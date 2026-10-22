@@ -34,9 +34,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // ScienceID is the agent's id.
@@ -305,7 +305,7 @@ func scienceCheck() string {
 		return ""
 	}
 	if st.PID != m.PID {
-		return fmt.Sprintf("%s's daemon (pid %d) was started without magpie's gateway", scienceName, st.PID)
+		return fmt.Sprintf("%s's daemon (pid %d) was started without chongyun's gateway", scienceName, st.PID)
 	}
 	if m.URL != gateway.URL() {
 		return fmt.Sprintf("%s's daemon was started for the gateway at %s", scienceName, m.URL)
@@ -349,7 +349,7 @@ func keepScienceOnce() {
 	m, _ := readScienceMark()
 	st, err := scienceServe(bin, gw, m.Port)
 	if err != nil {
-		log.Printf("%s: starting its daemon on magpie's gateway: %v", scienceName, err)
+		log.Printf("%s: starting its daemon on chongyun's gateway: %v", scienceName, err)
 		return
 	}
 	if err := writeScienceMark(scienceMark{URL: gw, PID: st.PID, Port: st.Port}); err != nil {
@@ -390,8 +390,8 @@ func claudeScience() *Agent {
 			},
 			Set: func(v string) error { return scienceOn(v != "") },
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie",
-					Note: "magpie restarts its daemon with ANTHROPIC_BASE_URL set to the gateway; a session running in it is cut off"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun",
+					Note: "chongyun restarts its daemon with ANTHROPIC_BASE_URL set to the gateway; a session running in it is cut off"}}
 			},
 		}},
 		Check: scienceCheck,
@@ -405,4 +405,4 @@ func claudeScience() *Agent {
 }
 
 // what Claude Science says after a change (notice.go)
-var noticeScience = newNotice("{agent}'s daemon runs on magpie's gateway: open {agent} again (reload its window if it is open). It still needs you signed in with your Claude account, which magpie never sends on; pick a model of magpie's in its model menu.")
+var noticeScience = newNotice("{agent}'s daemon runs on chongyun's gateway: open {agent} again (reload its window if it is open). It still needs you signed in with your Claude account, which chongyun never sends on; pick a model of chongyun's in its model menu.")

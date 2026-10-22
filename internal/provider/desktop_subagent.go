@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Claude Desktop runs the Claude Code of its Code tab with
@@ -45,7 +45,7 @@ func DesktopSubagentModel() string {
 func SetDesktopSubagentModel(id string) error {
 	id = strings.TrimSpace(id)
 	if pid, model, ok := strings.Cut(id, "/"); id != "" && (!ok || pid == "" || model == "") {
-		return fmt.Errorf("Claude Desktop's subagents can't be put on %q: pick one of magpie's models (provider/model)", id)
+		return fmt.Errorf("Claude Desktop's subagents can't be put on %q: pick one of chongyun's models (provider/model)", id)
 	}
 	s := settings.Load()
 	if s.DesktopSubagentModel == id {
@@ -70,7 +70,7 @@ func DesktopSubagentUnserved(id string) string {
 			return ""
 		}
 	}
-	return "magpie doesn't serve it now"
+	return "chongyun doesn't serve it now"
 }
 
 // DesktopSubagentEffort is the effort set for Desktop's subagent turns,

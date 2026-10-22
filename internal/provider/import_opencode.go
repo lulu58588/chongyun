@@ -9,8 +9,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // OpenCode's own sign-ins, as `opencode auth login` keeps them: auth.json in
@@ -67,7 +67,7 @@ func readOpenCodeAuth(path string) ([]AppImport, error) {
 		skip := ""
 		switch {
 		case e.Type == "oauth" || e.Type == "wellknown":
-			skip = "it is a sign-in, not a key; add the subscription in magpie"
+			skip = "it is a sign-in, not a key; add the subscription in chongyun"
 		case e.Type != "api":
 			continue
 		case pr == nil:

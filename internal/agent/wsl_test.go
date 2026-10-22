@@ -12,7 +12,7 @@ import (
 	"time"
 	"unicode/utf16"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 func utf16le(s string, bom bool) []byte {
@@ -122,7 +122,7 @@ func TestWSLCodexProvider(t *testing.T) {
 	cfg := read()
 	nat := "http://172.20.0.1:" + gateway.Port()
 	if !strings.Contains(cfg, `model_catalog_json = "`+d.Home+`/.codex/magpie-models.json"`) ||
-		!strings.Contains(cfg, `base_url = "`+nat+`/v1"`) || !strings.Contains(cfg, `model_provider = "magpie"`) {
+		!strings.Contains(cfg, `base_url = "`+nat+`/v1"`) || !strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("config:\n%s", cfg)
 	}
 	if _, err := os.Stat(filepath.Join(home, ".codex", "magpie-models.json")); err != nil {

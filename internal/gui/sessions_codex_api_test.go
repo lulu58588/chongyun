@@ -13,11 +13,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 type codexTestCall struct {

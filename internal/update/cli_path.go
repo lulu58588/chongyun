@@ -11,14 +11,14 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
-// The `magpie` command in a terminal (PAMI on Discord: a way in the app to
+// The `chongyun` command in a terminal (PAMI on Discord: a way in the app to
 // put it there, and to see whether it is). install.sh links it, Homebrew
 // links it, but the app downloaded from the site — and every Windows one —
 // leaves a terminal without it. Settings' Command line says, for each shell
-// a terminal may open, which magpie its `magpie` runs, and puts this app's
+// a terminal may open, which magpie its `chongyun` runs, and puts this app's
 // there when the user asks: a link in a folder already on PATH (the one
 // whose magpie runs first, when that one is another copy, or ~/.local/bin
 // and the like), on Windows the app's folder put first in the user's PATH.
@@ -26,10 +26,10 @@ import (
 // with one line that puts ~/.local/bin on its PATH.
 //
 // Another magpie's version is read from its .app's Info.plist or its
-// Homebrew Cellar folder, never by running it: `magpie version` migrates
+// Homebrew Cellar folder, never by running it: `chongyun version` migrates
 // the settings first (see StaleCLI).
 
-// CLIShell is one shell's `magpie`.
+// CLIShell is one shell's `chongyun`.
 type CLIShell struct {
 	Name    string `json:"name"`              // zsh, bash, fish, PowerShell, cmd
 	Default bool   `json:"default,omitempty"` // the one a terminal opens
@@ -40,7 +40,7 @@ type CLIShell struct {
 	HasDir  bool   `json:"hasDir,omitempty"`  // its PATH has CLI.Dir, so Add reaches it without its profile
 }
 
-// CLI is what `magpie` runs in a terminal opened now.
+// CLI is what `chongyun` runs in a terminal opened now.
 type CLI struct {
 	Exe     string     `json:"exe"`               // this app's program, which it should run
 	Command string     `json:"command,omitempty"` // the default shell's
@@ -68,7 +68,7 @@ var (
 
 var cliMu sync.Mutex
 
-// ReadCLI says what `magpie` runs in each shell. It asks each shell for its
+// ReadCLI says what `chongyun` runs in each shell. It asks each shell for its
 // PATH, a few seconds at most.
 func ReadCLI() *CLI {
 	v := &CLI{Windows: runtime.GOOS == "windows", Shells: []CLIShell{}}
@@ -127,9 +127,9 @@ func AddCLI(shell string) (*CLI, error) {
 	}
 	switch cliStuck() {
 	case "translocated":
-		return nil, errors.New("macOS runs magpie from a temporary copy until it is moved to Applications: move it there, open it again, then add the command")
+		return nil, errors.New("macOS runs chongyun from a temporary copy until it is moved to Applications: move it there, open it again, then add the command")
 	case "read-only":
-		return nil, errors.New("magpie is running from its disk image: copy it to Applications, open it from there, then add the command")
+		return nil, errors.New("chongyun is running from its disk image: copy it to Applications, open it from there, then add the command")
 	}
 	if shell == "" {
 		v := ReadCLI()
@@ -137,14 +137,14 @@ func AddCLI(shell string) (*CLI, error) {
 			return v, nil
 		}
 		if v.Dir == "" {
-			return nil, errors.New("no folder on your PATH can take the magpie command: add ~/.local/bin to a shell's profile below")
+			return nil, errors.New("no folder on your PATH can take the chongyun command: add ~/.local/bin to a shell's profile below")
 		}
 		if err := cliPlace(exe, v.Dir); err != nil {
 			return nil, err
 		}
 		v = ReadCLI()
 		if !v.Ours && v.Command != "" {
-			return v, fmt.Errorf("magpie is in %s now, but a terminal still runs %s first", v.Dir, v.Command)
+			return v, fmt.Errorf("chongyun is in %s now, but a terminal still runs %s first", v.Dir, v.Command)
 		}
 		return v, nil
 	}
@@ -160,7 +160,7 @@ func AddCLI(shell string) (*CLI, error) {
 	}
 	prof := cliProfile(shell)
 	if sh == nil || prof == "" {
-		return nil, fmt.Errorf("%s isn't a shell magpie can add the command to", shell)
+		return nil, fmt.Errorf("%s isn't a shell chongyun can add the command to", shell)
 	}
 	dir := filepath.Join(os.Getenv("HOME"), ".local", "bin")
 	if err := os.MkdirAll(dir, 0o755); err != nil {
@@ -191,7 +191,7 @@ func cliProgram() (string, error) {
 		return "", err
 	}
 	if i := strings.Index(filepath.ToSlash(exe), "/Cellar/magpie/"); i > 0 {
-		opt := filepath.Join(exe[:i], "opt", "magpie", "bin", "magpie")
+		opt := filepath.Join(exe[:i], "opt", "chongyun", "bin", "chongyun")
 		if sameFile(opt, exe) {
 			return opt, nil
 		}
@@ -211,7 +211,7 @@ func cliNames() []string {
 	if runtime.GOOS == "windows" {
 		return []string{"magpie.exe", "magpie.cmd", "magpie.bat"}
 	}
-	return []string{"magpie"}
+	return []string{"chongyun"}
 }
 
 // findCLI is the magpie a shell with PATH dirs runs, "" none.
@@ -272,7 +272,7 @@ func profileLine(shell string) string {
 	return `export PATH="$HOME/.local/bin:$PATH"`
 }
 
-const profileMark = "# added by magpie (Settings › Command line)"
+const profileMark = "# added by chongyun (Settings › Command line)"
 
 // addToProfile adds line to the profile at path, unless it has it.
 func addToProfile(path, line string) error {
@@ -345,7 +345,7 @@ func tildeHome(p string) string {
 
 // A Windows app not named magpie.exe — the site's download is
 // magpie-windows-amd64.exe (#942) — is given a magpie.cmd beside it that
-// runs it, since a terminal looks for `magpie` by that name only. It names
+// runs it, since a terminal looks for `chongyun` by that name only. It names
 // the program by its folder (%~dp0) and file name, which an update keeps:
 // it replaces the program where it is, under its name.
 
@@ -355,10 +355,10 @@ const shimName = "magpie.cmd"
 // shimText is the magpie.cmd that runs the program exe in its folder.
 func shimText(exe string) string {
 	name := filepath.Base(strings.ReplaceAll(exe, `\`, "/"))
-	return "@echo off\r\nrem added by magpie (Settings > Command line): the magpie command runs " + name + " in this folder\r\n\"%~dp0" + name + "\" %*\r\n"
+	return "@echo off\r\nrem added by chongyun (Settings > Command line): the chongyun command runs " + name + " in this folder\r\n\"%~dp0" + name + "\" %*\r\n"
 }
 
-// needsShim says whether the program exe can't be run as `magpie` by its
+// needsShim says whether the program exe can't be run as `chongyun` by its
 // own name.
 func needsShim(exe string) bool {
 	return !strings.EqualFold(filepath.Base(strings.ReplaceAll(exe, `\`, "/")), "magpie.exe")
@@ -375,7 +375,7 @@ func writeShim(exe string) (string, error) {
 		return p, nil
 	}
 	if err := os.WriteFile(p, []byte(shimText(exe)), 0o755); err != nil {
-		return "", fmt.Errorf("writing %s, which runs %s as magpie: %w", p, filepath.Base(exe), err)
+		return "", fmt.Errorf("writing %s, which runs %s as chongyun: %w", p, filepath.Base(exe), err)
 	}
 	return p, nil
 }

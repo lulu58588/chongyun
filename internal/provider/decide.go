@@ -24,8 +24,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // JevLatest is the Jev a decision provider is asked with when the user
@@ -629,7 +629,7 @@ func RouteDecider(model string) (Provider, string, error) {
 	if pid, rest, ok := strings.Cut(model, "/"); ok && rest != "" {
 		if p, ok := deciderByID(pid); ok {
 			if !p.On() {
-				return Provider{}, "", decideBadRequest("%s is switched off in magpie", p.Name)
+				return Provider{}, "", decideBadRequest("%s is switched off in chongyun", p.Name)
 			}
 			m, ok := resolveDecideModel(p, rest)
 			if !ok {
@@ -640,7 +640,7 @@ func RouteDecider(model string) (Provider, string, error) {
 	}
 	if p, ok := deciderByID(model); ok {
 		if !p.On() {
-			return Provider{}, "", decideBadRequest("%s is switched off in magpie", p.Name)
+			return Provider{}, "", decideBadRequest("%s is switched off in chongyun", p.Name)
 		}
 		if m := p.Jev(); m != "" {
 			return p, m, nil
@@ -678,9 +678,9 @@ func RouteDecider(model string) (Provider, string, error) {
 		return hits[0].p, hits[0].m, nil
 	case 0:
 		if len(on) == 0 {
-			return Provider{}, "", decideNotFound("magpie has no Jev provider")
+			return Provider{}, "", decideNotFound("chongyun has no Jev provider")
 		}
-		return Provider{}, "", decideNotFound("magpie knows no Jev model %q; name the provider before it, like %s/%s", model, on[0].ID, on[0].Jev())
+		return Provider{}, "", decideNotFound("chongyun knows no Jev model %q; name the provider before it, like %s/%s", model, on[0].ID, on[0].Jev())
 	default:
 		ps := make([]Provider, len(hits))
 		for i, h := range hits {
@@ -918,7 +918,7 @@ func (p Provider) decideAsked(ctx context.Context) ([]catalog.Model, error) {
 // decision API, and says why it wasn't answered.
 func (p Provider) AskSystemOne(ctx context.Context, model string) error {
 	if pat, off := ModelDisabled(p.ID, model); off { // never asked (#1867)
-		return fmt.Errorf("model %s/%s is disabled in magpie (it matches %q)", p.ID, model, pat)
+		return fmt.Errorf("model %s/%s is disabled in chongyun (it matches %q)", p.ID, model, pat)
 	}
 	u, err := p.DecideModelURL(ctx, model)
 	if err != nil {

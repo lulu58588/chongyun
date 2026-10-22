@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // A magpie that found the gateway taken serves it once the one that had it
@@ -24,7 +24,7 @@ func TestGatewayTakenOver(t *testing.T) {
 	}
 	t.Setenv("MAGPIE_ADDR", ln.Addr().String())
 	other := &http.Server{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`{"name":"magpie"}`))
+		w.Write([]byte(`{"name":"chongyun"}`))
 	})}
 	go other.Serve(ln)
 	defer other.Close()
@@ -48,7 +48,7 @@ func TestGatewayTakenOver(t *testing.T) {
 		watchGateway(ctx, 50*time.Millisecond)
 	}()
 	if serveGateway() != nil {
-		t.Fatal("served over another magpie")
+		t.Fatal("served over another chongyun")
 	}
 	time.Sleep(200 * time.Millisecond)
 	if served.Load() != nil {
@@ -79,7 +79,7 @@ func TestGatewayNotServedBesideASlowOne(t *testing.T) {
 	slow := make(chan struct{})
 	other := &http.Server{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		<-slow
-		w.Write([]byte(`{"name":"magpie"}`))
+		w.Write([]byte(`{"name":"chongyun"}`))
 	})}
 	go other.Serve(ln)
 	defer other.Close()
@@ -96,6 +96,6 @@ func TestGatewayNotServedBesideASlowOne(t *testing.T) {
 		takenSaid.Store(false)
 	})
 	if gw != nil {
-		t.Fatal("listened for the gateway on a port another magpie holds")
+		t.Fatal("listened for the gateway on a port another chongyun holds")
 	}
 }

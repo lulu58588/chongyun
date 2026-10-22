@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // A gateway session whose agent keeps it too is one session, in the count

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // iTanX (#1616): Codex's Sol as the main model (Opus, Sonnet), Astra on

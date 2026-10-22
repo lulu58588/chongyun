@@ -214,7 +214,7 @@ func asClient(client string, proto Protocol, body string) string {
 }
 
 // errNotSeen is TestsAs's answer for Claude Code before it has come through.
-const errNotSeen = "no Claude Code request has come through magpie yet: run Claude Code through magpie once, then test again"
+const errNotSeen = "no Claude Code request has come through chongyun yet: run Claude Code through chongyun once, then test again"
 
 // TestClients is the clients p's models can be tested as, each with why
 // it can't be yet ("" when it can): those whose API p has, of a provider

@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/mcpauth"
-	"github.com/yetone/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/netproxy"
 )
 
 // mcpClient relays the agents' requests to a remote MCP server magpie is
@@ -43,7 +43,7 @@ var mcpHop = map[string]bool{
 func (s *Server) mcpProxy(w http.ResponseWriter, r *http.Request) {
 	name := r.PathValue("name")
 	if !local(r) && !sharedWith(r) {
-		http.Error(w, "magpie lends its MCP sign-ins to another machine only when magpie is shared on the local network and the request carries its API key", http.StatusForbidden)
+		http.Error(w, "chongyun lends its MCP sign-ins to another machine only when chongyun is shared on the local network and the request carries its API key", http.StatusForbidden)
 		return
 	}
 	// a web page can make the browser send a request here too (a form, or
@@ -51,12 +51,12 @@ func (s *Server) mcpProxy(w http.ResponseWriter, r *http.Request) {
 	// it to the server with the user's sign-in; agents send no Origin and
 	// name this computer, as the MCP spec has servers check
 	if r.Header.Get("Origin") != "" || !sharedWith(r) && !loopbackHost(r.Host) {
-		http.Error(w, "magpie lends its MCP sign-ins to agents, not to web pages", http.StatusForbidden)
+		http.Error(w, "chongyun lends its MCP sign-ins to agents, not to web pages", http.StatusForbidden)
 		return
 	}
 	rec, ok := mcpauth.Get(name)
 	if !ok {
-		http.Error(w, "magpie isn't signed in to an MCP server called "+name+": sign in to it in magpie's Library", http.StatusNotFound)
+		http.Error(w, "chongyun isn't signed in to an MCP server called "+name+": sign in to it in chongyun's Library", http.StatusNotFound)
 		return
 	}
 	// a body cut at the limit would go to the server as a shorter message
@@ -163,7 +163,7 @@ func mcpRefused(w http.ResponseWriter, name string, err error) {
 	status := http.StatusBadGateway
 	msg := err.Error()
 	if errors.Is(err, mcpauth.ErrExpired) || errors.Is(err, mcpauth.ErrNotSignedIn) {
-		msg = "magpie's sign-in to the MCP server " + name + " has run out: sign in to it again in magpie's Library"
+		msg = "chongyun's sign-in to the MCP server " + name + " has run out: sign in to it again in chongyun's Library"
 	}
 	http.Error(w, msg, status)
 }

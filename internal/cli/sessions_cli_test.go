@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // sessionsHome is a sandbox HOME with the sessions package's fixtures as

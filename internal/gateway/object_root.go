@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"regexp"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A tool whose parameters are an anyOf, oneOf or allOf at the root, as

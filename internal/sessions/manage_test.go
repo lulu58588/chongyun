@@ -190,7 +190,7 @@ func TestDeleteActiveRefused(t *testing.T) {
 func TestDeleteOnlyKnownAgents(t *testing.T) {
 	manageSetup(t)
 	if _, err := Delete("opencode", "x"); err == nil {
-		t.Fatal("deleted from a database magpie doesn't write")
+		t.Fatal("deleted from a database chongyun doesn't write")
 	}
 	if _, err := Delete("claude", "../x"); err == nil {
 		t.Fatal("an id that isn't one")

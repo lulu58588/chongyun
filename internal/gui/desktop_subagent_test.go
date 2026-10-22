@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // Setting Desktop's subagent model on the Agents page says nothing of

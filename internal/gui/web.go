@@ -19,11 +19,11 @@ import (
 
 	"github.com/klauspost/compress/gzhttp"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
-// `magpie web` serves the window's page to a browser, for a computer that
+// `chongyun web` serves the window's page to a browser, for a computer that
 // can't show the app — no desktop, WSL, a server reached over SSH — with
 // the gateway beside it as the app has. What is the desktop's (the panel,
 // the tray, the Dock) does nothing there; a folder is named, not opened.
@@ -41,13 +41,13 @@ func (webHost) TintPanel([4]uint8, int) bool     { return false }
 func (webHost) TintTitleBar([4]uint8, bool) bool { return false }
 func (webHost) SetTextSize(int)                  {} // the browser zooms its own tab
 func (webHost) OpenFolder(path string) error {
-	return errors.New("in the browser magpie can't open folders: it is " + tilde(path))
+	return errors.New("in the browser chongyun can't open folders: it is " + tilde(path))
 }
 func (webHost) ChooseFolder(string) (string, error) {
-	return "", errors.New("in the browser magpie can't show a folder picker: type the folder's path")
+	return "", errors.New("in the browser chongyun can't show a folder picker: type the folder's path")
 }
 
-// Web is a started `magpie web`: its address and the link that signs a
+// Web is a started `chongyun web`: its address and the link that signs a
 // browser in.
 type Web struct {
 	Addr, Link string
@@ -217,7 +217,7 @@ func webGuard(cookie, key string, keep time.Duration, next http.Handler) http.Ha
 		}
 		if q := r.URL.Query(); q.Has("k") {
 			if !same(q.Get("k")) {
-				http.Error(rw, "this link's key is not this magpie web's: use the link it printed when it started", http.StatusUnauthorized)
+				http.Error(rw, "this link's key is not this chongyun web's: use the link it printed when it started", http.StatusUnauthorized)
 				return
 			}
 			q.Del("k")
@@ -230,7 +230,7 @@ func webGuard(cookie, key string, keep time.Duration, next http.Handler) http.Ha
 			r.Body = http.MaxBytesReader(rw, r.Body, 4096)
 			back := localPath(r.PostFormValue("back"))
 			if !same(r.PostFormValue("key")) {
-				webTurnedAway(rw, r, back, "That key is not this magpie web's.")
+				webTurnedAway(rw, r, back, "That key is not this chongyun web's.")
 				return
 			}
 			signIn(rw, r, back)
@@ -248,13 +248,13 @@ func webGuard(cookie, key string, keep time.Duration, next http.Handler) http.Ha
 		}
 		why, short := "This browser sent no sign-in cookie for this address. A browser keeps cookies per host, not per port, so another service on this host's other ports can take it away: by clearing its site data (a sign-out often does), or by filling the host's cookie limit. A page opened at another address than the one signed in at (an IP instead of a name) has none either.", "no cookie sent"
 		if len(sent) > 0 {
-			why, short = "This browser's sign-in cookie holds a key that isn't this magpie web's: the key changed after it signed in (MAGPIE_WEB_KEY changed, or a start without it made a new one).", "its cookie holds another key"
+			why, short = "This browser's sign-in cookie holds a key that isn't this chongyun web's: the key changed after it signed in (MAGPIE_WEB_KEY changed, or a start without it made a new one).", "its cookie holds another key"
 		}
 		if r.Method != http.MethodGet || !strings.Contains(r.Header.Get("Accept"), "text/html") {
-			http.Error(rw, "open the link magpie web printed when it started: it carries the key. "+why, http.StatusUnauthorized)
+			http.Error(rw, "open the link chongyun web printed when it started: it carries the key. "+why, http.StatusUnauthorized)
 			return
 		}
-		log.Printf("magpie web: turned away %s from %s: %s", r.URL.Path, r.RemoteAddr, short)
+		log.Printf("chongyun web: turned away %s from %s: %s", r.URL.Path, r.RemoteAddr, short)
 		webTurnedAway(rw, r, r.URL.RequestURI(), why)
 	})
 }
@@ -279,9 +279,9 @@ func webTurnedAway(rw http.ResponseWriter, r *http.Request, back, why string) {
 	rw.Header().Set("Content-Type", "text/html; charset=utf-8")
 	rw.Header().Set("Cache-Control", "no-store")
 	rw.WriteHeader(http.StatusUnauthorized)
-	fmt.Fprintf(rw, `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>magpie web</title>
+	fmt.Fprintf(rw, `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>chongyun web</title>
 <style>body{font:15px/1.5 system-ui,sans-serif;max-width:32em;margin:12vh auto;padding:0 16px;color:#222;background:#fafafa}@media(prefers-color-scheme:dark){body{color:#ddd;background:#1c1c1e}}input,button{font:inherit;padding:.4em .6em}input{width:100%%;box-sizing:border-box;margin:.5em 0}</style></head>
-<body><h1>magpie web</h1><p>%s</p><p>Paste the key (MAGPIE_WEB_KEY, or the k= in the link magpie web printed when it started):</p>
+<body><h1>chongyun web</h1><p>%s</p><p>Paste the key (MAGPIE_WEB_KEY, or the k= in the link chongyun web printed when it started):</p>
 <form method="post" action="%s"><input type="hidden" name="back" value="%s"><input type="password" name="key" autocomplete="current-password" autofocus required><button type="submit">Sign in</button></form></body></html>`,
 		html.EscapeString(why), webSignInPath, html.EscapeString(back))
 }
@@ -321,13 +321,13 @@ func LANAddrs() []string {
 	return out
 }
 
-// webHandler is what `magpie web` on port serves: the page and its API
+// webHandler is what `chongyun web` on port serves: the page and its API
 // behind the key, compressed for the browser.
 func webHandler(port, key string, keep time.Duration, page http.Handler) http.Handler {
-	return webCompressed(webGuard("magpie_web_"+port, key, keep, page))
+	return webCompressed(webGuard("chongyun_web_"+port, key, keep, page))
 }
 
-// webCompressed gzips what `magpie web` sends a browser that takes it: the
+// webCompressed gzips what `chongyun web` sends a browser that takes it: the
 // page's scripts, styles and SVG icons, and the API's JSON. They went out
 // as they are, about 4 MB for a first load before any data, and the
 // routing trace's JSON grows with every account a request could go to; a
@@ -336,7 +336,7 @@ func webHandler(port, key string, keep time.Duration, page http.Handler) http.Ha
 // Pictures already compressed go as they are.
 //
 // The app's own window gets the page from inside the process, with no
-// network between, so only `magpie web` compresses.
+// network between, so only `chongyun web` compresses.
 //
 // A gzipped file's ETag says so ("…-gzip"), as a validator of other bytes;
 // asked for again with it, the file is still a 304. A few bytes of padding
@@ -373,5 +373,5 @@ func compressible(ct string) bool {
 		strings.HasSuffix(ct, "json") || ct == "image/svg+xml"
 }
 
-// isWeb: the page is served to a browser by `magpie web`.
+// isWeb: the page is served to a browser by `chongyun web`.
 func isWeb(w Windows) bool { _, ok := w.(webHost); return ok }

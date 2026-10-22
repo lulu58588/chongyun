@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // nativeSealedReply is a Responses stream whose output is one compaction item,
@@ -501,7 +501,7 @@ func TestNativeCompactionWriterGoneSaysWhy(t *testing.T) {
 					t.Fatal(err)
 				}
 			},
-			[]string{"switched off in magpie", "switch spare@example.com on again", "the others can stay on beside it"},
+			[]string{"switched off in chongyun", "switch spare@example.com on again", "the others can stay on beside it"},
 			[]string{"no longer signed in", "paused"}},
 		{"own paused", "me@example.com",
 			func(t *testing.T) {
@@ -510,7 +510,7 @@ func TestNativeCompactionWriterGoneSaysWhy(t *testing.T) {
 				}
 			},
 			[]string{"it is paused", "turn me@example.com on again"},
-			[]string{"no longer signed in", "switched off in magpie"}},
+			[]string{"no longer signed in", "switched off in chongyun"}},
 		{"kept from the model", "me@example.com",
 			func(t *testing.T) {
 				if err := provider.SetAccountModels("codex", "me@example.com", []string{"gpt-4.1"}); err != nil {
@@ -518,10 +518,10 @@ func TestNativeCompactionWriterGoneSaysWhy(t *testing.T) {
 				}
 			},
 			[]string{"set not to serve gpt-5.5 (Names & levels)", "let me@example.com serve gpt-5.5 again"},
-			[]string{"no longer signed in", "switched off in magpie", "paused"}},
+			[]string{"no longer signed in", "switched off in chongyun", "paused"}},
 		{"signed out", "gone@example.com", func(t *testing.T) {},
-			[]string{"gone@example.com is no longer signed in to magpie", "sign in to gone@example.com again"},
-			[]string{"switched off in magpie", "paused"}},
+			[]string{"gone@example.com is no longer signed in to chongyun", "sign in to gone@example.com again"},
+			[]string{"switched off in chongyun", "paused"}},
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			codexSignedIn(t, "spare@example.com")
@@ -694,7 +694,7 @@ func TestNativeCompactionCompactJudgesItsWriter(t *testing.T) {
 	}
 	account := sealedBy
 
-	t.Run("a writer on in magpie answers it, signed as the writer", func(t *testing.T) {
+	t.Run("a writer on in chongyun answers it, signed as the writer", func(t *testing.T) {
 		codexSignedIn(t, "biz@example.com") // the sign-in is me@example.com (acct-1); biz@example.com (acct-2) is on
 		nativeOn(t, "codex")
 		wroteCheckpoint("gAAAAB-sealed-by-biz", account("biz@example.com"))
@@ -711,7 +711,7 @@ func TestNativeCompactionCompactJudgesItsWriter(t *testing.T) {
 		if code != 400 || seen != "" {
 			t.Fatalf("%d, the backend saw %q: %s", code, seen, body)
 		}
-		for _, want := range []string{"compacted natively by codex@gone@example.com", "gone@example.com is no longer signed in to magpie", "sign in to gone@example.com again"} {
+		for _, want := range []string{"compacted natively by codex@gone@example.com", "gone@example.com is no longer signed in to chongyun", "sign in to gone@example.com again"} {
 			if !strings.Contains(body, want) {
 				t.Errorf("no %q in %s", want, body)
 			}
@@ -755,7 +755,7 @@ func TestNativeCompactionCompactJudgesItsWriter(t *testing.T) {
 		if code != 400 || seen != "" {
 			t.Fatalf("%d, the backend saw %q: %s", code, seen, body)
 		}
-		if !strings.Contains(body, "gone@example.com is no longer signed in to magpie") {
+		if !strings.Contains(body, "gone@example.com is no longer signed in to chongyun") {
 			t.Errorf("body %s", body)
 		}
 	})

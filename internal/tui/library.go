@@ -16,9 +16,9 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // libRow is one line of the page.
@@ -142,7 +142,7 @@ func (m model) updateLibrary(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		case "instructions", "mcp", "skill", "rtk":
 			m.openLibAgents(r)
 		case "found-mcp", "found-skill":
-			m.flash, m.flashOK = "i brings "+r.name+" into the library, for magpie to give it to other agents too", true
+			m.flash, m.flashOK = "i brings "+r.name+" into the library, for chongyun to give it to other agents too", true
 			if !r.own {
 				m.flash += "; d takes it out of every agent that has it"
 			}
@@ -348,7 +348,7 @@ func (m *model) openLibAdd() {
 					in := newInput("owner/repo, a GitHub or GitLab link, a git address (git@host:group/repo.git), or a folder's full path")
 					in.CharLimit = 400
 					return askMsg{ask{crumbs: []string{"library", "add", "skills"}, input: in,
-						hint:    "magpie looks there for skills, then you pick one",
+						hint:    "chongyun looks there for skills, then you pick one",
 						onEnter: probeCmd}}
 				}
 				in := newInput("<name> <url | command args…>")

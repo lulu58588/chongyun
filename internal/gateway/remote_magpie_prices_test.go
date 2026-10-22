@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // Sorghum on Discord: a magpie with another computer's magpie as its
@@ -144,7 +144,7 @@ func TestRemoteMagpiePricesTold(t *testing.T) {
 		}
 		json.Unmarshal(w.Body.Bytes(), &v)
 		for _, m := range v.Data {
-			if _, ok := m["magpie_price"]; ok {
+			if _, ok := m["chongyun_price"]; ok {
 				return w.Code, true
 			}
 		}
@@ -155,7 +155,7 @@ func TestRemoteMagpiePricesTold(t *testing.T) {
 		t.Errorf("this computer, asking: %d, priced %v", code, got)
 	}
 	if _, got := priced("127.0.0.1:5000", "", false); got {
-		t.Error("prices told to a list that didn't ask (an older magpie, an agent)")
+		t.Error("prices told to a list that didn't ask (an older chongyun, an agent)")
 	}
 	t.Setenv("MAGPIE_ADDR", "0.0.0.0:0") // on the network, magpie not shared
 	if code, got := priced("192.168.1.9:5000", "", true); code != http.StatusUnauthorized || got {

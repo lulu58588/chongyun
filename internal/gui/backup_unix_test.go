@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/davsync"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/davsync"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Sync now, while another magpie syncs longer than the page waits: the
@@ -43,7 +43,7 @@ func TestDavsyncBusy(t *testing.T) {
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/api/davsync/now", strings.NewReader("{}")).WithContext(ctx))
 	var v davsync.View
 	json.Unmarshal(w.Body.Bytes(), &v)
-	if w.Code != 200 || !v.On || !strings.Contains(v.Error, "another magpie is syncing") {
+	if w.Code != 200 || !v.On || !strings.Contains(v.Error, "another chongyun is syncing") {
 		t.Fatalf("%d %s", w.Code, w.Body)
 	}
 }

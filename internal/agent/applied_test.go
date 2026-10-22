@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // sameGroup compares two values of a field, one of them read back from the
@@ -75,7 +75,7 @@ func TestDriftReplaced(t *testing.T) {
 	if err := cx.Reapply(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model = "fake/m1"`) || !strings.Contains(cfg, `model_provider = "magpie"`) || cx.Drift() != nil {
+	if cfg := read(); !strings.Contains(cfg, `model = "fake/m1"`) || !strings.Contains(cfg, `model_provider = "chongyun"`) || cx.Drift() != nil {
 		t.Fatalf("reapplied:\n%s", cfg)
 	}
 	os.WriteFile(filepath.Join(home, ".codex", "config.toml"), []byte("model = \"gpt-5.5\"\n"), 0o644)
@@ -126,7 +126,7 @@ func TestDriftBypassed(t *testing.T) {
 	started = time.Now()
 	prompt(time.Now().Add(-5 * time.Minute))
 	if d := cx.Drift(); d != nil {
-		t.Fatalf("used while magpie was down: %+v", d)
+		t.Fatalf("used while chongyun was down: %+v", d)
 	}
 }
 
@@ -189,7 +189,7 @@ func TestDriftUnwiredEveryAgent(t *testing.T) {
 				}
 			}
 			if want == "" {
-				t.Fatal("no field takes magpie's models")
+				t.Fatal("no field takes chongyun's models")
 			}
 			if err := a.Apply(f.Key, want); err != nil {
 				t.Fatal(err)
@@ -281,7 +281,7 @@ func TestCodexDriftReached(t *testing.T) {
 	}
 	log("INFO", "connecting to websocket: "+ws)
 	if d := cx.Drift(); d != nil {
-		t.Fatalf("reached magpie: %+v", d)
+		t.Fatalf("reached chongyun: %+v", d)
 	}
 }
 
@@ -298,7 +298,7 @@ func TestDriftInstalledMagpie(t *testing.T) {
 	cfg := filepath.Join(home, ".codex", "config.toml")
 	os.WriteFile(cfg, []byte("openai_base_url = \"http://"+gateway.DefaultAddr+gateway.CodexPath+"\"\nmodel = \"fake/m1\"\n"), 0o644)
 	if d := cx.Drift(); d != nil {
-		t.Fatalf("the installed magpie's wiring taken for drift: %+v", d)
+		t.Fatalf("the installed chongyun's wiring taken for drift: %+v", d)
 	}
 	os.WriteFile(cfg, []byte("openai_base_url = \"http://127.0.0.1:9999"+gateway.CodexPath+"\"\nmodel = \"fake/m1\"\n"), 0o644)
 	if d := cx.Drift(); d == nil || d.Kind != "unwired" {

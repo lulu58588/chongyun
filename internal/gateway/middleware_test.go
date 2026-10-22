@@ -11,10 +11,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/middleware"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/middleware"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A gateway middleware sees an agent's request before routing and its

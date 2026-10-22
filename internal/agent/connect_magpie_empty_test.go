@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Lumens on Discord (v0.1.1233): connecting WorkBuddy said it was
@@ -60,7 +60,7 @@ func TestConnectMagpieAsProviderWithNoModelLeft(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, err := workbuddy(home).ConnectHow()
-	if err != nil || c.How != "magpie" {
+	if err != nil || c.How != "chongyun" {
 		t.Fatalf("with a model: %+v %v", c, err)
 	}
 	if !workbuddyWired(path) {

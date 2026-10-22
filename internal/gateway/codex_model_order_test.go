@@ -8,7 +8,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Codex's /model lists the models in the order dragged on the Agents page

@@ -15,8 +15,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/dirent"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/dirent"
 )
 
 // Hermes stores canonical, non-overlapping input/cache buckets. Reasoning is

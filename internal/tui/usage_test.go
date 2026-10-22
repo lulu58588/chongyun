@@ -9,11 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/fx"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/fx"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // The Usage page lists the accounts' windows and balances as the app's
@@ -142,7 +142,7 @@ func TestUsagePageShowsCallsNotThroughMagpie(t *testing.T) {
 	t.Cleanup(func() { usage.LogCalls = old })
 	m := press(t, model{w: 160, h: 60, page: pageUsage}, "t")
 	v := m.viewUsage()
-	gw, own, ok := strings.Cut(v, "not through magpie")
+	gw, own, ok := strings.Cut(v, "not through chongyun")
 	if !ok || !strings.Contains(gw, "relay/m") || strings.Contains(gw, "gpt-6-luna") || !strings.Contains(own, "gpt-6-luna") {
 		t.Fatal(v)
 	}
@@ -178,7 +178,7 @@ func TestUsagePageAtMidnight(t *testing.T) {
 	both := func(how string, m model) {
 		t.Helper()
 		v := m.viewUsage()
-		gw, own, ok := strings.Cut(v, "not through magpie")
+		gw, own, ok := strings.Cut(v, "not through chongyun")
 		if !ok || !strings.Contains(gw, "relay/m") || !strings.Contains(own, "gpt-6-luna") {
 			t.Errorf("%s:\n%s", how, v)
 		}

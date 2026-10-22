@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // claudeWorkDirs runs two Claude subscription requests through a script

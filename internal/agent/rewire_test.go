@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // setPort is Settings' gateway port set to p, as the Settings page saves it.
@@ -79,7 +79,7 @@ func TestPortMovesEveryAgent(t *testing.T) {
 			}
 		}
 		if want == "" {
-			t.Fatalf("%s: no field takes magpie's models", a.ID)
+			t.Fatalf("%s: no field takes chongyun's models", a.ID)
 		}
 		if err := a.Apply(key, want); err != nil {
 			t.Fatalf("%s: %v", a.ID, err)
@@ -177,7 +177,7 @@ func TestPortLeavesAnUnwiredAgent(t *testing.T) {
 		t.Fatal(err)
 	}
 	if strings.Contains(read(), "127.0.0.1:3592") {
-		t.Fatalf("an agent taken off magpie was moved:\n%s", read())
+		t.Fatalf("an agent taken off chongyun was moved:\n%s", read())
 	}
 }
 
@@ -194,7 +194,7 @@ func TestDriftInstalledMagpieOnItsPort(t *testing.T) {
 	cfg := filepath.Join(home, ".codex", "config.toml")
 	os.WriteFile(cfg, []byte("openai_base_url = \"http://127.0.0.1:3591"+gateway.CodexPath+"\"\nmodel = \"fake/m1\"\n"), 0o644)
 	if d := cx.Drift(); d != nil {
-		t.Fatalf("the installed magpie's wiring taken for drift: %+v", d)
+		t.Fatalf("the installed chongyun's wiring taken for drift: %+v", d)
 	}
 }
 

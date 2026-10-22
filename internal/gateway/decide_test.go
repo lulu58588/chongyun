@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 func TestMixedDecisionGateway(t *testing.T) {
@@ -189,7 +189,7 @@ func TestSystemOneRoutesByPrefix(t *testing.T) {
 	call := func(path, body string) *httptest.ResponseRecorder {
 		rec := httptest.NewRecorder()
 		req := httptest.NewRequest("POST", path, strings.NewReader(body))
-		req.Header.Set("Authorization", "Bearer magpie")
+		req.Header.Set("Authorization", "Bearer chongyun")
 		req.Header.Set(SessionHeader, "decision-session")
 		s.Handler().ServeHTTP(rec, req)
 		return rec

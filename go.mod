@@ -1,4 +1,4 @@
-module github.com/yetone/magpie
+module github.com/lulu58588/magpie
 
 go 1.26.8
 

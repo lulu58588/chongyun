@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #374: Codex offering web search to a Responses provider goes through

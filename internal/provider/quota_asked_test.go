@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // dialsOut has magpie's own requests go as netproxy.Install has them, and
@@ -135,7 +135,7 @@ func TestAllowancesReadOnlyWhenAsked(t *testing.T) {
 		t.Fatalf("nobody asked, and ChatGPT was asked %d more times", n-1)
 	}
 	if d := out(); len(d) > 0 {
-		t.Fatalf("nobody asked, and magpie dialed %v", d)
+		t.Fatalf("nobody asked, and chongyun dialed %v", d)
 	}
 
 	// the vendor turns the account away for its quota: read, asked or not
@@ -180,7 +180,7 @@ func TestAllowancesReadByThemselvesByDefault(t *testing.T) {
 	t.Cleanup(forget)
 	LoginUsage(context.Background(), "codex")
 	if asked.Load() != 1 {
-		t.Fatal("magpie no longer reads an allowance by itself while set to")
+		t.Fatal("chongyun no longer reads an allowance by itself while set to")
 	}
 }
 

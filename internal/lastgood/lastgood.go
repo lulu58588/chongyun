@@ -28,7 +28,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // Valid is whether b is a good copy of a file's contents.

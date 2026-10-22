@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // lml on Discord (Windows, about ten providers): the Providers page took

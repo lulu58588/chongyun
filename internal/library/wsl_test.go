@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/agent"
 )
 
 // wslSandbox is sandbox with a running WSL distro, Ubuntu-24.04, whose /
@@ -215,7 +215,7 @@ func TestWSLMagpieImage(t *testing.T) {
 	old := wslProbe
 	wslProbe = func(distro, script string) (string, error) {
 		probed++
-		if distro != "Ubuntu-24.04" || !strings.Contains(script, `wslpath -u 'D:\tools\Magpie\magpie-windows-amd64.exe'`) {
+		if distro != "Ubuntu-24.04" || !strings.Contains(script, `wslpath -u 'D:\tools\Chongyun\magpie-windows-amd64.exe'`) {
 			t.Errorf("probe %s: %s", distro, script)
 		}
 		return answer, nil
@@ -228,9 +228,9 @@ func TestWSLMagpieImage(t *testing.T) {
 	reset()
 	t.Cleanup(func() { wslProbe = old; reset() })
 	// the Windows magpie this computer runs, as it would on Windows
-	thisMagpie(t, `D:\tools\Magpie\magpie-windows-amd64.exe`)
+	thisMagpie(t, `D:\tools\Chongyun\magpie-windows-amd64.exe`)
 
-	img := Server{Name: "magpie-image", Transport: "stdio", Command: `D:\tools\Magpie\magpie-windows-amd64.exe`, Args: []string{"mcp", "image"},
+	img := Server{Name: "magpie-image", Transport: "stdio", Command: `D:\tools\Chongyun\magpie-windows-amd64.exe`, Args: []string{"mcp", "image"},
 		Env: map[string]string{"MAGPIE_ADDR": "127.0.0.1:4000"}, Agents: []string{wslCodex, wslClaude}}
 	res := ok(t)(SaveServer("", img))
 	if len(res.Problems) != 0 {

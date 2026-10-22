@@ -6,8 +6,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // gatewayResponse observes the bytes delivered to the client without changing

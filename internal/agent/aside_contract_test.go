@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestAsideImageCatalogSeparatesGenerationFromVision(t *testing.T) {
@@ -212,7 +212,7 @@ func TestAsideImageFailureDoesNotMarkProviderDisconnected(t *testing.T) {
 	if err := a.Connect(); err != nil {
 		t.Fatal(err)
 	}
-	if err := edit.SetJSON(settings, edit.KV{Path: asideImageKey, Value: json.RawMessage(`{"provider":"magpie","modelId":"gone/image"}`)}); err != nil {
+	if err := edit.SetJSON(settings, edit.KV{Path: asideImageKey, Value: json.RawMessage(`{"provider":"chongyun","modelId":"gone/image"}`)}); err != nil {
 		t.Fatal(err)
 	}
 	a = mustFindAside(t)

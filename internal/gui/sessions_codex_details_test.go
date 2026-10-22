@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/sessions"
 )
 
 func codexDetailsAPILine(t *testing.T, at time.Time, typ string, payload any) string {

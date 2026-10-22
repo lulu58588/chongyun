@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/netproxy"
 )
 
 // connectTo is an HTTP proxy that tunnels every CONNECT to addr, whatever

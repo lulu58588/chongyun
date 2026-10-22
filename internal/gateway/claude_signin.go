@@ -130,7 +130,7 @@ func refusedMessage(b []byte, id string, code int) string {
 	if name == "" {
 		name = "The provider"
 	}
-	msg := fmt.Sprintf("%s refused magpie's credential (HTTP %d)", name, code)
+	msg := fmt.Sprintf("%s refused chongyun's credential (HTTP %d)", name, code)
 	if reason != "" {
 		msg += ": " + xAPIKey.ReplaceAllString(reason, "API key")
 	}

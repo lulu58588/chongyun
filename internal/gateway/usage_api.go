@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usageapi"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usageapi"
 )
 
 // The usage log, as the Usage page reads it (HoGee_xxl on X: an app of
@@ -22,7 +22,7 @@ import (
 // accounts is someone else's to use: it is told its own calls alone, from
 // /v1/magpie/usage/requests, and not the summary of everyone's.
 
-const usageRefused = "magpie's usage is told to another machine only when magpie is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)"
+const usageRefused = "chongyun's usage is told to another machine only when chongyun is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)"
 
 // heldKey: the request's gateway key is held to a budget, models or
 // accounts, and so sees only its own usage.
@@ -35,7 +35,7 @@ func heldKey(who access.Identity) bool {
 // accounts' lanes (321sssrt-bit, #1981: a friend given a key with a
 // budget saw every account's card, email and balance on their Remote
 // magpie's Usage page). The key's own limit stays at /v1/magpie/limit.
-const heldRefused = "this gateway key is held to a budget, models or accounts, so it is told nothing of this magpie's accounts: GET /v1/magpie/limit tells it its own limit"
+const heldRefused = "this gateway key is held to a budget, models or accounts, so it is told nothing of this chongyun's accounts: GET /v1/magpie/limit tells it its own limit"
 
 // refuseHeld answers a held key 403 with msg, marked with
 // provider.KeyHeldCode so another magpie shows the key's own card alone

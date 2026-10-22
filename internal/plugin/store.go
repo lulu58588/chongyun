@@ -34,12 +34,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // Entry is one plugin the user added.
@@ -245,7 +245,7 @@ var listSeen struct {
 }
 
 // listStamp is plugins.json as it is now, and what is installed: bun's
-// package.json and lockfile in Dir(), which `magpie plugin update` changes
+// package.json and lockfile in Dir(), which `chongyun plugin update` changes
 // without touching plugins.json (#952: a terminal's update to 0.1.18 left
 // the app's host answering with 0.1.17 until it was killed).
 func listStamp() string {
@@ -497,7 +497,7 @@ func notPlugin(target string) error {
 	if name == "" {
 		name = filepath.Base(target)
 	}
-	why := fmt.Sprintf("%s isn't an OpenCode or magpie plugin: its package names no file to load (no main or exports in package.json, no index file)", name)
+	why := fmt.Sprintf("%s isn't an OpenCode or chongyun plugin: its package names no file to load (no main or exports in package.json, no index file)", name)
 	if len(pkg.Bin) > 0 && string(pkg.Bin) != "null" {
 		why += ", only a command (bin). If it is an MCP server, add it under Library → MCP servers instead"
 	}
@@ -752,7 +752,7 @@ func installAt(ctx context.Context, pkg, version string) error {
 		// what bun said comes first: the page's status line shows the
 		// start of a long message
 		if m := minAge.FindStringSubmatch(err.Error()); m != nil {
-			return fmt.Errorf("%s %s isn't installed yet: Bun's minimumReleaseAge (in a .bunfig.toml) holds back versions published less than %s ago, and magpie installs it once it is older (%w)", pkg, version, ageText(m[1]), err)
+			return fmt.Errorf("%s %s isn't installed yet: Bun's minimumReleaseAge (in a .bunfig.toml) holds back versions published less than %s ago, and chongyun installs it once it is older (%w)", pkg, version, ageText(m[1]), err)
 		}
 		var said []string
 		for _, l := range strings.Split(err.Error(), "\n") {

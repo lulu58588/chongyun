@@ -11,8 +11,8 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // astrbotConfig is a cmd_config.json as AstrBot 4.28.2 writes it (json.dump,
@@ -199,7 +199,7 @@ func TestAstrBot(t *testing.T) {
 		ours = ours || o.Value == "magpie/kimi/k2"
 	}
 	if !own || !ours {
-		t.Fatalf("options: own %v magpie %v", own, ours)
+		t.Fatalf("options: own %v chongyun %v", own, ours)
 	}
 
 	if err := a.Pick("model", "magpie/kimi/k2"); err != nil {
@@ -216,13 +216,13 @@ func TestAstrBot(t *testing.T) {
 		t.Fatalf("check: %s", c)
 	}
 	sources := astrbotByID(t, m, "provider_sources")
-	src := sources["magpie"]
+	src := sources["chongyun"]
 	if src == nil || src["type"] != "openai_chat_completion" || src["provider_type"] != "chat_completion" ||
 		!strings.HasSuffix(src["api_base"].(string), "/v1") || src["timeout"] != float64(120) {
-		t.Fatalf("magpie's source: %v", src)
+		t.Fatalf("chongyun's source: %v", src)
 	}
 	if k, _ := src["key"].([]any); len(k) != 1 || k[0] != agentKeyAt("astrbot", here(home).gw()) {
-		t.Fatalf("magpie's key must be a list of the key naming AstrBot: %v", src["key"])
+		t.Fatalf("chongyun's key must be a list of the key naming AstrBot: %v", src["key"])
 	}
 	if !reflect.DeepEqual(sources["deepseek"]["key"], []any{"sk-user"}) {
 		t.Fatalf("the user's source: %v", sources["deepseek"])
@@ -237,7 +237,7 @@ func TestAstrBot(t *testing.T) {
 	if provider.Described != nil && provider.Described() {
 		k2mods = []any{"text", "image", "tool_use"}
 	}
-	if k2["provider_source_id"] != "magpie" || k2["model"] != "kimi/k2" || k2["max_context_tokens"] != float64(262144) ||
+	if k2["provider_source_id"] != "chongyun" || k2["model"] != "kimi/k2" || k2["max_context_tokens"] != float64(262144) ||
 		!reflect.DeepEqual(k2["modalities"], k2mods) || !reflect.DeepEqual(k2["custom_extra_body"], map[string]any{}) {
 		t.Fatalf("k2: %v", k2)
 	}
@@ -291,7 +291,7 @@ func TestAstrBotSyncKeepsTheirs(t *testing.T) {
 	}
 	// as AstrBot's WebUI saves it: the whole file, from what it holds
 	astrbotEdit(t, path, func(m map[string]any) {
-		src := astrbotByID(t, m, "provider_sources")["magpie"]
+		src := astrbotByID(t, m, "provider_sources")["chongyun"]
 		src["timeout"], src["proxy"] = 300, "http://127.0.0.1:7890"
 		astrbotByID(t, m, "provider")["magpie/kimi/k2-vision"]["enable"] = false
 	})
@@ -310,7 +310,7 @@ func TestAstrBotSyncKeepsTheirs(t *testing.T) {
 		t.Fatal(err)
 	}
 	m := astrbotRead(t, path)
-	src := astrbotByID(t, m, "provider_sources")["magpie"]
+	src := astrbotByID(t, m, "provider_sources")["chongyun"]
 	if src["timeout"] != float64(300) || src["proxy"] != "http://127.0.0.1:7890" {
 		t.Fatalf("the user's timeout and proxy were written over: %v", src)
 	}
@@ -319,7 +319,7 @@ func TestAstrBotSyncKeepsTheirs(t *testing.T) {
 		t.Fatalf("a model the user switched off came back on: %v", models["magpie/kimi/k2-vision"])
 	}
 	if models["magpie/kimi/k3"] == nil {
-		t.Fatalf("a model magpie lists now isn't in AstrBot's list: %v", models)
+		t.Fatalf("a model chongyun lists now isn't in AstrBot's list: %v", models)
 	}
 
 	// AstrBot's WebUI writes every key back in an order of its own; the
@@ -363,7 +363,7 @@ func TestAstrBotTheirPickStands(t *testing.T) {
 	b, _ := os.ReadFile(path)
 	writeFile(t, path, strings.Replace(string(b), `"provider_id": "magpie/kimi/k2"`, `"provider_id": "openai/gpt-5"`, 1))
 	if !a.Wired() {
-		t.Fatal("magpie's models are still in AstrBot's list: it is connected")
+		t.Fatal("chongyun's models are still in AstrBot's list: it is connected")
 	}
 	if err := a.Disconnect(); err != nil {
 		t.Fatal(err)
@@ -372,12 +372,12 @@ func TestAstrBotTheirPickStands(t *testing.T) {
 	if got := astrbotPick(m); got != "openai/gpt-5" {
 		t.Fatalf("the user's pick became %v", got)
 	}
-	if _, ok := astrbotByID(t, m, "provider_sources")["magpie"]; ok {
-		t.Fatal("magpie's source stayed")
+	if _, ok := astrbotByID(t, m, "provider_sources")["chongyun"]; ok {
+		t.Fatal("chongyun's source stayed")
 	}
 	for id := range astrbotByID(t, m, "provider") {
 		if strings.HasPrefix(id, "magpie/") {
-			t.Fatalf("magpie's model %s stayed", id)
+			t.Fatalf("chongyun's model %s stayed", id)
 		}
 	}
 }
@@ -399,7 +399,7 @@ func TestAstrBotBeforeAgentRunner(t *testing.T) {
 	}
 	m := astrbotRead(t, path)
 	if _, ok := m["agent_runner"]; ok {
-		t.Fatal("magpie made an agent_runner of its own")
+		t.Fatal("chongyun made an agent_runner of its own")
 	}
 	if got := m["provider_settings"].(map[string]any)["default_provider_id"]; got != "magpie/kimi/k2" {
 		t.Fatalf("default_provider_id %v", got)
@@ -423,7 +423,7 @@ func TestAstrBotRefusesWithoutItsSettings(t *testing.T) {
 		t.Fatalf("no settings: %v", err)
 	}
 	if isFile(path) {
-		t.Fatal("magpie made AstrBot's settings")
+		t.Fatal("chongyun made AstrBot's settings")
 	}
 	old := `{"provider": [{"id": "openai", "type": "openai_chat_completion", "key": ["sk"]}], "provider_settings": {"default_provider_id": "openai"}}`
 	writeFile(t, path, old)

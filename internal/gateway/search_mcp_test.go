@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/budget"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/budget"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // mcpPost sends one JSON-RPC body to the web search MCP server through h,

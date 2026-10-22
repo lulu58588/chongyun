@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // cachingVendor answers in one wire format, whole or streamed, with a

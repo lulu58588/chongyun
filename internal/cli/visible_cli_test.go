@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The visibility is kept under the agent's id lowered, because VisibleTo

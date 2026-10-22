@@ -9,7 +9,7 @@
 // Windows webview's profile into data/webview2 (no Start-menu shortcut or
 // App Paths entry is made either), and
 // nothing of magpie's own is written to the user's profile, the way VS
-// Code's portable mode works. "Beside magpie" is the folder holding the
+// Code's portable mode works. "Beside chongyun" is the folder holding the
 // executable, with links followed; for a Mac app it is the folder holding
 // Magpie.app (a file put inside the bundle would break its signature), and
 // for an AppImage the folder holding the .AppImage file, not the folder it
@@ -69,7 +69,7 @@ func Portable() string {
 		portable = Resolve(exe)
 		if portable == "" {
 			if data := Passed(exe); data != "" {
-				log.Printf("appdir: %s is beside magpie but not taken for its portable data: it is in a shared folder and %s has magpie's files too; a .portable file beside magpie makes it portable", data, installed())
+				log.Printf("appdir: %s is beside chongyun but not taken for its portable data: it is in a shared folder and %s has chongyun's files too; a .portable file beside chongyun makes it portable", data, installed())
 			}
 		}
 	})
@@ -176,13 +176,13 @@ var sharedFolder = func(dir string) bool {
 // with no home folder.
 func installed() string {
 	if x := os.Getenv("XDG_CONFIG_HOME"); rooted(x) {
-		return filepath.Join(x, "magpie")
+		return filepath.Join(x, "chongyun")
 	}
 	h, err := Home()
 	if err != nil {
 		return ""
 	}
-	return filepath.Join(h, ".config", "magpie")
+	return filepath.Join(h, ".config", "chongyun")
 }
 
 // Beside is the folder a portable magpie run from exe keeps its data folder
@@ -228,9 +228,9 @@ func Config() string {
 		return p
 	}
 	if x := os.Getenv("XDG_CONFIG_HOME"); rooted(x) {
-		return filepath.Join(x, "magpie")
+		return filepath.Join(x, "chongyun")
 	}
-	return filepath.Join(mustHome(), ".config", "magpie")
+	return filepath.Join(mustHome(), ".config", "chongyun")
 }
 
 // Redirected is the folder magpie keeps its files in when it is opened
@@ -247,7 +247,7 @@ func Redirected() string {
 	if err != nil {
 		return ""
 	}
-	if def := filepath.Join(h, ".config", "magpie"); filepath.Clean(def) != filepath.Clean(Config()) {
+	if def := filepath.Join(h, ".config", "chongyun"); filepath.Clean(def) != filepath.Clean(Config()) {
 		return def
 	}
 	return ""
@@ -260,9 +260,9 @@ func Cache() string {
 		return filepath.Join(p, "cache")
 	}
 	if x := os.Getenv("XDG_CACHE_HOME"); rooted(x) {
-		return filepath.Join(x, "magpie")
+		return filepath.Join(x, "chongyun")
 	}
-	return filepath.Join(mustHome(), ".cache", "magpie")
+	return filepath.Join(mustHome(), ".cache", "chongyun")
 }
 
 // WebView is the folder the Windows webview (WebView2) keeps its profile
@@ -288,5 +288,5 @@ func SystemCache() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(d, "magpie"), nil
+	return filepath.Join(d, "chongyun"), nil
 }

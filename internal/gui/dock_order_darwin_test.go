@@ -54,11 +54,11 @@ func init() {
 		return
 	}
 	app := application.New(application.Options{
-		Name: "magpie dock order regression",
+		Name: "chongyun dock order regression",
 		Mac:  application.MacOptions{ActivationPolicy: application.ActivationPolicyAccessory},
 		Assets: application.AssetOptions{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "text/html")
-			fmt.Fprint(w, `<p>magpie</p>`)
+			fmt.Fprint(w, `<p>chongyun</p>`)
 		})},
 	})
 	app.Event.OnApplicationEvent(events.Common.ApplicationStarted, func(*application.ApplicationEvent) {
@@ -98,7 +98,7 @@ func init() {
 				}
 			}
 			if !first {
-				fmt.Printf("dock order: magpie isn't first in Command-Tab's order: %s\n", got)
+				fmt.Printf("dock order: chongyun isn't first in Command-Tab's order: %s\n", got)
 				return
 			}
 			fmt.Println("dock order: ok")

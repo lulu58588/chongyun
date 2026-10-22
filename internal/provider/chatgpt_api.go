@@ -35,8 +35,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // ChatGPTAPIID is the subscription's id, as a provider and in logins.json.
@@ -59,7 +59,7 @@ const (
 	siwcResource = "https://api.openai.com/v1"
 	// siwcDynamicClient registers the app on its first sign-in
 	siwcDynamicClient = "dynamic_agent_client"
-	siwcAgentName     = "magpie"
+	siwcAgentName     = "chongyun"
 	// siwcDirectScope lets the token be sent to api.openai.com itself
 	siwcDirectScope = "chatgpt.tokens.use.direct"
 	siwcScopes      = "openid profile email offline_access resource.invoke " + siwcDirectScope
@@ -198,13 +198,13 @@ func (s *signInFlow) siwcDone(ctx context.Context, w http.ResponseWriter, q url.
 		return
 	}
 	s.finish(SignInState{State: "done", User: user, Plan: plan, Using: strings.EqualFold(activeOf(siwcSide()), user)})
-	signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to magpie. You can close this tab.", user))
+	signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to chongyun. You can close this tab.", user))
 }
 
 // siwcSignedIn trades the code for the account's tokens and keeps it.
 func siwcSignedIn(ctx context.Context, code, clientID, verifier, redirect, nonce, hostID string) (user, plan string, err error) {
 	if clientID == "" {
-		return "", "", errors.New("ChatGPT sign-in: OpenAI didn't finish registering magpie (no client id came back); start it again")
+		return "", "", errors.New("ChatGPT sign-in: OpenAI didn't finish registering chongyun (no client id came back); start it again")
 	}
 	tok, err := siwcPostToken(ctx, url.Values{"grant_type": {"authorization_code"}, "client_id": {clientID},
 		"code": {code}, "code_verifier": {verifier}, "redirect_uri": {redirect}, "resource": {siwcResource}})
@@ -359,7 +359,7 @@ func siwcFromToken(tok siwcTokenReply, c siwcCreds) (siwcCreds, error) {
 	}
 	scopes := strings.Fields(tok.Scope)
 	if !slices.Contains(scopes, siwcDirectScope) {
-		return c, errors.New("OpenAI didn't grant magpie the use of the subscription through its API (" + siwcDirectScope + "): this ChatGPT account may not be eligible")
+		return c, errors.New("OpenAI didn't grant chongyun the use of the subscription through its API (" + siwcDirectScope + "): this ChatGPT account may not be eligible")
 	}
 	c.Access, c.Refresh, c.Scopes = tok.Access, tok.Refresh, scopes
 	c.Expires = time.Now().Add(time.Duration(tok.ExpiresIn * float64(time.Second))).UTC()
@@ -408,7 +408,7 @@ func siwcFresh(ctx context.Context, user string, force bool) (siwcCreds, error) 
 		return siwcCreds{}, fmt.Errorf("%s: %w", user, ErrSIWCSignIn)
 	}
 	if errors.As(err, &te) && te.Code == "invalid_client" {
-		return siwcCreds{}, fmt.Errorf("ChatGPT: OpenAI no longer knows the client magpie registered for %s (%s) — sign in again", user, te.Error())
+		return siwcCreds{}, fmt.Errorf("ChatGPT: OpenAI no longer knows the client chongyun registered for %s (%s) — sign in again", user, te.Error())
 	}
 	if err != nil {
 		if !force && time.Until(c.Expires) > 0 {

@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // The standalone CLI's sign-in: who in a JSONC config.json, the token in

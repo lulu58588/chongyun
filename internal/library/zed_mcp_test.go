@@ -195,7 +195,7 @@ func TestZedMCP(t *testing.T) {
 			ok(t)(RemoveServer("web"))
 			got = parse()
 			if len(got) != 3 || got["mine"] == nil || got["remote-mine"] == nil || got["mcp-server-github"]["settings"] == nil {
-				t.Errorf("after taking magpie's out:\n%s", read(t, p))
+				t.Errorf("after taking chongyun's out:\n%s", read(t, p))
 			}
 			for _, keep := range []string{"// Zed settings", "// my theme", "/* the servers I added in Zed */", "// installed from Zed's extensions", `"theme": "One Dark"`, `"buffer_font_size": 15`, `"timeout": 120`} {
 				if !strings.Contains(read(t, p), keep) {

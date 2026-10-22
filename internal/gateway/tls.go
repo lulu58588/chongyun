@@ -15,8 +15,8 @@ import (
 	"time"
 )
 
-// TLS: `magpie serve --tls-cert <file> --tls-key <file>` (or
-// MAGPIE_TLS_CERT and MAGPIE_TLS_KEY) serves the gateway, and `magpie
+// TLS: `chongyun serve --tls-cert <file> --tls-key <file>` (or
+// MAGPIE_TLS_CERT and MAGPIE_TLS_KEY) serves the gateway, and `chongyun
 // web`'s page, over HTTPS to other computers (RoderickZH on Discord: magpie
 // on a server as a relay, reached over the internet). The certificate is
 // read again when its files change, so a certbot renewal is served without

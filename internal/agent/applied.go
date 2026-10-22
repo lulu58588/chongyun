@@ -13,11 +13,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // An agent's config is a file anyone can write: another switcher, an
@@ -207,7 +207,7 @@ func (a *Agent) Drift() *Drift {
 			continue
 		}
 		return &Drift{Kind: "replaced", Field: f.Key, Now: vals[f.Key], Want: want,
-			Detail: a.Name + "'s config was changed outside magpie: " + f.Label + " is " + orDefault(vals[f.Key]) + ", not " + want + " as magpie set it"}
+			Detail: a.Name + "'s config was changed outside chongyun: " + f.Label + " is " + orDefault(vals[f.Key]) + ", not " + want + " as chongyun set it"}
 	}
 	if onMagpie || joined {
 		if d := a.unreachable(on, vals[on.Key]); d != nil {
@@ -225,17 +225,17 @@ func (a *Agent) Drift() *Drift {
 			// came through
 			case !sameHost(to, gateway.URL()) && !sameHost(to, a.pointedAt()) && lastSeen(a.ID).Before(at.Add(-2*time.Second)):
 				return &Drift{Kind: "bypassed", Field: on.Key, Now: vals[on.Key], Want: vals[on.Key],
-					Detail: a.Name + "'s last request (" + at.Format("15:04") + ") went to " + hostOf(to) + ", not magpie — it was started before magpie set it up and still runs on its old config: quit and reopen it"}
+					Detail: a.Name + "'s last request (" + at.Format("15:04") + ") went to " + hostOf(to) + ", not chongyun — it was started before chongyun set it up and still runs on its old config: quit and reopen it"}
 			case refused:
 				return &Drift{Kind: "bypassed", Field: on.Key, Now: vals[on.Key], Want: vals[on.Key],
-					Detail: a.Name + " couldn't reach magpie at " + at.Format("15:04") + " — magpie wasn't running then, so it has none of magpie's models: quit and reopen it"}
+					Detail: a.Name + " couldn't reach chongyun at " + at.Format("15:04") + " — chongyun wasn't running then, so it has none of chongyun's models: quit and reopen it"}
 			}
 		}
 	}
 	if a.LastUsed != nil && onMagpie {
 		if used := a.LastUsed(); bypassed(used, rec.At, lastSeen(a.ID)) {
 			return &Drift{Kind: "bypassed", Field: on.Key, Now: vals[on.Key], Want: vals[on.Key],
-				Detail: a.Name + " was used at " + used.Format("15:04") + " but none of its requests reached magpie — one started before magpie set it up still runs on its old config: restart it"}
+				Detail: a.Name + " was used at " + used.Format("15:04") + " but none of its requests reached chongyun — one started before chongyun set it up still runs on its old config: restart it"}
 		}
 	}
 	return nil
@@ -467,7 +467,7 @@ func (a *Agent) Pick(key, v string) error {
 type NoModelsError struct{ Agent string }
 
 func (e *NoModelsError) Error() string {
-	return "Add a provider or subscription in magpie first, then connect " + e.Agent
+	return "Add a provider or subscription in chongyun first, then connect " + e.Agent
 }
 
 // AllHiddenError is Connect's answer when magpie has models but none of
@@ -479,7 +479,7 @@ func (e *NoModelsError) Error() string {
 type AllHiddenError struct{ Agent string }
 
 func (e *AllHiddenError) Error() string {
-	return "None of magpie's models is left in " + e.Agent + "'s model list: pick one under Model list → Pick on the Agents page, then connect " + e.Agent
+	return "None of chongyun's models is left in " + e.Agent + "'s model list: pick one under Model list → Pick on the Agents page, then connect " + e.Agent
 }
 
 func (a *Agent) Connect() error {
@@ -496,7 +496,7 @@ func (a *Agent) Connect() error {
 //   - "again": the models it was on when it was switched off, put back
 //   - "joined": the model it is on stays its own (Codex signed in with
 //     ChatGPT), magpie's models join its list
-//   - "magpie": an app whose one setting is magpie as its provider
+//   - "chongyun": an app whose one setting is magpie as its provider
 //   - "same": the model it is on now, through magpie
 //   - "alike": the model its alias (opus) stands for, through magpie
 //   - "default": on its own default with no model set: the first of its
@@ -596,7 +596,7 @@ func (a *Agent) connect() (Connection, error) {
 		if err := a.noModelLeft(); err != nil {
 			return Connection{}, err
 		}
-		return Connection{}, fmt.Errorf("%s can't be connected to magpie", a.Name)
+		return Connection{}, fmt.Errorf("%s can't be connected to chongyun", a.Name)
 	}
 	cur := connectWas(vals[f.Key], opts)
 	if cur == "" && f.Key != a.Fields[0].Key {
@@ -634,7 +634,7 @@ func (a *Agent) connect() (Connection, error) {
 					return Connection{}, err
 				}
 			}
-			return Connection{How: "magpie", Field: f.Key, Value: magpieID}, nil
+			return Connection{How: "chongyun", Field: f.Key, Value: magpieID}, nil
 		}
 		if o.Ref != "" && o.Group == RoutingGroups && group == "" {
 			group = o.Value
@@ -691,7 +691,7 @@ func (a *Agent) connect() (Connection, error) {
 		pick = group
 	}
 	if pick == "" {
-		return Connection{}, fmt.Errorf("magpie has no models %s can use: add a subscription or a provider first", a.Name)
+		return Connection{}, fmt.Errorf("chongyun has no models %s can use: add a subscription or a provider first", a.Name)
 	}
 	return Connection{How: how, Field: f.Key, Value: pick}, a.Apply(f.Key, pick)
 }
@@ -715,7 +715,7 @@ func connectWas(v string, opts []Option) string {
 }
 
 // Disconnect takes magpie out of the agent's config and puts back what the
-// user had, the Agents page's "Disconnect from magpie" (Fate on Discord:
+// user had, the Agents page's "Disconnect from chongyun" (Fate on Discord:
 // picking the agent's default did it, but nothing said so). Unwire first,
 // for an agent whose default would leave it as installed; then each field
 // still on magpie goes to its default, as picking it does, and so does
@@ -804,7 +804,7 @@ func (a *Agent) DisconnectOffline() error {
 // fields it changed (Routed: those that were magpie's) and what it left
 // every field at.
 type reconnection struct {
-	Magpie map[string]string `json:"magpie"`
+	Magpie map[string]string `json:"chongyun"`
 	Routed []string          `json:"routed,omitempty"`
 	Left   map[string]string `json:"left"`
 }
@@ -918,11 +918,11 @@ func wiringOff(name, file string, get func(string) (string, bool), kvs ...string
 		where := name + "'s " + k + " (" + filepath.Base(file) + ")"
 		switch {
 		case v == "":
-			return where + " is gone, so it no longer reaches magpie"
+			return where + " is gone, so it no longer reaches chongyun"
 		case strings.Contains(strings.ToLower(k), "url"):
-			return where + " is " + v + ", not magpie's gateway at " + want
+			return where + " is " + v + ", not chongyun's gateway at " + want
 		default:
-			return where + " was changed, so magpie's gateway won't take its requests"
+			return where + " was changed, so chongyun's gateway won't take its requests"
 		}
 	}
 	return ""

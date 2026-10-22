@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // qwenUser is a settings.json as Qwen Code leaves it for someone with a
@@ -250,7 +250,7 @@ func TestQwenFresh(t *testing.T) {
 		t.Fatal(err)
 	}
 	if got := readFile(path); got != "{\n  \"fastModel\": \"qwen3.8-flash\"\n}\n" {
-		t.Fatalf("nothing of magpie's to take out:\n%s", got)
+		t.Fatalf("nothing of chongyun's to take out:\n%s", got)
 	}
 }
 
@@ -282,7 +282,7 @@ func TestQwenBareModelAndOwnEnvKey(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, _, f := qwenFile(t, path); f["env"].(map[string]any)["MAGPIE_QWEN_API_KEY"] != gateway.Token {
-		t.Fatalf("key not magpie's: %v", f["env"])
+		t.Fatalf("key not chongyun's: %v", f["env"])
 	}
 	if err := a.Apply("model", ""); err != nil {
 		t.Fatal(err)

@@ -8,7 +8,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // leftPlugins installs two plugins from folders (so removing one runs no

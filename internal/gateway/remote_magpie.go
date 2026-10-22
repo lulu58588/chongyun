@@ -9,12 +9,12 @@ import (
 	"sync"
 	"unicode"
 
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // A request passed on to another computer's magpie (a Remote magpie
 // provider) goes as magpie's own, with magpie's User-Agent and the other
-// magpie's key, so that magpie knew it only as "magpie" (Jorben on Discord).
+// magpie's key, so that magpie knew it only as "chongyun" (Jorben on Discord).
 // It now names the agent it came from (AgentHeader) and the computer
 // (ViaHeader), and the other magpie keeps them in its usage, as "Claude
 // Code · via <computer>". They are a label and nothing more: what magpie

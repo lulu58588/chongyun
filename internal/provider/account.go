@@ -33,12 +33,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/claudecode"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/claudecode"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Account is the signed-in agent behind a provider.
@@ -318,7 +318,7 @@ type Exclusion struct {
 func Excluded() []Exclusion {
 	var out []Exclusion
 	for _, a := range Hidden() {
-		x := Exclusion{Agent: a.Account.Agent, Provider: a.ID, Why: "You removed it from magpie.", Quiet: a.Quiet, Tucked: a.Tucked}
+		x := Exclusion{Agent: a.Account.Agent, Provider: a.ID, Why: "You removed it from chongyun.", Quiet: a.Quiet, Tucked: a.Tucked}
 		if a.IsPlugin() {
 			x.Name = a.Name
 		}
@@ -1323,7 +1323,7 @@ func (a copilotApp) trade(ctx context.Context) (copilotSession, error) {
 	if a.User != "" {
 		who = " for " + CopilotAccountName(a.User, a.Host)
 	}
-	msg := strings.TrimSuffix(err.Error(), "; sign in to Copilot again") + ": the GitHub token Copilot's editors keep in " + a.src + who + " was refused, and it is read before any other sign-in; sign in to Copilot again in your editor or in magpie, or move that file aside"
+	msg := strings.TrimSuffix(err.Error(), "; sign in to Copilot again") + ": the GitHub token Copilot's editors keep in " + a.src + who + " was refused, and it is read before any other sign-in; sign in to Copilot again in your editor or in chongyun, or move that file aside"
 	if ok {
 		msg += " (the Copilot CLI is signed in to " + CopilotAccountName(cli.User, cli.Host) + ", another account, so it isn't used in its place)"
 	}

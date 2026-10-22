@@ -37,7 +37,7 @@ const codexDropBody = 1 << 20
 // codexDropped has read it as that 503 to a request this large: what the
 // accounts loop tells it by, through its own error shape, to ask again
 // without resting anybody.
-const codexResetSaid = "This usually passes, so magpie asked again without resting the account."
+const codexResetSaid = "This usually passes, so chongyun asked again without resting the account."
 
 // codexDropped is the reply, still the 503 it is, that a ChatGPT Codex
 // backend gave a request of size bytes when it closed the connection

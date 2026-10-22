@@ -108,7 +108,7 @@ func TestCallbackGoesPastTheAgentsProxy(t *testing.T) {
 		t.Fatal("no answer from the helper")
 	}
 	if !strings.Contains(got, "file body") {
-		t.Fatalf("the call didn't reach magpie: %s", got)
+		t.Fatalf("the call didn't reach chongyun: %s", got)
 	}
 	select {
 	case <-proxied:

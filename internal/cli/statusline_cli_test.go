@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // What Claude Code hands a statusLine command on stdin (code.claude.com
@@ -44,7 +44,7 @@ func statuslineGateway(t *testing.T, now time.Time) *httptest.Server {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /v1/magpie/quotas", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("kept") != "1" {
-			t.Errorf("statusline asked %s: that reads the vendors, not what magpie kept", r.URL)
+			t.Errorf("statusline asked %s: that reads the vendors, not what chongyun kept", r.URL)
 			http.Error(w, "vendor read", 500)
 			return
 		}

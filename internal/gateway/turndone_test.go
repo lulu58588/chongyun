@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // turnsFollowed has turns followed for a test: a turn as long as the

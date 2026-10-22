@@ -15,7 +15,7 @@ package agent
 //	  "inferenceGatewayAuthScheme":"bearer",
 //	  "disableDeploymentModeChooser":true,"coworkEgressAllowedHosts":["*"]}
 //	Claude-3p/configLibrary/_meta.json     {"appliedId":"<id>",
-//	  "entries":[…,{"id":"<id>","name":"magpie"}]}
+//	  "entries":[…,{"id":"<id>","name":"chongyun"}]}
 //
 // as CC Switch writes them (claude_desktop_config.rs). The folders are in
 // ~/Library/Application Support on macOS, %LOCALAPPDATA% on Windows (the
@@ -41,14 +41,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/desktopdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/desktopdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // desktopProfileID is magpie's profile in Desktop's configLibrary: a
-// UUID like the ones Desktop makes, its last part "magpie" in hex.
+// UUID like the ones Desktop makes, its last part "chongyun" in hex.
 const desktopProfileID = "00000000-0000-4000-8000-6d6167706965"
 
 // desktopPaths are the files and folders magpie writes for Claude Desktop.
@@ -179,8 +179,8 @@ func claudeDesktop(home string) *Agent {
 				return nil
 			},
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie",
-					Note: "Desktop's third-party gateway: Code and Cowork on magpie's models, no Anthropic sign-in (restart Desktop)"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun",
+					Note: "Desktop's third-party gateway: Code and Cowork on chongyun's models, no Anthropic sign-in (restart Desktop)"}}
 			},
 		}}, append(desktopTierFields(ps), desktopSubagentField(ps), desktopSubagentEffortField(ps))...),
 	}
@@ -214,10 +214,10 @@ func desktopCheck(p desktopPaths) string {
 	m, _ := edit.GetJSON(p.config, "deploymentMode")
 	m3, _ := edit.GetJSON(p.config3p, "deploymentMode")
 	if m != "3p" || m3 != "3p" {
-		return "Claude Desktop's deploymentMode (claude_desktop_config.json) is no longer 3p, so it signs in with Anthropic rather than using magpie"
+		return "Claude Desktop's deploymentMode (claude_desktop_config.json) is no longer 3p, so it signs in with Anthropic rather than using chongyun"
 	}
 	if id, _ := edit.GetJSON(p.meta, "appliedId"); id != desktopProfileID {
-		return "Claude Desktop uses another gateway configuration now (appliedId in configLibrary/_meta.json), not magpie's"
+		return "Claude Desktop uses another gateway configuration now (appliedId in configLibrary/_meta.json), not chongyun's"
 	}
 	return wiringOff("Claude Desktop", p.prof, func(k string) (string, bool) { return edit.GetJSON(p.prof, k) },
 		"inferenceGatewayBaseUrl", gateway.URL(), "inferenceGatewayApiKey", agentKey("claude-desktop"))
@@ -237,7 +237,7 @@ func desktopTierFields(ps []desktopPaths) []Field {
 			Set: func(v string) error {
 				v = gateway.DesktopCatalogID(v)
 				if v != "" && !isMagpie(v) {
-					return fmt.Errorf("%s: %q is not a model magpie serves", tier, v)
+					return fmt.Errorf("%s: %q is not a model chongyun serves", tier, v)
 				}
 				return gateway.SetDesktopTier(tier, v)
 			},
@@ -484,7 +484,7 @@ func desktopOn(p desktopPaths) error {
 
 	// _meta.json: magpie's entry (where it was, if it was), applied
 	if !wired {
-		entry, _ := json.Marshal(map[string]string{"id": desktopProfileID, "name": "magpie"})
+		entry, _ := json.Marshal(map[string]string{"id": desktopProfileID, "name": "chongyun"})
 		entries = append(entries, entry)
 		if err := edit.SetJSON(p.meta, edit.KV{Path: "entries", Value: entries}); err != nil {
 			return err
@@ -720,6 +720,6 @@ func desktopEmpty(b []byte) bool {
 
 // what claudedesktop says after a change (notice.go)
 var (
-	noticeClaudedesktop1 = newNotice("Claude Desktop reads this at start-up — quit and reopen it to run on magpie (Code and Cowork, no Anthropic sign-in).")
+	noticeClaudedesktop1 = newNotice("Claude Desktop reads this at start-up — quit and reopen it to run on chongyun (Code and Cowork, no Anthropic sign-in).")
 	noticeClaudedesktop2 = newNotice("Claude Desktop reads this at start-up — quit and reopen it to sign in with Anthropic again.")
 )

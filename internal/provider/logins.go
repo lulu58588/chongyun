@@ -26,15 +26,15 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/filelock"
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/filelock"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // Login is a remembered subscription account, without its secrets.
@@ -154,7 +154,7 @@ func loginID(l savedLogin) string {
 	if l.ID != "" {
 		return l.ID
 	}
-	sum := sha256.Sum256([]byte("magpie login\n" + l.Agent + "\n" + accountKey(l.User)))
+	sum := sha256.Sum256([]byte("chongyun login\n" + l.Agent + "\n" + accountKey(l.User)))
 	return hex.EncodeToString(sum[:8])
 }
 
@@ -633,7 +633,7 @@ func savedButSignedOut() []Exclusion {
 		}
 		_, _, err := readCodexLogin(codexHome(), false)
 		out = append(out, Exclusion{Agent: a, SignedOut: true, Users: users[a], Retry: codexKeychainUnread(err),
-			Why: fmt.Sprintf("%s saved in magpie, and they are only offered beside the account Codex is signed in to. %s", n, codexSignedOutWhy())})
+			Why: fmt.Sprintf("%s saved in chongyun, and they are only offered beside the account Codex is signed in to. %s", n, codexSignedOutWhy())})
 	}
 	return out
 }
@@ -658,7 +658,7 @@ func codexSignedOutWhy() string {
 	case se.Setting.Mode == "ephemeral":
 		return se.Error() + ". Set cli_auth_credentials_store = \"file\" there and sign in again (codex login)."
 	case se.Cause != nil:
-		return se.Error() + ". Allow magpie when macOS asks for the keychain (\"Always Allow\" lets /usr/bin/security read that item from then on, so macOS stops asking each time Codex changes it), or set cli_auth_credentials_store = \"file\" there and sign in again (codex login)."
+		return se.Error() + ". Allow chongyun when macOS asks for the keychain (\"Always Allow\" lets /usr/bin/security read that item from then on, so macOS stops asking each time Codex changes it), or set cli_auth_credentials_store = \"file\" there and sign in again (codex login)."
 	}
 	return se.Error() + fmt.Sprintf(": here it reads only %s. Set cli_auth_credentials_store = \"file\" there and sign in again (codex login).", codexAuthPath())
 }

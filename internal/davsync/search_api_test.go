@@ -3,8 +3,8 @@ package davsync
 import (
 	"testing"
 
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The search APIs (#419) sync with the providers: sent without keys, the
@@ -39,7 +39,7 @@ func TestSyncSearchAPIs(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(provider.StoredSearchAPIs()) != 1 {
-		t.Fatal("an older magpie's providers took them away")
+		t.Fatal("an older chongyun's providers took them away")
 	}
 	if err := bring(backup.Bundle{Searches: &[]provider.SearchAPI{}}, "providers"); err != nil {
 		t.Fatal(err)

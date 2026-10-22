@@ -35,9 +35,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // almaAPI is where Alma's API answers. Under test it is nothing, so no test
@@ -417,7 +417,7 @@ func almaWire() (string, error) {
 				return "", err
 			}
 			if p = almaMagpie(ps); p == nil {
-				return "", errors.New("Alma didn't keep magpie's provider")
+				return "", errors.New("Alma didn't keep chongyun's provider")
 			}
 			made = *p
 		}
@@ -708,7 +708,7 @@ func alma() *Agent {
 				return ""
 			}
 			if !p.Enabled {
-				return "Alma's magpie provider is turned off, so Alma won't use its models"
+				return "Alma's chongyun provider is turned off, so Alma won't use its models"
 			}
 			return wiringOff("Alma", "providers", func(k string) (string, bool) { return p.BaseURL, p.BaseURL != "" },
 				"baseURL", gatewayV1())

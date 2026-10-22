@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // ServersConfig is what an agent's project file would hold with the
@@ -29,7 +29,7 @@ type ServersConfig struct {
 func ConfigOfServers(agent string, names []string) (*ServersConfig, error) {
 	pf, ok := projectMCPFiles[agent]
 	if !ok {
-		return nil, fmt.Errorf("magpie knows of no file %s reads a project's MCP servers from", agent)
+		return nil, fmt.Errorf("chongyun knows of no file %s reads a project's MCP servers from", agent)
 	}
 	if len(names) == 0 {
 		return nil, errors.New("no servers named")

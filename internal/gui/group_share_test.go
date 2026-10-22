@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // laincatx on X: the Routing view's Copy to share answers the group as
@@ -65,7 +65,7 @@ func TestGroupShareAndImport(t *testing.T) {
 	}
 
 	// why, for the page to say in the reader's language
-	if code, _, body = post("import", map[string]string{"text": "a group, honest"}); code == 200 || !strings.Contains(body, "not a routing group shared from magpie") ||
+	if code, _, body = post("import", map[string]string{"text": "a group, honest"}); code == 200 || !strings.Contains(body, "not a routing group shared from chongyun") ||
 		!strings.Contains(body, `"share":"not_shared"`) {
 		t.Fatalf("bad text: %d %s", code, body)
 	}

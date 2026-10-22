@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // retrieveTimeout bounds an embeddings or rerank call: a vendor answers
@@ -40,7 +40,7 @@ func (s *Server) retrieve(path, operation string) http.HandlerFunc {
 		var asked string
 		json.Unmarshal(req["model"], &asked)
 		if asked == "" {
-			writeError(w, provider.Chat, 400, "name the model: \"model\" is a magpie model id, as /v1/models lists them")
+			writeError(w, provider.Chat, 400, "name the model: \"model\" is a chongyun model id, as /v1/models lists them")
 			return
 		}
 		s.serveRetrieval(w, r, path, operation, start, asked, &jsonRetrieval{req: req})

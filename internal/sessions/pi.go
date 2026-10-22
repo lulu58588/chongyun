@@ -10,7 +10,7 @@ import (
 
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // Pi writes a file per session, <time>_<session id>.jsonl, in a folder per

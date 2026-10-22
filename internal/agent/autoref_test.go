@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // An agent magpie set to a found group by its old id, group/auto-<slug>,
@@ -42,7 +42,7 @@ func TestFoundGroupRenamedOnlyWhereMagpieSetIt(t *testing.T) {
 
 	SyncCatalog()
 	if got := a.Values()["model"]; got != "magpie/auto/glm-4.6" {
-		t.Fatalf("magpie's own value became %q, want magpie/auto/glm-4.6\n%s", got, readFile(a.Path))
+		t.Fatalf("chongyun's own value became %q, want magpie/auto/glm-4.6\n%s", got, readFile(a.Path))
 	}
 	if got := appliedOf(a.ID).Fields["model"]; got != "magpie/auto/glm-4.6" {
 		t.Errorf("applied.json holds %q", got)

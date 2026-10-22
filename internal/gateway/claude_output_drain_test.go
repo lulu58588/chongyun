@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // What Claude Code writes as it exits reaches the client: its output is
@@ -85,8 +85,8 @@ func TestClaudeEndedBeforeItsInputSaysWhy(t *testing.T) {
 		t.Errorf("a write after Claude Code exited: %v", err)
 	}
 	err = write("#!/bin/sh\nread -r line\nsleep 30\n", func(run *subscriptionRun) { run.abort() })
-	if err == nil || !strings.Contains(err.Error(), "ended by magpie") || strings.Contains(err.Error(), "signal") {
-		t.Errorf("a write after magpie ended Claude Code: %v", err)
+	if err == nil || !strings.Contains(err.Error(), "ended by chongyun") || strings.Contains(err.Error(), "signal") {
+		t.Errorf("a write after chongyun ended Claude Code: %v", err)
 	}
 	// at once, before Claude Code has been reaped (red on ubuntu CI, where
 	// the write went into a pipe still open and nothing was said)
@@ -95,7 +95,7 @@ func TestClaudeEndedBeforeItsInputSaysWhy(t *testing.T) {
 		t.Fatal(err)
 	}
 	run.abort()
-	if err := run.setEffort("high"); err == nil || !strings.Contains(err.Error(), "ended by magpie") {
-		t.Errorf("a write right after magpie ended Claude Code: %v", err)
+	if err := run.setEffort("high"); err == nil || !strings.Contains(err.Error(), "ended by chongyun") {
+		t.Errorf("a write right after chongyun ended Claude Code: %v", err)
 	}
 }

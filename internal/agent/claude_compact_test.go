@@ -4,10 +4,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // TestClaudeCompactWindow: on magpie Claude Code compacts at the working
@@ -41,7 +41,7 @@ func TestClaudeCompactWindow(t *testing.T) {
 
 	must(a.Field("model").Set("v/big[1m]"))
 	if compact() != "272000" {
-		t.Fatalf("on magpie: %q", compact())
+		t.Fatalf("on chongyun: %q", compact())
 	}
 	must(settings.Save(settings.Settings{FullContext: true}))
 	must(a.Sync())
@@ -191,11 +191,11 @@ func TestClaudeCompactYieldsToOwnSetting(t *testing.T) {
 	// a size typed in magpie, or the model's own there, comes first
 	must(provider.SetModelCompacts("v", map[string]int{"flash": 200000}))
 	must(a.Sync())
-	expect("the model's own in magpie", "200000")
+	expect("the model's own in chongyun", "200000")
 	must(provider.SetModelCompacts("v", nil))
 	must(provider.SetCompactAt(400000))
 	must(a.Sync())
-	expect("typed in magpie", "400000")
+	expect("typed in chongyun", "400000")
 }
 
 // A routing group made only of Claude models runs as a Claude model does,

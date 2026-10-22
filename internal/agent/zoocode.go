@@ -9,8 +9,8 @@ package agent
 // its own Settings → Import does (importSettingsFromPath,
 // src/core/config/importExport.ts):
 //
-//	{"providerProfiles":{"currentApiConfigName":"magpie",
-//	  "apiConfigs":{"magpie":{"id":"magpie","apiProvider":"openai",
+//	{"providerProfiles":{"currentApiConfigName":"chongyun",
+//	  "apiConfigs":{"chongyun":{"id":"chongyun","apiProvider":"openai",
 //	    "openAiBaseUrl":"http://127.0.0.1:3425/v1","openAiApiKey":"magpie-zoo-code",
 //	    "openAiModelId":"<model>","openAiCustomModelInfo":{…}}}}}
 //
@@ -28,7 +28,7 @@ package agent
 // start, so while connected each start puts Zoo Code back on magpie's
 // profile. A profile once imported lives in Zoo Code's secret storage,
 // which magpie can't write, so Disconnect stops the import and leaves the
-// profile "magpie" there for the user to switch from or delete. Which
+// profile "chongyun" there for the user to switch from or delete. Which
 // profile the user picks inside Zoo Code magpie can't see either.
 //
 // Zoo Code for JetBrains runs the same extension in its own extension
@@ -43,8 +43,8 @@ import (
 	"strings"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // zooImport is the setting naming the file Zoo Code imports at start-up,
@@ -55,7 +55,7 @@ const zooImport = `zoo-code\.autoImportSettingsPath`
 // in begins: zoocodeorganization.zoo-code-<version>.
 const zooExtension = "zoocodeorganization.zoo-code"
 
-var noticeZoo = newNotice("Zoo Code reads magpie's profile when it starts — run Developer: Reload Window in VS Code to use this.")
+var noticeZoo = newNotice("Zoo Code reads chongyun's profile when it starts — run Developer: Reload Window in VS Code to use this.")
 
 func zooCode(home, cfg string) *Agent {
 	return zooCodeAt(vscodeUserDir(vscodeStable, home, cfg), filepath.Join(home, ".vscode", "extensions"))
@@ -224,7 +224,7 @@ func zooCodeInstalled(exts string) bool {
 }
 
 // zooCodeProfiles is magpie as Zoo Code's provider profiles to import: one
-// profile, "magpie", on the gateway's Chat Completions with model ref, the
+// profile, "chongyun", on the gateway's Chat Completions with model ref, the
 // one Zoo Code uses after the import.
 func zooCodeProfiles(ref string) map[string]any {
 	p := map[string]any{

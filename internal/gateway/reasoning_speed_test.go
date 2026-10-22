@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 func TestReasoningSpeedEvidence(t *testing.T) {
@@ -127,7 +127,7 @@ func TestSpeedEndsWithTheReply(t *testing.T) {
 		t.Fatalf("%d %+v %s", rec.Code, u, rec.Body)
 	}
 	if u.Millis >= held.Milliseconds() {
-		t.Fatalf("the reply's ms %d count the %v magpie took saving after it", u.Millis, held)
+		t.Fatalf("the reply's ms %d count the %v chongyun took saving after it", u.Millis, held)
 	}
 	if n, w := u.Decode(); n != 120 || w < usage.MinDecodeMs || w > u.Millis {
 		t.Fatalf("a reply that came at its pace tells no speed: %d/%d %+v", n, w, u)

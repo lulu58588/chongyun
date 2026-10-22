@@ -18,8 +18,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 type githubFixture struct {
@@ -235,7 +235,7 @@ func TestGitHubNotBackup(t *testing.T) {
 			if v.File == nil || v.File.Replace != tc.replace {
 				t.Fatalf("the file's replacement status: %+v", v.File)
 			}
-			if v.File.Replace && !strings.Contains(err.Error(), "magpie github upload") {
+			if v.File.Replace && !strings.Contains(err.Error(), "chongyun github upload") {
 				t.Fatalf("the recovery advice should name the GitHub upload command: %v", err)
 			}
 			if f.writes != 0 {

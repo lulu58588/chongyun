@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Codex is offered Fast on another magpie's model where that magpie offers
@@ -118,6 +118,6 @@ func TestRemoteMagpieOffersItsTiers(t *testing.T) {
 	mu.Lock()
 	defer mu.Unlock()
 	if len(hops) != 1 || hops[0] != "priority" || len(vendor) != 1 || vendor[0] != "priority" {
-		t.Errorf("tier sent to the remote magpie %v, by it to its vendor %v; want priority, priority", hops, vendor)
+		t.Errorf("tier sent to the remote chongyun %v, by it to its vendor %v; want priority, priority", hops, vendor)
 	}
 }

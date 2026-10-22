@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // magpie daemon: status before an install says how to install; start
@@ -29,13 +29,13 @@ func TestDaemonCmd(t *testing.T) {
 	daemonWait = 0
 	t.Cleanup(func() { daemonWait = prev })
 	out, err := runOut(t, "daemon")
-	if err != nil || !strings.Contains(out, "isn't installed") || !strings.Contains(out, "magpie daemon install") {
+	if err != nil || !strings.Contains(out, "isn't installed") || !strings.Contains(out, "chongyun daemon install") {
 		t.Errorf("status: %q, %v", out, err)
 	}
 	if _, err := runOut(t, "daemon", "start"); err == nil || !strings.Contains(err.Error(), "isn't installed") {
 		t.Errorf("start: %v", err)
 	}
-	if _, err := runOut(t, "daemon", "bogus"); err == nil || !strings.Contains(err.Error(), "usage: magpie daemon") {
+	if _, err := runOut(t, "daemon", "bogus"); err == nil || !strings.Contains(err.Error(), "usage: chongyun daemon") {
 		t.Errorf("bogus: %v", err)
 	}
 	if _, err := runOut(t, "daemon", "install"); err == nil || !strings.Contains(err.Error(), "go run") {
@@ -164,7 +164,7 @@ func TestDaemonStatusPrintsPage(t *testing.T) {
 func TestServeArgs(t *testing.T) {
 	helpHome(t)
 	for _, args := range [][]string{{"serve", "--lan"}, {"serve", "--web=3430"}, {"serve", "web"}} {
-		if _, err := runOut(t, args...); err == nil || !strings.Contains(err.Error(), "magpie serve") {
+		if _, err := runOut(t, args...); err == nil || !strings.Contains(err.Error(), "chongyun serve") {
 			t.Errorf("%q: %v", args, err)
 		}
 	}

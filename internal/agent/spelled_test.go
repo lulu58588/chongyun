@@ -38,7 +38,7 @@ func TestOwnProviderNamedAsMagpies(t *testing.T) {
 				t.Fatalf("own model reads %q", v)
 			}
 			if a.Wired() {
-				t.Fatal("its own relay/glm-4.6 reads as magpie's")
+				t.Fatal("its own relay/glm-4.6 reads as chongyun's")
 			}
 			if err := a.Connect(); err != nil {
 				t.Fatal(err)
@@ -69,10 +69,10 @@ func TestOpenCodeGatewayProviderIsMagpies(t *testing.T) {
 	}
 	hanakoWrite(t, a.Path, `{"provider":{"relay":{"options":{"baseURL":"`+gatewayV1()+`"},"models":{"relay/glm-4.6":{}}}},"model":"relay/relay/glm-4.6"}`, 0o644)
 	if !a.Wired() {
-		t.Fatalf("a model through its own provider at the gateway isn't magpie's: %v (%s)", a.Values(), filepath.Base(a.Path))
+		t.Fatalf("a model through its own provider at the gateway isn't chongyun's: %v (%s)", a.Values(), filepath.Base(a.Path))
 	}
 	hanakoWrite(t, a.Path, `{"provider":{"relay":{"options":{"baseURL":"https://x/v1"},"models":{"glm-4.6":{}}}},"model":"relay/glm-4.6"}`, 0o644)
 	if a.Wired() {
-		t.Fatalf("its own relay elsewhere reads as magpie's: %v", a.Values())
+		t.Fatalf("its own relay elsewhere reads as chongyun's: %v", a.Values())
 	}
 }

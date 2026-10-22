@@ -43,13 +43,13 @@ func TestYAMLNested(t *testing.T) {
 	}
 	got := read(t, p)
 	for _, want := range []string{"# omp settings", "theme: dark # mine", "# the main one", "default: magpie/deepseek/pro # keep",
-		"smol: openai/gpt-6-mini", "  mine:\n    baseUrl: https://x", "  magpie:\n    baseUrl: http://127.0.0.1/v1\n    models:\n      - id: deepseek/pro\n        reasoning: true",
+		"smol: openai/gpt-6-mini", "  mine:\n    baseUrl: https://x", "  chongyun:\n    baseUrl: http://127.0.0.1/v1\n    models:\n      - id: deepseek/pro\n        reasoning: true",
 		"a:\n  b:\n    c: 3"} {
 		if !strings.Contains(got, want) {
 			t.Errorf("missing %q in\n%s", want, got)
 		}
 	}
-	if strings.Index(got, "theme") > strings.Index(got, "modelRoles") || strings.Index(got, "mine:") > strings.Index(got, "magpie:") {
+	if strings.Index(got, "theme") > strings.Index(got, "modelRoles") || strings.Index(got, "mine:") > strings.Index(got, "chongyun:") {
 		t.Errorf("order changed:\n%s", got)
 	}
 
@@ -57,7 +57,7 @@ func TestYAMLNested(t *testing.T) {
 		t.Fatal(err)
 	}
 	got = read(t, p)
-	if strings.Contains(got, "default:") || strings.Contains(got, "magpie") || !strings.Contains(got, "smol:") || !strings.Contains(got, "mine:") {
+	if strings.Contains(got, "default:") || strings.Contains(got, "chongyun") || !strings.Contains(got, "smol:") || !strings.Contains(got, "mine:") {
 		t.Fatalf("del:\n%s", got)
 	}
 }

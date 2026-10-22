@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 func TestRegisterScheme(t *testing.T) {
@@ -96,7 +96,7 @@ func TestRegisterScheme(t *testing.T) {
 // is installed, so neither the dock nor the app grid draws a gear (#2626).
 func checkDesktopBinding(t *testing.T, data, entry string) {
 	t.Helper()
-	if !strings.Contains(entry, "\nStartupWMClass="+programName+"\n") || !strings.Contains(entry, "\nIcon=magpie\n") {
+	if !strings.Contains(entry, "\nStartupWMClass="+programName+"\n") || !strings.Contains(entry, "\nIcon=chongyun\n") {
 		t.Fatalf("desktop entry doesn't bind the window %q and its icon: %q", programName, entry)
 	}
 	icon, err := os.ReadFile(filepath.Join(data, "icons", "hicolor", "256x256", "apps", "magpie.png"))
@@ -131,8 +131,8 @@ func TestRegisterSchemeBindsAnOlderEntry(t *testing.T) {
 	}
 	dir := filepath.Join(data, "applications")
 	path := filepath.Join(dir, "magpie.desktop")
-	older := "[Desktop Entry]\nType=Application\nName=magpie\nComment=Every agent's model. One place.\nExec=" + exe +
-		" %u\nIcon=magpie\nCategories=Development;Utility;\nMimeType=x-scheme-handler/magpie;\nTerminal=false\n"
+	older := "[Desktop Entry]\nType=Application\nName=chongyun\nComment=Every agent's model. One place.\nExec=" + exe +
+		" %u\nIcon=chongyun\nCategories=Development;Utility;\nMimeType=x-scheme-handler/magpie;\nTerminal=false\n"
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -169,7 +169,7 @@ func TestKeepWebData(t *testing.T) {
 		moved         bool
 	}{
 		{"webkit data under the executable's name", true, false, true},
-		{"magpie's folder there already", true, true, false},
+		{"chongyun's folder there already", true, true, false},
 		{"a folder that isn't WebKit's", false, false, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

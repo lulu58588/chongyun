@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // AlphaSearchPath is where Codex's own web search, its web.run tool, goes:
@@ -63,7 +63,7 @@ func (s *Server) alphaSearch(w http.ResponseWriter, r *http.Request) {
 func (s *Server) alphaSearchBody(w http.ResponseWriter, r *http.Request, body []byte) {
 	var q alphaSearchRequest
 	if err := json.Unmarshal(body, &q); err != nil {
-		writeError(w, provider.Responses, http.StatusBadRequest, "magpie couldn't read the web search request: "+err.Error())
+		writeError(w, provider.Responses, http.StatusBadRequest, "chongyun couldn't read the web search request: "+err.Error())
 		return
 	}
 	if q.Model == "" {
@@ -78,7 +78,7 @@ func (s *Server) alphaSearchBody(w http.ResponseWriter, r *http.Request, body []
 		}
 		// a failure would end the turn: magpie searches in its place
 		log.Printf("web search on ChatGPT for %s: %s", q.Model, why)
-		note = "ChatGPT's web search failed (" + why + "); magpie searched in its place.\n\n"
+		note = "ChatGPT's web search failed (" + why + "); chongyun searched in its place.\n\n"
 	}
 	s.alphaSearchHere(w, r, q, note)
 }
@@ -207,7 +207,7 @@ func (s *Server) alphaSearchHere(w http.ResponseWriter, r *http.Request, q alpha
 		queries = append(queries, text)
 	}
 	if len(queries) == 0 {
-		writeJSON(w, http.StatusOK, alphaSearchReply{Output: note + "magpie can only search the web for " + q.Model + ": give web.run a search_query. Opening, clicking or finding in a page goes to the ChatGPT backend, for a ChatGPT account's model in magpie."})
+		writeJSON(w, http.StatusOK, alphaSearchReply{Output: note + "chongyun can only search the web for " + q.Model + ": give web.run a search_query. Opening, clicking or finding in a page goes to the ChatGPT backend, for a ChatGPT account's model in chongyun."})
 		return
 	}
 	ctx := context.WithValue(r.Context(), searchForKey{}, &CallFor{Agent: callerOf(r).agent, Model: q.Model})
@@ -219,9 +219,9 @@ func (s *Server) alphaSearchHere(w http.ResponseWriter, r *http.Request, q alpha
 				return
 			}
 			log.Printf("web search for %s: %v", q.Model, err)
-			msg := "magpie couldn't search the web for " + query + ": " + err.Error()
+			msg := "chongyun couldn't search the web for " + query + ": " + err.Error()
 			if errors.Is(err, errNoSearcher) {
-				msg += ": add a search API in magpie's Settings → Models → Web search (or magpie search add <api> <key>), or a provider that can search"
+				msg += ": add a search API in chongyun's Settings → Models → Web search (or chongyun search add <api> <key>), or a provider that can search"
 			}
 			said = append(said, msg)
 			continue

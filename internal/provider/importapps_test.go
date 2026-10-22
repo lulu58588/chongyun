@@ -59,7 +59,7 @@ func TestImportCCSwitch(t *testing.T) {
 		`INSERT INTO providers VALUES ('relay','claude','Some Relay','{"env":{"ANTHROPIC_BASE_URL":"https://relay.example.com","ANTHROPIC_AUTH_TOKEN":"sk-relay","ANTHROPIC_MODEL":"claude-sonnet-5"}}','https://relay.example.com','custom',2,1)`,
 		`INSERT INTO providers VALUES ('relay','codex','Some Relay','{"auth":{"OPENAI_API_KEY":"sk-relay"},"config":"model_provider = \"relay\"\nmodel = \"gpt-5.5\"\n\n[model_providers.relay]\nname = \"relay\"\nbase_url = \"https://relay.example.com/v1\"\nwire_api = \"responses\"\n"}','','custom',3,0)`,
 		`INSERT INTO providers VALUES ('ds','claude','DeepSeek','{"env":{"ANTHROPIC_BASE_URL":"https://api.deepseek.com/anthropic","ANTHROPIC_AUTH_TOKEN":"sk-ds"}}','','cn_official',4,2)`,
-		`INSERT INTO providers VALUES ('dial','pi','dial','{"api":"openai-completions","apiKey":"magpie","baseUrl":"http://127.0.0.1:3425/v1"}','','custom',5,0)`,
+		`INSERT INTO providers VALUES ('dial','pi','dial','{"api":"openai-completions","apiKey":"chongyun","baseUrl":"http://127.0.0.1:3425/v1"}','','custom',5,0)`,
 		`INSERT INTO providers VALUES ('g','gemini','Gemini relay','{"env":{"GOOGLE_GEMINI_BASE_URL":"https://g.example.com","GEMINI_API_KEY":"k","GEMINI_MODEL":"gemini-3.8-flash"}}','','custom',6,0)`,
 		`INSERT INTO providers VALUES ('g2','gemini','Gemini relay under a path','{"env":{"GOOGLE_GEMINI_BASE_URL":"https://g2.example.com/gemini/","GEMINI_API_KEY":"k2"}}','','custom',7,0)`,
 	)
@@ -73,7 +73,7 @@ func TestImportCCSwitch(t *testing.T) {
 		t.Fatalf("official sign-in offered: %+v", it)
 	}
 	if it := items["pi/dial"]; it.Skip == "" {
-		t.Fatalf("magpie itself offered: %+v", it)
+		t.Fatalf("chongyun itself offered: %+v", it)
 	}
 	g := items["gemini/g"]
 	// a Gemini-protocol relay (#1346): the base goes to the provider's own
@@ -169,13 +169,13 @@ func TestImportCodexConfig(t *testing.T) {
 	if err := os.MkdirAll(filepath.Dir(config), 0o700); err != nil {
 		t.Fatal(err)
 	}
-	data := `model_provider = "magpie"
+	data := `model_provider = "chongyun"
 model = "deepseek/deepseek-chat"
 model_catalog_json = "magpie-models.json"
 
 [model_providers.magpie]
 base_url = "http://127.0.0.1:3448/v1"
-experimental_bearer_token = "magpie"
+experimental_bearer_token = "chongyun"
 
 [model_providers.deepseek]
 name = "DeepSeek"
@@ -239,8 +239,8 @@ model_catalog_json = "magpie-models.json"
 	if p := items["openrouter"].Provider; p.Preset != "openrouter" || p.Headers["X-Org"] != "preset" {
 		t.Fatalf("preset import should keep the preset and its headers: %+v", p)
 	}
-	if items["magpie"].Skip == "" || items["unkeyed"].Skip == "" {
-		t.Fatalf("gateway or env-key provider offered: %+v %+v", items["magpie"], items["unkeyed"])
+	if items["chongyun"].Skip == "" || items["unkeyed"].Skip == "" {
+		t.Fatalf("gateway or env-key provider offered: %+v %+v", items["chongyun"], items["unkeyed"])
 	}
 	ds := items["deepseek"]
 	if ds.Skip != "" || ds.Provider.Key != "sk-explicit" || ds.Provider.Responses != "https://relay.example.com/v1" || strings.Join(ds.Provider.Models, ",") != "deepseek-chat,deepseek-reasoner,gpt-6-sol" {
@@ -349,7 +349,7 @@ func TestCodexImportModelsSameBasename(t *testing.T) {
 		}
 	}
 	if got := codexImportModels(config, "../.codex/magpie-models.json"); len(got) != 0 {
-		t.Fatalf("magpie's own catalog was imported: %v", got)
+		t.Fatalf("chongyun's own catalog was imported: %v", got)
 	}
 	if got := codexImportModels(config, "magpie-models.json"); len(got) != 1 || got[0] != "custom-model" {
 		t.Fatalf("user catalog with the same basename was skipped: %v", got)

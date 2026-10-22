@@ -6,7 +6,7 @@ package agent
 // take models of one's own from ~/.codebuddy/models.json ($CODEBUDDY_CONFIG_DIR
 // if set), in WorkBuddy's format (workbuddy.go):
 //
-//	{"models":[{"id":"deepseek/pro","name":…,"vendor":"magpie",
+//	{"models":[{"id":"deepseek/pro","name":…,"vendor": "chongyun",
 //	  "apiKey":"magpie-codebuddy","url":"http://127.0.0.1:3425/v1/chat/completions",
 //	  "maxInputTokens":…,"maxOutputTokens":…,"supportsToolCall":true,…}],
 //	 "availableModels":[…]}
@@ -23,7 +23,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 func codebuddy(home string) *Agent { return codebuddyIn(here(home)) }

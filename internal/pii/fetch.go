@@ -16,7 +16,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/source"
+	"github.com/lulu58588/magpie/internal/source"
 )
 
 // dl is the download under way, one at a time.

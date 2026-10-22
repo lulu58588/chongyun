@@ -15,9 +15,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func errorf(format string, a ...any) error { return fmt.Errorf(format, a...) }
@@ -2809,10 +2809,10 @@ func SetModelOutput(id string, n int) error {
 	}
 
 	// a limit for a model the provider does not serve is one that never
-	// applies and nothing later says so; the same refusal `magpie model
+	// applies and nothing later says so; the same refusal `chongyun model
 	// name` makes for the same id.
 	if model != "*" && !p.serves(model) {
-		return errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+		return errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 	}
 	s := settings.Load()
 	if s.ModelOutputs == nil {
@@ -2857,7 +2857,7 @@ func SetModelOutputs(providerID string, outs map[string]int) error {
 			return err
 		}
 		if model != "*" && n > 0 && !p.serves(model) {
-			return errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+			return errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 		}
 	}
 	s := settings.Load()
@@ -3000,7 +3000,7 @@ func SetContext(p Provider, model string, n int) error {
 	// applies and nothing later says so. A removal is exempt, so an entry
 	// left for a model that has since gone can still be taken away.
 	if n > 0 && model != "*" && !p.serves(model) {
-		return fmt.Errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+		return fmt.Errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 	}
 	if n > 0 {
 		if p.Contexts == nil {

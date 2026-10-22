@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #256: on a Copilot Student account, copilot/auto answered 400 "Copilot:

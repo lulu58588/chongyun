@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestLocalProviderDiscovery(t *testing.T) {
@@ -87,7 +87,7 @@ experimental_bearer_token = "secret-codex"
 Authorization = "secret-header"
 [model_providers.magpie]
 base_url = "http://127.0.0.1:3448/v1"
-experimental_bearer_token = "magpie"
+experimental_bearer_token = "chongyun"
 [model_providers.missing_key]
 base_url = "https://missing.example/v1"
 env_key = "UNSET_DISCOVERY_KEY"

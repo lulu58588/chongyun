@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // compactedText is the summary in a compaction Codex was answered with.
@@ -18,7 +18,7 @@ func compactedText(t *testing.T, body string) string {
 		item := e["item"].(map[string]any)
 		enc, _ := item["encrypted_content"].(string)
 		if item["type"] != "compaction" || !strings.HasPrefix(enc, magpieCompaction) {
-			t.Fatalf("not magpie's compaction: %s", body)
+			t.Fatalf("not chongyun's compaction: %s", body)
 		}
 		b, _ := base64.StdEncoding.DecodeString(strings.TrimPrefix(enc, magpieCompaction))
 		return string(b)

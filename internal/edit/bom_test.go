@@ -92,11 +92,11 @@ func TestJSONItemWithBOM(t *testing.T) {
 	if _, ok := GetJSONItem(p, map[string]string{"name": "mine"}); !ok {
 		t.Fatal("GetJSONItem through a BOM found nothing")
 	}
-	if err := SetJSONItem(p, map[string]string{"name": "magpie"}, map[string]any{"vendor": "customoai", "name": "magpie"}); err != nil {
+	if err := SetJSONItem(p, map[string]string{"name": "chongyun"}, map[string]any{"vendor": "customoai", "name": "chongyun"}); err != nil {
 		t.Fatal(err)
 	}
-	keptAsWritten(t, p, `"name": "mine"`, `"name": "magpie"`)
-	if err := DelJSONItem(p, map[string]string{"name": "magpie"}); err != nil {
+	keptAsWritten(t, p, `"name": "mine"`, `"name": "chongyun"`)
+	if err := DelJSONItem(p, map[string]string{"name": "chongyun"}); err != nil {
 		t.Fatal(err)
 	}
 	if got := read(t, p); got != in {
@@ -116,13 +116,13 @@ func TestTOMLConfigWithBOM(t *testing.T) {
 	if tables, err := TOMLTables(p); err != nil || len(tables) != 1 {
 		t.Fatalf("TOMLTables through a BOM: %v %v", tables, err)
 	}
-	if err := SetTOMLTop(p, KV{Path: "model_provider", Value: "magpie"}); err != nil {
+	if err := SetTOMLTop(p, KV{Path: "model_provider", Value: "chongyun"}); err != nil {
 		t.Fatal(err)
 	}
-	if err := SetTOMLTable(p, "model_providers.magpie", KV{Path: "name", Value: "magpie"}); err != nil {
+	if err := SetTOMLTable(p, "model_providers.magpie", KV{Path: "name", Value: "chongyun"}); err != nil {
 		t.Fatal(err)
 	}
-	keptAsWritten(t, p, `model_provider = "magpie"`, "[model_providers.magpie]", "[model_providers.mine]")
+	keptAsWritten(t, p, `model_provider = "chongyun"`, "[model_providers.magpie]", "[model_providers.mine]")
 	if err := DelTOMLTable(p, "model_providers.magpie"); err != nil {
 		t.Fatal(err)
 	}
@@ -141,10 +141,10 @@ func TestEnvAndYAMLWithBOM(t *testing.T) {
 	if v, ok := GetEnvFile(env, "OPENAI_API_KEY"); !ok || v != "sk-own" {
 		t.Fatalf("GetEnvFile through a BOM: %q %v", v, ok)
 	}
-	if err := SetEnvFile(env, KV{Path: "OPENAI_API_KEY", Value: "magpie"}); err != nil {
+	if err := SetEnvFile(env, KV{Path: "OPENAI_API_KEY", Value: "chongyun"}); err != nil {
 		t.Fatal(err)
 	}
-	got := keptAsWritten(t, env, "OPENAI_API_KEY=magpie", "OTHER=1")
+	got := keptAsWritten(t, env, "OPENAI_API_KEY=chongyun", "OTHER=1")
 	if strings.Count(got, "OPENAI_API_KEY") != 1 {
 		t.Fatalf("SetEnvFile added the key beside the first one: %q", got)
 	}
@@ -152,10 +152,10 @@ func TestEnvAndYAMLWithBOM(t *testing.T) {
 	if v, ok := GetYAMLTop(y, "model"); !ok || v != "mine" {
 		t.Fatalf("GetYAMLTop through a BOM: %q %v", v, ok)
 	}
-	if err := SetYAMLTop(y, KV{Path: "model", Value: "magpie"}); err != nil {
+	if err := SetYAMLTop(y, KV{Path: "model", Value: "chongyun"}); err != nil {
 		t.Fatal(err)
 	}
-	got = keptAsWritten(t, y, "model: magpie", "provider: own")
+	got = keptAsWritten(t, y, "model: chongyun", "provider: own")
 	if strings.Count(got, "model:") != 1 {
 		t.Fatalf("SetYAMLTop added the key beside the first one: %q", got)
 	}

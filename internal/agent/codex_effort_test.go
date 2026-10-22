@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A custom provider serving a model models.dev knows from others (a
@@ -134,7 +134,7 @@ func TestCodexDefaultEffortStaysDefault(t *testing.T) {
 	if err := model.Set("volc/glm-5.3-flash"); err != nil {
 		t.Fatal(err)
 	}
-	unset("magpie's model picked")
+	unset("chongyun's model picked")
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}

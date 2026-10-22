@@ -10,11 +10,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/budget"
-	"github.com/yetone/magpie/internal/gwbudget"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/budget"
+	"github.com/lulu58588/magpie/internal/gwbudget"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // limitClock is the time a gateway key's limit is checked at: the window

@@ -21,10 +21,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // The gateway draws: /v1/images/generations and /v1/images/edits take
@@ -414,10 +414,10 @@ func (s *Server) images(edit bool) http.HandlerFunc {
 			m, ok := drawer()
 			if !ok {
 				if v := DrawerMissing(); v != "" {
-					fail(400, fmt.Sprintf("no model to draw with: the Image generation model picked in magpie's Settings, %q, isn't set up any more: pick another in Settings → Models → Image generation, or name one", v))
+					fail(400, fmt.Sprintf("no model to draw with: the Image generation model picked in chongyun's Settings, %q, isn't set up any more: pick another in Settings → Models → Image generation, or name one", v))
 					return
 				}
-				fail(400, "no model to draw with: pick one in magpie's Settings → Images → Image generation, or name one")
+				fail(400, "no model to draw with: pick one in chongyun's Settings → Images → Image generation, or name one")
 				return
 			}
 			d.Model, call.Model = m, m
@@ -425,14 +425,14 @@ func (s *Server) images(edit bool) http.HandlerFunc {
 		p, model, ok := s.drawingModel(r, d.Model)
 		if !ok {
 			if agentOf(r) == "codex" && !strings.Contains(d.Model, "/") {
-				fail(400, "no model to draw with: Codex's provider has no matching image model and magpie's Settings → Images → Image generation has none enabled")
+				fail(400, "no model to draw with: Codex's provider has no matching image model and chongyun's Settings → Images → Image generation has none enabled")
 				return
 			}
 			if off, isOff := provider.SwitchedOff(d.Model); isOff {
 				fail(404, switchedOff(off, d.Model))
 				return
 			}
-			fail(404, fmt.Sprintf("magpie knows no model %q to draw with", d.Model))
+			fail(404, fmt.Sprintf("chongyun knows no model %q to draw with", d.Model))
 			return
 		}
 		g, ms, isGroup := drawingGroup(d.Model, p, model)
@@ -933,7 +933,7 @@ func (s *Server) draw(ctx context.Context, p provider.Provider, model string, d 
 		return s.drawCodeAssist(ctx, p, model, d)
 	}
 	if p.Base(provider.Chat) == "" && p.Base(provider.Responses) == "" {
-		return drawn{}, 400, fmt.Errorf("%s can't draw: magpie draws only through an OpenAI-compatible API, and %s has none", p.Name, p.Name)
+		return drawn{}, 400, fmt.Errorf("%s can't draw: chongyun draws only through an OpenAI-compatible API, and %s has none", p.Name, p.Name)
 	}
 	via := viaFor(p, model)
 	out, code, err := s.drawOn(ctx, p, model, d, via)

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // sealedWorkerMessage is what Codex (codex-rs protocol.rs,

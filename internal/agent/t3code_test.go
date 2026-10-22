@@ -9,9 +9,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // t3User is ~/.t3/userdata/settings.json as T3 Code writes it sparse: its
@@ -359,16 +359,16 @@ func TestT3CodeKeepsTheUsersSettings(t *testing.T) {
 	}
 	var mine map[string]any
 	json.Unmarshal(read()[magpieID], &mine)
-	if mine["displayName"] != "magpie" {
+	if mine["displayName"] != "chongyun" {
 		t.Fatalf("first written as %v", mine["displayName"])
 	}
 	cfg := mine["config"].(map[string]any)
 	if _, ok := cfg["autoCompactWindow"]; ok {
-		t.Fatalf("the Claude instance's window lent to magpie's: %v", cfg)
+		t.Fatalf("the Claude instance's window lent to chongyun's: %v", cfg)
 	}
 
 	// the user edits magpie's instance in T3 Code, as T3 saves it
-	mine["displayName"] = "Magpie GW"
+	mine["displayName"] = "Chongyun GW"
 	mine["enabled"] = false
 	mine["accentColor"] = "#ff8800"
 	cfg["autoCompactWindow"] = "300000"
@@ -412,7 +412,7 @@ func TestT3CodeKeepsTheUsersSettings(t *testing.T) {
 	if err := json.Unmarshal(insts[magpieID], &got); err != nil {
 		t.Fatal(err)
 	}
-	if got.DisplayName != "Magpie GW" || got.Enabled == nil || *got.Enabled || got.AccentColor != "#ff8800" {
+	if got.DisplayName != "Chongyun GW" || got.Enabled == nil || *got.Enabled || got.AccentColor != "#ff8800" {
 		t.Errorf("the user's name, switch or colour not kept: %s", insts[magpieID])
 	}
 	if got.Config.AutoCompactWindow != "300000" || got.Config.LaunchArgs != "--verbose" {
@@ -430,6 +430,6 @@ func TestT3CodeKeepsTheUsersSettings(t *testing.T) {
 	}) bool {
 		return m.Slug == "gone/old"
 	}) || len(got.Config.CustomModels) == 0 {
-		t.Errorf("custom models not magpie's: %+v", got.Config.CustomModels)
+		t.Errorf("custom models not chongyun's: %+v", got.Config.CustomModels)
 	}
 }

@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // deepSeekCustomRefusal is DeepSeek's Responses API turning Codex's exec

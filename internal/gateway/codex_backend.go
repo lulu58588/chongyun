@@ -17,13 +17,13 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/codexcat"
-	"github.com/yetone/magpie/internal/codexsummary"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/codexcat"
+	"github.com/lulu58588/magpie/internal/codexsummary"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // CodexPath is where Codex's built-in OpenAI provider reaches magpie, as its
@@ -62,7 +62,7 @@ const codexSummaryPrefix = codexsummary.Prefix
 func (s *Server) codexBackend(w http.ResponseWriter, r *http.Request) {
 	// Responses over a WebSocket: 426 sends Codex to plain HTTP at once
 	if strings.EqualFold(r.Header.Get("Upgrade"), "websocket") {
-		http.Error(w, "magpie speaks HTTP", http.StatusUpgradeRequired)
+		http.Error(w, "chongyun speaks HTTP", http.StatusUpgradeRequired)
 		return
 	}
 	// the pool's accounts and their model lists say they are this Codex, or
@@ -144,7 +144,7 @@ func (s *Server) codexBackend(w http.ResponseWriter, r *http.Request) {
 		// Unknown providers/groups must fail locally, never fall through to OpenAI.
 		if strings.Contains(model, "/") {
 			if rest == "/responses/compact" {
-				writeError(w, provider.Responses, 400, "/responses/compact is not supported for Magpie models; use a compaction_trigger on /responses")
+				writeError(w, provider.Responses, 400, "/responses/compact is not supported for Chongyun models; use a compaction_trigger on /responses")
 				return
 			}
 			// a sealed subagent task goes to a ChatGPT account the model
@@ -226,7 +226,7 @@ func (s *Server) codexBackend(w http.ResponseWriter, r *http.Request) {
 		body, _ = codexInput(body, false)
 		if r.Header.Get(AccountHeader) != "" {
 			// relayed as it came, it would go to Codex's own sign-in only
-			writeError(w, provider.Responses, 400, AccountHeader+" names one of magpie's Codex accounts, and Codex isn't signed in to ChatGPT here with any on in magpie")
+			writeError(w, provider.Responses, 400, AccountHeader+" names one of chongyun's Codex accounts, and Codex isn't signed in to ChatGPT here with any on in chongyun")
 			return
 		}
 	}
@@ -254,12 +254,12 @@ func (s *Server) codexBackend(w http.ResponseWriter, r *http.Request) {
 // itself, which fork_turns="none" doesn't change (#1855).
 func sealedTaskError(model, lead, earlier string) string {
 	if earlier != "" {
-		return fmt.Sprintf("This subagent's task was sealed by the ChatGPT backend, which answered the agent that sent it on one of Codex's own models (a subagent of this thread put there, or the lead after a switch), and only a ChatGPT account can open it. %s can't. %s answered the lead's earlier turns, but it neither seals a task nor opens one. "+sealedTaskItself+" Set Codex's subagent model on magpie's Agents page to a model of a ChatGPT account added in magpie, or to one that isn't served by the ChatGPT backend, so subagents get tasks they can read. To go on with this task, have it spawned again from an agent that isn't on Codex's own models."+sealedWayOut(), model, earlier)
+		return fmt.Sprintf("This subagent's task was sealed by the ChatGPT backend, which answered the agent that sent it on one of Codex's own models (a subagent of this thread put there, or the lead after a switch), and only a ChatGPT account can open it. %s can't. %s answered the lead's earlier turns, but it neither seals a task nor opens one. "+sealedTaskItself+" Set Codex's subagent model on chongyun's Agents page to a model of a ChatGPT account added in chongyun, or to one that isn't served by the ChatGPT backend, so subagents get tasks they can read. To go on with this task, have it spawned again from an agent that isn't on Codex's own models."+sealedWayOut(), model, earlier)
 	}
 	if lead != "" {
 		return fmt.Sprintf("This subagent's task was sealed by the server that answered its lead (%s), and only that server can open it; %s can't. "+sealedTaskItself+" Give the subagent the lead's model, or a lead model that isn't served by the ChatGPT backend, so its subagents get a task they can read. To go on with this task, use a model on %s for the lead and the subagent, or have the lead spawn the subagent again."+sealedWayOut(), lead, model, lead)
 	}
-	return fmt.Sprintf("This subagent's task was sealed by the ChatGPT backend that answered its lead, and only that backend can open it: a ChatGPT account, or the Responses API provider that answered the lead. %s is neither: magpie has no record of it answering the lead in the last 30 days. "+sealedTaskItself+" Give the subagent the lead's model, or a lead model that isn't served by the ChatGPT backend, so its subagents get a task they can read. To go on with this task, use the lead's model, or have the lead spawn the subagent again."+sealedWayOut(), model)
+	return fmt.Sprintf("This subagent's task was sealed by the ChatGPT backend that answered its lead, and only that backend can open it: a ChatGPT account, or the Responses API provider that answered the lead. %s is neither: chongyun has no record of it answering the lead in the last 30 days. "+sealedTaskItself+" Give the subagent the lead's model, or a lead model that isn't served by the ChatGPT backend, so its subagents get a task they can read. To go on with this task, use the lead's model, or have the lead spawn the subagent again."+sealedWayOut(), model)
 }
 
 // sealedWayOut is the way to subagents on any model from a lead on
@@ -270,9 +270,9 @@ func sealedTaskError(model, lead, earlier string) string {
 // by Codex's own features.multi_agent_v2.
 func sealedWayOut() string {
 	if settings.Load().CodexAgentsV1 {
-		return ` "Codex subagents on any model" is on in magpie's Settings, but this thread runs Codex's multi-agent V2, whose tasks are sealed: it began before the setting was turned on, or Codex's own features.multi_agent_v2 is on in its config. Start a new thread, with features.multi_agent_v2 off.`
+		return ` "Codex subagents on any model" is on in chongyun's Settings, but this thread runs Codex's multi-agent V2, whose tasks are sealed: it began before the setting was turned on, or Codex's own features.multi_agent_v2 is on in its config. Start a new thread, with features.multi_agent_v2 off.`
 	}
-	return ` For subagents on any model while the lead is on a ChatGPT model, turn on "Codex subagents on any model" in magpie's Settings and start a new thread: the lead then hands its subagents their tasks as text.`
+	return ` For subagents on any model while the lead is on a ChatGPT model, turn on "Codex subagents on any model" in chongyun's Settings and start a new thread: the lead then hands its subagents their tasks as text.`
 }
 
 // sealedTaskItself says what a sealed task is (#1855): spawn_agent's
@@ -407,7 +407,7 @@ func loggedAnswers(convs ...string) []loggedAnswer {
 	}
 	var all []loggedAnswer
 	usage.Visit(time.Now().Add(-sealerKeep), func(r usage.Record) {
-		if r.Provider == "" || r.Provider == "magpie" || r.IsRejected() || r.IsReported() || r.Status <= 0 || r.Status >= 400 || r.Computer != "" || isTitleKind(r.Kind) {
+		if r.Provider == "" || r.Provider == "chongyun" || r.IsRejected() || r.IsReported() || r.Status <= 0 || r.Status >= 400 || r.Computer != "" || isTitleKind(r.Kind) {
 			return
 		}
 		// ponytail: host " as " is provider.Where. A relay that starts
@@ -573,7 +573,7 @@ func withoutSealedMessages(body []byte) ([]byte, bool) {
 		if from == "" {
 			from = "another agent"
 		}
-		note := "[magpie: this message from " + from + " was sealed by the ChatGPT backend, which answered that agent on one of Codex's own models, and only it can open it; this model can't, so it was left out. An agent's final result still reaches the agent that spawned it as text.]"
+		note := "[chongyun: this message from " + from + " was sealed by the ChatGPT backend, which answered that agent on one of Codex's own models, and only it can open it; this model can't, so it was left out. An agent's final result still reaches the agent that spawned it as text.]"
 		for j, p := range parts {
 			if c, _ := p["encrypted_content"].(string); p["type"] == "encrypted_content" && nativeSealedAgentPayload.MatchString(c) {
 				parts[j] = map[string]any{"type": "input_text", "text": note}
@@ -639,14 +639,14 @@ func compactSigninHeld(r *http.Request, model string, on *provider.Provider) (ac
 // request is bound to that account — so the message says the two ways
 // out, not the accounts alone.
 func compactHeldError(who access.Identity, model string) string {
-	return fmt.Sprintf("Native compaction for %s goes through the account Codex is signed in to, which the gateway key %q may not use; it may use %s. Native compaction has no other route: add the signed-in account to the key in magpie's Gateway page, or use one of magpie's models, whose compaction goes through a compaction_trigger on /responses and the key's accounts.",
+	return fmt.Sprintf("Native compaction for %s goes through the account Codex is signed in to, which the gateway key %q may not use; it may use %s. Native compaction has no other route: add the signed-in account to the key in chongyun's Gateway page, or use one of chongyun's models, whose compaction goes through a compaction_trigger on /responses and the key's accounts.",
 		model, who.KeyName, keyAccountNames(who))
 }
 
 // sealedCompactHeldError is compactHeldError for a compact sealed by
 // writer, another of Codex's accounts, which only it can read (#2727).
 func sealedCompactHeldError(who access.Identity, model string, writer *provider.Provider) string {
-	return fmt.Sprintf("This conversation's native compaction for %s was sealed by %s, and only that account can read it; the gateway key %q may not use it; it may use %s. Add %s to the key in magpie's Gateway page, or start a new conversation.",
+	return fmt.Sprintf("This conversation's native compaction for %s was sealed by %s, and only that account can read it; the gateway key %q may not use it; it may use %s. Add %s to the key in chongyun's Gateway page, or start a new conversation.",
 		model, writer.Account.User, who.KeyName, keyAccountNames(who), writer.Account.User)
 }
 
@@ -1493,7 +1493,7 @@ func codexKeyRefused(msg []byte) string {
 	}
 	return "OpenAI refused the API key Codex is signed in with (" + said + "). " +
 		"This is one of Codex's own models, which goes to OpenAI with Codex's own sign-in: " +
-		"pick one of magpie's models in Codex (provider/model, or set it in magpie's Agents view), " +
+		"pick one of chongyun's models in Codex (provider/model, or set it in chongyun's Agents view), " +
 		"or sign Codex in with ChatGPT, or with an OpenAI API key"
 }
 
@@ -1503,8 +1503,8 @@ func codexKeyRefused(msg []byte) string {
 // lists (#322) — and what to do about it.
 func codexUnreached(model string, err error) string {
 	return "OpenAI can't be reached (" + err.Error() + "). " + model + " is one of Codex's own models, " +
-		"which goes to OpenAI with Codex's own sign-in: pick one of magpie's models in Codex " +
-		"(provider/model, or set it in magpie's Agents view), or let Codex reach OpenAI"
+		"which goes to OpenAI with Codex's own sign-in: pick one of chongyun's models in Codex " +
+		"(provider/model, or set it in chongyun's Agents view), or let Codex reach OpenAI"
 }
 
 // codexFailedEmpty says why a model of Codex's own failed when OpenAI gave
@@ -1513,8 +1513,8 @@ func codexUnreached(model string, err error) string {
 // for it sends the turn to OpenAI, not to that one (#409).
 func codexFailedEmpty(model, status string) string {
 	return "OpenAI answered " + status + " and said nothing more. " + model + " is one of Codex's own models, " +
-		"which goes to OpenAI with Codex's own sign-in, not to a provider in magpie: pick one of magpie's models in Codex " +
-		"(provider/model, or set it in magpie's Agents view), or try again later"
+		"which goes to OpenAI with Codex's own sign-in, not to a provider in chongyun: pick one of chongyun's models in Codex " +
+		"(provider/model, or set it in chongyun's Agents view), or try again later"
 }
 
 // apiKey reports whether Codex signed in with an API key rather than a
@@ -2809,7 +2809,7 @@ func localSummary(body []byte, why string) string {
 		n += len(asked[from])
 	}
 	var b strings.Builder
-	b.WriteString("magpie compacted this conversation without a model (" + why + "), so this is no summary: it is what the user asked")
+	b.WriteString("chongyun compacted this conversation without a model (" + why + "), so this is no summary: it is what the user asked")
 	if from > 0 {
 		fmt.Fprintf(&b, " (the latest %d of %d messages)", len(asked)-from, len(asked))
 	}

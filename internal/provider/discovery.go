@@ -1,5 +1,5 @@
 // Account discovery off (#1535, MaxHaiCom): with Settings → Privacy's
-// "Subscription accounts" off, `magpie accounts discovery off`, or
+// "Subscription accounts" off, `chongyun accounts discovery off`, or
 // MAGPIE_NO_ACCOUNTS=1, magpie reads no agent's sign-in — no
 // ~/.claude/.credentials.json, ~/.codex/auth.json, Copilot, Cursor, Kiro,
 // Devin or other credential file, no Keychain or Secret Service item, and
@@ -21,10 +21,10 @@ import (
 	"errors"
 	"os"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
-var errAccountDiscoveryOff = errors.New("subscription accounts are off in magpie (Settings → Privacy, or `magpie accounts discovery on`)")
+var errAccountDiscoveryOff = errors.New("subscription accounts are off in this build (Settings → Privacy, or `chongyun accounts discovery on`)")
 
 // discoveryOff is whether agents' sign-ins are left unread; see above.
 func discoveryOff() bool { return settings.AccountDiscoveryOff() }

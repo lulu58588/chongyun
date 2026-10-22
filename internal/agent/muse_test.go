@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 func museHome(t *testing.T) (home, path string) {
@@ -79,7 +79,7 @@ func TestMuse(t *testing.T) {
 		t.Fatalf("the user's keys: %v", m)
 	}
 	if f.Get() != "magpie/deepseek/pro" || a.Check() != "" {
-		t.Fatalf("on magpie: %q %q", f.Get(), a.Check())
+		t.Fatalf("on chongyun: %q %q", f.Get(), a.Check())
 	}
 	// another of magpie's models keeps what was stashed
 	if err := f.Set("magpie/deepseek/flash"); err != nil {

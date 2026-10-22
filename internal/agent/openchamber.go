@@ -29,8 +29,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // openChamberDir is where OpenChamber keeps its settings.

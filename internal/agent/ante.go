@@ -14,7 +14,7 @@ package agent
 //	 "models":{…}}
 //
 // The providers map's key is what --provider takes; an id inside an entry is
-// ignored. magpie adds the entry "magpie" at the gateway's /v1, on
+// ignored. magpie adds the entry "chongyun" at the gateway's /v1, on
 // OpenAiCompatible — the wire style Ante speaks Chat Completions with, which
 // is what the gateway takes every model on — and lists magpie's models in its
 // preferred_models, Ante's model picker. The user's own providers and the
@@ -57,9 +57,9 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 const (
@@ -216,7 +216,7 @@ func anteAt(at place) *Agent {
 				return ""
 			}
 			if !ours() {
-				return "Ante's provider (settings.json) is " + orDefault(get(anteProviderKey)) + ", so it no longer asks magpie"
+				return "Ante's provider (settings.json) is " + orDefault(get(anteProviderKey)) + ", so it no longer asks chongyun"
 			}
 			raw, err := edit.Read(path)
 			if err != nil {
@@ -257,7 +257,7 @@ func anteAt(at place) *Agent {
 				return put("")
 			},
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie", Note: "every magpie model in Ante's model picker, and Ante starts on magpie"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun", Note: "every chongyun model in Ante's model picker, and Ante starts on chongyun"}}
 			},
 		}, {
 			// Ante names the model on its own, without a provider in front
@@ -322,7 +322,7 @@ func anteProviderJSON(gw string) map[string]any {
 		ms = append(ms, anteModelJSON(m))
 	}
 	p := map[string]any{
-		"display_name": "magpie",
+		"display_name": "崇云科技",
 		// gw is the gateway's /v1 already (place.v1), which is what Ante
 		// joins its own path onto
 		"base_url":   gw,

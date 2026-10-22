@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // gatedCall is a Responses upstream that streams a call's first argument

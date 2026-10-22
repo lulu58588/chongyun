@@ -8,9 +8,9 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/yetone/magpie/internal/maskrec"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/maskrec"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A request with a value of a kind the user set to block goes nowhere,

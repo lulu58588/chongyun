@@ -167,7 +167,7 @@ func TestSlowTransferIsNotCutShort(t *testing.T) {
 	}
 	d.client = client
 	// ~24 MB at 6.4 MB/s: nearly 4 s each way
-	data := bytes.Repeat([]byte("magpie skill "), (24<<20)/13)
+	data := bytes.Repeat([]byte("chongyun skill "), (24<<20)/13)
 	ctx := context.Background()
 	start := time.Now()
 	if _, err := d.put(ctx, data, ""); err != nil {

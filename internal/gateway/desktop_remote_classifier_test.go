@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A Claude Desktop session on another magpie's Claude model keeps Claude
@@ -91,7 +91,7 @@ func TestClaudeDesktopClassifierOnRemoteMagpie(t *testing.T) {
 		mu.Lock()
 		defer mu.Unlock()
 		if len(hops) != 1 {
-			t.Fatalf("the other magpie was asked %v", hops)
+			t.Fatalf("the other chongyun was asked %v", hops)
 		}
 		return hops[0]
 	}
@@ -107,7 +107,7 @@ func TestClaudeDesktopClassifierOnRemoteMagpie(t *testing.T) {
 		`{"model":"claude-sonnet-5","max_tokens":1024,"stream":true,"system":[{"type":"text","text":"A user kicked off a Claude Code agent to do a coding task and walked away."}],"messages":[{"role":"user","content":"…"}]}`,
 	} {
 		if got := send(cli, body); got != "work/claude-sonnet-5" {
-			t.Fatalf("classifier: the other magpie was asked for %q, want work/claude-sonnet-5", got)
+			t.Fatalf("classifier: the other chongyun was asked for %q, want work/claude-sonnet-5", got)
 		}
 	}
 	// Desktop's title follows the session

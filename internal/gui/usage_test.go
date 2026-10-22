@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // holdUsageClock stops usage.Clock at at for the test and gives at back, for

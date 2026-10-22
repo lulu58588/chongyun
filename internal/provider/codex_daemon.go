@@ -28,7 +28,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // CodexDaemonRestart is the command that restarts Codex's app-server, for
@@ -320,7 +320,7 @@ func restartCodexDaemon(ctx context.Context, home string) error {
 func codexDaemonCommand(ctx context.Context, home, verb string) (*exec.Cmd, error) {
 	exe := codexExecutable()
 	if exe == "" {
-		return nil, errors.New("the codex CLI isn't installed, or magpie can't find it")
+		return nil, errors.New("the codex CLI isn't installed, or chongyun can't find it")
 	}
 	cmd := proc.CommandContext(ctx, exe, "app-server", "daemon", verb)
 	env := slices.DeleteFunc(os.Environ(), func(kv string) bool { return strings.HasPrefix(kv, "CODEX_HOME=") })

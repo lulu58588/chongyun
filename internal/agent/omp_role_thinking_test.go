@@ -6,8 +6,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #1397 (KKKKKKKEM): omp's plan, vision and advisor roles can be put on a
@@ -125,7 +125,7 @@ func TestOmpRoleThinking(t *testing.T) {
 		t.Fatal("advisor's level outlived it")
 	}
 	if v, ok := edit.GetYAML(filepath.Join(dir, "models.yml"), "providers.magpie.baseUrl"); ok && v != "" {
-		t.Fatal("magpie's provider stayed with no role on it")
+		t.Fatal("chongyun's provider stayed with no role on it")
 	}
 }
 

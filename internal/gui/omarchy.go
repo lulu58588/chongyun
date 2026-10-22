@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/yetone/magpie/internal/omarchy"
+	"github.com/lulu58588/magpie/internal/omarchy"
 )
 
 // onOmarchy is whether magpie runs on Omarchy, asked once: its windows then

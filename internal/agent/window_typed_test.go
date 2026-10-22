@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A window the user typed is the one Codex and Claude Code run to (#1809,
@@ -148,7 +148,7 @@ func TestSmallestMemberTypedWindow(t *testing.T) {
 	}
 
 	// Claude Desktop: each group's own autoCompactWindow
-	must(claudeDesktop(home).Field("provider").Set("magpie"))
+	must(claudeDesktop(home).Field("provider").Set("chongyun"))
 	ids := map[string]string{}
 	for _, e := range provider.Catalog() {
 		ids[e.ID] = gateway.DesktopID(e)
@@ -223,7 +223,7 @@ func TestLargestMemberTypedWindow(t *testing.T) {
 
 	// Claude Desktop: the typed group's own autoCompactWindow; the
 	// other is left to the top-level one, the default
-	must(claudeDesktop(home).Field("provider").Set("magpie"))
+	must(claudeDesktop(home).Field("provider").Set("chongyun"))
 	ids := map[string]string{}
 	for _, e := range provider.Catalog() {
 		ids[e.ID] = gateway.DesktopID(e)

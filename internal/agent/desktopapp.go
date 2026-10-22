@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // An agent that is a desktop app as well as a CLI has the app's version shown

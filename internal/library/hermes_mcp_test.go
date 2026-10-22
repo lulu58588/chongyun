@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 	"gopkg.in/yaml.v3"
 )
 

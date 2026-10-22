@@ -18,10 +18,10 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Prompt is Codex's generic system prompt (Apache-2.0, openai/codex,
@@ -211,7 +211,7 @@ func entriesAt(ms []catalog.Model, after int, effort string) []any {
 			continue
 		}
 		e := model{
-			Slug: m.ID, DisplayName: m.Name, Description: m.Name + " via magpie",
+			Slug: m.ID, DisplayName: m.Name, Description: m.Name + " via chongyun",
 			Instructions: Prompt, Efforts: []level{},
 			Shell: "unified_exec", Visibility: "list", InAPI: true, Priority: after + i + 1,
 			ApplyPatch: "freeform", Tools: []string{}, Modalities: []string{"text"},
@@ -242,10 +242,10 @@ func entriesAt(ms []catalog.Model, after int, effort string) []any {
 		} else if !strings.HasPrefix(m.ID, "group/") && !strings.HasPrefix(m.ID, "auto/") { // a routing group, a found one as auto/<model>
 			// Codex turns a pasted image away itself, saying only that the
 			// model doesn't take images; /model says where that is changed
-			// (KimYx0207 on X). The description still ends " via magpie",
+			// (KimYx0207 on X). The description still ends " via chongyun",
 			// which is how its entry is told from Codex's own
 			// (catalog.MagpieAdded)
-			e.Description = m.Name + " (text only: Accepts images is in its provider's Names & levels in magpie) via magpie"
+			e.Description = m.Name + " (text only: Accepts images is in its provider's Names & levels in chongyun) via chongyun"
 		}
 		if c := m.Context; c > 0 {
 			// the model's or its provider's threshold, else the one for

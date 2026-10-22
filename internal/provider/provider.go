@@ -24,11 +24,11 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // Protocol is a wire API magpie can speak to an upstream.
@@ -473,7 +473,7 @@ type unreadableError struct {
 }
 
 func (e *unreadableError) Error() string {
-	return fmt.Sprintf("%s can't be read (%v); magpie left it unchanged — fix it or move it aside", e.path, e.err)
+	return fmt.Sprintf("%s can't be read (%v); chongyun left it unchanged — fix it or move it aside", e.path, e.err)
 }
 
 func (e *unreadableError) Unwrap() []error { return []error{ErrUnreadable, e.err} }
@@ -744,7 +744,7 @@ func findIn(all []Provider, id string) (*Provider, error) {
 			return &p, nil
 		}
 	}
-	return nil, fmt.Errorf("no provider %q — magpie providers lists them%s", id, readElsewhere())
+	return nil, fmt.Errorf("no provider %q — chongyun providers lists them%s", id, readElsewhere())
 }
 
 // readElsewhere says, for a provider not found, that this magpie reads its
@@ -756,7 +756,7 @@ func readElsewhere() string {
 	if def == "" || !isFile(filepath.Join(def, "providers.json")) && !isFile(filepath.Join(def, "logins.json")) {
 		return ""
 	}
-	return fmt.Sprintf("\n  this magpie reads its files from %s, as XDG_CONFIG_HOME says; the app opened from the Dock or Start menu keeps them in %s. Run it with XDG_CONFIG_HOME unset (env -u XDG_CONFIG_HOME magpie …) to use those", appdir.Config(), def)
+	return fmt.Sprintf("\n  this chongyun reads its files from %s, as XDG_CONFIG_HOME says; the app opened from the Dock or Start menu keeps them in %s. Run it with XDG_CONFIG_HOME unset (env -u XDG_CONFIG_HOME chongyun …) to use those", appdir.Config(), def)
 }
 
 var idRe = regexp.MustCompile(`[^a-z0-9]+`)
@@ -785,8 +785,8 @@ func Save(p Provider) error {
 	if p.ID == "" || p.ID != Slug(p.ID) && !stored(p.ID) {
 		return fmt.Errorf("provider id must be lowercase letters, digits and dashes, not %q", p.ID)
 	}
-	if p.ID == "magpie" {
-		return errors.New(`"magpie" is what agents call the gateway itself; pick another id`)
+	if p.ID == "chongyun" {
+		return errors.New(`"chongyun" is what agents call the gateway itself; pick another id`)
 	}
 	if p.ID == strings.TrimSuffix(GroupPrefix, "/") {
 		return errors.New(`"group" starts the ids of routing groups; pick another id`)
@@ -964,7 +964,7 @@ func add(p Provider, once bool) (string, error) {
 	// A copy the user asked for is taken (AddCopy).
 	for _, h := range All() {
 		if once && h.Account == nil && sameProvider(h, normalize(p)) {
-			return "", fmt.Errorf("%s is already added with that key (%s); magpie provider key %s <key> changes its key", h.Name, h.ID, h.ID)
+			return "", fmt.Errorf("%s is already added with that key (%s); chongyun provider key %s <key> changes its key", h.Name, h.ID, h.ID)
 		}
 	}
 	p.ID, p.Name = freeID(p.ID), freeName(p.Name)

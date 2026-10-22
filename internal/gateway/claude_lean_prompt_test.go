@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/wslrun"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/wslrun"
 )
 
 // leanRun is what a run of a leanHarness was started with and told (its

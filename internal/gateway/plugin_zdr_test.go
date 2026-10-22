@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Command Code's own answers to x-cmd-zdr: 1 for a model no Zero Data

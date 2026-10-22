@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // noNamespaces answers as a vendor's Responses API that knows no

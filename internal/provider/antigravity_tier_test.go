@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // A Google AI Pro account as loadCodeAssist answers it (CLIProxyAPI

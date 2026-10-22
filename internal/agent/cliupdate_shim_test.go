@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // fixture is a file of testdata/mise-windows: bytes mise 2026.10.7 and

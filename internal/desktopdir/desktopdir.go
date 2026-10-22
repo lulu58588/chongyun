@@ -41,7 +41,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // Dirs are Claude Desktop's folders on one computer.

@@ -10,10 +10,10 @@ import (
 
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 func TestQoder(t *testing.T) {
@@ -72,7 +72,7 @@ func testQoder(t *testing.T, mk func(string) *Agent, rel string) {
 	p := c.Providers[magpieID]
 	if !strings.Contains(raw, "// the user's") || c.Model["name"] != "magpie/deepseek/pro" || p["baseUrl"] != gatewayV1() || p["apiKey"] != gateway.TokenFor(a.ID) ||
 		p["protocol"] != "openai" || p["model"] != "deepseek/pro" || c.Providers["mine"]["apiKey"] != "sk-m" || c.Theme != "dark" {
-		t.Fatalf("magpie:\n%s", raw)
+		t.Fatalf("chongyun:\n%s", raw)
 	}
 	var ids []string
 	for _, m := range p["models"].([]any) {
@@ -197,7 +197,7 @@ func TestQoderKeepsTheUsersSettings(t *testing.T) {
 			}
 			// the user edits magpie's provider, as they would Qoder's settings
 			if err := edit.SetJSON(path,
-				edit.KV{Path: "providers.magpie.displayName", Value: "Magpie GW"},
+				edit.KV{Path: "providers.magpie.displayName", Value: "Chongyun GW"},
 				edit.KV{Path: "providers.magpie.routing", Value: map[string]any{"compact": "relay/glm-4.6", "subagent": "relay/glm-4.6"}},
 				edit.KV{Path: "providers.magpie.streamIdleTimeoutMs", Value: 600000},
 				edit.KV{Path: "providers.magpie.firstPayloadTimeoutMs", Value: 120000},
@@ -237,7 +237,7 @@ func TestQoderKeepsTheUsersSettings(t *testing.T) {
 					t.Fatalf("%v\n%s", err, raw)
 				}
 				p := c.Providers[magpieID]
-				if p.DisplayName != "Magpie GW" || p.Routing["compact"] != "relay/glm-4.6" || p.Routing["subagent"] != "relay/glm-4.6" ||
+				if p.DisplayName != "Chongyun GW" || p.Routing["compact"] != "relay/glm-4.6" || p.Routing["subagent"] != "relay/glm-4.6" ||
 					p.StreamIdleTimeoutMs != 600000 || p.FirstPayloadTimeoutMs != 120000 || p.AuthType != "bearer" {
 					t.Errorf("%s: the user's settings not kept:\n%s", when, raw)
 				}
@@ -246,7 +246,7 @@ func TestQoderKeepsTheUsersSettings(t *testing.T) {
 					ids = append(ids, m.Model)
 				}
 				if p.BaseURL == "http://127.0.0.1:1/v1" || p.BaseURL == "" || p.APIKey == "" || slices.Contains(ids, "gone/old") || !slices.Contains(ids, "deepseek/pro") {
-					t.Errorf("%s: magpie's own parts not written: %s %s %v", when, p.BaseURL, p.APIKey, ids)
+					t.Errorf("%s: chongyun's own parts not written: %s %s %v", when, p.BaseURL, p.APIKey, ids)
 				}
 				if c.Providers["mine"].APIKey != "sk-m" {
 					t.Errorf("%s: the user's own provider changed:\n%s", when, raw)

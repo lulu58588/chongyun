@@ -25,9 +25,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/libc"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/libc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // Base is where Anthropic publishes Claude Code's builds, as its installer
@@ -96,7 +96,7 @@ func Find() string {
 
 // InstallHint is what an error about a missing Claude Code adds: how to
 // have magpie download it.
-const InstallHint = "or run `magpie claude-code install` to download Anthropic's own build for magpie"
+const InstallHint = "or run `chongyun claude-code install` to download Anthropic's own build for chongyun"
 
 // Platform is the name Anthropic's manifest gives the build for goos/goarch
 // (musl: a Linux whose C library is musl, as Alpine's).

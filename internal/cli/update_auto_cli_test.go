@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func TestUpdateAutoKeepsCorruptSettings(t *testing.T) {

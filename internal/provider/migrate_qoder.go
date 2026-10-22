@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/yetone/magpie/internal/qoder"
+	"github.com/lulu58588/magpie/internal/qoder"
 )
 
 // Qoder's and Qoder CN's accounts on @magpie-community/opencode-qoder-auth,

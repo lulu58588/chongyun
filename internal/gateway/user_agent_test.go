@@ -9,8 +9,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // uaVendor is a key+URL vendor on every API magpie forwards to one: it
@@ -65,7 +65,7 @@ var uaRoutes = []struct{ name, path, body, upstream string }{
 	{"responses", "/v1/responses", `{"model":"ua/m1","input":"hi"}`, "/v1/responses"},
 	{"gemini", "/v1beta/models/ug/m1:generateContent", `{"contents":[{"role":"user","parts":[{"text":"hi"}]}]}`, "/v1beta/models/m1:streamGenerateContent"},
 	{"embeddings", "/v1/embeddings", `{"model":"ua/embed-1","input":"hi"}`, "/v1/embeddings"},
-	{"images", "/v1/images/generations", `{"model":"ua/gpt-image-1","prompt":"a magpie"}`, "/v1/images/generations"},
+	{"images", "/v1/images/generations", `{"model":"ua/gpt-image-1","prompt":"a chongyun"}`, "/v1/images/generations"},
 }
 
 // uaSetup saves a key+URL provider "ua" on every API, at a uaVendor, with
@@ -130,8 +130,8 @@ func TestUserAgentPassedOn(t *testing.T) {
 		{"off", false, nil, pi, magpie},
 		{"on", true, nil, pi, pi},
 		{"on, the agent sent none", true, nil, "", magpie},
-		{"on, magpie's classifier", true, nil, RouterAgent, magpie},
-		{"on, magpie's image tool", true, nil, "claude-code/2.1.0 " + DrawAgent, magpie},
+		{"on, chongyun's classifier", true, nil, RouterAgent, magpie},
+		{"on, chongyun's image tool", true, nil, "claude-code/2.1.0 " + DrawAgent, magpie},
 		{"on, the user's own header", true, map[string]string{"User-Agent": "mine/1"}, pi, "mine/1"},
 		{"off, the user's own header", false, map[string]string{"User-Agent": "mine/1"}, pi, "mine/1"},
 	} {
@@ -185,7 +185,7 @@ func TestUserAgentFor(t *testing.T) {
 		{"opencode", provider.Provider{Chat: "https://opencode.ai/zen/v1", PassUserAgent: true}, magpie},
 		{"cline", provider.Provider{Preset: "clinepass", Chat: "https://api.cline.bot/api/v1", PassUserAgent: true}, magpie},
 		{"kilo", provider.Provider{Preset: "kilo", Chat: "https://api.kilo.ai/api/gateway", PassUserAgent: true}, magpie},
-		{"remote magpie", provider.Provider{Preset: provider.RemoteMagpiePreset, Chat: "http://10.0.0.2:3425/v1", PassUserAgent: true}, magpie},
+		{"remote chongyun", provider.Provider{Preset: provider.RemoteMagpiePreset, Chat: "http://10.0.0.2:3425/v1", PassUserAgent: true}, magpie},
 	} {
 		if got := userAgentFor(tt.p, pi); got != tt.want {
 			t.Errorf("%s: %q, want %q", tt.name, got, tt.want)

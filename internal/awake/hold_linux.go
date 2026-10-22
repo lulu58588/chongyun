@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // takeHold runs systemd-inhibit holding idle and sleep off around a sleep
@@ -17,7 +17,7 @@ func takeHold(display bool) (func(), error) {
 	if err != nil {
 		return nil, err
 	}
-	cmd := proc.Command(path, "--what=idle:sleep", "--who=magpie", "--why=Agents are working through magpie", "--mode=block", "sleep", "infinity")
+	cmd := proc.Command(path, "--what=idle:sleep", "--who=chongyun", "--why=Agents are working through chongyun", "--mode=block", "sleep", "infinity")
 	cmd.SysProcAttr = &syscall.SysProcAttr{Pdeathsig: syscall.SIGTERM}
 	if err := cmd.Start(); err != nil {
 		return nil, err

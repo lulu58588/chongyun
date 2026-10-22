@@ -13,12 +13,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/usage"
-	"github.com/yetone/magpie/internal/usageapi"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/usageapi"
 )
 
 // The Usage page's JSON is built in usageapi, which the gateway's
@@ -214,7 +214,7 @@ func usageRoutes(mux *http.ServeMux, w Windows) {
 		writeJSON(rw, provider.WithWindowStarts(usage.WithWindowHolds(provider.InProviderOrder(provider.WithCheckins(provider.Quotas(ctx))), usage.Clock()), usage.Clock()))
 	})
 	// WorkBuddy's daily check-in pressed now, from the Usage card, for
-	// each account not in yet today, as `magpie accounts checkin` does; the
+	// each account not in yet today, as `chongyun accounts checkin` does; the
 	// card is read again after
 	mux.HandleFunc("POST /api/usage/workbuddy-checkin", func(rw http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), time.Minute)

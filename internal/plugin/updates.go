@@ -23,11 +23,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/ghtoken"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/ghtoken"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // Updates is what magpie's last look at npm found for the plugins.

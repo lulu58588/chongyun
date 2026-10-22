@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Alma is told which of magpie's models reason, in each model's
@@ -38,12 +38,12 @@ func TestAlmaToldReasoning(t *testing.T) {
 	}
 	var mine map[string]any
 	for _, p := range f.providers {
-		if p["name"] == "magpie" {
+		if p["name"] == "chongyun" {
 			mine = p
 		}
 	}
 	if mine == nil {
-		t.Fatalf("no magpie provider: %v", f.providers)
+		t.Fatalf("no chongyun provider: %v", f.providers)
 	}
 	caps := func(id string) map[string]any {
 		t.Helper()
@@ -131,7 +131,7 @@ func TestAlmaToldPricing(t *testing.T) {
 	}
 	var mine map[string]any
 	for _, p := range f.providers {
-		if p["name"] == "magpie" {
+		if p["name"] == "chongyun" {
 			mine = p
 		}
 	}

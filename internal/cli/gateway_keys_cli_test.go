@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/budget"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/budget"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func TestGatewayKeyCLI(t *testing.T) {
@@ -117,7 +117,7 @@ func TestGatewayKeyListWithReadOnlyMigration(t *testing.T) {
 		t.Skip("settings.json remains writable")
 	}
 	var out bytes.Buffer
-	if err := gatewayKeysTo(&out, []string{"gateway-key", "list"}); err != nil || !strings.Contains(out.String(), "Magpie") {
+	if err := gatewayKeysTo(&out, []string{"gateway-key", "list"}); err != nil || !strings.Contains(out.String(), "Chongyun") {
 		t.Fatal("read-only migration blocked CLI list", out.String(), err)
 	}
 }

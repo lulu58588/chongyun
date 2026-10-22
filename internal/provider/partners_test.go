@@ -26,7 +26,7 @@ func fetchPartnersNow() {
 
 func partnerFeedServer(t *testing.T, body *atomic.Value) *httptest.Server {
 	srv := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("User-Agent") != "magpie" {
+		if r.Header.Get("User-Agent") != "chongyun" {
 			t.Errorf("User-Agent %q", r.Header.Get("User-Agent"))
 		}
 		_, _ = rw.Write([]byte(body.Load().(string)))
@@ -63,7 +63,7 @@ func TestPartnersFromTheFeed(t *testing.T) {
 	future := time.Now().Add(time.Hour).UTC().Format(time.RFC3339)
 	var body atomic.Value
 	body.Store(`{"partners":[
-		{"id":"acme","name":"Acme AI","chat":"https://api.acme.example/v1","keysUrl":"https://acme.example/keys?ref=magpie",
+		{"id":"acme","name":"Acme AI","chat":"https://api.acme.example/v1","keysUrl":"https://acme.example/keys?ref=chongyun",
 		 "iconUrl":"https://acme.example/logo.png","notes":{"en":"Fast relay","zh":"快速中转"},"langs":["zh"],
 		 "decide":"https://api.acme.example/decide","noKey":true},
 		{"id":"plain","name":"Plain","chat":"http://api.plain.example/v1"},
@@ -98,7 +98,7 @@ func TestPartnersFromTheFeed(t *testing.T) {
 
 	// a provider is added from it as from a preset
 	p, err := FromPreset("acme")
-	if err != nil || p.Chat != "https://api.acme.example/v1" || p.KeysURL != "https://acme.example/keys?ref=magpie" || p.Decide != "" {
+	if err != nil || p.Chat != "https://api.acme.example/v1" || p.KeysURL != "https://acme.example/keys?ref=chongyun" || p.Decide != "" {
 		t.Fatalf("FromPreset(acme) = %+v, %v", p, err)
 	}
 	if pr := Preset("acme"); pr == nil || !pr.Sponsored {

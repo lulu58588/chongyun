@@ -38,7 +38,7 @@ func TestRefreshSavedClaudeUsage(t *testing.T) {
 	if before["max@x.com"].Error != errClaudeSaved.Error() {
 		t.Fatalf("unasked saved account: %+v", before["max@x.com"])
 	}
-	// the Usage page opened, `magpie quota`: the user asking, but not for
+	// the Usage page opened, `chongyun quota`: the user asking, but not for
 	// this account, and each saved account would start a Claude Code
 	beforeRuns := runs.Load()
 	AskClaudeUsage()

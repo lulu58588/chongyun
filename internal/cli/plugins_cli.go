@@ -11,29 +11,29 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/middleware"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/pluginrt"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/middleware"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/pluginrt"
+	"github.com/lulu58588/magpie/internal/provider"
 	"golang.org/x/term"
 )
 
-const pluginUsage = `usage: magpie plugin [list] [--json]
-       magpie plugin add <npm | git | path>        install an OpenCode provider plugin, a pi package or a gateway hook/middleware (opencode-gemini-auth, pi-antigravity, github:owner/repo, ./my-plugin.js, ./alias.middleware.js, ./recall.hooks.ts)
-       magpie plugin rm <name>                     remove one
-       magpie plugin update                        install the newest version of each
-       magpie plugin on|off <name>                 turn one on or off
-       magpie plugin options <name> [<json> | off] show or set what a plugin is handed (a middleware's ctx.options)
-       magpie plugin use <name> <provider>         have this plugin serve a provider another plugin signs in to as well
-       magpie plugin login <provider> [<method>]   sign in to a provider a plugin adds
-       magpie plugin logout <provider>             forget the sign-in
-       magpie plugin move|migrate <subscription>   run a built-in subscription's accounts on its community plugin
-       magpie plugin builtin [on|off <id>]         list magpie's built-in plugins (Sessions, Library, routing groups…), or turn one on or off
-       magpie plugin preset essentials|all         start the built-in plugins from the Essentials preset, or from all of them
-       magpie plugin dump [--json]                 what plugins.yml comes to: each built-in plugin, its config, and the layer each value is from`
+const pluginUsage = `usage: chongyun plugin [list] [--json]
+       chongyun plugin add <npm | git | path>        install an OpenCode provider plugin, a pi package or a gateway hook/middleware (opencode-gemini-auth, pi-antigravity, github:owner/repo, ./my-plugin.js, ./alias.middleware.js, ./recall.hooks.ts)
+       chongyun plugin rm <name>                     remove one
+       chongyun plugin update                        install the newest version of each
+       chongyun plugin on|off <name>                 turn one on or off
+       chongyun plugin options <name> [<json> | off] show or set what a plugin is handed (a middleware's ctx.options)
+       chongyun plugin use <name> <provider>         have this plugin serve a provider another plugin signs in to as well
+       chongyun plugin login <provider> [<method>]   sign in to a provider a plugin adds
+       chongyun plugin logout <provider>             forget the sign-in
+       chongyun plugin move|migrate <subscription>   run a built-in subscription's accounts on its community plugin
+       chongyun plugin builtin [on|off <id>]         list chongyun's built-in plugins (Sessions, Library, routing groups…), or turn one on or off
+       chongyun plugin preset essentials|all         start the built-in plugins from the Essentials preset, or from all of them
+       chongyun plugin dump [--json]                 what plugins.yml comes to: each built-in plugin, its config, and the layer each value is from`
 
-// pluginCmd: `magpie plugin …` — OpenCode's provider plugins and pi's
+// pluginCmd: `chongyun plugin …` — OpenCode's provider plugins and pi's
 // packages, which sign in to a subscription and carry its requests
 // (internal/plugin), and gateway middleware (internal/middleware).
 func pluginCmd(args []string) error {
@@ -152,7 +152,7 @@ func pluginCmd(args []string) error {
 		return nil
 	case "move-back", "moveback", "unmigrate":
 		// the built-ins are retired: there is no going back to one
-		return errors.New("magpie's built-in subscriptions are retired: their community plugins run them")
+		return errors.New("chongyun's built-in subscriptions are retired: their community plugins run them")
 	case "builtin", "builtins", "built-in":
 		return builtinCmd(rest)
 	case "preset":
@@ -180,7 +180,7 @@ func listPlugins(ctx context.Context, asJSON bool) error {
 			fmt.Println("[]")
 			return nil
 		}
-		fmt.Println("No plugins. Add one: magpie plugin add <npm package | git repo | path>")
+		fmt.Println("No plugins. Add one: chongyun plugin add <npm package | git repo | path>")
 		return nil
 	}
 	loaded, lerr := plugin.Plugins(ctx)
@@ -252,9 +252,9 @@ func listPlugins(ctx context.Context, asJSON bool) error {
 			if p.Spec != e.Spec {
 				continue
 			}
-			who := muted.Render("not signed in · magpie plugin login " + p.ID)
+			who := muted.Render("not signed in · chongyun plugin login " + p.ID)
 			if c, ok := onBuiltin[p.ID]; ok && !p.SignedIn {
-				who = muted.Render(fmt.Sprintf("runs on magpie's built-in (%d accounts) · magpie plugin move %s", c.Accounts, p.ID))
+				who = muted.Render(fmt.Sprintf("runs on chongyun's built-in (%d accounts) · chongyun plugin move %s", c.Accounts, p.ID))
 			}
 			if p.SignedIn {
 				who = green.Render("signed in")
@@ -274,7 +274,7 @@ func listPlugins(ctx context.Context, asJSON bool) error {
 				fmt.Printf("  %s  %s\n", provider.PluginID(c.ID), muted.Render("also signed in to by "+strings.Join(c.With, ", ")+"; this one serves it"))
 				continue
 			}
-			fmt.Printf("  %s  %s\n", provider.PluginID(c.ID), amber.Render("served by "+c.By+", which signs in to it too · magpie plugin use "+e.Spec+" "+c.ID))
+			fmt.Printf("  %s  %s\n", provider.PluginID(c.ID), amber.Render("served by "+c.By+", which signs in to it too · chongyun plugin use "+e.Spec+" "+c.ID))
 		}
 	}
 	if lerr != nil {
@@ -378,7 +378,7 @@ func pluginProvider(ctx context.Context, name string) (plugin.Provider, error) {
 		ids = append(ids, p.ID)
 	}
 	if len(ids) == 0 {
-		return plugin.Provider{}, fmt.Errorf("no plugin signs in to %q — add one: magpie plugin add <npm package>", name)
+		return plugin.Provider{}, fmt.Errorf("no plugin signs in to %q — add one: chongyun plugin add <npm package>", name)
 	}
 	return plugin.Provider{}, fmt.Errorf("no plugin signs in to %q; they sign in to %s", name, strings.Join(ids, ", "))
 }
@@ -501,7 +501,7 @@ func pluginLogin(ctx context.Context, name, method string) error {
 		if a.Method != "code" && provider.PluginPastesCallback(pp.ID, a.URL) {
 			// a browser on another computer (magpie on a server or in
 			// Docker) ends on a page that won't load: its address finishes it
-			fmt.Println("If the page the browser ends on won't load (magpie on a server or in Docker), paste its whole address here and press Enter:")
+			fmt.Println("If the page the browser ends on won't load (chongyun on a server or in Docker), paste its whole address here and press Enter:")
 			go func() {
 				for wait.Err() == nil {
 					line, err := stdin.ReadString('\n')

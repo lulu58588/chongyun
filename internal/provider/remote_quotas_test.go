@@ -137,7 +137,7 @@ func TestRemoteMagpieCards(t *testing.T) {
 	for _, qs := range [][]SubscriptionQuota{subs, plans, balances} {
 		for _, q := range qs {
 			if strings.Contains(q.Provider, "home") {
-				t.Errorf("a third magpie's card passed on: %+v", q)
+				t.Errorf("a third chongyun's card passed on: %+v", q)
 			}
 		}
 	}
@@ -168,7 +168,7 @@ func TestRemoteMagpieCardRefresh(t *testing.T) {
 	remoteQuotaHome(t, peer)
 	ctx := context.Background()
 	cs := peerCards(RemoteCards(ctx))
-	if len(cs) != 1 || cs[0].Provider != "office" || cs[0].Error != errRemoteNothingRead || cs[0].Icon != "magpie" {
+	if len(cs) != 1 || cs[0].Provider != "office" || cs[0].Error != errRemoteNothingRead || cs[0].Icon != "chongyun" {
 		t.Fatalf("nothing read there: %+v", cs)
 	}
 	peer.Lock()
@@ -212,7 +212,7 @@ func TestRemoteMagpieUnreachable(t *testing.T) {
 	peer.status = http.StatusNotFound
 	peer.Unlock()
 	if cs := peerCards(RemoteCards(ctx)); len(cs) != 1 || cs[0].Error != errRemoteNoShare {
-		t.Errorf("an old magpie: %+v", cs)
+		t.Errorf("an old chongyun: %+v", cs)
 	}
 	// one that serves models but keeps its quotas, or refuses the key,
 	// says which, so its card can say what to do there
@@ -391,11 +391,11 @@ func TestRemoteMagpieKeyLimits(t *testing.T) {
 	peer.Unlock()
 	ks = keyCards(RemoteCards(ctx))
 	if len(ks) != 2 {
-		t.Errorf("old magpie: %+v", ks)
+		t.Errorf("old chongyun: %+v", ks)
 	}
 	for n, q := range ks {
 		if q.Error != errRemoteNoKeyLimit || q.GatewayKey != nil {
-			t.Errorf("%s on an old magpie: %+v", n, q)
+			t.Errorf("%s on an old chongyun: %+v", n, q)
 		}
 	}
 }

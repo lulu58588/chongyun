@@ -10,8 +10,8 @@ import (
 	"slices"
 	"time"
 
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // ErrOff is a Restore, Undo or SetAuto asked for with sync off.
@@ -63,7 +63,7 @@ func Restore(ctx context.Context) ([]string, error) {
 			return err
 		}
 		if data == nil {
-			return errors.New("there is no magpie setup on the server yet: nothing to restore")
+			return errors.New("there is no chongyun setup on the server yet: nothing to restore")
 		}
 		remote, err := backup.Open(data, c.Passphrase)
 		if errors.Is(err, backup.ErrPassphrase) {
@@ -141,9 +141,9 @@ func Upload(ctx context.Context) error {
 			_, err := backup.Open(data, c.Passphrase)
 			switch {
 			case err == nil:
-				return errors.New("the file on the server is a magpie backup this computer can open: Sync now merges with it instead, and nothing was written over it")
+				return errors.New("the file on the server is a chongyun backup this computer can open: Sync now merges with it instead, and nothing was written over it")
 			case errors.Is(err, backup.ErrPassphrase):
-				return errors.New("the file on the server is a magpie backup sealed with another passphrase, so it wasn't written over: use the passphrase set on your other computers")
+				return errors.New("the file on the server is a chongyun backup sealed with another passphrase, so it wasn't written over: use the passphrase set on your other computers")
 			}
 			err = described(c, data, err)
 			var nb *notBackup
@@ -161,7 +161,7 @@ func Upload(ctx context.Context) error {
 			return err
 		}
 		b := local
-		b.Created, b.App = time.Now().UTC(), "magpie"
+		b.Created, b.App = time.Now().UTC(), "chongyun"
 		sealed, err := backup.Seal(b, c.Passphrase)
 		if err != nil {
 			return err

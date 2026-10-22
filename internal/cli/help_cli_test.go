@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/agent"
 )
 
 // helpHome points the home and every config, cache and data folder into
@@ -84,7 +84,7 @@ func runOut(t *testing.T, args ...string) (string, error) {
 	case err = <-done:
 	case <-time.After(20 * time.Second):
 		os.Stdout = old
-		t.Fatalf("magpie %s didn't come back: it ran", strings.Join(args, " "))
+		t.Fatalf("chongyun %s didn't come back: it ran", strings.Join(args, " "))
 	}
 	w.Close()
 	os.Stdout = old
@@ -143,8 +143,8 @@ func types(ix *ast.IndexExpr) string {
 
 // --help, -h or help after any command, and every agent, in any place,
 // prints its usage and does nothing else: no file under the home is
-// written and nothing is started. `magpie snow --help` set Snow's model to
-// "--help" and took magpie out of it (#1457), and `magpie serve --help`
+// written and nothing is started. `chongyun snow --help` set Snow's model to
+// "--help" and took magpie out of it (#1457), and `chongyun serve --help`
 // ran a gateway.
 func TestHelpOnEveryCommandDoesNothing(t *testing.T) {
 	root := helpHome(t)
@@ -161,13 +161,13 @@ func TestHelpOnEveryCommandDoesNothing(t *testing.T) {
 			} {
 				out, err := runOut(t, args...)
 				if err != nil {
-					t.Errorf("magpie %s: %v", strings.Join(args, " "), err)
+					t.Errorf("chongyun %s: %v", strings.Join(args, " "), err)
 				}
-				if !strings.Contains(out, "magpie") && !strings.Contains(out, "usage") {
-					t.Errorf("magpie %s printed no usage: %q", strings.Join(args, " "), out)
+				if !strings.Contains(out, "chongyun") && !strings.Contains(out, "usage") {
+					t.Errorf("chongyun %s printed no usage: %q", strings.Join(args, " "), out)
 				}
 				if got := tree(t, root); !reflect.DeepEqual(got, before) {
-					t.Fatalf("magpie %s wrote under the home:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
+					t.Fatalf("chongyun %s wrote under the home:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
 				}
 			}
 		})
@@ -175,7 +175,7 @@ func TestHelpOnEveryCommandDoesNothing(t *testing.T) {
 }
 
 // The reporter's case (#1457, blackrion): Snow on magpie's profile, then
-// `magpie snow --help` and its other forms. Each prints Snow's usage, a
+// `chongyun snow --help` and its other forms. Each prints Snow's usage, a
 // flag no agent form takes is refused, and Snow's files stay as they were.
 func TestAgentHelpLeavesSnowWired(t *testing.T) {
 	groupsHome(t)
@@ -211,11 +211,11 @@ func TestAgentHelpLeavesSnowWired(t *testing.T) {
 		{"snow", "--help"}, {"snow", "-h"}, {"snow", "help"}, {"snow", "model", "--help"}, {"snow-cli", "--help"},
 	} {
 		out, err := runOut(t, args...)
-		if err != nil || !strings.Contains(out, "magpie snow <model>") {
-			t.Errorf("magpie %s: %v %q", strings.Join(args, " "), err, out)
+		if err != nil || !strings.Contains(out, "chongyun snow <model>") {
+			t.Errorf("chongyun %s: %v %q", strings.Join(args, " "), err, out)
 		}
 		if got := tree(t, dir); !reflect.DeepEqual(got, before) {
-			t.Fatalf("magpie %s changed Snow's files:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
+			t.Fatalf("chongyun %s changed Snow's files:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
 		}
 	}
 	for _, args := range [][]string{
@@ -223,18 +223,18 @@ func TestAgentHelpLeavesSnowWired(t *testing.T) {
 	} {
 		_, err := runOut(t, args...)
 		if err == nil || !strings.Contains(err.Error(), "nothing was changed") {
-			t.Errorf("magpie %s: %v", strings.Join(args, " "), err)
+			t.Errorf("chongyun %s: %v", strings.Join(args, " "), err)
 		}
 		if got := tree(t, dir); !reflect.DeepEqual(got, before) {
-			t.Fatalf("magpie %s changed Snow's files:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
+			t.Fatalf("chongyun %s changed Snow's files:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
 		}
 	}
 	// a model no profile of the user's is on, typed without a flag, is
 	// refused by Snow itself the same way
 	if _, err := runOut(t, "snow", "nonsense"); err == nil {
-		t.Error("magpie snow nonsense taken")
+		t.Error("chongyun snow nonsense taken")
 	}
 	if got := tree(t, dir); !reflect.DeepEqual(got, before) {
-		t.Fatalf("magpie snow nonsense changed Snow's files:\nbefore %v\nafter  %v", before, got)
+		t.Fatalf("chongyun snow nonsense changed Snow's files:\nbefore %v\nafter  %v", before, got)
 	}
 }

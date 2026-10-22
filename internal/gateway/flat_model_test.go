@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #1387 (worksyang): MiniMax Code names a model under magpie with one

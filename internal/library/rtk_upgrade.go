@@ -16,8 +16,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/source"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/source"
 )
 
 // rtk's version is kept up to date the way it was installed: Homebrew's
@@ -273,7 +273,7 @@ func latestRTK() (string, error) {
 		CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse },
 	}
 	req, _ := http.NewRequest("HEAD", rtkReleases, nil)
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	if resp, err := source.Do(c, req); err == nil {
 		resp.Body.Close()
 		if _, tag, ok := strings.Cut(resp.Header.Get("Location"), "/releases/tag/"); ok {
@@ -283,7 +283,7 @@ func latestRTK() (string, error) {
 		}
 	}
 	req, _ = http.NewRequest("GET", rtkReleasesAPI, nil)
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	req.Header.Set("Accept", "application/vnd.github+json")
 	resp, _, err := doGitHub(req, func(r *http.Request) (*http.Response, error) { return source.Do(c, r) })
 	if err != nil {
@@ -453,7 +453,7 @@ func UpgradeRTK() (*RTKView, error) {
 	}
 	c := upgraderOf(bin)
 	if c == nil {
-		return nil, fmt.Errorf("magpie can't tell how the rtk at %s was installed — update it the way you installed it", bin)
+		return nil, fmt.Errorf("chongyun can't tell how the rtk at %s was installed — update it the way you installed it", bin)
 	}
 	before := rtkVersion()
 	var env []string

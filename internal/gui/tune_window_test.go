@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
 )
 
 // tuneCalls is an agent's conversations on one model that grow by 5K a
@@ -48,7 +48,7 @@ func TestTuneWindowsAreTheUsers(t *testing.T) {
 	}
 	for _, e := range provider.Catalog() {
 		if e.ID == "cpa/gpt-cpa-open" && e.Context != 0 {
-			t.Fatalf("cpa/gpt-cpa-open has a window of %d: the case needs one magpie doesn't know", e.Context)
+			t.Fatalf("cpa/gpt-cpa-open has a window of %d: the case needs one chongyun doesn't know", e.Context)
 		}
 	}
 	codex := func(model string) tuneAdvice {
@@ -95,7 +95,7 @@ func TestTuneWindowsAreTheUsers(t *testing.T) {
 		for _, ag := range st.Agents {
 			for _, a := range ag.Advice {
 				if a.Compact != nil {
-					t.Errorf("Claude Code on %s is offered windows %+v; its window is magpie's own", m, a.Compact.Curve)
+					t.Errorf("Claude Code on %s is offered windows %+v; its window is chongyun's own", m, a.Compact.Curve)
 				}
 			}
 		}

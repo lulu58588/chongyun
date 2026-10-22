@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A model's name is the vendor's, or models.dev's, and agents are shown it
@@ -85,7 +85,7 @@ func setModelName(ref, name string) (bool, error) {
 		return false, errors.New("a model's name is at most 80 characters")
 	}
 	if name != "" && !p.serves(model) {
-		return false, fmt.Errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+		return false, fmt.Errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 	}
 	s := settings.Load()
 	key := p.ID + "/" + model
@@ -134,10 +134,10 @@ func SetModelPrice(id string, p *catalog.Price) error {
 			return err
 		}
 		// a price for a model the provider does not serve is a price that
-		// never applies and nothing later says so; the same refusal `magpie
+		// never applies and nothing later says so; the same refusal `chongyun
 		// model name` makes for the same id.
 		if model != "*" && !pr.serves(model) {
-			return fmt.Errorf("%s has no model %s (magpie provider %s lists them, and magpie model price '*/%s' prices it from any provider)", pr.ID, model, pr.ID, model)
+			return fmt.Errorf("%s has no model %s (chongyun provider %s lists them, and chongyun model price '*/%s' prices it from any provider)", pr.ID, model, pr.ID, model)
 		}
 		// the entry is written under the id the provider has now, the way a
 		// name is: a key under a display name is a price the provider is
@@ -202,14 +202,14 @@ func PriceKey(pid, model string) (string, bool) {
 // DropModelPrice takes a user's price away under the key it is stored at,
 // without asking whether the provider is still there, and reports whether
 // there was one there to take away. A price outlives the provider it was set
-// for: that provider can be deleted, and `magpie model prices` still lists
+// for: that provider can be deleted, and `chongyun model prices` still lists
 // the price and usage is still counted at it, so a removal that resolved the
 // provider first would leave the user no way to take it away. Which of the
 // keys a price is ever kept under this one is, is PriceKey's to say.
 //
 // A key holding no price is still no error — there is nothing there to take
 // away, which is the state it is left in either way — but saying so is what
-// tells a mistyped id from a price that was cleared: `magpie model price --
+// tells a mistyped id from a price that was cleared: `chongyun model price --
 // reset` over a price still in the file would have the user believe it gone.
 func DropModelPrice(key string) (bool, error) {
 	key = strings.TrimPrefix(strings.TrimSpace(key), "magpie/")
@@ -377,7 +377,7 @@ func setModelImage(ref string, images *bool) (bool, error) {
 		return false, err
 	}
 	if images != nil && !p.serves(model) {
-		return false, fmt.Errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+		return false, fmt.Errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 	}
 	if images != nil {
 		if vendor, known := vendorSees(p, model); known && *images == vendor {
@@ -433,7 +433,7 @@ func setModelAPI(ref, api string) (bool, error) {
 			return false, fmt.Errorf("%s has no %s URL to ask %s on: add it under More endpoints first", p.ID, proto, model)
 		}
 		if !p.serves(model) {
-			return false, fmt.Errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+			return false, fmt.Errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 		}
 	}
 	s := settings.Load()
@@ -598,7 +598,7 @@ func setModelSame(ref, same string) (bool, error) {
 		same = "" // its own id: merged by it already
 	}
 	if same != "" && !p.serves(model) {
-		return false, fmt.Errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+		return false, fmt.Errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 	}
 	s := settings.Load()
 	key := p.ID + "/" + model
@@ -737,7 +737,7 @@ func (e Entry) PlainName() string { return cmp.Or(e.Plain, e.Name) }
 // agent's list is told it: a model with levels, or one marked Reasoning
 // with a thinking switch alone. An export that read the levels alone
 // marked Trae CN's kimi-k3-max, which always thinks and has no levels
-// magpie knows, not reasoning for Pi, and `magpie pi effort high` was
+// magpie knows, not reasoning for Pi, and `chongyun pi effort high` was
 // clamped to off (#2380).
 func (e Entry) Thinks() bool { return e.Reasoning || len(e.Efforts) > 0 }
 
@@ -1118,10 +1118,10 @@ func nearestEffort(want string, levels []string) string {
 //
 // A blank name is a removal, and whether there was a name there to take away
 // is DropUpstreamName's to say, not this one's: a caller with something of
-// its own to say about a name that was not there — `magpie model wire --
+// its own to say about a name that was not there — `chongyun model wire --
 // reset`, which tells a mistyped id from a model already asked for by the
 // name magpie knows it by — asks DropUpstreamName for the removal itself,
-// the way `magpie model price --reset` asks DropModelPrice. A caller that
+// the way `chongyun model price --reset` asks DropModelPrice. A caller that
 // only wants the model left as it is has nothing to tell the user either
 // way, which is why a blank name is an error and not a second answer.
 func SetUpstreamName(ref, name string) error {
@@ -1138,10 +1138,10 @@ func SetUpstreamName(ref, name string) error {
 		return err
 	}
 	if model != "*" && !p.serves(model) {
-		return fmt.Errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+		return fmt.Errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 	}
 	if p.asksOwnBackend() {
-		return fmt.Errorf("%s is %s's own account: magpie asks it for the model by the id it knows, so there is no upstream name to give it", p.Name, p.Account.Agent)
+		return fmt.Errorf("%s is %s's own account: chongyun asks it for the model by the id it knows, so there is no upstream name to give it", p.Name, p.Account.Agent)
 	}
 	s := settings.Load()
 	if s.ModelWires == nil {

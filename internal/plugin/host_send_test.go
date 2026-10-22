@@ -64,7 +64,7 @@ func (c *wireIn) last(t *testing.T) []byte {
 	t.Helper()
 	line := c.lastLine()
 	if line == nil {
-		t.Fatal("magpie wrote nothing to the child")
+		t.Fatal("chongyun wrote nothing to the child")
 	}
 	return line
 }
@@ -80,7 +80,7 @@ func (c *wireIn) fetchFrame(t *testing.T) []byte {
 			return line
 		}
 	}
-	t.Fatal("magpie wrote no fetch request")
+	t.Fatal("chongyun wrote no fetch request")
 	return nil
 }
 

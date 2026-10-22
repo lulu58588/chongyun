@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/davsync"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/davsync"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // fakeArchive is a bucket of archived calls in memory; size, when set,

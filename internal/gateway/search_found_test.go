@@ -12,8 +12,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // fakeDeepSeek answers as DeepSeek's APIs do when magpie's searcher asks
@@ -359,7 +359,7 @@ func TestSearcherFindingNothingGivesWay(t *testing.T) {
 	searchesOn(t, provider.Responses, ds2.URL)
 	save(t, provider.Provider{ID: "ds2", Name: "DeepSeek 2", Key: "k", Responses: ds2.URL + "/v1", Models: []string{"deepseek-flash"}})
 	if p, _, _ := searcher(); p.ID != "ds" {
-		t.Fatalf("magpie's searcher is %s", p.ID)
+		t.Fatalf("chongyun's searcher is %s", p.ID)
 	}
 	blocks = searchAsClaudeCode(t)
 	if len(apis.asked) != 0 || len(ds2.searches()) != 1 {

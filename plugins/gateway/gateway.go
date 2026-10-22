@@ -9,8 +9,8 @@
 package gateway
 
 import (
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/pluginrt"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/pluginrt"
 )
 
 // Settings are the page's settings, at their defaults.

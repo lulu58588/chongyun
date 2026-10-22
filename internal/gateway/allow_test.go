@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // lc on Discord, magpie in Docker on a public host: with an allow list,

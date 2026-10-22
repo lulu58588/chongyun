@@ -32,7 +32,7 @@ func Agent(target string) (file string, only bool) {
 		Exports json.RawMessage `json:"exports"`
 		Magpie  struct {
 			Agent string `json:"agent"`
-		} `json:"magpie"`
+		} `json:"chongyun"`
 	}
 	if json.Unmarshal(b, &pkg) != nil || strings.TrimSpace(pkg.Magpie.Agent) == "" {
 		return "", false

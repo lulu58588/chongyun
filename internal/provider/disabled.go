@@ -6,8 +6,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Disabled models (#1867): models the user turned off for every request

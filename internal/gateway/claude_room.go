@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // claudeRoom counts the Claude Code processes magpie has running for
@@ -64,7 +64,7 @@ func claudeNoRoom(status int, body []byte) bool {
 
 func (e *claudeFull) Error() string {
 	return fmt.Sprintf("%d "+claudeNoRoomSaid+" (%s); none ended within %s. "+
-		"Set how many may run with `magpie claude-code runs N` (claudeRunsMost in settings.json)",
+		"Set how many may run with `chongyun claude-code runs N` (claudeRunsMost in settings.json)",
 		e.live, e.why, e.waited)
 }
 
@@ -79,7 +79,7 @@ func claudeRunsMost() (int, string) {
 }
 
 // ClaudeMemRuns is how many Claude Code processes this machine's memory
-// holds, and why; 0 when not bounded by it (`magpie claude-code runs`).
+// holds, and why; 0 when not bounded by it (`chongyun claude-code runs`).
 func ClaudeMemRuns() (int, string) { return claudeMemRuns() }
 
 // The memory a Claude Code process is given, and what is kept for magpie
@@ -326,7 +326,7 @@ func letGoForRoom(most int) bool {
 		b.mu.Unlock()
 		return true
 	})
-	why := "magpie let it go to make room for another Claude Code (" + strconv.Itoa(most) + " may run at once)"
+	why := "chongyun let it go to make room for another Claude Code (" + strconv.Itoa(most) + " may run at once)"
 	if idle != nil {
 		b := idleBridge
 		b.mu.Lock()

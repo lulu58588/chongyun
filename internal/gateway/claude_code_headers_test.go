@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A relay that serves only Claude Code (#179: packy's "only accessible via
@@ -75,7 +75,7 @@ func TestClaudeCodeHeadersReachAnthropicRelay(t *testing.T) {
 	provider.Save(*p)
 	send("/v1/messages", claude)
 	if a, k := f.head.Get("Authorization"), f.head.Get("X-Api-Key"); a != "" || k != "" {
-		t.Errorf("magpie's key leaked: %q %q", a, k)
+		t.Errorf("chongyun's key leaked: %q %q", a, k)
 	}
 	if f.head.Get("X-App") != "cli" {
 		t.Errorf("x-app: %v", f.head)

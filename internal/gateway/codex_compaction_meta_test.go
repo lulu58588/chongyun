@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The reporter's compaction, from Codex Desktop 26.1007 (#2352, yhxwyzm):
@@ -73,7 +73,7 @@ func TestLocalCompactionSaysLocal(t *testing.T) {
 				t.Fatalf("%d %s\nupstream got %.300s", rec.Code, rec.Body.String(), f.got)
 			}
 			if bytes.Contains(f.got, []byte(`"compaction_trigger"`)) {
-				t.Fatalf("magpie's own compaction sent the trigger: %s", f.got)
+				t.Fatalf("chongyun's own compaction sent the trigger: %s", f.got)
 			}
 			var q struct {
 				ClientMetadata map[string]string `json:"client_metadata"`

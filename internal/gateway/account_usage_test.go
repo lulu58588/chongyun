@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // Each call's record names the subscription account that answered it, as

@@ -11,8 +11,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A Kimi Code plan is known by its hosts' /coding endpoints, or by its
@@ -181,7 +181,7 @@ func TestKimiCodePlanSearchesForItsModels(t *testing.T) {
 		t.Fatal(err)
 	}
 	if p, _, ok := autoSearcher(); !ok || p.ID != "oai" {
-		t.Fatalf("magpie's pick %q %v", p.ID, ok)
+		t.Fatalf("chongyun's pick %q %v", p.ID, ok)
 	}
 	kimi.searched, kimi.results = nil, nil
 	if out := ask(); !strings.Contains(out, "Go 1.27.1 is out.") || len(kimi.searched) != 1 || len(other) != 0 || len(apis.asked) != 0 {

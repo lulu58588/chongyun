@@ -100,7 +100,7 @@ func TestProjectSkillsCopied(t *testing.T) {
 	ok(t)(ProjectSkill(proj, "pdf", []string{"claude"}))
 	p := filepath.Join(proj, ".claude/skills/pdf")
 	if isLink(t, p) || !ours(p, "pdf") {
-		t.Fatal("not magpie's copy")
+		t.Fatal("not chongyun's copy")
 	}
 	if s := read(t, filepath.Join(p, "scripts/run.sh")); s != "echo hi\n" {
 		t.Errorf("run.sh: %q", s)
@@ -152,7 +152,7 @@ func TestProjectRefusesForeignFolder(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(r.Problems) != 1 || r.Problems[0].Agent != proj || !strings.Contains(r.Problems[0].Error, "isn't magpie's") {
+	if len(r.Problems) != 1 || r.Problems[0].Agent != proj || !strings.Contains(r.Problems[0].Error, "isn't chongyun's") {
 		t.Fatalf("problems: %+v", r.Problems)
 	}
 	if !strings.Contains(read(t, filepath.Join(proj, ".claude/skills/pdf/SKILL.md")), "The project's own") {

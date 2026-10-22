@@ -4,7 +4,7 @@ import (
 	"cmp"
 	"net/http"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // museContext and museOutput are what Muse is told of a model whose window
@@ -34,7 +34,7 @@ func (s *Server) museModels(w http.ResponseWriter, r *http.Request) {
 			"attachment": e.Images, "reasoning": len(e.Efforts) > 0, "temperature": false, "tool_call": true,
 			"modalities": map[string]any{"input": input, "output": []string{"text"}},
 			"options":    map[string]any{"include": []string{}}, "variants": map[string]any{},
-			"description": labels[i] + " via magpie"}
+			"description": labels[i] + " via chongyun"}
 		// the window and the most a reply may hold: Muse hides a model
 		// whose limit lacks either, and without a limit asks for replies
 		// of 128K tokens, more than most models give; one magpie doesn't

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // claudeCloudHome is claudeAboutHome with the managed settings in the
@@ -64,7 +64,7 @@ func TestClaudeCloudSwitchStepsAsideForMagpie(t *testing.T) {
 				routed := func(when string) {
 					t.Helper()
 					if v, has := edit.GetJSONRaw(path, "env."+c.key); has {
-						t.Fatalf("%s: %s left at %s beside magpie's wiring:\n%s", when, c.key, v, readFile(path))
+						t.Fatalf("%s: %s left at %s beside chongyun's wiring:\n%s", when, c.key, v, readFile(path))
 					}
 					for _, k := range c.cloud {
 						if _, has := edit.GetJSON(path, "env."+k); !has {
@@ -233,7 +233,7 @@ func TestClaudeCloudSwitchElsewhereIsSaid(t *testing.T) {
 			}
 			// the template's own words, its slots filled, for the GUI to
 			// translate (tNotice)
-			if !strings.HasSuffix(d.Detail, "to go through magpie.") {
+			if !strings.HasSuffix(d.Detail, "to go through chongyun.") {
 				t.Fatalf("%q isn't one of the notices", d.Detail)
 			}
 			// where magpie can't write it, it doesn't: the file stays
@@ -314,7 +314,7 @@ func TestT3CodeSaysAClaudeCloudSwitch(t *testing.T) {
 	writeFile(t, claudePath, `{"env":{"CLAUDE_CODE_USE_BEDROCK":"1"}}`)
 	a := t3code(home)
 	if a.Check() != "" {
-		t.Fatal("drift before magpie's instance is there")
+		t.Fatal("drift before chongyun's instance is there")
 	}
 	if err := a.Field("provider").Set(magpieID); err != nil {
 		t.Fatal(err)
@@ -345,7 +345,7 @@ func TestT3CodeSaysAClaudeCloudSwitch(t *testing.T) {
 	raw, _ = edit.GetJSON(path, t3Instance+".environment")
 	for _, k := range agentenv.ClaudeProviders {
 		if strings.Contains(raw, k) {
-			t.Fatalf("%s left on magpie's instance: %s", k, raw)
+			t.Fatalf("%s left on chongyun's instance: %s", k, raw)
 		}
 	}
 	if !strings.Contains(raw, "MY_OWN") {

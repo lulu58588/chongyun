@@ -56,11 +56,11 @@ func TestSetYAMLFillsAnEmptyTableInBlocks(t *testing.T) {
 	if err := os.WriteFile(p, []byte("providers: {}\nmodel: {}\nkeep: {a: 1}\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	if err := SetYAML(p, KV{"providers.magpie", map[string]any{"name": "magpie", "models": []string{"x"}}}, KV{"model.default", "x"}, KV{"keep.b", 2}); err != nil {
+	if err := SetYAML(p, KV{"providers.magpie", map[string]any{"name": "chongyun", "models": []string{"x"}}}, KV{"model.default", "x"}, KV{"keep.b", 2}); err != nil {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(p)
-	want := "providers:\n  magpie:\n    models:\n      - x\n    name: magpie\nmodel:\n  default: x\nkeep: {a: 1, b: 2}\n"
+	want := "providers:\n  chongyun:\n    models:\n      - x\n    name: chongyun\nmodel:\n  default: x\nkeep: {a: 1, b: 2}\n"
 	if string(b) != want {
 		t.Fatalf("got\n%s\nwant\n%s", b, want)
 	}

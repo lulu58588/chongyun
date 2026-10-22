@@ -32,7 +32,7 @@ var (
 )
 
 // KeepFresh fetches the catalog whenever it is stale, now and every hour
-// after, for as long as the process runs (the app's backend, `magpie
+// after, for as long as the process runs (the app's backend, `chongyun
 // serve`). It never returns.
 func KeepFresh() {
 	keeping.Store(true)

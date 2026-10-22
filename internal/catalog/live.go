@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/filememo"
 )
 
 // A vendor's own /models endpoint is the truth about what it serves today;
@@ -500,7 +500,7 @@ func fetchPage(ctx context.Context, url, key string, anthropic bool, headers map
 			return nil, nil, err
 		}
 		req.Header.Set("Accept", "application/json")
-		req.Header.Set("User-Agent", "magpie")
+		req.Header.Set("User-Agent", "chongyun")
 		if key != "" {
 			req.Header.Set("Authorization", "Bearer "+key)
 			req.Header.Set("x-api-key", key)
@@ -618,7 +618,7 @@ func fetchPage(ctx context.Context, url, key string, anthropic bool, headers map
 			m.Output = int(n)
 		}
 		m.Efforts = levelsOf(r.Levels)
-		if r.WebSearch == "native" || r.WebSearch == "magpie" {
+		if r.WebSearch == "native" || r.WebSearch == "chongyun" {
 			m.WebSearch = r.WebSearch
 		}
 		if input != nil {
@@ -686,10 +686,10 @@ type liveModel struct {
 	Levels any      `json:"supported_reasoning_levels"`
 	// another magpie's name for the model with its provider there after
 	// it, and "image", "video" or "decision" for its other models
-	Label string `json:"magpie_label"`
+	Label string `json:"chongyun_label"`
 	Kind  string `json:"kind"`
 	// how another magpie searches the web for the model: "native" or
-	// "magpie" (Model.WebSearch)
+	// "chongyun" (Model.WebSearch)
 	WebSearch string `json:"web_search"`
 	// the service tiers another magpie offers its Codex on the model
 	// (Fast's "priority"), as Codex's catalog writes them ({"id":…}) or
@@ -699,7 +699,7 @@ type liveModel struct {
 	// what another magpie counts a call to the model at, asked for with
 	// its X-Magpie-Prices header: the price its user set, else its list
 	// price. Raw, as an odd value mustn't lose the whole list
-	Price json.RawMessage `json:"magpie_price"`
+	Price json.RawMessage `json:"chongyun_price"`
 	// the protocol family PipeLLM routes the model by: openai, anthropic
 	// or gemini
 	TypeTarget string `json:"type_target"`

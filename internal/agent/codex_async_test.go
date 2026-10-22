@@ -6,8 +6,8 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // setAsyncCompact sets Codex's background compaction as the Settings row
@@ -64,7 +64,7 @@ func TestCodexAsyncCompactionWritten(t *testing.T) {
 		t.Fatalf("async_compaction = %v:\n%s", feature, read())
 	}
 	if capability != "v2" {
-		t.Fatalf("no remote_compaction = \"v2\" on magpie's provider:\n%s", read())
+		t.Fatalf("no remote_compaction = \"v2\" on chongyun's provider:\n%s", read())
 	}
 	// a model switch writes magpie's provider table again
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
@@ -95,7 +95,7 @@ func TestCodexAsyncCompactionWritten(t *testing.T) {
 		t.Fatalf("left behind with the switch off: %v %v\n%s", feature, capability, read())
 	}
 	if _, ok := stashLoad()["codex.async"]; ok {
-		t.Fatal("the stash still claims what magpie wrote")
+		t.Fatal("the stash still claims what chongyun wrote")
 	}
 }
 

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // isMemoryKind: a call Codex makes to write or consolidate its memories,

@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 func TestAsideLegacyRestorePointIsReadWithoutMigrationWrites(t *testing.T) {
 	settings, models := asideHome(t)
-	if err := edit.SetJSON(settings, edit.KV{Path: "defaultModel.provider", Value: "magpie"}, edit.KV{Path: "defaultModel.modelId", Value: "relay/glm-4.6"}); err != nil {
+	if err := edit.SetJSON(settings, edit.KV{Path: "defaultModel.provider", Value: "chongyun"}, edit.KV{Path: "defaultModel.modelId", Value: "relay/glm-4.6"}); err != nil {
 		t.Fatal(err)
 	}
 	stash(map[string]string{"aside.was": "native/native-model"})

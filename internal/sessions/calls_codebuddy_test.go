@@ -10,7 +10,7 @@ import (
 // two `codebuddy -p` runs against a local OpenAI fake: one on a model the user
 // added for another vendor (fake-m1), whose two replies (a Read tool call,
 // then text) are calls of the agent's own; one on a model magpie wired
-// (deepseek/pro, vendor "magpie" in models.json), whose replies the gateway
+// (deepseek/pro, vendor "chongyun" in models.json), whose replies the gateway
 // logs itself and are not read here as well.
 func TestCodeBuddyCalls(t *testing.T) {
 	setupAgents(t)
@@ -44,7 +44,7 @@ func TestCodeBuddyCalls(t *testing.T) {
 func TestCodeBuddyGatewayIsItsOwn(t *testing.T) {
 	setupAgents(t)
 	if !buddyGateway(CodeBuddyDir(), "custom-local:deepseek/pro") {
-		t.Fatal("magpie's model in CodeBuddy's models.json is not read as the gateway's")
+		t.Fatal("chongyun's model in CodeBuddy's models.json is not read as the gateway's")
 	}
 	if buddyGateway(CodeBuddyDir(), "custom-local:fake-m1") {
 		t.Fatal("the user's own model in CodeBuddy's models.json is read as the gateway's")

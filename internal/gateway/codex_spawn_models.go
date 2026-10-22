@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/codexcat"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/codexcat"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Codex's spawn_agent tool names only the first five models of its

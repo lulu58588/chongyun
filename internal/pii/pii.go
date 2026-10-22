@@ -22,9 +22,10 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // The model, at a revision of LocalAI's repo, so the file is always the
@@ -38,8 +39,13 @@ var (
 // pf-serve, as the privacy-filter workflow built it at serveTag: a zip for
 // each system, by its sha256. A system with none can't run the model.
 var (
-	serveTag  = "pf-v1"
-	serveBase = "https://github.com/yetone/magpie/releases/download/"
+	serveTag = "pf-v1"
+	// serveBase is where this build's own pf-serve zips live. It is empty
+	// in this build: the upstream project's releases are not ours to serve,
+	// so the privacy filter is off until a base is given
+	// (CHONGYUN_PF_BASE), and the SHA-256 of every file below must match
+	// the file served there.
+	serveBase = pfBase()
 	serveSHA  = map[string]string{
 		"darwin-amd64":  "7d5512ed24ff865bb0e84009b0adecd3addf0444891990cbc78634d78390c607",
 		"darwin-arm64":  "07eb79dd1d74a6dc8e2e59eefed1094a4c1dafa27051343fac65d6c2172617f0",
@@ -49,11 +55,24 @@ var (
 	}
 )
 
+// pfBase is where this build's own pf-serve zips are published, read from
+// CHONGYUN_PF_BASE. It is empty by default: the upstream project's
+// releases are not ours to serve, so the local masking model stays off
+// until a base of our own is given, and the SHA-256 of every file must
+// match the file served there.
+func pfBase() string {
+	b := strings.TrimSpace(os.Getenv("CHONGYUN_PF_BASE"))
+	if b == "" {
+		return ""
+	}
+	return strings.TrimRight(b, "/") + "/"
+}
+
 // target is this system's name in serveSHA.
 func target() string { return runtime.GOOS + "-" + runtime.GOARCH }
 
-// Supported says pf-serve is built for this system.
-func Supported() bool { return serveSHA[target()] != "" }
+// Supported says pf-serve is built for this system and can be fetched.
+func Supported() bool { return serveSHA[target()] != "" && serveBase != "" }
 
 // Size is how much turning the model on downloads.
 func Size() int64 { return modelSize }

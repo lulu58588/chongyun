@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // refreshSandbox isolates the test's magpie folders and replaces the

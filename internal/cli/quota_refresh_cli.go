@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // quotaRefreshGap is how soon magpie quota refresh asks a card's vendor
@@ -49,7 +49,7 @@ func quotaRefreshCmd(args []string) error {
 	case 2:
 		id, user = names[0], names[1]
 	default:
-		return fmt.Errorf("usage: magpie quota refresh <provider> [<account>] [--json]")
+		return fmt.Errorf("usage: chongyun quota refresh <provider> [<account>] [--json]")
 	}
 	if p, err := provider.Find(id); err == nil && !provider.IsRemoteCard(id) {
 		id = p.ID
@@ -78,9 +78,9 @@ func quotaRefreshCmd(args []string) error {
 	}
 	if len(qs) == 0 {
 		if user != "" {
-			return fmt.Errorf("no card of %s · %s · magpie quota %s lists its accounts", id, user, id)
+			return fmt.Errorf("no card of %s · %s · chongyun quota %s lists its accounts", id, user, id)
 		}
-		return fmt.Errorf("no subscription, plan or key balance of %s · magpie quota lists them", id)
+		return fmt.Errorf("no subscription, plan or key balance of %s · chongyun quota lists them", id)
 	}
 	if asJSON {
 		b, _ := json.MarshalIndent(qs, "", "  ")

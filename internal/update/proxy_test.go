@@ -12,7 +12,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The update feed and a release's download go through the proxy set in
@@ -26,7 +26,7 @@ func TestUpdateGoesThroughTheProxy(t *testing.T) {
 	for _, k := range []string{"HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy", "ALL_PROXY", "all_proxy", "NO_PROXY", "no_proxy"} {
 		t.Setenv(k, "")
 	}
-	body := []byte("new magpie")
+	body := []byte("new chongyun")
 	sum := sha256.Sum256(body)
 	var mu sync.Mutex
 	var seen []string

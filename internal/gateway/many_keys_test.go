@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // @NetRozee on X: a custom endpoint given a thousand keys froze magpie.

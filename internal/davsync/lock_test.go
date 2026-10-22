@@ -40,12 +40,12 @@ func TestLock(t *testing.T) {
 	}
 	defer holder.Process.Kill()
 	if line, _ := bufio.NewReader(out).ReadString('\n'); line != "locked\n" {
-		t.Fatalf("the other magpie: %q", line)
+		t.Fatalf("the other chongyun: %q", line)
 	}
 	short, cancel := context.WithTimeout(ctx, 300*time.Millisecond)
 	defer cancel()
 	if _, err := lock(short); !errors.Is(err, ErrBusy) {
-		t.Fatalf("taken while another magpie held it: %v", err)
+		t.Fatalf("taken while another chongyun held it: %v", err)
 	}
 	// a wait called off, not run out, isn't another magpie's doing
 	called, stop := context.WithCancel(ctx)
@@ -62,7 +62,7 @@ func TestLock(t *testing.T) {
 	defer cancel()
 	unlock, err := lock(short)
 	if err != nil {
-		t.Fatalf("after the other magpie was killed: %v", err)
+		t.Fatalf("after the other chongyun was killed: %v", err)
 	}
 
 	// Off waits for a sync in progress, and goes on once it is done
@@ -122,7 +122,7 @@ func TestLockedSetup(t *testing.T) {
 	go func() { done <- Configure(cfg) }()
 	select {
 	case err := <-done:
-		t.Fatalf("configured while another magpie held the lock: %v", err)
+		t.Fatalf("configured while another chongyun held the lock: %v", err)
 	case <-time.After(300 * time.Millisecond):
 	}
 	unlock()

@@ -31,8 +31,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // grokCLIBases are where the installer looks, first to last: x.ai, then

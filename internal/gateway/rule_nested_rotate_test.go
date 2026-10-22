@@ -14,7 +14,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // rotateModelsUp answers with the model it was asked for, so every member

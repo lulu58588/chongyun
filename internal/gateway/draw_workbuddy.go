@@ -12,9 +12,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A WorkBuddy plan draws with the image models its product config lists:

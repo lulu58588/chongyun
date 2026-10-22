@@ -3,8 +3,8 @@ package provider
 import (
 	"strings"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Where Codex and Claude Code compact a long conversation (#876): the
@@ -184,7 +184,7 @@ func SetModelCompacts(providerID string, cs map[string]int) error {
 			return err
 		}
 		if model != "*" && n > 0 && !p.serves(model) {
-			return errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+			return errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 		}
 	}
 	s := settings.Load()

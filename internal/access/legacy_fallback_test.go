@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func TestLegacyLANFallbackBeforeMigration(t *testing.T) {
@@ -16,13 +16,13 @@ func TestLegacyLANFallbackBeforeMigration(t *testing.T) {
 		t.Fatal(err)
 	}
 	before, ok := Authenticate(s.LANKey)
-	if !ok || before.KeyID == "" || before.KeyName != "Magpie" {
+	if !ok || before.KeyID == "" || before.KeyName != "Chongyun" {
 		t.Fatal("unmigrated legacy key lost access", before, ok)
 	}
 	if _, err := os.Stat(Path()); !errors.Is(err, os.ErrNotExist) {
 		t.Fatal("authentication must not create a key store", err)
 	}
-	for _, secret := range []string{"", "wrong", "magpie", s.LANKey + "x"} {
+	for _, secret := range []string{"", "wrong", "chongyun", s.LANKey + "x"} {
 		if _, ok := Authenticate(secret); ok {
 			t.Fatal("legacy fallback accepted another token")
 		}
@@ -81,7 +81,7 @@ func TestLegacyLANFallbackWithReadOnlyDirectory(t *testing.T) {
 		t.Fatal(err)
 	}
 	for range 3 {
-		if who, ok := Authenticate(s.LANKey); !ok || who.KeyID == "" || who.KeyName != "Magpie" {
+		if who, ok := Authenticate(s.LANKey); !ok || who.KeyID == "" || who.KeyName != "Chongyun" {
 			t.Fatal("failed key-store creation broke legacy access", who, ok)
 		}
 	}

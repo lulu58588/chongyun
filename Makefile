@@ -1,10 +1,10 @@
 # The recipes (clean's rm -rf too) name paths relative to the working
-# folder, so they run only in magpie's own, known by its go.mod: run from
+# folder, so they run only in this project's own, known by its go.mod: run from
 # another one (make -f path/to/Makefile) they would act there. make -C
 # works. go.mod is read relative to the working folder, so a path with
 # spaces (or a symlinked Makefile) changes nothing.
-ifneq ($(shell sed -n 's/^module //p' go.mod 2>/dev/null),github.com/yetone/magpie)
-  $(error run make in magpie's folder (make -C path/to/magpie), not in $(CURDIR))
+ifneq ($(shell sed -n 's/^module //p' go.mod 2>/dev/null),github.com/lulu58588/magpie)
+  $(error run make in this project's folder (make -C path/to/chongyun), not in $(CURDIR))
 endif
 
 # A tag may hold $, ( or `, which the shell lines below would run: the
@@ -15,7 +15,7 @@ TAGS     = production
 TARGETS  = darwin/arm64 darwin/amd64 linux/amd64 linux/arm64 windows/amd64 windows/arm64 android/arm64
 
 # The GUI links the platform webview through cgo, so it is built natively.
-# `nogui` builds the terminal-only magpie, which cross-compiles anywhere.
+# `nogui` builds the terminal-only binary, which cross-compiles anywhere.
 # macOS 12 is the oldest Go (1.25 and later) runs on; Info.plist says so too.
 ifeq ($(shell uname -s),Darwin)
   export CGO_CFLAGS  = -mmacosx-version-min=12.0
@@ -35,10 +35,10 @@ endif
 .PHONY: build cli install test test-ui app icons release release-cli release-windows release-linux clean dev dev-once
 
 build:
-	go build -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" -o magpie .
+	go build -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" -o chongyun .
 
 cli:
-	CGO_ENABLED=0 go build -tags nogui -trimpath -ldflags="$(LDFLAGS)" -o magpie .
+	CGO_ENABLED=0 go build -tags nogui -trimpath -ldflags="$(LDFLAGS)" -o chongyun .
 
 install:
 	go install -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" .
@@ -58,13 +58,13 @@ test-ui:
 
 # macOS bundle: menu bar app with no Dock icon (LSUIElement).
 app: build
-	@rm -rf magpie.app
-	@mkdir -p magpie.app/Contents/MacOS magpie.app/Contents/Resources
-	@cp magpie magpie.app/Contents/MacOS/magpie
-	@cp build/darwin/magpie.icns magpie.app/Contents/Resources/magpie.icns
-	@cp build/darwin/Assets.car magpie.app/Contents/Resources/Assets.car
-	@sed 's/@VERSION@/$(VERSION)/' build/darwin/Info.plist > magpie.app/Contents/Info.plist
-	@echo "  magpie.app"
+	@rm -rf chongyun.app
+	@mkdir -p chongyun.app/Contents/MacOS chongyun.app/Contents/Resources
+	@cp chongyun chongyun.app/Contents/MacOS/chongyun
+	@cp build/darwin/chongyun.icns chongyun.app/Contents/Resources/chongyun.icns
+	@cp build/darwin/Assets.car chongyun.app/Contents/Resources/Assets.car
+	@sed 's/@VERSION@/$(VERSION)/' build/darwin/Info.plist > chongyun.app/Contents/Info.plist
+	@echo "  chongyun.app"
 
 icons:
 	@go run build/icon/gen.go tray internal/gui/tray.png
@@ -72,15 +72,15 @@ icons:
 	@go run build/icon/gen.go app 64 internal/gui/icon.png
 	@go run build/icon/gen.go app 1024 internal/gui/icon-1024.png
 	@go run build/icon/gen.go app 256 internal/gui/icon-256.png
-	@rm -rf build/darwin/magpie.iconset && mkdir -p build/darwin/magpie.iconset
+	@rm -rf build/darwin/chongyun.iconset && mkdir -p build/darwin/chongyun.iconset
 	@for s in 16 32 128 256 512; do \
-		go run build/icon/gen.go app $$s build/darwin/magpie.iconset/icon_$${s}x$${s}.png; \
-		go run build/icon/gen.go app $$((s*2)) build/darwin/magpie.iconset/icon_$${s}x$${s}@2x.png; \
+		go run build/icon/gen.go app $$s build/darwin/chongyun.iconset/icon_$${s}x$${s}.png; \
+		go run build/icon/gen.go app $$((s*2)) build/darwin/chongyun.iconset/icon_$${s}x$${s}@2x.png; \
 	done
-	@iconutil -c icns build/darwin/magpie.iconset -o build/darwin/magpie.icns && rm -rf build/darwin/magpie.iconset
+	@iconutil -c icns build/darwin/chongyun.iconset -o build/darwin/chongyun.icns && rm -rf build/darwin/chongyun.iconset
 	@# macOS 26 draws the Dock icon from AppIcon.icon, light and dark (Xcode 26's actool);
 	@# the compiled Assets.car is kept in the tree so a release needn't have it
-	@go run build/icon/gen.go glyph 1024 build/darwin/AppIcon.icon/Assets/magpie.png
+	@go run build/icon/gen.go glyph 1024 build/darwin/AppIcon.icon/Assets/chongyun.png
 	@rm -rf build/darwin/actool && mkdir -p build/darwin/actool
 	@xcrun actool build/darwin/AppIcon.icon --compile build/darwin/actool --platform macosx \
 		--minimum-deployment-target 11.0 --app-icon AppIcon --output-partial-info-plist build/darwin/actool/partial.plist >/dev/null
@@ -88,7 +88,7 @@ icons:
 
 release: clean build
 	@mkdir -p dist
-	@cp magpie dist/magpie-$(shell go env GOOS)-$(shell go env GOARCH)
+	@cp chongyun dist/chongyun-$(shell go env GOOS)-$(shell go env GOARCH)
 	@$(MAKE) --no-print-directory release-cli
 
 release-cli:
@@ -96,7 +96,7 @@ release-cli:
 	@for t in $(TARGETS); do \
 		os=$${t%/*}; arch=$${t#*/}; ext=""; [ $$os = windows ] && ext=.exe; \
 		echo "  $$os/$$arch (cli)"; \
-		CGO_ENABLED=0 GOOS=$$os GOARCH=$$arch go build -tags nogui -trimpath -ldflags="$(LDFLAGS)" -o dist/magpie-cli-$$os-$$arch$$ext . || exit 1; \
+		CGO_ENABLED=0 GOOS=$$os GOARCH=$$arch go build -tags nogui -trimpath -ldflags="$(LDFLAGS)" -o dist/chongyun-cli-$$os-$$arch$$ext . || exit 1; \
 	done
 
 # The desktop app for Windows: the system WebView2 needs no cgo, so both
@@ -109,7 +109,7 @@ release-windows:
 		--file-version "$(or $(WINVER),0.0.0)" --product-version "$(or $(WINVER),0.0.0)"
 	@for arch in amd64 arm64; do \
 		echo "  windows/$$arch (app)"; \
-		CGO_ENABLED=0 GOOS=windows GOARCH=$$arch go build -tags production -trimpath -ldflags="$(LDFLAGS) -H windowsgui" -o dist/magpie-windows-$$arch.exe . || exit 1; \
+		CGO_ENABLED=0 GOOS=windows GOARCH=$$arch go build -tags production -trimpath -ldflags="$(LDFLAGS) -H windowsgui" -o dist/chongyun-windows-$$arch.exe . || exit 1; \
 	done; rm -f rsrc_windows_*.syso
 
 # The desktop app for Linux links GTK 3 and WebKitGTK 4.1 through cgo, so it

@@ -3,7 +3,7 @@ package gateway
 // GET /v1/magpie/heap: a Go heap profile of the process serving the
 // gateway, for a report of magpie holding too much memory. A macOS
 // `sample` of the app names none of Go's frames, so this is the one way
-// to see what the Go side holds; `magpie heap` asks for it and writes the
+// to see what the Go side holds; `chongyun heap` asks for it and writes the
 // file the user sends.
 
 import (
@@ -17,7 +17,7 @@ import (
 	"runtime/pprof"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // HeapPath is where the gateway answers a heap profile.
@@ -109,7 +109,7 @@ func (s *Server) heapProfile(w http.ResponseWriter, r *http.Request) {
 // and corsGuard turn most of these away first; this holds where Handler
 // is served without them too.
 func heapRefused(r *http.Request) string {
-	return profileRefused(r, "heap profile", "magpie heap")
+	return profileRefused(r, "heap profile", "chongyun heap")
 }
 
 // profileRefused is heapRefused for any profile of this process (cpuRefused
@@ -117,11 +117,11 @@ func heapRefused(r *http.Request) string {
 func profileRefused(r *http.Request, what, cmd string) string {
 	switch {
 	case !local(r):
-		return "magpie hands its " + what + " only to a program on this computer, over loopback: run " + cmd + " there"
+		return "chongyun hands its " + what + " only to a program on this computer, over loopback: run " + cmd + " there"
 	case fromBrowser(r):
-		return "magpie doesn't hand its " + what + " to a web page: run " + cmd + " in a terminal"
+		return "chongyun doesn't hand its " + what + " to a web page: run " + cmd + " in a terminal"
 	case !loopbackHost(r.Host):
-		return "magpie hands its " + what + " only to a call to localhost or a loopback address, not " + r.Host + ": run " + cmd
+		return "chongyun hands its " + what + " only to a call to localhost or a loopback address, not " + r.Host + ": run " + cmd
 	}
 	return ""
 }

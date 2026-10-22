@@ -8,7 +8,7 @@ import (
 )
 
 // With magpie Codex's provider, a model of Codex's own on the Agents page
-// says what picking it does (#1269, shenghsi: "gpt-5.5 经 magpie", and
+// says what picking it does (#1269, shenghsi: "gpt-5.5 经 chongyun", and
 // Codex was taken off magpie the moment it was picked). With no ChatGPT
 // account in magpie to serve it, it goes straight to OpenAI and says so;
 // with one, it is picked as magpie serves it and Codex stays on magpie.
@@ -31,15 +31,15 @@ func TestCodexProviderOwnModelSaysItsPath(t *testing.T) {
 		if err := cx.Fields[0].Set("fake/m1"); err != nil {
 			t.Fatal(err)
 		}
-		if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
-			t.Fatalf("magpie isn't Codex's provider:\n%s", cfg)
+		if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
+			t.Fatalf("chongyun isn't Codex's provider:\n%s", cfg)
 		}
 		own := ownOf(codex(home))
 		if len(own) != 1 {
 			t.Fatalf("Codex's own gpt-a: %+v", own)
 		}
 		if o := own[0]; o.Via || o.Direct != "OpenAI" || o.Value != "gpt-a" {
-			t.Fatalf("picking gpt-a takes Codex off magpie, yet it reads %+v", o)
+			t.Fatalf("picking gpt-a takes Codex off chongyun, yet it reads %+v", o)
 		}
 	})
 
@@ -51,18 +51,18 @@ func TestCodexProviderOwnModelSaysItsPath(t *testing.T) {
 		if err := cx.Fields[0].Set("fake/m1"); err != nil {
 			t.Fatal(err)
 		}
-		if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
-			t.Fatalf("magpie isn't Codex's provider:\n%s", cfg)
+		if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
+			t.Fatalf("chongyun isn't Codex's provider:\n%s", cfg)
 		}
 		own := ownOf(codex(home))
 		if len(own) != 1 || own[0].Value != "codex/gpt-a" || !own[0].Via {
-			t.Fatalf("Codex's own gpt-a, served by magpie: %+v", own)
+			t.Fatalf("Codex's own gpt-a, served by chongyun: %+v", own)
 		}
 		if err := codex(home).Fields[0].Set(own[0].Value); err != nil {
 			t.Fatal(err)
 		}
-		if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, `model = "codex/gpt-a"`) {
-			t.Fatalf("picking it took Codex off magpie:\n%s", cfg)
+		if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) || !strings.Contains(cfg, `model = "codex/gpt-a"`) {
+			t.Fatalf("picking it took Codex off chongyun:\n%s", cfg)
 		}
 	})
 }

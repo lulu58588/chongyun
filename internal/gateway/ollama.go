@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The Ollama API's model routes, for a client that takes a custom endpoint
@@ -126,7 +126,7 @@ func ollamaCapabilities(e provider.Entry) []string {
 
 // ollamaArch is the architecture every model is told as: model_info's
 // keys are named after it.
-const ollamaArch = "magpie"
+const ollamaArch = "chongyun"
 
 // ollamaDefaultContext is the window told for a model whose own magpie
 // doesn't know: the one VS Code's Copilot takes when none is told.

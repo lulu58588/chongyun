@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The last-known state (#1519, fatkun). state() reads every agent's config

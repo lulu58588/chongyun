@@ -68,7 +68,7 @@ func SetKeepLoginAs(id, user string) error {
 		return err
 	}
 	if p.Account == nil || p.Account.Agent != p.ID || !slices.Contains(switchedAgents, p.ID) {
-		return fmt.Errorf("magpie doesn't sign %s in to another of its accounts", p.Name)
+		return fmt.Errorf("chongyun doesn't sign %s in to another of its accounts", p.Name)
 	}
 	ls := Logins(p.ID)
 	i := slices.IndexFunc(ls, func(l Login) bool { return strings.EqualFold(l.User, user) })

@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
 )
 
 func pageHome(t *testing.T) {

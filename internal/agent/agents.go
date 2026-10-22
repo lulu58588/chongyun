@@ -14,15 +14,15 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // The gateway knows each agent's requests by what this package says of it.
@@ -45,7 +45,7 @@ func init() {
 // others are clients that reach the gateway without being agents magpie
 // sets up: known only by their requests, to be drawn with a logo.
 var others = []*Agent{
-	{ID: "magpie", Name: "magpie", Icon: "magpie", UA: []string{"magpie"}},
+	{ID: "chongyun", Name: "崇云科技", Icon: "chongyun", UA: []string{"chongyun"}},
 	{ID: "curl", Name: "curl", Icon: "curl", UA: []string{"curl"}},
 	// PI-Desktop (vastsa/PI-Desktop) runs Pi's own library, which says
 	// "pi (…)"; given a User-Agent of its own in its provider's settings
@@ -384,7 +384,7 @@ func magpieProviderJSONAt(shape, catalog, gw string) any {
 			e["variants"] = openCodeVariants(m.Efforts, m.CodexFast)
 			ms[m.ID] = e
 		}
-		return map[string]any{"npm": "@ai-sdk/openai-compatible", "name": "magpie",
+		return map[string]any{"npm": "@ai-sdk/openai-compatible", "name": "chongyun",
 			"options": map[string]any{"baseURL": gw + "/v1", "apiKey": openCodeKeyAt(catalog, gw)}, "models": ms}
 	case "crush":
 		var ms []map[string]any
@@ -407,7 +407,7 @@ func magpieProviderJSONAt(shape, catalog, gw string) any {
 		if ms == nil {
 			ms = []map[string]any{}
 		}
-		return map[string]any{"type": "openai", "name": "magpie", "base_url": gw + "/v1", "api_key": keyAt(gw), "models": ms}
+		return map[string]any{"type": "openai", "name": "chongyun", "base_url": gw + "/v1", "api_key": keyAt(gw), "models": ms}
 	case "pi":
 		var ms []map[string]any
 		for _, m := range models {
@@ -423,7 +423,7 @@ func magpieProviderJSONAt(shape, catalog, gw string) any {
 		// Without it a turn of Pi's on Chat or Messages reached the gateway
 		// with no session: its usage had none and "Record gateway
 		// conversations" kept none of it (akic404 on Discord).
-		return map[string]any{"name": "magpie", "baseUrl": gw + "/v1", "api": "openai-completions", "apiKey": keyAt(gw),
+		return map[string]any{"name": "崇云科技", "baseUrl": gw + "/v1", "api": "openai-completions", "apiKey": keyAt(gw),
 			"compat": map[string]any{"sendSessionAffinityHeaders": true}, "models": ms}
 	}
 	return nil
@@ -1096,7 +1096,7 @@ func piLike(at place, id, name, dir string) *Agent {
 	return piLikeKeyed(at, id, name, dir, at.gwKey)
 }
 
-// piLikeKeyed is piLike whose provider "magpie" carries key's key: one
+// piLikeKeyed is piLike whose provider "chongyun" carries key's key: one
 // that names the agent (agentKeyAt) for an agent whose requests carry
 // nothing else of it (Prime Agent, primeagent.go).
 func piLikeKeyed(at place, id, name, dir string, key func() string) *Agent {
@@ -1569,7 +1569,7 @@ func crushAt(at place, path, data string) *Agent {
 
 // what goose says after a change (notice.go)
 var (
-	noticeGoose = newNotice("Goose loads its providers at start-up — quit and reopen Goose (and open goose sessions) to use magpie's models.")
+	noticeGoose = newNotice("Goose loads its providers at start-up — quit and reopen Goose (and open goose sessions) to use chongyun's models.")
 )
 
 // readOwnAuth is os.ReadFile for an agent's own sign-ins (OpenCode's

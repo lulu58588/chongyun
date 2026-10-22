@@ -21,9 +21,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/steady"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 const (

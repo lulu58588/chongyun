@@ -22,10 +22,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/ghtoken"
-	"github.com/yetone/magpie/internal/libc"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/source"
+	"github.com/lulu58588/magpie/internal/ghtoken"
+	"github.com/lulu58588/magpie/internal/libc"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/source"
 )
 
 // BunVersion is the Bun magpie downloads to run plugins with the first
@@ -172,7 +172,7 @@ func cantStart(bun string, err error) error {
 		return fmt.Errorf("this system can't start $MAGPIE_BUN (%s), though it is there: it is likely a build for another C library than this system's (glibc or musl), whose loader isn't here: %w", bun, err)
 	}
 	target, _ := bunTarget()
-	return fmt.Errorf("this system can't start the Bun magpie downloaded (%s, %s), though it is there: the build doesn't match this system's C library (glibc or musl). Set MAGPIE_BUN to a bun built for this system to run plugins on it: %w", target, bun, err)
+	return fmt.Errorf("this system can't start the Bun chongyun downloaded (%s, %s), though it is there: the build doesn't match this system's C library (glibc or musl). Set MAGPIE_BUN to a bun built for this system to run plugins on it: %w", target, bun, err)
 }
 
 // Bun is the bun to run plugins with: $MAGPIE_BUN when set, else the one

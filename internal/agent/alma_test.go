@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // fakeAlma is Alma's API as its spec has it: providers and settings in
@@ -193,7 +193,7 @@ func TestAlma(t *testing.T) {
 		t.Fatal(err)
 	}
 	if w := f.takeWrites(); len(w) != 0 {
-		t.Fatalf("sync without magpie's provider wrote %v", w)
+		t.Fatalf("sync without chongyun's provider wrote %v", w)
 	}
 
 	var ref string
@@ -204,24 +204,24 @@ func TestAlma(t *testing.T) {
 		}
 	}
 	if ref == "" {
-		t.Fatal("no magpie model offered")
+		t.Fatal("no chongyun model offered")
 	}
 	if err := a.Apply("model", "magpie/"+ref); err != nil {
 		t.Fatal(err)
 	}
 	var mine []map[string]any
 	for _, p := range f.providers {
-		if p["name"] == "magpie" {
+		if p["name"] == "chongyun" {
 			mine = append(mine, p)
 		}
 	}
 	if len(mine) != 1 {
-		t.Fatalf("magpie providers: %v", f.providers)
+		t.Fatalf("chongyun providers: %v", f.providers)
 	}
 	p := mine[0]
 	ms, _ := p["models"].([]any)
 	if p["type"] != "openai" || p["baseURL"] != gatewayV1() || len(f.keys) != 1 || f.keys[0] != "magpie-alma" || p["enabled"] != true || len(ms) == 0 {
-		t.Fatalf("magpie provider: %v", p)
+		t.Fatalf("chongyun provider: %v", p)
 	}
 	av, _ := p["availableModels"].([]any)
 	if ms[0] != ref || len(av) != len(ms) || av[0].(map[string]any)["id"] != ref || av[0].(map[string]any)["name"] == "" {
@@ -319,7 +319,7 @@ func TestAlmaModelObjects(t *testing.T) {
 		}
 	}
 	if ref == "" {
-		t.Fatal("no magpie model offered")
+		t.Fatal("no chongyun model offered")
 	}
 	if err := a.Apply("model", "magpie/"+ref); err != nil {
 		t.Fatal(err)
@@ -330,7 +330,7 @@ func TestAlmaModelObjects(t *testing.T) {
 	// magpie's own listed as objects too, the same ones: nothing to write
 	var mine map[string]any
 	for _, p := range f.providers {
-		if p["name"] == "magpie" {
+		if p["name"] == "chongyun" {
 			mine = p
 		}
 	}
@@ -386,7 +386,7 @@ func TestAlmaDown(t *testing.T) {
 		t.Fatalf("set while down: %v", err)
 	}
 	if len(a.Field("model").Options(nil)) == 0 {
-		t.Fatal("magpie's models not offered while Alma is down")
+		t.Fatal("chongyun's models not offered while Alma is down")
 	}
 }
 
@@ -450,8 +450,8 @@ func TestAlmaServerKeyed(t *testing.T) {
 		t.Fatal(err)
 	}
 	f := startAlma(t)
-	f.providers = append(f.providers, map[string]any{"id": "mg", "name": "magpie", "type": "openai", "baseURL": gatewayV1(),
-		"enabled": true, "apiKey": "magpie", "models": []any{}, "availableModels": []any{}})
+	f.providers = append(f.providers, map[string]any{"id": "mg", "name": "chongyun", "type": "openai", "baseURL": gatewayV1(),
+		"enabled": true, "apiKey": "chongyun", "models": []any{}, "availableModels": []any{}})
 	a := alma()
 	if a.Dir != data {
 		t.Fatalf("Alma's folder: %q, want alma-server's %q", a.Dir, data)
@@ -460,7 +460,7 @@ func TestAlmaServerKeyed(t *testing.T) {
 		t.Fatal(err)
 	}
 	if p := f.provider("mg"); p["apiKey"] != "magpie-alma" {
-		t.Fatalf("alma-server's magpie provider after Sync: %v", p)
+		t.Fatalf("alma-server's chongyun provider after Sync: %v", p)
 	}
 
 	// $XDG_DATA_HOME and ALMA_DATA_DIR, as alma-server reads them
@@ -504,7 +504,7 @@ func TestAlmaImageGen(t *testing.T) {
 	}
 	const drawn = "img/gpt-image-1"
 	if d := gateway.Drawer(); d != drawn {
-		t.Fatalf("magpie draws with %q", d)
+		t.Fatalf("chongyun draws with %q", d)
 	}
 	f := startAlma(t)
 	a := alma()
@@ -528,7 +528,7 @@ func TestAlmaImageGen(t *testing.T) {
 	}
 	var p map[string]any
 	for _, q := range f.providers {
-		if q["name"] == "magpie" {
+		if q["name"] == "chongyun" {
 			p = q
 		}
 	}
@@ -548,7 +548,7 @@ func TestAlmaImageGen(t *testing.T) {
 		}
 	}
 	if ms := p["models"].([]any); !listed || ms[len(ms)-1] != drawn {
-		t.Fatalf("magpie's models: %v %v", p["models"], p["availableModels"])
+		t.Fatalf("chongyun's models: %v %v", p["models"], p["availableModels"])
 	}
 
 	// the user's own pick, theirs or magpie's, stays: choosing a model
@@ -598,8 +598,8 @@ func TestAlmaKey(t *testing.T) {
 	if err := os.MkdirAll(a.Dir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	f.providers = append(f.providers, map[string]any{"id": "mg", "name": "magpie", "type": "openai", "baseURL": gatewayV1(),
-		"enabled": true, "apiKey": "magpie", "models": []any{}, "availableModels": []any{}})
+	f.providers = append(f.providers, map[string]any{"id": "mg", "name": "chongyun", "type": "openai", "baseURL": gatewayV1(),
+		"enabled": true, "apiKey": "chongyun", "models": []any{}, "availableModels": []any{}})
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}

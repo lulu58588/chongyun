@@ -9,8 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // A partner pays to be listed, so how often it is seen and picked is
@@ -56,13 +55,8 @@ func partnerCountFile() string { return filepath.Join(appdir.Cache(), "partner-c
 // on, and what magpie is used with sent with them. internal/stats reads
 // the same switches.
 func partnerCounting() bool {
-	for _, k := range []string{"DO_NOT_TRACK", "MAGPIE_NO_STATS"} {
-		if v := os.Getenv(k); v != "" && v != "0" && v != "false" {
-			return false
-		}
-	}
-	s := settings.Load()
-	return !s.NoStats && !s.NoUsageStats
+	// this build counts nobody: there is no place the counts would go.
+	return false
 }
 
 // livePartner reports whether id is a partner listed now: only those are

@@ -28,7 +28,7 @@ package agent
 // up itself), custom_headers and custom_extra_body objects, modalities a
 // list of text/image/audio/tool_use.
 //
-// magpie adds a source "magpie", OpenAI Compatible at the gateway's /v1 with
+// magpie adds a source "chongyun", OpenAI Compatible at the gateway's /v1 with
 // a key naming AstrBot (its requests carry no User-Agent of its own), and an
 // entry "magpie/<provider>/<model>" for every model of magpie's, and makes
 // the one picked AstrBot's default chat model: agent_runner.config.model.
@@ -66,8 +66,8 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 const (
@@ -217,13 +217,13 @@ func astrbotAt(at place) *Agent {
 	put := func(v string) error {
 		raw, _, err := read()
 		if errors.Is(err, os.ErrNotExist) {
-			return fmt.Errorf("AstrBot has no %s yet: start AstrBot once so it writes its settings (or start magpie with ASTRBOT_ROOT set to the folder AstrBot runs in), then connect it", path)
+			return fmt.Errorf("AstrBot has no %s yet: start AstrBot once so it writes its settings (or start chongyun with ASTRBOT_ROOT set to the folder AstrBot runs in), then connect it", path)
 		}
 		if err != nil {
 			return err
 		}
 		if !json.Valid(raw) {
-			return fmt.Errorf("AstrBot's %s isn't JSON magpie can read; it was left as it is", path)
+			return fmt.Errorf("AstrBot's %s isn't JSON chongyun can read; it was left as it is", path)
 		}
 		if !gjson.GetBytes(raw, astrbotSources).Exists() {
 			return fmt.Errorf("this AstrBot keeps no provider_sources in %s: update AstrBot to 4.10 or later, start it once, then connect it", path)
@@ -260,11 +260,11 @@ func astrbotAt(at place) *Agent {
 				return ""
 			}
 			if r, _ := get("agent_runner.runner_type"); pickKey() == astrbotRunner && r.String() != "local" {
-				return "AstrBot's agent runner (cmd_config.json) is " + orDefault(r.String()) + ", which doesn't ask its chat model, so it no longer asks magpie"
+				return "AstrBot's agent runner (cmd_config.json) is " + orDefault(r.String()) + ", which doesn't ask its chat model, so it no longer asks chongyun"
 			}
 			e, ok := source()
 			if !ok {
-				return "magpie's provider source is gone from AstrBot's " + path + " (a save in AstrBot's WebUI writes its settings back whole) — connect it again"
+				return "chongyun's provider source is gone from AstrBot's " + path + " (a save in AstrBot's WebUI writes its settings back whole) — connect it again"
 			}
 			return wiringOff("AstrBot", path, func(k string) (string, bool) {
 				r := e.Get(k)

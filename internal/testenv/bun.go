@@ -49,7 +49,7 @@ func Bun(t testing.TB) string {
 		run.version = strings.TrimSpace(string(out))
 	})
 	if older(run.version, MinBun) {
-		t.Skipf("bun %s on PATH (%s) is older than %s, the oldest magpie runs plugins on; install %s or newer to run this test", run.version, bun, MinBun, MinBun)
+		t.Skipf("bun %s on PATH (%s) is older than %s, the oldest chongyun runs plugins on; install %s or newer to run this test", run.version, bun, MinBun, MinBun)
 	}
 	return bun
 }

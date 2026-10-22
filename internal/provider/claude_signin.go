@@ -24,10 +24,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/claudecode"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/wslrun"
+	"github.com/lulu58588/magpie/internal/claudecode"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/wslrun"
 )
 
 // claudeCLISignIn is a `claude auth login` magpie is running.
@@ -151,7 +151,7 @@ func (c claudeCLI) proxied(choice string, env []string) ([]string, error) {
 func startClaudeSignIn(s *signInFlow) error {
 	cli, ok := findClaudeCLI()
 	if !ok {
-		return errors.New("install Claude Code first, the `claude` command line (the Claude desktop app is not it): magpie signs in to Claude through it; " + claudecode.InstallHint)
+		return errors.New("install Claude Code first, the `claude` command line (the Claude desktop app is not it): chongyun signs in to Claude through it; " + claudecode.InstallHint)
 	}
 	if err := os.MkdirAll(claudeDirsRoot(), 0o700); err != nil {
 		return err
@@ -342,7 +342,7 @@ func isLoopback(host string) bool {
 func claudeSignedIn(cli claudeCLI, dir, proxy string) (savedLogin, error) {
 	c, ok := readClaudeDir(dir)
 	if !ok {
-		return savedLogin{}, errors.New("Claude Code signed in, but kept no sign-in magpie can read")
+		return savedLogin{}, errors.New("Claude Code signed in, but kept no sign-in chongyun can read")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
@@ -422,7 +422,7 @@ func (s *signInFlow) claudePaste(raw string) error {
 	select {
 	case <-s.done:
 	case <-time.After(time.Minute):
-		return errors.New("the sign-in is still finishing; magpie shows the account when it's done")
+		return errors.New("the sign-in is still finishing; chongyun shows the account when it's done")
 	}
 	switch st := s.status(); st.State {
 	case "done":

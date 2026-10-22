@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // CC Switch's Codex config, as it writes it: its "custom" table, one of
@@ -45,7 +45,7 @@ func TestCodexTakesCCSwitchTables(t *testing.T) {
 			t.Fatal(err)
 		}
 		if c := table("custom"); c["base_url"] != v1 || c["experimental_bearer_token"] != "sk-relay" || c["requires_openai_auth"] != "true" {
-			t.Fatalf("auth %q: custom not through magpie:\n%s", auth, read())
+			t.Fatalf("auth %q: custom not through chongyun:\n%s", auth, read())
 		}
 		if table("cc-switch-2")["base_url"] != "https://old.example/v1" || table("mine")["base_url"] != "https://mine.example/v1" {
 			t.Fatalf("auth %q: other tables changed:\n%s", auth, read())
@@ -289,7 +289,7 @@ func TestCodexTakesCCSwitchMirrorForItsThreads(t *testing.T) {
 			t.Fatal(err)
 		}
 		if c := table("custom"); c["base_url"] != at.codexURL() || c["requires_openai_auth"] != "true" || c["name"] != "OpenAI" {
-			t.Fatalf("round %d: the mirror isn't through magpie:\n%s", round, read())
+			t.Fatalf("round %d: the mirror isn't through chongyun:\n%s", round, read())
 		}
 		if _, ok := table("cc-switch-3")["base_url"]; ok {
 			t.Fatalf("round %d: the profile's mirror changed:\n%s", round, read())
@@ -307,7 +307,7 @@ func TestCodexTakesCCSwitchMirrorForItsThreads(t *testing.T) {
 			t.Fatal(err)
 		}
 		if _, ok := table("custom")["base_url"]; ok {
-			t.Fatalf("round %d: off magpie (%q), the mirror keeps magpie's URL:\n%s", round, off, read())
+			t.Fatalf("round %d: off chongyun (%q), the mirror keeps chongyun's URL:\n%s", round, off, read())
 		}
 		if _, ok := stashLoad()[at.key("codex.mirrors")]; ok {
 			t.Errorf("round %d: stash left", round)

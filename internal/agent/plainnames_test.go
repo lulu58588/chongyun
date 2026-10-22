@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The model lists magpie writes into agents' own files (OpenCode, Pi, …)

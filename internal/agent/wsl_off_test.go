@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // #1264 (Etsuya233): with Settings' Detect agents in WSL off, magpie asks

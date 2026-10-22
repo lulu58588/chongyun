@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // emptyGroup is the user's group an id names when it has no member now:
@@ -26,5 +26,5 @@ func emptyGroupError(g provider.Group) string {
 	if len(g.Match) == 0 {
 		return fmt.Sprintf("the group %s has no model in it", g.Name)
 	}
-	return fmt.Sprintf("the group %s has no model now: its patterns (%s) match no model magpie serves; magpie group %s shows them", g.Name, strings.Join(g.Match, ", "), g.ID)
+	return fmt.Sprintf("the group %s has no model now: its patterns (%s) match no model chongyun serves; chongyun group %s shows them", g.Name, strings.Join(g.Match, ", "), g.ID)
 }

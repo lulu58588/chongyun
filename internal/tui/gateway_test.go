@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 func freeAddr(t *testing.T) string {
@@ -44,7 +44,7 @@ func TestTUIServesTheGatewayWhenNoneDoes(t *testing.T) {
 	if !gw.here.Load() {
 		t.Fatal("not marked as served here")
 	}
-	if s := gatewayStatus(); !strings.Contains(s, gateway.URL()) || !strings.Contains(s, "served while magpie tui is open") {
+	if s := gatewayStatus(); !strings.Contains(s, gateway.URL()) || !strings.Contains(s, "served while chongyun tui is open") {
 		t.Fatalf("status %q", s)
 	}
 	stop()
@@ -69,14 +69,14 @@ func TestTUILeavesTheGatewayToAnotherAndTakesItUp(t *testing.T) {
 		defer close(otherDone)
 		gateway.New().ListenAndServe(other)
 	}()
-	waitFor(t, "the other magpie's gateway never answered", gateway.Running)
+	waitFor(t, "the other chongyun's gateway never answered", gateway.Running)
 
 	ctx, stop := context.WithCancel(context.Background())
 	defer stop()
 	wait := serveGateway(ctx)
 	time.Sleep(300 * time.Millisecond)
 	if gw.here.Load() || gatewayStatus() != "" {
-		t.Fatalf("took the gateway another magpie serves: %q", gatewayStatus())
+		t.Fatalf("took the gateway another chongyun serves: %q", gatewayStatus())
 	}
 
 	endOther()

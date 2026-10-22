@@ -14,14 +14,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // The part of an agent's instructions file magpie writes sits between
 // these two lines; the rest of the file is the user's.
 const (
-	blockBegin = "<!-- magpie:begin · written by magpie from its Library -->"
-	blockEnd   = "<!-- magpie:end -->"
+	blockBegin = "<!-- chongyun:begin · written by chongyun from its Library -->"
+	blockEnd   = "<!-- chongyun:end -->"
 )
 
 // defaultSet is the set magpie had before there were more: its text is
@@ -455,7 +455,7 @@ func SaveInstructions(c InstructionsChange) (*Result, error) {
 func ImportInstructions(id string) (*Result, error) {
 	t := targetByID(id)
 	if t == nil || t.Instructions == "" {
-		return nil, fmt.Errorf("%s has no instructions file magpie knows", id)
+		return nil, fmt.Errorf("%s has no instructions file chongyun knows", id)
 	}
 	if t.Profile {
 		// moved out, the profile would go into every agent's file, and the
@@ -615,7 +615,7 @@ func (l *Library) linkable(file string) (string, error) {
 		return "", fmt.Errorf("%s is a folder: give a file", file)
 	}
 	if strings.Contains(readText(file), blockBegin) {
-		return "", fmt.Errorf("magpie writes its instructions into %s: a set can't be kept there too", file)
+		return "", fmt.Errorf("chongyun writes its instructions into %s: a set can't be kept there too", file)
 	}
 	if lib := realBelow(Dir()); real == lib || strings.HasPrefix(real, lib+string(filepath.Separator)) || real == realBelow(path()) {
 		return "", fmt.Errorf("%s is the library's own", file)
@@ -628,7 +628,7 @@ func (l *Library) linkable(file string) (string, error) {
 	for _, t := range everyTarget() {
 		for _, p := range []string{t.Instructions, t.Override} {
 			if p != "" && realBelow(p) == real {
-				return "", fmt.Errorf("%s is %s's own instructions, which magpie writes into: a set can't be kept there", file, t.Agent.Name)
+				return "", fmt.Errorf("%s is %s's own instructions, which chongyun writes into: a set can't be kept there", file, t.Agent.Name)
 			}
 		}
 	}

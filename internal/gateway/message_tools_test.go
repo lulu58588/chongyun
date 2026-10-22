@@ -12,8 +12,8 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // piAddedTool is Pi 1.2.0's own Chat request for the turn after an

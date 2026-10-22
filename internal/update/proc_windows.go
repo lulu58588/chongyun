@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 const (

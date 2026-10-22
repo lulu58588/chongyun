@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A Jev preset saved with the endpoint its gateway's docs give keeps it —

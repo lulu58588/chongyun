@@ -37,7 +37,7 @@ func TestCodexHomeEnvTakesThePick(t *testing.T) {
 		t.Fatalf("the catalog isn't beside it: %v", err)
 	}
 	if got := codex(home).Fields[0].Get(); got != "fake/m1" {
-		t.Fatalf("magpie reads the pick back as %q", got)
+		t.Fatalf("chongyun reads the pick back as %q", got)
 	}
 	if m := StandIn("codex", "gpt-5"); m != "fake/m1" {
 		t.Fatalf("the gateway's stand-in for Codex is %q, read from somewhere else", m)

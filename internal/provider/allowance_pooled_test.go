@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // A refusal for a model counted by a pool of some models only is that

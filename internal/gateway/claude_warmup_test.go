@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // fakeWarmClaude is a claude that writes what it was run with to log and

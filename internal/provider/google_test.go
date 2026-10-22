@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // fakeGoogle is Google's token endpoint and Code Assist, as far as magpie
@@ -202,9 +202,9 @@ func TestGeminiNeedsAProject(t *testing.T) {
 	writeGeminiLogin(t, "")
 	g, _ := geminiOwnLogin()
 	_, err := g.project(context.Background())
-	if err == nil || !strings.Contains(err.Error(), "magpie accounts project gemini me@example.com") ||
+	if err == nil || !strings.Contains(err.Error(), "chongyun accounts project gemini me@example.com") ||
 		!strings.Contains(err.Error(), "no longer supported") || !strings.Contains(err.Error(), "~/.gemini/.env") ||
-		!strings.Contains(err.Error(), "add it under Antigravity in magpie") {
+		!strings.Contains(err.Error(), "add it under Antigravity in chongyun") {
 		t.Fatalf("err = %v", err)
 	}
 	if len(f.onboards) != 0 {
@@ -234,7 +234,7 @@ func TestGeminiProjectFromEnv(t *testing.T) {
 	}
 }
 
-// An account named in magpie gets its project from `magpie accounts project`.
+// An account named in magpie gets its project from `chongyun accounts project`.
 func TestSetGoogleProject(t *testing.T) {
 	f := &fakeGoogle{load: `{"currentTier":{"id":"standard-tier","name":"Gemini Code Assist Standard"}}`}
 	googleSandbox(t, f)

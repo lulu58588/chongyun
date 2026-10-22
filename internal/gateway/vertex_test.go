@@ -14,8 +14,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // vertexSSE is a streamGenerateContent reply as Vertex AI sends it: each

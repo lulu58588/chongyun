@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/dirent"
+	"github.com/lulu58588/magpie/internal/dirent"
 )
 
 // Antigravity CLI's (agy's) calls (#2097, parkavenue9639: a call agy made

@@ -13,7 +13,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // Goose (Block's goose, its CLI and desktop app alike) reaches magpie as a
@@ -128,8 +128,8 @@ func gooseProviderJSON(at place) map[string]any {
 	p := map[string]any{
 		"name":                     gooseProviderID,
 		"engine":                   "openai",
-		"display_name":             "magpie",
-		"description":              "Every model magpie has, through its local gateway",
+		"display_name": "崇云科技",
+		"description":              "Every model chongyun has, through its local gateway",
 		"api_key_env":              "",
 		"base_url":                 at.v1(),
 		"headers":                  map[string]any{"Authorization": "Bearer " + gooseKey(at)},

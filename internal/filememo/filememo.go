@@ -12,7 +12,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 type entry struct {

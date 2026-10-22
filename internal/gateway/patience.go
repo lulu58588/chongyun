@@ -7,7 +7,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // didNotStream is in the error for an upstream that answered a stream

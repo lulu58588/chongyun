@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // Two installed plugins that sign in to one provider (neiko on Discord:

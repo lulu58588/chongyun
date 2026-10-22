@@ -33,10 +33,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // CursorLocalID is the agent's id, which its key names (TokenFor).
@@ -302,7 +302,7 @@ func cursorLocal() *Agent {
 			},
 			Set: func(v string) error { return cursorLocalOn(v != "") },
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie",
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun",
 					Note: "CURSOR_LOCAL_AGENT_BASE_URL and _API_KEY set for your user, which only this build reads (quit it and open it again)"}}
 			},
 		}, {
@@ -349,4 +349,4 @@ func cursorLocalEfforts() []Option {
 }
 
 // what Cursor Private Inference says after a change (notice.go)
-var noticeCursorLocal = newNotice("{agent} reads magpie's gateway from CURSOR_LOCAL_AGENT_BASE_URL and CURSOR_LOCAL_AGENT_API_KEY, now set for your user: quit it (the app, not only its window) and open it again, as it keeps the model list it was first given until it quits. A base URL or API key set in its Open configuration or a model's settings comes first, so leave both empty (or set the base URL to {url} and the key to {key}).")
+var noticeCursorLocal = newNotice("{agent} reads chongyun's gateway from CURSOR_LOCAL_AGENT_BASE_URL and CURSOR_LOCAL_AGENT_API_KEY, now set for your user: quit it (the app, not only its window) and open it again, as it keeps the model list it was first given until it quits. A base URL or API key set in its Open configuration or a model's settings comes first, so leave both empty (or set the base URL to {url} and the key to {key}).")

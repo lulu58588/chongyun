@@ -10,7 +10,7 @@ import (
 
 	"github.com/Calcium-Ion/moejs"
 
-	"github.com/yetone/magpie/internal/gwmw"
+	"github.com/lulu58588/magpie/internal/gwmw"
 )
 
 func jsonMarshal(v any) ([]byte, error) { return json.Marshal(v) }

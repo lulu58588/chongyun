@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 

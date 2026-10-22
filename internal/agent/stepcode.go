@@ -15,7 +15,7 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // StepCode keeps its configuration in ~/.stepcode/config.toml (or
@@ -45,8 +45,7 @@ func stepcodeProvider(at place) any {
 		ms = append(ms, piModelJSON(m, at.gw(), true))
 	}
 	return map[string]any{
-		"name":    "magpie",
-		"baseUrl": at.v1(),
+		"name": "崇云科技", "baseUrl": at.v1(),
 		"api":     "openai-completions",
 		"apiKey":  agentKeyAt("stepcode", at.gw()),
 		"models":  ms,

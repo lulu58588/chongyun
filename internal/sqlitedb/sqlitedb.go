@@ -1,7 +1,7 @@
 // Package sqlitedb is the one way magpie reaches SQLite: a package that
 // opens a database imports it, blank, in place of modernc.org/sqlite.
 //
-//	import _ "github.com/yetone/magpie/internal/sqlitedb"
+//	import _ "github.com/lulu58588/magpie/internal/sqlitedb"
 //
 // modernc's SQLite runs on modernc's libc, which keeps its own copy of the
 // environment, taken from os.Environ at the first getenv. On macOS,

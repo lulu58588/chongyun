@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The panel and the window grow with the text size, so the page inside

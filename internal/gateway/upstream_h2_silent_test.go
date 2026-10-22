@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // silentPath sits between the gateway and a vendor and can go silent on

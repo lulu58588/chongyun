@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // bigsteven on Discord: another computer's magpie (LAN share) serves each
@@ -54,7 +54,7 @@ func TestRemoteMagpieQuotaRestsTheModel(t *testing.T) {
 		t.Fatalf("codex on the remote: %d %s", code, body)
 	}
 	if r, ok := restOf("office"); ok {
-		t.Errorf("the whole remote magpie rests for one model's quota: %+v", r)
+		t.Errorf("the whole remote chongyun rests for one model's quota: %+v", r)
 	}
 	if _, ok := restOf("office/codex/gpt-5.5"); !ok {
 		t.Errorf("codex/gpt-5.5 doesn't rest: %v", rests())
@@ -68,7 +68,7 @@ func TestRemoteMagpieQuotaRestsTheModel(t *testing.T) {
 		t.Fatalf("glm on the remote: %d %s", code, body)
 	}
 	if r, ok := restOf("office"); ok {
-		t.Errorf("the whole remote magpie rests for one model's rate limit: %+v", r)
+		t.Errorf("the whole remote chongyun rests for one model's rate limit: %+v", r)
 	}
 	if r, ok := restOf("office/glm/glm-5"); !ok || r.Why != failRate {
 		t.Errorf("glm/glm-5 doesn't rest as rate limited: %+v %v", r, rests())

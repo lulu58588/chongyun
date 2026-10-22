@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // ---- OpenAI Chat Completions --------------------------------------------------
@@ -938,7 +938,7 @@ type cUsage struct {
 		CompletionTokens int `json:"completion_tokens"`
 		CachedTokens     int `json:"cached_tokens"`
 		CacheWriteTokens int `json:"cache_write_tokens"`
-	} `json:"magpie_deferred,omitempty"`
+	} `json:"chongyun_deferred,omitempty"`
 }
 
 func (u cUsage) usage() Usage {

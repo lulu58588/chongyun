@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // macOS' `security` as magpie runs it: the secret is read with room for

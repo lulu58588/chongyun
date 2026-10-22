@@ -14,8 +14,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func (m *model) reloadGroups() {
@@ -225,11 +225,11 @@ func memberOptions(skip []string, self string) []agent.Option {
 func (m *model) openMemberPicker(p pickMsg) {
 	var skip []string
 	crumbs := []string{"routing", p.newGroup, "first model"}
-	empty := "magpie has no models yet · add a provider first"
+	empty := "chongyun has no models yet · add a provider first"
 	if p.group != "" {
 		g, _ := findGroup(p.group)
 		skip, crumbs = g.Members, []string{"routing", g.Name, "add a model"}
-		empty = "every model magpie has is in it"
+		empty = "every model chongyun has is in it"
 	}
 	m.pk = picker{
 		crumbs: crumbs,
@@ -282,7 +282,7 @@ func (m *model) openClassifier(g provider.Group) {
 		input:  newInput("filter models · best a small fast one without reasoning"),
 		items:  list(),
 		relist: list,
-		empty:  "magpie has no models yet · add a provider first",
+		empty:  "chongyun has no models yet · add a provider first",
 		onPick: func(id string) tea.Cmd {
 			return saveGroup(g.ID, func(g *provider.Group) error { g.Classifier = id; return nil }, g.Name+" classifies with "+id)
 		},
@@ -445,7 +445,7 @@ func (m model) updateGroup(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		in := newInput("a tag, e.g. relay")
 		in.SetValue(g.Family)
 		m.openAsk(ask{crumbs: []string{"routing", g.Name, "family"}, input: in, empty: true,
-			hint: "agents can be shown only some families: magpie visible <agent> <family>",
+			hint: "agents can be shown only some families: chongyun visible <agent> <family>",
 			onEnter: func(v string) tea.Cmd {
 				return saveGroup(g.ID, func(g *provider.Group) error { g.Family = v; return nil }, g.Name+" family "+dash(v))
 			}})
@@ -569,7 +569,7 @@ func (m model) viewGroups() string {
 	for i := start; i < min(len(m.groups), start+visible); i++ {
 		g := m.groups[i]
 		if i == m.shown {
-			b.WriteString("\n" + pad + "  " + sFaint.Render("removed · found by magpie, taken away: u brings one back") + "\n")
+			b.WriteString("\n" + pad + "  " + sFaint.Render("removed · found by chongyun, taken away: u brings one back") + "\n")
 		}
 		marker, name := "  ", sName.Render(padRight(dash(g.Name), nameW))
 		if g.Hidden {
@@ -625,7 +625,7 @@ func (m model) viewGroup() string {
 		head = append(head, "family "+g.Family)
 	}
 	if g.Auto {
-		head = append(head, "found by magpie: a change makes it yours")
+		head = append(head, "found by chongyun: a change makes it yours")
 	}
 	b.WriteString(pad + "  " + sMuted.Render(strings.Join(head, " · ")) + "\n\n")
 	b.WriteString(pad + "  " + sFaint.Render("models · the first that can take a request gets it") + "\n")

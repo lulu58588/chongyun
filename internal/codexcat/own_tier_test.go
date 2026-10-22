@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // A model of a provider the user added by its address is offered the tiers
@@ -83,7 +83,7 @@ func TestServiceTiersGoOnToAnotherMagpie(t *testing.T) {
 	}
 	got := ServiceTiers(there)
 	if s := ids(got["office/codex/gpt-6.1-sol"]); s != "priority:Fast ultrafast:Ultrafast " {
-		t.Errorf("the other magpie's Codex offered %q", s)
+		t.Errorf("the other chongyun's Codex offered %q", s)
 	}
 	if s := ids(got["office/relay/glm-5"]); s != "" {
 		t.Errorf("a model offered no tier there is offered %q", s)

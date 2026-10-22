@@ -15,11 +15,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/budget"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/usage"
-	"github.com/yetone/magpie/internal/usageapi"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/budget"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/usageapi"
 )
 
 type ingestReply struct {

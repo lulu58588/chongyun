@@ -12,7 +12,7 @@ func TestTarget(t *testing.T) {
 		`C:\old\magpie.exe`:                          `C:\old\magpie.exe`,
 		`C:\Tools\magpie.exe.older`:                  `C:\Tools\magpie.exe.older`,
 		`/usr/local/bin/magpie`:                      `/usr/local/bin/magpie`,
-		`C:\Users\me\Downloads\magpie (1).exe.old-2`: `C:\Users\me\Downloads\magpie (1).exe`,
+		`C:\Users\me\Downloads\chongyun (1).exe.old-2`: `C:\Users\me\Downloads\chongyun (1).exe`,
 	} {
 		if got := Target(in); got != want {
 			t.Errorf("Target(%q) = %q, want %q", in, got, want)

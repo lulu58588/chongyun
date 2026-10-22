@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #1545 (thedavidweng): Detect APIs and Each picked model ask with the

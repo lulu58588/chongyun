@@ -4,9 +4,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // TestClaudeOutputTokens: Claude Code asks a model it doesn't know for a
@@ -79,12 +79,12 @@ func TestClaudeOutputTokens(t *testing.T) {
 	// installed
 	set("model", "claude-opus-4-8")
 	if output() != "" {
-		t.Fatalf("Claude's own model kept magpie's value: %q", output())
+		t.Fatalf("Claude's own model kept chongyun's value: %q", output())
 	}
 	set("model", "v/deep")
 	set("model", "")
 	if output() != "" {
-		t.Fatalf("reset kept magpie's value: %q", output())
+		t.Fatalf("reset kept chongyun's value: %q", output())
 	}
 	if v, _ := edit.GetJSON(path, "theme"); v != "dark" {
 		t.Fatal("theme lost")
@@ -110,7 +110,7 @@ func TestClaudeOutputTokens(t *testing.T) {
 	set("model", "v/mid")
 	set("model", "")
 	if output() != "100000" {
-		t.Fatalf("a value the user changed magpie's to: %q", output())
+		t.Fatalf("a value the user changed chongyun's to: %q", output())
 	}
 	// and one the same as magpie would write, but not written by it
 	if err := edit.SetJSON(path, edit.KV{Path: "env." + claudeOutputEnv, Value: "64000"}); err != nil {
@@ -119,6 +119,6 @@ func TestClaudeOutputTokens(t *testing.T) {
 	set("model", "v/mid")
 	set("model", "")
 	if output() != "64000" {
-		t.Fatalf("the user's 64000 was taken for magpie's: %q", output())
+		t.Fatalf("the user's 64000 was taken for chongyun's: %q", output())
 	}
 }

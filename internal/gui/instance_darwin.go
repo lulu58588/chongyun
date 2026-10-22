@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // runningAlready is whether another magpie, this same one on this config,
@@ -17,7 +17,7 @@ import (
 // Login Item the user added, or by the Mac reopening it after a shutdown
 // it wasn't quit for (Crispin on Discord: two magpies after each boot).
 // A start at login just ends; one for the window has the running magpie
-// show its window (the Dock's reopen), and a magpie:// link is opened,
+// show its window (the Dock's reopen), and a chongyun:// link is opened,
 // which the Mac hands to the running one.
 func runningAlready(showMain bool, link string) bool {
 	exe, err := os.Executable()
@@ -27,13 +27,13 @@ func runningAlready(showMain bool, link string) bool {
 	lock := instanceLock(settings.Dir(), exe)
 	held, err := holdInstance(lock)
 	if err != nil {
-		log.Println("one magpie:", err)
+		log.Println("one chongyun:", err)
 		return false
 	}
 	if held {
 		return false
 	}
-	log.Println("magpie is running already; handing over to it")
+	log.Println("chongyun is running already; handing over to it")
 	switch {
 	case link != "":
 		proc.Command("open", link).Run()

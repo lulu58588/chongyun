@@ -4,7 +4,7 @@
 // passes on, and the tray panel's Usage tab still shows the allowances.
 package usage
 
-import "github.com/yetone/magpie/internal/pluginrt"
+import "github.com/lulu58588/magpie/internal/pluginrt"
 
 func init() {
 	pluginrt.Register(pluginrt.Manifest{

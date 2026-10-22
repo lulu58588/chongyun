@@ -24,14 +24,14 @@ func TestCodexRunsOutAfterPick(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, "model_catalog_json") ||
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) || !strings.Contains(cfg, "model_catalog_json") ||
 		!strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model = "fake/m1"`) {
 		t.Fatalf("used up:\n%s", cfg)
 	}
 	if err := cx.Sync(); err != nil { // still out: stays
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("used up, synced again:\n%s", cfg)
 	}
 	codexUsedUp = func() bool { return false }
@@ -47,13 +47,13 @@ func TestCodexRunsOutAfterPick(t *testing.T) {
 	if err := cx.Field("login").Set("api"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("api:\n%s", cfg)
 	}
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("api, allowance there, synced:\n%s", cfg)
 	}
 }
@@ -73,8 +73,8 @@ func TestCodexKeptOnChatGPT(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
-		t.Fatalf("ChatGPT, used up: magpie its provider:\n%s", cfg)
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
+		t.Fatalf("ChatGPT, used up: chongyun its provider:\n%s", cfg)
 	}
 
 	beside := func(when string) {
@@ -104,7 +104,7 @@ func TestCodexKeptOnChatGPT(t *testing.T) {
 	if err := cx.Field("login").Set(""); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("ChatGPT again, used up:\n%s", cfg)
 	}
 }

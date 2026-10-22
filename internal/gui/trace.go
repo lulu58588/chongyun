@@ -11,10 +11,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // traceJSON is the gateway's routing trace since the page last asked.
@@ -213,7 +213,7 @@ var mainName = regexp.MustCompile(`^[A-Za-z0-9._@:/ -]{1,80}$`)
 // which escaping the whole of it lost).
 func mainURL(view, query string) string { return "/?view=" + view + query }
 
-// argView is a tab named on the command line (`magpie gui settings`, a
+// argView is a tab named on the command line (`chongyun gui settings`, a
 // restart to update) as ShowMain takes it: a name, never parameters.
 func argView(s string) string { return url.QueryEscape(s) }
 

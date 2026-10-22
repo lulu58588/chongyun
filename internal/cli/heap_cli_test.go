@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // heapDir is a home of its own and a working folder in it, the one magpie
@@ -41,13 +41,13 @@ func TestHeapHelpAndBadArgsWriteNothing(t *testing.T) {
 	before := tree(t, root)
 	for _, args := range [][]string{{"heap", "--help"}, {"heap", "-h"}, {"heap", "help"}, {"heap", "out.pb.gz", "--help"}} {
 		out, err := runOut(t, args...)
-		if err != nil || !strings.Contains(out, "usage: magpie heap [<file>]") {
-			t.Errorf("magpie %s: %v %q", strings.Join(args, " "), err, out)
+		if err != nil || !strings.Contains(out, "usage: chongyun heap [<file>]") {
+			t.Errorf("chongyun %s: %v %q", strings.Join(args, " "), err, out)
 		}
 	}
 	for _, args := range [][]string{{"heap", "--out", "x"}, {"heap", "-o"}, {"heap", "-"}, {"heap", "a.pb.gz", "b.pb.gz"}, {"heap", " "}} {
 		if _, err := runOut(t, args...); err == nil || !strings.Contains(err.Error(), "nothing was written") {
-			t.Errorf("magpie %s: %v", strings.Join(args, " "), err)
+			t.Errorf("chongyun %s: %v", strings.Join(args, " "), err)
 		}
 	}
 	if asked {
@@ -129,7 +129,7 @@ func TestHeapWithNoGateway(t *testing.T) {
 		}
 	}()
 	t.Setenv("MAGPIE_ADDR", ln.Addr().String())
-	if _, err := runOut(t, "heap", "x.pb.gz"); err == nil || !strings.Contains(err.Error(), "is magpie running") {
+	if _, err := runOut(t, "heap", "x.pb.gz"); err == nil || !strings.Contains(err.Error(), "is chongyun running") {
 		t.Fatalf("%v", err)
 	}
 	if ents, _ := os.ReadDir(dir); len(ents) != 0 {

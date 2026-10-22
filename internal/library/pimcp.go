@@ -13,9 +13,9 @@ import (
 
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // Pi 0.99 (2026-09-29) has MCP of its own, a built-in extension, builtin:mcp

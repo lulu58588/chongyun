@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/agentenv"
 )
 
 // The signature is the one Volcengine's own SDK makes: these were made by

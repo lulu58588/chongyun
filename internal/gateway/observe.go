@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // observed is a request the registered observers watch (usage.Observer,

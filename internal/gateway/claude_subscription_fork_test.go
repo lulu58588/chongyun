@@ -15,8 +15,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // ylorn on Discord: a lead Claude Code routed by group/orchestrator to a

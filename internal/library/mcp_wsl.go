@@ -20,7 +20,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/wslrun"
+	"github.com/lulu58588/magpie/internal/wslrun"
 )
 
 // isSelf is whether s is magpie's own image server, whatever its binary.
@@ -67,7 +67,7 @@ func (f *mcpFile) side(s *Server) (*Server, error) {
 
 // errNoInterop is why a distro whose interop is off can't start magpie's
 // own server.
-var errNoInterop = errors.New("WSL's interop is off in this distro, so an agent there can't start magpie (a Windows program): turn it on in /etc/wsl.conf ([interop] enabled=true) and restart WSL")
+var errNoInterop = errors.New("WSL's interop is off in this distro, so an agent there can't start chongyun (a Windows program): turn it on in /etc/wsl.conf ([interop] enabled=true) and restart WSL")
 
 // wslProbe runs script in the distro and gives what it printed; a var for
 // tests. A distro that isn't running isn't asked, which would start it.

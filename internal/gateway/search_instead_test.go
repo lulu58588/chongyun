@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // pickedSearchSetup is a search for glm/glm-flash, which can't search, with
@@ -159,7 +159,7 @@ func TestSearchInPlaceOfAutoSaysWhy(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			_, next, _ := pickedSearchSetup(t, tc.failing, provider.Responses)
 			if p, m, ok := searcher(); !ok || p.ID != "ds" || m != "deepseek-flash" {
-				t.Fatalf("magpie's searcher is %s/%s", p.ID, m)
+				t.Fatalf("chongyun's searcher is %s/%s", p.ID, m)
 			}
 			s := New()
 			searchForGLM(t, s)

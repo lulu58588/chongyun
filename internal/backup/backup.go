@@ -28,14 +28,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/profile"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/profile"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Ext is the extension backups are saved with.
@@ -113,12 +113,12 @@ var ErrPassphrase = errors.New("wrong passphrase, or the file was changed")
 // JSON, format, or key-derivation fields don't read. It is told from a
 // wrong passphrase and from a newer magpie's file, so a sync can rebuild
 // the damaged one from this computer rather than fail on it forever.
-var ErrCorrupt = errors.New("not a magpie backup")
+var ErrCorrupt = errors.New("not a chongyun backup")
 
 // ErrNotBackup is a file that doesn't begin like a backup at all: an empty
 // one, a page a server answered with, another app's file. It reads as
 // ErrCorrupt does, but is never rebuilt over by a sync on its own.
-var ErrNotBackup = errors.New("not a magpie backup")
+var ErrNotBackup = errors.New("not a chongyun backup")
 
 // BundleVersion is the bundle's structure: 2 carries the per-part
 // credential markers (ProvidersKeys, SettingsKeys, LibraryKeys) as their
@@ -305,7 +305,7 @@ func Open(data []byte, pass string) (Bundle, error) {
 		return Bundle{}, ErrNotBackup
 	}
 	if e.Version != 1 || e.KDF != "pbkdf2-sha256" {
-		return Bundle{}, errors.New("this backup was made by a newer magpie; update magpie to open it")
+		return Bundle{}, errors.New("this backup was made by a newer chongyun; update chongyun to open it")
 	}
 	if e.Iterations < 100_000 || e.Iterations > 10_000_000 || len(e.Nonce) != 12 || len(e.Salt) < 16 {
 		return Bundle{}, ErrCorrupt

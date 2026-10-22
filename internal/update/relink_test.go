@@ -16,7 +16,7 @@ func withCLIVersion(t *testing.T, v string) {
 	t.Cleanup(func() { cliVersion = was })
 }
 
-// StaleCLI says only what deserves saying: a copied `magpie` command that
+// StaleCLI says only what deserves saying: a copied `chongyun` command that
 // is a release *behind* the app — the stale build behind #531's wedged
 // sync. It stays quiet for the installer's link (already follows the app),
 // an absent command, a copy at or ahead of the app, and a copy that isn't a
@@ -31,7 +31,7 @@ func TestStaleCLI(t *testing.T) {
 	const app = "0.1.500"
 	bin := t.TempDir()
 	t.Setenv("MAGPIE_BIN_DIR", bin)
-	cli := filepath.Join(bin, "magpie")
+	cli := filepath.Join(bin, "chongyun")
 	writeCopy := func() { os.WriteFile(cli, []byte("a build"), 0o755) }
 
 	t.Run("a copied release behind the app is stale", func(t *testing.T) {

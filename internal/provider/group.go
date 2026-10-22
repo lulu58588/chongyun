@@ -31,8 +31,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // GroupPrefix starts a group's id in the catalog: "group/<id>".
@@ -1306,13 +1306,13 @@ func SaveGroup(g Group) error {
 	}
 	if gid, ok := strings.CutPrefix(g.Classifier, GroupPrefix); ok {
 		if c, ok := groupOf(groupsIn(providerEntries()), gid); !ok {
-			return fmt.Errorf("magpie has no group %q to classify with", gid)
+			return fmt.Errorf("chongyun has no group %q to classify with", gid)
 		} else if c.Disabled {
 			return fmt.Errorf("%s is switched off: switch it on to classify with it", c.Name)
 		}
 	} else if g.Classifier != "" {
 		if _, _, ok := Resolve(g.Classifier); !ok {
-			return fmt.Errorf("magpie knows no model %q to classify with", g.Classifier)
+			return fmt.Errorf("chongyun knows no model %q to classify with", g.Classifier)
 		}
 	}
 	g.Auto, g.Hidden = false, false
@@ -1343,7 +1343,7 @@ func groupsInGroup(g Group, all []Group) error {
 		}
 		sub, ok := groupOf(all, gid)
 		if !ok {
-			return fmt.Errorf("magpie has no group %q to put in %s", gid, g.Name)
+			return fmt.Errorf("chongyun has no group %q to put in %s", gid, g.Name)
 		}
 		if way := wayTo(all, sub, g.ID, nil); way != nil {
 			return fmt.Errorf("%s can't be in %s: %s is in it already (%s), so %s would be in itself",
@@ -1527,9 +1527,9 @@ func SwitchGroup(id string, on bool) error {
 	i := slices.IndexFunc(f.Groups, func(g Group) bool { return g.ID == id && !g.Hidden })
 	if i < 0 {
 		if g, ok := groupOf(groupsIn(providerEntries()), id); ok && g.Auto {
-			return fmt.Errorf("%s was found by magpie: remove it, or change it to make it yours, to switch it off", g.Name)
+			return fmt.Errorf("%s was found by chongyun: remove it, or change it to make it yours, to switch it off", g.Name)
 		}
-		return fmt.Errorf("magpie has no group %q", id)
+		return fmt.Errorf("chongyun has no group %q", id)
 	}
 	if f.Groups[i].Disabled == !on {
 		return nil
@@ -1556,7 +1556,7 @@ func PickGroup(id, pick string) error {
 	}
 	i := slices.IndexFunc(f.Groups, func(g Group) bool { return g.ID == id && !g.Hidden })
 	if i < 0 {
-		return fmt.Errorf("magpie has no group %q", id)
+		return fmt.Errorf("chongyun has no group %q", id)
 	}
 	g := &f.Groups[i]
 	if g.Routing != Manual {

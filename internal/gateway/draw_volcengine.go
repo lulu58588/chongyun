@@ -28,7 +28,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // isArk is a provider at Volcengine Ark (ark.<region>.volces.com): the
@@ -63,7 +63,7 @@ func arkSize(size string) (string, error) {
 		if s, ok := arkRatioSizes[strings.ReplaceAll(size, " ", "")]; ok {
 			return s, nil
 		}
-		return "", fmt.Errorf("Volcengine's images API takes no aspect ratio as size, and %q isn't one magpie can turn into a size (it can: 1:1, 4:3, 3:4, 16:9, 9:16, 3:2, 2:3, 21:9): describe the ratio in the prompt and leave size out, or give WIDTHxHEIGHT (e.g. 2048x2048)", size)
+		return "", fmt.Errorf("Volcengine's images API takes no aspect ratio as size, and %q isn't one chongyun can turn into a size (it can: 1:1, 4:3, 3:4, 16:9, 9:16, 3:2, 2:3, 21:9): describe the ratio in the prompt and leave size out, or give WIDTHxHEIGHT (e.g. 2048x2048)", size)
 	}
 	return size, nil
 }

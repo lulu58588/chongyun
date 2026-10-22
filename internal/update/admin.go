@@ -8,7 +8,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // ErrCanceled is the administrator's password prompt dismissed.
@@ -61,7 +61,7 @@ func asAdmin(script string) error {
 	var err error
 	switch runtime.GOOS {
 	case "darwin":
-		out, err = run("osascript", "-e", `do shell script "`+appleString(script)+`" with prompt "magpie is updating itself." with administrator privileges`)
+		out, err = run("osascript", "-e", `do shell script "`+appleString(script)+`" with prompt "chongyun is updating itself." with administrator privileges`)
 		if err != nil && strings.Contains(string(out), "(-128)") {
 			return ErrCanceled
 		}

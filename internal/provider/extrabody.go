@@ -103,7 +103,7 @@ func ExtraBodyOK(e ExtraBody) string {
 		case n == "":
 			return "an extra body field needs a name"
 		case slices.Contains(ExtraBodyReserved, n):
-			return fmt.Sprintf("extra body can't set %q: magpie sets the model, stream and the conversation itself", n)
+			return fmt.Sprintf("extra body can't set %q: chongyun sets the model, stream and the conversation itself", n)
 		case seen[n]:
 			return fmt.Sprintf("extra body names %q twice", n)
 		case !json.Valid(e[k]):

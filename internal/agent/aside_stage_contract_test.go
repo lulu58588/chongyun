@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 func TestAsideStageWritesSelectionObjectAndConfirmsPending(t *testing.T) {

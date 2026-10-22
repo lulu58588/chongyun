@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestWorkBuddy(t *testing.T) {
@@ -42,7 +42,7 @@ func TestWorkBuddy(t *testing.T) {
 	if f.Get() != "" {
 		t.Fatalf("get: %q", f.Get())
 	}
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	ms := read()
@@ -50,11 +50,11 @@ func TestWorkBuddy(t *testing.T) {
 		t.Fatalf("models: %v", ms)
 	}
 	pro := ms[1]
-	if pro["id"] != "deepseek/pro" || pro["vendor"] != "magpie" || pro["apiKey"] != "magpie-workbuddy" ||
+	if pro["id"] != "deepseek/pro" || pro["vendor"] != "chongyun" || pro["apiKey"] != "magpie-workbuddy" ||
 		pro["url"] != gatewayV1()+"/chat/completions" || pro["supportsToolCall"] != true || pro["maxInputTokens"] == nil {
-		t.Fatalf("magpie model: %v", pro)
+		t.Fatalf("chongyun model: %v", pro)
 	}
-	if f.Get() != "magpie" {
+	if f.Get() != "chongyun" {
 		t.Fatalf("get: %q", f.Get())
 	}
 
@@ -83,12 +83,12 @@ func TestWorkBuddy(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(read()) != 1 {
-		t.Fatal("sync put magpie back")
+		t.Fatal("sync put chongyun back")
 	}
 
 	// the CLI's object form, with a list of the models to show
 	os.WriteFile(path, []byte(`{"models":[{"id":"mine","url":"https://x/v1/chat/completions"}],"availableModels":["mine"],"other":1}`), 0o600)
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	var doc struct {
@@ -224,7 +224,7 @@ func TestWorkBuddyAIWritesItsOwnFolder(t *testing.T) {
 	if !a.Detected() {
 		t.Fatal("not detected")
 	}
-	if err := a.Field("provider").Set("magpie"); err != nil {
+	if err := a.Field("provider").Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	var ms []map[string]any
@@ -235,7 +235,7 @@ func TestWorkBuddyAIWritesItsOwnFolder(t *testing.T) {
 	if len(ms) != 1 || ms[0]["id"] != "deepseek/pro" || ms[0]["apiKey"] != "magpie-workbuddy-ai" {
 		t.Fatalf("models: %v", ms)
 	}
-	if got := a.Field("provider").Get(); got != "magpie" {
+	if got := a.Field("provider").Get(); got != "chongyun" {
 		t.Fatalf("get: %q", got)
 	}
 	if b, _ := os.ReadFile(cn); string(b) != `[{"id":"qwen-local","local":true}]` {

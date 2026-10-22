@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/filememo"
 )
 
 // newProcess is what a magpie run from a terminal starts with: nothing
@@ -165,7 +165,7 @@ func TestLoginsKeepAnotherMagpiesWrite(t *testing.T) {
 		go func() {
 			err := other.Wait()
 			if err != nil {
-				t.Logf("the other magpie: %v\n%s", err, out.Bytes())
+				t.Logf("the other chongyun: %v\n%s", err, out.Bytes())
 			}
 			otherDone <- err
 		}()
@@ -180,18 +180,18 @@ func TestLoginsKeepAnotherMagpiesWrite(t *testing.T) {
 	t.Cleanup(func() { beforeLoginsWrite = func() {} })
 	rememberLogins(false)
 	if other == nil {
-		t.Fatal("this magpie wrote nothing")
+		t.Fatal("this chongyun wrote nothing")
 	}
 	if err := <-otherDone; err != nil {
-		t.Fatal("the other magpie failed")
+		t.Fatal("the other chongyun failed")
 	}
 
 	b, _ := os.ReadFile(loginsPath())
 	if !bytes.Contains(b, []byte("r-rotated")) || bytes.Contains(b, []byte(`r-work"`)) {
-		t.Fatalf("the other magpie's renewed sign-in was written over:\n%s", b)
+		t.Fatalf("the other chongyun's renewed sign-in was written over:\n%s", b)
 	}
 	if !bytes.Contains(b, []byte("r-me-2")) {
-		t.Fatalf("this magpie's change was lost:\n%s", b)
+		t.Fatalf("this chongyun's change was lost:\n%s", b)
 	}
 }
 

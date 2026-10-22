@@ -136,7 +136,7 @@ func RunMCP(args []string) error {
 				result = map[string]any{
 					"protocolVersion": "2025-06-18",
 					"capabilities":    map[string]any{"tools": map[string]any{"listChanged": true}},
-					"serverInfo":      map[string]any{"name": "magpie", "version": "1"},
+					"serverInfo":      map[string]any{"name": "崇云科技", "version": "1"},
 				}
 			case "tools/list":
 				toolsMu.Lock()

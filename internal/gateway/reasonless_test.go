@@ -9,8 +9,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // reasoningLeft says what of a sent body still asks the model to reason.

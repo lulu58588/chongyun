@@ -30,9 +30,9 @@ import (
 
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/netproxy"
 )
 
 // claudeProxyAddr are the keys Claude Code takes its proxy from (Node's
@@ -170,7 +170,7 @@ func setClaudeProxyEnv(want string) (string, error) {
 			}
 		}
 		if userRoute && want != "" {
-			log.Printf("claude: settings.json's env has a proxy of the user's own; magpie leaves it, and writes no account's proxy")
+			log.Printf("claude: settings.json's env has a proxy of the user's own; chongyun leaves it, and writes no account's proxy")
 		}
 		want = ""
 	} else {

@@ -27,11 +27,11 @@ import (
 	"time"
 	"unicode/utf16"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/source"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/source"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // CLI is what magpie knows of an agent's command-line program.
@@ -616,7 +616,7 @@ var npmRegistry = "https://registry.npmjs.org/"
 func npmLatest(pkg string) (string, error) {
 	c := &http.Client{Timeout: 8 * time.Second}
 	req, _ := http.NewRequest("GET", npmRegistry+pkg+"/latest", nil)
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	req.Header.Set("Accept", "application/json")
 	resp, err := source.Do(c, req)
 	if err != nil {
@@ -669,7 +669,7 @@ func grokLatest() string {
 func channelVersion(url string) (string, error) {
 	c := &http.Client{Timeout: 8 * time.Second}
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	resp, err := source.Do(c, req)
 	if err != nil {
 		return "", err
@@ -755,7 +755,7 @@ func offPath(bin string, dirs []string) bool {
 // cliBin is where the agent's CLI is, "" when it has none magpie knows or
 // none is installed. One not on magpie's PATH is looked for where a user's
 // tools are installed (proc.FindTool), on every system as on Windows: a
-// `magpie serve` or a service started with a PATH that lacks ~/.bun/bin, an
+// `chongyun serve` or a service started with a PATH that lacks ~/.bun/bin, an
 // npm prefix or an nvm Node other than the default never found omp there,
 // so its version stayed unknown and its models offered xhigh in place of
 // max (whqtian on Discord: fixed on Windows and in WSL, still xhigh on
@@ -895,7 +895,7 @@ type AdminError struct {
 func (e *AdminError) Error() string {
 	why := "Windows' administrator prompt was declined"
 	if !e.Canceled {
-		why = "magpie couldn't ask Windows for one (" + e.Err.Error() + ")"
+		why = "chongyun couldn't ask Windows for one (" + e.Err.Error() + ")"
 	}
 	where := fmt.Sprintf("%s is installed in %s, which only an administrator can change", e.Agent, e.Prefix)
 	if e.Prefix == "" {
@@ -948,11 +948,11 @@ var updateTimeout = 10 * time.Minute
 func (a *Agent) UpdateCLI() (CLI, error) {
 	bin, spec := a.cliBin()
 	if bin == "" {
-		return CLI{}, fmt.Errorf("magpie can't find %s's CLI", a.Name)
+		return CLI{}, fmt.Errorf("chongyun can't find %s's CLI", a.Name)
 	}
 	real, u := installedAt(spec, bin)
 	if u == nil {
-		return CLI{}, fmt.Errorf("magpie can't tell how %s was installed at %s — update it the way you installed it", a.Name, bin)
+		return CLI{}, fmt.Errorf("chongyun can't tell how %s was installed at %s — update it the way you installed it", a.Name, bin)
 	}
 	if _, busy := updating.LoadOrStore(a.ID, true); busy {
 		return CLI{}, fmt.Errorf("%s is already being updated", a.Name)

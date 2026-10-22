@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Sharing gates remote access; each authorized remote call carries the same
@@ -56,12 +56,12 @@ func TestLANGuard(t *testing.T) {
 	if addr := listenAddr(); addr != "0.0.0.0:"+Port() {
 		t.Fatal(addr)
 	}
-	for _, hdr := range [][]string{nil, {"Authorization", "Bearer magpie"}, {"x-api-key", "wrong"}} {
+	for _, hdr := range [][]string{nil, {"Authorization", "Bearer chongyun"}, {"x-api-key", "wrong"}} {
 		if c := call("192.168.1.9:5000", hdr...); c != http.StatusUnauthorized {
 			t.Fatal("unauthorized remote", hdr, c)
 		}
 	}
-	if c := call("192.168.1.9:5000", "x-api-key", secret); c != 200 || id != keyID || got != "Bearer magpie|magpie" {
+	if c := call("192.168.1.9:5000", "x-api-key", secret); c != 200 || id != keyID || got != "Bearer chongyun|chongyun" {
 		t.Fatal(c, id, got)
 	}
 	if c := call("127.0.0.1:5000", "Authorization", "Bearer "+secret); c != 200 || id != keyID {
@@ -81,7 +81,7 @@ func TestLANGuard(t *testing.T) {
 	// MAGPIE_ADDR on the network, not shared (the Docker image): another
 	// machine, a container's host among them, needs an enabled key too
 	t.Setenv("MAGPIE_ADDR", "0.0.0.0:3499")
-	for _, hdr := range [][]string{nil, {"Authorization", "Bearer magpie"}, {"x-api-key", "wrong"}} {
+	for _, hdr := range [][]string{nil, {"Authorization", "Bearer chongyun"}, {"x-api-key", "wrong"}} {
 		for _, from := range []string{"192.168.1.9:5000", "172.17.0.1:40312", "[fd00::1]:5000"} {
 			if c := call(from, hdr...); c != http.StatusUnauthorized || id != "" {
 				t.Fatal("MAGPIE_ADDR on the network, not shared:", from, hdr, c)
@@ -92,7 +92,7 @@ func TestLANGuard(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if c := call("172.17.0.1:40312", "Authorization", "Bearer "+secret); c != 200 || id == "" || got != "Bearer magpie|" {
+	if c := call("172.17.0.1:40312", "Authorization", "Bearer "+secret); c != 200 || id == "" || got != "Bearer chongyun|" {
 		t.Fatal("MAGPIE_ADDR on the network, with a key:", c, id, got)
 	}
 	if c := call("127.0.0.1:5000", "Authorization", "Bearer anything"); c != 200 {
@@ -235,9 +235,9 @@ func TestLANModelsWithKeyBesideAnotherToken(t *testing.T) {
 		{"x-api-key", key, "Authorization", "Bearer "},
 		{"x-api-key", key, "Authorization", "Bearer"},
 		{"x-api-key", key, "Authorization", "Bearer undefined"},
-		{"x-api-key", key, "Authorization", "Bearer magpie"},
+		{"x-api-key", key, "Authorization", "Bearer chongyun"},
 		{"Authorization", "bearer " + key},
-		{"Authorization", "Bearer magpie", "x-goog-api-key", key},
+		{"Authorization", "Bearer chongyun", "x-goog-api-key", key},
 	} {
 		for _, path := range []string{"/v1/models", "/models", "/v1/models?limit=1000"} {
 			c, b := list("192.168.0.9:50123", path, hdr...)
@@ -251,7 +251,7 @@ func TestLANModelsWithKeyBesideAnotherToken(t *testing.T) {
 	}
 	// a key the gateway doesn't have is refused wherever it is sent
 	for _, hdr := range [][]string{
-		{"x-api-key", "sk-magpie-wrong", "Authorization", "Bearer magpie"},
+		{"x-api-key", "sk-magpie-wrong", "Authorization", "Bearer chongyun"},
 		{"Authorization", "Bearer "},
 		{"x-api-key", key + "x"},
 	} {
@@ -367,7 +367,7 @@ func TestNetworkGatewayGuardsEveryRoute(t *testing.T) {
 	}
 	for _, rt := range routes {
 		for _, from := range []string{"172.17.0.1:40312", "192.168.1.9:5000"} {
-			for _, hdr := range [][]string{nil, {"Authorization", "Bearer magpie"}, {"x-api-key", "anything"}, {"x-goog-api-key", "magpie"}, {"Authorization", "Bearer " + live}} {
+			for _, hdr := range [][]string{nil, {"Authorization", "Bearer chongyun"}, {"x-api-key", "anything"}, {"x-goog-api-key", "chongyun"}, {"Authorization", "Bearer " + live}} {
 				resetAuthThrottle() // test each route's own guard, not the flood limiter that would 429 later tries
 				if c, b := call(rt[0], rt[1], from, hdr...); c != http.StatusUnauthorized || !strings.Contains(b, "gateway key") {
 					t.Errorf("%s %s from %s with %v: %d %.120s", rt[0], rt[1], from, hdr, c, b)
@@ -384,7 +384,7 @@ func TestNetworkGatewayGuardsEveryRoute(t *testing.T) {
 	if c, b := call("GET", "/v1/magpie/quotas", "172.17.0.1:40312", "x-api-key", secrets[0]); c != 200 {
 		t.Fatal("quotas with the key:", c, b)
 	}
-	if c, b := call("GET", "/v1/models", "127.0.0.1:5000", "Authorization", "Bearer magpie"); c != 200 {
+	if c, b := call("GET", "/v1/models", "127.0.0.1:5000", "Authorization", "Bearer chongyun"); c != 200 {
 		t.Fatal("loopback:", c, b)
 	}
 }

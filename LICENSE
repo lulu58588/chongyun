@@ -1,6 +1,7 @@
 MIT License
 
 Copyright (c) 2026 yetone
+Copyright (c) 2026 崇云科技 (Chongyun Technology)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +20,40 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+-------------------------------------------------------------------------------
+崇云科技二开说明 / Notice for the Chongyun Technology derivative
+
+This build is a derivative work of "magpie" (https://github.com/yetone/magpie),
+which is distributed under the MIT License reproduced above. The MIT License
+requires that this notice be kept in all copies or substantial portions of
+the software; the original copyright notice and the MIT License text are
+retained above and are not modified.
+
+Modifications made by 崇云科技 include, among others:
+
+  * Branding: the product name, the logo, the application icons and the
+    user-facing texts were replaced with 崇云科技 / Chongyun.
+  * Telemetry: the daily usage-report to the upstream project's PostHog
+    project was removed (internal/stats). This build reports nothing to
+    any third party.
+  * Official infrastructure: the update feed, the partners list, the icon
+    proxy, the website and the CORS allow-list for the upstream site's
+    pages were removed or made configurable by this build.
+  * Subscription accounts: reading the sign-ins of other agents
+    (Claude Code, Codex, the Keychain) is now off unless the user turns it
+    on with `chongyun accounts discovery on`.
+  * The upstream project's website (site/) was removed.
+
+The MIT License grants the right to use, copy, modify, merge, publish,
+distribute, sublicense and sell this software. This software is provided
+"AS IS", without warranty of any kind. The names of the copyright holders
+are not used to endorse or promote products derived from this software
+without prior written permission.
+
+第三方代码 / Third-party code
+  internal/qoder/ is derived from https://github.com/ufec/CLIProxyAPI (MIT);
+  its copyright notice and licence are kept in internal/qoder/LICENSE and
+  the source is credited in internal/qoder/endpoints.go.
+  internal/pii/ downloads a local masking model from LocalAI's repository
+  under its own licence; this build does not publish that model.

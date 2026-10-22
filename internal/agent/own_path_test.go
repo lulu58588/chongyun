@@ -49,7 +49,7 @@ func TestOwnModelsSayTheirPath(t *testing.T) {
 	os.WriteFile(cfg, []byte(`openai_base_url = "`+codexGatewayURL()+`"`+"\n"), 0o644)
 	for _, o := range ownOf(codex(home), "OpenAI") {
 		if !o.Via || o.Direct != "" {
-			t.Errorf("routed, %s goes via magpie: %+v", o.Value, o)
+			t.Errorf("routed, %s goes via chongyun: %+v", o.Value, o)
 		}
 	}
 	os.WriteFile(cfg, []byte("model_provider = \"mine\"\n[model_providers.mine]\nbase_url = \"https://relay.example/v1\"\n"), 0o644)

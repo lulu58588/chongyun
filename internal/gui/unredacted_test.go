@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // lc on Discord: the editor's "Send requests unmasked" is saved on a

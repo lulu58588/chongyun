@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // A plugin account whose proxy is down, HTTP or SOCKS5, never reached its

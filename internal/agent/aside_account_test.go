@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // asideAccountsJSON is ~/.aside/accounts.json as fjrtdk pasted it on #1499
@@ -106,7 +106,7 @@ func TestAsideFollowsTheActiveAccount(t *testing.T) {
 	}
 	onlyAccount(t, *calls, "u1")
 	if key, _ := edit.GetJSON(asideFile(home, 1, "models.json"), "providers.magpie.apiKey"); key != gateway.TokenFor("aside") {
-		t.Fatal("u1 has no magpie provider")
+		t.Fatal("u1 has no chongyun provider")
 	}
 	if got := mustFindAside(t).Field("model").Get(); got != "magpie/relay/glm-4.6" {
 		t.Fatalf("u1 model %q", got)
@@ -115,7 +115,7 @@ func TestAsideFollowsTheActiveAccount(t *testing.T) {
 		t.Fatal("u0 was written while u1 is active")
 	}
 	if v, _ := edit.GetJSON(asideFile(home, 1, "models.json"), "keepMe"); v != "yes" {
-		t.Fatal("a key magpie doesn't own was dropped")
+		t.Fatal("a key chongyun doesn't own was dropped")
 	}
 	// `aside account use 0`: magpie follows it on its next look
 	writeFile(t, filepath.Join(home, ".aside", "accounts.json"), strings.Replace(asideAccountsJSON, `"currentAccountId": 1`, `"currentAccountId": 0`, 1))
@@ -157,7 +157,7 @@ func TestAsideUnreadableAccountsKeepU0(t *testing.T) {
 	}
 }
 
-// The account picked on magpie (the row's account field, `magpie aside
+// The account picked on magpie (the row's account field, `chongyun aside
 // account u2`) wins over Aside's active one; Default follows Aside again.
 func TestAsidePickedAccountOverridesActive(t *testing.T) {
 	home, calls := asideAccountsHome(t)

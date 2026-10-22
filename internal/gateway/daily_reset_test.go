@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #2008 (Gaudi-XIX): a free tier's daily allowance, refused as xkiro

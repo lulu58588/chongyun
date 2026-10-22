@@ -1,8 +1,8 @@
 package gui
 
 import (
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // replaceKey puts a new value in place of one of a provider's keys

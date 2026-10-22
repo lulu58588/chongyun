@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/testenv"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // elevation fakes Windows' administrator prompt: writable is whether the

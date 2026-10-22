@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // magpie accounts switch|forget copilot tells one login on two hosts apart
@@ -52,7 +52,7 @@ func TestAccountsCopilotHosts(t *testing.T) {
 	if _, err := run("switch", "copilot", "mona@b.ghe.com"); err != nil || first() != "mona@b.ghe.com" {
 		t.Fatalf("switch mona@b.ghe.com: %v, first %s", err, first())
 	}
-	if out, err := run("switch", "copilot", "MONA", "--host", "https://a.ghe.com/"); err != nil || first() != "mona@a.ghe.com" || !strings.Contains(out, "magpie now uses mona@a.ghe.com") {
+	if out, err := run("switch", "copilot", "MONA", "--host", "https://a.ghe.com/"); err != nil || first() != "mona@a.ghe.com" || !strings.Contains(out, "chongyun now uses mona@a.ghe.com") {
 		t.Fatalf("switch --host: %v %q, first %s", err, out, first())
 	}
 	if _, err := run("switch", "copilot", "hubot", "--host", "evil.example.com"); err == nil {

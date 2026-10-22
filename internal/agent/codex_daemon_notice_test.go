@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Codex 0.162's TUI runs on a background app-server it starts once and
@@ -51,7 +51,7 @@ func TestCodexNoticeKeepsTheDaemonCurrent(t *testing.T) {
 	home, _ := codexHome(t, "", "")
 	dir := filepath.Join(home, ".codex")
 	cfg, list := filepath.Join(dir, "config.toml"), filepath.Join(dir, "magpie-models.json")
-	os.WriteFile(cfg, []byte("model_provider = \"magpie\"\nmodel_catalog_json = \""+list+"\"\n"), 0o600)
+	os.WriteFile(cfg, []byte("model_provider = \"chongyun\"\nmodel_catalog_json = \""+list+"\"\n"), 0o600)
 	os.WriteFile(list, []byte(`{"models":[{"slug":"magpie/a"}]}`), 0o644)
 	then := time.Now().Add(-2 * time.Hour)
 	os.Chtimes(cfg, then, then)
@@ -79,9 +79,9 @@ func TestCodexNoticeKeepsTheDaemonCurrent(t *testing.T) {
 	answer = provider.CodexDaemonCheck{Behind: true, Restarted: true, Since: then}
 	n := codex(home).Notice()
 	if time.Since(changed) > time.Minute {
-		t.Fatalf("checked against %v, not magpie's change", changed)
+		t.Fatalf("checked against %v, not chongyun's change", changed)
 	}
-	if !strings.Contains(n, "magpie restarted") {
+	if !strings.Contains(n, "chongyun restarted") {
 		t.Fatalf("restarted: %q", n)
 	}
 	// a session on it: the user is told where to restart it

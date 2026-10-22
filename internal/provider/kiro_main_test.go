@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // TestMain keeps the package's tests off the Kiro and Copilot CLI sign-ins
@@ -17,6 +17,7 @@ import (
 // keeps them off the network (testenv.Offline): a test of a sign-in or a
 // key at a vendor's real address asks only what it serves on loopback.
 func TestMain(m *testing.M) {
+	os.Setenv("MAGPIE_ACCOUNT_DISCOVERY", "1")
 	os.Exit(testenv.RunIn(m, func(home string) {
 		testenv.Offline()
 		kiroCLIDB = func() string { return filepath.Join(home, "kiro-test", "kiro-cli", "data.sqlite3") }

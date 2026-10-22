@@ -20,10 +20,10 @@ import (
 	"github.com/tidwall/jsonc"
 	"gopkg.in/yaml.v3"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/imagemcp"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/imagemcp"
 )
 
 // Server is one MCP server: a command magpie's agents start, or a URL they
@@ -267,7 +267,7 @@ func (f *mcpFile) foreign(old map[string]any) error {
 	return errZedExtension
 }
 
-var errZedExtension = errors.New("Zed has a server by this name from one of its extensions, which magpie leaves as it is: give the server another name to give it to Zed")
+var errZedExtension = errors.New("Zed has a server by this name from one of its extensions, which chongyun leaves as it is: give the server another name to give it to Zed")
 
 // errNoRemote is what the page says of an app that reaches only a server
 // it runs itself (Claude Desktop, whose remote ones are its Connectors).

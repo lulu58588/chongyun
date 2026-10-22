@@ -7,16 +7,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/budget"
-	"github.com/yetone/magpie/internal/gwbudget"
-	"github.com/yetone/magpie/internal/gwmw"
-	"github.com/yetone/magpie/internal/gwtool"
-	"github.com/yetone/magpie/internal/masking"
-	"github.com/yetone/magpie/internal/middleware"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/routes"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/budget"
+	"github.com/lulu58588/magpie/internal/gwbudget"
+	"github.com/lulu58588/magpie/internal/gwmw"
+	"github.com/lulu58588/magpie/internal/gwtool"
+	"github.com/lulu58588/magpie/internal/masking"
+	"github.com/lulu58588/magpie/internal/middleware"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/routes"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // standInsEnv names the folder of a test binary's stand-in CLIs, for a

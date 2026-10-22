@@ -17,14 +17,14 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/profile"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/profile"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // ---- styling ---------------------------------------------------------------
@@ -824,7 +824,7 @@ func (m model) View() string {
 }
 
 func (m model) header(crumbs ...string) string {
-	s := pad + sTitle.Render("◉ magpie")
+	s := pad + sTitle.Render("◉ chongyun")
 	if len(crumbs) == 0 {
 		// the pages, this one marked
 		s += "  "

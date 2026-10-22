@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/claudecode"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/claudecode"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // A provider switched off, or whose account was removed from magpie, gets

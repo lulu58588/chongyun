@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // readBytesLines is how TraceReader.Poll read a file before nextTraceLine:

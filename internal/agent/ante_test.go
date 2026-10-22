@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // anteHome is a HOME with an Ante of the user's: a catalog holding a provider
@@ -120,12 +120,12 @@ func TestAnte(t *testing.T) {
 	for _, o := range f.Options(a.Values()) {
 		vals = append(vals, o.Value)
 	}
-	if !reflect.DeepEqual(vals, []string{"magpie"}) {
+	if !reflect.DeepEqual(vals, []string{"chongyun"}) {
 		t.Fatalf("options: %v", vals)
 	}
 
 	for range 2 { // twice: one magpie provider, and the user's left alone
-		if err := f.Set("magpie"); err != nil {
+		if err := f.Set("chongyun"); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -137,8 +137,8 @@ func TestAnte(t *testing.T) {
 		t.Fatalf("models: %v", got)
 	}
 	mine := anteEntry(t, path)
-	if mine["base_url"] != gatewayV1() || mine["wire_style"] != "OpenAiCompatible" || mine["display_name"] != "magpie" {
-		t.Fatalf("magpie provider: %v", mine)
+	if mine["base_url"] != gatewayV1() || mine["wire_style"] != "OpenAiCompatible" || mine["display_name"] != "chongyun" {
+		t.Fatalf("chongyun provider: %v", mine)
 	}
 	// no auth block of magpie's: the gateway lets this machine in with any
 	// token, and Ante counts a provider with none as authenticated
@@ -167,7 +167,7 @@ func TestAnte(t *testing.T) {
 			t.Fatalf("%s: effort written: %v", id, e)
 		}
 	}
-	if f.Get() != "magpie" || a.Check() != "" {
+	if f.Get() != "chongyun" || a.Check() != "" {
 		t.Fatalf("on: %q %q", f.Get(), a.Check())
 	}
 	// Ante starts on magpie: its provider named, and the provider and model
@@ -179,7 +179,7 @@ func TestAnte(t *testing.T) {
 		t.Fatalf("settings: %v", got)
 	}
 	if _, ok := anteRead(t, settings)["model"]; ok {
-		t.Fatalf("the user's model left beside magpie's provider: %v", anteRead(t, settings))
+		t.Fatalf("the user's model left beside chongyun's provider: %v", anteRead(t, settings))
 	}
 	for _, k := range []string{"permission_mode", "theme"} {
 		if anteRead(t, settings)[k] != wantSettings[k] {
@@ -202,8 +202,8 @@ func TestAnte(t *testing.T) {
 	// Ante moved to one of its own providers: magpie's entry is still in the
 	// catalog, and that is said rather than kept quiet about (#1210)
 	writeFile(t, settings, `{"provider":"together","model":"moonshotai/Kimi-K2-Instruct","permission_mode":"auto","theme":"default"}`)
-	if got := a.Check(); !strings.Contains(got, "together") || !strings.Contains(got, "no longer asks magpie") {
-		t.Fatalf("moved off magpie: %q", got)
+	if got := a.Check(); !strings.Contains(got, "together") || !strings.Contains(got, "no longer asks chongyun") {
+		t.Fatalf("moved off chongyun: %q", got)
 	}
 
 	// stepping out takes magpie's provider away, leaves the user's file as it
@@ -226,7 +226,7 @@ func TestAnte(t *testing.T) {
 	// nothing: its auto-detection, not a made-up choice
 	os.Remove(path)
 	os.Remove(settings)
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	if _, ok := anteProv(t, path)[magpieID]; !ok {
@@ -274,7 +274,7 @@ func TestAnteModelField(t *testing.T) {
 		t.Fatalf("own: %v", got)
 	}
 	if _, ok := anteProv(t, path)[magpieID]; ok {
-		t.Fatalf("magpie's entry left: %v", anteProv(t, path))
+		t.Fatalf("chongyun's entry left: %v", anteProv(t, path))
 	}
 	if a.Wired() || m.Get() != "" {
 		t.Fatalf("still wired: %v %q", a.Wired(), m.Get())
@@ -302,10 +302,10 @@ func TestAnteConnectDisconnect(t *testing.T) {
 	}
 	got := anteRead(t, settings)
 	if got["provider"] != magpieID {
-		t.Fatalf("Ante starts on %v, not magpie: %v", got["provider"], got)
+		t.Fatalf("Ante starts on %v, not chongyun: %v", got["provider"], got)
 	}
 	if got["model"] == nil || got["model"] == "moonshotai/Kimi-K2-Instruct" {
-		t.Fatalf("Connect left the user's model beside magpie's provider: %v", got)
+		t.Fatalf("Connect left the user's model beside chongyun's provider: %v", got)
 	}
 	if d := a.Drift(); d != nil {
 		t.Fatalf("drift after Connect: %+v", d)
@@ -318,7 +318,7 @@ func TestAnteConnectDisconnect(t *testing.T) {
 		t.Fatalf("not put back: %v", got)
 	}
 	if _, ok := anteProv(t, path)[magpieID]; ok {
-		t.Fatalf("magpie's entry left: %v", anteProv(t, path))
+		t.Fatalf("chongyun's entry left: %v", anteProv(t, path))
 	}
 	if d := a.Drift(); d != nil {
 		t.Fatalf("drift after Disconnect: %+v", d)
@@ -332,7 +332,7 @@ func TestAnteKeepsWhatTheUserPickedWhileWired(t *testing.T) {
 	home, path, settings := anteHome(t)
 	a := ante(home)
 	f := a.Field("provider")
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	// the user moves to their own provider, and to one of magpie's models
@@ -349,7 +349,7 @@ func TestAnteKeepsWhatTheUserPickedWhileWired(t *testing.T) {
 		t.Fatalf("the user's other keys: %v", got)
 	}
 	if _, ok := anteProv(t, path)[magpieID]; ok {
-		t.Fatalf("magpie's entry left: %v", anteProv(t, path))
+		t.Fatalf("chongyun's entry left: %v", anteProv(t, path))
 	}
 }
 
@@ -390,7 +390,7 @@ func anteEffortModel(t *testing.T, id string, efforts []string) map[string]any {
 			return out
 		}
 	}
-	t.Fatalf("eff/%s is not in magpie's catalog", id)
+	t.Fatalf("eff/%s is not in chongyun's catalog", id)
 	return nil
 }
 
@@ -409,7 +409,7 @@ func TestAnteEfforts(t *testing.T) {
 		{"minimal is Ante's min", []string{"minimal", "high"}, []string{"min", "high"}},
 		{"none is no rung of Ante's", []string{"none", "high"}, []string{"high"}},
 		{"none alone takes no effort", []string{"none"}, []string{}},
-		{"magpie's order, Ante's ladder", []string{"max", "low", "none", "minimal"}, []string{"min", "low", "max"}},
+		{"chongyun's order, Ante's ladder", []string{"max", "low", "none", "minimal"}, []string{"min", "low", "max"}},
 		{"all of them", []string{"none", "minimal", "low", "medium", "high", "xhigh", "max"},
 			[]string{"min", "low", "medium", "high", "xhigh", "max"}},
 		{"nothing known", nil, []string{}},
@@ -460,7 +460,7 @@ func TestAnteSyncKeepsTheUsersKeys(t *testing.T) {
 	const theirs = `{
   "providers": {
     "together": { "base_url": "https://api.together.xyz/v1", "wire_style": "OpenAiCompatible" },
-    "magpie": {
+    "chongyun": {
       "display_name": "old",
       "base_url": "http://127.0.0.1:1/v1",
       "wire_style": "OpenAiCompatible",
@@ -482,7 +482,7 @@ func TestAnteSyncKeepsTheUsersKeys(t *testing.T) {
 			home, path, settings := anteHome(t)
 			a := ante(home)
 			f := a.Field("provider")
-			if err := f.Set("magpie"); err != nil {
+			if err := f.Set("chongyun"); err != nil {
 				t.Fatal(err)
 			}
 			writeFile(t, path, theirs)
@@ -509,7 +509,7 @@ func TestAnteSyncKeepsTheUsersKeys(t *testing.T) {
 					}
 				}
 				// the fields magpie owns still follow the gateway
-				for k, want := range map[string]string{"base_url": gatewayV1(), "display_name": "magpie", "wire_style": "OpenAiCompatible"} {
+				for k, want := range map[string]string{"base_url": gatewayV1(), "display_name": "chongyun", "wire_style": "OpenAiCompatible"} {
 					if v, _ := edit.GetJSON(path, anteProvider+"."+k); v != want {
 						t.Errorf("%s = %q, want %q", k, v, want)
 					}
@@ -531,7 +531,7 @@ func TestAnteSyncKeepsTheUsersKeys(t *testing.T) {
 				if err := a.Sync(); err != nil {
 					t.Fatal(err)
 				}
-			} else if err := f.Set("magpie"); err != nil {
+			} else if err := f.Set("chongyun"); err != nil {
 				t.Fatal(err)
 			}
 			check()
@@ -539,7 +539,7 @@ func TestAnteSyncKeepsTheUsersKeys(t *testing.T) {
 			// together's beside it — the default of preferred_models, one of
 			// magpie's, is what it starts on
 			if v, _ := edit.GetJSON(settings, "provider"); v != magpieID {
-				t.Errorf("settings' provider = %q, want magpie", v)
+				t.Errorf("settings' provider = %q, want chongyun", v)
 			}
 			if v, ok := edit.GetJSON(settings, "model"); ok && v != "" {
 				t.Errorf("settings' model = %q, want none", v)
@@ -594,7 +594,7 @@ func TestAnteHome(t *testing.T) {
 		t.Fatalf("a relative $ANTE_HOME was taken: %q", got)
 	}
 	t.Setenv("ANTE_HOME", elsewhere)
-	if err := a.Field("provider").Set("magpie"); err != nil {
+	if err := a.Field("provider").Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	if _, ok := anteProv(t, path)[magpieID]; !ok {
@@ -605,7 +605,7 @@ func TestAnteHome(t *testing.T) {
 	}
 	// the home folder's own .ante is left exactly as the user had it
 	if b := readFile(catalogPath); strings.Contains(b, magpieID) {
-		t.Fatalf("magpie written beside the home folder: %s", b)
+		t.Fatalf("chongyun written beside the home folder: %s", b)
 	}
 	if b := readFile(settingsPath); b != `{
   "provider": "together",
@@ -621,10 +621,10 @@ func TestAnteHome(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, ok := anteProv(t, path)[magpieID]; ok {
-		t.Fatalf("magpie left at $ANTE_HOME: %v", anteProv(t, path))
+		t.Fatalf("chongyun left at $ANTE_HOME: %v", anteProv(t, path))
 	}
 	if b := readFile(catalogPath); strings.Contains(b, magpieID) {
-		t.Fatalf("magpie written beside the home folder on the way out: %s", b)
+		t.Fatalf("chongyun written beside the home folder on the way out: %s", b)
 	}
 	// A distro's ANTE_HOME is one magpie can't read, so its Ante is ~/.ante
 	// there, as MiniMax Code's mcode (see wsl.go).
@@ -648,14 +648,14 @@ func TestAnteWriteFailureRollsBothFilesBack(t *testing.T) {
 	home, path, settings := anteHome(t)
 	a := ante(home)
 	f := a.Field("provider")
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	beforeSettings := readFile(settings)
 	if v, _ := edit.GetJSON(settings, "provider"); v != magpieID {
 		t.Fatalf("not wired: %q", v)
 	}
-	bad := `{"providers": {"magpie": {"base_url": "http://127.0.0.1:1/v1"`
+	bad := `{"providers": {"chongyun": {"base_url": "http://127.0.0.1:1/v1"`
 	writeFile(t, path, bad)
 	if err := f.Set(""); err == nil {
 		t.Fatal("a catalog that can't be written was stepped over")
@@ -677,14 +677,14 @@ func TestAnteConnectWriteFailureRollsBack(t *testing.T) {
 	// nothing of it is written over, so the first settings write fails
 	bad := `{"provider": "together",`
 	writeFile(t, settings, bad)
-	if err := ante(home).Field("provider").Set("magpie"); err == nil {
+	if err := ante(home).Field("provider").Set("chongyun"); err == nil {
 		t.Fatal("a settings.json that can't be written was stepped over")
 	}
 	if got := readFile(path); got != before {
 		t.Fatalf("the catalog kept half of a change that failed:\n%s\n---\n%s", before, got)
 	}
 	if _, ok := anteProv(t, path)[magpieID]; ok {
-		t.Fatalf("magpie's entry stayed beside settings magpie never wrote: %v", anteProv(t, path))
+		t.Fatalf("chongyun's entry stayed beside settings chongyun never wrote: %v", anteProv(t, path))
 	}
 	if got := readFile(settings); got != bad {
 		t.Fatalf("the broken settings.json was edited:\n%s\n---\n%s", bad, got)
@@ -697,7 +697,7 @@ func TestAnteConnectWriteFailureRollsBack(t *testing.T) {
 func TestAnteKeepsTheUsersFile(t *testing.T) {
 	home, path, _ := anteHome(t)
 	a := ante(home)
-	if err := a.Field("provider").Set("magpie"); err != nil {
+	if err := a.Field("provider").Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	ps := anteProv(t, path)
@@ -705,7 +705,7 @@ func TestAnteKeepsTheUsersFile(t *testing.T) {
 		t.Fatalf("the user's provider went: %v", ps)
 	}
 	if _, ok := ps[magpieID]; !ok {
-		t.Fatalf("magpie's provider went: %v", ps)
+		t.Fatalf("chongyun's provider went: %v", ps)
 	}
 }
 
@@ -723,7 +723,7 @@ func TestAnteGroupSaysNoCapabilities(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := ante(home)
-	if err := a.Field("provider").Set("magpie"); err != nil {
+	if err := a.Field("provider").Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	var sawGroup bool

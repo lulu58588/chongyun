@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #1981 (321sssrt-bit): magpie shared on the local network with a gateway

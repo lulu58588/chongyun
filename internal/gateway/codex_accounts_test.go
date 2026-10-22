@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // codexSignedIn signs a test's Codex in to ChatGPT (acct-1), with the

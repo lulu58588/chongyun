@@ -64,8 +64,8 @@ func TestClipboardReadBack(t *testing.T) {
 		return primary, read, held, out
 	}
 	text := "claude --resume 1881 «剪贴板»"
-	t.Run("magpie", func(t *testing.T) {
-		_, read, held, _ := run(t, "magpie", text)
+	t.Run("chongyun", func(t *testing.T) {
+		_, read, held, _ := run(t, "chongyun", text)
 		if !copyHeld(read, held, text) {
 			t.Errorf("read back %d %q, want %q", read, held, text)
 		}

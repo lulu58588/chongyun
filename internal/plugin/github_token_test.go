@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // bingqilinweimaotai (#1942): a GitHub token saved in Settings did nothing

@@ -8,7 +8,7 @@ import (
 )
 
 // #942: the site's Windows download is magpie-windows-amd64.exe, and Add
-// to PATH put its folder on PATH, where a terminal finds no `magpie`. Add
+// to PATH put its folder on PATH, where a terminal finds no `chongyun`. Add
 // writes a magpie.cmd beside a program not named magpie.exe that runs it by
 // its folder and name, which an update keeps, and the Command line reads
 // that magpie.cmd as this app; one written for another program isn't.

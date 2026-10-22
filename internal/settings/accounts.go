@@ -4,13 +4,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/yetone/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/filememo"
 )
 
-// AccountDiscoveryOff is whether magpie leaves agents' sign-ins unread
-// (#1535): NoAccountDiscovery saved, or MAGPIE_NO_ACCOUNTS set to anything
-// but "", "0" or "false" for this process alone. The variable only ever
-// turns discovery off; it never turns on what the user saved off.
+// AccountDiscoveryOff is whether the agents' sign-ins are left unread
+// (#1535): the user saved them off (NoAccountDiscovery), MAGPIE_NO_ACCOUNTS
+// is set to anything but "", "0" or "false" for this process alone, or the
+// user never turned them on at all — this build reads an agent's sign-in
+// only when asked (AccountDiscovery, or MAGPIE_ACCOUNT_DISCOVERY for this
+// process alone). A switch saved off is never turned on by the
+// environment.
 func AccountDiscoveryOff() bool {
 	if noAccountsEnv() {
 		return true
@@ -20,20 +23,55 @@ func AccountDiscoveryOff() bool {
 	// the one setting, parsed once for each version of the file: it is
 	// asked for each agent and each plugin every time the providers are
 	// built, a whole parse of settings.json each (#2502)
-	off, err := filememo.Read("settings:no-accounts", Path(), func(b []byte) (bool, error) {
+	st, err := filememo.Read("settings:no-accounts", Path(), func(b []byte) (accountDiscovery, error) {
 		s, err := parse(b)
-		return s.NoAccountDiscovery, err
+		if err != nil {
+			return accountDiscovery{}, err
+		}
+		return accountDiscovery{off: s.NoAccountDiscovery, on: s.AccountDiscovery}, nil
 	})
 	if err != nil {
-		return load().NoAccountDiscovery
+		s := load()
+		st = accountDiscovery{off: s.NoAccountDiscovery, on: s.AccountDiscovery}
 	}
-	return off
+	if st.off {
+		return true
+	}
+	if accountDiscoveryOnEnv() {
+		return false
+	}
+	return !st.on
+}
+
+// accountDiscovery is what the settings say about reading the agents'
+// sign-ins: off when the user saved them off, on when the user turned them
+// on.
+type accountDiscovery struct {
+	off bool
+	on  bool
 }
 
 // AccountDiscoveryOffIn is AccountDiscoveryOff with the settings already
 // read, for a caller asking it many times in one look.
 func AccountDiscoveryOffIn(s Settings) bool {
-	return noAccountsEnv() || s.NoAccountDiscovery
+	if noAccountsEnv() {
+		return true
+	}
+	if s.NoAccountDiscovery {
+		return true
+	}
+	if accountDiscoveryOnEnv() {
+		return false
+	}
+	return !s.AccountDiscovery
+}
+
+// accountDiscoveryOnEnv is whether the agents' sign-ins are read for this
+// process alone: MAGPIE_ACCOUNT_DISCOVERY set to anything but "", "0" or
+// "false".
+func accountDiscoveryOnEnv() bool {
+	v := strings.ToLower(strings.TrimSpace(os.Getenv("MAGPIE_ACCOUNT_DISCOVERY")))
+	return v != "" && v != "0" && v != "false"
 }
 
 func noAccountsEnv() bool {

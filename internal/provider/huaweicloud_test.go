@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 func TestHuaweiCloudTokenPlan(t *testing.T) {

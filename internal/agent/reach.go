@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/wslrun"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/wslrun"
 )
 
 // An agent pointed at magpie by an address other than this machine's
@@ -45,7 +45,7 @@ func realReachProbe(base string) bool {
 }
 
 // magpieProbe says whether base answers as a magpie gateway: GET base/ is
-// 200 with {"name":"magpie"} (the gateway's info), as it is through a
+// 200 with {"name": "崇云科技"} (the gateway's info), as it is through a
 // reverse proxy that forwards base to it. A var for tests.
 var magpieProbe = realMagpieProbe
 
@@ -64,7 +64,7 @@ func answersAsMagpie(res *http.Response) bool {
 	var info struct {
 		Name string `json:"name"`
 	}
-	return res.StatusCode == http.StatusOK && json.NewDecoder(res.Body).Decode(&info) == nil && info.Name == "magpie"
+	return res.StatusCode == http.StatusOK && json.NewDecoder(res.Body).Decode(&info) == nil && info.Name == "chongyun"
 }
 
 // magpieAt is whether base answers as magpie (magpieProbe), and whether
@@ -72,7 +72,7 @@ func answersAsMagpie(res *http.Response) bool {
 // background as reachable does, never waited for. A var for tests, which
 // are told no without a probe.
 var magpieAt = func(base string) (ok, known bool) {
-	return probed("magpie "+base, func() bool { return magpieProbe(base) })
+	return probed("chongyun "+base, func() bool { return magpieProbe(base) })
 }
 
 // proxyBase is v, the address an agent's config names where magpie wrote
@@ -240,14 +240,14 @@ func (a *Agent) unreachable(on Field, now string) *Drift {
 	}
 	d := &Drift{Kind: "unreachable", Field: on.Key, Now: now, Want: now, Addr: addr}
 	host := strings.TrimPrefix(strings.TrimPrefix(addr, "http://"), "https://")
-	d.Detail = a.Name + " is pointed at magpie at " + addr + ", where nothing answers from this computer, though magpie answers at " + gateway.URL() + ". "
+	d.Detail = a.Name + " is pointed at chongyun at " + addr + ", where nothing answers from this computer, though chongyun answers at " + gateway.URL() + ". "
 	if a.WSL != "" || runtime.GOOS == "windows" {
-		d.Detail += "Under WSL's NAT networking, Windows as WSL sees it reaches magpie only while something listens on " + host +
-			": magpie itself with Settings › Share on local network on (it then listens on every address, and asks other computers for a gateway key), or a forward of your own (netsh interface portproxy, which may need setting up again after Windows restarts). " +
+		d.Detail += "Under WSL's NAT networking, Windows as WSL sees it reaches chongyun only while something listens on " + host +
+			": chongyun itself with Settings › Share on local network on (it then listens on every address, and asks other computers for a gateway key), or a forward of your own (netsh interface portproxy, which may need setting up again after Windows restarts). " +
 			"Once it answers here and WSL still can't connect, Windows' firewall may be keeping WSL out: allow the port " + gateway.Port() + " for the WSL network. " +
-			"On Windows 11, networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig lets WSL reach magpie at 127.0.0.1 instead."
+			"On Windows 11, networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig lets WSL reach chongyun at 127.0.0.1 instead."
 	} else {
-		d.Detail += "Whatever forwarded " + host + " to magpie isn't listening now; start it again, or point " + a.Name + " at " + gateway.URL() + "."
+		d.Detail += "Whatever forwarded " + host + " to chongyun isn't listening now; start it again, or point " + a.Name + " at " + gateway.URL() + "."
 	}
 	if to, distro := wslMovedFrom(addr); to != "" {
 		d.Move = to

@@ -11,10 +11,10 @@ import (
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
-// appPath is where Win+R and `start magpie` look magpie.exe up: the user's
+// appPath is where Win+R and `start chongyun` look magpie.exe up: the user's
 // own, no administrator needed
 const appPath = `Software\Microsoft\Windows\CurrentVersion\App Paths\magpie.exe`
 

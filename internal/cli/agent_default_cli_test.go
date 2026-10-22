@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// `magpie claude default` takes magpie out and puts back the model Claude
+// `chongyun claude default` takes magpie out and puts back the model Claude
 // Code was on before it, as the Agents page's Disconnect does, the user's
 // own lines kept (__jingling on X: it took their model away with
 // magpie's); a field's own default still leaves the agent as installed.
@@ -44,7 +44,7 @@ func TestAgentDefaultPutsBackTheModelBefore(t *testing.T) {
 	}
 }
 
-// `magpie claude model default` on a Claude Code wired into magpie puts
+// `chongyun claude model default` on a Claude Code wired into magpie puts
 // back the endpoint and token the user had before magpie and leaves them:
 // it took them away, and Disconnect after it had nothing to put back
 // (__jingling on X, twice).

@@ -191,7 +191,7 @@ func dshUpstream(src dshSource) string {
 }
 
 // dshGatewayProvider is whether a dsh provider is magpie's own gateway, by the
-// names magpie writes it under ("magpie", "magpie-responses" and
+// names magpie writes it under ("chongyun", "magpie-responses" and
 // "magpie-anthropic", one route per protocol — agent.dshKinds — and "dial"
 // from before). A call
 // through it is logged by the gateway itself, and dsh sends the gateway no
@@ -212,7 +212,7 @@ func dshGatewayProvider(src dshSource) bool {
 		return false
 	}
 	switch p {
-	case "magpie", "magpie-responses", "magpie-anthropic", "dial":
+	case "chongyun", "magpie-responses", "magpie-anthropic", "dial":
 		return true
 	}
 	return false

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A StepFun provider's Step Plan sign-in is its own (#2384): the editor is

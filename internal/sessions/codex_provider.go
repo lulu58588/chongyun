@@ -19,9 +19,9 @@ import (
 	toml "github.com/pelletier/go-toml/v2"
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // Codex lists, in its history and its resume picker, only the sessions made

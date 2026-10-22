@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // modelsHome is the sandbox with a provider of three models and Codex set up
@@ -33,7 +33,7 @@ func modelsHome(t *testing.T) (catalogFile string) {
 	if runtime.GOOS == "windows" {
 		ref = `"magpie-models.json"`
 	}
-	write(t, filepath.Join(h, ".codex", "config.toml"), "model = \"relay/m1\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = "+ref+"\n\n[model_providers.magpie]\nname = \"magpie\"\nbase_url = \"http://127.0.0.1:1/v1\"\nwire_api = \"responses\"\n")
+	write(t, filepath.Join(h, ".codex", "config.toml"), "model = \"relay/m1\"\nmodel_provider = \"chongyun\"\nmodel_catalog_json = "+ref+"\n\n[model_providers.magpie]\nname = \"chongyun\"\nbase_url = \"http://127.0.0.1:1/v1\"\nwire_api = \"responses\"\n")
 	was := catalog.Changed
 	catalog.Changed = agent.SyncCatalog
 	t.Cleanup(func() { catalog.Changed = was })

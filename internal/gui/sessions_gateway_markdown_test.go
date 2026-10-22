@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // akic404 on Discord: a magpie on a server that other magpies reach as a
@@ -45,7 +45,7 @@ func TestGatewaySessionExportsMarkdown(t *testing.T) {
 	}
 	check := func(md string) {
 		t.Helper()
-		for _, want := range []string{"- **Agent:** Pi\n", "- **Recorded by:** magpie's gateway\n", "## User\n\nrename foo to bar\n", "## Assistant\n\nRenamed it in a.go.\n"} {
+		for _, want := range []string{"- **Agent:** Pi\n", "- **Recorded by:** chongyun's gateway\n", "## User\n\nrename foo to bar\n", "## Assistant\n\nRenamed it in a.go.\n"} {
 			if !strings.Contains(md, want) {
 				t.Fatalf("no %q in\n%s", want, md)
 			}

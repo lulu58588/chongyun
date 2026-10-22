@@ -27,8 +27,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // devinAccountsDir holds the homes of the Devin accounts magpie signed in.

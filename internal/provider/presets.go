@@ -413,7 +413,7 @@ var presets = []PresetDef{
 	{ID: AzurePreset, Name: "Azure OpenAI", Icon: "azure-color", Kind: KindVendor, Catalog: "azure, openai", Hosts: true,
 		Note:         "your resource's endpoint and key",
 		Endpoint:     "https://<resource>.openai.azure.com",
-		EndpointHint: "Your resource's endpoint, from Keys and Endpoint in the Azure portal. Once added, magpie asks the resource for its deployments with this key, over its v1 API; the deployments' names are the model ids.",
+		EndpointHint: "Your resource's endpoint, from Keys and Endpoint in the Azure portal. Once added, chongyun asks the resource for its deployments with this key, over its v1 API; the deployments' names are the model ids.",
 		Website:      "https://ai.azure.com", KeysURL: "https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/OpenAI"},
 	// Ollama's own hosted models: the local server's API, at ollama.com with
 	// a key. Its decision models (Clef), served at /v1/systemone, are the
@@ -598,11 +598,11 @@ var presets = []PresetDef{
 	// another computer's magpie, shared on its network (remote_magpie.go):
 	// its providers, routing groups and usage stay there, each request
 	// goes on in the API the agent spoke
-	{ID: RemoteMagpiePreset, Name: "Remote magpie", Icon: "magpie", Kind: KindRemote,
-		Note:           "another computer's magpie, shared on its network",
+	{ID: RemoteMagpiePreset, Name: "Remote chongyun", Icon: "chongyun", Kind: KindRemote,
+		Note:           "another computer's chongyun, shared on its network",
 		Endpoint:       "http://192.168.1.20:3425",
-		EndpointHint:   "The address and API key the other computer's magpie shows in Settings, under Share on local network. Its models and routing groups are listed here; each request goes on in the API the agent spoke.",
-		EndpointNeeded: "The other magpie's address is needed"},
+		EndpointHint:   "The address and API key the other computer's chongyun shows in Settings, under Share on local network. Its models and routing groups are listed here; each request goes on in the API the agent spoke.",
+		EndpointNeeded: "The other chongyun's address is needed"},
 }
 
 func bedrockChat(region string) string {
@@ -701,7 +701,7 @@ func builtinPreset(id string) *PresetDef {
 func FromPreset(id string) (Provider, error) {
 	pr := Preset(id)
 	if pr == nil {
-		return Provider{}, errorf("no preset %q — magpie presets lists them", id)
+		return Provider{}, errorf("no preset %q — chongyun presets lists them", id)
 	}
 	p := Provider{
 		ID: pr.ID, Name: pr.Name, Icon: pr.Icon, Preset: pr.ID,

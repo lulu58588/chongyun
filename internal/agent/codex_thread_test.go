@@ -36,7 +36,7 @@ func TestCodexProviderAlsoSetsBaseURL(t *testing.T) {
 				t.Fatal(err)
 			}
 			cfg := read()
-			if !strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, "model_catalog_json") ||
+			if !strings.Contains(cfg, `model_provider = "chongyun"`) || !strings.Contains(cfg, "model_catalog_json") ||
 				!strings.Contains(cfg, `openai_base_url = "`+codexGatewayURL()+`"`) {
 				t.Fatalf("\n%s", cfg)
 			}
@@ -48,8 +48,8 @@ func TestCodexProviderAlsoSetsBaseURL(t *testing.T) {
 			}
 			if tc.api {
 				if cfg = read(); !strings.Contains(cfg, `openai_base_url = "`+codexGatewayURL()+`"`) ||
-					!strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, `model = "codex/gpt-5.4"`) {
-					t.Fatalf("own model on magpie API:\n%s", cfg)
+					!strings.Contains(cfg, `model_provider = "chongyun"`) || !strings.Contains(cfg, `model = "codex/gpt-5.4"`) {
+					t.Fatalf("own model on chongyun API:\n%s", cfg)
 				}
 				return
 			}
@@ -71,7 +71,7 @@ func TestCodexProviderKeepsOwnBaseURL(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cfg := read(); !strings.Contains(cfg, own) || strings.Count(cfg, "openai_base_url") != 1 ||
-		!strings.Contains(cfg, `model_provider = "magpie"`) {
+		!strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("\n%s", cfg)
 	}
 	if err := cx.Fields[0].Set(""); err != nil {
@@ -108,11 +108,11 @@ func TestCodexSyncAddsBaseURLToProvider(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg = read(); !strings.Contains(cfg, `openai_base_url = "`+codexGatewayURL()+`"`) || !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg = read(); !strings.Contains(cfg, `openai_base_url = "`+codexGatewayURL()+`"`) || !strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("sync:\n%s", cfg)
 	}
 
-	const mine = "model = \"fake/m1\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = \"/elsewhere/models.json\"\n"
+	const mine = "model = \"fake/m1\"\nmodel_provider = \"chongyun\"\nmodel_catalog_json = \"/elsewhere/models.json\"\n"
 	home, read = codexHome(t, "", mine)
 	if err := codex(home).Sync(); err != nil {
 		t.Fatal(err)

@@ -6,13 +6,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // #867: a provider of the user's own saved before a plugin with its id was
 // installed (zenmux, then @zenmux/pi-zenmux-oauth) hid the plugin's
-// subscription once signed in — "signed in, but magpie can't list it". The
+// subscription once signed in — "signed in, but chongyun can't list it". The
 // plugin's is id-plugin then, and the user's own keeps its id.
 func TestPluginIDBesideCustomProvider(t *testing.T) {
 	bun := testenv.Bun(t)

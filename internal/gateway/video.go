@@ -21,10 +21,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // The gateway makes videos: POST /v1/videos, GET /v1/videos/{id} and
@@ -545,7 +545,7 @@ func videoObject(id, model string, started time.Time, st videoState, f filming) 
 func videoMaker(id string) (p provider.Provider, vendorID string, started time.Time, err error) {
 	pid, vendorID, started, by, ok := parseVideoID(id)
 	if !ok {
-		return p, "", started, fmt.Errorf("%q isn't the id of a video magpie is making", id)
+		return p, "", started, fmt.Errorf("%q isn't the id of a video chongyun is making", id)
 	}
 	found, ferr := provider.Find(pid)
 	if ferr == nil && !drawsGrok(*found) && !found.IsRemoteMagpie() && len(found.PlanVideos()) == 0 && len(customVideomakers(*found)) > 0 {
@@ -692,7 +692,7 @@ func (s *Server) videosCreate(w http.ResponseWriter, r *http.Request) {
 			fail(404, switchedOff(off, f.Model))
 			return
 		}
-		fail(404, fmt.Sprintf("magpie knows no model %q to make videos with", f.Model))
+		fail(404, fmt.Sprintf("chongyun knows no model %q to make videos with", f.Model))
 		return
 	}
 	g, ms, isGroup := drawingGroup(f.Model, p, model)
@@ -869,7 +869,7 @@ func (s *Server) startVideo(ctx context.Context, r *http.Request, p provider.Pro
 	// any grok-imagine-video*, not only those listed: the vendor's newer ones work before magpie names them
 	if !v.remote && !v.custom && !volcengine && (!drawsGrok(p) || !strings.HasPrefix(model, grokVideoFamily)) {
 		v.unfit = true
-		return v, 400, fmt.Errorf(`%s/%s can't make videos: magpie makes videos with a Grok subscription's grok-imagine-video, Volcengine Agent Plan's Seedance models, another magpie's, and a provider's models its own model list marks "kind": "video" or that you mark a Video model (right-click the model in the provider's editor: Makes…)`, p.ID, model)
+		return v, 400, fmt.Errorf(`%s/%s can't make videos: chongyun makes videos with a Grok subscription's grok-imagine-video, Volcengine Agent Plan's Seedance models, another chongyun's, and a provider's models its own model list marks "kind": "video" or that you mark a Video model (right-click the model in the provider's editor: Makes…)`, p.ID, model)
 	}
 	// another magpie is asked at its videos API, which says itself what
 	// it can't make

@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // fakeScience is claude-science's daemon as its CLI tells it: status,
@@ -113,8 +113,8 @@ func TestClaudeScienceRestartsItsDaemon(t *testing.T) {
 	// keeper leaves it running
 	f.pid, f.env, f.calls = 77, nil, nil
 	f.lock()
-	if d := a.Check(); !strings.Contains(d, "without magpie's gateway") {
-		t.Errorf("a daemon magpie didn't start: check %q", d)
+	if d := a.Check(); !strings.Contains(d, "without chongyun's gateway") {
+		t.Errorf("a daemon chongyun didn't start: check %q", d)
 	}
 	f.calls = nil
 	keepScienceOnce()

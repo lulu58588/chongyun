@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // cliIdentity is who an agent's CLI says is signed in (`cursor-agent about`,

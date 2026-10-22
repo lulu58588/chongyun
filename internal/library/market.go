@@ -21,8 +21,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/iconproxy"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/iconproxy"
 )
 
 // The market is where the page finds MCP servers and skills to add in one
@@ -155,7 +155,7 @@ var featured = []MarketServer{
 // magpieCommand stands for this magpie's own binary in a featured server's
 // command, which InstallServer puts in when it is added, and in a library
 // carried to another computer, which reads it as its own (self_here.go).
-const magpieCommand = "magpie"
+const magpieCommand = "chongyun"
 
 // selfServerName is the name magpie's own image generation server is written
 // under, in every agent's config.
@@ -166,8 +166,8 @@ const selfServerName = "magpie-image"
 // in the project. It costs what the model does, so it is given only to the
 // agents picked for it.
 func selfServer() MarketServer {
-	m := localServer(selfServerName, "Magpie Image", "Magpie", "https://usemagpie.ai/favicon.png", "https://usemagpie.ai",
-		"Generate and edit images with the image model set in Magpie (Settings → Images), and make short videos with a video model set up in Magpie (Grok Imagine, Seedance), saved in the project.", magpieCommand, []string{"mcp", "image"})
+	m := localServer(selfServerName, "Chongyun Image", "Chongyun", "https://usemagpie.ai/favicon.png", "https://usemagpie.ai",
+		"Generate and edit images with the image model set in Chongyun (Settings → Images), and make short videos with a video model set up in Chongyun (Grok Imagine, Seedance), saved in the project.", magpieCommand, []string{"mcp", "image"})
 	m.OptIn = true
 	return m
 }
@@ -281,7 +281,7 @@ func serverKey(s *Server) string {
 		return strings.TrimSuffix(strings.ToLower(s.URL), "/")
 	}
 	if len(s.Args) == 2 && s.Args[0] == "mcp" && s.Args[1] == "image" {
-		return "magpie mcp image" // magpie's own, wherever its binary is
+		return "chongyun mcp image" // magpie's own, wherever its binary is
 	}
 	for _, a := range s.Args {
 		if a == "" || strings.HasPrefix(a, "-") || a == "run" {
@@ -788,7 +788,7 @@ type MarketSkill struct {
 // skill for an agent to read what magpie quota tells).
 var featuredSkills = []MarketSkill{{
 	Source: "magpie-community/plugins", SkillID: "magpie-quota", Name: "magpie-quota", Official: true, Featured: true,
-	Description: "Check how much is left of the user's AI subscriptions, coding plans and API key balances through magpie: each usage window's percent used and when it resets, each key's balance, and wait until a subscription has allowance again.",
+	Description: "Check how much is left of the user's AI subscriptions, coding plans and API key balances through chongyun: each usage window's percent used and when it resets, each key's balance, and wait until a subscription has allowance again.",
 }}
 
 type skillsShEntry struct {
@@ -1165,7 +1165,7 @@ func get(u, accept string, limit int64) ([]byte, error) {
 		return nil, err
 	}
 	// skills.sh answers a client it doesn't know with a page of its own
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 magpie")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 chongyun")
 	req.Header.Set("Accept", accept)
 	resp, err := client.Do(req)
 	if err != nil {

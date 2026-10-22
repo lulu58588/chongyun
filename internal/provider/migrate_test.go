@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // fakeMover moves a made-up built-in, "fakeco", whose accounts keep a

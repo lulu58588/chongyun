@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
 )
 
 func TestCodexSessionAttributionRequiresRecordedIdentity(t *testing.T) {
@@ -204,13 +204,13 @@ func TestLocalSessionAccountsDoNotEstablishProviders(t *testing.T) {
 		call sessions.Call
 		want string
 	}{
-		{"Codex on magpie's account", sessions.Call{Agent: "codex", Upstream: "openai", AccountID: "a-mine", UserID: "u-mine"}, "mine@example.com"},
+		{"Codex on chongyun's account", sessions.Call{Agent: "codex", Upstream: "openai", AccountID: "a-mine", UserID: "u-mine"}, "mine@example.com"},
 		{"Codex on another account", sessions.Call{Agent: "codex", Upstream: "openai", AccountID: "a-other"}, ""},
 		{"Codex with no account recorded", sessions.Call{Agent: "codex", Upstream: "openai"}, ""},
-		{"magpie's account through a relay", sessions.Call{Agent: "codex", Upstream: "relay", AccountID: "a-mine", UserID: "u-mine"}, "mine@example.com"},
-		{"Claude Desktop on magpie's account", sessions.Call{Agent: "claude-desktop", Session: "mine"}, "claude@example.com"},
+		{"chongyun's account through a relay", sessions.Call{Agent: "codex", Upstream: "relay", AccountID: "a-mine", UserID: "u-mine"}, "mine@example.com"},
+		{"Claude Desktop on chongyun's account", sessions.Call{Agent: "claude-desktop", Session: "mine"}, "claude@example.com"},
 		{"Claude Desktop in another organization", sessions.Call{Agent: "claude-desktop", Session: "other"}, "team@example.com"},
-		{"Claude-3p on magpie's account's ids", sessions.Call{Agent: "claude-desktop", Session: "third-3p"}, "claude@example.com"},
+		{"Claude-3p on chongyun's account's ids", sessions.Call{Agent: "claude-desktop", Session: "third-3p"}, "claude@example.com"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			if got := r.resolve(tc.call); got != tc.want {

@@ -6,7 +6,7 @@ package agent
 // as CodeBuddy Code's CLI writes it. Its own "local models" are entries of
 // the same list (local: true).
 //
-//	[{"id":"deepseek/pro","name":…,"vendor":"magpie","apiKey":"magpie-workbuddy",
+//	[{"id":"deepseek/pro","name":…,"vendor": "chongyun","apiKey":"magpie-workbuddy",
 //	  "url":"http://127.0.0.1:3425/v1/chat/completions",
 //	  "maxInputTokens":…,"maxOutputTokens":…,
 //	  "supportsToolCall":true,"supportsImages":…,"supportsReasoning":true,
@@ -36,9 +36,9 @@ import (
 	"runtime"
 	"slices"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 func workbuddy(home string) *Agent {
@@ -109,7 +109,7 @@ func workbuddyBuild(id, name, dir string, aliases []string, app desktopApp) *Age
 			},
 			Set: func(v string) error { return write(v != "") },
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie", Note: "every magpie model in " + name + "'s picker"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun", Note: "every chongyun model in " + name + "'s picker"}}
 			},
 		}},
 	}

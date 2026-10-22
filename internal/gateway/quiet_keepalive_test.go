@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // quietFast makes watch keep a quiet stream's agent alive within
@@ -331,7 +331,7 @@ func TestKeepAliveBeforeTheVendorsHeaders(t *testing.T) {
 		t.Fatal("no comment went out")
 	}
 	if got := rec.Header().Get(providerHeader); got != "q" {
-		t.Fatalf("the stream's headers before its reply lack magpie's notes: %q", got)
+		t.Fatalf("the stream's headers before its reply lack chongyun's notes: %q", got)
 	}
 	if !strings.Contains(rec.Body.String(), ": keepalive") {
 		t.Fatalf("body: %q", rec.Body.String())

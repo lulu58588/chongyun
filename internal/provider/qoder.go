@@ -17,8 +17,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/qoder"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/qoder"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // qoderMu keeps a Qoder account's saved pairs still while the move reads

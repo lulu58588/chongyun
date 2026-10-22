@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // openCodeMissing is what OpenCode's gateway answers a request that names

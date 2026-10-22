@@ -10,12 +10,12 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/agentplug"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/desktopdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/agentplug"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/desktopdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // Target is where one agent keeps each of the three: an empty path is
@@ -873,11 +873,11 @@ func noPlace(a *agent.Agent, kind, what string) string {
 		// Desktop's chat takes its instructions in its own settings, kept
 		// with the Claude account, not in a file; its Code tab is Claude
 		// Code, which reads Claude Code's CLAUDE.md
-		return "Claude Desktop keeps its instructions in its own settings, with your Claude account, not in a file magpie can write; its Code tab runs Claude Code, which reads Claude Code's · give them to claude"
+		return "Claude Desktop keeps its instructions in its own settings, with your Claude account, not in a file chongyun can write; its Code tab runs Claude Code, which reads Claude Code's · give them to claude"
 	case a.Plugin != "":
 		return fmt.Sprintf("%s's plugin (%s) says no place for %s: its agent.library.%s names none", a.Name, plugin.Name(a.Plugin), what, kind)
 	}
-	return fmt.Sprintf("%s has no user-wide place for %s that magpie knows of", a.Name, what)
+	return fmt.Sprintf("%s has no user-wide place for %s that chongyun knows of", a.Name, what)
 }
 
 // takenBy lists the agents here that kind can be given to.

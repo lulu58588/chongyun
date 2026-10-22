@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // DevEco Code (#1885) keeps OpenCode's config shape in ~/.config/deveco:
@@ -138,6 +138,6 @@ func TestDevEcoConnectKeepsTheUsersOwn(t *testing.T) {
 		t.Fatalf("own provider %q after disconnecting", k)
 	}
 	if _, ok := edit.GetJSON(cfg, "provider.magpie"); ok {
-		t.Fatalf("magpie's provider left: %s", readFile(cfg))
+		t.Fatalf("chongyun's provider left: %s", readFile(cfg))
 	}
 }

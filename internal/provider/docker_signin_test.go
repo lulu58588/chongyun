@@ -16,8 +16,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // magpie in Docker (xugui on Discord: "docker版登不上grok和command code"):
@@ -212,7 +212,7 @@ export const P = async () => ({
 	}
 }
 
-// The command line's plugin sign-in (`magpie plugin login grok`) installs
+// The command line's plugin sign-in (`chongyun plugin login grok`) installs
 // Grok Build through InstallPluginCLI, as the window's does; it said
 // "install Grok Build first: curl … | bash" in Docker, which has no curl
 // (#2223, evier12345). Only a plugin that signs in with a vendor's CLI

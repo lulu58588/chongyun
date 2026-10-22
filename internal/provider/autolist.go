@@ -2,11 +2,11 @@ package provider
 
 // A provider of the user's own can keep its model list up to date by itself
 // and take the models it newly lists by rule (#2135: relays of 10–70
-// models, run headless under `magpie serve`, whose new models never reached
+// models, run headless under `chongyun serve`, whose new models never reached
 // the list until Fetch models was clicked, and were then picked one by one).
 //
 //   - RefreshEvery: the gateway fetches the list again once it is that old
-//     (KeepListsFresh), exactly as Fetch models or `magpie provider refresh`
+//     (KeepListsFresh), exactly as Fetch models or `chongyun provider refresh`
 //     does (Refetch), so a model the vendor drops leaves the picks as it does
 //     there.
 //   - AutoInclude: patterns over a model's id. A model a fetch lists that
@@ -50,13 +50,13 @@ func ParseRefreshEvery(s string) (time.Duration, error) {
 	if n, ok := strings.CutSuffix(s, "d"); ok {
 		days, err := strconv.ParseFloat(n, 64)
 		if err != nil {
-			return 0, fmt.Errorf("%q is not a time magpie can read: write it as 30m, 6h or 1d", s)
+			return 0, fmt.Errorf("%q is not a time chongyun can read: write it as 30m, 6h or 1d", s)
 		}
 		d = time.Duration(days * float64(24*time.Hour))
 	} else {
 		var err error
 		if d, err = time.ParseDuration(s); err != nil {
-			return 0, fmt.Errorf("%q is not a time magpie can read: write it as 30m, 6h or 1d", s)
+			return 0, fmt.Errorf("%q is not a time chongyun can read: write it as 30m, 6h or 1d", s)
 		}
 	}
 	if d < MinRefreshEvery {
@@ -87,7 +87,7 @@ func (p Provider) ownList() bool {
 // errNotOwnList is why an account's or a plugin's provider takes neither
 // setting.
 func errNotOwnList(p Provider) error {
-	return fmt.Errorf("%s's list is fetched for it by magpie (or by its plugin): a schedule and rules are for a provider of your own", p.Name)
+	return fmt.Errorf("%s's list is fetched for it by chongyun (or by its plugin): a schedule and rules are for a provider of your own", p.Name)
 }
 
 // SetRefreshEvery sets how often the gateway fetches the provider's list by
@@ -123,7 +123,7 @@ func CleanAutoInclude(in []string) ([]string, error) {
 			continue
 		}
 		if !IsPattern(p) {
-			return nil, fmt.Errorf("%q is a model's id, not a rule: a rule has a * in it, or starts with %s (magpie provider models <id> +%s picks that one)", p, RegexpPrefix, p)
+			return nil, fmt.Errorf("%q is a model's id, not a rule: a rule has a * in it, or starts with %s (chongyun provider models <id> +%s picks that one)", p, RegexpPrefix, p)
 		}
 		if _, err := compilePattern(p); err != nil {
 			return nil, err
@@ -235,7 +235,7 @@ var listsEvery = time.Minute
 
 // KeepListsFresh fetches the list of each provider of the user's own that
 // has a RefreshEvery once its list is that old, run by the magpie serving
-// the gateway (`magpie serve`, the app).
+// the gateway (`chongyun serve`, the app).
 func KeepListsFresh(ctx context.Context) {
 	t := time.NewTimer(30 * time.Second)
 	defer t.Stop()

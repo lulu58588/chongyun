@@ -9,7 +9,7 @@ COPY . .
 
 ARG VERSION=dev
 RUN CGO_ENABLED=0 go build -tags nogui -trimpath \
-      -ldflags "-s -w -X main.version=${VERSION}" -o /out/magpie . \
+      -ldflags "-s -w -X main.version=${VERSION}" -o /out/chongyun . \
     && mkdir -p /config/home /config/cache /config/data /config/state
 
 # Debian, not distroless: a subscription's CLI is installed with its
@@ -28,9 +28,9 @@ RUN apt-get update \
     && groupadd -g 65532 nonroot \
     && useradd -u 65532 -g nonroot -d /config/home -s /bin/bash nonroot
 
-COPY --from=build /out/magpie /magpie
+COPY --from=build /out/chongyun /chongyun
 # magpie on PATH, so `magpie accounts add …` works in that terminal
-RUN ln -s /magpie /usr/local/bin/magpie
+RUN ln -s /chongyun /usr/local/bin/chongyun
 USER nonroot
 COPY --from=build --chown=65532:65532 /config /config
 
@@ -49,9 +49,9 @@ ENV HOME=/config/home \
 VOLUME /config
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD ["/magpie", "healthcheck"]
+    CMD ["/chongyun", "healthcheck"]
 
 EXPOSE 3425 3430
 
-ENTRYPOINT ["/magpie"]
+ENTRYPOINT ["/chongyun"]
 CMD ["serve"]

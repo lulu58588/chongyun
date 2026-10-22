@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // TestMain gives the package a home of its own (testenv). A home an agent is

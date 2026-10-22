@@ -20,8 +20,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/yetone/magpie/internal/gateway"
-	_ "github.com/yetone/magpie/internal/sqlitedb"
+	"github.com/lulu58588/magpie/internal/gateway"
+	_ "github.com/lulu58588/magpie/internal/sqlitedb"
 )
 
 // CindyScheme begins every Cindy import link.
@@ -46,7 +46,7 @@ func CindyLink(url string) string {
 		Auth      map[string]any  `json:"auth"`
 		Endpoints []cindyEndpoint `json:"endpoints"`
 	}{
-		Kind: "custom", Name: "Magpie", ID: magpieID,
+		Kind: "custom", Name: "Chongyun", ID: magpieID,
 		Auth: map[string]any{"method": "apiKey", "apiKey": agentKeyAt("cindy", url)},
 		Endpoints: []cindyEndpoint{
 			{"anthropic-messages", url, []string{"claude-code"}, models},

@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // What each of a search API's keys has left (SlouchyQuill on Discord):

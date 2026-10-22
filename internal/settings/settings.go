@@ -24,14 +24,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/fonts"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/redact"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/fonts"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/redact"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // Settings is what the user chose. "" and "system" both mean "follow the OS".
@@ -271,14 +271,13 @@ type Settings struct {
 	// who is signed in, and no subscription is offered; API-key providers
 	// work as before (see AccountDiscoveryOff, provider/discovery.go). Off,
 	// as by default, subscriptions are found as ever. This computer's own
-	// (KeepOwn), set only by its own switch or `magpie accounts discovery`.
+	// (KeepOwn), set only by its own switch or `chongyun accounts discovery`.
 	NoAccountDiscovery bool `json:"noAccountDiscovery,omitempty"`
-	// NoStats stops the one event a day that counts magpie's users (see
-	// internal/stats).
-	NoStats bool `json:"noStats,omitempty"`
-	// NoUsageStats keeps which agents, providers and models magpie is
-	// used with out of that event, which then counts the user only.
-	NoUsageStats bool `json:"noUsageStats,omitempty"`
+	// AccountDiscovery turns reading the agents' own sign-ins on. It is
+	// off unless the user says so: this build never reads another agent's
+	// credentials (the Keychain, ~/.claude, ~/.codex) unless asked, and
+	// serves no subscription account by default.
+	AccountDiscovery bool `json:"accountDiscovery,omitempty"`
 	// NoUpdatePill keeps the header's Update pill away when a newer magpie
 	// is out; UpdateSkip is the one version it was hidden for, and a newer
 	// one brings it back. Either way magpie still downloads the version and
@@ -394,9 +393,9 @@ type Settings struct {
 	// computer awake (#975, Hu9956: an agent recording the screen to check
 	// its work found it locked). This computer's own (KeepOwn).
 	KeepAwakeDisplay bool `json:"keepAwakeDisplay,omitempty"`
-	// GatewayMode is whether `magpie web` shows only what a gateway serving
+	// GatewayMode is whether `chongyun web` shows only what a gateway serving
 	// other machines needs (Player on Discord): "on", "off", or "" to
-	// decide by itself — on for `magpie web --gateway`, or with no agents
+	// decide by itself — on for `chongyun web --gateway`, or with no agents
 	// on this machine. This computer's own (KeepOwn).
 	GatewayMode string `json:"gatewayMode,omitempty"`
 	// QuotaLeft shows a subscription's windows by how much of each is left,
@@ -406,7 +405,7 @@ type Settings struct {
 	// balances from their vendors (#1518, RooobinYe): "" whenever it needs
 	// them (the Usage page and tray, routing, alerts, the switch to an
 	// account with room), "asked" only when the user asks — the Usage page
-	// opened or refreshed, a card's refresh, `magpie quota`/`accounts`.
+	// opened or refreshed, a card's refresh, `chongyun quota`/`accounts`.
 	// Otherwise the readings kept from the last time stand, marked as of
 	// then; an account the vendor turned away for its quota is still read.
 	// This computer's own (KeepOwn): magpie at login comes up before the
@@ -724,7 +723,7 @@ type ModelPrice struct {
 	// else at the 5-minute price (catalog.OneHourFor).
 	CacheWrite1h *float64 `json:"cache_write_1h,omitempty"`
 	// Tiers are the prices of a request whose input is over a size, each
-	// whole: "magpie model price … --tier 272k …" (PAMI on Discord).
+	// whole: "chongyun model price … --tier 272k …" (PAMI on Discord).
 	Tiers []catalog.Tier `json:"tiers,omitempty"`
 }
 
@@ -1026,6 +1025,7 @@ func (s *Settings) KeepOwn(cur Settings) {
 	s.NoWSLAgents = cur.NoWSLAgents
 	s.QuotaReads = cur.QuotaReads
 	s.NoAccountDiscovery = cur.NoAccountDiscovery
+	s.AccountDiscovery = cur.AccountDiscovery
 	s.LAN, s.AllowIPs = cur.LAN, cur.AllowIPs
 	s.FetchPrivate = cur.FetchPrivate
 	s.SessionTerminal = cur.SessionTerminal
@@ -1372,7 +1372,7 @@ func save(s Settings, recording bool) error {
 		return fmt.Errorf("the menu bar's usage is refreshed every %v minutes, not %d", TrayEvery, s.TrayUsageEvery)
 	}
 	if !slices.Contains(UpdateEveries, s.UpdateEvery) {
-		return fmt.Errorf("magpie checks for updates every %v minutes, not %d", UpdateEveries, s.UpdateEvery)
+		return fmt.Errorf("chongyun checks for updates every %v minutes, not %d", UpdateEveries, s.UpdateEvery)
 	}
 	if m := s.UpdateMirror; m != "" {
 		if u, err := url.Parse(m); err != nil || (u.Scheme != "https" && u.Scheme != "http") || u.Host == "" {
@@ -1395,7 +1395,7 @@ func save(s Settings, recording bool) error {
 		return fmt.Errorf("a balance alert is at an amount of 0 or more (0 for off), not %v", s.BalanceAlert)
 	}
 	if s.QuotaReads != "" && s.QuotaReads != "asked" {
-		return fmt.Errorf(`allowances are read "" (whenever magpie needs them) or "asked" (only when asked), not %q`, s.QuotaReads)
+		return fmt.Errorf(`allowances are read "" (whenever chongyun needs them) or "asked" (only when asked), not %q`, s.QuotaReads)
 	}
 	if err := CheckPort(s.Port); err != nil {
 		return err

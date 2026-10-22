@@ -19,8 +19,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/filememo"
 )
 
 // Model is one entry the picker can offer.
@@ -120,7 +120,7 @@ type Model struct {
 	Reasoning bool `json:",omitempty"`
 	// WebSearch is how another magpie (a Remote magpie) searches the web
 	// for the model when a web search tool is offered: "native", its own
-	// provider by itself, or "magpie", with that magpie's searcher; "" it
+	// provider by itself, or "chongyun", with that magpie's searcher; "" it
 	// doesn't, or didn't say. A plugin's model it says searches by itself
 	// (m.searches) is "native" too.
 	WebSearch string `json:",omitempty"`
@@ -474,7 +474,7 @@ var (
 	syncCh = make(chan struct{}, 1)
 )
 
-// CachePath is where `magpie sync` stores the models.dev catalog.
+// CachePath is where `chongyun sync` stores the models.dev catalog.
 func CachePath() string { return filepath.Join(appdir.Cache(), "models.json") }
 
 func opencodeCache() string {
@@ -668,7 +668,7 @@ func syncLock(ctx context.Context, onlyIfMissing bool) error {
 	if err != nil {
 		return err
 	}
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
@@ -1576,7 +1576,7 @@ func parseCodex(b []byte) ([]Model, error) {
 // which Codex's slugs never look like). Read back as Codex's own, they were
 // listed under OpenAI, and kept there after Codex was routed elsewhere.
 func MagpieAdded(etag, slug, description string) bool {
-	return strings.HasSuffix(description, " via magpie") ||
+	return strings.HasSuffix(description, " via chongyun") ||
 		strings.Contains(etag, "+magpie-") && strings.Contains(slug, "/")
 }
 

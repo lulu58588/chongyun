@@ -349,7 +349,7 @@ func TestWorkBuddyCheckinThroughPlugin(t *testing.T) {
 	via := func(req *http.Request) (*http.Response, error) {
 		paths = append(paths, req.URL.Path)
 		if req.Header.Get("Authorization") != "" {
-			t.Errorf("magpie signed %s itself", req.URL.Path)
+			t.Errorf("chongyun signed %s itself", req.URL.Path)
 		}
 		body := `{"code":0,"data":{"active":true,"today_checked_in":false,"streak_days":2}}`
 		if strings.HasSuffix(req.URL.Path, "/daily-checkin") {

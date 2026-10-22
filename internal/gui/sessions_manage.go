@@ -12,10 +12,10 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // The Sessions page: every session of an agent, by folder, to pick up again
@@ -267,7 +267,7 @@ func sessionManageRoutes(mux *http.ServeMux, w Windows) {
 			if g, ok := listed[id]; ok {
 				_, err = sessions.DeleteGateway(g.Agent, g.ID, g.ID, g.Last)
 			} else if !sessions.Deletable(in.Agent) {
-				err = errors.New("magpie can't delete this agent's sessions")
+				err = errors.New("chongyun can't delete this agent's sessions")
 			} else {
 				_, err = sessions.Delete(in.Agent, id)
 			}

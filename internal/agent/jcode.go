@@ -9,7 +9,7 @@ package agent
 // reasoning). jcode starts on [provider] default_provider and default_model,
 // a profile's name and one of its models.
 //
-// magpie adds itself as the profile "magpie": the gateway, with one model
+// magpie adds itself as the profile "chongyun": the gateway, with one model
 // entry per catalog model, so the catalog is in jcode's /model picker, and
 // jcode is started on the model picked. What [provider] named before is
 // stashed and put back when magpie steps out. Every other key of the file is
@@ -27,7 +27,7 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // jcodeProfile is magpie's profile's table in jcode's config.toml, and
@@ -88,7 +88,7 @@ func jcodeRead(path string) (jcodeConf, error) {
 		return c, err
 	}
 	if err := toml.Unmarshal(b, &c); err != nil {
-		return c, fmt.Errorf("jcode's %s isn't TOML magpie can read; it was left as it is: %w", path, err)
+		return c, fmt.Errorf("jcode's %s isn't TOML chongyun can read; it was left as it is: %w", path, err)
 	}
 	return c, nil
 }
@@ -313,7 +313,7 @@ func jcodeAt(at place) *Agent {
 			}
 			p, on := c.Providers[magpieID]
 			if !on {
-				return "jcode's [" + jcodeProfile + "] (config.toml) is gone, so it no longer reaches magpie"
+				return "jcode's [" + jcodeProfile + "] (config.toml) is gone, so it no longer reaches chongyun"
 			}
 			return wiringOff("jcode", path, func(k string) (string, bool) {
 				switch k {

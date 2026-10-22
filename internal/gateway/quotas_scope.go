@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A key held to a budget, models or accounts is told none of this

@@ -22,11 +22,11 @@ import (
 	"strings"
 
 	"github.com/tidwall/jsonc"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
-	_ "github.com/yetone/magpie/internal/sqlitedb"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
+	_ "github.com/lulu58588/magpie/internal/sqlitedb"
 )
 
 // AppSource is one app magpie can import from, with what it holds.
@@ -180,7 +180,7 @@ func ImportFromApps(picks []AppPick) ([]string, error) {
 			// a subscription is never replaced by a provider of keys: its
 			// sign-in would be lost, and Kiro's would take the key to its
 			// own host
-			return added, errorf("%s: %q is a subscription in magpie and can't be replaced; add it as a new provider", p.Name, p.ID)
+			return added, errorf("%s: %q is a subscription in chongyun and can't be replaced; add it as a new provider", p.Name, p.ID)
 		default:
 			// an account a provider holds already is not added twice: the
 			// same relay is often both a CC Switch entry and what Claude
@@ -212,7 +212,7 @@ func ImportFromApps(picks []AppPick) ([]string, error) {
 // reservedID is an id no imported provider can have: the gateway's own, a
 // subscription's or a plugin's, signed in or not.
 func reservedID(id string) bool {
-	if id == "magpie" || subscriptionID(id) {
+	if id == "chongyun" || subscriptionID(id) {
 		return true
 	}
 	_, ok := find(Accounts(), id)
@@ -232,7 +232,7 @@ func holds(p Provider) bool {
 
 // freeID is id, or id-2, id-3… whichever no provider has.
 func freeID(id string) string {
-	taken := map[string]bool{"magpie": true}
+	taken := map[string]bool{"chongyun": true}
 	for _, id := range accountIDs {
 		taken[id] = true
 	}
@@ -267,10 +267,10 @@ func settle(items []AppImport, have []Provider, used map[string]bool) []AppImpor
 			continue
 		}
 		p := &it.Provider
-		if p.ID == "" || p.ID == "magpie" {
+		if p.ID == "" || p.ID == "chongyun" {
 			p.ID = Slug(p.Name)
 		}
-		if p.ID == "" || p.ID == "magpie" {
+		if p.ID == "" || p.ID == "chongyun" {
 			p.ID = "imported"
 		}
 		for base, n := p.ID, 2; used[p.ID]; n++ {
@@ -371,7 +371,7 @@ func imported(name, key string, e endpoints, models []string) (Provider, string)
 			return Provider{}, "its base URL isn't valid"
 		}
 		if gatewayURL(pu) {
-			return Provider{}, "it points at magpie itself"
+			return Provider{}, "it points at chongyun itself"
 		}
 	}
 	if e.chat == "" && e.responses == "" && e.anthropic == "" && e.gemini == "" {
@@ -691,7 +691,7 @@ func ccSwitchEntry(e ccEntry) (name, key string, eps endpoints, models []string,
 		base := str(env, "ANTHROPIC_BASE_URL")
 		key = str(env, "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_API_KEY")
 		if base == "" && key == "" {
-			return name, "", eps, nil, "it is the agent's own sign-in; add the subscription in magpie"
+			return name, "", eps, nil, "it is the agent's own sign-in; add the subscription in chongyun"
 		}
 		if base == "" {
 			base = "https://api.anthropic.com"
@@ -715,7 +715,7 @@ func ccSwitchEntry(e ccEntry) (name, key string, eps endpoints, models []string,
 			key = mp["experimental_bearer_token"]
 		}
 		if base == "" && key == "" {
-			return name, "", eps, nil, "it is the agent's own sign-in; add the subscription in magpie"
+			return name, "", eps, nil, "it is the agent's own sign-in; add the subscription in chongyun"
 		}
 		if base == "" {
 			base = "https://api.openai.com/v1"
@@ -888,7 +888,7 @@ func readAlma(path string) ([]AppImport, error) {
 		skip := ""
 		switch {
 		case almaSignIns[typ]:
-			skip = "it is a sign-in, not a key; add the subscription in magpie"
+			skip = "it is a sign-in, not a key; add the subscription in chongyun"
 		case typ == "azure":
 			// the resource's endpoint (or only its name); one behind a
 			// gateway of the user's is kept as it is, asked as Azure's

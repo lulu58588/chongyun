@@ -23,9 +23,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/steady"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // bunSettle is how long a Bun release is out before magpie takes it.

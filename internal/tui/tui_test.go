@@ -11,11 +11,11 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // home is a sandbox: a home of its own with Claude Code and Codex in it,

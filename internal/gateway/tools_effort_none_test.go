@@ -11,7 +11,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // toolsEffortChat is JJ-Lin's mock of a Chat-only relay (#2670): function

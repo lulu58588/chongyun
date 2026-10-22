@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The groups magpie finds merge a model however a vendor spells its id:

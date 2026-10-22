@@ -19,10 +19,10 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
-	"github.com/yetone/magpie/internal/wslrun"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/wslrun"
 )
 
 // autoModeAsk is Claude Code's auto mode classifier's first stage as it

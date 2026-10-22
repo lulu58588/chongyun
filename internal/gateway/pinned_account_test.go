@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // twoAccounts stands in for the ChatGPT backend with Codex signed in to
@@ -39,7 +39,7 @@ func pinnedPost(t *testing.T, s *Server, path, model, account string) (int, stri
 	t.Helper()
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest("POST", path, strings.NewReader(`{"model":"`+model+`","stream":true,"input":"ping"}`))
-	req.Header.Set("Authorization", "Bearer magpie")
+	req.Header.Set("Authorization", "Bearer chongyun")
 	if path != "/v1/responses" {
 		req.Header.Set("Authorization", "Bearer chatgpt-token")
 		req.Header.Set("chatgpt-account-id", "acct-1")
@@ -123,7 +123,7 @@ func TestAccountPinnedResting(t *testing.T) {
 	// unpinned, the other one answers
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest("POST", "/v1/responses", strings.NewReader(`{"model":"codex/gpt-5.5","stream":true,"input":"ping"}`))
-	req.Header.Set("Authorization", "Bearer magpie")
+	req.Header.Set("Authorization", "Bearer chongyun")
 	s.Handler().ServeHTTP(rec, req)
 	if rec.Code != 200 || !strings.Contains(rec.Body.String(), "from acct-2") {
 		t.Fatalf("unpinned: %d %s", rec.Code, rec.Body.String())

@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/middleware"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/middleware"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // OpenCode's provider plugins (internal/plugin): the providers they sign
@@ -203,7 +203,7 @@ type pluginsJSON struct {
 	BunVer  string            `json:"bunVersion"`
 	Error   string            `json:"error,omitempty"` // the plugins couldn't be asked
 	// Picker is whether this magpie can show the system's folder picker:
-	// `magpie web` has none, and the page then offers no button for it
+	// `chongyun web` has none, and the page then offers no button for it
 	Picker bool `json:"picker"`
 	// Movable are the built-ins with accounts a plugin could run, which
 	// its card and its row offer to move

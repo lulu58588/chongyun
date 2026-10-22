@@ -70,14 +70,14 @@ func storedCommand(t *testing.T, name string) string {
 // to the agents and to the check, and keeps it.
 func TestOwnServerFromElsewhereRunsThisMagpie(t *testing.T) {
 	for _, c := range []struct{ name, stored string }{
-		{"Windows' magpie", `C:\Users\xiaoqian\Downloads\magpie-windows-amd64.exe`},
-		{"a Mac's magpie", "/Volumes/gone-1439/Magpie.app/Contents/MacOS/magpie"},
+		{"Windows' chongyun", `C:\Users\xiaoqian\Downloads\magpie-windows-amd64.exe`},
+		{"a Mac's chongyun", "/Volumes/gone-1439/Magpie.app/Contents/MacOS/magpie"},
 		{"moved out of Downloads", ""},
-		{"a sync from a magpie that names it", "magpie"},
+		{"a sync from a chongyun that names it", "chongyun"},
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			h := sandbox(t)
-			here := filepath.Join(h, "Programs", "Magpie", "magpie-windows-amd64.exe")
+			here := filepath.Join(h, "Programs", "Chongyun", "magpie-windows-amd64.exe")
 			write(t, here, "")
 			thisMagpie(t, here)
 			stored := c.stored
@@ -96,7 +96,7 @@ func TestOwnServerFromElsewhereRunsThisMagpie(t *testing.T) {
 				t.Fatal(err)
 			}
 			if got := v.server(selfServerName).Command; got != here {
-				t.Fatalf("read as %q, want this magpie %q", got, here)
+				t.Fatalf("read as %q, want this chongyun %q", got, here)
 			}
 			// the agents are given it, and library.json keeps it
 			ok(t)(Sync())
@@ -120,7 +120,7 @@ func TestOwnServerFromElsewhereRunsThisMagpie(t *testing.T) {
 // in the library and in the agents, gone or not.
 func TestUsersOwnServerStaysAsItIs(t *testing.T) {
 	h := sandbox(t)
-	here := filepath.Join(h, "Programs", "magpie")
+	here := filepath.Join(h, "Programs", "chongyun")
 	write(t, here, "")
 	thisMagpie(t, here)
 	otherBuild := filepath.Join(h, "dev", "magpie-dev")
@@ -149,12 +149,12 @@ func TestUsersOwnServerStaysAsItIs(t *testing.T) {
 }
 
 // A library carried to another computer names magpie's own server's
-// program as plain "magpie", so two computers with the same library carry
+// program as plain "chongyun", so two computers with the same library carry
 // the same bundle, and a sync doesn't write one's path over the other's
 // each time. Put there, it runs that computer's magpie.
 func TestCarriedOwnServerIsEachComputersMagpie(t *testing.T) {
 	h := sandbox(t)
-	mac := filepath.Join(h, "mac", "Magpie.app", "Contents", "MacOS", "magpie")
+	mac := filepath.Join(h, "mac", "Magpie.app", "Contents", "MacOS", "chongyun")
 	win := filepath.Join(h, "win", "magpie-windows-amd64.exe")
 	write(t, mac, "")
 	write(t, win, "")

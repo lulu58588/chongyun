@@ -7,7 +7,7 @@ package agent
 // protocol, the gateway's /v1 and the key; the model table holds the model
 // string, the context window (AtomCode compacts as it nears it), the output
 // limit, whether it sees images, the reasoning levels its picker offers and
-// the one in use. magpie adds the account "magpie" and one model table per
+// the one in use. magpie adds the account "chongyun" and one model table per
 // catalog model, keyed "magpie/<provider>/<model>" — the model string goes
 // to the gateway as it is, for it to resolve — and points default_provider
 // and default_model at the one picked, default_model winning when both are
@@ -23,8 +23,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // atomcodeAccount is the account table magpie writes, and atomcodeModels the
@@ -143,14 +143,14 @@ func atomcodeIn(at place) *Agent {
 				return err.Error()
 			}
 			if t == nil {
-				return "AtomCode's [models." + strconv.Quote(k) + "] (config.toml) is gone, so it no longer reaches magpie"
+				return "AtomCode's [models." + strconv.Quote(k) + "] (config.toml) is gone, so it no longer reaches chongyun"
 			}
 			a, err := atomcodeAccountValues(path)
 			if err != nil {
 				return err.Error()
 			}
 			if a == nil {
-				return "AtomCode's [" + atomcodeAccount + "] (config.toml) is gone, so it no longer reaches magpie"
+				return "AtomCode's [" + atomcodeAccount + "] (config.toml) is gone, so it no longer reaches chongyun"
 			}
 			return wiringOff("AtomCode", path, func(f string) (string, bool) { v, ok := a[f]; return v, ok },
 				"base_url", at.v1(), "api_key", agentKeyAt("atomcode", at.gw()))

@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // museReasoningID is the reasoning item id Muse Spark on OpenCode handed

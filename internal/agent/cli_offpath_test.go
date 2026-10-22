@@ -53,7 +53,7 @@ func TestCLIFoundOffTerminalPath(t *testing.T) {
 	dir := filepath.Join(home, ".codex")
 	codex := &Agent{ID: "codex", Name: "Codex", Bin: "codex", Dir: dir, Path: filepath.Join(dir, "config.toml")}
 	if !codex.Detected() {
-		t.Fatal("codex on magpie's PATH not detected")
+		t.Fatal("codex on chongyun's PATH not detected")
 	}
 	c, ok := codex.CLI()
 	if !ok || c.Version != "0.162.1" {

@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestClaudeTiers(t *testing.T) {
@@ -266,7 +266,7 @@ func TestClaudeSharingOffWiresGatewayTokenBack(t *testing.T) {
 	}
 	if tok, _ := edit.GetJSON(path, "env.ANTHROPIC_AUTH_TOKEN"); tok != gateway.Token {
 		b, _ := os.ReadFile(path)
-		t.Fatalf("wired with sharing off: key %q, want magpie's own\n%s", tok, b)
+		t.Fatalf("wired with sharing off: key %q, want chongyun's own\n%s", tok, b)
 	}
 	if err := access.ConfigureLAN(true, false); err != nil {
 		t.Fatal(err)

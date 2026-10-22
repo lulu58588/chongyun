@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // DeepSeek Harness's own DeepSeek models, beside magpie's in its picker,
@@ -70,7 +70,7 @@ func TestAgentOwnModelsHidden(t *testing.T) {
 		t.Fatalf("dsh's list: %+v, want its own models there and shown", got)
 	}
 	if own, magpie := values(dsh, map[string]string{}); !slices.Equal(own, all) || len(magpie) == 0 {
-		t.Fatalf("before: own %v, magpie's %v", own, magpie)
+		t.Fatalf("before: own %v, chongyun's %v", own, magpie)
 	}
 
 	if got := call("POST", `{"ownHidden":true}`); !got.OwnHidden {
@@ -84,7 +84,7 @@ func TestAgentOwnModelsHidden(t *testing.T) {
 	}
 	own, magpie := values(dsh, map[string]string{})
 	if len(own) != 0 || !slices.Contains(magpie, "magpie/relay/m1") {
-		t.Fatalf("hidden: own %v left, magpie's %v", own, magpie)
+		t.Fatalf("hidden: own %v left, chongyun's %v", own, magpie)
 	}
 	// the one it is set to stays, the others go
 	if own, _ := values(dsh, map[string]string{"model": "deepseek-v4-pro"}); !slices.Equal(own, []string{"deepseek-v4-pro"}) {

@@ -14,7 +14,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func updateHome(t *testing.T) {
@@ -35,9 +35,9 @@ func updateHome(t *testing.T) {
 // Discord: install and update without a proxy).
 func TestUpdateThroughAMirror(t *testing.T) {
 	updateHome(t)
-	body := []byte("new magpie")
+	body := []byte("new chongyun")
 	sum := sha256.Sum256(body)
-	asset := Asset{URL: "https://github.com/yetone/magpie-releases/releases/download/v9.9.9/magpie-cli-linux-amd64", SHA256: hex.EncodeToString(sum[:])}
+	asset := Asset{URL: "https://github.com/lulu58588/magpie-releases/releases/download/v9.9.9/magpie-cli-linux-amd64", SHA256: hex.EncodeToString(sum[:])}
 
 	var mu sync.Mutex
 	var seen []string
@@ -48,7 +48,7 @@ func TestUpdateThroughAMirror(t *testing.T) {
 		bad := tamper
 		mu.Unlock()
 		if bad {
-			w.Write([]byte("not magpie"))
+			w.Write([]byte("not chongyun"))
 			return
 		}
 		w.Write(body)
@@ -122,7 +122,7 @@ func TestUpdateThroughAMirror(t *testing.T) {
 // given, over Settings' and the environment's.
 func TestUpdateThroughAProxyGiven(t *testing.T) {
 	updateHome(t)
-	body := []byte("new magpie")
+	body := []byte("new chongyun")
 	sum := sha256.Sum256(body)
 	var mu sync.Mutex
 	var seen []string
@@ -199,10 +199,10 @@ func TestCheckProxyErrorShowsNoCredentials(t *testing.T) {
 // mirror's. Settings take a full https:// mirror only.
 func TestMirrorFailuresAreTheMirrors(t *testing.T) {
 	updateHome(t)
-	body := []byte("new magpie")
+	body := []byte("new chongyun")
 	sum := sha256.Sum256(body)
-	asset := Asset{URL: "https://github.com/yetone/magpie-releases/releases/download/v9.9.9/magpie-cli-linux-amd64", SHA256: hex.EncodeToString(sum[:])}
-	tampered := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("not magpie")) }))
+	asset := Asset{URL: "https://github.com/lulu58588/magpie-releases/releases/download/v9.9.9/magpie-cli-linux-amd64", SHA256: hex.EncodeToString(sum[:])}
+	tampered := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("not chongyun")) }))
 	defer tampered.Close()
 	missing := httptest.NewServer(http.NotFoundHandler())
 	defer missing.Close()

@@ -52,16 +52,16 @@ func TestOneMagpieAtATime(t *testing.T) {
 	buf := make([]byte, 5)
 	if _, err := out.Read(buf); err != nil || string(buf[:4]) != "held" {
 		cmd.Process.Kill()
-		t.Fatalf("the first magpie didn't take the lock: %q %v", buf, err)
+		t.Fatalf("the first chongyun didn't take the lock: %q %v", buf, err)
 	}
 	if held, err := holdInstance(lock); err != nil || held {
 		cmd.Process.Kill()
-		t.Fatalf("a second magpie took the held lock: %v %v", held, err)
+		t.Fatalf("a second chongyun took the held lock: %v %v", held, err)
 	}
 	cmd.Process.Kill()
 	cmd.Wait()
 	if held, err := holdInstance(lock); err != nil || !held {
-		t.Fatalf("the lock of a magpie that was killed stayed held: %v %v", held, err)
+		t.Fatalf("the lock of a chongyun that was killed stayed held: %v %v", held, err)
 	}
 	heldInstance.Close()
 	heldInstance = nil

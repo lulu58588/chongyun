@@ -8,9 +8,9 @@ import (
 
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // VS Code's chat: switched on, magpie's group joins the user's in
@@ -69,10 +69,10 @@ func TestVSCode(t *testing.T) {
 	}
 	g, _ := edit.GetJSONItem(lm, vscodeGroup)
 	for k, want := range map[string]string{
-		"vendor": "customendpoint", "name": "magpie", "apiType": "chat-completions",
+		"vendor": "customendpoint", "name": "chongyun", "apiType": "chat-completions",
 		"models.0.id": "relay/glm-4.6", "models.0.url": gatewayV1() + "/chat/completions",
 		"models.0.toolCalling": "true", "models.0.contextWindow": "204800",
-		"models.0.requestHeaders.Authorization": "Bearer magpie",
+		"models.0.requestHeaders.Authorization": "Bearer chongyun",
 	} {
 		if got := gjson.Get(g, k).String(); got != want {
 			t.Errorf("%s = %q, want %q", k, got, want)
@@ -213,7 +213,7 @@ func TestVSCodeProfiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, ok := edit.GetJSONItem(filepath.Join(dir, "profiles", "new1", "chatLanguageModels.json"), vscodeGroup); !ok {
-		t.Fatal("new profile not given magpie's group")
+		t.Fatal("new profile not given chongyun's group")
 	}
 
 	if err := a.Disconnect(); err != nil {
@@ -223,7 +223,7 @@ func TestVSCodeProfiles(t *testing.T) {
 		t.Fatalf("work profile not as it was:\n%s\n%s", readFile(filepath.Join(work, "settings.json")), readFile(wlm))
 	}
 	if _, ok := edit.GetJSONItem(filepath.Join(dir, "profiles", "new1", "chatLanguageModels.json"), vscodeGroup); ok {
-		t.Fatal("new profile kept magpie's group")
+		t.Fatal("new profile kept chongyun's group")
 	}
 }
 
@@ -286,7 +286,7 @@ func TestVSCodeInsiders(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, ok := edit.GetJSONItem(filepath.Join(ins.Dir, "chatLanguageModels.json"), vscodeGroup); ok || ins.Wired() {
-		t.Fatal("disconnected, magpie's group kept")
+		t.Fatal("disconnected, chongyun's group kept")
 	}
 }
 
@@ -331,7 +331,7 @@ func TestVSCodium(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, ok := edit.GetJSONItem(filepath.Join(c.Dir, "chatLanguageModels.json"), vscodeGroup); ok || c.Wired() {
-		t.Fatal("disconnected, magpie's group kept")
+		t.Fatal("disconnected, chongyun's group kept")
 	}
 }
 

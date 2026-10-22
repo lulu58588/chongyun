@@ -3,7 +3,7 @@ package cli
 import (
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // additional-tools=on has a provider's Responses API sent a tool Claude

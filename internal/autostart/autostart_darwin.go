@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 const label = "com.yetone.magpie"

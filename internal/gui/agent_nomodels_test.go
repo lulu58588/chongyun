@@ -9,11 +9,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/agent"
 )
 
 // Tystem on Discord: connecting Codex with no provider or subscription in
-// magpie answered "Codex can't be connected to magpie", untranslated. The
+// magpie answered "Codex can't be connected to chongyun", untranslated. The
 // answer carries code no_models and the agent's name, which the GUI says
 // in the reader's language.
 func TestAgentConnectNoModels(t *testing.T) {

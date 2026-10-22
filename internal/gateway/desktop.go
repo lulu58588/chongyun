@@ -13,9 +13,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Claude Desktop, pointed at a third-party gateway, keeps a model only when

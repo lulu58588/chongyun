@@ -26,7 +26,7 @@ func TestPiNamesItsSessionToTheGateway(t *testing.T) {
 	}
 
 	// one the user turned off stays off, through a sync and a pick
-	writeFile(t, piModels, `{"providers":{"magpie":{"name":"magpie","baseUrl":"http://127.0.0.1:3425/v1","api":"openai-completions","apiKey":"magpie","compat":{"sendSessionAffinityHeaders":false,"supportsStore":false},"models":[]}}}`)
+	writeFile(t, piModels, `{"providers":{"chongyun":{"name":"chongyun","baseUrl":"http://127.0.0.1:3425/v1","api":"openai-completions","apiKey":"chongyun","compat":{"sendSessionAffinityHeaders":false,"supportsStore":false},"models":[]}}}`)
 	SyncCatalog()
 	if err := pi(home).Fields[0].Set("magpie/relay/glm-4.6"); err != nil {
 		t.Fatal(err)

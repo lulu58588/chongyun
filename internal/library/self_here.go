@@ -11,7 +11,7 @@ package library
 // So a server that is magpie's own — `mcp …` run by a program named
 // magpie — and whose program isn't on this computer is pointed at this
 // magpie as the library is read (heal), and a carried library names
-// magpie's own as plain "magpie" (Collect), which each computer reads as
+// magpie's own as plain "chongyun" (Collect), which each computer reads as
 // its own. Two computers then carry the same library, and a sync doesn't
 // write one's path over the other's each time. A magpie program that is
 // there (another build kept beside this one) is the user's pick and stays;
@@ -22,7 +22,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // selfExe is this magpie by a path that stays put; a var for tests.

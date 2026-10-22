@@ -9,11 +9,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A providers-only upload must not turn the remote's redacted settings and

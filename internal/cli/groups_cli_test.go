@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // groupsHome is a machine of its own with two providers: a serves m and
@@ -31,7 +31,7 @@ func groupsHome(t *testing.T) {
 
 // storedGroups: the groups as the file keeps them.
 // A group an agent is on carries Claude Code's [1m] mark in the agent's
-// own settings, as a model's does: `magpie group` lists "← agent" beside a
+// own settings, as a model's does: `chongyun group` lists "← agent" beside a
 // group by its id, so the mark has to come off the id before it is looked
 // up. Claude Code on group/auto-gpt-5[1m] was on no row at all.
 func TestGroupUsesTakesTheOneMMarkOff(t *testing.T) {

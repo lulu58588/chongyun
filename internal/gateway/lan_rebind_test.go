@@ -57,7 +57,7 @@ func TestReboundPageRefused(t *testing.T) {
 		t.Fatal("a browser at a localhost subdomain:", c)
 	}
 	// an agent sends no browser marks, whatever name it was given
-	if c := call("POST", evil, "Authorization", "Bearer magpie", "User-Agent", "claude-cli/2.1"); c != 200 || !reached {
+	if c := call("POST", evil, "Authorization", "Bearer chongyun", "User-Agent", "claude-cli/2.1"); c != 200 || !reached {
 		t.Fatal("an agent:", c)
 	}
 	t.Setenv("MAGPIE_PUBLIC_URL", "https://magpie.example.net")

@@ -43,7 +43,7 @@ func TestWarmAtsMigrate(t *testing.T) {
 		CodexWarmAt string `json:"codexWarmAt"`
 	}
 	if json.Unmarshal(b, &old) != nil || old.CodexWarmAt != "09:00" {
-		t.Fatalf("first not kept for an older magpie:\n%s", b)
+		t.Fatalf("first not kept for an older chongyun:\n%s", b)
 	}
 	// one that isn't a time is refused, wherever it is in the list
 	if Save(Settings{CodexWarmAts: []string{"09:00", "25:00"}}) == nil {

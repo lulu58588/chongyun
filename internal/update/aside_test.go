@@ -68,7 +68,7 @@ func TestMoveAsideSaysWhy(t *testing.T) {
 	// a folder magpie may not change says so
 	fakeRename(t, 100, os.ErrPermission)
 	_, err = moveAside(exe)
-	if msg := err.Error(); !strings.Contains(msg, "doesn't let magpie change files in "+filepath.Dir(exe)) {
+	if msg := err.Error(); !strings.Contains(msg, "doesn't let chongyun change files in "+filepath.Dir(exe)) {
 		t.Errorf("%q", msg)
 	}
 

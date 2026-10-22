@@ -16,9 +16,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Option is one value the picker offers for a field.
@@ -507,7 +507,7 @@ func (a *Agent) Field(key string) *Field {
 		}
 	}
 	for i := range a.Fields {
-		if strings.EqualFold(a.Fields[i].Label, key) { // `magpie gemini auth …`: the label as shown
+		if strings.EqualFold(a.Fields[i].Label, key) { // `chongyun gemini auth …`: the label as shown
 			return &a.Fields[i]
 		}
 	}
@@ -641,7 +641,7 @@ func (a *Agent) Spell(key, v string) (string, error) {
 		}
 	}
 	if prefixed {
-		return "", fmt.Errorf("%s isn't a model in magpie's catalog (magpie models lists them)", ref)
+		return "", fmt.Errorf("%s isn't a model in chongyun's catalog (chongyun models lists them)", ref)
 	}
 	if err := a.notOffered(ref, opts); err != nil {
 		return "", err
@@ -672,14 +672,14 @@ func (a *Agent) notOffered(ref string, opts []Option) error {
 	}
 	for _, e := range provider.Catalog() {
 		if slices.Contains(ids, e.ID) {
-			return fmt.Errorf("%s is one of magpie's models, but %s isn't shown it: magpie models %s says why, and magpie visible %s all shows it every model", ref, a.Name, a.ID, a.ID)
+			return fmt.Errorf("%s is one of chongyun's models, but %s isn't shown it: chongyun models %s says why, and chongyun visible %s all shows it every model", ref, a.Name, a.ID, a.ID)
 		}
 	}
 	if pid+"/" == provider.GroupPrefix || provider.IsGroupRef(ref) {
-		return fmt.Errorf("magpie has no routing group %s (magpie models lists them)", ref)
+		return fmt.Errorf("chongyun has no routing group %s (chongyun models lists them)", ref)
 	}
 	if p, err := provider.Find(pid); err == nil && (p.ID == pid || slices.Contains(p.Was, pid)) {
-		return fmt.Errorf("%s's model list has no %s: magpie provider refresh %s fetches the list again (or add the model to it in its editor), and magpie models %s lists what %s is shown", p.ID, model, p.ID, a.ID, a.Name)
+		return fmt.Errorf("%s's model list has no %s: chongyun provider refresh %s fetches the list again (or add the model to it in its editor), and chongyun models %s lists what %s is shown", p.ID, model, p.ID, a.ID, a.Name)
 	}
 	return nil
 }

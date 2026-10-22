@@ -8,10 +8,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The catalog is rebuilt from every provider's files on each Resolve (tens
@@ -51,7 +51,7 @@ func stampOf(path string) rootStamp {
 
 // heldFreshLocked drops what is built when a file was written since, by
 // this process (filememo.Gen) or, for the providers' and the settings'
-// files, by another (the CLI's "magpie group add", seen by the next
+// files, by another (the CLI's "chongyun group add", seen by the next
 // request, not a second later). Called with held held.
 func heldFreshLocked(look bool) {
 	if g := filememo.Gen(); g != held.fgen {

@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // magpie update takes --proxy and --mirror, as --flag value or
@@ -25,7 +25,7 @@ func TestUpdateFlags(t *testing.T) {
 		}
 	}
 	if err := updateCmd([]string{"update", "chek"}); err == nil {
-		t.Error("magpie update chek ran an update")
+		t.Error("chongyun update chek ran an update")
 	}
 
 	groupsHome(t)

@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // Result is what a probe of one endpoint came back with.
@@ -259,7 +259,7 @@ func (p Provider) TestModels(ctx context.Context, models []string) []Result {
 func (p Provider) testOne(ctx context.Context, model string) Result {
 	if pat, off := ModelDisabled(p.ID, model); off {
 		// the user disabled it (#1867): not even a test reaches it
-		return Result{Model: model, Error: fmt.Sprintf("model %s/%s is disabled in magpie (it matches %q in Settings › Models › Disabled models)", p.ID, model, pat)}
+		return Result{Model: model, Error: fmt.Sprintf("model %s/%s is disabled in chongyun (it matches %q in Settings › Models › Disabled models)", p.ID, model, pat)}
 	}
 	if p.DecidesModel(model) && p.AsksDecideModels() {
 		// a decision model is sent the smallest System One question, a
@@ -663,7 +663,7 @@ func APIError(b []byte, fallback string) string {
 var cmdGoNoAPI = regexp.MustCompile(`(?i)\bGo plan doesn.t include API access`)
 
 // CommandCodeGoHint says where a Go plan's key works.
-const CommandCodeGoHint = "a Go plan's key works in magpie through the Command Code plugin (Plugins › Command Code, then sign in with the key), which asks Command Code as its CLI does; a Command Code API-key provider can't use it"
+const CommandCodeGoHint = "a Go plan's key works in chongyun through the Command Code plugin (Plugins › Command Code, then sign in with the key), which asks Command Code as its CLI does; a Command Code API-key provider can't use it"
 
 // verifyWords is a refusal asking for the account to be verified, put in
 // words rather than as VALIDATION_REQUIRED — or already by VerifyMessage.

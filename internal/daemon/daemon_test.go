@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // The tests run in a home of their own, with a fake systemctl, launchctl
@@ -73,7 +73,7 @@ func write(t *testing.T, path, text string) {
 	}
 }
 
-// On Linux, install writes a user unit that runs `magpie serve` with the
+// On Linux, install writes a user unit that runs `chongyun serve` with the
 // shell's PATH, proxy and agents' folders, readable by the user alone,
 // then enables and starts it through systemctl --user; uninstall stops,
 // disables and removes it (HuanCheng on Discord).
@@ -186,7 +186,7 @@ func TestSystemdStatus(t *testing.T) {
 	if len(st.Advice) != 1 || !strings.Contains(st.Advice[0], "sudo loginctl enable-linger ") {
 		t.Errorf("advice %q, want enable-linger", st.Advice)
 	}
-	if !strings.HasPrefix(st.Logs, "journalctl --user -u magpie") {
+	if !strings.HasPrefix(st.Logs, "journalctl --user -u chongyun") {
 		t.Errorf("logs %q", st.Logs)
 	}
 	// stopped by hand: SIGTERM's 15 is no failure to show
@@ -227,7 +227,7 @@ func TestRefusedBesideAutostart(t *testing.T) {
 		t.Run(os_, func(t *testing.T) {
 			log, _ := fakes(t, os_)
 			autostartEnabled = func() bool { return true }
-			if err := Install(Options{}); err == nil || !strings.Contains(err.Error(), "magpie autostart off") {
+			if err := Install(Options{}); err == nil || !strings.Contains(err.Error(), "chongyun autostart off") {
 				t.Errorf("got %v", err)
 			}
 			if c := calls(t, log); c[0] != "" {
@@ -237,7 +237,7 @@ func TestRefusedBesideAutostart(t *testing.T) {
 	}
 }
 
-// On the Mac, install writes a launch agent that runs `magpie serve` at
+// On the Mac, install writes a launch agent that runs `chongyun serve` at
 // login and again when it fails, and loads it; an install over one loaded
 // takes the old one out first.
 func TestLaunchdInstall(t *testing.T) {
@@ -300,7 +300,7 @@ func TestLaunchdInstall(t *testing.T) {
 	if err != nil || !st.Running || st.PID != 777 || st.State != "running" || st.LastExit != "" {
 		t.Errorf("status %+v, %v", st, err)
 	}
-	if !strings.Contains(st.Logs, filepath.Join("Library", "Logs", "magpie", "serve.log")) {
+	if !strings.Contains(st.Logs, filepath.Join("Library", "Logs", "chongyun", "serve.log")) {
 		t.Errorf("logs %q", st.Logs)
 	}
 
@@ -321,7 +321,7 @@ func TestLaunchdInstall(t *testing.T) {
 func TestUnsupported(t *testing.T) {
 	prev := goos
 	t.Cleanup(func() { goos = prev })
-	for os_, want := range map[string]string{"windows": "magpie autostart on", "android": "Termux:Boot"} {
+	for os_, want := range map[string]string{"windows": "chongyun autostart on", "android": "Termux:Boot"} {
 		goos = os_
 		if err := Install(Options{}); !errors.Is(err, ErrUnsupported) || !strings.Contains(err.Error(), want) {
 			t.Errorf("%s: %v", os_, err)
@@ -337,17 +337,17 @@ func TestPick(t *testing.T) {
 		t.Skip("links")
 	}
 	dir := t.TempDir()
-	real := filepath.Join(dir, "Cellar", "magpie", "1.0", "magpie")
+	real := filepath.Join(dir, "Cellar", "chongyun", "1.0", "chongyun")
 	os.MkdirAll(filepath.Dir(real), 0o755)
 	write(t, real, "x")
 	os.Chmod(real, 0o755)
 	bin := filepath.Join(dir, "bin")
 	os.MkdirAll(bin, 0o755)
-	if err := os.Symlink(real, filepath.Join(bin, "magpie")); err != nil {
+	if err := os.Symlink(real, filepath.Join(bin, "chongyun")); err != nil {
 		t.Fatal(err)
 	}
 	t.Setenv("PATH", bin)
-	if got, err := pick(real, real); err != nil || got != filepath.Join(bin, "magpie") {
+	if got, err := pick(real, real); err != nil || got != filepath.Join(bin, "chongyun") {
 		t.Errorf("got %q, %v; want the link on PATH", got, err)
 	}
 	// another magpie on PATH: this one
@@ -358,7 +358,7 @@ func TestPick(t *testing.T) {
 		t.Errorf("got %q", got)
 	}
 	for _, p := range []string{
-		filepath.Join(os.TempDir(), "go-build123", "b001", "exe", "magpie"),
+		filepath.Join(os.TempDir(), "go-build123", "b001", "exe", "chongyun"),
 		"/private/var/folders/x/T/AppTranslocation/ABC/d/magpie.app/Contents/MacOS/magpie",
 	} {
 		if _, err := pick(p, p); err == nil {
@@ -428,10 +428,10 @@ func TestInstallFindsNvmNode(t *testing.T) {
 
 var realWiden = widenPath
 
-// Installed with the page, the service runs `magpie serve --web=<addr>`
+// Installed with the page, the service runs `chongyun serve --web=<addr>`
 // with the page's key in its environment, on both systems, and Web reads
 // both back from the service's own file: the key stays the same across
-// restarts and is what `magpie daemon status` prints the link with
+// restarts and is what `chongyun daemon status` prints the link with
 // (HuanCheng on Discord). Installed again without, both are gone, and a
 // MAGPIE_WEB_KEY in the shell is never carried into a service with no page.
 func TestInstallWithWeb(t *testing.T) {

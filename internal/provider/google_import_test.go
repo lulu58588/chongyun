@@ -171,7 +171,7 @@ func TestImportGoogleAccounts(t *testing.T) {
 	}
 	for _, rt := range f.refreshed {
 		if rt == "1//b" {
-			t.Error("an account already in magpie was refreshed")
+			t.Error("an account already in chongyun was refreshed")
 		}
 	}
 	// kept as signed-in accounts are, with their project

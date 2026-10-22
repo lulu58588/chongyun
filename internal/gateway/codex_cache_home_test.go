@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/codexcat"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/codexcat"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // With the backend away, the list a ChatGPT sign-in is handed is made from

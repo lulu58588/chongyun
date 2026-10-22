@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func dshRouteHome(t *testing.T) (home, dir, web string) {
@@ -52,7 +52,7 @@ func TestDshCustomProvider(t *testing.T) {
 	if !strings.HasPrefix(s, "# Your patch layer for this dsh profile.\n- id: llm-deepseek\n  config:\n    apiKeyEnv: DEEPSEEK_API_KEY\n    thinking: enabled\n") || strings.Count(s, "llm-deepseek") != 1 {
 		t.Fatalf("dsh's own DeepSeek row was taken:\n%s", s)
 	}
-	for _, want := range []string{"      mine:\n", "baseURL: https://mine.example/v1", "      magpie:\n", "displayName: Magpie", "apiKeyEnv: " + dshKeyRef, "api: openai-completions", "baseURL: " + gatewayV1(), "- id: deepseek/pro", "provider: magpie", `model: "deepseek/pro"`} {
+	for _, want := range []string{"      mine:\n", "baseURL: https://mine.example/v1", "      chongyun:\n", "displayName: Chongyun", "apiKeyEnv: " + dshKeyRef, "api: openai-completions", "baseURL: " + gatewayV1(), "- id: deepseek/pro", "provider: chongyun", `model: "deepseek/pro"`} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q in\n%s", want, s)
 		}
@@ -70,9 +70,9 @@ func TestDshCustomProvider(t *testing.T) {
 		"- id: llm-deepseek\n  config:\n    apiKeyEnv: DEEPSEEK_API_KEY\n    thinking: enabled\n" +
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n" +
 		"      mine:\n        displayName: Mine\n        apiKeyEnv: MINE_API_KEY\n        api: openai-completions\n        baseURL: https://mine.example/v1\n        models:\n          - id: m1\n" +
-		"      magpie:\n        displayName: Magpie\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        reasoning: high\n        models:\n          - id: deepseek/pro\n            name: pro · DeepSeek\n          - id: deepseek/flash\n            name: flash · DeepSeek\n" +
+		"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        reasoning: high\n        models:\n          - id: deepseek/pro\n            name: pro · DeepSeek\n          - id: deepseek/flash\n            name: flash · DeepSeek\n" +
 		"      added:\n        displayName: Added\n        apiKeyEnv: ADDED_API_KEY\n        api: anthropic-messages\n        baseURL: https://added.example\n        models:\n          - id: a1\n" +
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n    reasoningEffort: high\n"
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n    reasoningEffort: high\n"
 	os.WriteFile(web, []byte(dshSaved), 0o644)
 	if f.Get() != "magpie/deepseek/flash" || a.Check() != "" {
 		t.Fatalf("after dsh saved it: get %q, check %q", f.Get(), a.Check())
@@ -92,7 +92,7 @@ func TestDshCustomProvider(t *testing.T) {
 	// in dsh's own store under the name that row gave it, which dsh reads
 	// over .env; the route names another
 	creds := filepath.Join(dir, ".credentials.yaml")
-	os.WriteFile(creds, []byte("version: 1\nrefs:\n  MAGPIE_API_KEY: sk-mine\n  "+dshKeyRef+": magpie\n"), 0o600)
+	os.WriteFile(creds, []byte("version: 1\nrefs:\n  MAGPIE_API_KEY: sk-mine\n  "+dshKeyRef+": chongyun\n"), 0o600)
 	if dshKeyRef == "MAGPIE_API_KEY" || a.Check() != "" {
 		t.Fatalf("the route reads the key a DeepSeek key was saved under: %q", a.Check())
 	}
@@ -108,7 +108,7 @@ func TestDshCustomProvider(t *testing.T) {
 		t.Fatal(err)
 	}
 	s = read()
-	if strings.Contains(s, "magpie:") || strings.Contains(s, "provider: magpie") || !strings.Contains(s, "      mine:\n") || !strings.Contains(s, "      added:\n") || !strings.Contains(s, "provider: deepseek-official") || f.Get() != "deepseek-v4-pro" {
+	if strings.Contains(s, "chongyun:") || strings.Contains(s, "provider: chongyun") || !strings.Contains(s, "      mine:\n") || !strings.Contains(s, "      added:\n") || !strings.Contains(s, "provider: deepseek-official") || f.Get() != "deepseek-v4-pro" {
 		t.Fatalf("own model: %q\n%s", f.Get(), s)
 	}
 	if err := f.Set("magpie/deepseek/pro"); err != nil {
@@ -118,7 +118,7 @@ func TestDshCustomProvider(t *testing.T) {
 		t.Fatal(err)
 	}
 	s = read()
-	if strings.Contains(s, "magpie") || strings.Contains(s, "agent-default-model") || !strings.Contains(s, "      mine:\n") || !strings.Contains(s, "      added:\n") || !strings.Contains(s, "apiKeyEnv: DEEPSEEK_API_KEY") {
+	if strings.Contains(s, "chongyun") || strings.Contains(s, "agent-default-model") || !strings.Contains(s, "      mine:\n") || !strings.Contains(s, "      added:\n") || !strings.Contains(s, "apiKeyEnv: DEEPSEEK_API_KEY") {
 		t.Fatalf("reset:\n%s", s)
 	}
 }
@@ -148,11 +148,11 @@ func TestDshMovesOffDeepSeekRow(t *testing.T) {
 	home, _, web := dshRouteHome(t)
 	userRow := "- id: llm-deepseek\n  config:\n    baseURL: https://example.com\n"
 	env := filepath.Join(filepath.Dir(filepath.Dir(filepath.Dir(web))), ".env")
-	os.WriteFile(env, []byte("OTHER=1\nMAGPIE_API_KEY=magpie\n"), 0o600)
+	os.WriteFile(env, []byte("OTHER=1\nMAGPIE_API_KEY=chongyun\n"), 0o600)
 	stash(map[string]string{dshStashKey(web, "llm-deepseek"): strings.TrimSuffix(userRow, "\n")})
 	old := "# Your patch layer for this dsh profile.\n" +
-		"- id: llm-deepseek # magpie\n  config:\n    apiKeyEnv: MAGPIE_API_KEY\n    baseURL: \"" + gatewayV1() + "\"\n    thinking: enabled\n    reasoningEffort: max\n    models:\n      - id: \"deepseek/pro\"\n        name: \"pro · DeepSeek\"\n" +
-		"- id: agent-default-model # magpie\n  config:\n    provider: deepseek-official\n    model: \"deepseek/pro\"\n"
+		"- id: llm-deepseek # chongyun\n  config:\n    apiKeyEnv: MAGPIE_API_KEY\n    baseURL: \"" + gatewayV1() + "\"\n    thinking: enabled\n    reasoningEffort: max\n    models:\n      - id: \"deepseek/pro\"\n        name: \"pro · DeepSeek\"\n" +
+		"- id: agent-default-model # chongyun\n  config:\n    provider: deepseek-official\n    model: \"deepseek/pro\"\n"
 	os.WriteFile(web, []byte(old), 0o644)
 	a := dsh(home)
 	if got := a.Field("model").Get(); got != "magpie/deepseek/pro" {
@@ -163,13 +163,13 @@ func TestDshMovesOffDeepSeekRow(t *testing.T) {
 	}
 	b, _ := os.ReadFile(web)
 	s := string(b)
-	if !strings.Contains(s, userRow) || strings.Contains(s, "llm-deepseek # magpie") || !strings.Contains(s, "      magpie:\n") || !strings.Contains(s, "provider: magpie") || !strings.Contains(s, `model: "deepseek/pro"`) {
+	if !strings.Contains(s, userRow) || strings.Contains(s, "llm-deepseek # chongyun") || !strings.Contains(s, "      chongyun:\n") || !strings.Contains(s, "provider: chongyun") || !strings.Contains(s, `model: "deepseek/pro"`) {
 		t.Fatalf("moved:\n%s", s)
 	}
 	if got := a.Field("model").Get(); got != "magpie/deepseek/pro" {
 		t.Fatalf("after the move: %q", got)
 	}
-	if b, _ := os.ReadFile(env); string(b) != "OTHER=1\n"+dshKeyRef+"=magpie\n" {
+	if b, _ := os.ReadFile(env); string(b) != "OTHER=1\n"+dshKeyRef+"=chongyun\n" {
 		t.Fatalf(".env:\n%s", b)
 	}
 	if d := a.Check(); d != "" {
@@ -185,11 +185,11 @@ func TestDshMovesOffDeepSeekRow(t *testing.T) {
 func TestDshCheckSaysTheModelItStartsOnIsNotInTheRoute(t *testing.T) {
 	home, dir, web := dshRouteHome(t)
 	env := filepath.Join(dir, ".env")
-	os.WriteFile(env, []byte(dshKeyRef+"=magpie\n"), 0o600)
+	os.WriteFile(env, []byte(dshKeyRef+"=chongyun\n"), 0o600)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n"+
-		"      magpie:\n        displayName: Magpie\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: "+gatewayV1()+"\n        models:\n          - id: deepseek/pro\n            name: pro · DeepSeek\n"+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: "+gatewayV1()+"\n        models:\n          - id: deepseek/pro\n            name: pro · DeepSeek\n"+
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	a := dsh(home)
 	if got := a.Field("model").Get(); got != "magpie/deepseek/flash" {
 		t.Fatalf("model: %q", got)
@@ -214,15 +214,15 @@ func TestDshCheckSaysWhenAnotherProfilesRouteHasNotGotTheModel(t *testing.T) {
 	dshKeyFixture(dir)
 	route := "# Your patch layer for this dsh profile.\n" +
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n" +
-		"      magpie:\n        displayName: Magpie\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        models:\n" +
+		"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        models:\n" +
 		"          - id: deepseek/pro\n            name: pro · DeepSeek\n"
 	os.WriteFile(web, []byte(route+
 		"          - id: deepseek/flash\n            name: flash · DeepSeek\n"+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	desktop := filepath.Join(dir, "profiles", "desktop", "cordis.patch.yml")
 	os.MkdirAll(filepath.Dir(desktop), 0o755)
 	os.WriteFile(desktop, []byte(route+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	a := dsh(home)
 	if d := a.Check(); !strings.Contains(d, desktop) {
 		t.Fatalf("the profile whose route has not got the model is not named: %q", d)
@@ -243,16 +243,16 @@ func TestDshCheckSaysWhenTheModelItStartsOnIsOneMagpieNoLongerGives(t *testing.T
 	dshKeyFixture(dir)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n"+
-		"      magpie:\n        displayName: Magpie\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: "+gatewayV1()+"\n        models:\n"+
+		"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: "+gatewayV1()+"\n        models:\n"+
 		"          - id: deepseek/pro\n            name: pro · DeepSeek\n"+
 		"          - id: deepseek/flash\n            name: flash · DeepSeek\n"+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/gone\n"), 0o644)
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/gone\n"), 0o644)
 	a := dsh(home)
 	if got := a.Field("model").Get(); got != "magpie/deepseek/gone" {
 		t.Fatalf("model: %q", got)
 	}
 	if d := a.Check(); !strings.Contains(d, "deepseek/gone") || !strings.Contains(d, "no longer gives") {
-		t.Fatalf("the model magpie no longer gives is not named: %q", d)
+		t.Fatalf("the model chongyun no longer gives is not named: %q", d)
 	}
 	// the route already holds what magpie writes: a sync leaves the model it
 	// starts on alone, so the check still stands
@@ -268,7 +268,7 @@ func TestDshCheckSaysWhenTheModelItStartsOnIsOneMagpieNoLongerGives(t *testing.T
 // page would write it.
 func dshRouteFixture(ids ...string) string {
 	s := "- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n" +
-		"      magpie:\n        displayName: Magpie\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        models:\n"
+		"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        models:\n"
 	for _, id := range ids {
 		s += "          - id: " + id + "\n            name: " + id + " · DeepSeek\n"
 	}
@@ -284,7 +284,7 @@ func TestDshRouteIsWrittenAgainWhileServing(t *testing.T) {
 	dshKeyFixture(dir)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		dshRouteFixture("deepseek/pro")+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	a := dsh(home)
 	if d := a.Check(); d == "" {
 		t.Fatal("a route without the model it starts on is not named")
@@ -293,9 +293,9 @@ func TestDshRouteIsWrittenAgainWhileServing(t *testing.T) {
 	b, _ := os.ReadFile(web)
 	s := string(b)
 	if !strings.Contains(s, "deepseek/pro") || !strings.Contains(s, "deepseek/flash") {
-		t.Fatalf("the route is not what magpie writes:\n%s", s)
+		t.Fatalf("the route is not what chongyun writes:\n%s", s)
 	}
-	if !strings.Contains(s, "provider: magpie\n    model: deepseek/flash") {
+	if !strings.Contains(s, "provider: chongyun\n    model: deepseek/flash") {
 		t.Fatalf("the model it starts on is not the user's still:\n%s", s)
 	}
 	if d := a.Check(); d != "" {
@@ -315,10 +315,10 @@ func TestKeepDshWiredWritesTheRouteAgain(t *testing.T) {
 	dshKeyFixture(dir)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		dshRouteFixture("deepseek/pro", "deepseek/flash")+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	a := dsh(home)
 	if d := a.Check(); d != "" {
-		t.Fatalf("the route magpie writes is not clean: %s", d)
+		t.Fatalf("the route chongyun writes is not clean: %s", d)
 	}
 	ctx, stop := context.WithCancel(context.Background())
 	done := make(chan struct{})
@@ -332,17 +332,17 @@ func TestKeepDshWiredWritesTheRouteAgain(t *testing.T) {
 		defer dshWrites.Unlock()
 		if err := os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 			dshRouteFixture("deepseek/pro")+
-			"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644); err != nil {
+			"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644); err != nil {
 			t.Fatal(err)
 		}
 		if d := a.Check(); d == "" {
-			t.Fatal("the route changed under magpie is not named")
+			t.Fatal("the route changed under chongyun is not named")
 		}
 	}()
 	deadline := time.Now().Add(5 * time.Second)
 	for a.Check() != "" {
 		if time.Now().After(deadline) {
-			t.Fatal("the route was not written again while magpie served")
+			t.Fatal("the route was not written again while chongyun served")
 		}
 		time.Sleep(5 * time.Millisecond)
 	}
@@ -359,7 +359,7 @@ func TestDshRouteAgainLeavesAListWithoutMagpieAlone(t *testing.T) {
 	os.WriteFile(web, []byte(mine), 0o644)
 	dshWiredOnce()
 	if b, _ := os.ReadFile(web); string(b) != mine {
-		t.Fatalf("a list without magpie's route:\n%s", b)
+		t.Fatalf("a list without chongyun's route:\n%s", b)
 	}
 }
 
@@ -377,7 +377,7 @@ func TestDshRouteAgainLeavesTheRouteWithNoCatalog(t *testing.T) {
 	}
 	stale := "# Your patch layer for this dsh profile.\n" +
 		dshRouteFixture("deepseek/pro") +
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"
 	web := filepath.Join(home, ".dsh", "profiles", "web", "cordis.patch.yml")
 	os.MkdirAll(filepath.Dir(web), 0o755)
 	os.WriteFile(web, []byte(stale), 0o644)
@@ -407,12 +407,12 @@ func TestDshRouteAgainSettlesOnAFlowList(t *testing.T) {
 	home, dir, web := dshRouteHome(t)
 	dshKeyFixture(dir)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile\n# a top-level YAML array\n"+
-		"[ { id: llm-pi-ai, name: \"@deepseek-ai/dsh-llm-pi-ai\", config: { providers: { magpie: { displayName: Magpie, apiKeyEnv: "+
+		"[ { id: llm-pi-ai, name: \"@deepseek-ai/dsh-llm-pi-ai\", config: { providers: { chongyun: { displayName: Chongyun, apiKeyEnv: "+
 		dshKeyRef+", api: openai-completions, baseURL: "+gatewayV1()+
-		", models: [ { id: deepseek/pro, name: pro }, { id: deepseek/flash, name: flash } ] } } } }, { id: agent-default-model, config: { provider: magpie, model: deepseek/flash } } ]\n"), 0o644)
+		", models: [ { id: deepseek/pro, name: pro }, { id: deepseek/flash, name: flash } ] } } } }, { id: agent-default-model, config: { provider: chongyun, model: deepseek/flash } } ]\n"), 0o644)
 	a := dsh(home)
 	if d := a.Check(); d != "" {
-		t.Fatalf("a route magpie writes, kept in flow style: %s", d)
+		t.Fatalf("a route chongyun writes, kept in flow style: %s", d)
 	}
 	dshWiredOnce()
 	first, _ := os.ReadFile(web)
@@ -447,7 +447,7 @@ func TestDshFillNewProfilesLeavesABareProfileWithNoCatalog(t *testing.T) {
 	}
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		dshRouteFixture("deepseek/pro")+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/pro\n"), 0o644)
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/pro\n"), 0o644)
 	bare := "# A new profile.\n[]\n"
 	os.WriteFile(desktop, []byte(bare), 0o644)
 	if err := dshSync(dir, gateway.URL()); err != nil {
@@ -465,13 +465,13 @@ func TestDshFillNewProfilesFillsABareProfile(t *testing.T) {
 	os.MkdirAll(filepath.Dir(desktop), 0o755)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		dshRouteFixture("deepseek/pro", "deepseek/flash")+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	os.WriteFile(desktop, []byte("# A new profile.\n[]\n"), 0o644)
 	if err := dshSync(dir, gateway.URL()); err != nil {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(desktop)
-	for _, want := range []string{"id: llm-pi-ai", "displayName: Magpie", "      magpie:", "provider: magpie", "id: deepseek/pro"} {
+	for _, want := range []string{"id: llm-pi-ai", "displayName: Chongyun", "      chongyun:", "provider: chongyun", "id: deepseek/pro"} {
 		if !strings.Contains(string(b), want) {
 			t.Fatalf("a new profile not filled with %q:\n%s", want, b)
 		}
@@ -523,8 +523,8 @@ func TestDshRouteKeepsTheAPIPickedInDsh(t *testing.T) {
 	route := func(api, base string) string {
 		return "# Your patch layer for this dsh profile.\n" +
 			"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n" +
-			"      magpie:\n        displayName: Magpie\n        apiKeyEnv: " + dshKeyRef + "\n        api: " + api + "\n        baseURL: " + base + "\n        models:\n          - id: deepseek/pro\n" +
-			"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/pro\n"
+			"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: " + dshKeyRef + "\n        api: " + api + "\n        baseURL: " + base + "\n        models:\n          - id: deepseek/pro\n" +
+			"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/pro\n"
 	}
 	a := dsh(home)
 	for _, c := range []struct{ api, base, want, wantBase string }{
@@ -569,7 +569,7 @@ func TestDshStrippedRouteIsWrittenBackQuietly(t *testing.T) {
 	stripped := "# Your patch layer for this dsh profile.\n" +
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n" +
 		"      mine:\n        displayName: Mine\n        apiKeyEnv: MINE_API_KEY\n        api: openai-completions\n        baseURL: https://mine.example/v1\n        models:\n          - id: m1\n" +
-		"- id: agent-default-model # magpie\n  config:\n    provider: magpie\n    model: deepseek/flash\n"
+		"- id: agent-default-model # chongyun\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"
 	os.WriteFile(web, []byte(stripped), 0o644)
 	read := func() string { b, _ := os.ReadFile(web); return string(b) }
 	a := dsh(home)
@@ -581,7 +581,7 @@ func TestDshStrippedRouteIsWrittenBackQuietly(t *testing.T) {
 	}
 	dshWiredOnce()
 	s := read()
-	for _, want := range []string{"      mine:\n", "      magpie:\n", "apiKeyEnv: " + dshKeyRef, "baseURL: " + gatewayV1(), "- id: deepseek/flash", "provider: magpie\n    model: deepseek/flash"} {
+	for _, want := range []string{"      mine:\n", "      chongyun:\n", "apiKeyEnv: " + dshKeyRef, "baseURL: " + gatewayV1(), "- id: deepseek/flash", "provider: chongyun\n    model: deepseek/flash"} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q after the write-back:\n%s", want, s)
 		}
@@ -608,7 +608,7 @@ func TestDshStrippedRouteWithoutAMagpieStartIsLeftAlone(t *testing.T) {
 	os.WriteFile(web, []byte(mine), 0o644)
 	dshWiredOnce()
 	if b, _ := os.ReadFile(web); string(b) != mine {
-		t.Fatalf("a profile taken off magpie was written into:\n%s", b)
+		t.Fatalf("a profile taken off chongyun was written into:\n%s", b)
 	}
 }
 
@@ -626,7 +626,7 @@ func TestDshCheckSaysForAStrippedRouteWithNoCatalog(t *testing.T) {
 	web := filepath.Join(dir, "profiles", "web", "cordis.patch.yml")
 	os.MkdirAll(filepath.Dir(web), 0o755)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
-		"- id: agent-default-model # magpie\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model # chongyun\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	a := dsh(home)
 	if d := a.Check(); d == "" {
 		t.Fatal("a route that cannot be written back is not met with silence")
@@ -640,8 +640,8 @@ func TestDshServingRoundLeavesTheOldWiringToDshMove(t *testing.T) {
 	home, _, web := dshRouteHome(t)
 	_ = home
 	old := "# Your patch layer for this dsh profile.\n" +
-		"- id: llm-deepseek # magpie\n  config:\n    apiKeyEnv: MAGPIE_API_KEY\n    baseURL: \"" + gatewayV1() + "\"\n    thinking: enabled\n" +
-		"- id: agent-default-model # magpie\n  config:\n    provider: deepseek-official\n    model: \"deepseek/pro\"\n"
+		"- id: llm-deepseek # chongyun\n  config:\n    apiKeyEnv: MAGPIE_API_KEY\n    baseURL: \"" + gatewayV1() + "\"\n    thinking: enabled\n" +
+		"- id: agent-default-model # chongyun\n  config:\n    provider: deepseek-official\n    model: \"deepseek/pro\"\n"
 	os.WriteFile(web, []byte(old), 0o644)
 
 	dshWiredOnce()
@@ -655,8 +655,8 @@ func TestDshServingRoundLeavesTheOldWiringToDshMove(t *testing.T) {
 // dshKeyFixture puts the key where magpie puts it for dsh: .env, which the
 // product CLI loads, and dsh's own key store, which the desktop app reads.
 func dshKeyFixture(dir string) {
-	os.WriteFile(filepath.Join(dir, ".env"), []byte(dshKeyRef+"=magpie\n"), 0o600)
-	os.WriteFile(filepath.Join(dir, ".credentials.yaml"), []byte("version: 1\nrefs:\n  "+dshKeyRef+": magpie\n"), 0o600)
+	os.WriteFile(filepath.Join(dir, ".env"), []byte(dshKeyRef+"=chongyun\n"), 0o600)
+	os.WriteFile(filepath.Join(dir, ".credentials.yaml"), []byte("version: 1\nrefs:\n  "+dshKeyRef+": chongyun\n"), 0o600)
 }
 
 // the user's own provider, as a profile's llm-pi-ai entry holds one
@@ -673,7 +673,7 @@ func TestDshHomeLayerWithoutPiRowGainsNone(t *testing.T) {
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+dshMineRow), 0o644)
 	hp := filepath.Join(dir, "cordis.patch.yml")
 	before := "# shared by every profile\n" +
-		"- id: agent-default-model # magpie\n  config:\n    provider: magpie\n    model: deepseek/flash\n"
+		"- id: agent-default-model # chongyun\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"
 	os.WriteFile(hp, []byte(before), 0o644)
 
 	dshWiredOnce()
@@ -694,7 +694,7 @@ func TestDshHomeLayerWithPiRowGetsItsRouteBack(t *testing.T) {
 	os.WriteFile(hp, []byte("# shared by every profile\n"+
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n"+
 		"      mine:\n        displayName: Mine\n        apiKeyEnv: MINE_API_KEY\n        api: openai-completions\n        baseURL: https://mine.example/v1\n        models:\n          - id: m1\n"+
-		"- id: agent-default-model # magpie\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model # chongyun\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 
 	dshWiredOnce()
 
@@ -703,7 +703,7 @@ func TestDshHomeLayerWithPiRowGetsItsRouteBack(t *testing.T) {
 	if strings.Count(s, "- id: llm-pi-ai") != 1 {
 		t.Fatalf("the home layer got a second entry:\n%s", s)
 	}
-	if !strings.Contains(s, "\n      magpie:\n") {
+	if !strings.Contains(s, "\n      chongyun:\n") {
 		t.Fatalf("the home layer's route was not written back:\n%s", s)
 	}
 	if !strings.Contains(s, "\n      mine:\n") {
@@ -733,15 +733,15 @@ func TestDshCheckSaysWhenNoCatalogAndAProfileHasNoRoute(t *testing.T) {
 	// web: magpie's route in it, and the start on magpie's
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n"+
-		"      magpie:\n        displayName: Magpie\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: http://127.0.0.1:3425/v1\n        models:\n          - id: deepseek/flash\n"+
-		"- id: agent-default-model # magpie\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: http://127.0.0.1:3425/v1\n        models:\n          - id: deepseek/flash\n"+
+		"- id: agent-default-model # chongyun\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	// cli: no route, and a start of the user's own
 	os.WriteFile(cli, []byte("# Your patch layer for this dsh profile.\n"+
 		"- id: agent-default-model\n  config:\n    provider: deepseek-official\n    model: deepseek-v4-flash\n"), 0o644)
 
 	d := dsh(home).Check()
-	if !strings.Contains(d, "cli profile") || !strings.Contains(d, "none of magpie's models") {
-		t.Fatalf("a profile without magpie's route and without magpie's start is not said: %q", d)
+	if !strings.Contains(d, "cli profile") || !strings.Contains(d, "none of chongyun's models") {
+		t.Fatalf("a profile without chongyun's route and without chongyun's start is not said: %q", d)
 	}
 }
 
@@ -766,16 +766,16 @@ func TestDshCheckSaysWhenNoCatalogAndAProfilesStartIsMagpies(t *testing.T) {
 	// web: magpie's route in it, and the start on magpie's
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n"+
-		"      magpie:\n        displayName: Magpie\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: http://127.0.0.1:3425/v1\n        models:\n          - id: deepseek/flash\n"+
-		"- id: agent-default-model # magpie\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: http://127.0.0.1:3425/v1\n        models:\n          - id: deepseek/flash\n"+
+		"- id: agent-default-model # chongyun\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	// cli: no route of its own, and its start names one of magpie's — the shape
 	// dsh's own save leaves, which a round would write back were there a catalog
 	os.WriteFile(cli, []byte("# Your patch layer for this dsh profile.\n"+
-		"- id: agent-default-model # magpie\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model # chongyun\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 
 	d := dsh(home).Check()
-	if !strings.Contains(d, "cli profile") || !strings.Contains(d, "none of magpie's models") {
-		t.Fatalf("with no catalog, a stripped profile of magpie's own start is not said: %q", d)
+	if !strings.Contains(d, "cli profile") || !strings.Contains(d, "none of chongyun's models") {
+		t.Fatalf("with no catalog, a stripped profile of chongyun's own start is not said: %q", d)
 	}
 }
 

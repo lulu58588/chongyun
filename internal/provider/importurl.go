@@ -10,8 +10,8 @@ import (
 
 // Import links let a vendor or a relay hand its users a ready-made provider:
 //
-//	magpie://import?preset=deepseek&key=sk-…
-//	magpie://import?name=My%20Relay&chat=https://relay.example/v1&key=sk-…
+//	chongyun://import?preset=deepseek&key=sk-…
+//	chongyun://import?name=My%20Relay&chat=https://relay.example/v1&key=sk-…
 //
 // Parameters (every value URL-encoded):
 //
@@ -36,20 +36,20 @@ import (
 // and the user says yes.
 
 // Scheme is the URL scheme magpie registers with the system.
-const Scheme = "magpie"
+const Scheme = "chongyun"
 
 // ParseImport reads an import link into the provider it describes.
 func ParseImport(link string) (Provider, error) {
 	u, err := url.Parse(strings.TrimSpace(link))
 	if err != nil || !strings.EqualFold(u.Scheme, Scheme) {
-		return Provider{}, errors.New("not a magpie:// link")
+		return Provider{}, errors.New("not a chongyun:// link")
 	}
 	action := u.Host
-	if action == "" { // magpie:import?… or magpie:///import?…
+	if action == "" { // chongyun:import?… or chongyun:///import?…
 		action = strings.Trim(u.Opaque+u.Path, "/")
 	}
 	if action != "import" {
-		return Provider{}, errorf("magpie://%s is not something magpie knows; links start magpie://import?", action)
+		return Provider{}, errorf("chongyun://%s is not something chongyun knows; links start chongyun://import?", action)
 	}
 	q := u.Query()
 	get := func(k string) string { return strings.TrimSpace(q.Get(k)) }
@@ -62,7 +62,7 @@ func ParseImport(link string) (Provider, error) {
 		if p.IsVertex() {
 			// asked at the user's own Google Cloud project, with their
 			// own credentials: nothing a link could hand over
-			return Provider{}, errorf("%s is added with your own Google Cloud project, not from a link: magpie provider add %s project=<id>, or Add in the app", p.Name, VertexPreset)
+			return Provider{}, errorf("%s is added with your own Google Cloud project, not from a link: chongyun provider add %s project=<id>, or Add in the app", p.Name, VertexPreset)
 		}
 		if r := get("region"); r != "" {
 			found := false
@@ -121,8 +121,8 @@ func ParseImport(link string) (Provider, error) {
 	if p.ID == "" {
 		return Provider{}, errors.New("the link's name has no letters or digits to make an id from")
 	}
-	if p.ID == "magpie" {
-		return Provider{}, errors.New(`"magpie" is what agents call the gateway itself; the link needs another id`)
+	if p.ID == "chongyun" {
+		return Provider{}, errors.New(`"chongyun" is what agents call the gateway itself; the link needs another id`)
 	}
 	if subscriptionID(p.ID) {
 		// named as a subscription is (claude, kiro): a provider of its own

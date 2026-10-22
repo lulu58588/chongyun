@@ -10,8 +10,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // openPencilUser is settings.json as OpenPencil saves it
@@ -113,12 +113,12 @@ func openPencilRead(t *testing.T, path string) (magpie openPencilEntryDoc, other
 			continue
 		}
 		if found {
-			t.Fatalf("two entries of magpie's: %s", b)
+			t.Fatalf("two entries of chongyun's: %s", b)
 		}
 		found, magpie = true, e
 	}
 	if !found {
-		t.Fatalf("no entry of magpie's: %s", b)
+		t.Fatalf("no entry of chongyun's: %s", b)
 	}
 	if !slices.Contains([]string{"anthropic", "openai", "openai-compat", "openai_compat"}, *magpie.Kind) {
 		t.Errorf("kind %q", *magpie.Kind)
@@ -134,7 +134,7 @@ func openPencilRead(t *testing.T, path string) (magpie openPencilEntryDoc, other
 
 // OpenPencil (ZSeven-W/openpencil) lists builtin agents of the user's own in
 // its chat's model picker, from settings.json in the platform's config
-// folder. magpie adds itself as the entry "magpie" on the gateway's Chat
+// folder. magpie adds itself as the entry "chongyun" on the gateway's Chat
 // Completions, keeps the user's entries and settings as they were and the
 // name and on/off they give its entry, writes nothing when nothing changed,
 // and off takes only its own entry out.
@@ -170,7 +170,7 @@ func TestOpenPencilProvider(t *testing.T) {
 
 	gw := gateway.URL()
 	e, others := openPencilRead(t, path)
-	if *e.Kind != "openai-compat" || *e.BaseURL != gw+"/v1" || e.APIKey != agentKeyAt("openpencil", gw) || *e.Preset != "custom" || !*e.Enabled || *e.DisplayName != "magpie" {
+	if *e.Kind != "openai-compat" || *e.BaseURL != gw+"/v1" || e.APIKey != agentKeyAt("openpencil", gw) || *e.Preset != "custom" || !*e.Enabled || *e.DisplayName != "chongyun" {
 		t.Errorf("entry: %+v", e)
 	}
 	var want []string
@@ -219,7 +219,7 @@ func TestOpenPencilProvider(t *testing.T) {
 	json.Unmarshal(b, &doc)
 	for _, x := range doc["builtin_agents"].([]any) {
 		if m := x.(map[string]any); m["id"] == magpieID {
-			m["display_name"], m["enabled"] = "My magpie", false
+			m["display_name"], m["enabled"] = "My chongyun", false
 			m["models"] = slices.DeleteFunc(m["models"].([]any), func(v any) bool { return v == want[1] })
 		}
 	}
@@ -230,7 +230,7 @@ func TestOpenPencilProvider(t *testing.T) {
 		t.Fatal(err)
 	}
 	e, _ = openPencilRead(t, path)
-	if *e.DisplayName != "My magpie" || *e.Enabled {
+	if *e.DisplayName != "My chongyun" || *e.Enabled {
 		t.Errorf("the user's name and off not kept: %+v", e)
 	}
 	if !slices.Equal(e.Models, want) {
@@ -299,7 +299,7 @@ func TestOpenPencilMakesItsFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(a.Path); !os.IsNotExist(err) {
-		t.Errorf("magpie's own file left behind: %v", err)
+		t.Errorf("chongyun's own file left behind: %v", err)
 	}
 }
 

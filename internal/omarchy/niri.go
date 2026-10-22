@@ -29,7 +29,7 @@ func Niri() bool {
 type NiriPanel struct {
 	mu    sync.Mutex
 	iconX int  // where the icon was clicked across its bar
-	known bool // whether iconX is known: not when `magpie panel` opened it
+	known bool // whether iconX is known: not when `chongyun panel` opened it
 }
 
 // Opening says the panel is about to open, from a click at x across the

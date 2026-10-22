@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yetone/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/agentenv"
 )
 
 // homeVar is the variable Go's os.UserHomeDir reads the home folder from.
@@ -39,7 +39,7 @@ func Home() (string, error) {
 	v := homeVar()
 	switch h := os.Getenv(v); {
 	case h == "":
-		return "", fmt.Errorf("%s is not set: magpie needs the home folder to find its own files and the agents'", v)
+		return "", fmt.Errorf("%s is not set: chongyun needs the home folder to find its own files and the agents'", v)
 	case !rooted(h):
 		return "", fmt.Errorf("%s is %q, not an absolute path", v, h)
 	default:

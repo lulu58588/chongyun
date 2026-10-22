@@ -29,9 +29,9 @@ import (
 	"time"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 const (
@@ -379,13 +379,13 @@ func checkpointError(model string, cp checkpointWriter) string {
 		what = "key"
 	}
 	why, fix := checkpointGone(model, what, cp)
-	msg := fmt.Sprintf("This conversation was compacted natively by %s: the compaction is sealed (encrypted) to that %s, and no other key or account can read it. The request for %s can't go to it now: %s. magpie doesn't send the compaction to another, which would refuse it, nor drop it or summarise it in its place, which would lose the conversation's earlier context. To go on with this conversation, %s; or start a new conversation.",
+	msg := fmt.Sprintf("This conversation was compacted natively by %s: the compaction is sealed (encrypted) to that %s, and no other key or account can read it. The request for %s can't go to it now: %s. chongyun doesn't send the compaction to another, which would refuse it, nor drop it or summarise it in its place, which would lose the conversation's earlier context. To go on with this conversation, %s; or start a new conversation.",
 		cp.Who, what, model, why, fix)
 	if p, err := provider.Find(cp.Provider); err == nil {
 		if p.NativeCompaction {
-			msg += fmt.Sprintf(" Native compaction is on for %s, so each conversation it compacts is held to the %s that compacted it; turned off (the provider's Compaction row), magpie summarises instead, which any of them can read.", p.ID, what)
+			msg += fmt.Sprintf(" Native compaction is on for %s, so each conversation it compacts is held to the %s that compacted it; turned off (the provider's Compaction row), chongyun summarises instead, which any of them can read.", p.ID, what)
 		} else {
-			msg += fmt.Sprintf(" Native compaction is off for %s now, so a compaction magpie routes among its %ss is magpie's summary, which any of them can read.", p.ID, what)
+			msg += fmt.Sprintf(" Native compaction is off for %s now, so a compaction chongyun routes among its %ss is chongyun's summary, which any of them can read.", p.ID, what)
 		}
 	}
 	return msg
@@ -399,7 +399,7 @@ func checkpointError(model string, cp checkpointWriter) string {
 func checkpointGone(model, what string, cp checkpointWriter) (why, fix string) {
 	p, err := provider.Find(cp.Provider)
 	if err != nil {
-		return fmt.Sprintf("the provider %s is no longer in magpie", cp.Provider),
+		return fmt.Sprintf("the provider %s is no longer in chongyun", cp.Provider),
 			fmt.Sprintf("add %s again with that %s", cp.Provider, what)
 	}
 	served := cp.Model
@@ -435,17 +435,17 @@ func checkpointGone(model, what string, cp checkpointWriter) (why, fix string) {
 		}
 		switch {
 		case l.Lapsed != "":
-			return "its sign-in has lapsed", fmt.Sprintf("sign in to %s again in magpie", l.User)
+			return "its sign-in has lapsed", fmt.Sprintf("sign in to %s again in chongyun", l.User)
 		case l.Paused:
-			return "it is paused, passed over while magpie's other accounts are on", fmt.Sprintf("turn %s on again: the others can stay on beside it, and only this conversation is held to it", l.User)
+			return "it is paused, passed over while chongyun's other accounts are on", fmt.Sprintf("turn %s on again: the others can stay on beside it, and only this conversation is held to it", l.User)
 		case !l.On:
-			return "it is switched off in magpie", fmt.Sprintf("switch %s on again: the others can stay on beside it, and only this conversation is held to it", l.User)
+			return "it is switched off in chongyun", fmt.Sprintf("switch %s on again: the others can stay on beside it, and only this conversation is held to it", l.User)
 		case !p.AccountServes(l.User, served):
 			return fmt.Sprintf("it is set not to serve %s (Names & levels)", served), fmt.Sprintf("let %s serve %s again", l.User, served)
 		}
 		return checkpointNotRouted(model, served)
 	}
-	return fmt.Sprintf("%s is no longer signed in to magpie", user), fmt.Sprintf("sign in to %s again in magpie", user)
+	return fmt.Sprintf("%s is no longer signed in to chongyun", user), fmt.Sprintf("sign in to %s again in chongyun", user)
 }
 
 // checkpointNotRouted is checkpointGone for a writer that is on and may
@@ -457,7 +457,7 @@ func checkpointNotRouted(model, served string) (why, fix string) {
 // carrierError is what Codex is told when its compaction_trigger, asked
 // of a provider set to compact natively, has nowhere left that carries it.
 func carrierError(model string) string {
-	return fmt.Sprintf("Codex asked %s for its own compaction (native compaction), and none of the keys or accounts that serve %s now can be asked it on the Responses API. magpie doesn't turn it into a summary of its own unasked. Turn native compaction off for the provider to have magpie summarise the conversation instead.", model, model)
+	return fmt.Sprintf("Codex asked %s for its own compaction (native compaction), and none of the keys or accounts that serve %s now can be asked it on the Responses API. chongyun doesn't turn it into a summary of its own unasked. Turn native compaction off for the provider to have chongyun summarise the conversation instead.", model, model)
 }
 
 // compactionWatch reads, on the way past, the compaction a native

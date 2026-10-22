@@ -39,7 +39,7 @@ func TestTrayUsagesMigrate(t *testing.T) {
 		t.Fatalf("several: %q %q\n%s", s.TrayUsages, s.TrayUsage, b)
 	}
 	if !strings.Contains(string(b), `"trayUsage": "codex|x@y.z"`) {
-		t.Fatalf("first not kept for an older magpie:\n%s", b)
+		t.Fatalf("first not kept for an older chongyun:\n%s", b)
 	}
 	// all turned off, though the page still sends the first it was drawn with
 	s.TrayUsages = []string{}

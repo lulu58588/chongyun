@@ -97,12 +97,12 @@ func TestWebGuardBookmark(t *testing.T) {
 
 	// the link's cookie, and the form's below, are Chrome's high priority
 	link := do(httptest.NewRequest("GET", "/?view=usage&k="+key, nil))
-	if sc := link.Header().Get("Set-Cookie"); link.Code != http.StatusSeeOther || !strings.HasSuffix(sc, "; Priority=High") || !strings.HasPrefix(sc, "magpie_web_3430="+key+";") {
+	if sc := link.Header().Get("Set-Cookie"); link.Code != http.StatusSeeOther || !strings.HasSuffix(sc, "; Priority=High") || !strings.HasPrefix(sc, "chongyun_web_3430="+key+";") {
 		t.Fatalf("link: %d %q", link.Code, sc)
 	}
 
 	// the reporter's case: the stale value first, the right one after
-	if c := do(page("magpie_web_3430=0123456789abcdef-old; magpie_web_3430=" + key)).Code; c != http.StatusTeapot {
+	if c := do(page("chongyun_web_3430=0123456789abcdef-old; chongyun_web_3430=" + key)).Code; c != http.StatusTeapot {
 		t.Fatalf("stale cookie first: %d", c)
 	}
 
@@ -113,7 +113,7 @@ func TestWebGuardBookmark(t *testing.T) {
 		t.Fatalf("no cookie: %d %s", rec.Code, body)
 	}
 	// a cookie with another key: says so
-	if body := do(page("magpie_web_3430=0123456789abcdef-old")).Body.String(); !strings.Contains(body, "holds a key that isn") {
+	if body := do(page("chongyun_web_3430=0123456789abcdef-old")).Body.String(); !strings.Contains(body, "holds a key that isn") {
 		t.Fatalf("other key: %s", body)
 	}
 	// the page's own fetches get a plain 401 with the reason

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // TestClaudeModelCapabilities: Claude Code on a gateway (Claude Desktop's
@@ -97,7 +97,7 @@ func TestClaudeModelCapabilities(t *testing.T) {
 
 	// Claude Desktop on magpie: its ids for magpie's models, as Claude Code
 	// gets them from its Code tab
-	if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
+	if err := claudeDesktop(home).Field("provider").Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	var deep provider.Entry
@@ -120,12 +120,12 @@ func TestClaudeModelCapabilities(t *testing.T) {
 	// off magpie, and back to Claude Code as installed: magpie's value goes
 	set("model", "claude-opus-4-8")
 	if caps() != "" {
-		t.Fatalf("Claude's own model kept magpie's capabilities: %q", caps())
+		t.Fatalf("Claude's own model kept chongyun's capabilities: %q", caps())
 	}
 	set("model", "v/mid")
 	set("model", "")
 	if caps() != "" {
-		t.Fatalf("reset kept magpie's capabilities: %q", caps())
+		t.Fatalf("reset kept chongyun's capabilities: %q", caps())
 	}
 
 	// the user's own value is theirs, through a switch and back

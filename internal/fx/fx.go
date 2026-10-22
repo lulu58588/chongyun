@@ -18,7 +18,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // rateURL is a free, no-key endpoint that gives every currency's rate
@@ -183,7 +183,7 @@ func fetchLive(ctx context.Context) (Rate, error) {
 	if err != nil {
 		return Rate{}, err
 	}
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return Rate{}, err

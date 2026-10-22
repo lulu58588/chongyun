@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/library"
 )
 
 // A profile's details are its fields by agent, in the order magpie lists the
@@ -48,7 +48,7 @@ func TestDetails(t *testing.T) {
 	}
 	ci, xi := slices.Index(ids, "claude"), slices.Index(ids, "codex")
 	if ci < 0 || xi < 0 || ids[len(ids)-1] != "gone" || len(ids) != 3 {
-		t.Fatalf("groups %v, want claude and codex in magpie's order, then gone", ids)
+		t.Fatalf("groups %v, want claude and codex in chongyun's order, then gone", ids)
 	}
 	claude, codex, gone := gs[ci], gs[xi], gs[2]
 	if claude.Name != "Claude Code" || codex.Name != "Codex" || gone.Name != "gone" {

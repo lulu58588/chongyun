@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // StartPluginSignIn begins signing in to a plugin's provider (OpenCode's
@@ -89,7 +89,7 @@ func pluginCLI(id string) (agentCLI, bool) {
 // PluginCLIMissing is the name of the vendor CLI a plugin's sign-in runs
 // through and this machine lacks (Grok Build for Grok's), "" when there is
 // none to install. The command line's sign-in installs it first, as
-// StartPluginSignIn does; without it, `magpie plugin login grok` in Docker
+// StartPluginSignIn does; without it, `chongyun plugin login grok` in Docker
 // said "install Grok Build first: curl … | bash", which the image has no
 // curl to run (#2223).
 func PluginCLIMissing(id string) string {

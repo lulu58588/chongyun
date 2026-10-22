@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // resetBackend stands in for the ChatGPT backend of accounts that are out

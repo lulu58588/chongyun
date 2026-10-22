@@ -33,7 +33,7 @@ func Gateway(target string) string {
 	var pkg struct {
 		Magpie struct {
 			Hooks string `json:"hooks"`
-		} `json:"magpie"`
+		} `json:"chongyun"`
 	}
 	b, err := os.ReadFile(filepath.Join(target, "package.json"))
 	if err != nil || json.Unmarshal(b, &pkg) != nil || strings.TrimSpace(pkg.Magpie.Hooks) == "" {

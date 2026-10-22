@@ -2,8 +2,8 @@ package provider
 
 import (
 	"encoding/json"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/update"
 	"os"
 	"path/filepath"
 	"runtime"

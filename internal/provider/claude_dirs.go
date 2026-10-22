@@ -21,8 +21,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/settings"
 	"golang.org/x/text/unicode/norm"
 )
 
@@ -330,7 +330,7 @@ func claudeListed(ls []savedLogin) string {
 // claudeLogoutLapse is why the account Claude Code was signed in to can't
 // be used once Claude Code let go of it: logged out, which revokes the
 // sign-in it held, or emptied that sign-in once Anthropic refused it.
-const claudeLogoutLapse = "Claude Code is no longer signed in; sign in again in magpie"
+const claudeLogoutLapse = "Claude Code is no longer signed in; sign in again in chongyun"
 
 // legacyClaudeLogoutLapse is claudeLogoutLapse as magpie wrote it before,
 // which took every such lapse for a /logout.

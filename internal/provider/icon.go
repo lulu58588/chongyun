@@ -18,7 +18,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/iconproxy"
+	"github.com/lulu58588/magpie/internal/iconproxy"
 )
 
 // A provider's own picture lives in the icons folder beside providers.json,
@@ -54,7 +54,7 @@ func StoreIcon(data []byte) (string, error) {
 	}
 	ext := iconExt(data)
 	if ext == "" {
-		return "", errors.New("not a picture magpie can show: use PNG, JPEG, GIF, WebP, ICO or SVG")
+		return "", errors.New("not a picture chongyun can show: use PNG, JPEG, GIF, WebP, ICO or SVG")
 	}
 	sum := sha256.Sum256(data)
 	name := hex.EncodeToString(sum[:8]) + "." + ext

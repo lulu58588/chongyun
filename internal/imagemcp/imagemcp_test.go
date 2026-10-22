@@ -33,7 +33,7 @@ func (g *gw) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	g.mu.Lock()
 	g.path, g.body, g.ua = append(g.path, r.URL.Path), append(g.body, string(b)), append(g.ua, r.Header.Get("User-Agent"))
 	g.mu.Unlock()
-	if r.Header.Get("Authorization") != "Bearer magpie" {
+	if r.Header.Get("Authorization") != "Bearer chongyun" {
 		w.WriteHeader(401)
 		return
 	}
@@ -128,7 +128,7 @@ func TestGenerateSavesInTheProject(t *testing.T) {
 	if b, _ := json.Marshal(tools); !strings.Contains(string(b), `"generate_image"`) {
 		t.Fatalf("tools %s", b)
 	}
-	r := c.call("tools/call", map[string]any{"name": "generate_image", "arguments": map[string]any{"prompt": "A Magpie, on a branch!", "n": 2}})
+	r := c.call("tools/call", map[string]any{"name": "generate_image", "arguments": map[string]any{"prompt": "A Chongyun, on a branch!", "n": 2}})
 	out := text(r)
 	if r["isError"] == true || strings.Count(out, filepath.Join(project, Folder)) != 2 {
 		t.Fatalf("%v", r)
@@ -289,7 +289,7 @@ func TestVideoToolSaysEveryVideoModel(t *testing.T) {
 	if desc == "" {
 		t.Fatalf("no generate_video in %v", res)
 	}
-	for _, want := range []string{"Grok", "Seedance", "another Magpie", "model list marks video models"} {
+	for _, want := range []string{"Grok", "Seedance", "another Chongyun", "model list marks video models"} {
 		if !strings.Contains(desc, want) {
 			t.Errorf("description leaves out %q: %s", want, desc)
 		}

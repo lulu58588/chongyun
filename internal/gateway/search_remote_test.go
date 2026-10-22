@@ -10,9 +10,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A Remote magpie searches the web for the models it serves, and its list
@@ -111,7 +111,7 @@ func TestRemoteMagpieSearches(t *testing.T) {
 	hops, vendor = nil, nil
 	mu.Unlock()
 	if len(sent) != 1 || !strings.Contains(sent[0], `"web_search_20250305"`) || strings.HasPrefix(sent[0], "1") {
-		t.Fatalf("the remote magpie was sent %q", sent)
+		t.Fatalf("the remote chongyun was sent %q", sent)
 	}
 	if len(asked) != 1 || !strings.Contains(asked[0], `"web_search_20250305"`) {
 		t.Fatalf("the vendor was sent %q", asked)
@@ -126,7 +126,7 @@ func TestRemoteMagpieSearches(t *testing.T) {
 		}
 	}
 	if choice == nil {
-		t.Fatalf("the remote magpie isn't a searcher: %v", Searchers())
+		t.Fatalf("the remote chongyun isn't a searcher: %v", Searchers())
 	}
 	if choice.Small != "zhipu/glm-5.3" || slices.ContainsFunc(choice.Models, func(m catalog.Model) bool { return m.ID == "plain/m1" }) {
 		t.Fatalf("it searches with %s of %v", choice.Small, choice.Models)
@@ -149,7 +149,7 @@ func TestRemoteMagpieSearches(t *testing.T) {
 	mu.Lock()
 	defer mu.Unlock()
 	if len(hops) != 1 || !strings.HasPrefix(hops[0], "1 ") {
-		t.Fatalf("the remote magpie was sent %q", hops)
+		t.Fatalf("the remote chongyun was sent %q", hops)
 	}
 }
 

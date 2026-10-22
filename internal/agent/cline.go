@@ -46,7 +46,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // clineSlot is the provider magpie takes in Cline.
@@ -393,7 +393,7 @@ func clineModelsAt(model, v1 string) map[string]any {
 		ms[m.ID] = e
 	}
 	return map[string]any{
-		"provider": map[string]any{"name": "magpie", "baseUrl": v1, "defaultModelId": model},
+		"provider": map[string]any{"name": "崇云科技", "baseUrl": v1, "defaultModelId": model},
 		"models":   ms,
 	}
 }
@@ -450,7 +450,7 @@ func clineWrite(path, empty string, kvs ...edit.KV) error {
 
 // what cline says after a change (notice.go)
 var (
-	noticeCline1 = newNotice("Cline reads its provider as a session starts — open sessions keep the model they have; new ones use this. Reload VS Code's window for its extension; Cline's desktop app keeps the model picked in its own composer — pick magpie's there.")
-	noticeCline2 = newNotice("Cline's desktop app keeps the model and effort picked in its own composer — pick magpie's there; this sets Cline's CLI and VS Code extension.")
+	noticeCline1 = newNotice("Cline reads its provider as a session starts — open sessions keep the model they have; new ones use this. Reload VS Code's window for its extension; Cline's desktop app keeps the model picked in its own composer — pick chongyun's there.")
+	noticeCline2 = newNotice("Cline's desktop app keeps the model and effort picked in its own composer — pick chongyun's there; this sets Cline's CLI and VS Code extension.")
 	noticeCline3 = newNotice("Cline reads its provider as a session starts — open sessions keep the model they have; new ones use this. Reload VS Code's window for its extension.")
 )

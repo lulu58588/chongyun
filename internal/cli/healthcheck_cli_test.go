@@ -17,12 +17,12 @@ func TestHealthcheck(t *testing.T) {
 	t.Setenv("USERPROFILE", os.Getenv("HOME"))
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	magpie := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`{"name":"magpie","version":"dev"}`))
+		w.Write([]byte(`{"name":"chongyun","version":"dev"}`))
 	}))
 	defer magpie.Close()
 	t.Setenv("MAGPIE_ADDR", strings.TrimPrefix(magpie.URL, "http://"))
 	if err := run([]string{"healthcheck"}); err != nil {
-		t.Fatal("magpie answering:", err)
+		t.Fatal("chongyun answering:", err)
 	}
 
 	other := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	appsettings "github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	appsettings "github.com/lulu58588/magpie/internal/settings"
 )
 
 func TestRuntimeUnavailableJSONKeepsMessageAndAction(t *testing.T) {
@@ -85,7 +85,7 @@ func TestAsideOfflineDisconnectAPIRequiresCurrentPreview(t *testing.T) {
 	if stage.Code != 200 {
 		t.Fatalf("stage %s", stage.Body)
 	}
-	if selection, _ := edit.GetJSON(settings, "defaultModel.provider"); selection != "magpie" {
+	if selection, _ := edit.GetJSON(settings, "defaultModel.provider"); selection != "chongyun" {
 		t.Fatal("stage did not normalize the same catalog ref as set")
 	}
 	a, err := agent.Find("aside")

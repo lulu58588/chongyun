@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // codexThreads makes Codex's state database with a thread on each of the
@@ -43,7 +43,7 @@ func TestCodexWritesTablesThreadsName(t *testing.T) {
 		inline := "model_providers.inl = { name = \"inl\", base_url = \"https://inl.example/v1\" }\n"
 		home, read := codexHome(t, auth, "model = \"gpt-5.4\"\n"+inline+"\n"+mine)
 		dir := filepath.Join(home, ".codex")
-		codexThreads(t, dir, "custom", "openai", "magpie", "mine", "ollama", "cc-switch-2", "custom", "inl")
+		codexThreads(t, dir, "custom", "openai", "chongyun", "mine", "ollama", "cc-switch-2", "custom", "inl")
 		path := filepath.Join(dir, "config.toml")
 		table := func(id string) map[string]string {
 			tb, err := edit.GetTOMLTable(path, "model_providers."+id)
@@ -59,7 +59,7 @@ func TestCodexWritesTablesThreadsName(t *testing.T) {
 		v1, key := here(home).v1(), here(home).gwKey()
 		for _, id := range []string{"custom", "cc-switch-2"} {
 			if c := table(id); c["base_url"] != v1 || c["wire_api"] != "responses" || c["experimental_bearer_token"] != key {
-				t.Fatalf("auth %q: %s not written through magpie:\n%s", auth, id, read())
+				t.Fatalf("auth %q: %s not written through chongyun:\n%s", auth, id, read())
 			}
 		}
 		for _, id := range []string{"openai", "ollama"} {

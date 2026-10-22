@@ -15,8 +15,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // fakeCodex signs a ChatGPT account in to Codex, its models listed by a

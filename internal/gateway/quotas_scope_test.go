@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #2216 (Kenoia): a key held to models or accounts on a shared magpie was
@@ -114,7 +114,7 @@ func TestHeldKeyToldItsOwnQuotas(t *testing.T) {
 				}
 			case "Nothing":
 				// told no card here: the other magpie shows its own limit,
-				// not "nothing read on that magpie yet"
+				// not "nothing read on that chongyun yet"
 				if path == provider.RemoteCardsPath {
 					if c != http.StatusForbidden || !strings.Contains(b, provider.KeyHeldCode) {
 						t.Errorf("%s %s: %d %s", name, path, c, b)
@@ -222,7 +222,7 @@ func seedKeptBalances(t *testing.T) {
 // #2216 from the other side: a magpie with that magpie as its provider,
 // through a key let see its quotas, shows the cards of what the key may
 // use beside the key's own; a key told none shows its own card alone, not
-// "nothing read on that magpie yet", which a refresh wouldn't change.
+// "nothing read on that chongyun yet", which a refresh wouldn't change.
 func TestRemoteMagpieShowsHeldKeyItsQuotas(t *testing.T) {
 	fresh(t)
 	t.Setenv("MAGPIE_ADDR", "")

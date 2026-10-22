@@ -14,9 +14,9 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // POST /v1/magpie/usage/requests (#1874): a client that calls its vendor
@@ -103,7 +103,7 @@ func (s *Server) usageIngest(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if who.KeyID == "" {
-			writeError(w, provider.Chat, http.StatusForbidden, "a browser page may report usage only with an enabled magpie gateway key (Authorization: Bearer <key>): a page has no say in what this computer's usage counts")
+			writeError(w, provider.Chat, http.StatusForbidden, "a browser page may report usage only with an enabled chongyun gateway key (Authorization: Bearer <key>): a page has no say in what this computer's usage counts")
 			return
 		}
 	}

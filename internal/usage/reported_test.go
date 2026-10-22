@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func reportedHome(t *testing.T) {
@@ -80,7 +80,7 @@ func TestIngestReported(t *testing.T) {
 		byRID[r.RequestID+"/"+r.Source] = r
 	}
 	if r := byRID["r-1/reported"]; !r.Priced || math.Abs(r.Cost-priced) > 1e-9 || SourceOf(r) != SourceReported {
-		t.Fatalf("priced at magpie's prices: %+v", r)
+		t.Fatalf("priced at chongyun's prices: %+v", r)
 	}
 	if r := byRID["r-2/reported"]; !r.Priced || r.Cost != own || r.OwnCost == nil || *r.OwnCost != own {
 		t.Fatalf("its own cost: %+v", r)

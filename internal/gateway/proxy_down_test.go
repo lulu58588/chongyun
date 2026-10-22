@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // TestProxyDownDoesNotRest (#381): a member whose proxy isn't listening

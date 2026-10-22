@@ -7,7 +7,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // listsSandbox is a HOME of its own with one provider of two models.
@@ -56,7 +56,7 @@ func TestEveryPickerOfMagpiesModelsCanBeNarrowed(t *testing.T) {
 		}
 	}
 	if len(bare) > 0 {
-		t.Errorf("magpie's models are put in these agents' pickers with no way to pick which: %v", bare)
+		t.Errorf("chongyun's models are put in these agents' pickers with no way to pick which: %v", bare)
 	}
 	for _, id := range []string{"zcode", "pencil", "openpencil", "t3code", "workbuddy", "workbuddy-ai", copilotJBID, CursorLocalID} {
 		if !slices.Contains(menus, id) {
@@ -75,9 +75,9 @@ func TestZCodeListsOnlyThePicked(t *testing.T) {
 	path, rules := filepath.Join(dir, "config.json"), filepath.Join(dir, "provider_config.json")
 	os.MkdirAll(dir, 0o755)
 	os.WriteFile(path, []byte(`{"provider":{"builtin:bigmodel":{"name":"Bigmodel","kind":"anthropic","enabled":true},"mine":{"name":"Mine","kind":"openai","models":{"m1":{"name":"M1"}}}},"theme":"dark"}`), 0o644)
-	os.WriteFile(rules, []byte(`{"schemaVersion":1,"config":{"providerConfigRules":{"providerRules":[{"providerId":"mine","enabled":true,"config":{"personalModelIds":["m1"]}}]},"modelConfigRules":{"providerModelRules":[{"providerId":"mine","modelId":"m1","config":{"properties":{"contextWindow":1000}}}],"manualProviderModelRules":[{"providerId":"magpie","modelId":"deepseek/pro","config":{"enabled":true,"properties":{"contextWindow":4242}}}]}},"ui":{"lang":"zh"}}`), 0o600)
+	os.WriteFile(rules, []byte(`{"schemaVersion":1,"config":{"providerConfigRules":{"providerRules":[{"providerId":"mine","enabled":true,"config":{"personalModelIds":["m1"]}}]},"modelConfigRules":{"providerModelRules":[{"providerId":"mine","modelId":"m1","config":{"properties":{"contextWindow":1000}}}],"manualProviderModelRules":[{"providerId":"chongyun","modelId":"deepseek/pro","config":{"enabled":true,"properties":{"contextWindow":4242}}}]}},"ui":{"lang":"zh"}}`), 0o600)
 	a := zcode(home)
-	if err := a.Field("provider").Set("magpie"); err != nil {
+	if err := a.Field("provider").Set("chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	type configDoc struct {
@@ -122,7 +122,7 @@ func TestZCodeListsOnlyThePicked(t *testing.T) {
 		return d
 	}
 	listed := func() (config, personal, ruled []string) {
-		for id := range readConfig().Provider["magpie"]["models"].(map[string]any) {
+		for id := range readConfig().Provider["chongyun"]["models"].(map[string]any) {
 			config = append(config, id)
 		}
 		d := readRules()

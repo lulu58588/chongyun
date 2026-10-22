@@ -10,8 +10,8 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // jcodeConfig is a config.toml as jcode 0.94.0 writes it after `jcode
@@ -88,7 +88,7 @@ func jcodeTable(m map[string]any, keys ...string) map[string]any {
 func jcodeModelsOf(t *testing.T, m map[string]any) map[string]map[string]any {
 	t.Helper()
 	out := map[string]map[string]any{}
-	list, _ := jcodeTable(m, "providers", "magpie")["models"].([]any)
+	list, _ := jcodeTable(m, "providers", "chongyun")["models"].([]any)
 	for _, x := range list {
 		e := x.(map[string]any)
 		out[e["id"].(string)] = e
@@ -116,14 +116,14 @@ func TestJcode(t *testing.T) {
 		ours = ours || o.Value == "magpie/kimi/k2"
 	}
 	if !own || !ours {
-		t.Fatalf("options: own %v magpie %v", own, ours)
+		t.Fatalf("options: own %v chongyun %v", own, ours)
 	}
 
 	if err := a.Pick("model", "magpie/kimi/k2"); err != nil {
 		t.Fatal(err)
 	}
 	m := jcodeParse(t, path)
-	if p := jcodeTable(m, "provider"); p["default_provider"] != "magpie" || p["default_model"] != "kimi/k2" {
+	if p := jcodeTable(m, "provider"); p["default_provider"] != "chongyun" || p["default_model"] != "kimi/k2" {
 		t.Fatalf("[provider]: %v", p)
 	}
 	if !a.Wired() || f.Get() != "magpie/kimi/k2" {
@@ -132,10 +132,10 @@ func TestJcode(t *testing.T) {
 	if c := a.Check(); c != "" {
 		t.Fatalf("check: %s", c)
 	}
-	p := jcodeTable(m, "providers", "magpie")
+	p := jcodeTable(m, "providers", "chongyun")
 	if p["type"] != "openai-compatible" || p["base_url"] != here(home).v1() || p["requires_api_key"] != true ||
 		p["api_key"] != agentKeyAt("jcode", here(home).gw()) || p["default_model"] != "kimi/k2" {
-		t.Fatalf("magpie's profile: %v", p)
+		t.Fatalf("chongyun's profile: %v", p)
 	}
 	models := jcodeModelsOf(t, m)
 	k2, vision := models["kimi/k2"], models["kimi/k2-vision"]
@@ -207,7 +207,7 @@ func TestJcodeSyncKeepsTheirs(t *testing.T) {
 	gw := here(home)
 	// as jcode's Config::save writes it, with what the user changed in it
 	saved := `[provider]
-default_provider = "magpie"
+default_provider = "chongyun"
 default_model = "kimi/k2"
 
 [providers.magpie]
@@ -251,7 +251,7 @@ X-Team = "mine"
 	if len(models) != 1 || models["kimi/k2"]["reasoning_effort"] != "high" {
 		t.Fatalf("models: %v", models)
 	}
-	if h := jcodeTable(m, "providers", "magpie", "headers"); h["X-Team"] != "mine" {
+	if h := jcodeTable(m, "providers", "chongyun", "headers"); h["X-Team"] != "mine" {
 		t.Fatalf("the user's header: %v", h)
 	}
 	if c := a.Check(); c != "" {
@@ -297,7 +297,7 @@ func TestJcodeHome(t *testing.T) {
 	if !a.Wired() || !a.Detected() {
 		t.Fatalf("wired %v detected %v", a.Wired(), a.Detected())
 	}
-	writeFile(t, a.Path, "[provider]\ndefault_provider = \"magpie\"\ndefault_model = \"kimi/k2\"\n")
+	writeFile(t, a.Path, "[provider]\ndefault_provider = \"chongyun\"\ndefault_model = \"kimi/k2\"\n")
 	if c := a.Check(); !strings.Contains(c, "is gone") {
 		t.Fatalf("check: %q", c)
 	}

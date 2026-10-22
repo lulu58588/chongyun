@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Codex on one of its own models, signed in to ChatGPT, goes through
@@ -160,7 +160,7 @@ func TestCodexFailoverOnlyKeepsOwnModels(t *testing.T) {
 		t.Errorf("failover-only Codex lists %v, want just gpt-5.5", got)
 	}
 	if c, _ := os.ReadFile(cache); !strings.Contains(string(c), "1970-01-01") {
-		t.Errorf("Codex's cached list of magpie's models kept:\n%s", c)
+		t.Errorf("Codex's cached list of chongyun's models kept:\n%s", c)
 	}
 
 	// connected, magpie's models are in its list and the row says connected
@@ -171,6 +171,6 @@ func TestCodexFailoverOnlyKeepsOwnModels(t *testing.T) {
 		t.Errorf("joined: wired %v, failing over %v, own only %v", cx.Wired(), cx.FailingOver(), CodexOwnOnly())
 	}
 	if got := strings.Join(models(), " "); !strings.Contains(got, "fake/m1") {
-		t.Errorf("joined Codex lists %v, want magpie's too", got)
+		t.Errorf("joined Codex lists %v, want chongyun's too", got)
 	}
 }

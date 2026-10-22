@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/agentenv"
 )
 
 // UserPath gives the desktop app the PATH a terminal of the user's has. One
@@ -333,7 +333,7 @@ func mergeShellEnv(paths []string, vars []map[string]string) (string, map[string
 // no controlling terminal. An interactive zsh in magpie's session took the
 // terminal it was started from — it puts itself in the foreground, as a
 // shell does for its jobs — and while it ran, magpie's own process group
-// was in the background there: Ctrl-C no longer reached `magpie web`, and
+// was in the background there: Ctrl-C no longer reached `chongyun web`, and
 // anything in that group touching the terminal (the bash asked beside it,
 // whose profile runs in magpie's group, an agent's CLI) had the kernel stop
 // the whole group, magpie with it (DD on Discord: magpie web → zsh:

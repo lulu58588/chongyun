@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // desktopSubagentHome is a fresh home for magpie's files.
@@ -66,7 +66,7 @@ func TestDesktopSubagentUnserved(t *testing.T) {
 	if err := SaveGroup(Group{ID: "workers", Name: "Workers", Members: []string{"fake/m1"}}); err != nil {
 		t.Fatal(err)
 	}
-	for id, want := range map[string]string{"fake/m1": "", "group/workers": "", "fake/missing": "magpie doesn't serve it now", "missing/m": "magpie doesn't serve it now"} {
+	for id, want := range map[string]string{"fake/m1": "", "group/workers": "", "fake/missing": "chongyun doesn't serve it now", "missing/m": "chongyun doesn't serve it now"} {
 		if got := DesktopSubagentUnserved(id); got != want {
 			t.Errorf("%s: %q, want %q", id, got, want)
 		}

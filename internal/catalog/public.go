@@ -37,7 +37,7 @@ func PublicDrawers(ctx context.Context, base string) []Model {
 		return nil
 	}
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil

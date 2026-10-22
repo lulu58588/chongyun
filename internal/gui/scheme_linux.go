@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // desktopIcon is the entry's Icon=magpie, put in the user's icon theme: the
@@ -30,7 +30,7 @@ func dataHome() string {
 	return filepath.Join(home, ".local", "share")
 }
 
-// registerScheme makes magpie:// links open this executable: a desktop
+// registerScheme makes chongyun:// links open this executable: a desktop
 // entry that claims the scheme, then the desktop's default for it. The
 // entry also binds magpie's windows to it (StartupWMClass) and has its icon
 // installed beside it. An entry that already runs this executable, claims
@@ -50,10 +50,10 @@ func registerScheme() error {
 	path := filepath.Join(dir, "magpie.desktop")
 	entry := `[Desktop Entry]
 Type=Application
-Name=magpie
+Name=chongyun
 Comment=Every agent's model. One place.
 Exec=` + exe + ` %u
-Icon=magpie
+Icon=chongyun
 StartupWMClass=` + programName + `
 Categories=Development;Utility;
 MimeType=x-scheme-handler/magpie;

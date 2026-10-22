@@ -13,14 +13,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/desktopdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/desktopdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Claude Code reads its endpoint from the `env` block of settings.json.
@@ -936,7 +936,7 @@ func claudeIn(at place) *Agent {
 	// groups first as viaMagpie lists them, so the user picks among them
 	// in Claude Code itself. Groups were left out, so one magpie had just
 	// made the main model and every tier wasn't in /model (#1575). One the
-	// user wrote is theirs. One whose every row says "via magpie" is
+	// user wrote is theirs. One whose every row says "via chongyun" is
 	// magpie's though its mark is gone (an older magpie's stash lost it),
 	// so it is kept up to date rather than left as the user's: a WSL
 	// Claude Code's /model kept a list without the models added since
@@ -972,7 +972,7 @@ func claudeIn(at place) *Agent {
 		// it, by the Provider in model names setting (provider.Labels): the
 		// picker took the name alone, so none of the setting's three ways
 		// changed /model (love1sbug on X). A description that would say the
-		// provider the label already says is left "via magpie".
+		// provider the label already says is left "via chongyun".
 		labels := listLabels("claude")
 		rows := []any{}
 		for _, o := range viaMagpie("claude", "") {
@@ -984,10 +984,10 @@ func claudeIn(at place) *Agent {
 			// without its provider (Off, or a name the user gave) named
 			// neither in /model; the provider goes before the account then,
 			// as an API key's note says it (#1136, cjyrainbow)
-			if by, ok := strings.CutSuffix(note, " · via magpie"); ok {
+			if by, ok := strings.CutSuffix(note, " · via chongyun"); ok {
 				switch {
 				case label != o.Label && strings.HasSuffix(label, " · "+by):
-					note = "via magpie"
+					note = "via chongyun"
 				case o.Group != "" && o.Group != RoutingGroups && by != o.Group && !strings.HasSuffix(label, " · "+o.Group):
 					note = o.Group + " · " + note
 				}
@@ -1683,7 +1683,7 @@ func claudeIn(at place) *Agent {
 			m := get()
 			if v != "" && !contains(claudeEfforts, v) {
 				if v == "ultra" || v == "ultracode" {
-					return fmt.Errorf("ultracode is a switch of Claude Code's beside its effort: magpie claude ultracode on")
+					return fmt.Errorf("ultracode is a switch of Claude Code's beside its effort: chongyun claude ultracode on")
 				}
 				return fmt.Errorf("Claude Code keeps an effort of %s, not %q", strings.Join(claudeEfforts, ", "), v)
 			}
@@ -1782,10 +1782,10 @@ func claudeIn(at place) *Agent {
 					if v == "" {
 						return nil
 					}
-					return fmt.Errorf("pick a model through magpie for Claude Code first; %s can then have its own", tier)
+					return fmt.Errorf("pick a model through chongyun for Claude Code first; %s can then have its own", tier)
 				}
 				if v != "" && !isMagpie(v) {
-					return fmt.Errorf("%s: %q is not a model magpie serves", tier, v)
+					return fmt.Errorf("%s: %q is not a model chongyun serves", tier, v)
 				}
 				main, tiers := curTiers()
 				// its effort, if it has one, goes with it to the new model
@@ -1835,10 +1835,10 @@ func claudeIn(at place) *Agent {
 				if v == "" {
 					return nil
 				}
-				return fmt.Errorf("pick a model through magpie for Claude Code first; its subagents can then have one of their own")
+				return fmt.Errorf("pick a model through chongyun for Claude Code first; its subagents can then have one of their own")
 			}
 			if v != "" && !isMagpie(v) {
-				return fmt.Errorf("subagents: %q is not a model magpie serves", v)
+				return fmt.Errorf("subagents: %q is not a model chongyun serves", v)
 			}
 			_, e := subagentAt()
 			// a model picked is the user's own, the main model too
@@ -1878,7 +1878,7 @@ func claudeIn(at place) *Agent {
 					if v == "" {
 						return nil
 					}
-					return fmt.Errorf("pick a model through magpie for Claude Code first; %s can then have an effort of its own", who)
+					return fmt.Errorf("pick a model through chongyun for Claude Code first; %s can then have an effort of its own", who)
 				}
 				if v != "" && !contains(provider.MemberEfforts, v) {
 					return fmt.Errorf("%s: an effort is one of %s, not %q", label, strings.Join(provider.MemberEfforts, ", "), v)
@@ -1933,10 +1933,10 @@ func claudeIn(at place) *Agent {
 				if v == "" {
 					return nil
 				}
-				return fmt.Errorf("pick a model through magpie for Claude Code first; its auto mode can then have a model of its own")
+				return fmt.Errorf("pick a model through chongyun for Claude Code first; its auto mode can then have a model of its own")
 			}
 			if v != "" && !isMagpie(v) {
-				return fmt.Errorf("auto mode: %q is not a model magpie serves", v)
+				return fmt.Errorf("auto mode: %q is not a model chongyun serves", v)
 			}
 			if contains(claudeNoClassifier, claudeName(v)) {
 				return fmt.Errorf("auto mode: Claude Code doesn't run its classifier on %s, and would take its own pick instead", v)
@@ -1970,18 +1970,18 @@ func claudeIn(at place) *Agent {
 		},
 		Set: func(v string) error {
 			if v != "" && v != "claudeai" {
-				return fmt.Errorf("sign-in is claudeai or empty (magpie's key), not %q", v)
+				return fmt.Errorf("sign-in is claudeai or empty (chongyun's key), not %q", v)
 			}
 			if !routed() {
 				if v == "" {
 					stash(map[string]string{loginKey: ""})
 					return nil
 				}
-				return fmt.Errorf("pick a model through magpie for Claude Code first; it can then keep its claude.ai sign-in")
+				return fmt.Errorf("pick a model through chongyun for Claude Code first; it can then keep its claude.ai sign-in")
 			}
 			// one kept before stays so, taking effect where it can again
 			if v != "" && !signInHere() && stashLoad()[loginKey] != v {
-				return fmt.Errorf("Claude Code reaches magpie from another machine (%s), where magpie, shared, takes only its sharing key, so it can't keep its claude.ai sign-in there", at.gw())
+				return fmt.Errorf("Claude Code reaches chongyun from another machine (%s), where chongyun, shared, takes only its sharing key, so it can't keep its claude.ai sign-in there", at.gw())
 			}
 			stash(map[string]string{loginKey: v, wroteAt: at.gw()})
 			return edit.SetJSON(path, edit.KV{Path: "env.ANTHROPIC_AUTH_TOKEN", Value: wiredKey()})
@@ -2117,7 +2117,7 @@ func claudeIn(at place) *Agent {
 				managed = at.sys("/etc/claude-code/managed-settings.json")
 			}
 			if u, _ := edit.GetJSON(managed, "env.ANTHROPIC_BASE_URL"); u != "" && u != at.gw() && !reachesMagpie(u, at.gw()) {
-				return "Claude Code's managed settings (" + at.native(managed) + ") set ANTHROPIC_BASE_URL to " + u + ", which wins over magpie's"
+				return "Claude Code's managed settings (" + at.native(managed) + ") set ANTHROPIC_BASE_URL to " + u + ", which wins over chongyun's"
 			}
 			getEnv := func(k string) (string, bool) { return edit.GetJSON(path, "env."+k) }
 			if off := wiringOff("Claude Code", path, getEnv, "ANTHROPIC_BASE_URL", at.gw()); off != "" {
@@ -2133,7 +2133,7 @@ func claudeIn(at place) *Agent {
 			where := "Claude Code's ANTHROPIC_AUTH_TOKEN (" + filepath.Base(path) + ")"
 			switch {
 			case keepSignIn() && tok != "":
-				return where + " is set, so Claude Code sends magpie that key, not its claude.ai sign-in as magpie set it"
+				return where + " is set, so Claude Code sends chongyun that key, not its claude.ai sign-in as chongyun set it"
 			case keepSignIn():
 				return ""
 			case tok == "" && signInHere():
@@ -2141,7 +2141,7 @@ func claudeIn(at place) *Agent {
 				if has {
 					how = "is empty"
 				}
-				return where + " " + how + ", so Claude Code sends magpie its claude.ai sign-in, if it has one, not magpie's key — to keep it so, set its sign-in to claude.ai"
+				return where + " " + how + ", so Claude Code sends chongyun its claude.ai sign-in, if it has one, not chongyun's key — to keep it so, set its sign-in to claude.ai"
 			}
 			return wiringOff("Claude Code", path, getEnv, "ANTHROPIC_AUTH_TOKEN", at.gwKey())
 		},
@@ -2172,8 +2172,8 @@ func claudeIn(at place) *Agent {
 // address but Anthropic's own (2.1.290).
 func claudeSignIns() []Option {
 	return []Option{
-		{Value: "", Label: "magpie's key", Note: "Claude Code sends magpie its key and is signed out of claude.ai while it runs through magpie: claude.ai's plan limits in /usage, its connectors, voice and /teleport are off"},
-		{Value: "claudeai", Label: "claude.ai", Note: "Claude Code keeps its claude.ai sign-in (/login), so those work; it sends that sign-in to magpie, which never passes it on. Remote Control and ultrareview stay off: Claude Code has them only on Anthropic's own address"},
+		{Value: "", Label: "chongyun's key", Note: "Claude Code sends chongyun its key and is signed out of claude.ai while it runs through chongyun: claude.ai's plan limits in /usage, its connectors, voice and /teleport are off"},
+		{Value: "claudeai", Label: "claude.ai", Note: "Claude Code keeps its claude.ai sign-in (/login), so those work; it sends that sign-in to chongyun, which never passes it on. Remote Control and ultrareview stay off: Claude Code has them only on Anthropic's own address"},
 	}
 }
 
@@ -2194,7 +2194,7 @@ func claudeTakes(model, v string) error {
 }
 
 // claudeModelWord refuses a value given for Claude Code's model that is a
-// bare word and not one of its aliases: `magpie claude ultra` wrote
+// bare word and not one of its aliases: `chongyun claude ultra` wrote
 // "model": "ultra" over the model.
 func claudeModelWord(v, model string) error {
 	w := strings.TrimSuffix(v, "[1m]")
@@ -2203,13 +2203,13 @@ func claudeModelWord(v, model string) error {
 	}
 	switch {
 	case w == "ultra" || w == "ultracode":
-		return fmt.Errorf("ultracode is a switch of Claude Code's, not a model: magpie claude ultracode on")
+		return fmt.Errorf("ultracode is a switch of Claude Code's, not a model: chongyun claude ultracode on")
 	case contains(claudeEfforts, w):
 		if err := claudeTakes(model, w); err != nil {
 			return err
 		}
 	}
-	return fmt.Errorf("%q is no model of Claude Code's: give a model id (claude-…), one of its aliases (%s) or a model magpie serves", v, strings.Join(claudeAliases, ", "))
+	return fmt.Errorf("%q is no model of Claude Code's: give a model id (claude-…), one of its aliases (%s) or a model chongyun serves", v, strings.Join(claudeAliases, ", "))
 }
 
 // claudeDropModelEffort takes the effort saved for model n out of
@@ -2616,13 +2616,13 @@ var (
 
 // why a Claude Code wired to magpie goes to a cloud instead (claudeCloud)
 var (
-	noticeClaudeCloudFile  = newNotice("{file} sets {var}, so Claude Code sends its requests to {cloud}, not to magpie: take it out there to go through magpie.")
-	noticeClaudeCloudShell = newNotice("{var} is set in your shell's environment, so Claude Code started there sends its requests to {cloud}, not to magpie: take it out of your shell's profile to go through magpie.")
+	noticeClaudeCloudFile  = newNotice("{file} sets {var}, so Claude Code sends its requests to {cloud}, not to chongyun: take it out there to go through chongyun.")
+	noticeClaudeCloudShell = newNotice("{var} is set in your shell's environment, so Claude Code started there sends its requests to {cloud}, not to chongyun: take it out of your shell's profile to go through chongyun.")
 )
 
 // magpiesPicker says whether settings.json's modelPicker is one magpie
 // wrote: it has rows, and each one's description is magpie's, which ends
-// "via magpie" (writePicker in claudeIn).
+// "via chongyun" (writePicker in claudeIn).
 func magpiesPicker(path string) bool {
 	raw, has := edit.GetJSON(path, "modelPicker")
 	if !has {
@@ -2638,7 +2638,7 @@ func magpiesPicker(path string) bool {
 		return false
 	}
 	for _, o := range p.Options {
-		if o.Model == "" || !strings.HasSuffix(o.Description, "via magpie") {
+		if o.Model == "" || !strings.HasSuffix(o.Description, "via chongyun") {
 			return false
 		}
 	}

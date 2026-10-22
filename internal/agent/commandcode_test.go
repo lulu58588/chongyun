@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestCommandCode(t *testing.T) {
@@ -38,11 +38,11 @@ func TestCommandCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	s, p := read(settingsPath), read(providersPath)
-	if s["model"] != "magpie/deepseek/pro" || s["modelProvider"] != "magpie" || s["theme"] != "dark" {
+	if s["model"] != "magpie/deepseek/pro" || s["modelProvider"] != "chongyun" || s["theme"] != "dark" {
 		t.Fatalf("settings: %v", s)
 	}
 	ps := p["provider"].(map[string]any)
-	m, ok := ps["magpie"].(map[string]any)
+	m, ok := ps["chongyun"].(map[string]any)
 	if !ok || ps["mine"] == nil || m["apiKey"] != false || m["api"] != "openai-completions" {
 		t.Fatalf("providers: %v", p)
 	}
@@ -55,7 +55,7 @@ func TestCommandCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	s, p = read(settingsPath), read(providersPath)
-	if s["model"] != "moonshotai/kimi-k3" || s["modelProvider"] != nil || p["provider"].(map[string]any)["magpie"] != nil || p["provider"].(map[string]any)["mine"] == nil {
+	if s["model"] != "moonshotai/kimi-k3" || s["modelProvider"] != nil || p["provider"].(map[string]any)["chongyun"] != nil || p["provider"].(map[string]any)["mine"] == nil {
 		t.Fatalf("own: %v %v", s, p)
 	}
 
@@ -65,7 +65,7 @@ func TestCommandCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	s, p = read(settingsPath), read(providersPath)
-	if s["model"] != nil || s["modelProvider"] != nil || s["theme"] != "dark" || p["provider"].(map[string]any)["magpie"] != nil {
+	if s["model"] != nil || s["modelProvider"] != nil || s["theme"] != "dark" || p["provider"].(map[string]any)["chongyun"] != nil {
 		t.Fatalf("reset: %v %v", s, p)
 	}
 }

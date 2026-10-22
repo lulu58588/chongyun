@@ -35,12 +35,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/filelock"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/filelock"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // Client makes the sign-in's requests, through the proxy magpie's others
@@ -64,10 +64,10 @@ var renewLead = 2 * time.Minute
 var signInTimeout = 10 * time.Minute
 
 // ErrNotSignedIn is a server magpie holds no sign-in for.
-var ErrNotSignedIn = errors.New("magpie isn't signed in to this server")
+var ErrNotSignedIn = errors.New("chongyun isn't signed in to this server")
 
 // ErrExpired is a sign-in the server no longer takes: it has to be done again.
-var ErrExpired = errors.New("magpie's sign-in to this server has run out: sign in again in the Library")
+var ErrExpired = errors.New("chongyun's sign-in to this server has run out: sign in again in the Library")
 
 // ErrNoSignIn is a server that answered an agent's first request without
 // asking for a sign-in: it works as it is. One that takes a key as a header
@@ -81,14 +81,14 @@ var ErrNoSignIn = errors.New("this server already works without signing in, so t
 // list, #1619). magpie doesn't pass itself off as a listed client; a server
 // magpie isn't signed in to is given to the agents at its own address, so
 // each agent signs in there itself. The GUI has it in every language.
-var ErrClientRefused = errors.New("this server's sign-in admits only the apps it lists and turned magpie away, so magpie can't sign in for the agents. The agents given it still have the server's own address: sign in from each agent itself (in Claude Code, run /mcp and pick the server)")
+var ErrClientRefused = errors.New("this server's sign-in admits only the apps it lists and turned chongyun away, so chongyun can't sign in for the agents. The agents given it still have the server's own address: sign in from each agent itself (in Claude Code, run /mcp and pick the server)")
 
 // ErrNoRegistration is a server whose sign-in doesn't let an app register
 // itself (GitHub's, 新v学员 on Discord): magpie signs in to it only as an
 // OAuth app of the user's own, made with the server's vendor, as Claude
 // Code does with --client-id. The page opens the server's fields for one
 // on it.
-var ErrNoRegistration = errors.New("the server's sign-in doesn't let an app register itself (no dynamic client registration), so magpie signs in to it only as an OAuth app of your own: make one with the server's vendor (GitHub's under Settings › Developer settings › OAuth Apps), with http://localhost/callback as its callback URL, then give its client ID and secret under \"OAuth app\" in the server's editor")
+var ErrNoRegistration = errors.New("the server's sign-in doesn't let an app register itself (no dynamic client registration), so chongyun signs in to it only as an OAuth app of your own: make one with the server's vendor (GitHub's under Settings › Developer settings › OAuth Apps), with http://localhost/callback as its callback URL, then give its client ID and secret under \"OAuth app\" in the server's editor")
 
 // Record is magpie's sign-in to one server.
 type Record struct {
@@ -545,7 +545,7 @@ func discover(ctx context.Context, serverURL string) (meta, error) {
 		return meta{}, fmt.Errorf("%q isn't a URL", serverURL)
 	}
 	// ask it something, as an agent would: its 401 says where to sign in
-	body := `{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":"` + protocolVersion + `","capabilities":{},"clientInfo":{"name":"magpie","version":"1"}}}`
+	body := `{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":"` + protocolVersion + `","capabilities":{},"clientInfo":{"name": "崇云科技","version":"1"}}}`
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, serverURL, strings.NewReader(body))
 	if err != nil {
 		return meta{}, err
@@ -625,7 +625,7 @@ func discover(ctx context.Context, serverURL string) (meta, error) {
 	switch {
 	case got:
 		if len(as.Challenges) > 0 && !contains(as.Challenges, "S256") {
-			return meta{}, errors.New("the server's sign-in doesn't offer PKCE (S256), which magpie needs")
+			return meta{}, errors.New("the server's sign-in doesn't offer PKCE (S256), which chongyun needs")
 		}
 		m.Issuer, m.AuthorizeURL, m.TokenURL, m.RegisterURL, m.AuthMethods = as.Issuer, as.Authorize, as.Token, as.Register, as.AuthMethods
 		m.Scope = withOffline(m.Scope, as.ScopesSupport)
@@ -681,11 +681,11 @@ func register(ctx context.Context, m meta, redirect string) (id, secret, method 
 		case contains(m.AuthMethods, "client_secret_basic"):
 			method = "client_secret_basic"
 		default:
-			return "", "", "", fmt.Errorf("the server's token endpoint takes only %s, which magpie can't do", strings.Join(m.AuthMethods, ", "))
+			return "", "", "", fmt.Errorf("the server's token endpoint takes only %s, which chongyun can't do", strings.Join(m.AuthMethods, ", "))
 		}
 	}
 	reg := map[string]any{
-		"client_name":                "Magpie",
+		"client_name":                "Chongyun",
 		"client_uri":                 "https://usemagpie.ai",
 		"redirect_uris":              []string{redirect},
 		"grant_types":                []string{"authorization_code", "refresh_token"},
@@ -712,7 +712,7 @@ func register(ctx context.Context, m meta, redirect string) (id, secret, method 
 		return "", "", "", ErrClientRefused
 	}
 	if resp.StatusCode/100 != 2 {
-		return "", "", "", fmt.Errorf("registering magpie with the server's sign-in failed (%d): %s", resp.StatusCode, strings.TrimSpace(string(rb)))
+		return "", "", "", fmt.Errorf("registering chongyun with the server's sign-in failed (%d): %s", resp.StatusCode, strings.TrimSpace(string(rb)))
 	}
 	var out struct {
 		ID     string `json:"client_id"`
@@ -720,7 +720,7 @@ func register(ctx context.Context, m meta, redirect string) (id, secret, method 
 		Method string `json:"token_endpoint_auth_method"`
 	}
 	if err := json.Unmarshal(rb, &out); err != nil || out.ID == "" {
-		return "", "", "", errors.New("the server's sign-in registered magpie but gave it no client id")
+		return "", "", "", errors.New("the server's sign-in registered chongyun but gave it no client id")
 	}
 	if out.Method != "" {
 		// the server may register magpie for another of the methods it
@@ -728,7 +728,7 @@ func register(ctx context.Context, m meta, redirect string) (id, secret, method 
 		// response): one magpie can't send would fail the code exchange
 		// after the browser round trip, so it is said here instead
 		if !contains([]string{"none", "client_secret_post", "client_secret_basic"}, out.Method) {
-			return "", "", "", fmt.Errorf("the server's sign-in registered magpie for %s, which magpie can't do", out.Method)
+			return "", "", "", fmt.Errorf("the server's sign-in registered chongyun for %s, which chongyun can't do", out.Method)
 		}
 		method = out.Method
 	}
@@ -871,13 +871,13 @@ func StartWith(ctx context.Context, name, serverURL string, app *App) (State, er
 	mux.HandleFunc("/callback", func(w http.ResponseWriter, r *http.Request) {
 		v := r.URL.Query()
 		if v.Get("state") != state {
-			page(w, http.StatusBadRequest, "This sign-in link is out of date. Start the sign-in again from Magpie.")
+			page(w, http.StatusBadRequest, "This sign-in link is out of date. Start the sign-in again from Chongyun.")
 			return
 		}
 		f.mu.Lock()
 		if f.claimed || f.finished {
 			f.mu.Unlock()
-			page(w, http.StatusOK, "Magpie has this sign-in already. You can close this tab.")
+			page(w, http.StatusOK, "Chongyun has this sign-in already. You can close this tab.")
 			return
 		}
 		f.claimed = true
@@ -900,7 +900,7 @@ func StartWith(ctx context.Context, name, serverURL string, app *App) (State, er
 		t, err := tokenRequest(cctx, rec, form)
 		if err != nil {
 			f.finish(State{State: "failed", Error: err.Error()})
-			page(w, http.StatusOK, "Magpie couldn't finish the sign-in: "+err.Error())
+			page(w, http.StatusOK, "Chongyun couldn't finish the sign-in: "+err.Error())
 			return
 		}
 		r2 := rec
@@ -909,10 +909,10 @@ func StartWith(ctx context.Context, name, serverURL string, app *App) (State, er
 			r2.Scope = t.Scope
 		}
 		if err := f.keep(name, r2); err != nil {
-			page(w, http.StatusOK, "Magpie couldn't keep the sign-in: "+err.Error())
+			page(w, http.StatusOK, "Chongyun couldn't keep the sign-in: "+err.Error())
 			return
 		}
-		page(w, http.StatusOK, "Magpie is signed in to "+name+". Every agent given it in the Library uses this sign-in. You can close this tab.")
+		page(w, http.StatusOK, "Chongyun is signed in to "+name+". Every agent given it in the Library uses this sign-in. You can close this tab.")
 	})
 	f.srv = &http.Server{Handler: mux, ReadHeaderTimeout: 10 * time.Second}
 	go f.srv.Serve(ln)
@@ -1014,5 +1014,5 @@ func Cancel(id string) {
 func page(w http.ResponseWriter, status int, msg string) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(status)
-	fmt.Fprintf(w, `<!doctype html><meta charset="utf-8"><title>Magpie</title><body style="font:15px -apple-system,system-ui,sans-serif;max-width:32em;margin:4em auto;padding:0 1em;color:#222">%s</body>`, html.EscapeString(msg))
+	fmt.Fprintf(w, `<!doctype html><meta charset="utf-8"><title>Chongyun</title><body style="font:15px -apple-system,system-ui,sans-serif;max-width:32em;margin:4em auto;padding:0 1em;color:#222">%s</body>`, html.EscapeString(msg))
 }

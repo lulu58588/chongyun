@@ -38,8 +38,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/lastgood"
 )
 
 // loginSwitchEvery is how often the account each agent is on is looked at.

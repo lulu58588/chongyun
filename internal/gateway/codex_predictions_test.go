@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // predictionSchema is the schema ChatGPT.app's composer predictions ask
@@ -76,26 +76,26 @@ func TestCodexPredictionsSetting(t *testing.T) {
 
 	rec := codexPredictionRequest(t, s, CodexPath+"/responses", "gpt-6-astra")
 	if text, _ := outputText(t, rec.Body.String()); chatgptCalls != 1 || f.calls != 0 || text != `{"suggestion":"From ChatGPT"}` {
-		t.Fatalf("default: chatgpt %d, magpie model %d, %q", chatgptCalls, f.calls, text)
+		t.Fatalf("default: chatgpt %d, chongyun model %d, %q", chatgptCalls, f.calls, text)
 	}
 
 	saveCodexPredictions(t, "off")
 	rec = codexPredictionRequest(t, s, CodexPath+"/responses", "gpt-6-astra")
 	if text, n := outputText(t, rec.Body.String()); rec.Code != 200 || n != 1 || text != `{"suggestion":null}` || chatgptCalls != 1 || f.calls != 0 {
-		t.Fatalf("off: %d %q, %d items, chatgpt %d, magpie model %d", rec.Code, rec.Body.String(), n, chatgptCalls, f.calls)
+		t.Fatalf("off: %d %q, %d items, chatgpt %d, chongyun model %d", rec.Code, rec.Body.String(), n, chatgptCalls, f.calls)
 	}
 
 	saveCodexPredictions(t, "fake/m1")
 	rec = codexPredictionRequest(t, s, CodexPath+"/responses", "gpt-6-astra")
 	if text, _ := outputText(t, rec.Body.String()); rec.Code != 200 || text != `{"suggestion":"Run the tests again"}` || f.calls != 1 || chatgptCalls != 1 {
-		t.Fatalf("routed: %d %q, magpie model %d, chatgpt %d", rec.Code, rec.Body.String(), f.calls, chatgptCalls)
+		t.Fatalf("routed: %d %q, chongyun model %d, chatgpt %d", rec.Code, rec.Body.String(), f.calls, chatgptCalls)
 	}
 	var sent struct {
 		Model string `json:"model"`
 	}
 	json.Unmarshal(f.got, &sent)
 	if sent.Model != "m1" {
-		t.Errorf("the magpie model was asked for %q", sent.Model)
+		t.Errorf("the chongyun model was asked for %q", sent.Model)
 	}
 
 	// a turn of the conversation is not a prediction: it goes as before
@@ -104,17 +104,17 @@ func TestCodexPredictionsSetting(t *testing.T) {
 	req.Header.Set("Authorization", "Bearer chatgpt-token")
 	s.Handler().ServeHTTP(rec, req)
 	if chatgptCalls != 2 || f.calls != 1 {
-		t.Errorf("a plain turn: chatgpt %d, magpie model %d", chatgptCalls, f.calls)
+		t.Errorf("a plain turn: chatgpt %d, chongyun model %d", chatgptCalls, f.calls)
 	}
 
 	var kinds []string
 	for _, u := range usage.Load(time.Time{}) {
 		kinds = append(kinds, u.Provider+":"+u.Kind)
-		if u.Provider == "magpie" && (!u.IsRejected() || u.Status != 200) {
+		if u.Provider == "chongyun" && (!u.IsRejected() || u.Status != 200) {
 			t.Errorf("an answered-here prediction %+v", u)
 		}
 	}
-	want := "openai:composer_predictions magpie:composer_predictions fake:composer_predictions openai:"
+	want := "openai:composer_predictions chongyun:composer_predictions fake:composer_predictions openai:"
 	if got := strings.Join(kinds, " "); got != want {
 		t.Errorf("ledger %s\nwant   %s", got, want)
 	}
@@ -152,7 +152,7 @@ func TestCodexPredictionOnMagpie(t *testing.T) {
 			s := New()
 			rec := codexPredictionRequest(t, s, path, "fake/m1")
 			if text, _ := outputText(t, rec.Body.String()); rec.Code != 200 || text != `{"suggestion":"Commit it"}` || f.calls != 1 {
-				t.Fatalf("on magpie: %d %q, calls %d", rec.Code, rec.Body.String(), f.calls)
+				t.Fatalf("on chongyun: %d %q, calls %d", rec.Code, rec.Body.String(), f.calls)
 			}
 		})
 	}

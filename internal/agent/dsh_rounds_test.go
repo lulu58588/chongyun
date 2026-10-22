@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // dshSettled is a profile with magpie's route, and keepDshWired's rounds
@@ -19,7 +19,7 @@ func dshSettled(t *testing.T) (r *dshRounds, web string) {
 	dshKeyFixture(dir)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		dshRouteFixture("deepseek/pro")+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 	r = &dshRounds{}
 	r.once()
 	r.once()
@@ -28,7 +28,7 @@ func dshSettled(t *testing.T) (r *dshRounds, web string) {
 	}
 	if !dshListed(web, "deepseek/pro") || !dshListed(web, "deepseek/flash") {
 		b, _ := os.ReadFile(web)
-		t.Fatalf("the route is not what magpie writes:\n%s", b)
+		t.Fatalf("the route is not what chongyun writes:\n%s", b)
 	}
 	return r, web
 }
@@ -84,13 +84,13 @@ func TestDshRoundAfterAChangeWritesAgain(t *testing.T) {
 		r, web := dshSettled(t)
 		os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 			dshRouteFixture("deepseek/pro")+
-			"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
+			"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
 		r.once()
 		if !dshListed(web, "deepseek/flash") {
 			t.Fatal("a route dsh wrote over is not written again by the next round")
 		}
 	})
-	t.Run("another magpie", func(t *testing.T) {
+	t.Run("another chongyun", func(t *testing.T) {
 		r, web := dshSettled(t)
 		b, err := os.ReadFile(provider.Path())
 		if err != nil {
@@ -105,7 +105,7 @@ func TestDshRoundAfterAChangeWritesAgain(t *testing.T) {
 		}
 		r.once()
 		if !dshListed(web, "deepseek/max") {
-			t.Fatal("a provider another magpie saved is not in dsh's route after the next round")
+			t.Fatal("a provider another chongyun saved is not in dsh's route after the next round")
 		}
 	})
 	// what the stamp can't see (another app's account file, a date) is

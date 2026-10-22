@@ -15,8 +15,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Library is library.json: what magpie keeps, and which agents get it.

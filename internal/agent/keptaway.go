@@ -8,10 +8,10 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // synced runs an agent's sync, which brings magpie's models in its files up

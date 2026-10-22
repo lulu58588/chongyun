@@ -158,4 +158,4 @@ func observeLedger(r Record) {
 }
 
 // BodyCut ends a body the gateway captured only the start of.
-const BodyCut = "\n… (cut here by magpie)"
+const BodyCut = "\n… (cut here by chongyun)"

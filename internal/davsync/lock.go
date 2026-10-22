@@ -6,12 +6,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/yetone/magpie/internal/filelock"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/filelock"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // ErrBusy is a wait for another magpie's sync that ran out of time.
-var ErrBusy = errors.New("another magpie is syncing: try again in a moment")
+var ErrBusy = errors.New("another chongyun is syncing: try again in a moment")
 
 // lock keeps what reads or writes sync's files — a sync, Configure, Off,
 // Dismiss — to one at a time across magpies: the gateway's syncs every

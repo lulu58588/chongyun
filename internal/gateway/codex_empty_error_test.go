@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // One of Codex's own models, failed by the ChatGPT backend with an error
@@ -29,7 +29,7 @@ func TestCodexOwnModelEmptyError(t *testing.T) {
 	if code != 502 || json.Unmarshal([]byte(body), &e) != nil {
 		t.Fatalf("%d %q", code, body)
 	}
-	for _, want := range []string{"502 Bad Gateway", "gpt-5.6-terra is one of Codex's own models", "pick one of magpie's models"} {
+	for _, want := range []string{"502 Bad Gateway", "gpt-5.6-terra is one of Codex's own models", "pick one of chongyun's models"} {
 		if !strings.Contains(e.Error.Message, want) {
 			t.Errorf("no %q in %q", want, e.Error.Message)
 		}

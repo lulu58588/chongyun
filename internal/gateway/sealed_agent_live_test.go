@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // This explicit check uses the signed-in account for one native Codex turn.

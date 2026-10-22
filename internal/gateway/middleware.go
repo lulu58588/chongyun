@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/gwmw"
-	"github.com/yetone/magpie/internal/middleware"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/gwmw"
+	"github.com/lulu58588/magpie/internal/middleware"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // serveAgent is serve for a request an agent sent: the agent middleware

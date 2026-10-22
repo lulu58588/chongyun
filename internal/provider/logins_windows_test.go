@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // Another magpie writing logins.json (a temp file renamed over it: the one
@@ -65,6 +65,6 @@ func TestLoginsKeptWhileAnotherMagpieWrites(t *testing.T) {
 		t.Fatalf("the Antigravity account is gone from logins.json (read as none %d times)", misses)
 	}
 	if misses > 0 {
-		t.Fatalf("logins.json read as no accounts %d times while another magpie wrote it", misses)
+		t.Fatalf("logins.json read as no accounts %d times while another chongyun wrote it", misses)
 	}
 }

@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // claudeAboutSetup is #1227's settings.json before magpie: every tier on the
@@ -76,7 +76,7 @@ func TestClaudeTierNamesGoWithTheirModel(t *testing.T) {
 				t.Fatalf("fable left on %q:\n%s", v, readFile(path))
 			}
 			if left := claudeAboutLeft(path); len(left) > 0 {
-				t.Fatalf("the user's own models' names left on magpie's: %v", left)
+				t.Fatalf("the user's own models' names left on chongyun's: %v", left)
 			}
 			if out == "default" {
 				if err := a.Apply("model", ""); err != nil {
@@ -117,7 +117,7 @@ func TestClaudeTierNamesLeftByAnOlderMagpie(t *testing.T) {
 		t.Fatal(err)
 	}
 	if left := claudeAboutLeft(path); len(left) > 0 {
-		t.Fatalf("the names before magpie are left: %v", left)
+		t.Fatalf("the names before chongyun are left: %v", left)
 	}
 	if err := a.Apply("model", ""); err != nil {
 		t.Fatal(err)
@@ -156,7 +156,7 @@ func TestClaudeOwnTierNameOnMagpie(t *testing.T) {
 	}
 	want := map[string]string{"ANTHROPIC_DEFAULT_OPUS_MODEL_NAME": "DeepSeek Pro", "ANTHROPIC_DEFAULT_SONNET_MODEL_NAME": "DeepSeek Flash"}
 	if got := claudeAboutLeft(path); !reflect.DeepEqual(got, want) {
-		t.Fatalf("the user's names for magpie's models: %v\n%s", got, readFile(path))
+		t.Fatalf("the user's names for chongyun's models: %v\n%s", got, readFile(path))
 	}
 	// the main model moves: sonnet, following it, moves too; opus stays
 	if err := a.Apply("model", "opencode-go/deepseek-pro"); err != nil {

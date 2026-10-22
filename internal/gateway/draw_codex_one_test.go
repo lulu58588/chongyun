@@ -9,9 +9,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // #1865: chatgpt.com's Codex images backend answers gpt-image-2,
@@ -85,7 +85,7 @@ func TestCodexListsOneGPTImage(t *testing.T) {
 	if m, ok := drawer(); !ok || m != "codex/gpt-image-2.5" {
 		t.Fatalf("drawer = %q %v", m, ok)
 	}
-	code, _, raw := postImages(t, New(), "/v1/images/generations", "application/json", `{"prompt":"a magpie"}`)
+	code, _, raw := postImages(t, New(), "/v1/images/generations", "application/json", `{"prompt":"a chongyun"}`)
 	if code != 200 {
 		t.Fatalf("%d %s", code, raw)
 	}

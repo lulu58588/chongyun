@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // rtk's hooks run it by name — Pi's extension asks rtk --version and turns
@@ -78,7 +78,7 @@ func PathRTK() (*RTKView, error) {
 	}
 	dir, link := rtkPathDir(bin)
 	if dir == "" {
-		return nil, fmt.Errorf("magpie found no folder on your PATH it can put rtk in — add %s to PATH in your shell profile", filepath.Dir(bin))
+		return nil, fmt.Errorf("chongyun found no folder on your PATH it can put rtk in — add %s to PATH in your shell profile", filepath.Dir(bin))
 	}
 	if err := rtkOnPath(bin, dir, link); err != nil {
 		return nil, err

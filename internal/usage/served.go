@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Which model answered: a vendor may serve a request with another model

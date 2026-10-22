@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"sync/atomic"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
-// Gateway mode (Player on Discord): `magpie web` on a server that is only
+// Gateway mode (Player on Discord): `chongyun web` on a server that is only
 // the gateway for other machines' agents shows what such a gateway needs —
 // Providers, Gateway, Routing, Usage, Sessions, Plugins and Settings — and leaves out
 // what is this machine's agents' (Agents, Library, the settings
@@ -19,14 +19,14 @@ import (
 // windows show everything whatever it says.
 //
 // Settings' choice (settings.GatewayMode, "on" or "off") wins; with none,
-// `magpie web --gateway` turns it on, and so does a magpie web with no
+// `chongyun web --gateway` turns it on, and so does a magpie web with no
 // agent on its machine (a container, a NAS). Settings › General turns it
 // off again, which brings the pages back.
 
-// WebGateway is `magpie web --gateway`'s.
+// WebGateway is `chongyun web --gateway`'s.
 var WebGateway atomic.Bool
 
-// webPage is set once the page is served by `magpie web`: settingsState,
+// webPage is set once the page is served by `chongyun web`: settingsState,
 // which has no Windows, tells the page its gateway mode by it.
 var webPage atomic.Bool
 

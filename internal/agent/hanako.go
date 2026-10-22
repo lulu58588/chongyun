@@ -22,7 +22,7 @@ package agent
 // the primary agent's chat model. While OpenHanako runs, both go through its
 // local API, which saves them and reloads its models at once:
 //
-//	PUT /api/config               {"providers":{"magpie":{…}|null}}
+//	PUT /api/config               {"providers":{"chongyun":{…}|null}}
 //	PUT /api/agents/:id/config    {"models":{"chat":{"id","provider"}}}
 //	GET /api/models               {"models":[{"id","provider",…}]}
 //
@@ -46,9 +46,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // hanakoProbe gives up quickly, as OpenHanako's own liveness probe does:
@@ -138,7 +138,7 @@ func hanako(home string) *Agent {
 				if v == "" {
 					// nothing changes rather than half of it
 					if _, there := hanakoCurrent(dir); there && hanakoSealed(path) && hanakoLive(dir) == nil {
-						return errSealed("take magpie out of")
+						return errSealed("take chongyun out of")
 					}
 					if onMagpie() {
 						// the stash goes only once the model is back
@@ -347,7 +347,7 @@ func hanakoRemove(dir string) error {
 	}
 	path := filepath.Join(dir, "provider-catalog.json")
 	if hanakoSealed(path) {
-		return errSealed("take magpie out of")
+		return errSealed("take chongyun out of")
 	}
 	if err := edit.DelJSON(path, "providers."+magpieID); err != nil {
 		return err
@@ -364,7 +364,7 @@ func hanakoRemove(dir string) error {
 // errSealed says why magpie can't do what it was asked to with OpenHanako
 // closed, and what will.
 func errSealed(what string) error {
-	return fmt.Errorf("OpenHanako keeps its providers encrypted, so magpie can only %s it while it runs: open OpenHanako and try again", what)
+	return fmt.Errorf("OpenHanako keeps its providers encrypted, so chongyun can only %s it while it runs: open OpenHanako and try again", what)
 }
 
 // hanakoSavePlugin keeps magpie's definition up to date in its plugin file,
@@ -374,7 +374,7 @@ func errSealed(what string) error {
 func hanakoSavePlugin(dir string, p hanakoProviderEntry) error {
 	file := filepath.Join(hanakoPlugin(dir), "providers", magpieID+".json")
 	if _, err := os.Stat(file); err != nil {
-		return errSealed("add magpie to")
+		return errSealed("add chongyun to")
 	}
 	return edit.SetJSON(file,
 		edit.KV{Path: "displayName", Value: p.DisplayName},
@@ -451,7 +451,7 @@ func hanakoBack(dir, agent, prev string) error {
 		return hanakoBack(dir, agent, "")
 	}
 	if pick == "" {
-		return errors.New("OpenHanako has no model of its own to go back to — add a provider in OpenHanako's settings, then turn magpie off again")
+		return errors.New("OpenHanako has no model of its own to go back to — add a provider in OpenHanako's settings, then turn chongyun off again")
 	}
 	return hanakoChat(dir, agent, pick)
 }

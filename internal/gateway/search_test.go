@@ -11,7 +11,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A client's web search, offered to a model that can't search: the model
@@ -557,7 +557,7 @@ func TestWebSearchOfARelayThatSearches(t *testing.T) {
 		t.Fatal(err)
 	}
 	if sp, _, ok := searcher(); ok {
-		t.Fatalf("magpie searches with %s", sp.ID)
+		t.Fatalf("chongyun searches with %s", sp.ID)
 	}
 	if rec := ask(); rec.Code != 200 || !strings.Contains(rec.Body.String(), "Go 1.27.1 is out.") {
 		t.Fatalf("%d %s", rec.Code, rec.Body.String())
@@ -669,17 +669,17 @@ func TestSearchAskedLooksCheaply(t *testing.T) {
 	asks := []byte(`{"model":"gpt-5","input":"` + long + `","tools":[{"type":"web_search"}]}`)
 	codex := provider.Provider{ID: "codex", Responses: provider.CodexBase, Account: &provider.Account{Agent: "codex"}}
 	if searchedForIt(codex, provider.Responses, "gpt-5", asks) {
-		t.Error("Codex searches by itself, and magpie searched for it")
+		t.Error("Codex searches by itself, and chongyun searched for it")
 	}
 	if n := testing.AllocsPerRun(20, func() { searchedForIt(codex, provider.Responses, "gpt-5", asks) }); n > 20 {
 		t.Errorf("a provider that searches by itself: %v allocations, the body parsed", n)
 	}
 	other := provider.Provider{ID: "x", Responses: "https://example.test/v1"}
 	if !searchedForIt(other, provider.Responses, "gpt-5", asks) {
-		t.Error("a provider that doesn't search: magpie didn't search for it")
+		t.Error("a provider that doesn't search: chongyun didn't search for it")
 	}
 	if searchedForIt(other, provider.Responses, "gpt-5", plain) {
-		t.Error("a body offering no search: magpie searched for it")
+		t.Error("a body offering no search: chongyun searched for it")
 	}
 }
 

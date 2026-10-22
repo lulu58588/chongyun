@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Shares of an allowance past which an account is kept for when the others

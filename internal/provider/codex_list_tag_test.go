@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // listTagHome is a ChatGPT account signed in to Codex beside 8 providers
@@ -186,7 +186,7 @@ func TestCodexListTagFollowsChanges(t *testing.T) {
 		t.Fatal(err)
 	}
 	ageListFiles(t)
-	step("the providers' file written by another magpie", func() {
+	step("the providers' file written by another chongyun", func() {
 		if err := os.WriteFile(Path(), after, 0o600); err != nil {
 			t.Fatal(err)
 		}

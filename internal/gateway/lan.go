@@ -14,11 +14,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/budget"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/budget"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // The gateway accepts named caller keys locally and, while shared or on the
@@ -257,16 +257,16 @@ func lanGuard(next http.Handler) http.Handler {
 		remote := !local(r)
 		if !remote && rebound(r) {
 			log.Printf("refused %s %s: a web page reached loopback under the name %q", r.Method, r.URL.Path, r.Host)
-			writeError(w, provider.Chat, http.StatusForbidden, "magpie doesn't answer a browser that reached it as "+r.Host+" (a web site's name pointed at this computer): call it as localhost or 127.0.0.1, or send an enabled gateway key")
+			writeError(w, provider.Chat, http.StatusForbidden, "chongyun doesn't answer a browser that reached it as "+r.Host+" (a web site's name pointed at this computer): call it as localhost or 127.0.0.1, or send an enabled gateway key")
 			return
 		}
 		if remote && !remoteKeyed() {
 			if proxied(r) {
-				log.Printf("refused %s %s through a proxy or tunnel: magpie isn't shared", r.Method, r.URL.Path)
-				http.Error(w, "this request came through a proxy or tunnel (it carries a forwarding header such as X-Forwarded-For or Cf-Connecting-IP), so magpie answers it as one from another machine: only while Settings → Share on local network is on, with an enabled gateway key (Gateway → Gateway keys) sent as Authorization: Bearer <key> or x-api-key", http.StatusForbidden)
+				log.Printf("refused %s %s through a proxy or tunnel: chongyun isn't shared", r.Method, r.URL.Path)
+				http.Error(w, "this request came through a proxy or tunnel (it carries a forwarding header such as X-Forwarded-For or Cf-Connecting-IP), so chongyun answers it as one from another machine: only while Settings → Share on local network is on, with an enabled gateway key (Gateway → Gateway keys) sent as Authorization: Bearer <key> or x-api-key", http.StatusForbidden)
 				return
 			}
-			http.Error(w, "magpie isn't shared on the local network", http.StatusForbidden)
+			http.Error(w, "chongyun isn't shared on the local network", http.StatusForbidden)
 			return
 		}
 		if remote || managedKey(r) {
@@ -418,7 +418,7 @@ func identifyCaller(w http.ResponseWriter, r *http.Request) (*http.Request, bool
 			// no unbounded work) until the bucket refills. A valid key never
 			// reaches here, so a real caller is not held.
 			w.Header().Set("Retry-After", strconv.Itoa(int(retry.Seconds())+1))
-			writeError(w, provider.Chat, http.StatusTooManyRequests, "too many failed authentications; slow down and send an enabled magpie gateway key")
+			writeError(w, provider.Chat, http.StatusTooManyRequests, "too many failed authentications; slow down and send an enabled chongyun gateway key")
 			return r, false
 		}
 		msg := refusedKey(callerKey(r))
@@ -533,13 +533,13 @@ func managedKey(r *http.Request) bool {
 // key (#545).
 func refusedKey(key string) string {
 	if key == "" {
-		return "no API key was sent: send a magpie gateway key as Authorization: Bearer <key> (or x-api-key)"
+		return "no API key was sent: send a chongyun gateway key as Authorization: Bearer <key> (or x-api-key)"
 	}
 	which := "the API key sent"
 	if len(key) >= 12 { // a short one isn't named, so as not to give most of it away
 		which = "the API key ending in " + key[len(key)-4:]
 	}
-	return which + " is not an enabled magpie gateway key: it is disabled, removed or mistyped"
+	return which + " is not an enabled chongyun gateway key: it is disabled, removed or mistyped"
 }
 
 // local is a request from this computer: one that reached the gateway on

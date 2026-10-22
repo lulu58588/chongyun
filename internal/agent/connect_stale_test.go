@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // staleOnWindows is why the tests of copies told from the process list
@@ -36,8 +36,8 @@ func TestCodexStaleOnlyForMagpiesChange(t *testing.T) {
 	os.MkdirAll(dir, 0o755)
 	cfg := filepath.Join(dir, "config.toml")
 	list := filepath.Join(dir, "magpie-models.json")
-	conf := "model = \"magpie/gpt-6-luna\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = \"" + tomlString(list) + "\"\n\n" +
-		"[model_providers.magpie]\nname = \"magpie\"\nbase_url = \"http://127.0.0.1:3425/v1\"\n"
+	conf := "model = \"magpie/gpt-6-luna\"\nmodel_provider = \"chongyun\"\nmodel_catalog_json = \"" + tomlString(list) + "\"\n\n" +
+		"[model_providers.magpie]\nname = \"chongyun\"\nbase_url = \"http://127.0.0.1:3425/v1\"\n"
 	os.WriteFile(cfg, []byte(conf), 0o600)
 	os.WriteFile(list, []byte(`{"models":[{"slug":"magpie/gpt-6-luna"}]}`), 0o644)
 	then := time.Now().Add(-2 * time.Hour)
@@ -56,7 +56,7 @@ func TestCodexStaleOnlyForMagpiesChange(t *testing.T) {
 	}
 	a := codex(home)
 	if n := a.Stale(); n != 0 {
-		t.Fatalf("reopened after magpie's change, other home's daemon: %d stale, want 0", n)
+		t.Fatalf("reopened after chongyun's change, other home's daemon: %d stale, want 0", n)
 	}
 
 	// Codex trusts a project: config.toml written now, magpie's part as it was
@@ -70,7 +70,7 @@ func TestCodexStaleOnlyForMagpiesChange(t *testing.T) {
 	// magpie's list changes: the copy running from before has the old one
 	os.WriteFile(list, []byte(`{"models":[{"slug":"magpie/gpt-6-luna"},{"slug":"magpie/new"}]}`), 0o644)
 	if n := a.Stale(); n != 1 {
-		t.Fatalf("magpie's list changed: %d stale, want 1", n)
+		t.Fatalf("chongyun's list changed: %d stale, want 1", n)
 	}
 	// and stays so while nothing else changes, magpie restarted or not
 	if n := codex(home).Stale(); n != 1 {
@@ -199,7 +199,7 @@ func TestCodexStaleOnWindowsIsTheDaemonsLastCheck(t *testing.T) {
 	home, _ := codexHome(t, "", "")
 	dir := filepath.Join(home, ".codex")
 	cfg, list := filepath.Join(dir, "config.toml"), filepath.Join(dir, "magpie-models.json")
-	os.WriteFile(cfg, []byte("model_provider = \"magpie\"\nmodel_catalog_json = \""+tomlString(list)+"\"\n"), 0o600)
+	os.WriteFile(cfg, []byte("model_provider = \"chongyun\"\nmodel_catalog_json = \""+tomlString(list)+"\"\n"), 0o600)
 	os.WriteFile(list, []byte(`{"models":[{"slug":"magpie/a"}]}`), 0o644)
 	wasKeep, wasRunning := keepCodexDaemon, running
 	t.Cleanup(func() {
@@ -225,7 +225,7 @@ func TestCodexStaleOnWindowsIsTheDaemonsLastCheck(t *testing.T) {
 	}
 	codexDaemonCheck(cfg)
 	if got := copies(); len(got) != 0 {
-		t.Fatalf("a daemon on magpie's list: %+v, want none", got)
+		t.Fatalf("a daemon on chongyun's list: %+v, want none", got)
 	}
 	answer = provider.CodexDaemonCheck{Behind: true, Attached: 1, Since: since}
 	codexDaemonCheck(cfg)
@@ -241,7 +241,7 @@ func TestCodexStaleOnWindowsIsTheDaemonsLastCheck(t *testing.T) {
 	answer = provider.CodexDaemonCheck{Behind: true, Restarted: true, Since: since}
 	codexDaemonCheck(cfg)
 	if got := copies(); len(got) != 0 {
-		t.Fatalf("restarted by magpie: %+v, want none", got)
+		t.Fatalf("restarted by chongyun: %+v, want none", got)
 	}
 	// a check from longer ago than the loop looks says nothing now
 	answer = provider.CodexDaemonCheck{Behind: true, Attached: 1, Since: since}

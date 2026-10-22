@@ -12,11 +12,11 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 var asideRead = func(account string) (map[string]json.RawMessage, error) {
@@ -146,7 +146,7 @@ func asideOwnOptions(path, cur string) []Option {
 	sort.Strings(names)
 	for _, p := range names {
 		v := s.Providers[p]
-		if p == "magpie" {
+		if p == "chongyun" {
 			continue
 		}
 		for _, m := range v.Models {
@@ -256,7 +256,7 @@ func (c *asideConnection) load() (asideRecord, error) {
 		}
 		value, ok := legacy[c.at.key(name)]
 		p, m, valid := strings.Cut(value, "/")
-		if !ok || !valid || p == "" || m == "" || p == "magpie" {
+		if !ok || !valid || p == "" || m == "" || p == "chongyun" {
 			continue
 		}
 		raw, _ := edit.GetJSON(c.path, asideFieldPath(key))
@@ -310,16 +310,16 @@ func (c *asideConnection) provider() (string, string) {
 		return "invalid", "Aside's provider configuration could not be read"
 	}
 	if p.Key == "" || p.URL == "" {
-		return "foreign", "Aside's magpie provider has no ownership credential; it will not be overwritten"
+		return "foreign", "Aside's chongyun provider has no ownership credential; it will not be overwritten"
 	}
 	if p.Key != gateway.TokenFor("aside") && p.Key != agentKeyAt("aside", c.at.gw()) {
-		return "foreign", "Aside's magpie provider belongs to another configuration; it will not be overwritten"
+		return "foreign", "Aside's chongyun provider belongs to another configuration; it will not be overwritten"
 	}
 	if !sameGateway(p.URL, c.at.v1()) {
-		return "invalid", "Aside's magpie provider points to another gateway; reconnect explicitly to use this one"
+		return "invalid", "Aside's chongyun provider points to another gateway; reconnect explicitly to use this one"
 	}
 	if p.API == "" || len(p.Models) == 0 {
-		return "invalid", "Aside's magpie provider has an incomplete model catalog; reconnect the provider"
+		return "invalid", "Aside's chongyun provider has an incomplete model catalog; reconnect the provider"
 	}
 	return "connected", ""
 }
@@ -398,7 +398,7 @@ func (c *asideConnection) state() NativeState {
 		}
 		if strings.HasPrefix(value, "magpie/") && status == "disconnected" {
 			f.Status = "unavailable"
-			f.Detail = "The magpie provider is missing; reconnect the provider without changing this selection"
+			f.Detail = "The chongyun provider is missing; reconnect the provider without changing this selection"
 		}
 		if owned, ok := r.Fields[key]; ok && len(owned.Pending) > 0 {
 			f.Status = "pendingRestart"
@@ -420,7 +420,7 @@ func asideImageOptions() []Option {
 		}
 		for _, m := range gateway.Drawers(p) {
 			ref := p.ID + "/" + m.ID
-			out = append(out, Option{Value: "magpie/" + ref, Ref: ref, Label: m.Name, Group: p.Name, Icon: p.Icon, Note: "image generation · via magpie"})
+			out = append(out, Option{Value: "magpie/" + ref, Ref: ref, Label: m.Name, Group: p.Name, Icon: p.Icon, Note: "image generation · via chongyun"})
 		}
 	}
 	return out
@@ -458,7 +458,7 @@ func (c *asideConnection) validateSelection(key, value string) (string, error) {
 	if !ok || p == "" || m == "" {
 		return "", fmt.Errorf("expected provider/model")
 	}
-	if key == "image" && p == "magpie" && !asideImageOffered(value) {
+	if key == "image" && p == "chongyun" && !asideImageOffered(value) {
 		return "", fmt.Errorf("%s is not an image generation model", value)
 	}
 	return value, nil

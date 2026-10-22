@@ -27,7 +27,7 @@ func TestBuiltinMarket(t *testing.T) {
 			t.Errorf("%s: summary needs en and zh", x.Package)
 		}
 		if !x.Community {
-			t.Errorf("%s: only magpie's community's plugins are listed", x.Package)
+			t.Errorf("%s: only chongyun's community's plugins are listed", x.Package)
 		}
 		// gateway middleware signs in to nothing
 		if x.Kind == "middleware" {

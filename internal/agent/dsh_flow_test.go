@@ -8,8 +8,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // A profile's patch list written in flow style, as dsh's own writers leave
@@ -41,7 +41,7 @@ func TestDshFlowPatchList(t *testing.T) {
 	}
 	for _, p := range []string{web, def} {
 		s := read(p)
-		for _, want := range []string{"# Your patch layer", "- id: llm-pi-ai # magpie", "- id: agent-default-model # magpie", `model: "deepseek/pro"`} {
+		for _, want := range []string{"# Your patch layer", "- id: llm-pi-ai # chongyun", "- id: agent-default-model # chongyun", `model: "deepseek/pro"`} {
 			if !strings.Contains(s, want) {
 				t.Fatalf("missing %q in %s:\n%s", want, p, s)
 			}
@@ -107,7 +107,7 @@ func TestDshDocStart(t *testing.T) {
 	if !strings.Contains(s, "id: \"ui-settings-general\"") {
 		t.Fatalf("the user's entry lost:\n%s", s)
 	}
-	for _, want := range []string{"- id: llm-pi-ai # magpie", "- id: agent-default-model # magpie", `model: "deepseek/pro"`} {
+	for _, want := range []string{"- id: llm-pi-ai # chongyun", "- id: agent-default-model # chongyun", `model: "deepseek/pro"`} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q in %s:\n%s", want, web, s)
 		}
@@ -167,7 +167,7 @@ func TestDshDocStartOnlyFirst(t *testing.T) {
 		"--- x\n- id: a\n",
 		"[]\n---\n- id: a\n",
 	} {
-		if _, _, err := dshParse("p.yml", raw); err == nil || !strings.Contains(err.Error(), "not a list of entries magpie can edit") {
+		if _, _, err := dshParse("p.yml", raw); err == nil || !strings.Contains(err.Error(), "not a list of entries chongyun can edit") {
 			t.Fatalf("%q: want the file refused, got %v", raw, err)
 		}
 	}

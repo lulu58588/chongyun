@@ -11,8 +11,8 @@ import (
 
 	"golang.org/x/term"
 
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // backupCmd writes every provider, setting, profile and agent model, and
@@ -27,15 +27,15 @@ func backupCmd(args []string) error {
 		case a == "--no-library":
 			lib = false
 		case strings.HasPrefix(a, "-"):
-			return fmt.Errorf("unknown flag %s (magpie backup [--no-keys] [--no-library] [file])", a)
+			return fmt.Errorf("unknown flag %s (chongyun backup [--no-keys] [--no-library] [file])", a)
 		case file == "":
 			file = a
 		default:
-			return errors.New("usage: magpie backup [--no-keys] [--no-library] [file]")
+			return errors.New("usage: chongyun backup [--no-keys] [--no-library] [file]")
 		}
 	}
 	if file == "" {
-		file = "magpie" + backup.Ext
+		file = "chongyun" + backup.Ext
 	}
 	b, err := backup.Collect(keys, version)
 	if err != nil {
@@ -80,15 +80,15 @@ func restoreCmd(args []string) error {
 		case a == "--no-library":
 			parts.Library = false
 		case strings.HasPrefix(a, "-"):
-			return fmt.Errorf("unknown flag %s (magpie restore [--no-agents] [--no-library] <file>)", a)
+			return fmt.Errorf("unknown flag %s (chongyun restore [--no-agents] [--no-library] <file>)", a)
 		case file == "":
 			file = a
 		default:
-			return errors.New("usage: magpie restore [--no-agents] [--no-library] <file>")
+			return errors.New("usage: chongyun restore [--no-agents] [--no-library] <file>")
 		}
 	}
 	if file == "" {
-		return errors.New("usage: magpie restore [--no-agents] [--no-library] <file>")
+		return errors.New("usage: chongyun restore [--no-agents] [--no-library] <file>")
 	}
 	data, err := os.ReadFile(file)
 	if err != nil {
@@ -116,10 +116,10 @@ func restoreCmd(args []string) error {
 	}
 	fmt.Println()
 	if len(r.NeedKey) > 0 {
-		fmt.Println(muted.Render("Needs a key (magpie provider key <id>): " + strings.Join(r.NeedKey, ", ")))
+		fmt.Println(muted.Render("Needs a key (chongyun provider key <id>): " + strings.Join(r.NeedKey, ", ")))
 	}
 	if len(r.SignIn) > 0 {
-		fmt.Println(muted.Render("The backup's settings use these, not signed in on this computer (a backup carries settings, not sign-ins; to use one here: magpie accounts add <id>): " + strings.Join(r.SignIn, ", ")))
+		fmt.Println(muted.Render("The backup's settings use these, not signed in on this computer (a backup carries settings, not sign-ins; to use one here: chongyun accounts add <id>): " + strings.Join(r.SignIn, ", ")))
 	}
 	if len(r.Plugins) > 0 {
 		fmt.Println(muted.Render("Plugins added: " + strings.Join(r.Plugins, ", ")))

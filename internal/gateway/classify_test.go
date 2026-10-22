@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // clsUp is a Chat vendor that classifies: it answers what answer says,
@@ -174,7 +174,7 @@ func TestIntentRoutesATurn(t *testing.T) {
 			}
 			recs++
 		case r.ByMagpie() || r.Kind == "routing":
-			t.Fatalf("an agent's record marked magpie's or routing: %+v", r)
+			t.Fatalf("an agent's record marked chongyun's or routing: %+v", r)
 		default:
 			agents++
 		}

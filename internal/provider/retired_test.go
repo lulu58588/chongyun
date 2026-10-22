@@ -57,7 +57,7 @@ func TestRetiredLooksOnceInAWhile(t *testing.T) {
 	os.Chtimes(retiredPath(), later, later)
 	for deadline := time.Now().Add(10 * time.Second); !Retired("p", "other"); time.Sleep(5 * time.Millisecond) {
 		if time.Now().After(deadline) {
-			t.Fatal("another magpie's write isn't seen")
+			t.Fatal("another chongyun's write isn't seen")
 		}
 	}
 

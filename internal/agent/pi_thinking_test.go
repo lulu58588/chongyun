@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // Changing Pi's thinking level writes defaultThinkingLevel alone, and only
@@ -19,7 +19,7 @@ func TestPiThinkingLeavesTheProvider(t *testing.T) {
 	models := filepath.Join(dir, "models.json")
 	settingsBody := `{
   "theme": "dark",
-  "defaultProvider": "magpie",
+  "defaultProvider": "chongyun",
   "defaultModel": "relay/glm-4.6",
   "defaultThinkingLevel": "low"
 }
@@ -27,8 +27,8 @@ func TestPiThinkingLeavesTheProvider(t *testing.T) {
 	modelsBody := `{
   "providers": {
     "mine": {"baseUrl": "http://x"},
-    "magpie": {
-      "name": "magpie",
+    "chongyun": {
+      "name": "chongyun",
       "models": [
         {"id": "relay/glm-4.6", "name": "GLM", "contextWindow": 272000, "reasoning": false}
       ]
@@ -58,7 +58,7 @@ func TestPiThinkingLeavesTheProvider(t *testing.T) {
 		t.Fatal(err)
 	}
 	for k, want := range map[string]string{
-		"theme": "dark", "defaultProvider": "magpie", "defaultModel": "relay/glm-4.6", "defaultThinkingLevel": "high",
+		"theme": "dark", "defaultProvider": "chongyun", "defaultModel": "relay/glm-4.6", "defaultThinkingLevel": "high",
 	} {
 		if v, _ := edit.GetJSON(settings, k); v != want {
 			t.Fatalf("%s = %q\n%s", k, v, readFile(settings))
@@ -74,7 +74,7 @@ func TestPiThinkingLeavesTheProvider(t *testing.T) {
 	if _, ok := edit.GetJSON(settings, "defaultThinkingLevel"); ok {
 		t.Fatalf("default left thinking:\n%s", readFile(settings))
 	}
-	for k, want := range map[string]string{"theme": "dark", "defaultProvider": "magpie", "defaultModel": "relay/glm-4.6"} {
+	for k, want := range map[string]string{"theme": "dark", "defaultProvider": "chongyun", "defaultModel": "relay/glm-4.6"} {
 		if v, _ := edit.GetJSON(settings, k); v != want {
 			t.Fatalf("default changed %s to %q\n%s", k, v, readFile(settings))
 		}

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // claudeOpusThenSonnet is #1050's Claude Code before the switch: on
@@ -57,7 +57,7 @@ func sonnetFollowsAsBefore(t *testing.T, a *Agent, path string) {
 
 // The main model moved onto the Sonnet 5.5 magpie had given the sonnet tier
 // and the subagents, in Claude Code's own /model (whose list magpie writes,
-// each "· via magpie"): the two now follow the main model, read as empty,
+// each "· via chongyun"): the two now follow the main model, read as empty,
 // and run on the model magpie set them to. That isn't "changed outside
 // magpie" (#1050, cjyrainbow: Claude Code · WSL Ubuntu 已在 magpie 之外换掉
 // claude/claude-sonnet-5-5[1m] while everything still went through magpie).
@@ -73,7 +73,7 @@ func TestClaudeFollowerOnTheMainModelIsNoDrift(t *testing.T) {
 		t.Fatalf("not #1050's state: %v\n%s", v, readFile(path))
 	}
 	if d := a.Drift(); d != nil {
-		t.Fatalf("drift on a tier following magpie's model: %+v", *d)
+		t.Fatalf("drift on a tier following chongyun's model: %+v", *d)
 	}
 
 	// the main model on Anthropic's own: changed outside magpie
@@ -81,7 +81,7 @@ func TestClaudeFollowerOnTheMainModelIsNoDrift(t *testing.T) {
 		t.Fatal(err)
 	}
 	if d := a.Drift(); d == nil || d.Kind != "replaced" && d.Kind != "unwired" {
-		t.Fatalf("the main model off magpie isn't said: %+v", d)
+		t.Fatalf("the main model off chongyun isn't said: %+v", d)
 	}
 }
 
@@ -107,7 +107,7 @@ func TestWSLClaudeFollowerOnTheMainModelIsNoDrift(t *testing.T) {
 		t.Fatalf("not #1050's state: %v\n%s", v, readFile(path))
 	}
 	if dr := a.Drift(); dr != nil {
-		t.Fatalf("drift on a tier following magpie's model: %+v", *dr)
+		t.Fatalf("drift on a tier following chongyun's model: %+v", *dr)
 	}
 	d.Running = false
 	stopped := wslAgent(wslKindOf("claude"), d)
@@ -115,7 +115,7 @@ func TestWSLClaudeFollowerOnTheMainModelIsNoDrift(t *testing.T) {
 		t.Fatalf("stopped: not what was last seen: %v", v)
 	}
 	if dr := stopped.Drift(); dr != nil {
-		t.Fatalf("stopped: drift on a tier following magpie's model: %+v", *dr)
+		t.Fatalf("stopped: drift on a tier following chongyun's model: %+v", *dr)
 	}
 	noOwnClaude(t)
 }
@@ -126,7 +126,7 @@ func TestWSLClaudeFollowerOnTheMainModelIsNoDrift(t *testing.T) {
 // with the main model's way back from Sonnet 5.5, the pick lost without a
 // word. "Same as model" picked for them afterwards has them follow again.
 func TestClaudeOwnTierStaysThroughTheMainModel(t *testing.T) {
-	for _, via := range []string{"magpie", "/model"} {
+	for _, via := range []string{"chongyun", "/model"} {
 		t.Run(via, func(t *testing.T) {
 			home, _ := codexHome(t, "", "")
 			a := claude(home)
@@ -134,7 +134,7 @@ func TestClaudeOwnTierStaysThroughTheMainModel(t *testing.T) {
 			env := func(k string) string { v, _ := edit.GetJSON(path, "env."+k); return v }
 			main := func(m string) {
 				t.Helper()
-				if via == "magpie" {
+				if via == "chongyun" {
 					if err := a.Apply("model", m); err != nil {
 						t.Fatal(err)
 					}
@@ -189,7 +189,7 @@ func TestClaudeOwnTierStaysThroughTheMainModel(t *testing.T) {
 func TestClaudeOwnTierOnTheNewMainModelStays(t *testing.T) {
 	for _, own := range []string{"oa/gpt-6.1-sol", "anth/claude-opus-5-5"} {
 		for _, tier := range claudeTiers {
-			for _, via := range []string{"magpie", "/model"} {
+			for _, via := range []string{"chongyun", "/model"} {
 				t.Run(own+"/"+tier+"/"+via, func(t *testing.T) {
 					home, _ := codexHome(t, "", "")
 					a := claude(home)
@@ -205,7 +205,7 @@ func TestClaudeOwnTierOnTheNewMainModelStays(t *testing.T) {
 					bare := func(s string) string { return strings.TrimSuffix(s, "[1m]") }
 					main := func(m string) {
 						t.Helper()
-						if via == "magpie" {
+						if via == "chongyun" {
 							if err := a.Apply("model", m); err != nil {
 								t.Fatal(err)
 							}

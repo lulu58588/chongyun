@@ -11,9 +11,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/yetone/magpie/internal/davsync"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/davsync"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // archiveStore is the bucket a call is read back from: sync's S3 one, or
@@ -79,7 +79,7 @@ func openArchive(r *http.Request) (io.ReadCloser, int64, string, error) {
 	}
 	body, size, err := b.Open(r.Context(), name)
 	if errors.Is(err, davsync.ErrNoObject) {
-		return nil, 0, "", errors.New("Not in the archive yet: it is uploaded just after the call, or the upload failed (magpie's log says why)")
+		return nil, 0, "", errors.New("Not in the archive yet: it is uploaded just after the call, or the upload failed (chongyun's log says why)")
 	}
 	if err != nil {
 		return nil, 0, "", err

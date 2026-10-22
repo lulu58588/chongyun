@@ -54,7 +54,7 @@ func Lock(path string, wait time.Duration) (unlock func(), held bool) {
 		}
 		if time.Since(start) > wait {
 			f.Close()
-			log.Printf("%s: another magpie held it for %v; going on without it", path, wait)
+			log.Printf("%s: another chongyun held it for %v; going on without it", path, wait)
 			return func() {}, false
 		}
 		time.Sleep(5 * time.Millisecond)

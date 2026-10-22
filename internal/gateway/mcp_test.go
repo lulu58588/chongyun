@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/mcpauth"
-	"github.com/yetone/magpie/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
 )
 
 // /mcp/<server> is a remote MCP server magpie signed in to (#615), as the
@@ -49,7 +49,7 @@ func TestMCPProxy(t *testing.T) {
 		t.Fatalf("initialize: %d %s %v", resp.StatusCode, b, resp.Header)
 	}
 	if got := f.Seen.Get("Authorization"); got != "Bearer "+token {
-		t.Fatalf("the server got Authorization %q, not magpie's token", got)
+		t.Fatalf("the server got Authorization %q, not chongyun's token", got)
 	}
 	if f.Seen.Get("X-Team") != "acme" || f.Seen.Get("Mcp-Protocol-Version") != "2025-06-18" {
 		t.Fatalf("headers not passed on: %v", f.Seen)
@@ -233,11 +233,11 @@ func TestMCPProxyKeepsQueryAndHeaders(t *testing.T) {
 			t.Fatalf("%s: %d %s", body, resp.StatusCode, b)
 		}
 	}
-	call(`{"jsonrpc":"2.0","id":1,"method":"initialize"}`, "X-Api-Key", "exa-key", "X-Exa-Source", "magpie")
+	call(`{"jsonrpc":"2.0","id":1,"method":"initialize"}`, "X-Api-Key", "exa-key", "X-Exa-Source", "chongyun")
 	if f.SeenQuery != "login" {
 		t.Fatalf("the server got the query %q, not login", f.SeenQuery)
 	}
-	if f.Seen.Get("X-Api-Key") != "exa-key" || f.Seen.Get("X-Exa-Source") != "magpie" {
+	if f.Seen.Get("X-Api-Key") != "exa-key" || f.Seen.Get("X-Exa-Source") != "chongyun" {
 		t.Fatalf("headers not passed on: %v", f.Seen)
 	}
 	token, _ := mcpauth.Token(t.Context(), "exa")

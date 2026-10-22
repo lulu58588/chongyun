@@ -19,8 +19,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/ghtoken"
-	"github.com/yetone/magpie/internal/source"
+	"github.com/lulu58588/magpie/internal/ghtoken"
+	"github.com/lulu58588/magpie/internal/source"
 )
 
 // ---- which skills GitHub has changed --------------------------------------
@@ -160,7 +160,7 @@ func lastCommit(src Source) (*commit, error) {
 // errLimited.
 func apiGet(u string) ([]byte, int, bool, error) {
 	req, _ := http.NewRequest("GET", u, nil)
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	req.Header.Set("Accept", "application/vnd.github+json")
 	etags.Lock()
 	had, cached := etags.m[u]

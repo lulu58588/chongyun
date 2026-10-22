@@ -30,12 +30,12 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 const dshMCPPlugin = "@deepseek-ai/dsh-mcp-client"
 
-const dshMark = "- insert: # magpie"
+const dshMark = "- insert: # chongyun"
 
 // dshServerName is what dsh-mcp-client takes as a serverName.
 var dshServerName = regexp.MustCompile(`^[A-Za-z0-9_-]{1,32}$`)
@@ -103,7 +103,7 @@ func dshRead(path string) (*dshPatches, error) {
 			// document, which is no list magpie can edit.
 			marker := dshDocStart(l) && !opened
 			if t != "" && !strings.HasPrefix(t, "#") && t != "[]" && !marker {
-				return nil, fmt.Errorf("%s is not a list of entries magpie can edit", path)
+				return nil, fmt.Errorf("%s is not a list of entries chongyun can edit", path)
 			}
 			if t != "" && !strings.HasPrefix(t, "#") {
 				opened = true
@@ -112,7 +112,7 @@ func dshRead(path string) (*dshPatches, error) {
 				p.head = append(p.head, l)
 			}
 		case t != "" && !strings.HasPrefix(t, "#") && !strings.HasPrefix(l, " "):
-			return nil, fmt.Errorf("%s is not a list of entries magpie can edit", path)
+			return nil, fmt.Errorf("%s is not a list of entries chongyun can edit", path)
 		default:
 			p.items[len(p.items)-1] = append(p.items[len(p.items)-1], l)
 		}

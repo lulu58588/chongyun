@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/yetone/magpie/internal/codexsummary"
+	"github.com/lulu58588/magpie/internal/codexsummary"
 )
 
 // A rollout written portable (sessions.PortCodexRollouts) holds, in place
@@ -29,7 +29,7 @@ func TestPortedCompactionReadsTheSame(t *testing.T) {
 		json.Unmarshal(a, &x)
 		json.Unmarshal(b, &y)
 		if !reflect.DeepEqual(x, y) {
-			t.Errorf("%+v: magpie's item sent as\n%s\nthe ported message as\n%s", c, a, b)
+			t.Errorf("%+v: chongyun's item sent as\n%s\nthe ported message as\n%s", c, a, b)
 		}
 	}
 }

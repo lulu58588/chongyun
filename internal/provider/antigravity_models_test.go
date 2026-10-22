@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // antigravityListed is what Antigravity's fetchAvailableModels said for

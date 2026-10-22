@@ -29,7 +29,7 @@ func TestConsoleShowsTheServingMagpiesRouting(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		switch r.URL.Path {
 		case "/":
-			w.Write([]byte(`{"name":"magpie","version":"0.1.1257","models":3,"window":true,"serves":"serve","pid":4321,"apis":[]}`))
+			w.Write([]byte(`{"name":"chongyun","version":"0.1.1257","models":3,"window":true,"serves":"serve","pid":4321,"apis":[]}`))
 		case "/v1/magpie/trace":
 			w.Write([]byte(`{"object":"trace","seq":7,"pid":4321,"serves":"serve","routes":[{"id":1,"model":"ollama/gemma4:e4b","provider":"ollama","status":200}]}`))
 		default:
@@ -62,12 +62,12 @@ func TestConsoleShowsTheServingMagpiesRouting(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !got.Mine || len(got.Routes) != 1 || got.Routes[0].Model != "ollama/gemma4:e4b" || got.Routes[0].Status != 200 {
-		t.Fatalf("the serving magpie's routing was not shown: mine %v routes %+v", got.Mine, got.Routes)
+		t.Fatalf("the serving chongyun's routing was not shown: mine %v routes %+v", got.Mine, got.Routes)
 	}
 	// the trace names the magpie it came from, so the page's name for it
 	// changes with the trace when another magpie takes the gateway over
 	if got.By == nil || got.By.Pid != 4321 || got.By.Serves != "serve" {
-		t.Errorf("the trace doesn't name the magpie it came from: %+v", got.By)
+		t.Errorf("the trace doesn't name the chongyun it came from: %+v", got.By)
 	}
 
 	// the state names it, for the page's heading to say which one is routing
@@ -95,7 +95,7 @@ func TestConsoleKeepsTheNoticeFromAnOlderGateway(t *testing.T) {
 	other := &http.Server{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		if r.URL.Path == "/" {
-			w.Write([]byte(`{"name":"magpie","version":"0.1.550","models":3,"window":true,"apis":[]}`))
+			w.Write([]byte(`{"name":"chongyun","version":"0.1.550","models":3,"window":true,"apis":[]}`))
 			return
 		}
 		http.NotFound(w, r)

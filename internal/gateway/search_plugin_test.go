@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gwtool"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/gwtool"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The tool point's web search with plugins/search on and off, for a user
@@ -66,10 +66,10 @@ func TestSearchOnAndOff(t *testing.T) {
 
 	// on
 	if !CanSearch() || !canSearchFor(provider.Provider{}) || !searchesOwn(plan) {
-		t.Fatal("on: magpie's search not offered")
+		t.Fatal("on: chongyun's search not offered")
 	}
 	if !strings.Contains(ask(false), "web_search") {
-		t.Error("on: a model that can't search wasn't given magpie's web_search")
+		t.Error("on: a model that can't search wasn't given chongyun's web_search")
 	}
 	if !strings.Contains(ask(true), "web_search_20250305") {
 		t.Error("on: a vendor that searches by itself wasn't sent its own web_search")
@@ -93,10 +93,10 @@ func TestSearchOnAndOff(t *testing.T) {
 	// off
 	withoutSearch(t)
 	if CanSearch() || canSearchFor(provider.Provider{}) || canSearchFor(plan) || searchesOwn(plan) {
-		t.Error("off: magpie's search still offered")
+		t.Error("off: chongyun's search still offered")
 	}
 	if sent := ask(false); strings.Contains(sent, "web_search") {
-		t.Errorf("off: magpie's web_search offered: %s", sent)
+		t.Errorf("off: chongyun's web_search offered: %s", sent)
 	}
 	if !strings.Contains(ask(true), "web_search_20250305") {
 		t.Error("off: a vendor that searches by itself lost its own web_search")

@@ -19,12 +19,12 @@ import (
 
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
-	"github.com/yetone/magpie/internal/agentplug"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/agentplug"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 func init() {
@@ -97,7 +97,7 @@ func pluggedAgents(home string, builtin []*Agent, errs map[string]string) []*Age
 	for _, p := range list {
 		if taken[p.Desc.ID] {
 			if errs != nil {
-				errs[p.Spec] = fmt.Sprintf("agent id %q is magpie's own agent's", p.Desc.ID)
+				errs[p.Spec] = fmt.Sprintf("agent id %q is chongyun's own agent's", p.Desc.ID)
 			}
 			continue
 		}
@@ -439,7 +439,7 @@ func plugged(home string, p *agentplug.Agent) *Agent {
 				return nil
 			},
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun"}}
 			},
 		}}
 	}

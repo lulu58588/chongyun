@@ -38,7 +38,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // Where ZCode's coding plan and its sign-in are; vars so tests can point

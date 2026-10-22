@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/desktopdir"
+	"github.com/lulu58588/magpie/internal/desktopdir"
 )
 
 // Call is one model call as an agent's own session file records it.

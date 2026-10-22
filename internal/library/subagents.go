@@ -15,8 +15,8 @@ import (
 	"unicode/utf8"
 
 	"github.com/pelletier/go-toml/v2"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // Subagents (#2283) are agents of their own the main agent hands a task
@@ -92,7 +92,7 @@ func (sp *subagentSpec) path(name string) string { return filepath.Join(sp.dir, 
 func subagentSpecOf(t *Target) (*subagentSpec, string) {
 	a := t.Agent
 	if a.WSL != "" {
-		return nil, "magpie gives no subagents to an agent in WSL yet"
+		return nil, "chongyun gives no subagents to an agent in WSL yet"
 	}
 	md := func(dir string, keys func(s *Subagent, skills, mcp []string) [][2]string) *subagentSpec {
 		return &subagentSpec{dir: dir, ext: ".md", render: func(s *Subagent, skills, mcp []string) []byte {
@@ -151,7 +151,7 @@ func subagentSpecOf(t *Target) (*subagentSpec, string) {
 		sp.ext = ".agent.md"
 		return sp, ""
 	}
-	return nil, "magpie can't give " + a.Name + " subagents: it reads none from a folder of its own"
+	return nil, "chongyun can't give " + a.Name + " subagents: it reads none from a folder of its own"
 }
 
 // yamlStr is s as a YAML scalar: JSON's quoted string is one.
@@ -349,7 +349,7 @@ func (l *Library) syncSubagents(t *Target, b *backups, res *Result) {
 		case err == nil && bytes.Equal(cur, body):
 			// the same as magpie would write: taken as magpie's
 		case err == nil:
-			res.fail(id, "subagent:"+s.Name, fmt.Errorf("%s has a subagent of its own at %s, which magpie leaves as it is", t.Agent.Name, path))
+			res.fail(id, "subagent:"+s.Name, fmt.Errorf("%s has a subagent of its own at %s, which chongyun leaves as it is", t.Agent.Name, path))
 			continue
 		case !os.IsNotExist(err):
 			res.fail(id, "subagent:"+s.Name, err)

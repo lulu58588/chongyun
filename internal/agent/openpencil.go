@@ -12,7 +12,7 @@ package agent
 // settings_payload.rs, main at 40902a3f and v0.8.4):
 //
 //	{"version":1, …,
-//	 "builtin_agents":[{"id":"magpie","preset":"custom","display_name":"magpie",
+//	 "builtin_agents":[{"id":"chongyun","preset":"custom","display_name": "崇云科技",
 //	   "kind":"openai-compat","api_key":"magpie-openpencil",
 //	   "model":"<first model>","models":["<model>",…],
 //	   "base_url":"http://127.0.0.1:3425/v1","enabled":true}], …}
@@ -56,9 +56,9 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // openPencilApp is OpenPencil's macOS bundle, as its release builds it
@@ -73,10 +73,10 @@ const openPencilMaxModels = 64
 // (the .app's CFBundleExecutable, the .deb's and AppImage's, the .exe).
 var openPencilProc = []string{`(^|/)openpencil-desktop( |$)`}
 
-var noticeOpenPencil = newNotice("OpenPencil reads its settings when it starts and writes them all back when it quits — quit OpenPencil before changing this, then open it and pick a magpie model in its chat's model picker.")
+var noticeOpenPencil = newNotice("OpenPencil reads its settings when it starts and writes them all back when it quits — quit OpenPencil before changing this, then open it and pick a chongyun model in its chat's model picker.")
 
 // errOpenPencilRunning is a change refused while OpenPencil runs.
-var errOpenPencilRunning = errors.New("OpenPencil writes its settings back when it quits, over what magpie writes now: quit OpenPencil, then try again")
+var errOpenPencilRunning = errors.New("OpenPencil writes its settings back when it quits, over what chongyun writes now: quit OpenPencil, then try again")
 
 func openPencil(home, cfg string) *Agent {
 	dir := openPencilDir(home, cfg)
@@ -127,7 +127,7 @@ func openPencil(home, cfg string) *Agent {
 				return write(v != "")
 			},
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie", Note: "every magpie model in OpenPencil's chat model picker"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun", Note: "every chongyun model in OpenPencil's chat model picker"}}
 			},
 		}},
 	}, path)
@@ -206,7 +206,7 @@ func openPencilEntry(gw string) openPencilAgent {
 			break
 		}
 	}
-	e := openPencilAgent{ID: magpieID, Preset: "custom", DisplayName: "magpie", Kind: "openai-compat",
+	e := openPencilAgent{ID: magpieID, Preset: "custom", DisplayName: "崇云科技", Kind: "openai-compat",
 		APIKey: agentKeyAt("openpencil", gw), BaseURL: gw + "/v1", Enabled: true}
 	if len(ms) > 0 {
 		e.Model = ms[0]
@@ -240,7 +240,7 @@ func openPencilAgents(path string) (list []json.RawMessage, i int, err error) {
 		return nil, i, fmt.Errorf("%s isn't JSON OpenPencil reads", path)
 	}
 	if v := gjson.GetBytes(b, "version"); v.Type != gjson.Number || v.Raw != "1" {
-		return nil, i, fmt.Errorf("%s says version %s, not the 1 OpenPencil reads, so magpie leaves it alone", path, v.Raw)
+		return nil, i, fmt.Errorf("%s says version %s, not the 1 OpenPencil reads, so chongyun leaves it alone", path, v.Raw)
 	}
 	raw := gjson.GetBytes(b, "builtin_agents")
 	if !raw.Exists() || raw.Type == gjson.Null {

@@ -19,7 +19,7 @@ const (
 
 // SharedGroup is the text a group is shared as.
 type SharedGroup struct {
-	Magpie  string `json:"magpie"`
+	Magpie  string `json:"chongyun"`
 	Version int    `json:"version"`
 	Group   Group  `json:"group"`
 }
@@ -71,15 +71,15 @@ type ShareError struct {
 func (e *ShareError) Error() string {
 	switch e.Why {
 	case "newer":
-		return fmt.Sprintf("this group was shared from a newer magpie (format %d): update magpie to import it", e.Format)
+		return fmt.Sprintf("this group was shared from a newer chongyun (format %d): update chongyun to import it", e.Format)
 	case "no_format":
 		return "this shared group says no format it is in: copy it again with Copy to share"
 	case "unreadable":
 		return fmt.Sprintf("this shared group can't be read: %v", e.Err)
 	case "none_here":
-		return "none of the group's models is in your magpie: " + strings.Join(e.Models, ", ")
+		return "none of the group's models is in your chongyun: " + strings.Join(e.Models, ", ")
 	}
-	return "this is not a routing group shared from magpie: copy one with Copy to share in a group's menu"
+	return "this is not a routing group shared from chongyun: copy one with Copy to share in a group's menu"
 }
 
 func (e *ShareError) Unwrap() error { return e.Err }
@@ -110,7 +110,7 @@ func ReadShared(text string) (SharedGroup, error) {
 		return s, notOne
 	}
 	var probe struct {
-		Magpie  string          `json:"magpie"`
+		Magpie  string          `json:"chongyun"`
 		Version int             `json:"version"`
 		Group   json.RawMessage `json:"group"`
 	}

@@ -39,7 +39,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/lastgood"
 )
 
 // stepfunSites are StepFun's two platforms, by the API host a provider uses.
@@ -91,8 +91,8 @@ func StepFunBookmarklet() string {
 		`const c=a?JSON.parse(atob(a.split(".")[1].replace(/-/g,"+").replace(/_/g,"/"))):{};` +
 		`if(!c.activated||!f){alert("Sign in to StepFun first / 请先登录 StepFun");return}` +
 		`const t="` + stepfunPaste + `"+JSON.stringify({site:s[0],access:a,refresh:f,webId:w});` +
-		`try{await navigator.clipboard.writeText(t);alert("Copied: paste it into magpie / 已复制，回 magpie 粘贴")}` +
-		`catch{prompt("Copy this and paste it into magpie / 复制这段，回 magpie 粘贴",t)}` +
+		`try{await navigator.clipboard.writeText(t);alert("Copied: paste it into chongyun / 已复制，回 chongyun 粘贴")}` +
+		`catch{prompt("Copy this and paste it into chongyun / 复制这段，回 chongyun 粘贴",t)}` +
 		`}catch(e){alert(String(e))}})()`
 }
 

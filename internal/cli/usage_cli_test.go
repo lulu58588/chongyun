@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	stats "github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	stats "github.com/lulu58588/magpie/internal/usage"
 )
 
 // holdUsageClock stops the usage clock at at for the test and gives at back,
@@ -118,7 +118,7 @@ func TestUsageShowsCallsNotThroughMagpie(t *testing.T) {
 		t.Fatal(err)
 	}
 	out := b.String()
-	gw, own, ok := strings.Cut(out, "not through magpie")
+	gw, own, ok := strings.Cut(out, "not through chongyun")
 	if !ok || !strings.Contains(gw, "relay/m") || strings.Contains(gw, "gpt-6-luna") || !strings.Contains(own, "gpt-6-luna") || !strings.Contains(own, "1.5K") {
 		t.Fatal(out)
 	}
@@ -128,7 +128,7 @@ func TestUsageShowsCallsNotThroughMagpie(t *testing.T) {
 		return []sessions.Call{{Time: now.AddDate(0, 0, -40), Agent: "codex", Model: "gpt-6-luna", Tokens: sessions.Tokens{Input: 7}}}
 	}
 	b.Reset()
-	if err := usageTo(&b, []string{"usage", "all"}); err != nil || !strings.Contains(b.String(), "not through magpie") || !strings.Contains(b.String(), "gpt-6-luna") {
+	if err := usageTo(&b, []string{"usage", "all"}); err != nil || !strings.Contains(b.String(), "not through chongyun") || !strings.Contains(b.String(), "gpt-6-luna") {
 		t.Fatal(b.String(), err)
 	}
 }
@@ -150,7 +150,7 @@ func TestUsageAskedAtMidnight(t *testing.T) {
 	if err := usageTo(&b, []string{"usage", "today"}); err != nil {
 		t.Fatal(err)
 	}
-	gw, own, ok := strings.Cut(b.String(), "not through magpie")
+	gw, own, ok := strings.Cut(b.String(), "not through chongyun")
 	if !ok || !strings.Contains(gw, "relay/m") || !strings.Contains(own, "gpt-6-luna") {
 		t.Fatal(b.String())
 	}

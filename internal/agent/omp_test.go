@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 	"gopkg.in/yaml.v3"
 )
 
@@ -55,7 +55,7 @@ func TestOmp(t *testing.T) {
 	}
 	m, raw := read(modelsPath)
 	ps := providers(m)
-	mp, ok := ps["magpie"].(map[string]any)
+	mp, ok := ps["chongyun"].(map[string]any)
 	if !ok || ps["mine"] == nil || mp["auth"] != "none" || mp["api"] != "openai-completions" || !strings.HasSuffix(mp["baseUrl"].(string), "/v1") {
 		t.Fatalf("models:\n%s", raw)
 	}
@@ -73,7 +73,7 @@ func TestOmp(t *testing.T) {
 	}
 	c, _ = read(configPath)
 	m, _ = read(modelsPath)
-	if roles(c)["default"] != "moonshotai/kimi-k3" || providers(m)["magpie"] != nil || providers(m)["mine"] == nil {
+	if roles(c)["default"] != "moonshotai/kimi-k3" || providers(m)["chongyun"] != nil || providers(m)["mine"] == nil {
 		t.Fatalf("own: %v %v", c, m)
 	}
 
@@ -86,7 +86,7 @@ func TestOmp(t *testing.T) {
 	}
 	c, _ = read(configPath)
 	m, _ = read(modelsPath)
-	if roles(c)["default"] != "moonshotai/kimi-k3" || roles(c)["smol"] != "magpie/deepseek/pro" || providers(m)["magpie"] == nil {
+	if roles(c)["default"] != "moonshotai/kimi-k3" || roles(c)["smol"] != "magpie/deepseek/pro" || providers(m)["chongyun"] == nil {
 		t.Fatalf("reset with smol: %v %v", c, m)
 	}
 
@@ -97,7 +97,7 @@ func TestOmp(t *testing.T) {
 	}
 	c, _ = read(configPath)
 	m, _ = read(modelsPath)
-	if roles(c)["default"] != nil || roles(c)["smol"] != "openai/gpt-6-mini" || c["theme"] != "dark" || providers(m)["magpie"] != nil || providers(m)["mine"] == nil {
+	if roles(c)["default"] != nil || roles(c)["smol"] != "openai/gpt-6-mini" || c["theme"] != "dark" || providers(m)["chongyun"] != nil || providers(m)["mine"] == nil {
 		t.Fatalf("reset: %v %v", c, m)
 	}
 }
@@ -125,7 +125,7 @@ func TestOmpRefsBeyondDefault(t *testing.T) {
 		var m struct{ Providers map[string]any }
 		b, _ := os.ReadFile(modelsPath)
 		yaml.Unmarshal(b, &m)
-		return m.Providers["magpie"] != nil
+		return m.Providers["chongyun"] != nil
 	}
 	f := omp(home).Field("model")
 
@@ -138,7 +138,7 @@ func TestOmpRefsBeyondDefault(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !hasMagpie() {
-		t.Fatal("a fallback chain on magpie/deepseek/pro:max lost magpie's provider")
+		t.Fatal("a fallback chain on magpie/deepseek/pro:max lost chongyun's provider")
 	}
 	// none left: it goes
 	os.WriteFile(configPath, []byte("modelRoles:\n  default: magpie/deepseek/flash\nretry:\n  fallbackChains:\n    default:\n      - openai/gpt-6\n"), 0o644)
@@ -146,7 +146,7 @@ func TestOmpRefsBeyondDefault(t *testing.T) {
 		t.Fatal(err)
 	}
 	if hasMagpie() {
-		t.Fatal("magpie's provider stayed with nothing on it")
+		t.Fatal("chongyun's provider stayed with nothing on it")
 	}
 
 	const before = `# mine
@@ -232,7 +232,7 @@ func TestOmpNamedToTheGateway(t *testing.T) {
 	}
 	ua := m.Providers[magpieID].Headers["User-Agent"]
 	if ua == "" || usage.AgentOf(ua) != "omp" {
-		t.Fatalf("magpie's provider names omp as %q, which the gateway takes for %q:\n%s", ua, usage.AgentOf(ua), b)
+		t.Fatalf("chongyun's provider names omp as %q, which the gateway takes for %q:\n%s", ua, usage.AgentOf(ua), b)
 	}
 	if usage.AgentOf("Bun/1.3.14") == "omp" {
 		t.Fatal("Bun's own User-Agent is taken for omp's, so the header proves nothing")
@@ -281,7 +281,7 @@ func TestOmpRoles(t *testing.T) {
 		t.Fatal(err)
 	}
 	if r := roles(); r["task"] != "magpie/deepseek/flash" || r["default"] != "anthropic/claude-opus-5" || !magpieIn() {
-		t.Fatalf("subagent on magpie: %v, magpie in models.yml: %v", r, magpieIn())
+		t.Fatalf("subagent on chongyun: %v, chongyun in models.yml: %v", r, magpieIn())
 	}
 	if sub.Get() != "magpie/deepseek/flash" {
 		t.Fatalf("get: %q", sub.Get())
@@ -307,7 +307,7 @@ func TestOmpRoles(t *testing.T) {
 		t.Fatal(err)
 	}
 	if r := roles(); r["task"] != nil || r["smol"] != "openai/gpt-6-mini" || r["default"] != "anthropic/claude-opus-5" || magpieIn() {
-		t.Fatalf("subagent reset: %v, magpie in models.yml: %v", r, magpieIn())
+		t.Fatalf("subagent reset: %v, chongyun in models.yml: %v", r, magpieIn())
 	}
 }
 
@@ -351,7 +351,7 @@ func TestOmpLevels(t *testing.T) {
 	// deepseek/pro has no max of its own: omp clamps it, so it stays
 	apply("model", "magpie/deepseek/pro", "magpie/deepseek/pro:max")
 	if d := a.Drift(); d != nil {
-		t.Fatalf("drift on what magpie set: %+v", d)
+		t.Fatalf("drift on what chongyun set: %+v", d)
 	}
 	apply("model", "magpie/deepseek/flash", "magpie/deepseek/flash:max")
 	apply("model", "magpie/deepseek/pro:low", "magpie/deepseek/pro:low") // its own level wins
@@ -430,7 +430,7 @@ func TestOmpLevelSuffix(t *testing.T) {
 		t.Fatal(err)
 	}
 	if d := a.Drift(); d != nil {
-		t.Fatalf("drift on what magpie set: %+v", d)
+		t.Fatalf("drift on what chongyun set: %+v", d)
 	}
 	// omp's own /model puts the role back on the user's model
 	edit.SetYAML(configPath, edit.KV{Path: "modelRoles.default", Value: "anthropic/claude-opus-5:high"})
@@ -477,7 +477,7 @@ func TestOmpRoleList(t *testing.T) {
 			t.Fatal(err)
 		}
 		if got := a.Field(k).Get(); got != "magpie/deepseek/pro" {
-			t.Fatalf("%s on magpie: %q", k, got)
+			t.Fatalf("%s on chongyun: %q", k, got)
 		}
 		if err := a.Apply(k, ""); err != nil {
 			t.Fatal(err)
@@ -524,7 +524,7 @@ func TestOmpRoleAndChain(t *testing.T) {
 		t.Fatal(err)
 	}
 	if v, _ := edit.GetYAML(modelsPath, "providers.magpie.baseUrl"); v == "" || a.Field("slow").Get() != "" {
-		t.Fatalf("the chain lost magpie's provider, or slow stayed: %q", a.Field("slow").Get())
+		t.Fatalf("the chain lost chongyun's provider, or slow stayed: %q", a.Field("slow").Get())
 	}
 	edit.SetYAML(modelsPath, edit.KV{Path: "providers.magpie.baseUrl", Value: "http://127.0.0.1:1/v1"})
 	if d := a.Drift(); d == nil || d.Kind != "unwired" {
@@ -661,7 +661,7 @@ func TestOmpOwnModels(t *testing.T) {
   zzrelay:
     models:
       - id: m1
-  magpie:
+  chongyun:
     baseUrl: http://127.0.0.1:1/v1
     auth: none
     models:
@@ -786,7 +786,7 @@ func TestOmpKeepsTheUsersSettings(t *testing.T) {
 		}
 		if mp.BaseURL == "http://127.0.0.1:1/v1" || mp.Auth != "none" || mp.APIKey != nil || mp.Headers["User-Agent"] != "omp" ||
 			slices.Contains(ids, "gone/old") || !slices.Contains(ids, "kimi/k3") {
-			t.Errorf("%s: magpie's own parts not written:\n%s", when, raw)
+			t.Errorf("%s: chongyun's own parts not written:\n%s", when, raw)
 		}
 	}
 	check("sync")

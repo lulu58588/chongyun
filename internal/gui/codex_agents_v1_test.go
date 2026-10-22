@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Codex's own multi_agent_v2 on in the config magpie routes is what the
@@ -72,7 +72,7 @@ func TestCodexAgentsV1SettingNotice(t *testing.T) {
 		t.Fatalf("no notice that Codex's own V2 wins: %q", n)
 	}
 	if b, _ := os.ReadFile(cfg); !strings.Contains(string(b), "multi_agent_v2 = true") || strings.Contains(string(b), "multi_agent_v2 = false") {
-		t.Fatalf("magpie wrote the key:\n%s", b)
+		t.Fatalf("chongyun wrote the key:\n%s", b)
 	}
 
 	code, out = call("POST", "/api/settings/codex-agents-v1", `{"on":false}`)

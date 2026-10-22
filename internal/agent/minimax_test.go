@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -133,14 +133,14 @@ func TestMiniMaxCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw := readMiniMax(t, path)
-	mp, ok := c.CustomProvider["magpie"]
+	mp, ok := c.CustomProvider["chongyun"]
 	if !ok || c.DefaultModel != "custom_provider:magpie/think~deep" || c.DefaultModelVariant != "" {
 		t.Fatalf("config:\n%s", raw)
 	}
 	if mp.Kind != "custom" || mp.API != "anthropic-messages" || mp.Enabled == nil || !*mp.Enabled ||
 		mp.Options["baseURL"] != gateway.URL() || mp.Options["apiKey"] != gateway.Token || mp.Options["authMode"] != "api-key" ||
 		!reflect.DeepEqual(mp.Options["headers"], map[string]any{"User-Agent": "minimax-code"}) {
-		t.Fatalf("magpie's entry:\n%s", raw)
+		t.Fatalf("chongyun's entry:\n%s", raw)
 	}
 	deep, flash := mp.Models["think~deep"], mp.Models["think~v1.5-flash"]
 	if len(mp.Models) != 2 || deep.Limit.Context != 400000 || deep.Limit.Output != 64000 || !deep.Reasoning ||
@@ -171,7 +171,7 @@ func TestMiniMaxCode(t *testing.T) {
 	}
 	for _, v := range vals {
 		if strings.HasPrefix(v, "custom_provider:magpie/") {
-			t.Fatalf("magpie's entry offered as the user's own: %v", vals)
+			t.Fatalf("chongyun's entry offered as the user's own: %v", vals)
 		}
 	}
 
@@ -182,7 +182,7 @@ func TestMiniMaxCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	if d := c.CustomProvider["magpie"].Models["think~deep"]; c.DefaultModel != "custom_provider:magpie/think~v1.5-flash" ||
+	if d := c.CustomProvider["chongyun"].Models["think~deep"]; c.DefaultModel != "custom_provider:magpie/think~v1.5-flash" ||
 		d.Enabled == nil || *d.Enabled || !strings.Contains(raw, "# hidden in /model") {
 		t.Fatalf("second:\n%s", raw)
 	}
@@ -199,7 +199,7 @@ func TestMiniMaxCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	if c.DefaultModel != "minimax/MiniMax-M2.7" || c.DefaultModelVariant != "thinking" || c.CustomProvider["magpie"].Kind != "" ||
+	if c.DefaultModel != "minimax/MiniMax-M2.7" || c.DefaultModelVariant != "thinking" || c.CustomProvider["chongyun"].Kind != "" ||
 		c.CustomProvider["work"].Kind != "custom" || !strings.Contains(raw, "# my notes") {
 		t.Fatalf("reset:\n%s", raw)
 	}
@@ -210,7 +210,7 @@ func TestMiniMaxCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	if c.DefaultModel != "custom_provider:work/deep-reasoner-1" || c.DefaultModelVariant != "" || c.CustomProvider["magpie"].Kind != "" {
+	if c.DefaultModel != "custom_provider:work/deep-reasoner-1" || c.DefaultModelVariant != "" || c.CustomProvider["chongyun"].Kind != "" {
 		t.Fatalf("own:\n%s", raw)
 	}
 }
@@ -224,7 +224,7 @@ func TestMiniMaxCodeSync(t *testing.T) {
 		t.Fatal(err)
 	}
 	if b, _ := os.ReadFile(path); string(b) != miniMaxConfig {
-		t.Fatalf("sync without magpie's entry wrote:\n%s", b)
+		t.Fatalf("sync without chongyun's entry wrote:\n%s", b)
 	}
 	if err := a.Field("model").Set("magpie/think/deep"); err != nil {
 		t.Fatal(err)
@@ -237,7 +237,7 @@ func TestMiniMaxCodeSync(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw := readMiniMax(t, path)
-	if _, ok := c.CustomProvider["magpie"].Models["think~v2"]; !ok || len(c.CustomProvider["magpie"].Models) != 3 {
+	if _, ok := c.CustomProvider["chongyun"].Models["think~v2"]; !ok || len(c.CustomProvider["chongyun"].Models) != 3 {
 		t.Fatalf("sync:\n%s", raw)
 	}
 	st, _ := os.Stat(path)
@@ -315,13 +315,13 @@ func TestMiniMaxCodeOneSlash(t *testing.T) {
 	}
 	os.WriteFile(path, []byte(old), 0o644)
 	if f.Get() != "magpie/bb-codex/gpt-6.1-sol" {
-		t.Fatalf("an older magpie's default reads as %q", f.Get())
+		t.Fatalf("an older chongyun's default reads as %q", f.Get())
 	}
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	ms := c.CustomProvider["magpie"].Models
+	ms := c.CustomProvider["chongyun"].Models
 	sol, was := ms["bb-codex~gpt-6.1-sol"], ms["bb-codex/gpt-6.1-sol"]
 	if c.DefaultModel != "custom_provider:magpie/bb-codex~gpt-6.1-sol" ||
 		c.Memory["captureModel"] != "custom_provider:magpie/bb-codex~gpt-6.1-sol" || c.Memory["consolidationModel"] != "minimax/MiniMax-M2.7" ||
@@ -347,7 +347,7 @@ func TestMiniMaxCodeOneSlash(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	if c.DefaultModel != "minimax/MiniMax-M2.7" || c.DefaultModelVariant != "thinking" || c.CustomProvider["magpie"].Kind != "" {
+	if c.DefaultModel != "minimax/MiniMax-M2.7" || c.DefaultModelVariant != "thinking" || c.CustomProvider["chongyun"].Kind != "" {
 		t.Fatalf("reset:\n%s", raw)
 	}
 }
@@ -369,12 +369,12 @@ func oneSlash(t *testing.T, raw string) {
 			t.Fatalf("%s fails MiniMax Code's check:\n%s", m, raw)
 		}
 	}
-	for k, m := range c.CustomProvider["magpie"].Models {
+	for k, m := range c.CustomProvider["chongyun"].Models {
 		if (m.Enabled == nil || *m.Enabled) && !mcodeOneSlash.MatchString("custom_provider:magpie/"+k) {
 			t.Fatalf("model %s fails MiniMax Code's check:\n%s", k, raw)
 		}
 	}
 	if refs == 0 {
-		t.Fatalf("no ref to magpie's entry:\n%s", raw)
+		t.Fatalf("no ref to chongyun's entry:\n%s", raw)
 	}
 }

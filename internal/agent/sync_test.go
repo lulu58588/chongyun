@@ -9,13 +9,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/codexcat"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/codexcat"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/testenv"
 	"gopkg.in/yaml.v3"
 )
 
@@ -225,13 +225,13 @@ func TestMaxTokensWithinContextWindow(t *testing.T) {
 func TestSyncCatalogRewritesAgentLists(t *testing.T) {
 	home := syncHome(t)
 	piModels := filepath.Join(home, ".pi", "agent", "models.json")
-	writeFile(t, piModels, `{"providers":{"mine":{"baseUrl":"http://x"},"magpie":{"name":"magpie","models":[]}}}`)
+	writeFile(t, piModels, `{"providers":{"mine":{"baseUrl":"http://x"},"chongyun":{"name":"chongyun","models":[]}}}`)
 	crushCfg := filepath.Join(home, ".config", "crush", "crush.json")
 	crushBody := `{"providers":{"mine":{"base_url":"http://x"}}}`
 	writeFile(t, crushCfg, crushBody)
 	codexDir := filepath.Join(home, ".codex")
 	codexCat := filepath.Join(codexDir, "magpie-models.json")
-	writeFile(t, filepath.Join(codexDir, "config.toml"), "model = \"relay/glm-4.6\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = '"+codexCat+"'\n")
+	writeFile(t, filepath.Join(codexDir, "config.toml"), "model = \"relay/glm-4.6\"\nmodel_provider = \"chongyun\"\nmodel_catalog_json = '"+codexCat+"'\n")
 	writeFile(t, codexCat, `{"models":[]}`)
 
 	if err := provider.Save(provider.Provider{ID: "added", Name: "Added", Key: "k", Chat: "http://127.0.0.1:1/v1", Models: []string{"m2"}}); err != nil {
@@ -245,7 +245,7 @@ func TestSyncCatalogRewritesAgentLists(t *testing.T) {
 		t.Errorf("pi models.json:\n%s", pi)
 	}
 	if got := readFile(crushCfg); got != crushBody {
-		t.Errorf("crush config without magpie changed:\n%s", got)
+		t.Errorf("crush config without chongyun changed:\n%s", got)
 	}
 	cx := readFile(codexCat)
 	if !strings.Contains(cx, `"slug": "added/m2"`) || !strings.Contains(cx, `"context_window": 204800`) {
@@ -313,7 +313,7 @@ func TestOpenCodeModelsCarryContextAndSyncRestores(t *testing.T) {
 	if err := opencode(home, filepath.Join(home, ".config")).Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if s := readFile(cfg); !strings.Contains(s, `"magpie"`) || !strings.Contains(s, `"mine"`) || !strings.Contains(s, `204800`) {
+	if s := readFile(cfg); !strings.Contains(s, `"chongyun"`) || !strings.Contains(s, `"mine"`) || !strings.Contains(s, `204800`) {
 		t.Fatalf("%s", s)
 	}
 	// one that doesn't use magpie gets nothing
@@ -348,7 +348,7 @@ func TestOpenCodeKeepsItsOwnGatewayProviders(t *testing.T) {
 		t.Fatalf("model = %q", v)
 	}
 	if _, ok := edit.GetJSON(cfg, "provider.magpie"); ok {
-		t.Fatal("magpie's provider added beside the file's own")
+		t.Fatal("chongyun's provider added beside the file's own")
 	}
 	// a model none of them lists still gets magpie's provider
 	os.WriteFile(cfg, []byte(`{"provider": {"magpie-relay": {"options": {"baseURL": "http://127.0.0.1:3425/v1"}, "models": {}}}}`), 0o644)
@@ -359,7 +359,7 @@ func TestOpenCodeKeepsItsOwnGatewayProviders(t *testing.T) {
 		t.Fatalf("model = %q", v)
 	}
 	if _, ok := edit.GetJSON(cfg, "provider.magpie"); !ok {
-		t.Fatal("magpie's provider not added")
+		t.Fatal("chongyun's provider not added")
 	}
 }
 
@@ -373,7 +373,7 @@ func TestMiMoCodeMirrorsOpenCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := readFile(cfg)
-	if !strings.Contains(s, `"magpie"`) || !strings.Contains(s, `"mine"`) || !strings.Contains(s, `204800`) {
+	if !strings.Contains(s, `"chongyun"`) || !strings.Contains(s, `"mine"`) || !strings.Contains(s, `204800`) {
 		t.Fatalf("%s", s)
 	}
 	// one that doesn't use magpie gets nothing
@@ -401,7 +401,7 @@ func TestMiMoCodeConfigAsTheAppFindsIt(t *testing.T) {
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if s := readFile(plain); !strings.Contains(s, `"magpie"`) || !strings.Contains(s, `"mine"`) {
+	if s := readFile(plain); !strings.Contains(s, `"chongyun"`) || !strings.Contains(s, `"mine"`) {
 		t.Fatalf("%s", s)
 	}
 	// its own name comes first

@@ -245,7 +245,7 @@ func TestDshDesktopNeverOpened(t *testing.T) {
 		t.Fatalf("names %s, not the desktop app's profile", a.Path)
 	}
 	if dshProfileTemplate != dshDesktopPatch {
-		t.Fatal("the template magpie writes isn't dsh's")
+		t.Fatal("the template chongyun writes isn't dsh's")
 	}
 
 	// the user's own key in dsh's store, set before magpie came
@@ -262,7 +262,7 @@ func TestDshDesktopNeverOpened(t *testing.T) {
 	}
 	s := read(desktop)
 	if !strings.HasPrefix(s, strings.TrimSuffix(dshDesktopPatch, "[]\n")) || !strings.Contains(s, "apiKeyEnv: "+dshKeyRef) || !strings.Contains(s, "provider: "+dshRoute) {
-		t.Fatalf("the desktop profile magpie made:\n%s", s)
+		t.Fatalf("the desktop profile chongyun made:\n%s", s)
 	}
 	if _, err := os.Stat(filepath.Join(dir, "config.yaml")); err == nil {
 		t.Fatal("wrote config.yaml, which dsh 0.2 doesn't read")
@@ -284,7 +284,7 @@ func TestDshDesktopNeverOpened(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(filepath.Join(dir, "profiles")); !os.IsNotExist(err) {
-		t.Fatalf("the profile magpie made outlived Disconnect: %v\n%s", err, read(desktop))
+		t.Fatalf("the profile chongyun made outlived Disconnect: %v\n%s", err, read(desktop))
 	}
 	if c := read(creds); !strings.Contains(c, "MINE_API_KEY: sk-mine") || strings.Contains(c, dshKeyRef) {
 		t.Fatalf("dsh's key store after Disconnect:\n%s", c)

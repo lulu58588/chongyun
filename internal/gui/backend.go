@@ -7,11 +7,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // served is the gateway this process serves, nil while another magpie
@@ -121,7 +121,7 @@ func serveGatewayLocked() *gateway.Server {
 	if !gateway.Handover {
 		if o := gateway.ServedBy(); o.Running {
 			if update.Newer(gateway.Version, o.Version) {
-				log.Printf("gateway: magpie %s serves %s, older than this one (%s); agents' requests go through it until it quits", o.Version, gateway.URL(), gateway.Version)
+				log.Printf("gateway: chongyun %s serves %s, older than this one (%s); agents' requests go through it until it quits", o.Version, gateway.URL(), gateway.Version)
 			}
 			return nil
 		}
@@ -131,7 +131,7 @@ func serveGatewayLocked() *gateway.Server {
 		// the service logged "bind: address already in use")
 		if gateway.Taken() {
 			if !takenSaid.Swap(true) {
-				log.Printf("gateway: %s is taken but doesn't answer as magpie yet; this magpie serves the gateway once it is free", gateway.URL())
+				log.Printf("gateway: %s is taken but doesn't answer as chongyun yet; this chongyun serves the gateway once it is free", gateway.URL())
 			}
 			return nil
 		}

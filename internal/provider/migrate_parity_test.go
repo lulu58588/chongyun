@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // A built-in moved onto its plugin offers the reasoning levels it did for

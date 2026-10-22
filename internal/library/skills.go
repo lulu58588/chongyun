@@ -21,7 +21,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/source"
+	"github.com/lulu58588/magpie/internal/source"
 	"gopkg.in/yaml.v3"
 )
 
@@ -207,7 +207,7 @@ func copyIn(p, name string) error {
 		os.RemoveAll(next)
 		return err
 	}
-	if err := markCopy(next, "copied from "+lib+" by magpie, and copied again when it changes\n"); err != nil {
+	if err := markCopy(next, "copied from "+lib+" by chongyun, and copied again when it changes\n"); err != nil {
 		os.RemoveAll(next)
 		return err
 	}
@@ -769,7 +769,7 @@ func fetch(src Source) (string, error) {
 	c := &http.Client{Timeout: 2 * time.Minute}
 	get := func(u string) (*http.Response, bool, error) {
 		req, _ := http.NewRequest("GET", u, nil)
-		req.Header.Set("User-Agent", "magpie")
+		req.Header.Set("User-Agent", "chongyun")
 		return doGitHub(req, func(r *http.Request) (*http.Response, error) { return source.DoOfficial(c, r) })
 	}
 	if tooBig.has(src) {
@@ -1710,7 +1710,7 @@ func ownSkill(l *Library, name, agentID string) (*Skill, *Target, error) {
 	}
 	t := targetByID(id)
 	if t == nil || t.Skills == "" {
-		return nil, nil, fmt.Errorf("%s has no skills folder magpie knows of", agentID)
+		return nil, nil, fmt.Errorf("%s has no skills folder chongyun knows of", agentID)
 	}
 	return s, t, nil
 }

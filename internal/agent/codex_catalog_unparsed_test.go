@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A magpie-models.json that doesn't parse is kept aside before magpie
@@ -45,7 +45,7 @@ func TestUnparsedCodexCatalogKeptAside(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(list); err == nil {
-		t.Error("a list magpie steps out of stayed")
+		t.Error("a list chongyun steps out of stayed")
 	}
 	if bad, _ := filepath.Glob(list + ".bad-*"); len(bad) == 0 {
 		t.Fatalf("the unparsed list was removed with no copy kept")

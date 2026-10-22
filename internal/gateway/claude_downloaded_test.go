@@ -8,13 +8,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/claudecode"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/claudecode"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // A machine with no Claude Code of its own (a server, a container) answers
-// a Claude subscription's request with the one `magpie claude-code install`
+// a Claude subscription's request with the one `chongyun claude-code install`
 // downloaded into magpie's cache (Jorben on Discord): before, the request
 // failed "Claude Code is not installed" with that build right there.
 func TestClaudeSubscriptionRunsTheDownloadedClaudeCode(t *testing.T) {
@@ -55,7 +55,7 @@ func TestClaudeSubscriptionWithoutClaudeCodeSaysHowToGetIt(t *testing.T) {
 	t.Setenv("PATH", t.TempDir())
 	_ = os.RemoveAll(claudecode.Root())
 	_, err := claudeBinary()
-	if err == nil || !strings.Contains(err.Error(), "magpie claude-code install") {
+	if err == nil || !strings.Contains(err.Error(), "chongyun claude-code install") {
 		t.Fatalf("claudeBinary() error = %v", err)
 	}
 }

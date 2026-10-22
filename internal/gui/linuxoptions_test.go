@@ -9,10 +9,10 @@ import "testing"
 // downloaded), which no desktop entry names, and the dock drew a gear (#2626).
 func TestLinuxWindowNamedAsItsEntry(t *testing.T) {
 	o := linuxOptions()
-	if o.ProgramName != programName || programName != "magpie" {
-		t.Fatalf("ProgramName = %q (programName %q), want the entry's StartupWMClass, magpie", o.ProgramName, programName)
+	if o.ProgramName != programName || programName != "chongyun" {
+		t.Fatalf("ProgramName = %q (programName %q), want the entry's StartupWMClass, chongyun", o.ProgramName, programName)
 	}
 	if !o.DisableQuitOnLastWindowClosed {
-		t.Fatal("magpie quits when its last window closes; the tray should stay")
+		t.Fatal("chongyun quits when its last window closes; the tray should stay")
 	}
 }

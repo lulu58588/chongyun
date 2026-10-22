@@ -11,9 +11,9 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/budget"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/budget"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func gatewayKeys(args []string) error { return gatewayKeysTo(os.Stdout, args) }
@@ -59,7 +59,7 @@ func gatewayKeysTo(out io.Writer, args []string) error {
 		args = args[:2]
 	}
 	if (action == "list" && len(args) != 1) || (action != "list" && len(args) != 2) {
-		return fmt.Errorf("usage: magpie gateway-key list | add <name> [--key <value> | --key -] | rotate <id> | remove <id> | limit <id> [list | off | reset [<n>] | remove <n> | [add] day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]] | models <id> [all | <provider>/<model>|<provider>/* ...] | accounts <id> [all | <provider>/<account>|<provider>/<key id> ...] | quotas <id> [on | off]")
+		return fmt.Errorf("usage: chongyun gateway-key list | add <name> [--key <value> | --key -] | rotate <id> | remove <id> | limit <id> [list | off | reset [<n>] | remove <n> | [add] day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]] | models <id> [all | <provider>/<model>|<provider>/* ...] | accounts <id> [all | <provider>/<account>|<provider>/<key id> ...] | quotas <id> [on | off]")
 	}
 	switch action {
 	case "list", "add", "rotate", "remove":
@@ -130,7 +130,7 @@ func gatewayKeysTo(out io.Writer, args []string) error {
 //	magpie gateway-key limit <id> remove <n>            take off the nth limit
 //	magpie gateway-key limit <id> reset [<n>]           count from 0 again, every limit or the nth; a new N-day or N-hour cycle from now (#1509)
 func gatewayKeyLimit(out io.Writer, args []string) error {
-	usage := fmt.Errorf("usage: magpie gateway-key limit <id> [off | reset [<n>] | remove <n> | [add] day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]]")
+	usage := fmt.Errorf("usage: chongyun gateway-key limit <id> [off | reset [<n>] | remove <n> | [add] day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]]")
 	if len(args) == 0 {
 		return usage
 	}
@@ -152,7 +152,7 @@ func gatewayKeyLimit(out io.Writer, args []string) error {
 				if len(have) == 0 {
 					return nil, fmt.Errorf("%s has no limit", keys[i].Name)
 				}
-				return nil, fmt.Errorf("a limit's number is 1 to %d, as `magpie gateway-key limit %s` lists them: %q", len(have), id, v)
+				return nil, fmt.Errorf("a limit's number is 1 to %d, as `chongyun gateway-key limit %s` lists them: %q", len(have), id, v)
 			}
 			n--
 			return &n, nil
@@ -219,7 +219,7 @@ func gatewayKeyLimit(out io.Writer, args []string) error {
 					return v != nil && l.Period == v.Period && l.Days == v.Days && l.Hours == v.Hours
 				})
 				if n < 0 {
-					return fmt.Errorf("%s has %d limits and none %s: add one with `magpie gateway-key limit %s add %s ...`, or take one off with `remove <n>`", keys[i].Name, len(have), perPhrase(v), id, args[1])
+					return fmt.Errorf("%s has %d limits and none %s: add one with `chongyun gateway-key limit %s add %s ...`, or take one off with `remove <n>`", keys[i].Name, len(have), perPhrase(v), id, args[1])
 				}
 				in.Index = &n
 			}
@@ -362,7 +362,7 @@ func parseKeyLimit(window string, rest []string, usage error) (*access.Limit, er
 //	magpie gateway-key models <id> openai/gpt-5 anthropic/*  only these
 func gatewayKeyModels(out io.Writer, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: magpie gateway-key models <id> [all | <provider>/<model>|<provider>/* ...]")
+		return fmt.Errorf("usage: chongyun gateway-key models <id> [all | <provider>/<model>|<provider>/* ...]")
 	}
 	id := args[0]
 	if len(args) > 1 {
@@ -421,7 +421,7 @@ func limitWords(k access.Key, now time.Time) string {
 // account by its name, a key by its KeyID — every one when none are set.
 func gatewayKeyAccounts(out io.Writer, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: magpie gateway-key accounts <id> [all | <provider>/<account>|<provider>/<key id> ...]")
+		return fmt.Errorf("usage: chongyun gateway-key accounts <id> [all | <provider>/<account>|<provider>/<key id> ...]")
 	}
 	id := args[0]
 	if len(args) > 1 {
@@ -463,7 +463,7 @@ func gatewayKeyAccounts(out io.Writer, args []string) error {
 //	magpie gateway-key quotas <id>         whether it is
 //	magpie gateway-key quotas <id> on|off  tell it them, or none (#1981)
 func gatewayKeyQuotas(out io.Writer, args []string) error {
-	usage := fmt.Errorf("usage: magpie gateway-key quotas <id> [on | off]")
+	usage := fmt.Errorf("usage: chongyun gateway-key quotas <id> [on | off]")
 	if len(args) == 0 || len(args) > 2 {
 		return usage
 	}

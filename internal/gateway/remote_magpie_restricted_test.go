@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // caa536733's rule for a remote magpie's quota, credit and rate refusals,
@@ -60,7 +60,7 @@ func TestRemoteMagpieRestrictedRestsTheModel(t *testing.T) {
 		t.Fatalf("glm restricted on the remote: %d %s", code, body)
 	}
 	if r, ok := restOf("office"); ok {
-		t.Errorf("the whole remote magpie rests for one model's restricted account: %+v", r)
+		t.Errorf("the whole remote chongyun rests for one model's restricted account: %+v", r)
 	}
 	r, ok := restOf("office/workbuddy/glm-5.3-flash")
 	if !ok || r.Why != failRestricted || r.By != "restricted" || !r.Until.After(time.Now()) {
@@ -82,7 +82,7 @@ func TestRemoteMagpieRestrictedRestsTheModel(t *testing.T) {
 func TestRemoteMagpieVerifyAndKeyLimitScoping(t *testing.T) {
 	c := candidate{p: provider.Provider{ID: "office", Preset: provider.RemoteMagpiePreset, Key: "k"}, model: "gemini/gemini-3-flash", rest: "office"}
 	if !remoteModelRest(c, failRestricted, http.Header{}) || !remoteModelRest(c, failVerify, http.Header{}) {
-		t.Error("a restricted or verify refusal from the other magpie rests the whole remote, not the model")
+		t.Error("a restricted or verify refusal from the other chongyun rests the whole remote, not the model")
 	}
 	h := http.Header{}
 	h.Set(remoteKeyLimitHeader, "2026-10-15T00:00:00Z")
@@ -90,7 +90,7 @@ func TestRemoteMagpieVerifyAndKeyLimitScoping(t *testing.T) {
 		t.Error("the key's own limit there rests only the model, not the key")
 	}
 	if remoteModelRest(candidate{p: provider.Provider{ID: "office", Key: "k"}, model: "m", rest: "office"}, failRestricted, http.Header{}) {
-		t.Error("a provider that isn't a remote magpie rests the model on a restricted refusal")
+		t.Error("a provider that isn't a remote chongyun rests the model on a restricted refusal")
 	}
 }
 

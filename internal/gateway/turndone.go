@@ -23,8 +23,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // TurnEnd is a turn that ran at least as long as Settings' TurnDoneAlert.

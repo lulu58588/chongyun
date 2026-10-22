@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/fx"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/fx"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // Settings shows the local address agents use; the Gateway page advertises

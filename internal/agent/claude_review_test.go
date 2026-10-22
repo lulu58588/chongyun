@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // TestClaudeAutoModeReview: Claude Code in auto mode behind magpie on a
@@ -122,7 +122,7 @@ func TestClaudeAutoModeReview(t *testing.T) {
 	// off magpie, onto Claude Code's own model, and reset: magpie's goes
 	set("model", "claude-opus-4-8")
 	if review() != "" {
-		t.Fatalf("Claude's own model kept magpie's value: %q", review())
+		t.Fatalf("Claude's own model kept chongyun's value: %q", review())
 	}
 	set("model", "v/gpt-x")
 	if review() != "0" {
@@ -130,7 +130,7 @@ func TestClaudeAutoModeReview(t *testing.T) {
 	}
 	set("model", "")
 	if review() != "" {
-		t.Fatalf("reset kept magpie's value: %q", review())
+		t.Fatalf("reset kept chongyun's value: %q", review())
 	}
 
 	// the user's own value is theirs, through a switch, Sync and reset

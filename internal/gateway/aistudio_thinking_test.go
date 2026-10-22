@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // AI Studio's Gemini thinks silently unless asked for its thoughts: Claude

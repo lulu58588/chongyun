@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // Another magpie is added by its address however it was typed, and
@@ -52,7 +52,7 @@ func TestRemoteMagpie(t *testing.T) {
 	if n := len(p.Exposed()); n != len(ms) {
 		t.Errorf("exposed %d of %d", n, len(ms))
 	}
-	if !p.Ready() || p.Icon != "magpie" {
+	if !p.Ready() || p.Icon != "chongyun" {
 		t.Errorf("%+v", p)
 	}
 }

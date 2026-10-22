@@ -1,4 +1,4 @@
-// Package daemon runs `magpie serve` as a service of the user's own: a
+// Package daemon runs `chongyun serve` as a service of the user's own: a
 // systemd user unit on Linux, a launch agent on the Mac. The system starts
 // it at boot or login and starts it again when it stops, with no window
 // and no desktop session, for a server or a machine reached over SSH.
@@ -18,14 +18,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/autostart"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/autostart"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // Name is the service's name: magpie.service, com.yetone.magpie.serve.
-const Name = "magpie"
+const Name = "chongyun"
 
 // Status is what the system says of the service.
 type Status struct {
@@ -65,16 +65,16 @@ func current() (manager, error) {
 	case "darwin":
 		return launchd{}, nil
 	case "windows":
-		return nil, fmt.Errorf("%w on Windows: `magpie autostart on` opens magpie, with its gateway, when you log in; or run `magpie daemon install` inside WSL", ErrUnsupported)
+		return nil, fmt.Errorf("%w on Windows: `chongyun autostart on` opens chongyun, with its gateway, when you log in; or run `chongyun daemon install` inside WSL", ErrUnsupported)
 	case "android":
-		return nil, fmt.Errorf("%w on Android: `magpie autostart on` starts the gateway at boot through Termux:Boot", ErrUnsupported)
+		return nil, fmt.Errorf("%w on Android: `chongyun autostart on` starts the gateway at boot through Termux:Boot", ErrUnsupported)
 	}
-	return nil, fmt.Errorf("%w on %s: run `magpie serve` under the system's own service manager", ErrUnsupported, goos)
+	return nil, fmt.Errorf("%w on %s: run `chongyun serve` under the system's own service manager", ErrUnsupported, goos)
 }
 
 // Options are what the service serves besides the gateway.
 type Options struct {
-	// Web is the address the app's page is served on (`magpie serve
+	// Web is the address the app's page is served on (`chongyun serve
 	// --web=…`), "" for none.
 	Web string
 	// Key is the page's MAGPIE_WEB_KEY, written into the service so its
@@ -93,7 +93,7 @@ func Install(o Options) error {
 	// the app opened at login serves the gateway too: the two would take
 	// turns failing on the port
 	if autostartEnabled() {
-		return errors.New("magpie already opens at login and serves the gateway: run `magpie autostart off` first, or keep that instead")
+		return errors.New("chongyun already opens at login and serves the gateway: run `chongyun autostart off` first, or keep that instead")
 	}
 	if o.Web != "" && o.Key == "" {
 		return errors.New("the page needs a key")
@@ -114,7 +114,7 @@ func serveArgs(o Options) []string {
 	return []string{"serve", webFlag + o.Web}
 }
 
-// webFlag is `magpie serve`'s, naming the page's address.
+// webFlag is `chongyun serve`'s, naming the page's address.
 const webFlag = "--web="
 
 // webKeyVar is the page's key in the service's environment.
@@ -152,7 +152,7 @@ var (
 )
 
 // TLS is the certificate and key files the installed service serves
-// HTTPS with (`magpie daemon install --tls-cert … --tls-key …`), "" when
+// HTTPS with (`chongyun daemon install --tls-cert … --tls-key …`), "" when
 // it has none or isn't installed.
 func TLS() (cert, key string) {
 	m, err := current()
@@ -259,7 +259,7 @@ func Get() (Status, error) {
 }
 
 // ErrNotInstalled is Start, Stop or Restart before Install.
-var ErrNotInstalled = errors.New("the magpie service isn't installed: `magpie daemon install`")
+var ErrNotInstalled = errors.New("the chongyun service isn't installed: `chongyun daemon install`")
 
 func with(f func(manager) error) error {
 	m, err := current()
@@ -307,10 +307,10 @@ var self = func() (string, error) {
 // name it was started by.
 func pick(real, exe string) (string, error) {
 	if strings.Contains(real, "/AppTranslocation/") {
-		return "", errors.New("move magpie to Applications first, then install the service")
+		return "", errors.New("move chongyun to Applications first, then install the service")
 	}
 	if strings.Contains(real, string(filepath.Separator)+"go-build") {
-		return "", errors.New("this magpie is a build `go run` deletes when it ends: install magpie, then run `magpie daemon install` from it")
+		return "", errors.New("this chongyun is a build `go run` deletes when it ends: install chongyun, then run `chongyun daemon install` from it")
 	}
 	if p, err := exec.LookPath(Name); err == nil {
 		if abs, err := filepath.Abs(p); err == nil {
@@ -344,7 +344,7 @@ var carried = []string{
 	"http_proxy", "https_proxy", "all_proxy", "no_proxy",
 	"XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME", "XDG_STATE_HOME",
 	"MAGPIE_ADDR", "MAGPIE_TRUST_PROXY", "MAGPIE_BUN", "MAGPIE_WEB_URL",
-	// `magpie daemon install --tls-cert … --tls-key …` sets them
+	// `chongyun daemon install --tls-cert … --tls-key …` sets them
 	"MAGPIE_TLS_CERT", "MAGPIE_TLS_KEY",
 }
 

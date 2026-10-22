@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // Hyprland is whether magpie runs under Hyprland, Omarchy's compositor or
@@ -116,12 +116,12 @@ const clickEvent = "magpie-click"
 
 // ReportClicks has Hyprland announce every left click, until StopClicks.
 func ReportClicks() error {
-	return hyprctl("eval", `if magpie_click then magpie_click:remove() end magpie_click = hl.bind("mouse:272", function() hl.dispatch(hl.dsp.event("`+clickEvent+`")) end, { non_consuming = true })`)
+	return hyprctl("eval", `if chongyun_click then chongyun_click:remove() end chongyun_click = hl.bind("mouse:272", function() hl.dispatch(hl.dsp.event("`+clickEvent+`")) end, { non_consuming = true })`)
 }
 
 // StopClicks takes the bind away again.
 func StopClicks() error {
-	return hyprctl("eval", `if magpie_click then magpie_click:remove() magpie_click = nil end`)
+	return hyprctl("eval", `if chongyun_click then chongyun_click:remove() chongyun_click = nil end`)
 }
 
 // WatchClicks calls click on each click ReportClicks announces, for as long

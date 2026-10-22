@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The fixtures are requests the agents sent a fake upstream, run in a

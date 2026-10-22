@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // fakePlugin readies the test plugin's host for a move of fakeco, with
@@ -121,7 +121,7 @@ func TestNoWayBack(t *testing.T) {
 	setFakeLogins(t, fakeLogin("a@fake", "r-a", true, true))
 	_ = setMigration("fakeco", func(m *Migration) { *m = Migration{State: MovedBack, Package: abs} })
 	if errs := MoveRetiring(ctx); errs["fakeco"] != nil || !Moved("fakeco") {
-		t.Fatalf("one moved back by an older magpie: %v, moved %v", errs, Moved("fakeco"))
+		t.Fatalf("one moved back by an older chongyun: %v, moved %v", errs, Moved("fakeco"))
 	}
 	signedIn := func(when string) {
 		t.Helper()
@@ -151,7 +151,7 @@ func TestNoWayBack(t *testing.T) {
 	was := *installs
 	keepMovedCurrent(ctx)
 	if errs := MoveRetiring(ctx); len(errs) != 0 || *installs != was || pluginListed(abs) {
-		t.Fatalf("magpie put back a plugin the user removed: %v, %d installs", errs, *installs-was)
+		t.Fatalf("chongyun put back a plugin the user removed: %v, %d installs", errs, *installs-was)
 	}
 
 	if _, err := plugin.Add(ctx, abs); err != nil {

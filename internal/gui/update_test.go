@@ -11,13 +11,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // A version downloaded and waiting for a restart gives way to a newer one
 // out since, so the restart goes straight to the latest.
 func TestUpdateStagedGivesWayToNewer(t *testing.T) {
-	body := []byte("new magpie")
+	body := []byte("new chongyun")
 	sum := sha256.Sum256(body)
 	var latest atomic.Value
 	latest.Store("0.1.11")

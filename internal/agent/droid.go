@@ -31,9 +31,9 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 const (
@@ -230,7 +230,7 @@ func droidIn(at place) *Agent {
 			}
 			c, ok := mine(v)
 			if !ok {
-				return "Droid's custom model " + v + " (settings.json) is gone, so it no longer reaches magpie"
+				return "Droid's custom model " + v + " (settings.json) is gone, so it no longer reaches chongyun"
 			}
 			r := gjson.ParseBytes(c.raw)
 			base := at.v1()

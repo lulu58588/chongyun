@@ -23,7 +23,7 @@ func TestJunctionIsALink(t *testing.T) {
 		t.Errorf("link target %q %v", to, ok)
 	}
 	if !ours(p, "pdf") {
-		t.Error("magpie's junction isn't its own")
+		t.Error("chongyun's junction isn't its own")
 	}
 	if _, err := os.Stat(filepath.Join(p, "SKILL.md")); err != nil {
 		t.Errorf("the skill isn't read through the junction: %v", err)

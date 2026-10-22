@@ -10,7 +10,7 @@ import (
 
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // A server's tools can be turned off one by one (nf1qaz2w on Discord): the
@@ -204,7 +204,7 @@ func entryToolsEdit(f *mcpFile, old map[string]any, prev, want []string) (*tools
 		if len(want) == 0 && len(prev) == 0 {
 			return nil, nil, nil
 		}
-		return nil, prev, fmt.Errorf("%s in its entry isn't a list of names, so magpie leaves it as it is", strings.Join(key, "."))
+		return nil, prev, fmt.Errorf("%s in its entry isn't a list of names, so chongyun leaves it as it is", strings.Join(key, "."))
 	}
 	list, mine := offList(cur, prev, want)
 	if slices.Equal(cur, list) {
@@ -284,7 +284,7 @@ func (l *Library) syncToolRules(t *Target, how toolsOffHow, given []string, b *b
 		perms, _ := doc["permissions"].(map[string]any)
 		cur, ok := entryTools(doc, []string{"permissions", "deny"})
 		if !ok {
-			fail(fmt.Errorf("%s: permissions.deny isn't a list of rules, so magpie leaves it as it is", path))
+			fail(fmt.Errorf("%s: permissions.deny isn't a list of rules, so chongyun leaves it as it is", path))
 			return
 		}
 		list, mine := offList(cur, a.ToolRules, want)
@@ -313,7 +313,7 @@ func (l *Library) syncToolRules(t *Target, how toolsOffHow, given []string, b *b
 	// those it set to false, taken away while they still say false
 	tools, isMap := doc["tools"].(map[string]any)
 	if doc["tools"] != nil && !isMap {
-		fail(fmt.Errorf("%s: tools isn't an object, so magpie leaves it as it is", path))
+		fail(fmt.Errorf("%s: tools isn't an object, so chongyun leaves it as it is", path))
 		return
 	}
 	var set []edit.KV

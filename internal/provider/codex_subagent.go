@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Codex's lead picks the model of each subagent it spawns by itself, in
@@ -59,14 +59,14 @@ func CodexSubagentUnserved(id string) string {
 		}
 	}
 	if !CodexAccountModel(id) {
-		return "magpie doesn't serve it now"
+		return "chongyun doesn't serve it now"
 	}
 	for _, e := range served {
 		if chatGPTEntry(e) {
-			return "no ChatGPT account on in magpie serves it"
+			return "no ChatGPT account on in chongyun serves it"
 		}
 	}
-	return "no ChatGPT account is on in magpie"
+	return "no ChatGPT account is on in chongyun"
 }
 
 // SetCodexSubagentModel puts Codex's subagents on id, a model or routing
@@ -80,7 +80,7 @@ func CodexSubagentUnserved(id string) string {
 func SetCodexSubagentModel(id string) error {
 	id = strings.TrimSpace(id)
 	if pid, model, ok := strings.Cut(id, "/"); id != "" && (!ok || pid == "" || model == "") {
-		return fmt.Errorf("Codex's subagents can't be put on %q: pick one of magpie's models (provider/model)", id)
+		return fmt.Errorf("Codex's subagents can't be put on %q: pick one of chongyun's models (provider/model)", id)
 	}
 	s := settings.Load()
 	if s.CodexSubagentModel == id {

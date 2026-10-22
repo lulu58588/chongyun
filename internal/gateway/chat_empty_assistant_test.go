@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // dsRefuseEmptyAssistant answers as DeepSeek's and Kimi's Chat APIs do,

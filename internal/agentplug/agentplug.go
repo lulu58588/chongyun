@@ -50,8 +50,8 @@ import (
 	"time"
 
 	"github.com/Calcium-Ion/moejs"
-	"github.com/yetone/magpie/internal/jsmod"
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/jsmod"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // Formats are the config files an agent plugin's file may be, by the

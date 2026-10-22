@@ -55,20 +55,20 @@ func TestDshRefreshKeepsHandSetCompat(t *testing.T) {
 	home, dir, web := dshRouteHome(t)
 	dshKeyFixture(dir)
 	route := func(key, api string) string {
-		return "      " + key + ":\n        displayName: Magpie\n        apiKeyEnv: " + dshKeyRef + "\n        api: " + api + "\n        baseURL: " + gatewayV1() + "\n        models:\n" +
+		return "      " + key + ":\n        displayName: Chongyun\n        apiKeyEnv: " + dshKeyRef + "\n        api: " + api + "\n        baseURL: " + gatewayV1() + "\n        models:\n" +
 			"          - id: deepseek/pro\n            name: stale\n            contextWindow: 1\n            compat:\n              maxTokensField: max_tokens\n              supportsStore: false\n"
 	}
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n"+
-		route("magpie", "openai-completions")+route("magpie-responses", "openai-responses")+
-		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/pro\n"), 0o644)
+		route("chongyun", "openai-completions")+route("magpie-responses", "openai-responses")+
+		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/pro\n"), 0o644)
 	a := dsh(home)
 	for i := 0; i < 2; i++ {
 		if err := a.Sync(); err != nil {
 			t.Fatal(err)
 		}
 		b, _ := os.ReadFile(web)
-		models, compat := dshRouteCompat(t, web, "magpie")
+		models, compat := dshRouteCompat(t, web, "chongyun")
 		if len(models) == 0 || strings.Contains(strings.Join(models, ","), "stale") {
 			t.Fatalf("the route wasn't written as the catalog has it: %v\n%s", models, b)
 		}
@@ -81,7 +81,7 @@ func TestDshRefreshKeepsHandSetCompat(t *testing.T) {
 		if strings.Contains(string(b), "magpie-responses:") {
 			// the route went with its last model, so its compat can't
 			// follow the model onto another one
-			t.Fatalf("a route with none of magpie's models stayed:\n%s", b)
+			t.Fatalf("a route with none of chongyun's models stayed:\n%s", b)
 		}
 	}
 }

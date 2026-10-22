@@ -12,8 +12,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // WorkBuddy's calls, read from the same lines its session summary is
@@ -83,7 +83,7 @@ type wbIDs struct {
 // name only a magpie answers to (provider.GroupPrefix), so a call asked for
 // under it went to a gateway whichever machine that was, and this file has
 // nothing to pair it with. The rest are read from models.json, whose entries
-// for magpie (internal/agent's workbuddy.go writes them: vendor "magpie",
+// for magpie (internal/agent's workbuddy.go writes them: vendor "chongyun",
 // url this gateway's) are the ones WorkBuddy shows in its picker as
 // "custom-local:<id>". An entry the user put there for another vendor keeps
 // its own usage, so the vendor is read too and not only the prefix.
@@ -133,13 +133,13 @@ func buddyGatewayIDs(dir string) map[string]bool {
 		var doc struct{ Models []wbEntry }
 		if json.Unmarshal(b, &list) == nil {
 			for _, e := range list {
-				if e.Vendor == "magpie" && e.ID != "" {
+				if e.Vendor == "chongyun" && e.ID != "" {
 					ids[e.ID] = true
 				}
 			}
 		} else if json.Unmarshal(b, &doc) == nil {
 			for _, e := range doc.Models {
-				if e.Vendor == "magpie" && e.ID != "" {
+				if e.Vendor == "chongyun" && e.ID != "" {
 					ids[e.ID] = true
 				}
 			}

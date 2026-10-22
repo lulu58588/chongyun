@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestCline(t *testing.T) {
@@ -88,7 +88,7 @@ func TestCline(t *testing.T) {
 	if c.LastUsed != "openai-compatible" || s["model"] != "deepseek/pro" || s["baseUrl"] != gatewayV1() || s["apiKey"] != gateway.Token ||
 		s["headers"].(map[string]any)["User-Agent"] != "cline" || s["reasoning"].(map[string]any)["effort"] != "high" ||
 		c.Providers["anthropic"].Settings["apiKey"] != "sk-a" {
-		t.Fatalf("magpie:\n%s", raw)
+		t.Fatalf("chongyun:\n%s", raw)
 	}
 	// Cline's openai-compatible lists only gpt-4o: magpie's models take
 	// its place in models.json, the user's other entries kept
@@ -251,9 +251,9 @@ func TestClineKeepsTheUsersSettings(t *testing.T) {
 		if e.Provider["modelsSourceUrl"] != "https://x/models" || e.Provider["protocol"] != "openai-chat" || e.Models["relay/glm-4.6"]["temperature"] != 0.3 {
 			t.Errorf("%s: the user's settings not kept:\n%s", when, raw)
 		}
-		if e.Provider["baseUrl"] == "http://127.0.0.1:1/v1" || e.Provider["name"] != "magpie" || e.Models["gone/old"] != nil ||
+		if e.Provider["baseUrl"] == "http://127.0.0.1:1/v1" || e.Provider["name"] != "chongyun" || e.Models["gone/old"] != nil ||
 			e.Models["deepseek/pro"] == nil || e.Models["relay/glm-4.6"]["name"] == nil {
-			t.Errorf("%s: magpie's own parts not written:\n%s", when, raw)
+			t.Errorf("%s: chongyun's own parts not written:\n%s", when, raw)
 		}
 	}
 	check("sync")

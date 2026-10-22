@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestFromCodex(t *testing.T) {
@@ -105,7 +105,7 @@ func TestCodexHeadersReachKeyedRelay(t *testing.T) {
 		provider.Save(*p)
 		send(codex)
 		if a := f.head.Get("Authorization"); a != "" {
-			t.Errorf("%s: magpie's key leaked: %q", c.proto, a)
+			t.Errorf("%s: chongyun's key leaked: %q", c.proto, a)
 		}
 		if f.head.Get("Originator") != "codex_exec" {
 			t.Errorf("%s: originator: %v", c.proto, f.head)

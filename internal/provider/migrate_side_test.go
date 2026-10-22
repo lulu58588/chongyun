@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // moveAndBack does what Move, and putBack after a failed one, do with a

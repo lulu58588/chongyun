@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A model is switched fast for an agent only when magpie can ask its vendor

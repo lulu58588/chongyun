@@ -76,7 +76,7 @@ func TestHold(t *testing.T) {
 	}
 	Forget()
 	if v, _ := Read("hold", p, parse); v != "bb" {
-		t.Fatalf("after a write magpie made: %q", v)
+		t.Fatalf("after a write chongyun made: %q", v)
 	}
 	write("ccc")
 	release()
@@ -126,7 +126,7 @@ func TestHoldMissing(t *testing.T) {
 	}
 	Forget()
 	if v, err := Read("missing", p, parse); v != "a" || err != nil {
-		t.Fatalf("after a write magpie made: %q %v", v, err)
+		t.Fatalf("after a write chongyun made: %q %v", v, err)
 	}
 	os.Remove(p)
 	Read("missing", p, parse)

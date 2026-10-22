@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // installedShells are the shells installed here that a terminal may open:
@@ -66,7 +66,7 @@ func cliDir(exe string, dirs []string, cmd string) string {
 
 // cliPlace links exe as magpie in dir, over what is there.
 func cliPlace(exe, dir string) error {
-	dst := filepath.Join(dir, "magpie")
+	dst := filepath.Join(dir, "chongyun")
 	if sameFile(dst, exe) {
 		return nil
 	}

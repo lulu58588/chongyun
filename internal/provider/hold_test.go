@@ -9,11 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // A request that only reads builds the catalog once for all its look-ups
@@ -89,7 +89,7 @@ func TestHoldKeptForTheNextRequest(t *testing.T) {
 // What is held across requests is built again when anything it was built
 // from may have moved: a write that only tells filememo (settings.Save, an
 // account's file), the providers' or the settings' file written by
-// another process (the CLI's "magpie group add"), the groups served or
+// another process (the CLI's "chongyun group add"), the groups served or
 // not (GateGroups, ServeGroups), and the models.dev catalog read again.
 func TestHoldKeptUntilAWrite(t *testing.T) {
 	defer func(d time.Duration) { heldFor = d }(heldFor)
@@ -142,7 +142,7 @@ func TestHoldKeptUntilAWrite(t *testing.T) {
 
 // A change the plugin host tells (a sign-in saved, a plugin added) drops
 // what a request holds before it returns: a SyncCatalog running held the
-// plugins as they were before `magpie plugin login` saved its account,
+// plugins as they were before `chongyun plugin login` saved its account,
 // and the look at the accounts right after it found none (#2449). The
 // hooks told in the background are left out, so only what goes at once
 // is looked at.

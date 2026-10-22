@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // openaiStrict is a Responses upstream that checks reasoning as OpenAI does
@@ -284,8 +284,8 @@ func TestForeignReasoningNeverReachesOpenAI(t *testing.T) {
 		{name: "compaction on Codex's sign-in", path: CodexPath + "/responses/compact", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token"},
 		{name: "turn on Codex's API key", path: CodexPath + "/responses", model: "gpt-6.1-sol", auth: "Bearer sk-test"},
 		{name: "compaction on Codex's API key", path: CodexPath + "/responses/compact", model: "gpt-6.1-sol", auth: "Bearer sk-test"},
-		{name: "turn on a magpie account", path: CodexPath + "/responses", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token", spare: true, pauseOwn: true},
-		{name: "compaction on a magpie account", path: CodexPath + "/responses/compact", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token", spare: true, pauseOwn: true},
+		{name: "turn on a chongyun account", path: CodexPath + "/responses", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token", spare: true, pauseOwn: true},
+		{name: "compaction on a chongyun account", path: CodexPath + "/responses/compact", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token", spare: true, pauseOwn: true},
 		{name: "the gateway's own Responses API", path: "/v1/responses", model: "codex/gpt-6.1-sol", auth: ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

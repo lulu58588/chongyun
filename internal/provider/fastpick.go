@@ -6,8 +6,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // An agent's pick of a model may be sent in its vendor's fast mode (#954),
@@ -103,7 +103,7 @@ func SetFastTier(agent, id, tier string) error {
 	switch tier {
 	case "", "priority", "ultrafast":
 	default:
-		return fmt.Errorf("magpie knows no tier %q", tier)
+		return fmt.Errorf("chongyun knows no tier %q", tier)
 	}
 	if tier != "" {
 		if IsGroupRef(id) {
@@ -111,13 +111,13 @@ func SetFastTier(agent, id, tier string) error {
 		}
 		p, model, ok := Resolve(id)
 		if !ok {
-			return fmt.Errorf("magpie knows no model %q", id)
+			return fmt.Errorf("chongyun knows no model %q", id)
 		}
 		if p.ID+"/"+model != id {
 			return fmt.Errorf("%s is not a model as <provider>/<model>", id)
 		}
 		if !CanFast(p, model) {
-			return fmt.Errorf("%s has no fast mode magpie can ask for", id)
+			return fmt.Errorf("%s has no fast mode chongyun can ask for", id)
 		}
 		if tier == "ultrafast" && !CanUltra(p, model) {
 			return fmt.Errorf("no account offers Ultrafast on %s", id)

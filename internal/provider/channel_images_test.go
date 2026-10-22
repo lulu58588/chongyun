@@ -7,9 +7,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/codexcat"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/codexcat"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // #2157 (sstdgm): a custom provider's nyro-gpt-5.5 is GPT-5.5 on the

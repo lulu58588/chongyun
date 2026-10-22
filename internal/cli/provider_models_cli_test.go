@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // magpie provider models <id> +m adds a model to those exposed and -m takes
@@ -132,7 +132,7 @@ func TestModelsSayWhatIsNotExposed(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !strings.Contains(out, "deepseek-flash") || !strings.Contains(out, "not picked") || !strings.Contains(out, "magpie provider models og +<model>") {
+		if !strings.Contains(out, "deepseek-flash") || !strings.Contains(out, "not picked") || !strings.Contains(out, "chongyun provider models og +<model>") {
 			t.Errorf("%s said %q; want deepseek-flash named as not picked, and how to expose it", name, out)
 		}
 	}
@@ -172,7 +172,7 @@ func TestGroupMemberNotExposedSaysHow(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !strings.Contains(out, "not exposed · magpie provider models og +deepseek-flash") {
+		if !strings.Contains(out, "not exposed · chongyun provider models og +deepseek-flash") {
 			t.Errorf("%s said %q; want how to expose og/deepseek-flash", name, out)
 		}
 	}

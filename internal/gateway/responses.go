@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // ---- OpenAI Responses -------------------------------------------------------

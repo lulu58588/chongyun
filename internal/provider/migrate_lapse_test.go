@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // An account whose sign-in the vendor refuses while the move reads the
@@ -98,7 +98,7 @@ func TestMoveExpiredInWords(t *testing.T) {
 
 // A move's lock left by a magpie killed mid-move (a hung move stopped by
 // hand) holds nothing: the next move takes it, where it used to be
-// refused as "another magpie is moving" for a quarter of an hour.
+// refused as "another chongyun is moving" for a quarter of an hour.
 func TestMoveLockOfDeadMagpie(t *testing.T) {
 	claudeHome(t)
 	gone := exec.Command("true")
@@ -114,7 +114,7 @@ func TestMoveLockOfDeadMagpie(t *testing.T) {
 	}
 	unlock, err := lockMoves()
 	if err != nil {
-		t.Fatalf("a dead magpie's lock: %v", err)
+		t.Fatalf("a dead chongyun's lock: %v", err)
 	}
 	// one held by a magpie still running stays held
 	if _, err := lockMoves(); err == nil {

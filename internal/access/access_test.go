@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func TestNamedKeys(t *testing.T) {
@@ -107,11 +107,11 @@ func TestLegacyLANKeyMigrationIsIdempotentAndRevocable(t *testing.T) {
 		t.Fatal(err)
 	}
 	keys, err := List()
-	if err != nil || len(keys) != 1 || keys[0].Name != "Magpie" || !strings.HasPrefix(keys[0].Masked, "sk-magpie-…") {
+	if err != nil || len(keys) != 1 || keys[0].Name != "Chongyun" || !strings.HasPrefix(keys[0].Masked, "sk-magpie-…") {
 		t.Fatal(keys, err)
 	}
 	if settings.Load().LANKey != s.LANKey || !settings.Load().LAN {
-		t.Fatal("migration broke older Magpie's sharing settings")
+		t.Fatal("migration broke older Chongyun's sharing settings")
 	}
 	if who, ok := Authenticate(s.LANKey); !ok || who.KeyID != keys[0].ID {
 		t.Fatal(who, ok)
@@ -160,7 +160,7 @@ func TestLegacyLANKeyMigrationPreservesNamedKeys(t *testing.T) {
 		t.Fatal(err)
 	}
 	keys, _ = List()
-	if len(keys) != 2 || keys[0].ID != id || keys[1].Name != "Magpie" {
+	if len(keys) != 2 || keys[0].ID != id || keys[1].Name != "Chongyun" {
 		t.Fatal(keys)
 	}
 	if _, ok := Authenticate(secret); !ok {
@@ -207,7 +207,7 @@ func TestLegacyLANKeyMigrationRetryAndFailure(t *testing.T) {
 }
 
 func TestNamedLANKeyKeepsItsName(t *testing.T) {
-	for _, name := range []string{"Local network", "Magpie", "Desk"} {
+	for _, name := range []string{"Local network", "Chongyun", "Desk"} {
 		t.Run(name, func(t *testing.T) {
 			t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 			s := settings.Load()
@@ -283,7 +283,7 @@ func TestLANRotationKeepsOlderMagpieWorking(t *testing.T) {
 	}
 	before := settings.Load()
 	if before.LANKey == "" {
-		t.Fatal("older Magpie has no sharing key")
+		t.Fatal("older Chongyun has no sharing key")
 	}
 	next, err := Update("rotate-key", Change{Key: before.LANKeyID})
 	if err != nil {

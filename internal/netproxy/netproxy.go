@@ -20,7 +20,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Install routes http.DefaultTransport (and so http.DefaultClient) through

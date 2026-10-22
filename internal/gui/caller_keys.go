@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/budget"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/budget"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // keyRow is a gateway key as the Gateway page lists it, with what it has

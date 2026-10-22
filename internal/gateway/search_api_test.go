@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // searchAPIs is a fake of every search API magpie asks, each on its own
@@ -246,7 +246,7 @@ func TestNoSearchAPINoTool(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !canSearch() {
-		t.Fatal("a search API set up, and magpie can't search")
+		t.Fatal("a search API set up, and chongyun can't search")
 	}
 }
 

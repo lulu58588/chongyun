@@ -22,7 +22,7 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 const (
@@ -91,7 +91,7 @@ func museAt(at place, cfg string) *Agent {
 				return ""
 			}
 			if model() == "" {
-				return "Muse Code's model (settings.json) is gone, so it no longer reaches magpie"
+				return "Muse Code's model (settings.json) is gone, so it no longer reaches chongyun"
 			}
 			return wiringOff("Muse Code", path, func(k string) (string, bool) { return edit.GetJSON(path, museTransport+"."+k) },
 				"base_url", gatewayV1(), "auth", "none")

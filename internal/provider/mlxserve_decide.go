@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // MLXServePreset is the MLX-Serve preset's id.

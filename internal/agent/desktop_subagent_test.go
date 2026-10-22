@@ -3,8 +3,8 @@ package agent
 import (
 	"testing"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Claude Desktop's subagent model field: offered magpie's models once
@@ -76,7 +76,7 @@ func TestDesktopSubagentEffortField(t *testing.T) {
 	if len(f.Options(nil)) != 0 || f.Set("high") != nil || a.Wired() {
 		t.Fatal("saving an unwired effort offered choices or connected Desktop")
 	}
-	if err := a.Pick("provider", "magpie"); err != nil {
+	if err := a.Pick("provider", "chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	if len(f.Options(nil)) != len(provider.MemberEfforts) {

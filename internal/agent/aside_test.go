@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 func asideHome(t *testing.T) (string, string) {
@@ -166,7 +166,7 @@ func TestAsideNativeSelectionKeepsProviderAndEndsOwnership(t *testing.T) {
 
 func TestAsideLegacySelectionNeedsRestoreTarget(t *testing.T) {
 	settings, models := asideHome(t)
-	writeFile(t, settings, `{"defaultModel":{"provider":"magpie","modelId":"relay/glm-4.6","thinkingLevel":"high"}}`)
+	writeFile(t, settings, `{"defaultModel":{"provider":"chongyun","modelId":"relay/glm-4.6","thinkingLevel":"high"}}`)
 	a := mustFindAside(t)
 	if err := a.Connect(); err != nil {
 		t.Fatal(err)
@@ -182,7 +182,7 @@ func TestAsideLegacySelectionNeedsRestoreTarget(t *testing.T) {
 
 func TestAsideForeignProviderAndSyncAreReadOnly(t *testing.T) {
 	settings, models := asideHome(t)
-	writeFile(t, models, `{"providers":{"magpie":{"apiKey":"someone-else","baseUrl":"https://other.invalid/v1"}}}`)
+	writeFile(t, models, `{"providers":{"chongyun":{"apiKey":"someone-else","baseUrl":"https://other.invalid/v1"}}}`)
 	before := readFile(settings) + readFile(models)
 	a := mustFindAside(t)
 	if err := a.Connect(); err == nil {

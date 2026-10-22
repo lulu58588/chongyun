@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // Codex signed in with ChatGPT, connected on one of magpie's models beside
@@ -56,7 +56,7 @@ func TestCodexOwnPickAfterMagpieModelStaysConnected(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cx.Wired() {
-		t.Fatalf("still beside the sign-in after magpie became its provider:\n%s", read())
+		t.Fatalf("still beside the sign-in after chongyun became its provider:\n%s", read())
 	}
 }
 

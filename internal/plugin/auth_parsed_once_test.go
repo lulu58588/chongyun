@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/lastgood"
 )
 
 // plugin-auth.json is parsed once for each version of the file, however

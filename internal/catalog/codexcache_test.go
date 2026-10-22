@@ -7,10 +7,10 @@ import "testing"
 func TestCodexCacheLeavesMagpieOut(t *testing.T) {
 	b := []byte(`{"etag":"W/\"abc+magpie-0a06185a4db4\"","models":[
 		{"slug":"gpt-5.5","display_name":"GPT-5.5","visibility":"list","priority":1},
-		{"slug":"group/semantic","display_name":"semantic","description":"semantic via magpie","visibility":"list","priority":2},
+		{"slug":"group/semantic","display_name":"semantic","description":"semantic via chongyun","visibility":"list","priority":2},
 		{"slug":"group/auto-glm-5-3-flash","display_name":"GLM-5.3-Flash","visibility":"list","priority":3},
 		{"slug":"codex/gpt-5.4","display_name":"GPT-5.4","visibility":"list","priority":4},
-		{"slug":"deepseek/deepseek-v4","display_name":"DeepSeek V4","description":"DeepSeek V4 via magpie","visibility":"list","priority":5}]}`)
+		{"slug":"deepseek/deepseek-v4","display_name":"DeepSeek V4","description":"DeepSeek V4 via chongyun","visibility":"list","priority":5}]}`)
 	ms, err := parseCodex(b)
 	if err != nil {
 		t.Fatal(err)

@@ -13,6 +13,7 @@ func TestAccountDiscoveryOffParsedOnce(t *testing.T) {
 	t.Setenv("MAGPIE_NO_ACCOUNTS", "")
 	s := Load()
 	s.NoAccountDiscovery = true
+	s.AccountDiscovery = false
 	if err := Save(s); err != nil {
 		t.Fatal(err)
 	}
@@ -28,6 +29,7 @@ func TestAccountDiscoveryOffParsedOnce(t *testing.T) {
 	}
 	s = Load()
 	s.NoAccountDiscovery = false
+	s.AccountDiscovery = true
 	if err := Save(s); err != nil {
 		t.Fatal(err)
 	}

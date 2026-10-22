@@ -205,7 +205,7 @@ func TestPiPackage(t *testing.T) {
 		t.Fatalf("Finish = %+v, %v", got, err)
 	}
 	if b, err := os.ReadFile(filepath.Join(filepath.Dir(AuthPath()), "pi", "stolen")); err == nil {
-		t.Fatalf("a program the login started read magpie's messages: %s", b)
+		t.Fatalf("a program the login started read chongyun's messages: %s", b)
 	}
 	var saved map[string]map[string]any
 	b, _ := os.ReadFile(AuthPath())

@@ -9,8 +9,8 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // keptEffortHome is a sandbox HOME with a provider of thinking models: deep
@@ -104,7 +104,7 @@ func TestWorkBuddyKeepsTheUsersDefaultEffort(t *testing.T) {
 
 	ms := read()
 	if effort(ms["think/deep"]) != "high" || effort(ms["think/wide"]) != "medium" {
-		t.Fatalf("magpie's defaults: %v %v", effort(ms["think/deep"]), effort(ms["think/wide"]))
+		t.Fatalf("chongyun's defaults: %v %v", effort(ms["think/deep"]), effort(ms["think/wide"]))
 	}
 
 	// deep set by hand; wide saved from WorkBuddy's model settings
@@ -210,7 +210,7 @@ func TestZCodeKeepsTheUsersDefaultVariant(t *testing.T) {
 	json.Unmarshal(b, &doc)
 	r := doc["provider"].(map[string]any)[magpieID].(map[string]any)["models"].(map[string]any)["think/wide"].(map[string]any)["reasoning"].(map[string]any)
 	if r["defaultVariant"] != "medium" {
-		t.Fatalf("magpie's default: %s", b)
+		t.Fatalf("chongyun's default: %s", b)
 	}
 	r["defaultVariant"] = "high"
 	b, _ = json.Marshal(doc)
@@ -246,7 +246,7 @@ func TestKimiKeepsTheUsersDefaultEffort(t *testing.T) {
 	b, _ := os.ReadFile(path)
 	at := strings.Index(string(b), `[models."magpie/think/wide"]`)
 	if at < 0 || !strings.Contains(string(b[at:]), `default_effort = "high"`) {
-		t.Fatalf("magpie's default: %s", b)
+		t.Fatalf("chongyun's default: %s", b)
 	}
 	s := string(b[:at]) + strings.Replace(string(b[at:]), `default_effort = "high"`, `default_effort = "low"`, 1)
 	os.WriteFile(path, []byte(s), 0o600)
@@ -277,7 +277,7 @@ func TestMiniMaxKeepsTheUsersDefaultEffort(t *testing.T) {
 	}
 	c, raw := readMiniMax(t, path)
 	if c.CustomProvider[magpieID].Models["think~wide"].Thinking.DefaultEffort != "high" {
-		t.Fatalf("magpie's default:\n%s", raw)
+		t.Fatalf("chongyun's default:\n%s", raw)
 	}
 	at := strings.Index(raw, "think~wide:")
 	raw = raw[:at] + strings.Replace(raw[at:], "defaultEffort: high", "defaultEffort: low", 1)

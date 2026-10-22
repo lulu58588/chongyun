@@ -18,10 +18,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/mcpauth"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // The Library page says of each server whether it works, found the only
@@ -269,7 +269,7 @@ func initializeReq() []byte {
 	return request(1, "initialize", map[string]any{
 		"protocolVersion": mcpProtocol,
 		"capabilities":    map[string]any{},
-		"clientInfo":      map[string]any{"name": "magpie", "version": gateway.Version},
+		"clientInfo":      map[string]any{"name": "崇云科技", "version": gateway.Version},
 	})
 }
 

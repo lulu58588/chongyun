@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Deleting a gateway session (lc on Discord: a Claude Code session seen only

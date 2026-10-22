@@ -75,13 +75,13 @@ func SealData(data []byte, pass string) ([]byte, error) {
 func OpenData(sealed []byte, pass string) ([]byte, error) {
 	var e envelope
 	if json.Unmarshal(sealed, &e) != nil || e.Format != dataFormat {
-		return nil, errors.New("not a file magpie sealed")
+		return nil, errors.New("not a file chongyun sealed")
 	}
 	if e.Version != 1 || e.KDF != "pbkdf2-sha256" {
-		return nil, errors.New("sealed by a newer magpie")
+		return nil, errors.New("sealed by a newer chongyun")
 	}
 	if e.Iterations < 100_000 || e.Iterations > 10_000_000 || len(e.Nonce) != 12 || len(e.Salt) < 16 {
-		return nil, errors.New("not a file magpie sealed")
+		return nil, errors.New("not a file chongyun sealed")
 	}
 	key, err := derived(pass, e)
 	if err != nil {

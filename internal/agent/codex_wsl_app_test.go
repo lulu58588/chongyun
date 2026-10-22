@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The Codex app on Windows with its agent in WSL reads Windows'
@@ -77,7 +77,7 @@ func TestCodexWSLAppAddressKept(t *testing.T) {
 	if err := cx.Unwire(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); strings.Contains(cfg, "openai_base_url") || strings.Contains(cfg, "model_catalog_json") || strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); strings.Contains(cfg, "openai_base_url") || strings.Contains(cfg, "model_catalog_json") || strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("unwired:\n%s", cfg)
 	}
 }

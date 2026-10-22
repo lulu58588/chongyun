@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Codex's background app-server (the daemon codex sessions attach to)
@@ -123,6 +123,6 @@ func codexDaemonBehind() []StaleCopy {
 
 // what codexdaemon says after a change (notice.go)
 var (
-	noticeCodexBehind = newNotice("Codex builds its model list at start-up, and the app-server open codex sessions share started before this: restart it (Restart on magpie's Agents page, or {command}) and the Codex app to see this.")
-	noticeCodexdaemon = newNotice("magpie restarted the app-server codex sessions share, which none was on, so new codex sessions have this; restart the Codex app, if it is open, to see it there.")
+	noticeCodexBehind = newNotice("Codex builds its model list at start-up, and the app-server open codex sessions share started before this: restart it (Restart on chongyun's Agents page, or {command}) and the Codex app to see this.")
+	noticeCodexdaemon = newNotice("chongyun restarted the app-server codex sessions share, which none was on, so new codex sessions have this; restart the Codex app, if it is open, to see it there.")
 )

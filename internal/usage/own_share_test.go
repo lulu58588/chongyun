@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #1839: the calls magpie made by itself — its routing classifier's (UA
@@ -52,7 +52,7 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 	}
 	a := acct["cx@a@example.com"]
 	if a.Calls != 3 || a.Input != 1510 {
-		t.Fatalf("magpie's calls are still the account's: %+v", a.Totals)
+		t.Fatalf("chongyun's calls are still the account's: %+v", a.Totals)
 	}
 	if a.Own.Calls != 2 || a.Own.Tokens != 513 { // the try handed on: its tokens, as Totals has them
 		t.Fatalf("account a's own share: %+v", a.Own)
@@ -61,7 +61,7 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 		t.Fatalf("own cost %v, want %v", a.Own.Cost, want)
 	}
 	if b := acct["cx@b@example.com"]; b.Own != (OwnShare{}) {
-		t.Fatalf("account b has none of magpie's: %+v", b.Own)
+		t.Fatalf("account b has none of chongyun's: %+v", b.Own)
 	}
 	var k Group
 	for _, g := range s.ProviderKeys {
@@ -82,7 +82,7 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 	if ownModel != 2 {
 		t.Fatalf("model: %d own calls: %+v", ownModel, s.Models)
 	}
-	// magpie's calls are an agent's row of their own, as before ("magpie"
+	// magpie's calls are an agent's row of their own, as before ("chongyun"
 	// where the agents are loaded, its User-Agent's name here)
 	mine := 0
 	for _, g := range s.Agents {
@@ -93,12 +93,12 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 		}
 	}
 	if mine != 3 {
-		t.Fatalf("magpie's agent rows: %d calls", mine)
+		t.Fatalf("chongyun's agent rows: %d calls", mine)
 	}
 	// none is said as nothing at all
 	b, _ := json.Marshal(acct["cx@b@example.com"])
 	if strings.Contains(string(b), `"own"`) {
-		t.Fatalf("a group with none of magpie's calls: %s", b)
+		t.Fatalf("a group with none of chongyun's calls: %s", b)
 	}
 	b, _ = json.Marshal(a)
 	if !strings.Contains(string(b), `"own":{"calls":2,"tokens":513`) {
@@ -109,7 +109,7 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 // Every request magpie sends by itself is magpie's own: the classifier, the
 // search, the image description; an agent's is not.
 func TestByMagpie(t *testing.T) {
-	for ua, want := range map[string]bool{"magpie-router/1": true, "magpie-search/1": true, "magpie-vision/1": true, "magpie": true, "claude-cli/2.1": false, "codex_cli_rs/0.50": false, "": false} {
+	for ua, want := range map[string]bool{"magpie-router/1": true, "magpie-search/1": true, "magpie-vision/1": true, "chongyun": true, "claude-cli/2.1": false, "codex_cli_rs/0.50": false, "": false} {
 		if got := (Record{Agent: ua}).ByMagpie(); got != want {
 			t.Errorf("%q: %v, want %v", ua, got, want)
 		}

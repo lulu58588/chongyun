@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A gateway key held to some models (#882) sees only those in the model
@@ -114,7 +114,7 @@ func TestGatewayKeyModelsHoldAKey(t *testing.T) {
 	rec := httptest.NewRecorder()
 	h.ServeHTTP(rec, r)
 	if rec.Code != 200 {
-		t.Fatal("magpie's own call was held", rec.Code, rec.Body.String())
+		t.Fatal("chongyun's own call was held", rec.Code, rec.Body.String())
 	}
 	// plan out of quota: its fallback is a model the key may not use
 	plan.code, plan.reply = 429, `{"error":{"message":"slow down"}}`

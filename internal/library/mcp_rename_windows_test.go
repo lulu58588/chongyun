@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/mcpauth"
-	"github.com/yetone/magpie/internal/mcpauth/mcpauthtest"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // On Windows, a read-only sign-in file can't be replaced, while the

@@ -10,8 +10,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // listedIDs is /v1/models' ids, in order, as the request r is answered.
@@ -192,7 +192,7 @@ func TestBareModelIDsShared(t *testing.T) {
 	}
 
 	if got := bare(get("", true)); len(got) != 0 {
-		t.Fatalf("another magpie was listed bare ids %v", got)
+		t.Fatalf("another chongyun was listed bare ids %v", got)
 	}
 	// held to b/*: glm-5.3 bare reaches a first, which the key may not use
 	if got, want := bare(get(secrets[0], false)), []string{"only-b"}; !slices.Equal(got, want) {

@@ -26,7 +26,7 @@ func TestWidgetFiles(t *testing.T) {
 		t.Errorf("manifest: %+v", m)
 	}
 	qml := string(files["Widget.qml"])
-	if strings.Contains(qml, "__MAGPIE__") || !strings.Contains(qml, `magpie: "/opt/my \"apps\"/magpie"`) {
+	if strings.Contains(qml, "__MAGPIE__") || !strings.Contains(qml, `chongyun: "/opt/my \"apps\"/magpie"`) {
 		t.Errorf("the executable isn't written in, quoted:\n%s", qml)
 	}
 	for _, s := range []string{`[root.magpie, "panel"]`, `[root.magpie, "app"]`, "Qt.RightButton"} {

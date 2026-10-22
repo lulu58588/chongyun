@@ -19,9 +19,9 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/filelock"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/filelock"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 const Prefix = "sk-magpie-key-"
@@ -98,7 +98,7 @@ func ownSecret(secret string, keys []Key) (string, error) {
 		}
 	}
 	if strings.HasPrefix(secret, legacyLANPrefix) {
-		return "", errors.New("A key of your own can't start with sk-magpie-: leave the key empty and magpie makes one")
+		return "", errors.New("A key of your own can't start with sk-magpie-: leave the key empty and chongyun makes one")
 	}
 	for _, k := range keys {
 		if subtle.ConstantTimeCompare([]byte(secret), []byte(k.Secret)) == 1 {
@@ -465,7 +465,7 @@ func Update(action string, in Change) (string, error) {
 		}
 		// Revoke the old-version mirror before changing the active key store.
 		if err := settings.Save(s); err != nil {
-			return "", fmt.Errorf("Cannot change the default gateway key without updating settings.json: older Magpie versions may still accept its old credential. Make the settings file writable and retry; the key is unchanged: %w", err)
+			return "", fmt.Errorf("Cannot change the default gateway key without updating settings.json: older Chongyun versions may still accept its old credential. Make the settings file writable and retry; the key is unchanged: %w", err)
 		}
 	}
 	if err := save(keys); err != nil {
@@ -517,7 +517,7 @@ func Authenticate(secret string) (Identity, bool) {
 func legacyLANKey(secret string) Key {
 	// The fallback and eventual persisted key must share their usage identity.
 	sum := sha256.Sum256([]byte(secret))
-	return Key{ID: "lan-" + hex.EncodeToString(sum[:12]), Name: "Magpie", LAN: true, Secret: secret}
+	return Key{ID: "lan-" + hex.EncodeToString(sum[:12]), Name: "Chongyun", LAN: true, Secret: secret}
 }
 
 // MigrateLegacyLANKey makes the old Settings key a normal, revocable caller
@@ -531,7 +531,7 @@ func MigrateLegacyLANKey() error {
 
 func MigrateLegacyLANKeyBestEffort() {
 	if err := MigrateLegacyLANKey(); err != nil {
-		log.Printf("magpie: could not migrate LAN key: %v", err)
+		log.Printf("chongyun: could not migrate LAN key: %v", err)
 	}
 }
 
@@ -591,7 +591,7 @@ func configureLAN(on, rotate bool) error {
 		}
 		i := slices.IndexFunc(keys, func(k Key) bool { return k.ID == s.LANKeyID || k.LAN })
 		// a default key the user removed stays removed when sharing is
-		// turned on again: making a fresh "Magpie" key then read as a
+		// turned on again: making a fresh "Chongyun" key then read as a
 		// default key that keeps coming back beside the user's own
 		// (#1655, GradientLive). Only an explicit new key makes one.
 		if i < 0 && !rotate && removedDefault(s) {
@@ -608,7 +608,7 @@ func configureLAN(on, rotate bool) error {
 				if err != nil {
 					return err
 				}
-				keys = append(keys, Key{ID: id, Name: "Magpie", LAN: true})
+				keys = append(keys, Key{ID: id, Name: "Chongyun", LAN: true})
 				i = len(keys) - 1
 			}
 			keys[i].Secret = Prefix + token

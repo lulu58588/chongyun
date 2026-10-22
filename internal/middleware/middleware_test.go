@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gwmw"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/gwmw"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // use makes plugins.json list entries, and the middleware load afresh.
@@ -67,7 +67,7 @@ func TestRequestChain(t *testing.T) {
 	// a folder package whose middleware imports a file beside it, and a
 	// plugin that is only middleware
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"alias","magpie":{"middleware":"./mw/index.js"}}`), 0o644)
+	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"alias","chongyun":{"middleware":"./mw/index.js"}}`), 0o644)
 	os.MkdirAll(filepath.Join(dir, "mw"), 0o755)
 	os.WriteFile(filepath.Join(dir, "mw", "names.js"), []byte(`export const names = {"m1": "m2"};`), 0o644)
 	os.WriteFile(filepath.Join(dir, "mw", "index.js"), []byte(`
@@ -269,7 +269,7 @@ func TestOffAndHostSkip(t *testing.T) {
 	}
 	// a package with a main is an OpenCode plugin too
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"main":"index.js","magpie":{"middleware":"mw.js"}}`), 0o644)
+	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"main":"index.js","chongyun":{"middleware":"mw.js"}}`), 0o644)
 	if f, only := plugin.Middleware(dir); f == "" || only {
 		t.Fatalf("Middleware = %q, %v", f, only)
 	}

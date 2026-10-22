@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // airHome is a sandbox home with Air's config folder and an OpenCode at a
@@ -70,9 +70,9 @@ func TestAirAddsMagpieAgent(t *testing.T) {
 	for k, v := range map[string]string{
 		"model":                           "magpie/fake/m1",
 		"small_model":                     "magpie/fake/m1",
-		"enabled_providers":               `["magpie"]`,
+		"enabled_providers":               `["chongyun"]`,
 		"provider.magpie.options.baseURL": gatewayV1(),
-		"provider.magpie.options.apiKey":  "magpie",
+		"provider.magpie.options.apiKey":  "chongyun",
 		"provider.magpie.npm":             "@ai-sdk/openai-compatible",
 	} {
 		if got, _ := edit.GetJSON(cfg, k); strings.Join(strings.Fields(got), "") != v {
@@ -80,7 +80,7 @@ func TestAirAddsMagpieAgent(t *testing.T) {
 		}
 	}
 	if _, ok := edit.GetJSON(cfg, `provider.magpie.models.fake/m1`); !ok {
-		t.Fatalf("no fake/m1 in magpie's models: %s", readFile(cfg))
+		t.Fatalf("no fake/m1 in chongyun's models: %s", readFile(cfg))
 	}
 	if v := a.Field("model").Get(); v != want {
 		t.Fatalf("model = %q", v)
@@ -88,24 +88,24 @@ func TestAirAddsMagpieAgent(t *testing.T) {
 	if d := a.Drift(); d != nil {
 		t.Fatalf("drift: %+v", d)
 	}
-	if n := a.Notice(); !strings.Contains(n, "pick Magpie") {
+	if n := a.Notice(); !strings.Contains(n, "pick Chongyun") {
 		t.Fatalf("notice: %q", n)
 	}
 	// one of Air's own agents isn't set from here
 	if err := a.Apply("model", "anthropic/claude-sonnet-5"); err == nil {
-		t.Fatal("took a model that isn't magpie's")
+		t.Fatal("took a model that isn't chongyun's")
 	}
 	if err := a.Apply("model", ""); err != nil {
 		t.Fatal(err)
 	}
 	if _, ok := edit.GetJSON(acp, "agent_servers.Magpie"); ok {
-		t.Fatalf("Magpie still in acp.json: %s", readFile(acp))
+		t.Fatalf("Chongyun still in acp.json: %s", readFile(acp))
 	}
 	if v, _ := edit.GetJSON(acp, "agent_servers.Goose.command"); v != "goose" {
 		t.Fatalf("the user's agent went: %s", readFile(acp))
 	}
 	if _, err := os.Stat(cfg); !os.IsNotExist(err) {
-		t.Fatalf("magpie's OpenCode config left: %v", err)
+		t.Fatalf("chongyun's OpenCode config left: %v", err)
 	}
 	if v := a.Field("model").Get(); v != "" {
 		t.Fatalf("model after = %q", v)
@@ -143,7 +143,7 @@ func TestAirCheckAndSync(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(cfg); !os.IsNotExist(err) {
-		t.Fatal("Sync wrote a config magpie never set up")
+		t.Fatal("Sync wrote a config chongyun never set up")
 	}
 	if err := a.Apply("model", "magpie/fake/m1"); err != nil {
 		t.Fatal(err)
@@ -160,7 +160,7 @@ func TestAirCheckAndSync(t *testing.T) {
 	if err := edit.DelJSON(acp, "agent_servers.Magpie"); err != nil {
 		t.Fatal(err)
 	}
-	if d := a.Drift(); d == nil || d.Kind != "unwired" || !strings.Contains(d.Detail, "Magpie agent") {
+	if d := a.Drift(); d == nil || d.Kind != "unwired" || !strings.Contains(d.Detail, "Chongyun agent") {
 		t.Fatalf("drift: %+v", d)
 	}
 	if err := a.Reapply(); err != nil {
@@ -191,7 +191,7 @@ func TestAirProviderWritesKeepCustomFields(t *testing.T) {
   "model": "magpie/fake/m1",
   "provider": {
     "mine": {"name": "mine"},
-    "magpie": {
+    "chongyun": {
       "name": "old",
       "npm": "old",
       "options": {

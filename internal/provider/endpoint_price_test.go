@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // useEndpointCatalog puts testdata/endpoint_catalog.json in the catalog
@@ -73,7 +73,7 @@ func TestEndpointCatalogPrices(t *testing.T) {
 		t.Errorf("at an Anthropic endpoint: %q, %+v %v, want thinkingmachines at %+v", tm.EndpointCatalog(), pr, ok, inkling)
 	}
 
-	// what `magpie model price 002/Qwen3.8-27B` and the Usage page read
+	// what `chongyun model price 002/Qwen3.8-27B` and the Usage page read
 	if err := Save(normalize(Provider{ID: "002", Name: "002", Key: "k", Chat: amdEndpoint})); err != nil {
 		t.Fatal(err)
 	}

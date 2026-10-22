@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // The 「接入」 switch keeps an agent on the model it was on, now through
@@ -59,7 +59,7 @@ func TestGeminiConnectRoundTrip(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(dir, ".env")); err == nil {
 		if k, _ := edit.GetEnvFile(filepath.Join(dir, ".env"), "GEMINI_API_KEY"); k != "" {
-			t.Fatalf("magpie's key left: %q", k)
+			t.Fatalf("chongyun's key left: %q", k)
 		}
 	}
 	// and on again, on the model it was on (its sign-in follows the model)
@@ -232,7 +232,7 @@ func TestGooseRoundTripKeepsItsOwnModel(t *testing.T) {
 		}
 	}
 	if _, err := os.Stat(gooseProviderPath(a.Path)); err == nil {
-		t.Fatal("magpie's custom provider left")
+		t.Fatal("chongyun's custom provider left")
 	}
 }
 
@@ -356,6 +356,6 @@ func TestConnectSaysHow(t *testing.T) {
 	}
 	writeFile(t, path, `{"model": "claude-haiku-9"}`)
 	if how, err := c.ConnectHow(); err != nil || how.How != "first" || how.Value == "" {
-		t.Fatalf("on a model magpie lacks: %+v %v", how, err)
+		t.Fatalf("on a model chongyun lacks: %+v %v", how, err)
 	}
 }

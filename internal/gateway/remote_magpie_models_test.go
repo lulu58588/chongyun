@@ -10,8 +10,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A Remote magpie's list has the image models the other magpie draws with,
@@ -126,7 +126,7 @@ func TestRemoteMagpieModels(t *testing.T) {
 		mu.Lock()
 		vendor, hops = nil, nil
 		mu.Unlock()
-		code, body := post(t, "/v1/images/generations", `{"model":"office/`+c.model+`","prompt":"a magpie"}`)
+		code, body := post(t, "/v1/images/generations", `{"model":"office/`+c.model+`","prompt":"a chongyun"}`)
 		mu.Lock()
 		gotHops, gotVendor := slices.Clone(hops), slices.Clone(vendor)
 		mu.Unlock()

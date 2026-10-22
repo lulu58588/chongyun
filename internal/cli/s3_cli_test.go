@@ -11,8 +11,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/davsync"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/davsync"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // s3Server is an S3 server with buckets of any name, path-style, keeping
@@ -93,10 +93,10 @@ func TestS3Cmd(t *testing.T) {
 	// the wrong kind of address, and no access key, said before any secret
 	// is asked for
 	if err := s3Cmd([]string{"on", "https://dav.example.com/dav/"}); err == nil || !strings.Contains(err.Error(), "not an S3 address") {
-		t.Fatalf("a WebDAV address to magpie s3: %v", err)
+		t.Fatalf("a WebDAV address to chongyun s3: %v", err)
 	}
-	if err := webdavCmd([]string{"on", "s3://bkt"}); err == nil || !strings.Contains(err.Error(), "magpie s3 on s3://bkt") {
-		t.Fatalf("an S3 address to magpie webdav: %v", err)
+	if err := webdavCmd([]string{"on", "s3://bkt"}); err == nil || !strings.Contains(err.Error(), "chongyun s3 on s3://bkt") {
+		t.Fatalf("an S3 address to chongyun webdav: %v", err)
 	}
 	if err := s3Cmd([]string{"on", "s3://bkt", "endpoint=" + bucket.url}); err == nil || !strings.Contains(err.Error(), "no access key") {
 		t.Fatalf("no access key: %v", err)
@@ -139,7 +139,7 @@ func TestS3Cmd(t *testing.T) {
 	if err := webdavCmd([]string{"set", "keys=yes"}); err == nil || !strings.Contains(err.Error(), "S3 sync is on") {
 		t.Fatalf("webdav set while S3 is on: %v", err)
 	}
-	if err := webdavCmd([]string{"off"}); err == nil || !strings.Contains(err.Error(), "magpie s3 off") {
+	if err := webdavCmd([]string{"off"}); err == nil || !strings.Contains(err.Error(), "chongyun s3 off") {
 		t.Fatalf("webdav off while S3 is on: %v", err)
 	}
 	if _, ok := davsync.Load(); !ok {
@@ -182,7 +182,7 @@ func TestS3Cmd(t *testing.T) {
 	if c, _ := davsync.Load(); c.S3() || c.URL != dav.url || c.User != "me" || c.Password != "pw" || c.Other == nil || c.Other.Password != "s3cr3t2" {
 		t.Fatalf("back to WebDAV: %+v", c)
 	}
-	if err := s3Cmd([]string{"off"}); err == nil || !strings.Contains(err.Error(), "magpie webdav off") {
+	if err := s3Cmd([]string{"off"}); err == nil || !strings.Contains(err.Error(), "chongyun webdav off") {
 		t.Fatalf("s3 off while WebDAV is on: %v", err)
 	}
 	if err := webdavCmd([]string{"off"}); err != nil {

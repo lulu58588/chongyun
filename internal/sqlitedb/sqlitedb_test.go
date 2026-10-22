@@ -34,7 +34,7 @@ func TestSQLiteSurvivesMalformedEnv(t *testing.T) {
 	child.Env = append(child.Env, childDB+"="+db)
 	out, err := child.CombinedOutput()
 	if err != nil || strings.Contains(string(out), "TODOTODO") || !strings.Contains(string(out), "opened 1") {
-		t.Fatalf("a magpie started with an entry with no \"=\" couldn't open SQLite: %v\n%s", err, out)
+		t.Fatalf("a chongyun started with an entry with no \"=\" couldn't open SQLite: %v\n%s", err, out)
 	}
 }
 

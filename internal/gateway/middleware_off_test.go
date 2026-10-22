@@ -10,12 +10,12 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/gwmw"
-	"github.com/yetone/magpie/internal/masking"
-	"github.com/yetone/magpie/internal/middleware"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/gwmw"
+	"github.com/lulu58588/magpie/internal/masking"
+	"github.com/lulu58588/magpie/internal/middleware"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // echoing is a vendor that keeps what it was sent and says the last

@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/mcpauth"
 )
 
 // Fake is the server: its MCP endpoint is URL, which takes only a token it

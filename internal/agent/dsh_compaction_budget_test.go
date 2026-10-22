@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // dshCompactsAt is where dsh's compaction-basic starts compacting a model

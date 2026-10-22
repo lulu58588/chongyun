@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // zooCodeHere is Zoo Code in a VS Code User folder under home, the
@@ -63,7 +63,7 @@ func TestZooCode(t *testing.T) {
 	// a current profile that is one of apiConfigs, and a modelInfo with
 	// contextWindow and supportsPromptCache
 	for k, want := range map[string]string{
-		"providerProfiles.currentApiConfigName":                                        "magpie",
+		"providerProfiles.currentApiConfigName":                                        "chongyun",
 		"providerProfiles.apiConfigs.magpie.apiProvider":                               "openai",
 		"providerProfiles.apiConfigs.magpie.openAiBaseUrl":                             gatewayV1(),
 		"providerProfiles.apiConfigs.magpie.openAiApiKey":                              agentKey("zoo-code"),
@@ -76,7 +76,7 @@ func TestZooCode(t *testing.T) {
 		}
 	}
 	if gjson.Get(b, "globalSettings").Exists() {
-		t.Fatalf("magpie's import sets Zoo Code's own settings:\n%s", b)
+		t.Fatalf("chongyun's import sets Zoo Code's own settings:\n%s", b)
 	}
 	// the catalog gives glm-4.6 no output limit: Zoo Code's own default
 	// stands, not a 0 that would cap every reply
@@ -115,7 +115,7 @@ func TestZooCode(t *testing.T) {
 		t.Fatalf("disconnected: %v %q\n%s", a.Wired(), f.Get(), readFile(a.Path))
 	}
 	if _, err := os.Stat(file); !os.IsNotExist(err) {
-		t.Fatalf("magpie's import file left: %v", err)
+		t.Fatalf("chongyun's import file left: %v", err)
 	}
 }
 
@@ -168,7 +168,7 @@ func TestZooCodeProfiles(t *testing.T) {
 		t.Fatalf("work profile not as it was:\n%s", readFile(filepath.Join(work, "settings.json")))
 	}
 	if _, ok := edit.GetJSON(newSettings, zooImport); ok {
-		t.Fatalf("new profile kept magpie's import path:\n%s", readFile(newSettings))
+		t.Fatalf("new profile kept chongyun's import path:\n%s", readFile(newSettings))
 	}
 }
 

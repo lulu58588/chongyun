@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Managing sessions: every session of one agent, to look through and pick
@@ -293,7 +293,7 @@ const manifest = "session.json"
 // ~/.claude, and Restore puts it back there.
 func Delete(agent, id string) (Trashed, error) {
 	if !Deletable(agent) {
-		return Trashed{}, fmt.Errorf("magpie can't delete %s sessions", agent)
+		return Trashed{}, fmt.Errorf("chongyun can't delete %s sessions", agent)
 	}
 	if !safeID.MatchString(id) {
 		return Trashed{}, errors.New("no such session")

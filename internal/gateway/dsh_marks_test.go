@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // #2505 (h4rk8s): DSH names its session in x-deepseek-harness-session-id
@@ -93,7 +93,7 @@ func TestDshMarksSessionAndCompaction(t *testing.T) {
 			got := arrived[len(arrived)-1]
 			mu.Unlock()
 			if got.Get("x-deepseek-harness-session-id") != "dsh-session-A" || got.Get("x-deepseek-harness-compact") != tc.compact {
-				t.Errorf("%d: the remote magpie was sent session %q compact %q", i, got.Get("x-deepseek-harness-session-id"), got.Get("x-deepseek-harness-compact"))
+				t.Errorf("%d: the remote chongyun was sent session %q compact %q", i, got.Get("x-deepseek-harness-session-id"), got.Get("x-deepseek-harness-compact"))
 			}
 		}
 		rs := records(i + 1)

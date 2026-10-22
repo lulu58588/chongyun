@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // The headers a third-party Anthropic API's key goes in (Provider.AuthHeader).

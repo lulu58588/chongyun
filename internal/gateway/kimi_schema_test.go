@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A tool schema with an enum and no type goes to Kimi with the type its

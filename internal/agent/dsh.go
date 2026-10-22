@@ -42,14 +42,14 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
-const dshMark = "# magpie"
+const dshMark = "# chongyun"
 
 // dshKeyRef is the credential dsh signs gateway requests with. It is not
 // dshOldKeyRef, the one magpie's llm-deepseek entry named: dsh's Models page
@@ -457,7 +457,7 @@ func dshParse(path, raw string) (head []string, items []dshItem, err error) {
 			// document, which is no list magpie can edit.
 			marker := dshDocStart(l) && !opened
 			if t != "" && !strings.HasPrefix(t, "#") && t != "[]" && !marker {
-				return nil, nil, fmt.Errorf("%s is not a list of entries magpie can edit", path)
+				return nil, nil, fmt.Errorf("%s is not a list of entries chongyun can edit", path)
 			}
 			if t != "" && !strings.HasPrefix(t, "#") {
 				opened = true
@@ -467,7 +467,7 @@ func dshParse(path, raw string) (head []string, items []dshItem, err error) {
 			}
 			continue
 		case t != "" && !strings.HasPrefix(t, "#") && !strings.HasPrefix(l, " "):
-			return nil, nil, fmt.Errorf("%s is not a list of entries magpie can edit", path)
+			return nil, nil, fmt.Errorf("%s is not a list of entries chongyun can edit", path)
 		default:
 			items[len(items)-1].lines = append(items[len(items)-1].lines, l)
 		}
@@ -539,7 +539,7 @@ func dshNode(it dshItem) (*yaml.Node, error) {
 		return nil, err
 	}
 	if len(doc.Content) == 0 || doc.Content[0].Kind != yaml.SequenceNode || len(doc.Content[0].Content) != 1 || doc.Content[0].Content[0].Kind != yaml.MappingNode {
-		return nil, fmt.Errorf("the %s entry is not one magpie can edit", it.id)
+		return nil, fmt.Errorf("the %s entry is not one chongyun can edit", it.id)
 	}
 	return doc.Content[0].Content[0], nil
 }
@@ -784,7 +784,7 @@ func dshCheck(dir, gw string) string {
 		// the home layer's llm-pi-ai goes over every profile's: without
 		// magpie's route it lists none of magpie's models anywhere
 		if !dshWired(dshOver(dir, items)) && dshWired(items) {
-			return "DeepSeek Harness's home patch layer (" + routeFile + ") sets llm-pi-ai over every profile without magpie's route, so sessions list none of magpie's models; Apply again writes it there too"
+			return "DeepSeek Harness's home patch layer (" + routeFile + ") sets llm-pi-ai over every profile without chongyun's route, so sessions list none of chongyun's models; Apply again writes it there too"
 		}
 	}
 	// a profile of dsh's (its desktop app's) without magpie's route: where
@@ -803,7 +803,7 @@ func dshCheck(dir, gw string) string {
 		if canWriteBack && !dshOldWiring(items) && dshStartsOnMagpie(dir, items) {
 			continue
 		}
-		return "DeepSeek Harness's " + filepath.Base(filepath.Dir(f)) + " profile (" + f + ") has none of magpie's models, so sessions there list DeepSeek's own alone"
+		return "DeepSeek Harness's " + filepath.Base(filepath.Dir(f)) + " profile (" + f + ") has none of chongyun's models, so sessions there list DeepSeek's own alone"
 	}
 	routes := dshRoutesIn(dshOver(dir, items))
 	// the route gone entirely while the start still names one of magpie's
@@ -872,9 +872,9 @@ func dshCheck(dir, gw string) string {
 			// no longer gives dsh is not, so that one asks for another model
 			// rather than for a click that cannot help
 			if dshServes(ref) {
-				return "DeepSeek Harness starts on " + magpieID + "/" + ref + ", which magpie's route in " + f + " doesn't list: a session there fails with no such configured model until that route is written again (Apply again, or pick one of magpie's models in dsh)"
+				return "DeepSeek Harness starts on " + magpieID + "/" + ref + ", which chongyun's route in " + f + " doesn't list: a session there fails with no such configured model until that route is written again (Apply again, or pick one of chongyun's models in dsh)"
 			}
-			return "DeepSeek Harness starts on " + magpieID + "/" + ref + ", which magpie no longer gives dsh: a session there fails with no such configured model until another of magpie's is picked in dsh"
+			return "DeepSeek Harness starts on " + magpieID + "/" + ref + ", which chongyun no longer gives dsh: a session there fails with no such configured model until another of chongyun's is picked in dsh"
 		}
 	}
 	env := filepath.Join(dir, ".env")
@@ -885,9 +885,9 @@ func dshCheck(dir, gw string) string {
 	creds := filepath.Join(dir, ".credentials.yaml")
 	if v, ok := edit.GetYAML(creds, "refs."+dshKeyRef); ok && v != keyAt(gw) && !gatewayTakes(v) {
 		if onAnotherMachine(gw) {
-			return "DeepSeek Harness's own key store (" + creds + ") holds another " + dshKeyRef + ", which it uses over magpie's; remove it there (dsh's Models page, Magpie's key) to go through magpie"
+			return "DeepSeek Harness's own key store (" + creds + ") holds another " + dshKeyRef + ", which it uses over chongyun's; remove it there (dsh's Models page, Chongyun's key) to go through chongyun"
 		}
-		return "DeepSeek Harness's own key store (" + creds + ") holds another " + dshKeyRef + ", which it uses over magpie's and this magpie refuses; Apply again puts magpie's key there (Disconnect puts this one back)"
+		return "DeepSeek Harness's own key store (" + creds + ") holds another " + dshKeyRef + ", which it uses over chongyun's and this chongyun refuses; Apply again puts chongyun's key there (Disconnect puts this one back)"
 	} else if !ok && dshCredsOurs(creds) {
 		// the desktop app doesn't read .env (#969)
 		return "DeepSeek Harness's own key store (" + creds + ") doesn't hold " + dshKeyRef + ": the desktop app reads the key from there, not from .env, and its sessions fail with no credential for provider route " + dshRoute + " until it is written (Apply again)"
@@ -901,7 +901,7 @@ func dshCheck(dir, gw string) string {
 // a route written without its key would fail the turn all the same).
 func dshCheckStripped(dir, gw string) string {
 	if len(magpieModels("dsh")) == 0 {
-		return "DeepSeek Harness starts on one of magpie's models, but magpie's route is out of " + dshHomePatch(dir) + " and the profiles' and there is no model list to write it back from; pick a model of magpie's again once it has one"
+		return "DeepSeek Harness starts on one of chongyun's models, but chongyun's route is out of " + dshHomePatch(dir) + " and the profiles' and there is no model list to write it back from; pick a model of chongyun's again once it has one"
 	}
 	env := filepath.Join(dir, ".env")
 	if off := wiringOff("DeepSeek Harness", env, func(k string) (string, bool) { return edit.GetEnvFile(env, k) },
@@ -1370,9 +1370,9 @@ type dshKind struct {
 // Chat provider's, a sign-in served through its agent's own API — on
 // magpie's first route, which keeps its key.
 var dshKinds = []dshKind{
-	{dshRoute, "openai-completions", "Magpie"},
-	{dshRoute + "-responses", "openai-responses", "Magpie · Responses"},
-	{dshRoute + "-anthropic", "anthropic-messages", "Magpie · Anthropic"},
+	{dshRoute, "openai-completions", "Chongyun"},
+	{dshRoute + "-responses", "openai-responses", "Chongyun · Responses"},
+	{dshRoute + "-anthropic", "anthropic-messages", "Chongyun · Anthropic"},
 }
 
 // isDshRoute reports whether a provider route dsh names is one of magpie's.
@@ -1989,7 +1989,7 @@ func dshWiredWith(dir string, files []string, models []catalog.Model) string {
 	}
 	if fresh {
 		if err := dshFillNewProfiles(fill, models, gateway.URL()); err != nil {
-			trouble = append(trouble, "giving dsh's new profile magpie's route: "+dshWriteError(err))
+			trouble = append(trouble, "giving dsh's new profile chongyun's route: "+dshWriteError(err))
 		}
 	}
 	files = append(files, dshHomePatch(dir)) // left as it is without magpie's route
@@ -2209,7 +2209,7 @@ func dshSetEffort(dir, v, gw string) error {
 			route = dshRouteFor(ref, magpieModels("dsh"))
 		}
 		if v != "" && len(levels) == 0 {
-			return fmt.Errorf("DeepSeek Harness has no thinking levels for %s: magpie knows of none the model takes", ref)
+			return fmt.Errorf("DeepSeek Harness has no thinking levels for %s: chongyun knows of none the model takes", ref)
 		}
 		if v != "" && !contains(levels, v) {
 			return fmt.Errorf("DeepSeek Harness takes an effort of %s for this model, not %q", strings.Join(levels, ", "), v)
@@ -2264,14 +2264,14 @@ func dshSetEffort(dir, v, gw string) error {
 		if i := dshFind(items, "llm-deepseek"); i >= 0 && items[i].magpie {
 			models := magpieModels("dsh")
 			if len(models) == 0 {
-				return fmt.Errorf("DeepSeek Harness has no models to write: magpie has none to hand it")
+				return fmt.Errorf("DeepSeek Harness has no models to write: chongyun has none to hand it")
 			}
 			items[i].lines = dshProviderLines(v, models, gw)
 			return dshWrite(f, head, items)
 		}
 	}
 	if v != "" {
-		return fmt.Errorf("pick a model through magpie for DeepSeek Harness first; the effort is kept with magpie's DeepSeek entry")
+		return fmt.Errorf("pick a model through chongyun for DeepSeek Harness first; the effort is kept with chongyun's DeepSeek entry")
 	}
 	return nil
 }
@@ -2302,8 +2302,8 @@ func dshSettingsEndpoint(path string) bool {
 var (
 	noticeDsh1 = newNotice("New dsh sessions start on this. A session made before keeps its model, open now or reopened later, until you pick another in it with /model or the model button by its message box. A dsh started with -p or in a terminal reads it at start-up.")
 	noticeDsh2 = newNotice("dsh reads its config at start-up — restart open dsh sessions to use this.")
-	noticeDsh3 = newNotice("dsh's web search goes through magpie, which has nothing to search with yet: set up a provider that searches by itself (DeepSeek, Claude, Codex, …) or a search API under Settings › Web search.")
-	noticeDsh4 = newNotice("~/.dsh/settings.yaml sets its own DeepSeek endpoint or key, which dsh puts over magpie's; clear it in dsh's Models page to go through magpie.")
+	noticeDsh3 = newNotice("dsh's web search goes through chongyun, which has nothing to search with yet: set up a provider that searches by itself (DeepSeek, Claude, Codex, …) or a search API under Settings › Web search.")
+	noticeDsh4 = newNotice("~/.dsh/settings.yaml sets its own DeepSeek endpoint or key, which dsh puts over chongyun's; clear it in dsh's Models page to go through chongyun.")
 	noticeDsh5 = newNotice("DeepSeek Harness Desktop hasn't been opened yet: it starts on this the first time it opens.")
 )
 

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // barWin is the desktop app as a Windows; the Bar icon routes reach no
@@ -52,6 +52,6 @@ func TestBarIconTellsTheTray(t *testing.T) {
 	}
 	post(`{"on":false}`)
 	if len(told) != 2 || told[1] {
-		t.Fatalf("Bar icon off: the tray was told %v, want [true false] (no magpie left in the bar)", told)
+		t.Fatalf("Bar icon off: the tray was told %v, want [true false] (no chongyun left in the bar)", told)
 	}
 }

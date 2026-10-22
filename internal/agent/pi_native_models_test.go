@@ -7,8 +7,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // piNativeHome is a home with Pi signed in to both openai and openai-codex

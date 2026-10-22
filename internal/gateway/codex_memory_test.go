@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // codexCall is a request Codex with magpie as its provider sends to
@@ -27,7 +27,7 @@ func codexCall(t *testing.T, s *Server, model, source string) *httptest.Response
 
 // Codex's memory calls come on models of its own by their bare names
 // (gpt-5.6-terra, gpt-5.6-luna), whatever Codex is set to (#742,
-// congee949: every one was a 404 "magpie knows no model"). They go to the
+// congee949: every one was a 404 "chongyun knows no model"). They go to the
 // model Codex's own turns go to — the last one answered, or the ledger's
 // after a restart — and are recorded as the memory calls they are. Any
 // other call on a model magpie doesn't know is still turned away.

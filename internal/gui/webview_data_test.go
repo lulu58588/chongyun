@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // #508: a portable magpie on Windows still made %APPDATA%\magpie.exe,
@@ -26,8 +26,8 @@ func TestWindowsOptionsWebViewData(t *testing.T) {
 		t.Fatalf("installed: %+v, want WebView2's default folder and no quit on last close", o)
 	}
 
-	exe := filepath.Join(r, "Magpie", "magpie.exe")
-	if err := os.MkdirAll(filepath.Join(r, "Magpie", "data"), 0o755); err != nil {
+	exe := filepath.Join(r, "Chongyun", "magpie.exe")
+	if err := os.MkdirAll(filepath.Join(r, "Chongyun", "data"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(exe, nil, 0o755); err != nil {
@@ -35,7 +35,7 @@ func TestWindowsOptionsWebViewData(t *testing.T) {
 	}
 	appdir.UseExecutable(exe)
 	o := windowsOptions()
-	if want := filepath.Join(r, "Magpie", "data", "webview2"); o.WebviewUserDataPath != want {
+	if want := filepath.Join(r, "Chongyun", "data", "webview2"); o.WebviewUserDataPath != want {
 		t.Fatalf("portable: WebviewUserDataPath = %q, want %q", o.WebviewUserDataPath, want)
 	}
 	if !o.DisableQuitOnLastWindowClosed {

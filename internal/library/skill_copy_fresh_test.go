@@ -181,7 +181,7 @@ func TestCopyFreshByMark(t *testing.T) {
 		t.Fatal("a copy just made isn't fresh")
 	}
 	// a mark from before: no hash
-	write(t, filepath.Join(cx, marker), "copied from "+skillDir("pdf")+" by magpie, and copied again when it changes\n")
+	write(t, filepath.Join(cx, marker), "copied from "+skillDir("pdf")+" by chongyun, and copied again when it changes\n")
 	if !fresh(cx) {
 		t.Error("an old mark's copy, the same as the library's, isn't fresh")
 	}

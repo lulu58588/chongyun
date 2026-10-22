@@ -13,8 +13,8 @@ import (
 
 	"github.com/klauspost/compress/zstd"
 
-	"github.com/yetone/magpie/internal/codexsummary"
-	"github.com/yetone/magpie/internal/filelock"
+	"github.com/lulu58588/magpie/internal/codexsummary"
+	"github.com/lulu58588/magpie/internal/filelock"
 )
 
 const portThread = "01a15820-ff81-7840-bb3f-e18771c53aa8"
@@ -162,7 +162,7 @@ func TestPortCodexRollouts(t *testing.T) {
 			// nothing of magpie's that OpenAI would refuse is left
 			for i, l := range got {
 				if i != 1 && strings.Contains(l, codexsummary.Mark) {
-					t.Errorf("line %d still has magpie's item: %s", i, l)
+					t.Errorf("line %d still has chongyun's item: %s", i, l)
 				}
 			}
 			// a second pass has nothing to do

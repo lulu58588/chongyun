@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A group whose effort is auto keeps a conversation's reasoning from one

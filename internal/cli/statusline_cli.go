@@ -20,20 +20,20 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
-const statuslineUsage = `usage: magpie statusline [<provider|account>…]
+const statuslineUsage = `usage: chongyun statusline [<provider|account>…]
   one line for Claude Code's status line: the model the session's latest turn went
-  to through magpie, then each subscription and plan magpie has, as last read: its
+  to through chongyun, then each subscription and plan chongyun has, as last read: its
   windows' use ("5h 62% 7d 41%"), * on the one that answered last. Accounts that
-  answered through magpie in the last 30 days are shown, all of them when none has;
+  answered through chongyun in the last 30 days are shown, all of them when none has;
   a provider or an account's email, login or name keeps only those.
   Claude Code runs it on every message with the session's JSON on stdin; put it in
-  ~/.claude/settings.json yourself (magpie doesn't write it, a status line such as
+  ~/.claude/settings.json yourself (chongyun doesn't write it, a status line such as
   claude-hud may hold it):
-    "statusLine": {"type": "command", "command": "magpie statusline"}
+    "statusLine": {"type": "command", "command": "chongyun statusline"}
   It asks the gateway on this computer (the port in Settings' Gateway address, or MAGPIE_ADDR), never
   a vendor, and prints nothing when the gateway isn't running.`
 

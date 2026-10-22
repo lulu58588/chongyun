@@ -9,9 +9,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // corsGuard lets the web pages and browser extensions the user listed
@@ -47,17 +47,17 @@ func corsGuard(next http.Handler) http.Handler {
 		if origin == "" || !corsAllowed(origin) {
 			if foreignPage(r, origin) {
 				log.Printf("refused %s %s from the web page %s: not one listed in Settings", r.Method, r.URL.Path, origin)
-				writeError(w, provider.Chat, http.StatusForbidden, "magpie doesn't answer the web page "+origin+": list it in Settings → Network and sharing → Web pages to let it call magpie with a gateway key")
+				writeError(w, provider.Chat, http.StatusForbidden, "chongyun doesn't answer the web page "+origin+": list it in Settings → Network and sharing → Web pages to let it call chongyun with a gateway key")
 				return
 			}
 			if origin == "null" && !keyedCaller(r) {
 				log.Printf("refused %s %s from Origin: null: a sandboxed frame or a local page, with no gateway key", r.Method, r.URL.Path)
-				writeError(w, provider.Chat, http.StatusForbidden, "magpie doesn't answer a sandboxed frame or a local page (Origin: null) without a gateway key: create one in magpie's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
+				writeError(w, provider.Chat, http.StatusForbidden, "chongyun doesn't answer a sandboxed frame or a local page (Origin: null) without a gateway key: create one in chongyun's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
 				return
 			}
 			if localhostSubdomain(origin) && !keyedCaller(r) {
 				log.Printf("refused %s %s from the web page %s: a localhost subdomain, with no gateway key", r.Method, r.URL.Path, origin)
-				writeError(w, provider.Chat, http.StatusForbidden, "magpie doesn't answer the web page "+origin+" without a gateway key: Safari and other WebKit browsers ask the network's DNS for a localhost subdomain, so the page may not be on this computer. Open it at localhost or 127.0.0.1, or create a key in magpie's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
+				writeError(w, provider.Chat, http.StatusForbidden, "chongyun doesn't answer the web page "+origin+" without a gateway key: Safari and other WebKit browsers ask the network's DNS for a localhost subdomain, so the page may not be on this computer. Open it at localhost or 127.0.0.1, or create a key in chongyun's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
 				return
 			}
 			next.ServeHTTP(w, r)
@@ -83,7 +83,7 @@ func corsGuard(next http.Handler) http.Handler {
 		// lanGuard, in front of Handler on the real server, has already
 		// taken the key and put magpie's own token in its place
 		if !keyedCaller(r) {
-			writeError(w, provider.Chat, http.StatusUnauthorized, "a web page or browser extension calls magpie with a gateway key: create one in magpie's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
+			writeError(w, provider.Chat, http.StatusUnauthorized, "a web page or browser extension calls chongyun with a gateway key: create one in chongyun's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
 			return
 		}
 		next.ServeHTTP(w, r)

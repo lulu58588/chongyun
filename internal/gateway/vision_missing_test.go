@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // pickVision saves the Image recognition model the user picked.
@@ -130,7 +130,7 @@ func TestMissingImageGenerationModelIsSaid(t *testing.T) {
 	if got := DrawerMissing(); got != "gone/gpt-image-2" {
 		t.Fatalf("DrawerMissing = %q", got)
 	}
-	code, _, raw := postImages(t, s, "/v1/images/generations", "application/json", `{"prompt":"a magpie"}`)
+	code, _, raw := postImages(t, s, "/v1/images/generations", "application/json", `{"prompt":"a chongyun"}`)
 	if code != 400 || !strings.Contains(raw, "gone/gpt-image-2") || !strings.Contains(raw, "Image generation") {
 		t.Fatalf("no drawer: %d %s, want 400 naming the missing gone/gpt-image-2", code, raw)
 	}

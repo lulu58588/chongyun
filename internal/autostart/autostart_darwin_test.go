@@ -81,7 +81,7 @@ func TestRefreshOlderLaunchAgent(t *testing.T) {
 		t.Fatal(err)
 	}
 	if b, _ := os.ReadFile(p); string(b) != other {
-		t.Fatalf("a launch agent magpie didn't write was changed:\n%s", b)
+		t.Fatalf("a launch agent chongyun didn't write was changed:\n%s", b)
 	}
 }
 
@@ -97,16 +97,16 @@ func fakeApp(t *testing.T, dir, id string) string {
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleName</key><string>magpie</string>
+	<key>CFBundleName</key><string>chongyun</string>
 	<key>CFBundleIdentifier</key><string>` + id + `</string>
-	<key>CFBundleExecutable</key><string>magpie</string>
+	<key>CFBundleExecutable</key><string>chongyun</string>
 </dict>
 </plist>
 `
 	if err := os.WriteFile(filepath.Join(app, "Info.plist"), []byte(info), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	exe := filepath.Join(app, "MacOS", "magpie")
+	exe := filepath.Join(app, "MacOS", "chongyun")
 	if err := os.WriteFile(exe, []byte("#!/bin/sh\n"), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -126,7 +126,7 @@ func TestLaunchAgentNamesItsApp(t *testing.T) {
 
 	key := "<key>AssociatedBundleIdentifiers</key>\n\t<array><string>com.yetone.magpie</string></array>"
 	if b := string(plist(exe)); !strings.Contains(b, key) {
-		t.Fatalf("the launch agent doesn't name magpie's app:\n%s", b)
+		t.Fatalf("the launch agent doesn't name chongyun's app:\n%s", b)
 	}
 
 	p := record()
@@ -160,7 +160,7 @@ func TestLaunchAgentNamesItsApp(t *testing.T) {
 	}
 
 	// a program outside any app has nothing to name
-	if b := string(plist(filepath.Join(home, "bin", "magpie"))); strings.Contains(b, "AssociatedBundleIdentifiers") {
+	if b := string(plist(filepath.Join(home, "bin", "chongyun"))); strings.Contains(b, "AssociatedBundleIdentifiers") {
 		t.Fatalf("a bare program's launch agent names an app:\n%s", b)
 	}
 }

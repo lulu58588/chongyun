@@ -10,9 +10,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // desktopElectronUA is Desktop's own client (its titles, isClaudeDesktop);
@@ -232,8 +232,8 @@ func TestDesktopSubagentGroupTarget(t *testing.T) {
 // says why.
 func TestDesktopSubagentKept(t *testing.T) {
 	for _, tc := range []struct{ name, why, target string }{
-		{"unserved", "magpie doesn't serve it now", "fake/missing"},
-		{"disabled", "it is disabled in magpie", "fake/m2"},
+		{"unserved", "chongyun doesn't serve it now", "fake/missing"},
+		{"disabled", "it is disabled in chongyun", "fake/m2"},
 		{"held model", "the gateway key may not use it", "fake/m2"},
 		{"held group", "the gateway key may not use it", "group/workers"},
 	} {
@@ -242,9 +242,9 @@ func TestDesktopSubagentKept(t *testing.T) {
 			u := desktopSubagentSetup(t)
 			target, key := tc.target, Token+"-claude-desktop"
 			switch why {
-			case "magpie doesn't serve it now":
+			case "chongyun doesn't serve it now":
 				target = "fake/missing"
-			case "it is disabled in magpie":
+			case "it is disabled in chongyun":
 				if err := provider.DisableModels("fake/m2"); err != nil {
 					t.Fatal(err)
 				}

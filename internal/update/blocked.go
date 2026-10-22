@@ -19,8 +19,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // BlockedError is a new version that couldn't be started on this computer.
@@ -32,7 +32,7 @@ type BlockedError struct {
 
 func (e *BlockedError) Error() string {
 	if e.Policy() {
-		return "Windows didn't let the new version start (" + e.Err.Error() + "): Smart App Control or another application control policy blocks magpie's unsigned builds; download it from " + Site + " and run it yourself, or turn Smart App Control off, then check for updates again"
+		return "Windows didn't let the new version start (" + e.Err.Error() + "): Smart App Control or another application control policy blocks chongyun's unsigned builds; download it from " + Site + " and run it yourself, or turn Smart App Control off, then check for updates again"
 	}
 	return "the new version couldn't start: " + e.Err.Error() + "; download it from " + Site + " and run it yourself"
 }

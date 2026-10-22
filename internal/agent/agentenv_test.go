@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/agentenv"
 )
 
 // readsEnv matches the two ways these packages name a variable they read to
@@ -24,16 +24,16 @@ var notAnAgent = map[string]string{
 	"LOCALAPPDATA":          "the same",
 	"PATH":                  "the process' own",
 	"USER":                  "the process' own",
-	"XDG_CONFIG_HOME":       "magpie's own folder's, which appdir decides",
+	"XDG_CONFIG_HOME":       "chongyun's own folder's, which appdir decides",
 	"XDG_DATA_HOME":         "the same",
 	"XDG_CACHE_HOME":        "Go's build cache's too, which a sandbox keeps shared; Air's ACP OpenCode under it is found by path in a test's own home (#2423)",
-	"MAGPIE_ADDR":           "magpie's own",
-	"MAGPIE_DEBUG":          "magpie's own debug flag",
-	"MAGPIE_PUBLIC_URL":     "magpie's own public URL",
-	"MAGPIE_TRUST_PROXY":    "magpie's own: a proxy here signs its clients in (#1022)",
-	"MAGPIE_EFFORT_UPDATES": "magpie's own switch for effort updates (#617)",
-	"MAGPIE_SITE_ORIGIN":    "a site origin magpie's Omarchy theme answers, to try the site locally",
-	"MAGPIE_PARTNERS":       "where magpie's own partner list is read from (a URL, or off), not a folder",
+	"MAGPIE_ADDR":           "chongyun's own",
+	"MAGPIE_DEBUG":          "chongyun's own debug flag",
+	"MAGPIE_PUBLIC_URL":     "chongyun's own public URL",
+	"MAGPIE_TRUST_PROXY":    "chongyun's own: a proxy here signs its clients in (#1022)",
+	"MAGPIE_EFFORT_UPDATES": "chongyun's own switch for effort updates (#617)",
+	"MAGPIE_SITE_ORIGIN":    "a site origin chongyun's Omarchy theme answers, to try the site locally",
+	"MAGPIE_PARTNERS":       "where chongyun's own partner list is read from (a URL, or off), not a folder",
 	"CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "Claude Code's behaviour flag, not an agent's folder",
 	"GIT_SSH":         "the user's own SSH program for git, which a skill fetched with their git keeps",
 	"GIT_SSH_COMMAND": "the same, as a command",

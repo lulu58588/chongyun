@@ -11,10 +11,10 @@
 package search
 
 import (
-	"github.com/yetone/magpie/internal/gwtool"
-	"github.com/yetone/magpie/internal/pluginrt"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/gwtool"
+	"github.com/lulu58588/magpie/internal/pluginrt"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func init() {

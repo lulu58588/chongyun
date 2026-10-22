@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestZed(t *testing.T) {
@@ -87,7 +87,7 @@ func TestZed(t *testing.T) {
 		t.Fatal("did not restore whole default model")
 	}
 	if _, ok := edit.GetJSON(a.Path, zedProvider); ok {
-		t.Fatal("magpie provider left after reset")
+		t.Fatal("chongyun provider left after reset")
 	}
 }
 
@@ -136,7 +136,7 @@ func TestZedFreshAndOwn(t *testing.T) {
 		t.Fatalf("native model: %q", f.Get())
 	}
 	if _, ok := edit.GetJSON(a.Path, zedProvider); ok {
-		t.Fatal("magpie provider left on native selection")
+		t.Fatal("chongyun provider left on native selection")
 	}
 }
 
@@ -244,7 +244,7 @@ func TestZedRestoresProviderAndModelLimits(t *testing.T) {
 	writeFile(t, catalog.CachePath(), `{"zai":{"models":{"glm-4.6":{"id":"glm-4.6","name":"GLM","modalities":{"input":["text","image"]},"limit":{"context":204800,"output":300000}}}}}`)
 	catalog.Reset()
 	a := zedAt(filepath.Join(home, "zed"))
-	writeFile(t, a.Path, `{"agent":{"default_model":{"provider":"openai","model":"own"}},"language_models":{"openai_compatible":{"magpie":{"api_url":"https://my-proxy/v1","available_models":[]}}}}`)
+	writeFile(t, a.Path, `{"agent":{"default_model":{"provider":"openai","model":"own"}},"language_models":{"openai_compatible":{"chongyun":{"api_url":"https://my-proxy/v1","available_models":[]}}}}`)
 	before := readFile(a.Path)
 	if err := a.Sync(); err != nil || readFile(a.Path) != before {
 		t.Fatalf("sync changed a user's provider: %v", err)
@@ -285,7 +285,7 @@ func TestZedReselectAfterNativePicker(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, ok := edit.GetJSON(a.Path, zedProvider); ok {
-		t.Fatal("reset restored magpie's own provider")
+		t.Fatal("reset restored chongyun's own provider")
 	}
 	if got := f.Get(); got != "openai/gpt-custom" {
 		t.Fatalf("reset model: %q", got)
@@ -296,7 +296,7 @@ func TestZedReselectPreservesProvider(t *testing.T) {
 	home := syncHome(t)
 	a := zedAt(filepath.Join(home, "zed"))
 	original := `{"api_url":"https://my-proxy/v1","available_models":[{"name":"custom","max_tokens":8192}],"headers":{"X-Custom":"keep"}}`
-	writeFile(t, a.Path, `{"agent":{"default_model":{"provider":"openai","model":"own"}},"language_models":{"openai_compatible":{"magpie":`+original+`}}}`)
+	writeFile(t, a.Path, `{"agent":{"default_model":{"provider":"openai","model":"own"}},"language_models":{"openai_compatible":{"chongyun":`+original+`}}}`)
 	f := a.Field("model")
 	if err := f.Set("magpie/relay/glm-4.6"); err != nil {
 		t.Fatal(err)
@@ -322,7 +322,7 @@ func TestZedReselectPreservesProvider(t *testing.T) {
 func TestZedResetAfterNativePicker(t *testing.T) {
 	home := syncHome(t)
 	a := zedAt(filepath.Join(home, "zed"))
-	writeFile(t, a.Path, `{"agent":{"default_model":{"provider":"openai","model":"own"}},"language_models":{"openai_compatible":{"magpie":{"api_url":"https://my-proxy/v1","available_models":[]}}}}`)
+	writeFile(t, a.Path, `{"agent":{"default_model":{"provider":"openai","model":"own"}},"language_models":{"openai_compatible":{"chongyun":{"api_url":"https://my-proxy/v1","available_models":[]}}}}`)
 	f := a.Field("model")
 	if err := f.Set("magpie/relay/glm-4.6"); err != nil {
 		t.Fatal(err)

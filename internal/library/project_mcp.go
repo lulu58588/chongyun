@@ -13,7 +13,7 @@ import (
 	toml "github.com/pelletier/go-toml/v2"
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // projectMCPFiles is the file, in a project, each agent reads the project's
@@ -177,7 +177,7 @@ func (l *Library) syncProjectMCP(p *Project, fail func(what string, err error)) 
 		for _, s := range want[rel] {
 			old := entries[s.Name]
 			if old != nil && !slices.Contains(had, s.Name) {
-				fail("mcp:"+s.Name, fmt.Errorf("%s has a server called %s already that isn't magpie's: it's left as it is", rel, s.Name))
+				fail("mcp:"+s.Name, fmt.Errorf("%s has a server called %s already that isn't chongyun's: it's left as it is", rel, s.Name))
 				continue
 			}
 			if old != nil {
@@ -270,7 +270,7 @@ func ProjectServer(dir, name string, agents []string) (*Result, error) {
 		var ids []string
 		for _, id := range agents {
 			if ProjectMCPFile(id) == "" {
-				return fmt.Errorf("magpie knows of no file %s reads a project's MCP servers from", id)
+				return fmt.Errorf("chongyun knows of no file %s reads a project's MCP servers from", id)
 			}
 			ids = set(ids, id, true)
 		}

@@ -4,8 +4,8 @@
 package library
 
 import (
-	lib "github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/pluginrt"
+	lib "github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/pluginrt"
 )
 
 func init() {

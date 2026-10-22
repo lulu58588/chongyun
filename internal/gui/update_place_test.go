@@ -8,19 +8,19 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
-// The terminal build on a Mac (magpie-cli-darwin, which `magpie web` runs
-// from) is a bare binary, in no .app. `magpie update` replaces it, but the
+// The terminal build on a Mac (magpie-cli-darwin, which `chongyun web` runs
+// from) is a bare binary, in no .app. `chongyun update` replaces it, but the
 // page's updater only ever took a binary off the Mac, so its Update and
 // Download opened the release page and nothing was downloaded. It now takes
 // the binary as it does elsewhere; the desktop app's own binary copied out
 // of its .app still isn't replaced by the terminal build.
 func TestUpdateTakesTheMacTerminalBuild(t *testing.T) {
 	dir := t.TempDir()
-	exe := filepath.Join(dir, "magpie")
-	if err := os.WriteFile(exe, []byte("magpie"), 0o755); err != nil {
+	exe := filepath.Join(dir, "chongyun")
+	if err := os.WriteFile(exe, []byte("chongyun"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	wasB, wasE, wasGUI := bundleOf, executable, update.GUI
@@ -41,7 +41,7 @@ func TestUpdateTakesTheMacTerminalBuild(t *testing.T) {
 			http.NotFound(w, r)
 			return
 		}
-		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", URL: "https://github.com/yetone/magpie-releases/releases/tag/v0.1.11",
+		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", URL: "https://github.com/lulu58588/magpie-releases/releases/tag/v0.1.11",
 			Assets: map[string]update.Asset{
 				update.BinaryAsset(): {URL: "http://" + r.Host + "/asset"}}})
 	}))

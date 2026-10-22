@@ -3,7 +3,7 @@ package agent
 import (
 	"strings"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A group magpie found is listed as auto/<model> (provider.Group.Ref); it

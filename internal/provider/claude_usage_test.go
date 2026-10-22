@@ -30,7 +30,7 @@ func fakeClaudeUsage(t *testing.T, out *atomic.Value, fail *atomic.Bool) *atomic
 		return out.Load().(string), nil
 	})
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		t.Errorf("magpie asked Anthropic itself: %s", r.URL)
+		t.Errorf("chongyun asked Anthropic itself: %s", r.URL)
 	}))
 	oldBase, oldWait, oldUsed := claudeBase, claudeUsageWait, claudeUsedSince
 	claudeBase = srv.URL

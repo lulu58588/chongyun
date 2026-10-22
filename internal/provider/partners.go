@@ -14,11 +14,10 @@ import (
 	"slices"
 	"strings"
 	"sync"
-	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/source"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/source"
 )
 
 // Partners are services that pay to be listed first in the add sheet,
@@ -93,16 +92,11 @@ var partnerID = regexp.MustCompile(`^[a-z0-9][a-z0-9-]{1,40}$`)
 func partnerCacheFile() string { return filepath.Join(appdir.Cache(), "partners.json") }
 
 func partnersSource() string {
-	src := os.Getenv("MAGPIE_PARTNERS")
-	if src == "" {
-		if testing.Testing() {
-			// a test never asks the real site; one that wants a list
-			// names its own
-			return "off"
-		}
-		src = PartnersURL
+	// this build lists no partner: the add sheet is the vendors' own.
+	if v := os.Getenv("MAGPIE_PARTNERS"); v != "" {
+		return v
 	}
-	return src
+	return "off"
 }
 
 // Partners are the partners listed now, in the list's order: what was
@@ -260,7 +254,7 @@ func fetchPartners(ctx context.Context, src string) ([]Partner, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	req.Header.Set("Accept", "application/json")
 	res, err := source.Do(http.DefaultClient, req)
 	if err != nil {

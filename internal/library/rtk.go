@@ -16,11 +16,11 @@ import (
 	"time"
 
 	"github.com/pelletier/go-toml/v2"
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/proc"
 	"gopkg.in/yaml.v3"
 )
 
@@ -799,7 +799,7 @@ func parseGain(out string) (*RTKGain, []RTKDay, string) {
 	}
 	i, j := strings.Index(out, "{"), strings.LastIndex(out, "}")
 	if i < 0 || j < i || json.Unmarshal([]byte(out[i:j+1]), &g) != nil || g.Summary == nil {
-		return nil, nil, strings.TrimSuffix("rtk gain printed no summary magpie can read: "+installerSaid(out, 2), ": ")
+		return nil, nil, strings.TrimSuffix("rtk gain printed no summary chongyun can read: "+installerSaid(out, 2), ": ")
 	}
 	s := g.Summary
 	if s.Commands == 0 {

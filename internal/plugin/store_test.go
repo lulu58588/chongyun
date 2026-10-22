@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // storeSandbox gives the test its own magpie folders, without the Bun the
@@ -107,7 +107,7 @@ func TestLoadCopyIsIndependent(t *testing.T) {
 		t.Fatalf("a nested config value changed with a copy: %v", q)
 	}
 	if _, ok := again.Config["new"]; ok {
-		t.Fatal("a new config key reached what magpie keeps")
+		t.Fatal("a new config key reached what chongyun keeps")
 	}
 }
 

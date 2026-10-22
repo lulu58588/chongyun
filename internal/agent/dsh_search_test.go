@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Packing1 on Discord: dsh through magpie alone, every web search failed
@@ -32,7 +32,7 @@ func TestDshSearchThroughGateway(t *testing.T) {
 	if !strings.Contains(s, want) || strings.Count(s, "id: "+dshSearchRow) != 1 {
 		t.Fatalf("search row:\n%s", s)
 	}
-	for _, w := range []string{"- id: web-search-deepseek # magpie", "apiKeyEnv: " + dshKeyRef, `baseURL: "` + gatewayV1() + `"`, `model: "deepseek/pro"`, `name: "@deepseek-ai/dsh-web-search-deepseek"`} {
+	for _, w := range []string{"- id: web-search-deepseek # chongyun", "apiKeyEnv: " + dshKeyRef, `baseURL: "` + gatewayV1() + `"`, `model: "deepseek/pro"`, `name: "@deepseek-ai/dsh-web-search-deepseek"`} {
 		if !strings.Contains(s, w) {
 			t.Fatalf("missing %q in\n%s", w, s)
 		}
@@ -63,7 +63,7 @@ func TestDshSearchThroughGateway(t *testing.T) {
 		t.Fatal(err)
 	}
 	if s = read(); strings.Contains(s, dshSearchRow) {
-		t.Fatalf("own model kept magpie's search:\n%s", s)
+		t.Fatalf("own model kept chongyun's search:\n%s", s)
 	}
 	if err := f.Set("magpie/deepseek/pro"); err != nil {
 		t.Fatal(err)

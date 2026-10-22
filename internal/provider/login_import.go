@@ -31,7 +31,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // loginImport is one account read from a file.
@@ -398,7 +398,7 @@ func importLogin(ctx context.Context, agent string, e loginImport, name string, 
 		c := claudeCredentials{raw: map[string]any{}, OAuth: claudeAuth{AccessToken: e.accessToken, RefreshToken: e.refreshToken,
 			ExpiresAt: 1, Scopes: scopes}}
 		if e.email == "" {
-			return fail("the file doesn't say which Claude account this is; sign in to it from magpie instead")
+			return fail("the file doesn't say which Claude account this is; sign in to it from chongyun instead")
 		}
 		acct := map[string]any{"emailAddress": e.email}
 		if e.claudeAccount != "" {

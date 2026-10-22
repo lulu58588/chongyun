@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // remoteOnly leaves out the remote's keys' own cards (#1547).
@@ -106,10 +106,10 @@ func TestRemoteMagpieQuotas(t *testing.T) {
 		return w.Code
 	}
 	if c := post("127.0.0.1:5000", "?provider=home/codex", ""); c != http.StatusBadRequest {
-		t.Errorf("a third magpie's card: %d", c)
+		t.Errorf("a third chongyun's card: %d", c)
 	}
 	if c := post("127.0.0.1:5000", "?provider=office", ""); c != http.StatusBadRequest {
-		t.Errorf("a remote magpie's own card: %d", c)
+		t.Errorf("a remote chongyun's own card: %d", c)
 	}
 	if c := post("192.168.1.9:5000", "?provider=bal", ""); c == http.StatusOK {
 		t.Error("another machine without a key had a card read")

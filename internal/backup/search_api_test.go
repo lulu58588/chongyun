@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The search APIs (#419) go in a backup with the providers: their keys

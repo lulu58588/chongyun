@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // codexTitlesTo is where a request Codex makes for a thread's title goes
@@ -210,7 +210,7 @@ func (s *Server) codexDescription(w http.ResponseWriter, r *http.Request, body [
 func (s *Server) codexPrediction(w http.ResponseWriter, r *http.Request, body []byte, to string) {
 	if to == "off" {
 		s.sentNowhere(w, r, body, "Predictions off",
-			"Codex composer predictions are off in magpie's Settings: answered with no prediction, sent nowhere", []any{predictionItem(fmt.Sprintf("resp_magpie_%d", time.Now().UnixNano()), noSuggestion)})
+			"Codex composer predictions are off in chongyun's Settings: answered with no prediction, sent nowhere", []any{predictionItem(fmt.Sprintf("resp_magpie_%d", time.Now().UnixNano()), noSuggestion)})
 		return
 	}
 	body, _ = codexInput(body, true)
@@ -376,33 +376,33 @@ func noTitle(said string) string {
 // a finished reply with nothing in it, which Codex takes as no title and
 // leaves the thread named as it was (its thread_title.rs: no message, or
 // no {"title": …} in it, sets none). The Routing and Usage views have it
-// as the title request it was, answered by magpie and sent to no one.
+// as the title request it was, answered by chongyun and sent to no one.
 func (s *Server) codexTitleOff(w http.ResponseWriter, r *http.Request, body []byte) {
-	s.sentNowhere(w, r, body, "Titles off", "Codex titles are off in magpie's Settings: answered with no title, sent nowhere", nil)
+	s.sentNowhere(w, r, body, "Titles off", "Codex titles are off in chongyun's Settings: answered with no title, sent nowhere", nil)
 }
 
 // sentNowhere answers a hidden turn of Codex's that a setting turned off
 // with these output items, sending it nowhere: who and why are what the
 // Routing and Usage views say of it, the request kept there as what it
-// was, answered by magpie.
+// was, answered by chongyun.
 func (s *Server) sentNowhere(w http.ResponseWriter, r *http.Request, body []byte, who, why string, out []any) {
 	start := time.Now()
 	usage.Saw(agentOf(r))
 	metadata := requestSessionMetadata(r.Header, body)
 	kind := requestCallKind(r.Header, metadata)
 	model := modelOf(body)
-	seat := Weighed{ID: "magpie", Provider: "magpie", Name: "magpie", Who: who, Kind: "provider", Model: model}
+	seat := Weighed{ID: "chongyun", Provider: "chongyun", Name: "崇云科技", Who: who, Kind: "provider", Model: model}
 	tr := s.trace.beginFor(r, Route{Time: start, Agent: agentOf(r), Session: sessionOf(r.Header), ParentSession: titleParentSession(r.Header, metadata, kind),
-		Kind: kind, Model: model, Provider: "magpie", Order: []Weighed{seat}, Tries: []Try{{ID: seat.ID, Model: model, Start: start}}})
+		Kind: kind, Model: model, Provider: "chongyun", Order: []Weighed{seat}, Tries: []Try{{ID: seat.ID, Model: model, Start: start}}})
 	writeTitleReply(w, fmt.Sprintf("resp_magpie_%d", start.UnixNano()), out, nil)
 	ms := time.Since(start).Milliseconds()
 	s.trace.update(tr, func(t *Route) {
 		t.Tries[0].Done, t.Tries[0].Status, t.Tries[0].Millis, t.Tries[0].Error = true, 200, ms, why
 		t.Done, t.Status, t.Error, t.Millis = true, 200, why, ms
 	})
-	s.record(Call{Route: tr.ID, Time: start, From: provider.Responses, To: provider.Responses, Model: model, Provider: "magpie",
+	s.record(Call{Route: tr.ID, Time: start, From: provider.Responses, To: provider.Responses, Model: model, Provider: "chongyun",
 		Agent: agentOf(r), Kind: kind, Status: 200, Millis: ms, Error: why})
-	appendUsage(r, usage.Record{RouteID: tr.ID, Time: start, Agent: agentOf(r), Provider: "magpie", Model: model, Requested: model,
+	appendUsage(r, usage.Record{RouteID: tr.ID, Time: start, Agent: agentOf(r), Provider: "chongyun", Model: model, Requested: model,
 		Millis: ms, Status: 200, Rejected: true, Error: why, Session: sessionOf(r.Header), NativeSession: nativeSessionOf(r.Header),
 		Kind: kind, Endpoint: r.URL.Path})
 }
@@ -452,7 +452,7 @@ func writeTitleEnd(w http.ResponseWriter, id string, out []any, used json.RawMes
 // titleShape is the object a title request's text.format asks for: its
 // string properties' bounds and which are required. Codex 0.160's TUI asks
 // for {"title"} alone; another of its builds for a description beside the
-// title, both required and nothing else allowed (#743: magpie gave it the
+// title, both required and nothing else allowed (#743: chongyun gave it the
 // title alone, so it kept the first message as the thread's name).
 type titleShape struct {
 	Properties map[string]struct {

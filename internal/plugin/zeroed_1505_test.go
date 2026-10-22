@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/lastgood"
 )
 
 // zeroedAuth is plugin-auth.json as #1505's Windows crash left it: its full
@@ -59,7 +59,7 @@ func TestZeroedPluginAuthReadFromBackup(t *testing.T) {
 		t.Fatalf("a zeroed plugin-auth.json read as %v", got)
 	}
 	if len(lastgood.Recovered()) != 1 {
-		t.Fatalf("magpie's read not noted: %+v", lastgood.Recovered())
+		t.Fatalf("chongyun's read not noted: %+v", lastgood.Recovered())
 	}
 	lastgood.Reset() // the host's own read is told magpie too
 
@@ -108,10 +108,10 @@ func TestZeroedPluginAuthWithoutBackupNotWrittenOver(t *testing.T) {
 	}
 	Restart()
 	if err := SignOut(ctx, "renewco", ""); err == nil {
-		t.Fatal("magpie's sign-out of sign-ins that don't read said done")
+		t.Fatal("chongyun's sign-out of sign-ins that don't read said done")
 	}
 	if got, _ := os.ReadFile(AuthPath()); !bytes.Equal(got, zeroedAuth) {
-		t.Fatalf("magpie's sign-out wrote %q over sign-ins that don't read", got)
+		t.Fatalf("chongyun's sign-out wrote %q over sign-ins that don't read", got)
 	}
 	// a sign-in added writes, the zeroed file kept aside first
 	k := importRenew(t, ctx, "new@renew")

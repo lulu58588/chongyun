@@ -11,7 +11,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/access"
 )
 
 // magpie's web search, the one a model that can't search is given
@@ -43,7 +43,7 @@ type mcpMessage struct {
 }
 
 func (s *Server) searchMCP(w http.ResponseWriter, r *http.Request) {
-	serveMCP(w, r, "magpie's web search", 1<<20, s.searchMCPCall)
+	serveMCP(w, r, "chongyun's web search", 1<<20, s.searchMCPCall)
 }
 
 // serveMCP answers the JSON-RPC messages POSTed to one of magpie's own MCP
@@ -51,7 +51,7 @@ func (s *Server) searchMCP(w http.ResponseWriter, r *http.Request) {
 // long: guarded as a gateway route, and a web page turned away.
 func serveMCP(w http.ResponseWriter, r *http.Request, what string, limit int64, call func(*http.Request, mcpMessage) (any, map[string]any)) {
 	if !local(r) && !sharedWith(r) {
-		http.Error(w, what+" is served to another machine only when magpie is shared on the local network and the request carries a gateway key (Authorization: Bearer <key>)", http.StatusForbidden)
+		http.Error(w, what+" is served to another machine only when chongyun is shared on the local network and the request carries a gateway key (Authorization: Bearer <key>)", http.StatusForbidden)
 		return
 	}
 	// a page on this computer (localhost) gets past corsGuard; only one the
@@ -120,8 +120,8 @@ func (s *Server) searchMCPCall(r *http.Request, m mcpMessage) (any, map[string]a
 		return map[string]any{
 			"protocolVersion": mcpVersion(m),
 			"capabilities":    map[string]any{"tools": map[string]any{}},
-			"serverInfo":      map[string]any{"name": "magpie-web-search", "title": "Magpie Web Search", "version": Version},
-			"instructions":    "web_search searches the web with the search magpie gives its models: a provider that can search, or the search APIs set up in magpie (Settings → Models → Web search). web_fetch reads a page it found, by its URL.",
+			"serverInfo":      map[string]any{"name": "magpie-web-search", "title": "Chongyun Web Search", "version": Version},
+			"instructions":    "web_search searches the web with the search chongyun gives its models: a provider that can search, or the search APIs set up in chongyun (Settings → Models → Web search). web_fetch reads a page it found, by its URL.",
 		}, nil
 	case "ping":
 		return map[string]any{}, nil
@@ -202,9 +202,9 @@ func (s *Server) searchMCPRun(r *http.Request, query string) (string, error) {
 		if r.Context().Err() == nil {
 			log.Printf("web search MCP: %v", err)
 		}
-		msg := "magpie couldn't search the web: " + err.Error()
+		msg := "chongyun couldn't search the web: " + err.Error()
 		if errors.Is(err, errNoSearcher) {
-			msg += ": add a search API in magpie's Settings → Models → Web search (or magpie search add <api> <key>), or a provider that can search"
+			msg += ": add a search API in chongyun's Settings → Models → Web search (or chongyun search add <api> <key>), or a provider that can search"
 		}
 		return "", searchMCPError(msg)
 	}

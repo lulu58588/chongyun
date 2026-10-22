@@ -4,8 +4,8 @@ import (
 	"maps"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A provider's editor sets where Codex and Claude Code compact on its

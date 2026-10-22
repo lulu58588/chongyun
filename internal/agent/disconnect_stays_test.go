@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // agentFiles reads every file under home but magpie's own (its settings,
@@ -23,7 +23,7 @@ func agentFiles(t *testing.T, home string) map[string]string {
 		}
 		rel, _ := filepath.Rel(home, p)
 		if e.IsDir() {
-			if rel == filepath.Join(".config", "magpie") || rel == ".cache" {
+			if rel == filepath.Join(".config", "chongyun") || rel == ".cache" {
 				return filepath.SkipDir
 			}
 			return nil
@@ -104,7 +104,7 @@ func codexChatGPTAuth(email, acct string) map[string]any {
 // paynezhuang on Discord: Codex signed in to ChatGPT, with another of the
 // user's ChatGPT accounts on in magpie. magpie's first start pointed Codex
 // at the gateway for failover; the user switched Codex on, then chose
-// "Disconnect from magpie", and after each update and restart Codex had
+// "Disconnect from chongyun", and after each update and restart Codex had
 // magpie's base URL in config.toml again. A disconnect is the user's say:
 // no start brings it back, with ChatGPT sign-in or magpie API, until the
 // user connects Codex again.
@@ -140,7 +140,7 @@ func TestCodexDisconnectStaysWithAccountsOn(t *testing.T) {
 			}
 			restored := read()
 			if strings.Contains(restored, "openai_base_url") || strings.Contains(restored, "model_provider =") {
-				t.Fatalf("disconnect left magpie in:\n%s", restored)
+				t.Fatalf("disconnect left chongyun in:\n%s", restored)
 			}
 			// restarts, an update among them
 			for i := 0; i < 3; i++ {
@@ -184,14 +184,14 @@ func TestCodexAPIDisconnectStays(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !cx.Wired() {
-		t.Fatalf("magpie API not wired:\n%s", read())
+		t.Fatalf("chongyun API not wired:\n%s", read())
 	}
 	if err := cx.Disconnect(); err != nil {
 		t.Fatal(err)
 	}
 	restored := read()
 	if cx.Wired() || strings.Contains(restored, "model_provider =") || strings.Contains(restored, "openai_base_url") {
-		t.Fatalf("disconnect left magpie in:\n%s", restored)
+		t.Fatalf("disconnect left chongyun in:\n%s", restored)
 	}
 	for i := 0; i < 2; i++ {
 		SyncCatalog()
@@ -204,7 +204,7 @@ func TestCodexAPIDisconnectStays(t *testing.T) {
 		t.Fatal(err)
 	}
 	SyncCatalog()
-	if cfg := read(); !cx.Wired() || !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !cx.Wired() || !strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("connected again:\n%s", cfg)
 	}
 }

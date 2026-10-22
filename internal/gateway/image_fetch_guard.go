@@ -13,9 +13,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A URL magpie didn't choose itself is downloaded only from public
@@ -58,7 +58,7 @@ const imageRedirects = 5
 
 // errPrivateAddress is a URL that leads somewhere other than the public
 // internet.
-var errPrivateAddress = errors.New(`it is at a private address, which magpie doesn't download from: send the image itself (a data: URL or a file) instead, or name the host in settings.json's "fetchPrivate"`)
+var errPrivateAddress = errors.New(`it is at a private address, which chongyun doesn't download from: send the image itself (a data: URL or a file) instead, or name the host in settings.json's "fetchPrivate"`)
 
 // fetchAllow is where a download may go beyond public addresses: the
 // user's fetchPrivate, and the hosts a transport was made for.

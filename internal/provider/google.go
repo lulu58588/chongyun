@@ -37,8 +37,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // CodeAssist is Google's Code Assist API, which magpie only speaks
@@ -108,7 +108,7 @@ const AntigravityRisk = "Google may suspend an Antigravity account it sees used 
 
 // ClaudeRisk is what magpie says before a Claude account is added, as the
 // window does.
-const ClaudeRisk = "Anthropic may suspend or ban a Claude account it sees used outside its own apps. magpie sends requests through Claude Code, but Anthropic may still act on them; you use it at your own risk. Use an account you can afford to lose."
+const ClaudeRisk = "Anthropic may suspend or ban a Claude account it sees used outside its own apps. chongyun sends requests through Claude Code, but Anthropic may still act on them; you use it at your own risk. Use an account you can afford to lose."
 
 // geminiCLIVersion is the Gemini CLI magpie says it is.
 const geminiCLIVersion = "0.61.0"
@@ -360,7 +360,7 @@ func (g googleAccount) token(ctx context.Context) (string, error) {
 		ExpiresIn   int64  `json:"expires_in"`
 	}
 	if err := postToken(ctx, googleTokenURL, "application/x-www-form-urlencoded", []byte(form.Encode()), &fresh); err != nil || fresh.AccessToken == "" {
-		how := "sign in again from magpie"
+		how := "sign in again from chongyun"
 		if g.own {
 			how = "run gemini and sign in again"
 		}
@@ -649,11 +649,11 @@ func (g googleAccount) geminiProject(ctx context.Context) (googleProject, error)
 // needsProject says a Code Assist Standard or Enterprise account needs a
 // Google Cloud project named, with Google's reason when it gave one.
 func (g googleAccount) needsProject(why string) error {
-	msg := "Google serves Gemini CLI's sign-in only to Gemini Code Assist Standard and Enterprise, which bill a Google Cloud project: name it with `magpie accounts project gemini " + g.user + " <project-id>`"
+	msg := "Google serves Gemini CLI's sign-in only to Gemini Code Assist Standard and Enterprise, which bill a Google Cloud project: name it with `chongyun accounts project gemini " + g.user + " <project-id>`"
 	if g.own {
 		msg += " or GOOGLE_CLOUD_PROJECT in ~/.gemini/.env"
 	}
-	msg += ". A personal Google account is served to Antigravity instead: add it under Antigravity in magpie"
+	msg += ". A personal Google account is served to Antigravity instead: add it under Antigravity in chongyun"
 	if why != "" {
 		msg = why + " — " + msg
 	}

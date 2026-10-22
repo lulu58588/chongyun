@@ -59,13 +59,13 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/claudecode"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/wslrun"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/claudecode"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/wslrun"
 )
 
 type subscriptionBridge struct {
@@ -289,7 +289,7 @@ type shownCall struct {
 }
 
 // waitTool collects a tool result that took longer than an agent's patience.
-const waitTool = "magpie_wait"
+const waitTool = "chongyun_wait"
 
 type mcpToolResult struct {
 	Content []map[string]any `json:"content"`
@@ -655,7 +655,7 @@ func (b *subscriptionBridge) startRun(ctx context.Context, req *Request, model, 
 		return nil, nil, err
 	}
 	mcpConfig, _ := json.Marshal(map[string]any{"mcpServers": map[string]any{
-		"magpie": map[string]any{"command": exe, "args": []string{"claude-mcp-helper", callbackPath, toolsPath}},
+		"chongyun": map[string]any{"command": exe, "args": []string{"claude-mcp-helper", callbackPath, toolsPath}},
 	}})
 	args := claudeCLIArgs(model, string(mcpConfig), req.Effort, req.WebSearch)
 	if req.leanPrompt {
@@ -882,7 +882,7 @@ func (r *subscriptionRun) cliControl(request map[string]any) error {
 	ch := make(chan controlReply, 1)
 	// one that ended says how, and the last it wrote to stderr: "Claude
 	// Code ended" alone left the user nothing to act on
-	what := fmt.Sprintf("answered magpie's %v request", request["subtype"])
+	what := fmt.Sprintf("answered chongyun's %v request", request["subtype"])
 	r.mu.Lock()
 	if r.closed {
 		r.mu.Unlock()
@@ -3719,7 +3719,7 @@ func (r *subscriptionRun) endedBefore(what string) error {
 	defer r.mu.Unlock()
 	why := "exited before it " + what
 	if r.killed {
-		why = "was ended by magpie before it " + what
+		why = "was ended by chongyun before it " + what
 	} else if r.exit != nil {
 		why += " (" + r.exit.Error() + ")"
 	}
@@ -3864,7 +3864,7 @@ func (r *subscriptionRun) whyLost() string {
 	case why != "":
 		return why
 	case killed:
-		return "magpie ended it"
+		return "chongyun ended it"
 	case exit != nil:
 		return "its Claude Code exited (" + exit.Error() + ")"
 	}

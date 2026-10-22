@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // forkNoneTask is the first request Codex 0.162 (rust-v0.162.0-alpha.17.2)
@@ -113,7 +113,7 @@ func TestSealedTaskNamesSubagentsOnAnyModel(t *testing.T) {
 		}
 		return got.Error.Message
 	}
-	if msg := refusal(); !strings.Contains(msg, `turn on "Codex subagents on any model" in magpie's Settings and start a new thread`) {
+	if msg := refusal(); !strings.Contains(msg, `turn on "Codex subagents on any model" in chongyun's Settings and start a new thread`) {
 		t.Fatalf("the refusal doesn't name the setting: %s", msg)
 	}
 	st := settings.Load()

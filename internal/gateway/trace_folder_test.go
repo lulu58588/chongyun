@@ -9,18 +9,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestShortFolder(t *testing.T) {
 	for dir, want := range map[string]string{
 		"/Users/someone/secret/workspace/magpie":  "workspace/magpie",
 		"/Users/someone/secret/workspace/magpie/": "workspace/magpie",
-		`C:\Users\someone\src\magpie`:             "src/magpie",
-		`D:\magpie`:                               "magpie",
+		`C:\Users\someone\src\chongyun`:             "src/magpie",
+		`D:\chongyun`:                               "chongyun",
 		`C:\`:                                     "",
-		`\\server\share\team\magpie`:              "team/magpie",
-		"/magpie":                                 "magpie",
+		`\\server\share\team\chongyun`:              "team/magpie",
+		"/magpie":                                 "chongyun",
 		"/":                                       "",
 		"":                                        "",
 		"/home/u/my project/中文 目录":                "my project/中文 目录",

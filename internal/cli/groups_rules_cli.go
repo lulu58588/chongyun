@@ -6,15 +6,15 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A group's rules from the terminal: magpie group rule add|rm|mv …, as the
 // Routing view's Rules section makes them.
 
 const ruleUsage = `usage:
-  magpie group rule <group>               the group's rules
-  magpie group rule add <group> use=<model> [use-effort=low|medium|high|xhigh|max] [tokens=<n>] [images] [effort=on|low|medium|high|xhigh|max] [agents=a,b…]
+  chongyun group rule <group>               the group's rules
+  chongyun group rule add <group> use=<model> [use-effort=low|medium|high|xhigh|max] [tokens=<n>] [images] [effort=on|low|medium|high|xhigh|max] [agents=a,b…]
                         [intent="<what the message asks for>"] [compact] [time=HH:MM-HH:MM] [days=mon-fri]
                         [folders=<folder>,…] [except-folders=<folder>,…] [classifier=<model>] [at=<n>]
                                           a rule: a turn that matches it goes to <model>, one of the group's
@@ -23,13 +23,13 @@ const ruleUsage = `usage:
                                           use-effort= is the reasoning <model> is asked for on the requests
                                           the rule sends it, whatever the agent asked: at the model's nearest
                                           level, or as the agent asked when its levels aren't known
-  magpie group rule add <group> pause=<model> [time=HH:MM-HH:MM] [days=mon-fri] [agents=a,b…]
+  chongyun group rule add <group> pause=<model> [time=HH:MM-HH:MM] [days=mon-fri] [agents=a,b…]
                         [folders=<folder>,…] [except-folders=<folder>,…] [at=<n>]
                                           a pause: while it holds, <model> is left out of the group — sent
                                           nothing, not even when the others fail or a conversation was on it
-  magpie group rule rm <group> <n>        remove rule n
-  magpie group rule mv <group> <n> <to>   move rule n to place <to>
-  magpie group rule classifier <group> <model>
+  chongyun group rule rm <group> <n>        remove rule n
+  chongyun group rule mv <group> <n> <to>   move rule n to place <to>
+  chongyun group rule classifier <group> <model>
                                           the model that tells which intent a message is, or
                                           group/<id>: another group, its models tried in turn
 
@@ -43,11 +43,11 @@ const ruleUsage = `usage:
            what the vendor counted the conversation's last request as, whichever is more
   images   it carries an image, now or earlier in the conversation
   effort   the agent asked for reasoning: on (any), or at least this level
-  agents   it comes from one of these agents (claude, codex, opencode, … as magpie usage names them)
+  agents   it comes from one of these agents (claude, codex, opencode, … as chongyun usage names them)
   intent   the user's message is of this kind, in your words ("writing or fixing tests", "a quick
-           question"): as the turn begins, the group's classifier — any model magpie has, best a small
+           question"): as the turn begins, the group's classifier — any model chongyun has, best a small
            fast one without reasoning, or another group of them to fail over — is asked which of the intents that may match the message is,
-           once; if it fails or can't say, no intent matches. Its call shows in the usage as magpie's own
+           once; if it fails or can't say, no intent matches. Its call shows in the usage as chongyun's own
   compact  the agent is compacting the conversation (Claude Code's /compact or auto-compact, Codex's,
            OpenCode's, Pi's, Gemini CLI's, Qwen Code's, Kimi's): a cheaper, faster model can write the
            summary. The request is as long as the conversation, so a model known to take less is passed
@@ -67,16 +67,16 @@ const ruleUsage = `usage:
            except-folders=~/big-task keeps <model> for the task in ~/big-task — every other request,
            a subagent's or a small model's too when it doesn't tell its folder, goes elsewhere
 
-  e.g. magpie group rule add opus-anywhere use=openrouter/google/gemini-3-pro tokens=200k
-       magpie group rule add opus-anywhere use=a/vision-model images
-       magpie group rule add fast use=codex/gpt-5.6-sol:xhigh effort=high
-       magpie group rule add opus-anywhere use=deepseek/deepseek-v4-flash compact
-       magpie group rule add cheap use=glm/glm-5.3 time=14:00-18:00 days=mon-fri
-       magpie group rule add cheap pause=glm/glm-5.3 time=14:00-18:00 days=mon-fri
-       magpie group rule add opus-anywhere use=kimi/kimi-k2.6 folders=~/oss
-       magpie group rule add auto-claude-opus-5-5 pause=claude/claude-opus-5-5 except-folders=~/big-task
-       magpie group rule add opus-anywhere use=deepseek/deepseek-v4-flash intent="a quick question" classifier=groq/llama-3.1-8b-instant
-       magpie group rule add fast use=codex/gpt-5.6-sol use-effort=low intent="a quick question"`
+  e.g. chongyun group rule add opus-anywhere use=openrouter/google/gemini-3-pro tokens=200k
+       chongyun group rule add opus-anywhere use=a/vision-model images
+       chongyun group rule add fast use=codex/gpt-5.6-sol:xhigh effort=high
+       chongyun group rule add opus-anywhere use=deepseek/deepseek-v4-flash compact
+       chongyun group rule add cheap use=glm/glm-5.3 time=14:00-18:00 days=mon-fri
+       chongyun group rule add cheap pause=glm/glm-5.3 time=14:00-18:00 days=mon-fri
+       chongyun group rule add opus-anywhere use=kimi/kimi-k2.6 folders=~/oss
+       chongyun group rule add auto-claude-opus-5-5 pause=claude/claude-opus-5-5 except-folders=~/big-task
+       chongyun group rule add opus-anywhere use=deepseek/deepseek-v4-flash intent="a quick question" classifier=groq/llama-3.1-8b-instant
+       chongyun group rule add fast use=codex/gpt-5.6-sol use-effort=low intent="a quick question"`
 
 // parseTokens reads 200000, 200k, 1.5m.
 func parseTokens(v string) (int, error) { return provider.ParseTokens(v) }
@@ -105,7 +105,7 @@ func ruleCmd(args []string) error {
 		// magpie group rule <group>: the group, its rules with it
 		if g, err := findGroup(verb); err == nil {
 			if len(g.Rules) == 0 {
-				fmt.Println(muted.Render("  " + g.ID + " has no rules · magpie group rule add " + g.ID + " use=<model> …"))
+				fmt.Println(muted.Render("  " + g.ID + " has no rules · chongyun group rule add " + g.ID + " use=<model> …"))
 				return nil
 			}
 			return showGroup(g)
@@ -117,7 +117,7 @@ func ruleCmd(args []string) error {
 		return err
 	}
 	if g.Hidden {
-		return fmt.Errorf("%s was removed: magpie group restore %s brings it back first", g.ID, g.ID)
+		return fmt.Errorf("%s was removed: chongyun group restore %s brings it back first", g.ID, g.ID)
 	}
 	place := func(s string) (int, error) {
 		n, err := strconv.Atoi(s)
@@ -145,7 +145,7 @@ func ruleCmd(args []string) error {
 		}
 	case "rm", "remove", "delete":
 		if len(rest) != 2 {
-			return fmt.Errorf("magpie group rule rm <group> <n>")
+			return fmt.Errorf("chongyun group rule rm <group> <n>")
 		}
 		i, err := place(rest[1])
 		if err != nil {
@@ -154,7 +154,7 @@ func ruleCmd(args []string) error {
 		g.Rules = slices.Delete(g.Rules, i, i+1)
 	case "mv", "move":
 		if len(rest) != 3 {
-			return fmt.Errorf("magpie group rule mv <group> <n> <to>")
+			return fmt.Errorf("chongyun group rule mv <group> <n> <to>")
 		}
 		i, err := place(rest[1])
 		if err != nil {
@@ -168,14 +168,14 @@ func ruleCmd(args []string) error {
 		g.Rules = slices.Insert(slices.Delete(g.Rules, i, i+1), j, r)
 	case "classifier", "classify":
 		if len(rest) != 2 {
-			return fmt.Errorf("magpie group rule classifier <group> <model>")
+			return fmt.Errorf("chongyun group rule classifier <group> <model>")
 		}
 		if !slices.ContainsFunc(g.Rules, func(r provider.Rule) bool { return r.Intent != "" }) {
 			return fmt.Errorf("%s has no rule with an intent to classify for", g.ID)
 		}
 		g.Classifier = rest[1]
 	default:
-		return fmt.Errorf("magpie group rule has no %q\n\n%s", verb, ruleUsage)
+		return fmt.Errorf("chongyun group rule has no %q\n\n%s", verb, ruleUsage)
 	}
 	if err := provider.SaveGroup(g); err != nil {
 		return err

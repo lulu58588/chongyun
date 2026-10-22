@@ -16,9 +16,9 @@ import (
 
 	"github.com/klauspost/compress/zstd"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func titleTestKey(t testing.TB) {

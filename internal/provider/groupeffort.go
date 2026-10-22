@@ -25,7 +25,7 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // MemberEfforts are the levels a group's member may be fixed at, lowest
@@ -134,7 +134,7 @@ func CleanLevels(in []string) ([]string, error) {
 			continue
 		}
 		if !slices.Contains(Levels, l) {
-			return nil, fmt.Errorf("%q is not a reasoning level magpie knows (they are %s)", l, strings.Join(Levels, ", "))
+			return nil, fmt.Errorf("%q is not a reasoning level chongyun knows (they are %s)", l, strings.Join(Levels, ", "))
 		}
 		want = append(want, l)
 	}

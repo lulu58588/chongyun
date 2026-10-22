@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The member picker offers a group of decision models only decision

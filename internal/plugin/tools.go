@@ -13,8 +13,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // Tool is a tool a plugin gives: OpenCode's tool hook ({tool: {name:

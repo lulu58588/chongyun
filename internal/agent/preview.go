@@ -12,10 +12,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Before an agent is disconnected the user is shown what changes in its
@@ -99,7 +99,7 @@ func DisconnectPreview(a *Agent, exe string) ([]FileChange, error) {
 		return nil, errors.New("no preview for this agent")
 	}
 	if appdir.Portable() != "" {
-		return nil, errors.New("no preview for a portable magpie")
+		return nil, errors.New("no preview for a portable chongyun")
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -488,7 +488,7 @@ func mask(l string) string {
 	}
 	val := strings.TrimSpace(l[m[1]:])
 	bare := strings.Trim(val, `"', `)
-	if bare == "" || bare == "magpie" || strings.HasPrefix(bare, "{") || strings.HasPrefix(bare, "$") {
+	if bare == "" || bare == "chongyun" || strings.HasPrefix(bare, "{") || strings.HasPrefix(bare, "$") {
 		return l
 	}
 	return l[:m[1]] + " ••••"

@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/profile"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/profile"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Sync turned off and on again to the same server is not a new computer

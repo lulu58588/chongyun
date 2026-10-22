@@ -26,11 +26,11 @@ func TestCodexMemoriesModel(t *testing.T) {
 		t.Fatalf("unset memories model = %q", got)
 	}
 	if err := mem.Set("fake/m1"); err == nil {
-		t.Error("a magpie model was taken before Codex runs through magpie")
+		t.Error("a chongyun model was taken before Codex runs through chongyun")
 	}
 	for _, o := range mem.Options(nil) {
 		if isMagpie(o.Value) {
-			t.Errorf("magpie model offered before Codex runs through magpie: %s", o.Value)
+			t.Errorf("chongyun model offered before Codex runs through chongyun: %s", o.Value)
 		}
 	}
 	if err := mem.Set("gpt-5.4-mini"); err != nil {
@@ -52,7 +52,7 @@ func TestCodexMemoriesModel(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cfg := read(); !strings.Contains(cfg, `extract_model = "fake/m1"`) || !strings.Contains(cfg, `consolidation_model = "fake/m1"`) {
-		t.Fatalf("magpie model:\n%s", cfg)
+		t.Fatalf("chongyun model:\n%s", cfg)
 	}
 	// one of Codex's own again: Codex can't find magpie's model any more
 	if err := cx.Fields[0].Set("gpt-5.4"); err != nil {
@@ -60,7 +60,7 @@ func TestCodexMemoriesModel(t *testing.T) {
 	}
 	if cfg := read(); strings.Contains(cfg, "extract_model") || strings.Contains(cfg, "consolidation_model") ||
 		!strings.Contains(cfg, "max_raw_memories_for_consolidation = 64") {
-		t.Fatalf("stepping out of magpie:\n%s", cfg)
+		t.Fatalf("stepping out of chongyun:\n%s", cfg)
 	}
 
 	// Default: the keys go, and a table left empty with them
@@ -101,6 +101,6 @@ func TestCodexMemoriesUnwire(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cfg := read(); strings.Contains(cfg, "fake/m1") {
-		t.Fatalf("magpie model kept after disconnecting:\n%s", cfg)
+		t.Fatalf("chongyun model kept after disconnecting:\n%s", cfg)
 	}
 }

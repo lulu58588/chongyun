@@ -205,7 +205,7 @@ func switchSideLogin(agent, user string, ls []sideLogin) error {
 
 func setSideLoginOn(agent, user string, on bool, ls []sideLogin) error {
 	if !on && strings.EqualFold(activeOf(ls), user) {
-		return fmt.Errorf("magpie uses %s first; put another account first to stop using it", user)
+		return fmt.Errorf("chongyun uses %s first; put another account first to stop using it", user)
 	}
 	return editSideLogin(agent, user, func(saved []savedLogin, i int) ([]savedLogin, error) {
 		saved[i].On = on

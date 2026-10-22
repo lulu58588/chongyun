@@ -11,7 +11,7 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // Factory's Droid keeps a session under its sessions folder

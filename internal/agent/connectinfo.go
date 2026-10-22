@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // What the Agents page says beside an agent's 「接入」 switch (the owner's
@@ -100,7 +100,7 @@ func (a *Agent) FailoverSaid() string {
 	if a.FailingOver == nil || !a.FailingOver() {
 		return ""
 	}
-	return "not connected · goes through magpie only to fail over to your other ChatGPT accounts; tick Only switch Codex's sign-in under Providers › Codex (magpie accounts switch-only codex on), or switch them off, to stop it"
+	return "not connected · goes through chongyun only to fail over to your other ChatGPT accounts; tick Only switch Codex's sign-in under Providers › Codex (chongyun accounts switch-only codex on), or switch them off, to stop it"
 }
 
 // startsWith is, for an agent that reads magpie's models only as it

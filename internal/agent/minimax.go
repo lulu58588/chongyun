@@ -26,9 +26,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -131,10 +131,10 @@ func miniMaxAt(at place, dir string) *Agent {
 				return ""
 			}
 			if _, ok := edit.GetYAMLText(path, mcodeEntry); !ok {
-				return "MiniMax Code's " + mcodeEntry + " (config.yaml) is gone, so it no longer reaches magpie"
+				return "MiniMax Code's " + mcodeEntry + " (config.yaml) is gone, so it no longer reaches chongyun"
 			}
 			if get(mcodeEntry+".enabled") == "false" {
-				return "MiniMax Code's " + mcodeEntry + " (config.yaml) is turned off, so it no longer reaches magpie"
+				return "MiniMax Code's " + mcodeEntry + " (config.yaml) is turned off, so it no longer reaches chongyun"
 			}
 			return wiringOff("MiniMax Code", path, func(k string) (string, bool) { return edit.GetYAML(path, mcodeEntry+".options."+k) },
 				"baseURL", at.gw(), "apiKey", at.gwKey())

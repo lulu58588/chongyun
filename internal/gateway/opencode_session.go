@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // openCodeSeed names the conversation a request to OpenCode's gateway is a

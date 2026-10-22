@@ -8,10 +8,10 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/mcpauth"
 )
 
 // A remote server that asks for an OAuth sign-in is signed in to once, in
@@ -84,7 +84,7 @@ func gatewayOf(t *Target) string {
 	return gateway.URL()
 }
 
-var errNotHTTP = errors.New("magpie signs in only to a server reached over streamable HTTP")
+var errNotHTTP = errors.New("chongyun signs in only to a server reached over streamable HTTP")
 
 // SignInServer starts signing magpie in to the library's server called
 // name: the State's URL is the page to open in a browser.

@@ -6,9 +6,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func claudeDottedHome(t *testing.T, p provider.Provider, settings string) (string, string) {
@@ -81,7 +81,7 @@ func TestClaudeDottedVersionsGoInDashed(t *testing.T) {
 		t.Fatalf("read back: %v", v)
 	}
 	if d := a.Drift(); d != nil {
-		t.Fatalf("drift after magpie's own write: %v", d)
+		t.Fatalf("drift after chongyun's own write: %v", d)
 	}
 	// /model lists them as Claude Code takes them, another vendor's as it is
 	var picker struct{ Options []struct{ Model string } }
@@ -151,7 +151,7 @@ func TestClaudeDottedVersionsGoInDashed(t *testing.T) {
 		t.Fatal(err)
 	}
 	if model() != "relay/claude-opus-4-6-us" || env("ANTHROPIC_DEFAULT_OPUS_MODEL") != "relay/claude-opus-4-6-us" {
-		t.Fatalf("an older magpie's dotted ids:\n%s", readFile(path))
+		t.Fatalf("an older chongyun's dotted ids:\n%s", readFile(path))
 	}
 	noDots()
 

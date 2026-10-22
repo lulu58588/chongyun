@@ -15,10 +15,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // asked is what a vendor was asked for, in order, from the several
@@ -197,7 +197,7 @@ func TestUpstreamNameReachesTheVendorOnly(t *testing.T) {
 // A name given for a provider outlives that provider, and it outlives it by
 // the id: the provider can be deleted and another take the same id, and the
 // name goes on asking that one's models for theirs. So a removal has to work
-// off the key the name is stored at — which is all `magpie model wire
+// off the key the name is stored at — which is all `chongyun model wire
 // relay-b/model-2 --reset` has left to work off once the provider is gone —
 // and here it is: with the name off, the relay that took the id is asked for
 // its own model by its own id.
@@ -711,7 +711,7 @@ func TestProviderDrawingTestsAskTheCanonicalName(t *testing.T) {
 	// the images request and the chat one it fell back to, neither carrying
 	// the upstream name
 	if got := seen.all(); len(got) != 2 || got[0] != "imagine-2" || got[1] != "imagine-2" {
-		t.Fatalf("the relay was asked for %v; a drawing goes out under the name magpie knows the model by", got)
+		t.Fatalf("the relay was asked for %v; a drawing goes out under the name chongyun knows the model by", got)
 	}
 }
 
@@ -1175,7 +1175,7 @@ func TestAntigravityEnvelopeIsNamedAsTheLedgerJudgesIt(t *testing.T) {
 	// and a Gemini CLI account is asked for the model magpie knows, which is
 	// what its ledger row reads back too
 	if got := codeAssistID("gemini-3.7-flash", "high", "gemini"); got != "gemini-3.7-flash" {
-		t.Errorf("a Gemini CLI account is asked for %q; want the model magpie knows", got)
+		t.Errorf("a Gemini CLI account is asked for %q; want the model chongyun knows", got)
 	}
 }
 

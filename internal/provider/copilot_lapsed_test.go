@@ -244,7 +244,7 @@ func TestCopilotEditorRefusedSignsOut(t *testing.T) {
 	}
 	p, _ = find(All(), "copilot")
 	if _, err := p.Fetch(context.Background()); err != nil {
-		t.Fatalf("with magpie's sign-in: %v", err)
+		t.Fatalf("with chongyun's sign-in: %v", err)
 	}
 }
 

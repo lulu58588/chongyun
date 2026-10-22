@@ -3,7 +3,7 @@ package agent
 // Command Code (commandcode.ai) keeps its settings in ~/.commandcode/
 // settings.json, the model as "provider/model", and takes providers of the
 // user's own in ~/.commandcode/providers.json. magpie adds itself there as
-// the provider "magpie", keyless, with the catalog as its models; a model
+// the provider "chongyun", keyless, with the catalog as its models; a model
 // through magpie is "magpie/<provider>/<model>", which Command Code splits
 // at the first "/". Command Code still wants its own sign-in for these.
 
@@ -15,7 +15,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // ccEfforts are the reasoning levels Command Code knows.
@@ -57,7 +57,7 @@ func commandCodeIn(at place) *Agent {
 				return ""
 			}
 			if p := get("modelProvider"); p != magpieID {
-				return "Command Code's modelProvider (settings.json) is " + orDefault(p) + ", so it no longer asks magpie"
+				return "Command Code's modelProvider (settings.json) is " + orDefault(p) + ", so it no longer asks chongyun"
 			}
 			return wiringOff("Command Code", providers, func(k string) (string, bool) { return edit.GetJSON(providers, "provider."+magpieID+"."+k) },
 				"baseURL", at.v1())
@@ -170,7 +170,7 @@ func ccProviderJSONAt(v1 string) any {
 		}
 		ms[m.ID] = e
 	}
-	return map[string]any{"name": "magpie", "api": "openai-completions", "baseURL": v1, "apiKey": false, "models": ms}
+	return map[string]any{"name": "崇云科技", "api": "openai-completions", "baseURL": v1, "apiKey": false, "models": ms}
 }
 
 // ccEffortMap is settings.json's reasoningEffort, model id to effort.
@@ -196,6 +196,6 @@ func ccEffortMap(path string) map[string]string {
 
 // what commandcode says after a change (notice.go)
 var (
-	noticeCommandcode1 = newNotice("Command Code wants its own sign-in (cmd login) even for models through magpie.")
+	noticeCommandcode1 = newNotice("Command Code wants its own sign-in (cmd login) even for models through chongyun.")
 	noticeCommandcode2 = newNotice("It reads its settings at start-up — restart open Command Code sessions to use this.")
 )

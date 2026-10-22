@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -133,7 +133,7 @@ func TestOmpEnabledModelsCleared(t *testing.T) {
 	hasMagpie := func(modelsPath string) bool {
 		m, _ := ompScopeRead(t, modelsPath)
 		p, _ := m["providers"].(map[string]any)
-		return p["magpie"] != nil
+		return p["chongyun"] != nil
 	}
 
 	home, configPath, modelsPath := ompScopeHome(t)
@@ -155,7 +155,7 @@ func TestOmpEnabledModelsCleared(t *testing.T) {
 		t.Fatalf("comment lost:\n%s", raw)
 	}
 	if hasMagpie(modelsPath) {
-		t.Fatal("magpie's provider stayed")
+		t.Fatal("chongyun's provider stayed")
 	}
 
 	// the list had only magpie's model: the key goes
@@ -176,7 +176,7 @@ func TestOmpEnabledModelsCleared(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !hasMagpie(modelsPath) {
-		t.Fatal("a folder's list on magpie lost magpie's provider")
+		t.Fatal("a folder's list on chongyun lost chongyun's provider")
 	}
 	if _, raw := ompScopeRead(t, configPath); !strings.Contains(raw, "magpie/deepseek/pro") {
 		t.Fatalf("folder's entry dropped:\n%s", raw)
@@ -228,7 +228,7 @@ func TestOmpEnabledModelsTakeEveryMagpieModel(t *testing.T) {
 	}
 	// every model magpie wrote for omp is one the list takes in
 	m, _ := ompScopeRead(t, modelsPath)
-	ms, _ := m["providers"].(map[string]any)["magpie"].(map[string]any)["models"].([]any)
+	ms, _ := m["providers"].(map[string]any)["chongyun"].(map[string]any)["models"].([]any)
 	if len(ms) < 2 {
 		t.Fatalf("models.yml: %v", m)
 	}

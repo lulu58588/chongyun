@@ -42,20 +42,20 @@ const remoteCardsFor = 30 * time.Second
 
 // errRemoteNothingRead is a remote magpie that has read no card since it
 // started: it is asked to only when a card is refreshed here.
-const errRemoteNothingRead = "nothing read on that magpie yet; refresh to have it read"
+const errRemoteNothingRead = "nothing read on that chongyun yet; refresh to have it read"
 
 // errRemoteNoShare is a remote magpie too old to answer RemoteCardsPath.
-const errRemoteNoShare = "remote magpie doesn't share its quotas; update magpie on that computer"
+const errRemoteNoShare = "remote chongyun doesn't share its quotas; update chongyun on that computer"
 
 // errRemoteNotShared is a remote magpie that answers models but not its
 // quotas (403): it isn't shared on its local network, as an older magpie's
 // gateway that MAGPIE_ADDR opened (Docker's) wasn't until it was (Fim980 on
 // X: the card said only "Allowance unavailable"). A newer one asks a key of
 // every other machine and, given one, answers the quotas too.
-const errRemoteNotShared = "remote magpie isn't shared; turn on Share on local network on that computer"
+const errRemoteNotShared = "remote chongyun isn't shared; turn on Share on local network on that computer"
 
 // errRemoteKey is a remote magpie that didn't take this provider's key (401).
-const errRemoteKey = "remote magpie didn't take this key; use one of its enabled gateway keys"
+const errRemoteKey = "remote chongyun didn't take this key; use one of its enabled gateway keys"
 
 // KeyHeldCode is the error code a gateway answers a key held to a budget,
 // models or accounts with, where its own accounts would be told (#1981):
@@ -66,11 +66,11 @@ const KeyHeldCode = "gateway_key_held"
 // budget, models or accounts: it tells the key's own card (remoteKeyCards)
 // and none of its accounts', so none is shown, not even one kept from
 // before the key was held.
-var errKeyHeld = errors.New("remote magpie holds this key to a budget, models or accounts")
+var errKeyHeld = errors.New("remote chongyun holds this key to a budget, models or accounts")
 
 // errRemoteUnreachable starts the error of a remote magpie that couldn't
 // be reached at all.
-const errRemoteUnreachable = "couldn't reach the remote magpie"
+const errRemoteUnreachable = "couldn't reach the remote chongyun"
 
 // CachedCards is the Usage page's cards as this magpie last read them,
 // each with its kind, for another magpie to show: no vendor is asked,
@@ -225,7 +225,7 @@ func remoteCards(ctx context.Context, p Provider, fresh bool) []SubscriptionQuot
 		if msg == "" {
 			msg = errRemoteNothingRead
 		}
-		return []SubscriptionQuota{{Provider: p.ID, Name: name, Icon: "magpie", Kind: "subscription", From: name, Windows: []QuotaWindow{}, Error: msg}}
+		return []SubscriptionQuota{{Provider: p.ID, Name: name, Icon: "chongyun", Kind: "subscription", From: name, Windows: []QuotaWindow{}, Error: msg}}
 	}
 	out := make([]SubscriptionQuota, 0, len(r.cards))
 	for _, q := range r.cards {

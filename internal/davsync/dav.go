@@ -14,12 +14,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/backup"
 )
 
 // folder and file are where the backup lives under the address given.
 const (
-	folder = "magpie"
+	folder = "chongyun"
 	file   = "magpie.magpie-backup"
 )
 
@@ -85,9 +85,9 @@ type rateLimited struct {
 
 func (e *rateLimited) Error() string {
 	if e.status == http.StatusTooManyRequests {
-		return fmt.Sprintf("the %s server is limiting how often magpie may reach it (HTTP 429 Too Many Requests): sync waits longer before trying again", e.kind)
+		return fmt.Sprintf("the %s server is limiting how often chongyun may reach it (HTTP 429 Too Many Requests): sync waits longer before trying again", e.kind)
 	}
-	return fmt.Sprintf("the %s server is busy, or limiting how often magpie may reach it (HTTP %d): sync waits longer before trying again", e.kind, e.status)
+	return fmt.Sprintf("the %s server is busy, or limiting how often chongyun may reach it (HTTP %d): sync waits longer before trying again", e.kind, e.status)
 }
 
 // limited is the error for an answer that says the server is limiting
@@ -370,7 +370,7 @@ func (d *dav) put(ctx context.Context, data []byte, etag string) (version, error
 
 // check says so when the server kept less than what was sent: relays and
 // tunnels cut long writes short, and the half that lands reads back as
-// "not a magpie backup" on every sync after. The size is enough — a short
+// "not a chongyun backup" on every sync after. The size is enough — a short
 // file is the whole failure — so no download rides on a write. It gives
 // back the ETag it saw, for a retry to match the file as the short write
 // left it. A HEAD that can't be done — an error, or not a 200 — leaves the

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // /api/state asks StaleCopies for Claude and Codex on every call, and ps

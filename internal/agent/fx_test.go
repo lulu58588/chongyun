@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 func TestFx(t *testing.T) {
@@ -40,8 +40,8 @@ func TestFx(t *testing.T) {
 	}
 	s := read()
 	ps := s["providers"].(map[string]any)
-	m, ok := ps["magpie"].(map[string]any)
-	if !ok || ps["local"] == nil || s["provider"] != "magpie" || s["models"].(map[string]any)["magpie"] != "deepseek/flash" || s["theme"] != "dark" {
+	m, ok := ps["chongyun"].(map[string]any)
+	if !ok || ps["local"] == nil || s["provider"] != "chongyun" || s["models"].(map[string]any)["chongyun"] != "deepseek/flash" || s["theme"] != "dark" {
 		t.Fatalf("settings: %v", s)
 	}
 	if m["protocol"] != "openai-chat-completions" || m["base_url"] != gatewayV1() || m["auth"].(map[string]any)["type"] != "none" {
@@ -59,7 +59,7 @@ func TestFx(t *testing.T) {
 		t.Fatal(err)
 	}
 	s = read()
-	if s["provider"] != nil || s["providers"].(map[string]any)["magpie"] != nil || s["providers"].(map[string]any)["local"] == nil ||
+	if s["provider"] != nil || s["providers"].(map[string]any)["chongyun"] != nil || s["providers"].(map[string]any)["local"] == nil ||
 		s["models"].(map[string]any)["gateway"] != "openai/gpt-6-sol" || f.Get() != "openai/gpt-6-sol" {
 		t.Fatalf("own: %v", s)
 	}
@@ -76,7 +76,7 @@ func TestFx(t *testing.T) {
 		t.Fatal(err)
 	}
 	s = read()
-	if s["provider"] != nil || s["providers"].(map[string]any)["magpie"] != nil || s["models"].(map[string]any)["magpie"] != nil {
+	if s["provider"] != nil || s["providers"].(map[string]any)["chongyun"] != nil || s["models"].(map[string]any)["chongyun"] != nil {
 		t.Fatalf("reset: %v", s)
 	}
 }
@@ -159,7 +159,7 @@ func TestFxKeepsTheUsersSettings(t *testing.T) {
 			t.Errorf("%s: the user's settings not kept:\n%s", when, raw)
 		}
 		if p.BaseURL == "http://127.0.0.1:1/v1" || p.BaseURL == "" || len(p.Auth) != 1 || p.Auth["type"] != "none" || p.ModelMetadata["gone/old"] != nil || p.ModelMetadata["deepseek/pro"] == nil {
-			t.Errorf("%s: magpie's own parts not written:\n%s", when, raw)
+			t.Errorf("%s: chongyun's own parts not written:\n%s", when, raw)
 		}
 		if s.Theme != "dark" || s.Providers["local"].BaseURL == "" {
 			t.Errorf("%s: the user's other settings changed:\n%s", when, raw)

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #1603 (SwimmingLiu): two Codex accounts on in magpie, Codex on CC
@@ -45,7 +45,7 @@ func TestCodexAccountsOfferedViaMagpie(t *testing.T) {
 			switch {
 			case o.Value == "gpt-5.5" && o.Direct != "":
 				direct = append(direct, o)
-			case strings.HasPrefix(o.Value, "codex/") && o.Direct == "" && strings.HasSuffix(o.Note, "via magpie"):
+			case strings.HasPrefix(o.Value, "codex/") && o.Direct == "" && strings.HasSuffix(o.Note, "via chongyun"):
 				magpie = append(magpie, o)
 			}
 		}
@@ -62,7 +62,7 @@ func TestCodexAccountsOfferedViaMagpie(t *testing.T) {
 			t.Error("the relay's own gpt-5.5 isn't offered direct")
 		}
 		if !hasValue(magpie, "codex/gpt-5.5") {
-			t.Errorf("no codex/gpt-5.5 via magpie: %+v", magpie)
+			t.Errorf("no codex/gpt-5.5 via chongyun: %+v", magpie)
 		}
 		if read() != before {
 			t.Errorf("listing the models wrote config.toml:\n%s", read())
@@ -74,7 +74,7 @@ func TestCodexAccountsOfferedViaMagpie(t *testing.T) {
 		os.WriteFile(filepath.Join(home, ".codex", "models_cache.json"), cache, 0o644)
 		logins(false)
 		if _, magpie := via(codex(home)); !hasValue(magpie, "codex/gpt-5.5") {
-			t.Errorf("the account in magpie isn't the relay Codex is on: %+v", magpie)
+			t.Errorf("the account in chongyun isn't the relay Codex is on: %+v", magpie)
 		}
 	})
 
@@ -83,7 +83,7 @@ func TestCodexAccountsOfferedViaMagpie(t *testing.T) {
 		os.WriteFile(filepath.Join(home, ".codex", "models_cache.json"), cache, 0o644)
 		logins(false)
 		if _, magpie := via(codex(home)); len(magpie) != 0 {
-			t.Errorf("Codex's own sign-in, again via magpie: %+v", magpie)
+			t.Errorf("Codex's own sign-in, again via chongyun: %+v", magpie)
 		}
 	})
 }

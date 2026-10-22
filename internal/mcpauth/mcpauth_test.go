@@ -10,9 +10,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/mcpauth"
-	"github.com/yetone/magpie/internal/mcpauth/mcpauthtest"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func home(t *testing.T) {
@@ -42,7 +42,7 @@ func TestSignIn(t *testing.T) {
 	if len(redirect) != 1 || !strings.HasPrefix(redirect[0].(string), "http://127.0.0.1:") || !strings.HasSuffix(redirect[0].(string), "/callback") {
 		t.Errorf("redirect_uris = %v", reg["redirect_uris"])
 	}
-	if reg["token_endpoint_auth_method"] != "none" || reg["client_name"] != "Magpie" {
+	if reg["token_endpoint_auth_method"] != "none" || reg["client_name"] != "Chongyun" {
 		t.Errorf("registration = %v", reg)
 	}
 	r, ok := mcpauth.Get("neon")
@@ -253,12 +253,12 @@ func TestSignInRefusesAssignedSecretJWT(t *testing.T) {
 	st, err := mcpauth.Start(t.Context(), "neon", f.URL)
 	if err != nil {
 		if !strings.Contains(err.Error(), "can't do") {
-			t.Fatalf("signing in to a server that registered magpie for client_secret_jwt: %v", err)
+			t.Fatalf("signing in to a server that registered chongyun for client_secret_jwt: %v", err)
 		}
 		return
 	}
 	mcpauth.Cancel(st.ID)
-	t.Fatalf("the sign-in page was opened for a client magpie can't authenticate as: %s", st.URL)
+	t.Fatalf("the sign-in page was opened for a client chongyun can't authenticate as: %s", st.URL)
 }
 
 // An assignment magpie can do is taken, both ways round (#1490): a client

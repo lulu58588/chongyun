@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // #656: Codex's Ultra on Copilot's gpt-6.1-sol. Codex offers it on a model

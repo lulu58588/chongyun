@@ -15,11 +15,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gwtool"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gwtool"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A client may offer its model the web search of the vendor it was made
@@ -640,7 +640,7 @@ func searcherReady(p provider.Provider) (string, bool) {
 func searchTool(tools []Tool) Tool {
 	name := "web_search"
 	for slices.ContainsFunc(tools, func(t Tool) bool { return t.Name == name }) {
-		name = "magpie_" + name
+		name = "chongyun_" + name
 	}
 	return Tool{Name: name,
 		Description: "Search the web for current information: news, releases, documentation, prices, anything after your training or that you are unsure of. Returns what the pages found say, with their URLs. Cite the URLs you use.",
@@ -706,10 +706,10 @@ func (s *Server) webSearch(ctx context.Context, query string) (string, []Hit, er
 	return said, hits, nil
 }
 
-var errNoSearcher = errors.New("no provider that can search the web, nor a search API, is set up in magpie")
+var errNoSearcher = errors.New("no provider that can search the web, nor a search API, is set up in chongyun")
 
 // errSearchOff is a search asked of magpie while plugins/search is off.
-var errSearchOff = errors.New("magpie's web search is off: turn the Web search plugin on in magpie's Settings → Plugins")
+var errSearchOff = errors.New("chongyun's web search is off: turn the Web search plugin on in chongyun's Settings → Plugins")
 
 // searchServed is whether plugins/search serves magpie's web search here
 // (the gateway's tool point, gwtool): off, magpie neither offers its

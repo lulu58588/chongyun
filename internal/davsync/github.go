@@ -273,7 +273,7 @@ func (g *github) commit(ctx context.Context, name string, data []byte, sha strin
 	if err := g.prepare(ctx); err != nil {
 		return version{}, err
 	}
-	in := map[string]string{"message": "magpie: sync " + name, "content": base64.StdEncoding.EncodeToString(data)}
+	in := map[string]string{"message": "chongyun: sync " + name, "content": base64.StdEncoding.EncodeToString(data)}
 	// Omitting branch lets the first backup initialize an empty repository.
 	if !g.empty {
 		in["branch"] = g.branch
@@ -284,7 +284,7 @@ func (g *github) commit(ctx context.Context, name string, data []byte, sha strin
 	method := http.MethodPut
 	if remove {
 		method = http.MethodDelete
-		in["message"] = "magpie: remove " + name
+		in["message"] = "chongyun: remove " + name
 		delete(in, "content")
 	}
 	body, err := json.Marshal(in)

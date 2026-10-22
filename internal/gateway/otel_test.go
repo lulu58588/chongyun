@@ -14,11 +14,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/otlp"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/otlp"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // fastOTel has the exporter read the agents' transcripts and send what it
@@ -162,8 +162,8 @@ func TestOTelSessionDedupOnlyUnkeyedLoopback(t *testing.T) {
 		{"Docker Desktop unseen session", "127.0.0.1:1234", "", "docker-session", "", "", false},
 		{"visible native overrides routing", "127.0.0.1:1234", "", "session", "routing", "", true},
 		{"unseen native overrides visible routing", "127.0.0.1:1234", "", "wsl-session", "session", "", false},
-		{"visible Magpie session only", "127.0.0.1:1234", "", "", "session", "", true},
-		{"unseen Magpie session only", "127.0.0.1:1234", "", "", "wsl-session", "", false},
+		{"visible Chongyun session only", "127.0.0.1:1234", "", "", "session", "", true},
+		{"unseen Chongyun session only", "127.0.0.1:1234", "", "", "wsl-session", "", false},
 		{"keyed visible session", "127.0.0.1:1234", "key", "session", "", "", false},
 		{"title helper shares session", "127.0.0.1:1234", "", "session", "", "thread_title", false},
 	}

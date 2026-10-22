@@ -53,10 +53,10 @@ func caVars(env []string) []string {
 // from where it runs, which is under the same user folder.
 func TestBunIsGivenAnASCIIWayToTheRoots(t *testing.T) {
 	user := `C:\Users\张三`
-	ca := user + `\.cache\magpie\bun\system-ca-abc.pem`
+	ca := user + `\.cache\chongyun\bun\system-ca-abc.pem`
 	for _, c := range []struct{ name, p, dir, goos, want string }{
-		{"under a Chinese user name", ca, user + `\.config\magpie\plugins`, "windows", `..\..\..\.cache\magpie\bun\system-ca-abc.pem`},
-		{"an ASCII path as it is", `C:\Users\bob\.cache\magpie\bun\system-ca-abc.pem`, `C:\Users\bob\x`, "windows", `C:\Users\bob\.cache\magpie\bun\system-ca-abc.pem`},
+		{"under a Chinese user name", ca, user + `\.config\chongyun\plugins`, "windows", `..\..\..\.cache\chongyun\bun\system-ca-abc.pem`},
+		{"an ASCII path as it is", `C:\Users\bob\.cache\chongyun\bun\system-ca-abc.pem`, `C:\Users\bob\x`, "windows", `C:\Users\bob\.cache\chongyun\bun\system-ca-abc.pem`},
 		{"another drive, no way there", ca, `D:\plugins`, "windows", ca},
 		{"no way there in ASCII", ca, `C:\其他\plugins`, "windows", ca},
 		{"Bun elsewhere reads it whole", "/home/张三/.cache/magpie/bun/system-ca-abc.pem", "/home/张三/.config/magpie/plugins", "linux", "/home/张三/.cache/magpie/bun/system-ca-abc.pem"},

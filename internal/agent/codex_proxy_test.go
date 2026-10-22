@@ -16,10 +16,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // proxyAs has codexProxyFor read env, sys and goos, and proxyProbe answer
@@ -158,7 +158,7 @@ func TestCodexEnvTakesLoginShell(t *testing.T) {
 		t.Fatalf("NO_PROXY = %q, want the login shell's", got)
 	}
 	if got := codexEnv("HTTP_PROXY"); got != "http://127.0.0.1:7890" {
-		t.Fatalf("HTTP_PROXY = %q, want magpie's own", got)
+		t.Fatalf("HTTP_PROXY = %q, want chongyun's own", got)
 	}
 	proxyAs(t, nil, netproxy.Proxy{URL: "http://127.0.0.1:7890", HTTP: "http://127.0.0.1:7890"}, "darwin", nil)
 	codexProxyEnv = codexEnv
@@ -172,7 +172,7 @@ func TestCodexEnvTakesLoginShell(t *testing.T) {
 // A proxy's own 502 isn't magpie; a proxy that passes the request on is.
 func TestRealProxyProbe(t *testing.T) {
 	gw := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, `{"name":"magpie"}`)
+		io.WriteString(w, `{"name":"chongyun"}`)
 	}))
 	defer gw.Close()
 	dead := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -192,7 +192,7 @@ func TestRealProxyProbe(t *testing.T) {
 	}))
 	defer pass.Close()
 	if realProxyProbe(gw.URL+"/v1", dead.URL) {
-		t.Fatal("a proxy answering 502 counted as reaching magpie")
+		t.Fatal("a proxy answering 502 counted as reaching chongyun")
 	}
 	if !realProxyProbe(gw.URL+"/v1", pass.URL) {
 		t.Fatal("a proxy passing the request on didn't count")
@@ -413,7 +413,7 @@ func TestCodexFailoverEndsWithMagpie(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cfg := read(); strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model = "gpt-5.5"`) {
-		t.Fatalf("magpie quit, Codex still pointed at it:\n%s", cfg)
+		t.Fatalf("chongyun quit, Codex still pointed at it:\n%s", cfg)
 	}
 	// the app-server keeps the base URL it started with: asked to restart
 	if len(asked) != 1 || asked[0] != filepath.Dir(cx.Path) {
@@ -499,6 +499,6 @@ func TestCodexMirrorFailoverHeldAndEndsWithMagpie(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cfg := read(); strings.Contains(cfg, "base_url") || !strings.Contains(cfg, `model_provider = "custom"`) || !strings.Contains(cfg, "supports_websockets = true") {
-		t.Fatalf("magpie quit, CC Switch's mirror still pointed at it:\n%s", cfg)
+		t.Fatalf("chongyun quit, CC Switch's mirror still pointed at it:\n%s", cfg)
 	}
 }

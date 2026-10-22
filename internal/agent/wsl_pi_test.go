@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // piDistroHome is a distro's / in a temp dir with a user whose ~/.pi holds
@@ -123,7 +123,7 @@ func TestWSLPiPick(t *testing.T) {
 		}
 		dir := filepath.Join(home, ".pi", "agent")
 		settings, models := filepath.Join(dir, "settings.json"), filepath.Join(dir, "models.json")
-		if p, _ := edit.GetJSON(settings, "defaultProvider"); p != "magpie" {
+		if p, _ := edit.GetJSON(settings, "defaultProvider"); p != "chongyun" {
 			t.Fatalf("settings:\n%s", readFile(settings))
 		}
 		if m, _ := edit.GetJSON(settings, "defaultModel"); m != "relay/glm-4.6" {
@@ -139,7 +139,7 @@ func TestWSLPiPick(t *testing.T) {
 		if err := json.Unmarshal([]byte(readFile(models)), &file); err != nil {
 			t.Fatal(err)
 		}
-		got := file.Providers["magpie"]
+		got := file.Providers["chongyun"]
 		if got["baseUrl"] != gw+"/v1" || got["apiKey"] != gateway.Token {
 			t.Fatalf("mirrored %v: %v", mirrored, got)
 		}

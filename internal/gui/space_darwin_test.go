@@ -31,11 +31,11 @@ func init() {
 		return
 	}
 	app := application.New(application.Options{
-		Name: "magpie dock reopen regression",
+		Name: "chongyun dock reopen regression",
 		Mac:  application.MacOptions{ActivationPolicy: application.ActivationPolicyAccessory},
 		Assets: application.AssetOptions{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "text/html")
-			fmt.Fprint(w, `<p>magpie</p>`)
+			fmt.Fprint(w, `<p>chongyun</p>`)
 		})},
 	})
 	h := &host{app: app}

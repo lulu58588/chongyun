@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // importJWT is an unsigned JWT carrying claims, as ChatGPT's tokens are read.
@@ -96,7 +96,7 @@ func TestAccountsImport(t *testing.T) {
 	if err != nil {
 		t.Fatalf("%v\n%s", err, out)
 	}
-	for _, want := range []string{"added a@example.com", "added b@example.com", bad + ":", "see them: magpie accounts codex"} {
+	for _, want := range []string{"added a@example.com", "added b@example.com", bad + ":", "see them: chongyun accounts codex"} {
 		if !strings.Contains(out, want) {
 			t.Errorf("no %q in:\n%s", want, out)
 		}

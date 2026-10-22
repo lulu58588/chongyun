@@ -22,13 +22,13 @@ func TestCodexAPIKeepsMagpieOnOwnModel(t *testing.T) {
 	wired := func(model string) {
 		t.Helper()
 		cfg := read()
-		if !strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, "model_catalog_json") ||
+		if !strings.Contains(cfg, `model_provider = "chongyun"`) || !strings.Contains(cfg, "model_catalog_json") ||
 			!strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model = "`+model+`"`) {
 			t.Fatalf("not wired on %s:\n%s", model, cfg)
 		}
 		b, err := os.ReadFile(catalogPath)
 		if err != nil || !strings.Contains(string(b), `"fake/m1"`) {
-			t.Fatalf("magpie's models not in Codex's catalog (%v):\n%s", err, b)
+			t.Fatalf("chongyun's models not in Codex's catalog (%v):\n%s", err, b)
 		}
 	}
 	cx := codex(home)
@@ -67,7 +67,7 @@ func TestCodexAPIKeepsMagpieOnOwnModel(t *testing.T) {
 	// one magpie doesn't serve is refused, the config left as it was
 	before := read()
 	if err := model.Set("gpt-zzz"); err == nil {
-		t.Fatal("a model magpie doesn't serve was taken on magpie API")
+		t.Fatal("a model chongyun doesn't serve was taken on chongyun API")
 	}
 	if read() != before {
 		t.Fatalf("a refused model changed the config:\n%s", read())
@@ -102,7 +102,7 @@ func TestCodexAPISyncWiresOwnModel(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, `model = "codex/gpt-a"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) || !strings.Contains(cfg, `model = "codex/gpt-a"`) {
 		t.Fatalf("after sync:\n%s", cfg)
 	}
 }

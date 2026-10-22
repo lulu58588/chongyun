@@ -17,10 +17,10 @@ import (
 
 	"github.com/klauspost/compress/zstd"
 
-	"github.com/yetone/magpie/internal/codexsummary"
-	"github.com/yetone/magpie/internal/filelock"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/codexsummary"
+	"github.com/lulu58588/magpie/internal/filelock"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // A Codex conversation magpie compacted keeps magpie's compaction item in

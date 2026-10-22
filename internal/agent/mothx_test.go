@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // mothxDefault is the settings.json MothX 1.3.104 writes on its first run
@@ -136,7 +136,7 @@ func mothxOf(t *testing.T) *Agent {
 }
 
 // MothX (#2353) is wired in its one settings.json: magpie as the provider
-// "magpie" beside the user's own, and defaultProvider/defaultModel on it.
+// "chongyun" beside the user's own, and defaultProvider/defaultModel on it.
 // Everything else in the file — the settings MothX's first run spelled
 // out, the user's providers, what they added to magpie's block — stays.
 // The provider's key names MothX; Disconnect puts the file back byte for
@@ -181,7 +181,7 @@ func TestMothX(t *testing.T) {
 	if err := a.Connect(); err != nil {
 		t.Fatal(err)
 	}
-	for k, want := range map[string]string{"defaultProvider": "magpie", "defaultModel": "relay/glm-4.6",
+	for k, want := range map[string]string{"defaultProvider": "chongyun", "defaultModel": "relay/glm-4.6",
 		"defaultThinkingLevel": "medium", "theme": "dark", "defaultMode": "yolo", "sandbox.passEnv.2": "USER",
 		"providers.mine.apiKey": "MINE_KEY", "worktree.branchPrefix": "mothx"} {
 		if v, _ := edit.GetJSON(path, k); v != want {
@@ -194,7 +194,7 @@ func TestMothX(t *testing.T) {
 	if err := json.Unmarshal([]byte(readFile(path)), &file); err != nil {
 		t.Fatal(err)
 	}
-	got := file.Providers["magpie"]
+	got := file.Providers["chongyun"]
 	if got["baseUrl"] != gateway.URL()+"/v1" || got["api"] != "openai-chat" || got["apiKey"] != "magpie-mothx" || got["thinkingFormat"] != "openai" {
 		t.Fatalf("provider:\n%s", readFile(path))
 	}
@@ -326,7 +326,7 @@ func TestMothXKeepsWhatChangedWhileConnected(t *testing.T) {
 	}
 	// nor the providers object it opened in a file that had none
 	if _, has := edit.GetJSON(a.Path, "providers"); has {
-		t.Fatalf("magpie left:\n%s", readFile(a.Path))
+		t.Fatalf("chongyun left:\n%s", readFile(a.Path))
 	}
 }
 

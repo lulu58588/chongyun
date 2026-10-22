@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // healthcheck: magpie healthcheck — exits 0 when a magpie gateway answers
@@ -25,8 +25,8 @@ func healthcheck() error {
 	}
 	defer res.Body.Close()
 	b, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
-	if res.StatusCode != http.StatusOK || !bytes.Contains(b, []byte(`"magpie"`)) {
-		return fmt.Errorf("%s answers %s, not as a magpie gateway", gateway.URL(), res.Status)
+	if res.StatusCode != http.StatusOK || !bytes.Contains(b, []byte(`"chongyun"`)) {
+		return fmt.Errorf("%s answers %s, not as a chongyun gateway", gateway.URL(), res.Status)
 	}
 	return nil
 }

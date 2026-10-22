@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // An install goes on though the page's connection goes: on magpie web

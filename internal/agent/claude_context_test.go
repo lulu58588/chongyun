@@ -4,10 +4,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // TestClaudeContextWindow: Claude Code takes a model it doesn't know for a
@@ -95,12 +95,12 @@ func TestClaudeContextWindow(t *testing.T) {
 	// back to Claude's own model, and to Claude Code as installed
 	set("model", "claude-opus-4-8")
 	if window() != "" {
-		t.Fatalf("Claude's own model kept magpie's window: %q", window())
+		t.Fatalf("Claude's own model kept chongyun's window: %q", window())
 	}
 	set("model", "v/mid")
 	set("model", "")
 	if window() != "" {
-		t.Fatalf("reset kept magpie's window: %q", window())
+		t.Fatalf("reset kept chongyun's window: %q", window())
 	}
 	if v, _ := edit.GetJSON(path, "theme"); v != "dark" {
 		t.Fatal("theme lost")
@@ -126,7 +126,7 @@ func TestClaudeContextWindow(t *testing.T) {
 	set("model", "v/mid")
 	set("model", "")
 	if window() != "100000" {
-		t.Fatalf("a value the user changed magpie's to: %q", window())
+		t.Fatalf("a value the user changed chongyun's to: %q", window())
 	}
 	// and one the same as magpie would write, but not written by it
 	set("model", "v/small")
@@ -138,6 +138,6 @@ func TestClaudeContextWindow(t *testing.T) {
 	}
 	set("model", "")
 	if window() != "400000" {
-		t.Fatalf("the user's 400000 was taken for magpie's: %q", window())
+		t.Fatalf("the user's 400000 was taken for chongyun's: %q", window())
 	}
 }

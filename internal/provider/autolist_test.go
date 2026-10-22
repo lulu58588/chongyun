@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 func autolistHome(t *testing.T) {
@@ -280,7 +280,7 @@ func TestKeepListsFreshFetchesWhatIsDue(t *testing.T) {
 }
 
 // A save that doesn't set them keeps the schedule and the rules: the
-// window's editor and `magpie provider set` change other things.
+// window's editor and `chongyun provider set` change other things.
 func TestSaveKeepsTheListsScheduleAndRules(t *testing.T) {
 	autolistHome(t)
 	r := newRelayList(t, "gpt-6")

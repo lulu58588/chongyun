@@ -12,7 +12,7 @@ package agent
 //	{"agent_servers": {"<name in Air's agent menu>": {"command": …, "args": […], "env": {…}}}}
 //
 // and the models such an agent reports at session/new are its model menu
-// in Air. So magpie adds an agent of its own there, "Magpie": OpenCode's ACP
+// in Air. So magpie adds an agent of its own there, "Chongyun": OpenCode's ACP
 // server (opencode acp), handed with OPENCODE_CONFIG a config file magpie
 // keeps beside acp.json that has magpie's provider, its models, the one
 // picked as the model a task starts on, and enabled_providers narrowed to
@@ -38,14 +38,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // airAgent is the name magpie's agent has in acp.json, and so in Air's
 // agent menu.
-const airAgent = "Magpie"
+const airAgent = "Chongyun"
 
 // airDir is where Air keeps its settings and acp.json.
 func airDir(home, cfg string) string {
@@ -169,7 +169,7 @@ func air(home, cfg string) *Agent {
 				return ""
 			}
 			if !ours() {
-				return "Air's Magpie agent (" + filepath.Base(path) + ") is gone, so Air no longer reaches magpie"
+				return "Air's Chongyun agent (" + filepath.Base(path) + ") is gone, so Air no longer reaches chongyun"
 			}
 			return wiringOff("Air", ocPath, func(k string) (string, bool) { return edit.GetJSON(ocPath, "provider."+magpieID+".options."+k) },
 				"baseURL", gatewayV1(), "apiKey", hereKey())
@@ -192,7 +192,7 @@ func air(home, cfg string) *Agent {
 				}
 				ref, ok := strings.CutPrefix(v, magpieID+"/")
 				if !ok || !isMagpie(ref) {
-					return fmt.Errorf("Air takes only magpie's models here (its own agents are picked in Air): %s isn't one", v)
+					return fmt.Errorf("Air takes only chongyun's models here (its own agents are picked in Air): %s isn't one", v)
 				}
 				// each key new to the file goes in at its top: last first,
 				// so a new file reads $schema, model, …, provider
@@ -222,6 +222,6 @@ func air(home, cfg string) *Agent {
 
 // what air says after a change (notice.go)
 var (
-	noticeAir1 = newNotice("Air runs magpie's models through OpenCode's ACP server, and OpenCode isn't installed here: install OpenCode (npm i -g opencode-ai), then pick Magpie in a new Air task.")
-	noticeAir2 = newNotice("In Air, start a new task and pick Magpie in its agent menu: magpie's models and routing groups are in its model menu.")
+	noticeAir1 = newNotice("Air runs chongyun's models through OpenCode's ACP server, and OpenCode isn't installed here: install OpenCode (npm i -g opencode-ai), then pick Chongyun in a new Air task.")
+	noticeAir2 = newNotice("In Air, start a new task and pick Chongyun in its agent menu: chongyun's models and routing groups are in its model menu.")
 )

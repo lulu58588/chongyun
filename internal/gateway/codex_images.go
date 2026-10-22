@@ -23,7 +23,7 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Codex's own client sizes every inline image it sends to ChatGPT before

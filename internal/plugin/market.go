@@ -16,10 +16,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/ghtoken"
-	"github.com/yetone/magpie/internal/source"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/ghtoken"
+	"github.com/lulu58588/magpie/internal/source"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // The plugin market: the plugins magpie suggests, from the community
@@ -237,7 +237,7 @@ func fetchJSONFrom(ctx context.Context, u string, limit int64, do func(*http.Cli
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	req.Header.Set("Accept", "application/json")
 	// GitHub's API is asked with the user's GitHub token, as the
 	// library's skills are: without one it answers an address 60
@@ -373,7 +373,7 @@ type npmLatest struct {
 	} `json:"_npmUser"`
 	Magpie struct {
 		Icon string `json:"icon"`
-	} `json:"magpie"`
+	} `json:"chongyun"`
 }
 
 func person(v any) string {
@@ -690,7 +690,7 @@ func InstalledIcon(spec string) string {
 	var p struct {
 		Magpie struct {
 			Icon string `json:"icon"`
-		} `json:"magpie"`
+		} `json:"chongyun"`
 	}
 	if json.Unmarshal(b, &p) != nil {
 		return ""

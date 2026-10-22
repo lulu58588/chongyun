@@ -23,8 +23,8 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // grokEfforts are the reasoning efforts Grok knows.
@@ -149,7 +149,7 @@ func grokIn(at place) *Agent {
 				return err.Error()
 			}
 			if t == nil {
-				return "Grok Build's [model." + strconv.Quote(v) + "] (config.toml) is gone, so it no longer reaches magpie"
+				return "Grok Build's [model." + strconv.Quote(v) + "] (config.toml) is gone, so it no longer reaches chongyun"
 			}
 			return wiringOff("Grok Build", path, func(k string) (string, bool) { v, ok := t[k]; return v, ok },
 				"base_url", at.v1(), "api_key", at.gwKey())

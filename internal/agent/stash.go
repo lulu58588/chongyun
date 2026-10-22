@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The stash remembers what an agent's config said before magpie pointed it

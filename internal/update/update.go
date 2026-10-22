@@ -30,20 +30,26 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/source"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/source"
 )
 
-// Site is magpie's home; its /api/latest is the update feed.
-const Site = "https://usemagpie.ai"
+// Site is where this build's own releases live; its /api/latest is the
+// update feed. It is empty in this build: nothing is published there, and
+// the app never goes looking for a newer version. Point MAGPIE_UPDATE_FEED
+// at a feed of your own to have one.
+const Site = ""
 
 // Feed is where the newest release is described. MAGPIE_UPDATE_FEED points
 // it elsewhere, for testing an update against a local server.
 func Feed() string {
 	if f := os.Getenv("MAGPIE_UPDATE_FEED"); f != "" {
 		return f
+	}
+	if Site == "" {
+		return ""
 	}
 	return Site + "/api/latest"
 }
@@ -81,6 +87,9 @@ func Latest(ctx context.Context) (*Release, error) { return LatestIn(ctx, "") }
 // LatestIn asks the feed for the newest release, its notes in lang (see
 // InLang): the app's language, which What's new follows.
 func LatestIn(ctx context.Context, lang string) (*Release, error) {
+	if Feed() == "" {
+		return nil, errors.New("update: this build has no update feed")
+	}
 	req, err := http.NewRequestWithContext(ctx, "GET", withLang(Feed(), lang), nil)
 	if err != nil {
 		return nil, err
@@ -453,7 +462,7 @@ func InstallBinaryAside(staged, exe string) (string, error) {
 		}
 		// A running .exe cannot be overwritten, but it can be moved aside.
 		// What the last update moved aside may still be running too (a
-		// `magpie serve` started before it), and can't be removed or
+		// `chongyun serve` started before it), and can't be removed or
 		// replaced then: this one goes beside it, under a name of its own.
 		// The download is kept, for another try.
 		RemoveOld(exe)
@@ -466,7 +475,7 @@ func InstallBinaryAside(staged, exe string) (string, error) {
 		if heldOpen(err) {
 			// the reason and what to do, shown as is in the version row
 			// and the Update pill's tooltip, without the paths
-			err = &saidError{fmt.Sprintf("couldn't put the new version in place of %s: another program still has the download open (often an antivirus checking it): let magpie through it and restart to update again, or download the new version and put it in place of this one", filepath.Base(exe)), err}
+			err = &saidError{fmt.Sprintf("couldn't put the new version in place of %s: another program still has the download open (often an antivirus checking it): let chongyun through it and restart to update again, or download the new version and put it in place of this one", filepath.Base(exe)), err}
 		}
 		if old != "" {
 			if restoreErr := moveIn(old, exe); restoreErr != nil {
@@ -618,9 +627,9 @@ func moveAside(exe string) (string, error) {
 	var hint string
 	switch {
 	case heldOpen(err):
-		hint = "another program has it open (often an antivirus or OneDrive): let magpie through it and restart to update again, or download the new version and put it in place of this one"
+		hint = "another program has it open (often an antivirus or OneDrive): let chongyun through it and restart to update again, or download the new version and put it in place of this one"
 	case errors.Is(err, fs.ErrPermission):
-		hint = "Windows doesn't let magpie change files in " + filepath.Dir(exe) + " (an antivirus' folder protection, or the folder's permissions): let magpie through, or download the new version and put it in place of this one"
+		hint = "Windows doesn't let chongyun change files in " + filepath.Dir(exe) + " (an antivirus' folder protection, or the folder's permissions): let chongyun through, or download the new version and put it in place of this one"
 	default:
 		hint = "download the new version and put it in place of this one"
 	}

@@ -9,14 +9,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // The Gateway page's button (leslie_luo on Discord): with an older magpie
 // keeping the gateway's port, it quits that one and this one serves the
 // gateway at once; otherwise it restarts the gateway this one serves, or
-// starts it when none does. The page said only "quit that magpie", and the
+// starts it when none does. The page said only "quit that chongyun", and the
 // user couldn't find which one it was. Only a process whose program is a
 // magpie (proc.IsMagpie, by the pid listening on the port and its path) is
 // ever ended; anything else is said, never touched.

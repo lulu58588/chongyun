@@ -18,7 +18,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // antigravityEffortWords are the effort words of Antigravity's ids and the

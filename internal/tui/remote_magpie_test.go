@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A remote magpie is added from the TUI with its address, as the app's
@@ -24,11 +24,11 @@ func TestTUIAddsARemoteMagpieWithItsAddress(t *testing.T) {
 	m = typeIn(m, "remote-magpie")
 	m = press(t, m, "enter")
 	if m.mode != modeAsk || m.ask.input.Placeholder != "http://192.168.1.20:3425" {
-		t.Fatalf("picking Remote magpie asked %q (mode %v), not its address", m.ask.input.Placeholder, m.mode)
+		t.Fatalf("picking Remote chongyun asked %q (mode %v), not its address", m.ask.input.Placeholder, m.mode)
 	}
 	// nothing typed: said to be needed, nothing added
 	m = press(t, m, "enter")
-	wantFlash(t, m, false, "The other magpie's address is needed")
+	wantFlash(t, m, false, "The other chongyun's address is needed")
 	if _, err := provider.Find("remote-magpie"); err == nil {
 		t.Fatal("added without an address")
 	}
@@ -44,7 +44,7 @@ func TestTUIAddsARemoteMagpieWithItsAddress(t *testing.T) {
 	m = typeIn(m, "sk-magpie-test")
 	m = press(t, m, "enter")
 	// nothing answers there: added, and said why it has no models
-	wantFlash(t, m, false, "added Remote magpie · no model list")
+	wantFlash(t, m, false, "added Remote chongyun · no model list")
 	p, err := provider.Find("remote-magpie")
 	if err != nil {
 		t.Fatal(err)
@@ -105,12 +105,12 @@ func TestTUIAddListSaysRemoteMagpieIsAnotherComputers(t *testing.T) {
 		if o.Value != provider.RemoteMagpiePreset {
 			continue
 		}
-		if o.Note != "Remote magpie · another computer's magpie, shared on its network" {
-			t.Fatalf("Remote magpie is listed as %q", o.Note)
+		if o.Note != "Remote chongyun · another computer's chongyun, shared on its network" {
+			t.Fatalf("Remote chongyun is listed as %q", o.Note)
 		}
 		return
 	}
-	t.Fatal("Remote magpie is not in the add list")
+	t.Fatal("Remote chongyun is not in the add list")
 }
 
 func TestTUIFetchesAProvidersModels(t *testing.T) {
@@ -131,7 +131,7 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 		}
 		var data []map[string]any
 		for _, id := range ids {
-			data = append(data, map[string]any{"id": id, "object": "model", "display_name": id, "magpie_label": id + " · 中转站"})
+			data = append(data, map[string]any{"id": id, "object": "model", "display_name": id, "chongyun_label": id + " · 中转站"})
 		}
 		json.NewEncoder(w).Encode(map[string]any{"object": "list", "data": data})
 	}))
@@ -161,7 +161,7 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 	m = press(t, m, "enter")
 	m = typeIn(m, "sk-magpie-test")
 	m = press(t, m, "enter")
-	wantFlash(t, m, true, "added Remote magpie · 2 models from its list · 2 for agents")
+	wantFlash(t, m, true, "added Remote chongyun · 2 models from its list · 2 for agents")
 	p, err := provider.Find("remote-magpie")
 	if err != nil {
 		t.Fatal(err)
@@ -178,7 +178,7 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 	set(false, "custom/qwen3.6-max", "custom/glm-5.3", "custom/kimi-k3")
 	m = at(m, "remote-magpie")
 	m = press(t, m, "m")
-	wantFlash(t, m, true, "Remote magpie: 3 models from its list · 3 for agents")
+	wantFlash(t, m, true, "Remote chongyun: 3 models from its list · 3 for agents")
 	if !strings.Contains(m.View(), "3 models") {
 		t.Fatalf("the row doesn't say 3 models after m:\n%s", m.View())
 	}
@@ -204,7 +204,7 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 		t.Fatalf("listed before it was fetched:\n%s", m.View())
 	}
 	m = press(t, m, "ctrl+r")
-	wantFlash(t, m, true, "Remote magpie: 4 models from its list")
+	wantFlash(t, m, true, "Remote chongyun: 4 models from its list")
 	if m.mode != modePick || !strings.Contains(m.View(), "custom/ling-3.1-flash-free") {
 		t.Fatalf("the models view doesn't list what ctrl+r fetched:\n%s", m.View())
 	}

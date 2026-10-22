@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // corpProxy is a company's reverse proxy in front of the gateway, with a
@@ -86,7 +86,7 @@ func reverseProxyIsStillMagpie(t *testing.T, proxy string) {
 			}
 		}
 		if want == "" {
-			t.Fatalf("%s: no field takes magpie's models", a.ID)
+			t.Fatalf("%s: no field takes chongyun's models", a.ID)
 		}
 		if err := a.Apply(key, want); err != nil {
 			t.Fatalf("%s: %v", a.ID, err)
@@ -165,7 +165,7 @@ func TestClaudeManagedProxyIsStillMagpie(t *testing.T) {
 	os.WriteFile(claudeManaged(), []byte(`{"env":{"ANTHROPIC_BASE_URL":"`+corpProxy+`"}}`), 0o644)
 	fakeMagpieAt(t, map[string]bool{corpProxy: true})
 	if d := cl.Drift(); d != nil {
-		t.Fatalf("managed proxy to magpie: %+v", d)
+		t.Fatalf("managed proxy to chongyun: %+v", d)
 	}
 }
 
@@ -193,7 +193,7 @@ func TestReverseProxyTriedFirst(t *testing.T) {
 		return false
 	}
 	magpieAt = func(base string) (bool, bool) {
-		return probed("magpie "+base, func() bool { return magpieProbe(base) })
+		return probed("chongyun "+base, func() bool { return magpieProbe(base) })
 	}
 	reachAge = time.Hour
 	reachForget()
@@ -205,7 +205,7 @@ func TestReverseProxyTriedFirst(t *testing.T) {
 	}
 	close(release)
 	if d := driftSettled(t, cl); d == nil || d.Kind != "unwired" || !strings.Contains(d.Detail, corpProxy) {
-		t.Fatalf("not magpie there, yet %+v", d)
+		t.Fatalf("not chongyun there, yet %+v", d)
 	}
 	if len(tried) != 1 || tried[0] != corpProxy {
 		t.Fatalf("tried %v", tried)
@@ -232,7 +232,7 @@ func TestMagpieProbe(t *testing.T) {
 			gw.ServeHTTP(w, r)
 		case r.URL.Path == "/broken/":
 			w.WriteHeader(502)
-			w.Write([]byte(`{"name":"magpie"}`))
+			w.Write([]byte(`{"name":"chongyun"}`))
 		default:
 			w.WriteHeader(404)
 			w.Write([]byte(`{"error":{"message":"not found"}}`))
@@ -286,7 +286,7 @@ func TestCodexBehindReverseProxy(t *testing.T) {
 	}
 	log("connecting to websocket: wss://ai.corp.example/magpie/backend-api/codex/responses")
 	if d := codex(home).Drift(); d != nil {
-		t.Fatalf("reached magpie through the proxy: %+v", d)
+		t.Fatalf("reached chongyun through the proxy: %+v", d)
 	}
 	log("connecting to websocket: wss://chatgpt.com/backend-api/codex/responses")
 	if d := codex(home).Drift(); d == nil || d.Kind != "bypassed" {
@@ -329,7 +329,7 @@ func TestCodexSignedInBehindReverseProxy(t *testing.T) {
 		t.Fatal(err)
 	}
 	if p, _ := edit.GetTOMLTop(cx.Path, "model_provider"); p == magpieID {
-		t.Fatal("signed in, yet magpie is Codex's provider")
+		t.Fatal("signed in, yet chongyun is Codex's provider")
 	}
 	b, _ := os.ReadFile(cx.Path)
 	if !strings.Contains(string(b), gateway.URL()) {

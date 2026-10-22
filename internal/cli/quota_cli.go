@@ -10,23 +10,23 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
-const quotaUsage = `usage: magpie quota [<provider>…] [--json]
-       magpie quota reset [<codex account>] [--yes]
-       magpie quota auto-reset [<codex account>] [week|expiring] [on|off]
-       magpie quota credits [<codex account>] [on|off]
-       magpie quota alert [<percent>|off] [--balance <amount>|off]
-       magpie quota wait <provider|account> [--timeout <duration>] [--quiet]
-       magpie quota history [<provider|account>…] [--days <n>] [--json]
-       magpie quota refresh <provider> [<account>] [--json]
-  what is left of every subscription, plan and key magpie has: each window's use and
+const quotaUsage = `usage: chongyun quota [<provider>…] [--json]
+       chongyun quota reset [<codex account>] [--yes]
+       chongyun quota auto-reset [<codex account>] [week|expiring] [on|off]
+       chongyun quota credits [<codex account>] [on|off]
+       chongyun quota alert [<percent>|off] [--balance <amount>|off]
+       chongyun quota wait <provider|account> [--timeout <duration>] [--quiet]
+       chongyun quota history [<provider|account>…] [--days <n>] [--json]
+       chongyun quota refresh <provider> [<account>] [--json]
+  what is left of every subscription, plan and key chongyun has: each window's use and
   when it starts again, and each key's balance, asked of the vendors now (or less than
   a minute ago). --json is for scripts and agents, each entry with lastServedAt, when it
   last answered through the gateway, and last: true on the latest; the gateway answers the same at
-  GET http://127.0.0.1:3425/v1/magpie/quotas (on the port in Settings' Gateway address), and to another machine only while magpie is
+  GET http://127.0.0.1:3425/v1/magpie/quotas (on the port in Settings' Gateway address), and to another machine only while chongyun is
   shared on the local network, with its key as the API key (Authorization: Bearer or x-api-key)
   A Codex account that holds rate-limit resets says how many; quota reset spends one,
   starting the account's current windows again (the one Codex is signed in to unless
@@ -42,26 +42,26 @@ const quotaUsage = `usage: magpie quota [<provider>…] [--json]
   It is the account's standing setting, held resets or not; off stops it, and alone
   it says which accounts have it on. It is off until turned on.
   quota credits off keeps a Codex account from spending its credits: once one of
-  its windows is used up, by magpie's latest reading (refreshed about every
+  its windows is used up, by chongyun's latest reading (refreshed about every
   minute), routing holds it as used up until that window renews and the request
   goes to the other accounts, groups and fallbacks, or is refused with why (with
   auto-reset on, its week used up and no one else left, it spends a reset first).
   on, the default, lets the vendor answer on its credits then, so the task goes
   on; alone it says which accounts don't spend theirs.
-  quota alert 80 has the magpie app notify when any window of a subscription or plan
+  quota alert 80 has the chongyun app notify when any window of a subscription or plan
   reaches 80% used, once each time the window runs (not windows set aside, such as
   on-demand spending); --balance 5 when a balance falls to 5 or under, in its own
   currency or credits, once until topped up past it. off turns either off, and alone
   it says what is set. Both are off until set.
-  quota wait codex returns once any Codex account magpie has on has allowance again
+  quota wait codex returns once any Codex account chongyun has on has allowance again
   (a window that stops it no longer used up), and an account's email or login, or
   <provider>/<account>, waits for that one alone: it reads the vendors itself, gateway
   running or not, again shortly after the soonest reset (every 1 to 10 minutes), and
   says on stderr what it waits for. For a script to go on with work it stopped:
-  until codex exec …; do magpie quota wait codex || break; done. Exit 0 once there
+  until codex exec …; do chongyun quota wait codex || break; done. Exit 0 once there
   is allowance, 1 when --timeout (30m, 6h) passes first, 2 for a name it doesn't
   know, 130 on Ctrl+C.
-  quota history is what magpie has read of each subscription's and plan's windows
+  quota history is what chongyun has read of each subscription's and plan's windows
   over time, kept 45 days (UTC times, a reading only when it changed, each window's
   runs apart by when they reset): the latest readings of each window, or with --json
   every one since --days days ago, as GET /v1/magpie/quotas/history?days=&provider=&user=
@@ -71,7 +71,7 @@ const quotaUsage = `usage: magpie quota [<provider>…] [--json]
   quota refresh reads one card again, as its refresh button on the Usage page does:
   the provider's, or of the one account named (<provider>/<account> works too), and
   shows only it, --json with each card's readAt and error. A saved Claude account is
-  read by running Claude Code's /usage in its own folder, which plain magpie quota
+  read by running Claude Code's /usage in its own folder, which plain chongyun quota
   never does. A card read less than 30 seconds ago isn't asked again: what was read
   then is shown.`
 
@@ -284,12 +284,12 @@ func quotaAutoResetCmd(args []string) error {
 		}
 	}
 	if when != "" && !set {
-		return fmt.Errorf("say on or off: magpie quota auto-reset <account> %s on", when)
+		return fmt.Errorf("say on or off: chongyun quota auto-reset <account> %s on", when)
 	}
 	if !set && user == "" {
 		on := settings.Load().CodexAutoReset
 		if len(on) == 0 {
-			fmt.Println(muted.Render("no Codex account uses a reset by itself ·"), "magpie quota auto-reset <account> on")
+			fmt.Println(muted.Render("no Codex account uses a reset by itself ·"), "chongyun quota auto-reset <account> on")
 			return nil
 		}
 		for _, u := range on {
@@ -346,7 +346,7 @@ func autoResetSay(user string) string {
 func printResetsUsed(user string) {
 	used := provider.ResetsUsed(user)
 	if len(used) == 0 {
-		fmt.Println(muted.Render("magpie hasn't used any of its resets in the last 90 days"))
+		fmt.Println(muted.Render("chongyun hasn't used any of its resets in the last 90 days"))
 		return
 	}
 	for _, u := range used {
@@ -386,11 +386,11 @@ func quotaCreditsCmd(args []string) error {
 	if !set && user == "" {
 		off := settings.Load().CodexNoCredits
 		if len(off) == 0 {
-			fmt.Println(muted.Render("every Codex account spends its credits once its allowance is used up ·"), "magpie quota credits <account> off")
+			fmt.Println(muted.Render("every Codex account spends its credits once its allowance is used up ·"), "chongyun quota credits <account> off")
 			return nil
 		}
 		for _, u := range off {
-			fmt.Println(muted.Render("○"), u, muted.Render("doesn't spend its credits: held once magpie reads a window used up"))
+			fmt.Println(muted.Render("○"), u, muted.Render("doesn't spend its credits: held once chongyun reads a window used up"))
 		}
 		return nil
 	}
@@ -402,7 +402,7 @@ func quotaCreditsCmd(args []string) error {
 		if provider.CodexCredits(user) {
 			fmt.Println(user, "spends its credits once its allowance is used up")
 		} else {
-			fmt.Println(user, "doesn't spend its credits: once magpie reads a window used up it is held till it renews")
+			fmt.Println(user, "doesn't spend its credits: once chongyun reads a window used up it is held till it renews")
 		}
 		return nil
 	}
@@ -412,7 +412,7 @@ func quotaCreditsCmd(args []string) error {
 	if on {
 		fmt.Println(green.Render("✓"), user+":", "spends its credits once its allowance is used up, so a task goes on")
 	} else {
-		fmt.Println(green.Render("✓"), user+":", "no longer spends its credits: once magpie reads a window used up, requests go to the other accounts till it renews")
+		fmt.Println(green.Render("✓"), user+":", "no longer spends its credits: once chongyun reads a window used up, requests go to the other accounts till it renews")
 	}
 	return nil
 }
@@ -494,7 +494,7 @@ func quotaAlertCmd(args []string) error {
 		fmt.Println("; no balance alert")
 	}
 	if s.UsageAlert > 0 || s.BalanceAlert > 0 {
-		fmt.Println(muted.Render("  the notifications come from the magpie app, while it runs"))
+		fmt.Println(muted.Render("  the notifications come from the chongyun app, while it runs"))
 	}
 	return nil
 }
@@ -603,7 +603,7 @@ func quotaHistoryCmd(args []string) error {
 		if len(only) > 0 {
 			return fmt.Errorf("no readings kept of %s", strings.Join(only, ", "))
 		}
-		fmt.Println(muted.Render("nothing kept yet ·"), "a subscription's or plan's windows are kept here as magpie reads them")
+		fmt.Println(muted.Render("nothing kept yet ·"), "a subscription's or plan's windows are kept here as chongyun reads them")
 		return nil
 	}
 	for _, h := range hs {

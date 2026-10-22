@@ -57,7 +57,7 @@ func TestSharedGroupRoundTrip(t *testing.T) {
 	if strings.Contains(text, secret) || strings.Contains(text, "127.0.0.1") || strings.Contains(text, "acme-secret") || strings.Contains(text, "big-secret") {
 		t.Fatalf("the shared text carries a provider's key or address, or the sharer's folder: %s", text)
 	}
-	if !strings.Contains(text, `"magpie":"routing-group"`) || !strings.Contains(text, `"version":1`) {
+	if !strings.Contains(text, `"chongyun":"routing-group"`) || !strings.Contains(text, `"version":1`) {
 		t.Fatalf("the shared text doesn't say what it is: %s", text)
 	}
 
@@ -134,12 +134,12 @@ func TestSharedGroupMissingMembers(t *testing.T) {
 func TestSharedGroupBadText(t *testing.T) {
 	shareHome(t, Provider{ID: "a", Name: "A", Key: "k", Chat: "http://127.0.0.1:1/v1", Models: []string{"x"}})
 	for _, c := range []struct{ text, says string }{
-		{"", "not a routing group shared from magpie"},
-		{"hello {not json}", "not a routing group shared from magpie"},
-		{`{"magpie":"something-else","version":1,"group":{"members":["a/x"]}}`, "not a routing group shared from magpie"},
-		{`{"magpie":"routing-group","version":2,"group":{"members":["a/x"]}}`, "newer magpie (format 2)"},
-		{`{"magpie":"routing-group","group":{"members":["a/x"]}}`, "no format"},
-		{`{"magpie":"routing-group","version":1,"group":{"members":"a/x"}}`, "can't be read"},
+		{"", "not a routing group shared from chongyun"},
+		{"hello {not json}", "not a routing group shared from chongyun"},
+		{`{"chongyun":"something-else","version":1,"group":{"members":["a/x"]}}`, "not a routing group shared from chongyun"},
+		{`{"chongyun":"routing-group","version":2,"group":{"members":["a/x"]}}`, "newer chongyun (format 2)"},
+		{`{"chongyun":"routing-group","group":{"members":["a/x"]}}`, "no format"},
+		{`{"chongyun":"routing-group","version":1,"group":{"members":"a/x"}}`, "can't be read"},
 	} {
 		if _, err := ImportGroup(c.text); err == nil || !strings.Contains(err.Error(), c.says) {
 			t.Errorf("ImportGroup(%q) = %v, want an error saying %q", c.text, err, c.says)

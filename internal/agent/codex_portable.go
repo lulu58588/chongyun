@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/yetone/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/sessions"
 )
 
 // A Codex conversation magpie compacted can't go on once Codex talks to

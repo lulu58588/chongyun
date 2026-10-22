@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // sharedGroups saves davisjiahao's groups (#2361): First and Second share

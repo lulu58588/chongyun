@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // The Cline plugin's provider has ClinePass's Upstream tick too (ARNO on

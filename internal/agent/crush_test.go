@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // crushHome is effortHome with Crush's data folder in the sandbox too, and
@@ -44,7 +44,7 @@ func TestCrushPickWhereCrushReadsIt(t *testing.T) {
 	if err := large.Set("magpie/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
-	if p, _ := edit.GetJSON(data, "models.large.provider"); p != "magpie" {
+	if p, _ := edit.GetJSON(data, "models.large.provider"); p != "chongyun" {
 		t.Fatalf("Crush still picks %q from its data file:\n%s", p, readFile(data))
 	}
 	if m, _ := edit.GetJSON(data, "models.large.model"); m != "deepseek/pro" {
@@ -55,7 +55,7 @@ func TestCrushPickWhereCrushReadsIt(t *testing.T) {
 	}
 	// the provider stays where it was, with the library's MCP servers
 	if _, ok := edit.GetJSON(cr.Path, "providers.magpie.base_url"); !ok {
-		t.Fatalf("no magpie provider in %s:\n%s", cr.Path, readFile(cr.Path))
+		t.Fatalf("no chongyun provider in %s:\n%s", cr.Path, readFile(cr.Path))
 	}
 	if cr.Check() != "" {
 		t.Fatalf("check: %s", cr.Check())
@@ -107,7 +107,7 @@ func TestCrushPickInCrushJSON(t *testing.T) {
 	if cr.Path == data {
 		t.Skip("crush.json is Crush's data file here")
 	}
-	writeFile(t, cr.Path, `{"providers":{"magpie":{"base_url":"x"}},"models":{"large":{"provider":"magpie","model":"deepseek/pro"}}}`)
+	writeFile(t, cr.Path, `{"providers":{"chongyun":{"base_url":"x"}},"models":{"large":{"provider":"chongyun","model":"deepseek/pro"}}}`)
 	if got := cr.Field("model").Get(); got != "magpie/deepseek/pro" {
 		t.Fatalf("large reads %q", got)
 	}
@@ -146,12 +146,12 @@ func TestCrushPickReplacesCrushsModelObject(t *testing.T) {
 		if err := json.Unmarshal([]byte(raw), &obj); err != nil {
 			t.Fatalf("models.%s: %v\n%s", typ, err, readFile(data))
 		}
-		if len(obj) != 2 || obj["provider"] != "magpie" {
-			t.Fatalf("models.%s after magpie's pick: %s", typ, raw)
+		if len(obj) != 2 || obj["provider"] != "chongyun" {
+			t.Fatalf("models.%s after chongyun's pick: %s", typ, raw)
 		}
 	}
 	if e := cr.Field("effort").Get(); e != "" {
-		t.Fatalf("effort row shows %q, which magpie never set", e)
+		t.Fatalf("effort row shows %q, which chongyun never set", e)
 	}
 	// the rest of the data file is Crush's and stays
 	if k, _ := edit.GetJSON(data, "providers.openai.api_key"); k != "sk-keep" {
@@ -169,12 +169,12 @@ func TestCrushPickReplacesCrushsModelObject(t *testing.T) {
 		t.Fatal(err)
 	}
 	if e := cr.Field("effort").Get(); e != "high" {
-		t.Fatalf("magpie's own effort %q after a new pick:\n%s", e, readFile(data))
+		t.Fatalf("chongyun's own effort %q after a new pick:\n%s", e, readFile(data))
 	}
 
 	// once Crush's picker has saved its own object again, magpie's next pick
 	// drops all of it, the effort Crush saved too
-	writeFile(t, data, `{"models":{"large":{"model":"deepseek/pro","provider":"magpie","reasoning_effort":"low","max_tokens":64000}}}`)
+	writeFile(t, data, `{"models":{"large":{"model":"deepseek/pro","provider":"chongyun","reasoning_effort":"low","max_tokens":64000}}}`)
 	if err := cr.Field("model").Set("magpie/deepseek/max"); err != nil {
 		t.Fatal(err)
 	}
@@ -226,7 +226,7 @@ func TestCrushInWSLPicksInTheDistrosDataFile(t *testing.T) {
 	if err := large.Set("magpie/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
-	if p, _ := edit.GetJSON(data, "models.large.provider"); p != "magpie" {
+	if p, _ := edit.GetJSON(data, "models.large.provider"); p != "chongyun" {
 		t.Fatalf("the distro's Crush still picks %q:\n%s", p, readFile(data))
 	}
 	if got := large.Get(); got != "magpie/deepseek/pro" {

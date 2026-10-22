@@ -30,7 +30,7 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 const (
@@ -352,10 +352,10 @@ func qwenIn(at place) *Agent {
 				return ""
 			}
 			if v, _ := edit.GetJSON(path, qwenEnv); !keyHolds(v, at.gwKey()) {
-				return "Qwen Code's " + qwenEnv + " (settings.json) no longer is magpie's key, so magpie's models have none"
+				return "Qwen Code's " + qwenEnv + " (settings.json) no longer is chongyun's key, so chongyun's models have none"
 			}
 			if v, ok := edit.GetJSON(path, qwenAuth); !ok || v != "openai" {
-				return "Qwen Code's security.auth.selectedType (settings.json) no longer is openai, so it asks /auth instead of using magpie"
+				return "Qwen Code's security.auth.selectedType (settings.json) no longer is openai, so it asks /auth instead of using chongyun"
 			}
 			return wiringOff("Qwen Code", path, func(k string) (string, bool) {
 				g := gjson.GetBytes(c.raw, k)

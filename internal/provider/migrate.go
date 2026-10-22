@@ -43,11 +43,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // A migration's states.
@@ -151,7 +151,7 @@ var unreachable = regexp.MustCompile(`(?i)ConnectionRefused|ConnectionClosed|Fai
 // installFailed says why the plugin couldn't be installed.
 func installFailed(pkg string, err error) error {
 	if unreachable.MatchString(err.Error()) {
-		return &moveError{MoveWhy{Code: "offline"}, "magpie couldn't reach npm to install the plugin. Check the network or proxy, then try again.", err}
+		return &moveError{MoveWhy{Code: "offline"}, "chongyun couldn't reach npm to install the plugin. Check the network or proxy, then try again.", err}
 	}
 	line := strings.TrimSpace(err.Error())
 	if ls := strings.Split(line, "\n"); len(ls) > 1 {
@@ -485,9 +485,9 @@ func lockMoves() (func(), error) {
 			os.Remove(p)
 			continue
 		}
-		return nil, errors.New("another magpie is moving subscriptions to plugins")
+		return nil, errors.New("another chongyun is moving subscriptions to plugins")
 	}
-	return nil, errors.New("another magpie is moving subscriptions to plugins")
+	return nil, errors.New("another chongyun is moving subscriptions to plugins")
 }
 
 // Hooks the tests stand in for.

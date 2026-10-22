@@ -12,9 +12,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func TestKnownTextOnlyModelRejectsImagesBeforeUpstream(t *testing.T) {
@@ -520,7 +520,7 @@ func TestTextOnlyRefusalSaysWhyAndWhere(t *testing.T) {
 	s := New()
 	body := `{"model":"MODEL","messages":[{"role":"user","content":[{"type":"text","text":"read"},{"type":"image_url","image_url":{"url":"data:image/png;base64,aGVsbG8="}}]}]}`
 	for model, want := range map[string]string{
-		"probe/sol":   "Accepts images is turned off for it in magpie, in Providers → Probe → Names & levels",
+		"probe/sol":   "Accepts images is turned off for it in chongyun, in Providers → Probe → Names & levels",
 		"group/words": "no model in the group Words is marked as taking images",
 	} {
 		rec := httptest.NewRecorder()

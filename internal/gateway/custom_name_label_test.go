@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // /v1/models' magpie_label names a model as the agents' lists do, by the
@@ -42,7 +42,7 @@ func TestModelsListSuffixModes(t *testing.T) {
 			Data []struct {
 				ID    string `json:"id"`
 				Name  string `json:"display_name"`
-				Label string `json:"magpie_label"`
+				Label string `json:"chongyun_label"`
 			} `json:"data"`
 		}
 		if err := json.Unmarshal(rec.Body.Bytes(), &out); err != nil {

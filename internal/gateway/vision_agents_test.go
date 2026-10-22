@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/codexcat"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/codexcat"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A text-only model is offered to agents as taking images while magpie

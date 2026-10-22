@@ -186,7 +186,7 @@ func cleanFast(entries []Entry, g *Group) error {
 			return fmt.Errorf("%s is a group: its models are sent as it says, so it takes no :%s", model, FastWord)
 		}
 		if p, m, ok := resolveIn(entries, model); ok && !CanFast(p, m) {
-			return fmt.Errorf("%s has no fast mode magpie can ask for (ChatGPT and OpenAI GPT models, a GPT model on a provider you added by its address, Cursor's with a fast one, a plugin's it says are served at priority, and Claude Opus 4.8 and 5 on an Anthropic key have)", model)
+			return fmt.Errorf("%s has no fast mode chongyun can ask for (ChatGPT and OpenAI GPT models, a GPT model on a provider you added by its address, Cursor's with a fast one, a plugin's it says are served at priority, and Claude Opus 4.8 and 5 on an Anthropic key have)", model)
 		}
 		out = append(out, f)
 	}

@@ -38,11 +38,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // KiroExecutable finds kiro-cli, which refreshes its own sign-in; a var so
@@ -277,9 +277,9 @@ func KiroAuthOf(ctx context.Context, key, home string, stale bool) (KiroAuth, er
 	if !ok {
 		delete(kiroAuthCache.m, id)
 		if home != "" {
-			return KiroAuth{}, errors.New("this Kiro account's sign-in is gone; add it again in magpie")
+			return KiroAuth{}, errors.New("this Kiro account's sign-in is gone; add it again in chongyun")
 		}
-		return KiroAuth{}, errors.New("Kiro isn't signed in; add the Kiro subscription in magpie, sign in with `kiro-cli login` or the Kiro IDE, or save a Kiro API key on the provider")
+		return KiroAuth{}, errors.New("Kiro isn't signed in; add the Kiro subscription in chongyun, sign in with `kiro-cli login` or the Kiro IDE, or save a Kiro API key on the provider")
 	}
 	if kiroAuthCache.m == nil {
 		kiroAuthCache.m = map[string]kiroCred{}

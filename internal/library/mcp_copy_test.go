@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
 )
 
 // #1478 (xiaozhu1337): a project magpie doesn't keep gets the library's
@@ -53,7 +53,7 @@ func TestConfigOfServersIsTheProjectFile(t *testing.T) {
 			t.Errorf("codex took an SSE server")
 		}
 		if c.Text != want {
-			t.Errorf("%s: copied\n%s\nbut a project of magpie's has in %s\n%s", id, c.Text, c.File, want)
+			t.Errorf("%s: copied\n%s\nbut a project of chongyun's has in %s\n%s", id, c.Text, c.File, want)
 		}
 		if !slices.Contains(skip, "docs") && !strings.Contains(c.Text, "docs.example") {
 			t.Errorf("%s: no docs server in\n%s", id, c.Text)

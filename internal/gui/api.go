@@ -29,36 +29,36 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/autostart"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/fonts"
-	"github.com/yetone/magpie/internal/fx"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/mcpauth"
-	"github.com/yetone/magpie/internal/middleware"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/profile"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/redact"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/update"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/autostart"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/fonts"
+	"github.com/lulu58588/magpie/internal/fx"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/middleware"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/profile"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/redact"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // cliBehind is the terminal's magpie command when it's a copied file rather
 // than the installer's link — a copy can't follow updates (#531's lesson) —
 // told once, and only until the user dismisses it for this version. The
 // check is a bare Lstat: telling a *stale* copy from a current one would
-// mean running the old binary, and `magpie version` isn't read-only — it
+// mean running the old binary, and `chongyun version` isn't read-only — it
 // migrates the user's settings first, with the old build's migrations. Only
-// `magpie update`, which the user started, reads versions (update.StaleCLI).
+// `chongyun update`, which the user started, reads versions (update.StaleCLI).
 // "" when the command is the link or absent, this isn't the Mac, or the
 // advice was dismissed for this version.
 func cliBehind() string {
@@ -109,7 +109,7 @@ func cliBehindRoutes(mux *http.ServeMux) {
 		cliBehindMu.Unlock()
 		rw.WriteHeader(http.StatusNoContent)
 	})
-	// Settings' Command line: what `magpie` runs in each shell, and this
+	// Settings' Command line: what `chongyun` runs in each shell, and this
 	// app's put there when asked (update.AddCLI); shell names the one whose
 	// profile gets ~/.local/bin
 	mux.HandleFunc("GET /api/cli", func(rw http.ResponseWriter, r *http.Request) {
@@ -725,7 +725,7 @@ func init() {
 
 // revalidated serves the page's own files to be asked for again each time,
 // by their content's hash: an embedded file has no date, so they went out
-// with nothing to check them by, and a cache in front of `magpie web` (a
+// with nothing to check them by, and a cache in front of `chongyun web` (a
 // proxy, a CDN, a tunnel's) could keep an older version's app.js under the
 // new index.html after an update: a page without what that version added,
 // such as the request archive switch (Jorben on Discord). An unchanged
@@ -757,7 +757,7 @@ func revalidated(next http.Handler) http.Handler {
 		rw.Header().Set("Cache-Control", "no-cache")
 		// a file asked for by the address the page names it by, its
 		// content's hash, is the same at that address for good: a browser
-		// keeps it and doesn't ask again, which a slow link to `magpie web`
+		// keeps it and doesn't ask again, which a slow link to `chongyun web`
 		// feels at every load (akic404 on Discord). Another version's hash,
 		// or none, is asked for again as before.
 		if v := r.URL.Query().Get("v"); v != "" && v == hex.EncodeToString(sum[:6]) {
@@ -2154,7 +2154,7 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 		writeJSON(rw, settingsState())
 	})
 	// the GitHub download mirror updates come through (#893), the same
-	// setting `magpie update mirror` sets: a full https:// prefix, or ""
+	// setting `chongyun update mirror` sets: a full https:// prefix, or ""
 	// for GitHub itself. The feed and its checksums are never the mirror's.
 	mux.HandleFunc("POST /api/settings/update-mirror", func(rw http.ResponseWriter, r *http.Request) {
 		var in struct {
@@ -2291,7 +2291,7 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 func noFramedAPI(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		if apiFramed(r) {
-			http.Error(rw, "magpie's API answers magpie's own window only", http.StatusForbidden)
+			http.Error(rw, "chongyun's API answers chongyun's own window only", http.StatusForbidden)
 			return
 		}
 		h.ServeHTTP(rw, r)
@@ -2536,11 +2536,11 @@ func countClient(m map[string]string, client, as string) (map[string]string, err
 		delete(out, strings.ToLower(client))
 		return out, nil
 	}
-	if usage.IsAgent(client) || client == "other" || usage.AgentOf(client) == "magpie" || strings.HasPrefix(strings.ToLower(client), "magpie") {
+	if usage.IsAgent(client) || client == "other" || usage.AgentOf(client) == "chongyun" || strings.HasPrefix(strings.ToLower(client), "chongyun") {
 		return nil, fmt.Errorf("%s is counted on its own", client)
 	}
-	if !usage.IsAgent(as) || as == "magpie" {
-		return nil, fmt.Errorf("%s is not an agent magpie knows", as)
+	if !usage.IsAgent(as) || as == "chongyun" {
+		return nil, fmt.Errorf("%s is not an agent chongyun knows", as)
 	}
 	out[strings.ToLower(client)] = as
 	return out, nil

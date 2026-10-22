@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestOptionalFieldValueErrorNotRetried(t *testing.T) {

@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // qianfan plays the plan's own endpoints: chat completions and Responses

@@ -7,13 +7,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/yetone/magpie/internal/daemon"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/gui"
-	"github.com/yetone/magpie/internal/stats"
+	"github.com/lulu58588/magpie/internal/daemon"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gui"
 )
 
-// webAddr is where `magpie web` listens unless told: beside the gateway.
+// webAddr is where `chongyun web` listens unless told: beside the gateway.
 const webAddr = "127.0.0.1:3430"
 
 // webCmd: magpie web [--addr host:port] [--lan] [--no-open] [--gateway]
@@ -42,7 +41,7 @@ func webCmd(args []string) error {
 		case a == "--gateway":
 			gui.WebGateway.Store(true)
 		default:
-			return fmt.Errorf("magpie web: unknown %q · magpie web [--addr host:port] [--lan] [--no-open] [--gateway] [--tls-cert <file> --tls-key <file>], MAGPIE_WEB_KEY to keep one key", a)
+			return fmt.Errorf("chongyun web: unknown %q · chongyun web [--addr host:port] [--lan] [--no-open] [--gateway] [--tls-cert <file> --tls-key <file>], MAGPIE_WEB_KEY to keep one key", a)
 		}
 	}
 	if lan && addr == webAddr {
@@ -53,8 +52,8 @@ func webCmd(args []string) error {
 	// it serves, is the one to open
 	if a, k := daemon.Web(); a != "" && gateway.ServedBy().Running {
 		link := webLink(a, k)
-		fmt.Println(green.Render("●"), "the magpie service serves this page:", bold.Render(link))
-		fmt.Println(muted.Render("  magpie daemon web off turns it off"))
+		fmt.Println(green.Render("●"), "the chongyun service serves this page:", bold.Render(link))
+		fmt.Println(muted.Render("  chongyun daemon web off turns it off"))
 		if open {
 			openInBrowser(link)
 		}
@@ -69,13 +68,13 @@ func webCmd(args []string) error {
 		// app): this page shows its settings and accounts, read from the
 		// same files, and takes the gateway up when that one stops
 		o := gateway.ServedBy()
-		who := "another magpie"
+		who := "another chongyun"
 		if o.Version != "" {
 			who += " (" + o.Version + ")"
 		}
 		fmt.Println(muted.Render("  the gateway on " + gateway.URL() + " is served by " + who + "; this page shows the same settings and accounts, and serves the gateway once that one stops"))
 		if st, err := daemon.Get(); err == nil && st.Running {
-			fmt.Println(muted.Render("  to have the service serve this page itself: magpie daemon web on"))
+			fmt.Println(muted.Render("  to have the service serve this page itself: chongyun daemon web on"))
 		}
 	}
 	printWeb(w)
@@ -87,7 +86,7 @@ func webCmd(args []string) error {
 
 // printWeb prints where a started page is, and what its link carries.
 func printWeb(w *gui.Web) {
-	fmt.Println(green.Render("●"), "magpie web on", bold.Render(w.Link))
+	fmt.Println(green.Render("●"), "chongyun web on", bold.Render(w.Link))
 	if l := tlsLine(); l != "" {
 		fmt.Println(l)
 	}
@@ -114,9 +113,9 @@ func printWeb(w *gui.Web) {
 // lanWarning is said wherever the page is served on the network.
 func lanWarning() string {
 	if gateway.TLSOn() {
-		return "anyone with the link can change magpie and see its keys"
+		return "anyone with the link can change chongyun and see its keys"
 	}
-	return "anyone with the link can change magpie and see its keys, and the network carries it unencrypted (--tls-cert and --tls-key serve it over https)"
+	return "anyone with the link can change chongyun and see its keys, and the network carries it unencrypted (--tls-cert and --tls-key serve it over https)"
 }
 
 // webLink is the link to a page served on addr with key, from this
@@ -164,7 +163,7 @@ func proxyLink(key string) string {
 
 // serveCmd: magpie serve [--web[=host:port]] — the gateway, and with
 // --web magpie web's page from the same process: what the service runs
-// (`magpie daemon install --web`), so the page shows the gateway that
+// (`chongyun daemon install --web`), so the page shows the gateway that
 // serves the agents, its routing included (HuanCheng on Discord).
 func serveCmd(args []string) error {
 	args, err := tlsFlags(args)
@@ -179,29 +178,28 @@ func serveCmd(args []string) error {
 		case strings.HasPrefix(a, "--web="):
 			web = strings.TrimPrefix(a, "--web=")
 			if _, _, err := net.SplitHostPort(web); err != nil {
-				return fmt.Errorf("magpie serve: --web=%s isn't host:port", web)
+				return fmt.Errorf("chongyun serve: --web=%s isn't host:port", web)
 			}
 		default:
-			return fmt.Errorf("magpie serve: unknown %q · magpie serve [--web[=host:port]] [--tls-cert <file> --tls-key <file>]", a)
+			return fmt.Errorf("chongyun serve: unknown %q · chongyun serve [--web[=host:port]] [--tls-cert <file> --tls-key <file>]", a)
 		}
 	}
 	if web == "" {
 		return serve()
 	}
-	go stats.Run(version, "serve")
 	w, err := gui.StartWeb(web, version)
 	if err != nil {
 		return err
 	}
 	public := advertisedURL()
-	fmt.Println(green.Render("●"), "magpie gateway on", bold.Render(gateway.URL()))
+	fmt.Println(green.Render("●"), "chongyun gateway on", bold.Render(gateway.URL()))
 	fmt.Println(muted.Render("  OpenAI  "), public+"/v1/chat/completions", muted.Render("·"), public+"/v1/responses")
 	fmt.Println(muted.Render("  Anthropic"), public+"/v1/messages")
 	if l := tlsLine(); l != "" {
 		fmt.Println(l)
 	}
 	if !w.ServesGateway() {
-		fmt.Println(amber.Render("!"), "another magpie serves the gateway there: this one serves it once that one stops")
+		fmt.Println(amber.Render("!"), "another chongyun serves the gateway there: this one serves it once that one stops")
 	}
 	printWeb(w)
 	return w.Wait()

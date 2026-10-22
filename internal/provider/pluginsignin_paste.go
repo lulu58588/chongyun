@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // A plugin's browser sign-in ("auto") that the plugin finishes at a port of

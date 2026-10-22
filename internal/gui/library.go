@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/mcpauth"
 )
 
 // The problems of the last change to the library stay on the page until the

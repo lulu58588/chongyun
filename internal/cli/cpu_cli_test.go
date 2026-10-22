@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // --help and its other forms print magpie cpu's usage, ask nothing and
@@ -29,8 +29,8 @@ func TestCPUHelpAndBadArgsWriteNothing(t *testing.T) {
 	before := tree(t, root)
 	for _, args := range [][]string{{"cpu", "--help"}, {"cpu", "-h"}, {"cpu", "help"}, {"cpu", "out.pb.gz", "--help"}, {"cpu", "--seconds", "10", "-h"}} {
 		out, err := runOut(t, args...)
-		if err != nil || !strings.Contains(out, "usage: magpie cpu [<file>] [--seconds N]") {
-			t.Errorf("magpie %s: %v %q", strings.Join(args, " "), err, out)
+		if err != nil || !strings.Contains(out, "usage: chongyun cpu [<file>] [--seconds N]") {
+			t.Errorf("chongyun %s: %v %q", strings.Join(args, " "), err, out)
 		}
 	}
 	for _, args := range [][]string{
@@ -39,7 +39,7 @@ func TestCPUHelpAndBadArgsWriteNothing(t *testing.T) {
 		{"cpu", "--seconds", "30s"}, {"cpu", "--seconds=-5"}, {"cpu", "--seconds", "10", "--seconds", "20"}, {"cpu", "x.pb.gz", "--seconds"},
 	} {
 		if _, err := runOut(t, args...); err == nil || !strings.Contains(err.Error(), "nothing was recorded") {
-			t.Errorf("magpie %s: %v", strings.Join(args, " "), err)
+			t.Errorf("chongyun %s: %v", strings.Join(args, " "), err)
 		}
 	}
 	if asked {
@@ -154,7 +154,7 @@ func TestCPUWithNoGateway(t *testing.T) {
 	}()
 	t.Setenv("MAGPIE_ADDR", ln.Addr().String())
 	out, err := runOut(t, "cpu", "x.pb.gz")
-	if err == nil || !strings.Contains(err.Error(), "is magpie running") {
+	if err == nil || !strings.Contains(err.Error(), "is chongyun running") {
 		t.Fatalf("%v", err)
 	}
 	if strings.Contains(out, "Recording") {

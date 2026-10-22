@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // vertexNotAsked points Vertex AI, Google's token endpoint and IAM
@@ -48,7 +48,7 @@ func TestProviderAddVertexPairs(t *testing.T) {
 	for _, args := range [][]string{{"provider", "add", "google-vertex"}, {"provider", "add", "google-vertex", "location=us"}} {
 		err := providerCmd(args)
 		if err == nil || !strings.Contains(err.Error(), "needs the id of your Google Cloud project") ||
-			!strings.Contains(err.Error(), "magpie provider add google-vertex project=") {
+			!strings.Contains(err.Error(), "chongyun provider add google-vertex project=") {
 			t.Fatalf("%v: %v", args[2:], err)
 		}
 	}
@@ -149,7 +149,7 @@ func TestProviderAddVertexPairs(t *testing.T) {
 	}
 	out, err = printed(t, func() error { return providerCmd([]string{"provider", "key", "google-vertex", "AIzaSy-test"}) })
 	if err == nil || !strings.Contains(err.Error(), "Google credentials") ||
-		!strings.Contains(err.Error(), "magpie provider set google-vertex credentials=") {
+		!strings.Contains(err.Error(), "chongyun provider set google-vertex credentials=") {
 		t.Fatalf("provider key: %v", err)
 	}
 	if strings.Contains(out, "✓") || mustFind(t, "google-vertex").Key != "" {
@@ -169,7 +169,7 @@ func TestProvidersShowVertexCredentials(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if row := lineWith(out, "google-vertex"); !strings.Contains(row, "magpie provider add google-vertex project=") || strings.Contains(row, "<key>") {
+	if row := lineWith(out, "google-vertex"); !strings.Contains(row, "chongyun provider add google-vertex project=") || strings.Contains(row, "<key>") {
 		t.Fatalf("presets: %q", row)
 	}
 	key := filepath.Join(t.TempDir(), "vertex-sa.json")
@@ -258,10 +258,10 @@ func TestProvidersShowVertexWithoutProject(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if row := lineWith(out, "project "); !strings.Contains(row, want) || !strings.Contains(row, "magpie provider set "+id+" project=") {
+		if row := lineWith(out, "project "); !strings.Contains(row, want) || !strings.Contains(row, "chongyun provider set "+id+" project=") {
 			t.Errorf("show, %s: project %q in\n%s", id, row, out)
 		}
-		if strings.Contains(out, "provider key") || strings.Contains(out, "not set  magpie provider key") {
+		if strings.Contains(out, "provider key") || strings.Contains(out, "not set  chongyun provider key") {
 			t.Errorf("show, %s, asks for a key:\n%s", id, out)
 		}
 	}

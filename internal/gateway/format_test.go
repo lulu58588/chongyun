@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // calendarSchema is the schema the OpenAI SDK sends for the docs'

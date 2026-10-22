@@ -14,8 +14,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A model that can't see images is given what a model that can says of
@@ -141,7 +141,7 @@ func pickedMissing(v string) string {
 // described, says of a picked Image recognition model that is missing.
 func missingSeerNote() string {
 	if v := VisionMissing(); v != "" {
-		return fmt.Sprintf("; the Image recognition model picked in magpie's Settings, %q, isn't set up any more: pick another in Settings → Models → Image recognition", v)
+		return fmt.Sprintf("; the Image recognition model picked in chongyun's Settings, %q, isn't set up any more: pick another in Settings → Models → Image recognition", v)
 	}
 	return ""
 }
@@ -154,16 +154,16 @@ func missingSeerNote() string {
 // none of its members is marked as taking images.
 func textOnlyNote(p provider.Provider, model string, group string) string {
 	if group != "" {
-		return fmt.Sprintf("; no model in the group %s is marked as taking images: turn on Accepts images for one that does, in its provider's Names & levels in magpie", group)
+		return fmt.Sprintf("; no model in the group %s is marked as taking images: turn on Accepts images for one that does, in its provider's Names & levels in chongyun", group)
 	}
 	name := p.Name
 	if name == "" {
 		name = p.ID
 	}
 	if v, ok := provider.ImageOverride(p.ID, model); ok && !v {
-		return fmt.Sprintf("; Accepts images is turned off for it in magpie, in Providers → %s → Names & levels", name)
+		return fmt.Sprintf("; Accepts images is turned off for it in chongyun, in Providers → %s → Names & levels", name)
 	}
-	return fmt.Sprintf("; %s's model list marks it as not taking images: if it does, turn on Accepts images for it in magpie, in Providers → %s → Names & levels", name, name)
+	return fmt.Sprintf("; %s's model list marks it as not taking images: if it does, turn on Accepts images for it in chongyun, in Providers → %s → Names & levels", name, name)
 }
 
 // noSeerNote is what a request turned away for an image says of why no
@@ -174,10 +174,10 @@ func noSeerNote() string {
 		return n
 	}
 	if provider.HeldSettings().Vision == "off" {
-		return "; Image recognition is off in magpie's Settings → Models"
+		return "; Image recognition is off in chongyun's Settings → Models"
 	}
 	if _, ok := seer(); !ok {
-		return "; none of the models enabled in magpie can see images to describe it: enable one that can, or pick one in Settings → Models → Image recognition"
+		return "; none of the models enabled in chongyun can see images to describe it: enable one that can, or pick one in Settings → Models → Image recognition"
 	}
 	return ""
 }
@@ -188,7 +188,7 @@ func autoSeerNote(see string) string {
 	if provider.HeldSettings().Vision != "" {
 		return ""
 	}
-	return fmt.Sprintf("; magpie picked %s of the models you enabled: pick another in Settings → Models → Image recognition", see)
+	return fmt.Sprintf("; chongyun picked %s of the models you enabled: pick another in Settings → Models → Image recognition", see)
 }
 
 // AutoVision is the model magpie picks to describe images when the
@@ -264,7 +264,7 @@ func autoSpent(model string) error {
 	if !back.IsZero() {
 		when = " until " + heldClock(back, time.Now())
 	}
-	return fmt.Errorf("%s is out of its allowance%s, as is every other model magpie could describe it with, and none is asked until one is back", model, when)
+	return fmt.Errorf("%s is out of its allowance%s, as is every other model chongyun could describe it with, and none is asked until one is back", model, when)
 }
 
 // autoDescribes is whether the model that describes images is

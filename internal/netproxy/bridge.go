@@ -342,11 +342,11 @@ func EnvForBunWith(choice string, env []string, loopback bool) ([]string, error)
 				break
 			}
 			if !loopback {
-				return nil, fmt.Errorf("the proxy %s is SOCKS, which Claude Code can't use (UnsupportedProxyProtocol), and magpie's HTTP bridge to it is on this computer's loopback, which Claude Code in WSL doesn't reach: set an http:// proxy for it instead", Redact(v))
+				return nil, fmt.Errorf("the proxy %s is SOCKS, which Claude Code can't use (UnsupportedProxyProtocol), and chongyun's HTTP bridge to it is on this computer's loopback, which Claude Code in WSL doesn't reach: set an http:// proxy for it instead", Redact(v))
 			}
 			a, err := Bridge(u)
 			if err != nil {
-				return nil, fmt.Errorf("the proxy %s is SOCKS, which Claude Code can't use (UnsupportedProxyProtocol), and magpie's HTTP bridge to it didn't start (%v): set an http:// proxy for it instead", Redact(v), err)
+				return nil, fmt.Errorf("the proxy %s is SOCKS, which Claude Code can't use (UnsupportedProxyProtocol), and chongyun's HTTP bridge to it didn't start (%v): set an http:// proxy for it instead", Redact(v), err)
 			}
 			e = k + "=" + a
 		}

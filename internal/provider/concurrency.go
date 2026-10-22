@@ -221,7 +221,7 @@ func (p Provider) QuotaRestFor() time.Duration {
 // when the vendor doesn't say when they are back, 0 for the gateway's own.
 func SetQuotaRest(id string, minutes int) error {
 	if minutes < 0 || minutes > MaxQuotaRest {
-		return fmt.Errorf("a rest out of quota is from 0 (magpie's own) to %d minutes (8 days), not %d", MaxQuotaRest, minutes)
+		return fmt.Errorf("a rest out of quota is from 0 (chongyun's own) to %d minutes (8 days), not %d", MaxQuotaRest, minutes)
 	}
 	p, err := Find(id)
 	if err != nil {
@@ -322,7 +322,7 @@ func SetQuotaResetAt(id, at string) error {
 	return Save(*p)
 }
 
-// RestCapOff is RestCap set to off (`magpie provider rest-cap <id> off`):
+// RestCapOff is RestCap set to off (`chongyun provider rest-cap <id> off`):
 // a key or account of the provider that fails without saying why — a
 // relay's or an account pool's 5xx, a dropped connection — doesn't rest at
 // all, and is asked again by the next request as if it hadn't failed
@@ -351,7 +351,7 @@ func (p Provider) RestCapOr(def time.Duration) time.Duration {
 // gateway's own, RestCapOff for no rest after an unknown failure.
 func SetRestCap(id string, minutes int) error {
 	if minutes != RestCapOff && (minutes < 0 || minutes > MaxQuotaRest) {
-		return fmt.Errorf("the longest rest is from 0 (magpie's own) to %d minutes (8 days), or off, not %d", MaxQuotaRest, minutes)
+		return fmt.Errorf("the longest rest is from 0 (chongyun's own) to %d minutes (8 days), or off, not %d", MaxQuotaRest, minutes)
 	}
 	p, err := Find(id)
 	if err != nil {

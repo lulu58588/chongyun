@@ -7,8 +7,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/upstream"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/upstream"
 )
 
 // /api/upstream says what the vendor's page says for the providers that

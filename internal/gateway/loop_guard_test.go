@@ -18,9 +18,9 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // deepseekLoop is the reporter's reasoning, line for line as dsh showed it
@@ -389,7 +389,7 @@ var loopAsks = []struct {
 	asks             int
 }{
 	{"chat", "/v1/chat/completions", `{"model":"ds/deepseek-v4-max","stream":true,"messages":[{"role":"user","content":"add TOML"}]}`,
-		"data: [DONE]", `data: {"error":{"message":"magpie ended this reply`, 2},
+		"data: [DONE]", `data: {"error":{"message":"chongyun ended this reply`, 2},
 	{"anthropic", "/v1/messages", `{"model":"ds/deepseek-v4-max","max_tokens":32000,"stream":true,"messages":[{"role":"user","content":"add TOML"}]}`,
 		`"type":"message_stop"`, "event: error\ndata: {\"error\":{", 2},
 	{"responses", "/v1/responses", `{"model":"ds/deepseek-v4-max","stream":true,"input":"add TOML"}`,
@@ -458,7 +458,7 @@ func TestLoopEndsTheReplyOnEveryProtocol(t *testing.T) {
 func loopCut(t *testing.T, v *loopingVendor, got, done, failed, provider string, asks int) {
 	t.Helper()
 	if !strings.Contains(got, failed) || !strings.Contains(got, "stuck in a loop") || strings.Contains(got, done) {
-		t.Fatalf("the stream doesn't end with magpie's error:\n%s", got[max(len(got)-1500, 0):])
+		t.Fatalf("the stream doesn't end with chongyun's error:\n%s", got[max(len(got)-1500, 0):])
 	}
 	if !strings.Contains(got, "Producing") {
 		t.Fatal("the reasoning before the loop was found didn't reach the agent")
@@ -552,7 +552,7 @@ func TestReasoningLoopIsAskedAgain(t *testing.T) {
 			v := &loopingVendor{loops: 1, letGo: make(chan bool, 4)}
 			gw := deepseekOn(t, v)
 			got := askStream(t, gw+x.path, x.body)
-			if !strings.Contains(got, x.done) || strings.Contains(got, "magpie ended this reply") || !strings.Contains(got, "parse() now takes .toml") {
+			if !strings.Contains(got, x.done) || strings.Contains(got, "chongyun ended this reply") || !strings.Contains(got, "parse() now takes .toml") {
 				t.Fatalf("the reply asked again didn't end whole:\n%s", got[max(len(got)-1500, 0):])
 			}
 			if !strings.Contains(got, "Producing") || !strings.Contains(got, "a case for .toml in parse()") {
@@ -622,7 +622,7 @@ func TestLongReplyThatDoesNotLoopGoesThrough(t *testing.T) {
 			v := &loopingVendor{reasoning: string(src), letGo: make(chan bool, 4)}
 			gw := deepseekOn(t, v)
 			got := askStream(t, gw+x.path, x.body)
-			if !strings.Contains(got, x.done) || strings.Contains(got, "magpie ended this reply") || !strings.Contains(got, "parse() now takes .toml") {
+			if !strings.Contains(got, x.done) || strings.Contains(got, "chongyun ended this reply") || !strings.Contains(got, "parse() now takes .toml") {
 				t.Fatalf("the reply didn't go through whole:\n%s", got[max(len(got)-1500, 0):])
 			}
 			if letGo := <-v.letGo; letGo {
@@ -641,7 +641,7 @@ func TestLoopGuardOff(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := askStream(t, gw+"/v1/chat/completions", loopAsks[0].body)
-	if !strings.Contains(got, "data: [DONE]") || strings.Contains(got, "magpie ended this reply") {
+	if !strings.Contains(got, "data: [DONE]") || strings.Contains(got, "chongyun ended this reply") {
 		t.Fatalf("the loop was cut with the guard off:\n%s", got[max(len(got)-800, 0):])
 	}
 	if letGo := <-v.letGo; letGo || v.sent.Load() != 3000 {

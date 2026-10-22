@@ -21,9 +21,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // traceKeep is how many requests the trace keeps.
@@ -686,7 +686,7 @@ func (t *trace) update(r *Route, f func(r *Route)) {
 // or tunnel on this computer isn't local, nor is a LAN one while shared.
 func (s *Server) gatewayTrace(w http.ResponseWriter, r *http.Request) {
 	if !local(r) {
-		writeError(w, provider.Chat, http.StatusForbidden, "magpie's routing is told to this computer alone")
+		writeError(w, provider.Chat, http.StatusForbidden, "chongyun's routing is told to this computer alone")
 		return
 	}
 	if refuseHeld(w, r, heldRefused) {

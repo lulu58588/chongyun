@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // Project is a folder of the user's whose agents get some of the library's
@@ -91,8 +91,8 @@ func (l *Library) project(dir string) *Project {
 
 // The .gitignore lines magpie keeps between these two, and only there.
 const (
-	ignoreBegin = "# >>> magpie: library skills placed here (magpie adds and removes these lines) >>>"
-	ignoreEnd   = "# <<< magpie <<<"
+	ignoreBegin = "# >>> chongyun: library skills placed here (chongyun adds and removes these lines) >>>"
+	ignoreEnd   = "# <<< chongyun <<<"
 )
 
 // syncProjects places the library's skills in every project as it says.
@@ -150,7 +150,7 @@ func (l *Library) syncProject(p *Project, res *Result) {
 		case err == nil:
 			placed = append(placed, e)
 		case errors.Is(err, errForeign):
-			fail(name, fmt.Errorf("%s is in the project already and isn't magpie's: it's left as it is", e))
+			fail(name, fmt.Errorf("%s is in the project already and isn't chongyun's: it's left as it is", e))
 		default:
 			fail(name, err)
 			if ours(filepath.Join(p.Dir, filepath.FromSlash(e)), name) {
@@ -169,7 +169,7 @@ func (l *Library) syncProject(p *Project, res *Result) {
 	p.tidy()
 }
 
-var errForeign = errors.New("not magpie's")
+var errForeign = errors.New("not chongyun's")
 
 // place puts a skill at e in the project: a link to the library's, or a
 // copy made again whenever the library's differs from it.
@@ -412,7 +412,7 @@ func ProjectSkill(dir, name string, agents []string) (*Result, error) {
 		var ids []string
 		for _, id := range agents {
 			if ProjectSkillsDir(id) == "" {
-				return fmt.Errorf("magpie knows of no folder %s reads a project's skills from", id)
+				return fmt.Errorf("chongyun knows of no folder %s reads a project's skills from", id)
 			}
 			ids = set(ids, id, true)
 		}

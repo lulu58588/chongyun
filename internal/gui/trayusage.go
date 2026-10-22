@@ -11,10 +11,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/fx"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/fx"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // Settings → Allowances in the menu bar: the windows of the subscriptions and
@@ -238,7 +238,7 @@ func trayTotalCard(id string, t usage.Totals, currency string, rate float64) pro
 		when = "Last 7 days"
 	}
 	rows := []string{"Σ" + trayCount(t.Tokens()+t.CacheRead+t.CacheWrite)}
-	tip := when + " in magpie\n" + trayTokens(t)
+	tip := when + " in chongyun\n" + trayTokens(t)
 	if t.Cost > 0 {
 		c := usage.FormatCost(t.Cost, currency, rate)
 		if t.Unpriced > 0 {
@@ -286,12 +286,12 @@ func trayTokens(t usage.Totals) string {
 
 // trayIdleTip is the tooltip while the menu bar shows no cards: magpie's
 // name over what went through it today, as the panel's Usage tab counts it
-// (ylorn on Discord: a Linux bar's tooltip said only "magpie"): every
+// (ylorn on Discord: a Linux bar's tooltip said only "chongyun"): every
 // token, split into input, output and cache as the usage:today card's
 // tooltip does (NextCommit on Discord), then the cost and the requests.
 func trayIdleTip(t usage.Totals, currency string, rate float64) string {
 	if t.Calls == 0 {
-		return "magpie\nToday: no requests yet"
+		return "chongyun\nToday: no requests yet"
 	}
 	line := "Today: " + trayTokens(t) + "\n"
 	if t.Cost > 0 {
@@ -305,7 +305,7 @@ func trayIdleTip(t usage.Totals, currency string, rate float64) string {
 	if t.Calls == 1 {
 		n = "request"
 	}
-	return fmt.Sprintf("magpie\n%s%d %s", line, t.Calls, n)
+	return fmt.Sprintf("chongyun\n%s%d %s", line, t.Calls, n)
 }
 
 // trayCount is a count as the Usage page says it in English: 133M, 1.2M,

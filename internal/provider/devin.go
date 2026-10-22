@@ -31,10 +31,10 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // DevinExecutable finds the devin CLI; a var so tests can fake it.
@@ -628,9 +628,9 @@ func DevinAuthAt(home string) (key, server string, err error) {
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			if home != "" {
-				return "", "", errors.New("this Devin account's sign-in is gone; add it again in magpie")
+				return "", "", errors.New("this Devin account's sign-in is gone; add it again in chongyun")
 			}
-			return "", "", errors.New("Devin isn't signed in; sign in from magpie's Providers page or run `devin auth login`")
+			return "", "", errors.New("Devin isn't signed in; sign in from chongyun's Providers page or run `devin auth login`")
 		}
 		return "", "", err
 	}

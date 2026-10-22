@@ -11,8 +11,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 func TestLodyLink(t *testing.T) {
@@ -34,7 +34,7 @@ func TestLodyLink(t *testing.T) {
 				t.Fatal(err)
 			}
 			want := map[string]any{
-				"kind": "custom", "id": "magpie", "name": "Magpie",
+				"kind": "custom", "id": "chongyun", "name": "Chongyun",
 				"auth": map[string]any{"method": "apiKey", "apiKey": "magpie-lody"},
 				"endpoints": []any{
 					map[string]any{"protocol": "anthropic-messages", "baseUrl": base, "targets": []any{"claude-code"}, "modelsUrl": base + "/v1/models"},

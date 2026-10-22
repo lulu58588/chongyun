@@ -15,8 +15,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // agentCLI is a CLI a subscription runs through: how to find it, and the
@@ -190,7 +190,7 @@ func installCLI(ctx context.Context, c agentCLI) error {
 		}
 		return errorf("installing %s failed (%s); install it yourself with `%s`, then sign in again", c.Name, msg, manual)
 	}
-	return errorf("the %s installer finished, but magpie can't find it; install it yourself with `%s`, then sign in again", c.Name, manual)
+	return errorf("the %s installer finished, but chongyun can't find it; install it yourself with `%s`, then sign in again", c.Name, manual)
 }
 
 // lastLine is the last line of a command's output with something on it,

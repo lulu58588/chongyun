@@ -31,11 +31,11 @@ func init() {
 		return
 	}
 	app := application.New(application.Options{
-		Name: "magpie window up regression",
+		Name: "chongyun window up regression",
 		Mac:  application.MacOptions{ActivationPolicy: application.ActivationPolicyAccessory},
 		Assets: application.AssetOptions{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "text/html")
-			fmt.Fprint(w, `<p>magpie</p>`)
+			fmt.Fprint(w, `<p>chongyun</p>`)
 		})},
 	})
 	h := &host{app: app}
@@ -91,7 +91,7 @@ func init() {
 			// shows the window again: the hide and the check are one step on
 			// the main thread, and a hide undone that way is done again.
 			var hiddenUp bool
-			waitFor("magpie is hidden", func() bool {
+			waitFor("chongyun is hidden", func() bool {
 				if windowOpen(h.main) {
 					app.Hide()
 				}
@@ -99,10 +99,10 @@ func init() {
 				return !windowOpen(h.main)
 			})
 			if !hiddenUp {
-				fail("hidden with magpie: the window counts as up=false, want true")
+				fail("hidden with chongyun: the window counts as up=false, want true")
 			}
 			application.InvokeSync(app.Show)
-			waitFor("magpie is shown again", func() bool { return windowOpen(h.main) })
+			waitFor("chongyun is shown again", func() bool { return windowOpen(h.main) })
 
 			// minimised
 			application.InvokeSync(func() { h.main.Minimise() })
@@ -119,7 +119,7 @@ func init() {
 			// closed, then magpie hidden: still closed
 			application.InvokeSync(app.Hide)
 			time.Sleep(300 * time.Millisecond)
-			expect("closed, magpie hidden", false)
+			expect("closed, chongyun hidden", false)
 			application.InvokeSync(app.Show)
 
 			fmt.Println("window up: ok")

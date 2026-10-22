@@ -9,7 +9,7 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #2077: a magpie that uses another computer's (a Remote magpie provider)
@@ -47,7 +47,7 @@ func TestRemoteMagpieRestsTheModel(t *testing.T) {
 	}
 	remote := httptest.NewServer(New().Handler())
 	t.Cleanup(remote.Close)
-	id, err := provider.Add(provider.Provider{ID: "office", Name: "Remote magpie", Preset: provider.RemoteMagpiePreset, Chat: strings.TrimPrefix(remote.URL, "http://")})
+	id, err := provider.Add(provider.Provider{ID: "office", Name: "Remote chongyun", Preset: provider.RemoteMagpiePreset, Chat: strings.TrimPrefix(remote.URL, "http://")})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,7 +86,7 @@ func TestRemoteMagpieKeyLimitRestsTheKey(t *testing.T) {
 	c := candidate{p: provider.Provider{ID: "office", Preset: provider.RemoteMagpiePreset, Key: "k"}, model: "cc/claude-opus-5-5", rest: "office"}
 	h := http.Header{}
 	if !remoteModelRest(c, failQuota, h) {
-		t.Error("a quota refusal from the other magpie rests the key, not the model")
+		t.Error("a quota refusal from the other chongyun rests the key, not the model")
 	}
 	h.Set(remoteKeyLimitHeader, "2026-10-15T00:00:00Z")
 	if remoteModelRest(c, failQuota, h) || remoteModelRest(c, failRate, h) {
@@ -94,6 +94,6 @@ func TestRemoteMagpieKeyLimitRestsTheKey(t *testing.T) {
 	}
 	c.p.Preset = ""
 	if remoteModelRest(c, failQuota, http.Header{}) {
-		t.Error("a provider that isn't a remote magpie rests the model on a quota refusal")
+		t.Error("a provider that isn't a remote chongyun rests the model on a quota refusal")
 	}
 }

@@ -7,7 +7,7 @@ package provider
 // before this only the gateway's log said so; a reset gone from the card
 // read the same whether magpie spent it, the user did, or it ran out. Each
 // use is kept in codex-resets-used.json, by account, and shown on the
-// account's card and by `magpie quota auto-reset`.
+// account's card and by `chongyun quota auto-reset`.
 
 import (
 	"encoding/json"
@@ -20,9 +20,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/filelock"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/steady"
+	"github.com/lulu58588/magpie/internal/filelock"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/steady"
 )
 
 // Why a reset was used: by itself as the account's week was used up and no
@@ -45,7 +45,7 @@ type ResetUse struct {
 
 var (
 	// resetsUsedKeep is how long a use is kept, and resetsUsedMost how many
-	// at most: enough to answer "did magpie use one?" a while later
+	// at most: enough to answer "did chongyun use one?" a while later
 	resetsUsedKeep = 90 * 24 * time.Hour
 	resetsUsedMost = 200
 	// resetsUsedShown is how many of an account's uses its card gets

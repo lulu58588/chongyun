@@ -8,14 +8,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // An agent in a WSL distro under NAT reaches the gateway at Windows'
 // address, where gateway.Token is turned away (whqtian on Discord: OpenCode
-// in WSL was written "apiKey": "magpie" and refused). Every agent's config
+// in WSL was written "apiKey": "chongyun" and refused). Every agent's config
 // carries the LAN sharing key there while sharing is on, and gateway.Token on
 // loopback, or while nothing is shared.
 func TestGatewayKeyBeyondLoopback(t *testing.T) {
@@ -69,10 +69,10 @@ func TestGatewayKeyBeyondLoopback(t *testing.T) {
 		t.Errorf("Qoder on loopback: key %q", k)
 	}
 	if !ourKey(lan) || !ourKey(gateway.Token) || ourKey("sk-someone-else") || ourKey("") {
-		t.Error("ourKey tells magpie's keys from others wrongly")
+		t.Error("ourKey tells chongyun's keys from others wrongly")
 	}
 	if !qoderKeyed(lan, "qoder") {
-		t.Error("a Qoder given the LAN key isn't seen as on magpie")
+		t.Error("a Qoder given the LAN key isn't seen as on chongyun")
 	}
 
 	if err := access.ConfigureLAN(false, false); err != nil {
@@ -134,7 +134,7 @@ func TestT3CodeKeyBeyondLoopback(t *testing.T) {
 // Air's and OpenChamber's OpenCode provider block carries the key for the
 // gateway's address, and each row's Check compares against it: beyond
 // loopback, the LAN sharing key. Against gateway.Token there, the rows said
-// "magpie's gateway won't take its requests" of the config Sync had just
+// "chongyun's gateway won't take its requests" of the config Sync had just
 // written and the gateway does take (#1647, ggbdpq).
 func TestAirAndOpenChamberChecksTakeTheKeyForTheGateway(t *testing.T) {
 	home, _ := codexHome(t, "", "")
@@ -245,7 +245,7 @@ func TestPinnedGatewayKeyForEveryWriter(t *testing.T) {
 			t.Errorf("%s at %s: key %q, want the LAN sharing key", agent, gw, k)
 		}
 		if plain[agent] == lan || !strings.HasPrefix(plain[agent], gateway.Token) {
-			t.Errorf("%s with nothing shared: key %q, want magpie's own", agent, plain[agent])
+			t.Errorf("%s with nothing shared: key %q, want chongyun's own", agent, plain[agent])
 		}
 	}
 }

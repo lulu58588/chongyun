@@ -11,9 +11,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func drawingRelay(t *testing.T, id string, imageIDs ...string) *easel {
@@ -65,7 +65,7 @@ func drawingMainTurn(t *testing.T, s *Server, model, session, turn, kind, token 
 
 func drawingToolCall(t *testing.T, s *Server, path, model, session, turn, token string) (int, imagesAnswer, string) {
 	t.Helper()
-	body := map[string]any{"model": model, "prompt": "a magpie"}
+	body := map[string]any{"model": model, "prompt": "a chongyun"}
 	if path == "/v1/images/edits" {
 		body["image"] = "data:image/png;base64," + base64.StdEncoding.EncodeToString(pngBytes)
 	}

@@ -25,8 +25,8 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 const agyModels = "customModelsConfig.customModels"
@@ -125,7 +125,7 @@ func agy(home string) *Agent {
 				return ""
 			}
 			if _, ok := agyCustom(path)[v]; !ok {
-				return "Antigravity CLI's custom model " + v + " (settings.json) is gone, so it no longer reaches magpie"
+				return "Antigravity CLI's custom model " + v + " (settings.json) is gone, so it no longer reaches chongyun"
 			}
 			if p := provider(); p != "gemini" {
 				return "Antigravity CLI's modelProvider (settings.json) is " + orDefault(p) + ", not gemini, so it asks Google directly"
@@ -189,4 +189,4 @@ func agy(home string) *Agent {
 }
 
 // what agy says after a change (notice.go)
-var noticeAgy = newNotice("agy takes magpie's gateway and model only from how it is started — start it with {command}")
+var noticeAgy = newNotice("agy takes chongyun's gateway and model only from how it is started — start it with {command}")

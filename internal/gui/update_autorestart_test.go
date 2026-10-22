@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // #2096: with Settings' AutoRestart on, a downloaded update is restarted

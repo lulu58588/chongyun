@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // an ask that couldn't tell leaves the account served, on disk too, where

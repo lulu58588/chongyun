@@ -36,8 +36,8 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 const codexKeychainService = "Codex Auth"
@@ -83,8 +83,8 @@ var (
 	// exit 128) for Cancel (Security.framework's SecBase.h)
 	errKeychainRefused  = errors.New("macOS's keychain prompt was denied or cancelled")
 	errKeychainNoAnswer = errors.New("macOS's keychain prompt got no answer in time")
-	errKeychainWaiting  = errors.New("magpie is waiting for an answer to macOS's keychain prompt")
-	errKeychainUnread   = errors.New("the keychain didn't give it to magpie")
+	errKeychainWaiting  = errors.New("chongyun is waiting for an answer to macOS's keychain prompt")
+	errKeychainUnread   = errors.New("the keychain didn't give it to chongyun")
 )
 
 // securityKeychain is macOS' `security`, as readClaudeKeychainItem and
@@ -256,7 +256,7 @@ func (e *codexStoreError) Error() string {
 	if e.Cause != nil {
 		return fmt.Sprintf("Codex keeps its sign-in in %s (cli_auth_credentials_store = %q in %s), and %v", e.Setting.where(), e.Setting.Mode, e.Config, e.Cause)
 	}
-	return fmt.Sprintf("Codex keeps its sign-in in %s (cli_auth_credentials_store = %q in %s), which magpie doesn't read", e.Setting.where(), e.Setting.Mode, e.Config)
+	return fmt.Sprintf("Codex keeps its sign-in in %s (cli_auth_credentials_store = %q in %s), which chongyun doesn't read", e.Setting.where(), e.Setting.Mode, e.Config)
 }
 
 // codexStore is where a Codex sign-in was read from, so that a refresh
@@ -420,7 +420,7 @@ func (a *codexKeychainAsk) run(account string, k keychain, gen uint64) {
 		if err == nil {
 			var obj map[string]json.RawMessage
 			if json.Unmarshal(b, &obj) != nil || obj == nil {
-				b, err = nil, errors.New("the keychain item isn't a Codex sign-in magpie can read")
+				b, err = nil, errors.New("the keychain item isn't a Codex sign-in chongyun can read")
 			}
 		}
 	}

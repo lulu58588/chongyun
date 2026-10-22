@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // tavilyUsageDoc is GET /usage's 200 reply as Tavily's API reference

@@ -12,7 +12,7 @@ import (
 
 	"github.com/klauspost/compress/zstd"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // zstdTurns sends turns to the ChatGPT backend compressed, as the gateway
@@ -83,7 +83,7 @@ func turnsBackend(t *testing.T, drop int) (*[]sentTurn, *sync.Mutex) {
 
 // textTurn is ylorn's turn: text alone, about n bytes of it, no image.
 func textTurn(n int) string {
-	line := "The quick brown fox jumps over the lazy dog while magpie relays this text-only request. "
+	line := "The quick brown fox jumps over the lazy dog while chongyun relays this text-only request. "
 	b, _ := json.Marshal(map[string]any{"model": "gpt-6-luna", "stream": true, "input": []any{
 		map[string]any{"type": "message", "role": "user", "content": []any{
 			map[string]any{"type": "input_text", "text": strings.Repeat(line, n/len(line)+1)[:n]}}}}})

@@ -29,7 +29,7 @@ func fake(t *testing.T) (*fakeSystem, string) {
 	}
 	register = func(exe string) { f.paths = append(f.paths, exe) }
 	registered = func() bool { return f.before }
-	return f, filepath.Join(dir, "magpie", StateName)
+	return f, filepath.Join(dir, "chongyun", StateName)
 }
 
 func exists(p string) bool { _, err := os.Stat(p); return err == nil }
@@ -97,7 +97,7 @@ func TestEnsureAfterOlderMagpie(t *testing.T) {
 func TestEnsurePortable(t *testing.T) {
 	f, state := fake(t)
 	for i := 0; i < 2; i++ {
-		if err := ensure(`E:\Magpie\magpie.exe`, `E:\Magpie\data`, state); err != nil {
+		if err := ensure(`E:\Chongyun\magpie.exe`, `E:\Chongyun\data`, state); err != nil {
 			t.Fatal(err)
 		}
 	}

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // fakeRTK is an rtk on PATH that acts as rtk 0.50's installer does for
@@ -462,7 +462,7 @@ func TestRTKGainRead(t *testing.T) {
 		t.Fatalf("failed: gain %+v, err %q", v.Gain, v.GainErr)
 	}
 	gain(`echo 'No tracking data yet.'; exit 0`)
-	if v := ReadRTK(); v.Gain != nil || v.GainErr != "rtk gain printed no summary magpie can read: No tracking data yet." {
+	if v := ReadRTK(); v.Gain != nil || v.GainErr != "rtk gain printed no summary chongyun can read: No tracking data yet." {
 		t.Fatalf("not JSON: gain %+v, err %q", v.Gain, v.GainErr)
 	}
 }
@@ -515,7 +515,7 @@ func TestRTKNoHookListed(t *testing.T) {
 		t.Fatalf("switched on: %v", err)
 	}
 	if _, err := RTKTakes("dsh"); err == nil || !strings.Contains(err.Error(), "rewriting the shell command") {
-		t.Fatalf("magpie library rtk on dsh: %v", err)
+		t.Fatalf("chongyun library rtk on dsh: %v", err)
 	}
 }
 
@@ -628,7 +628,7 @@ func TestRTKNoHookGrokApp(t *testing.T) {
 		t.Fatalf("switched on: %v", err)
 	}
 	if _, err := RTKTakes("grok-app"); err == nil || !strings.Contains(err.Error(), "no Grok or Grok App agent") {
-		t.Fatalf("magpie library rtk on grok-app: %v", err)
+		t.Fatalf("chongyun library rtk on grok-app: %v", err)
 	}
 }
 
@@ -653,6 +653,6 @@ func TestRTKNoHookGrokBuild(t *testing.T) {
 		t.Fatalf("switched on: %v", err)
 	}
 	if _, err := RTKTakes("grok"); err == nil || !strings.Contains(err.Error(), "no Grok agent") {
-		t.Fatalf("magpie library rtk on grok: %v", err)
+		t.Fatalf("chongyun library rtk on grok: %v", err)
 	}
 }

@@ -33,7 +33,7 @@ const RemoteKeyLimitPath = "/v1/magpie/limit"
 const remoteKeyCard = "~keys"
 
 // errRemoteNoKeyLimit is a remote magpie too old to tell a key its limit.
-const errRemoteNoKeyLimit = "remote magpie is too old to tell this key's limit; update magpie on that computer"
+const errRemoteNoKeyLimit = "remote chongyun is too old to tell this key's limit; update chongyun on that computer"
 
 // GatewayKeyLimit is a remote gateway key's limit as its card carries it.
 // Windows on the card show each cap; this says what they don't.
@@ -161,7 +161,7 @@ func remoteKeyCardOf(ctx context.Context, p Provider, name, key string, fresh bo
 		c.Unlock()
 	}
 	from := remoteName(p)
-	q := SubscriptionQuota{Provider: p.ID + "/" + remoteKeyCard, Name: from, Icon: "magpie", User: name, Kind: "plan", From: from, Windows: []QuotaWindow{}}
+	q := SubscriptionQuota{Provider: p.ID + "/" + remoteKeyCard, Name: from, Icon: "chongyun", User: name, Kind: "plan", From: from, Windows: []QuotaWindow{}}
 	if r.got == nil {
 		q.Error = r.err
 		return q
@@ -268,7 +268,7 @@ func askRemoteKeyLimit(ctx context.Context, p Provider, key string) (*remoteKeyA
 	if err := json.Unmarshal(b, &a); err != nil || a.Limited == nil {
 		// not the answer of a magpie's keyLimit: something else at that
 		// address, or a reply cut short
-		return nil, fmt.Errorf("%s answered its key's limit in a form magpie doesn't read", remoteName(p))
+		return nil, fmt.Errorf("%s answered its key's limit in a form chongyun doesn't read", remoteName(p))
 	}
 	return &a, nil
 }

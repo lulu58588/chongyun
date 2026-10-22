@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Whether a model an agent asks for is served here is answered from the

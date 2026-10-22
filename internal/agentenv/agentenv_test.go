@@ -49,7 +49,7 @@ func TestVarsAreRead(t *testing.T) {
 	}
 	for _, v := range Vars {
 		if !found[v] {
-			t.Errorf("%s is in Vars, but nothing outside this package reads it: magpie stopped reading it, or the name was never the one magpie reads", v)
+			t.Errorf("%s is in Vars, but nothing outside this package reads it: chongyun stopped reading it, or the name was never the one chongyun reads", v)
 		}
 	}
 }

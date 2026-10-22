@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 func TestClaudeStandIn(t *testing.T) {
@@ -67,9 +67,9 @@ func TestCodexStandIn(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	write("model = \"deepseek/deepseek-v4\"\nmodel_provider = \"magpie\"\n\n[model_providers.magpie]\nname = \"magpie\"\n")
+	write("model = \"deepseek/deepseek-v4\"\nmodel_provider = \"chongyun\"\n\n[model_providers.magpie]\nname = \"chongyun\"\n")
 	if got := StandIn("codex", "codex-auto-review"); got != "deepseek/deepseek-v4" {
-		t.Errorf("magpie as provider: %q", got)
+		t.Errorf("chongyun as provider: %q", got)
 	}
 	// the gateway knows the request as Codex's by its User-Agent
 	for _, ua := range []string{

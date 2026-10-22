@@ -5,7 +5,7 @@ package gateway
 // report of magpie using too much CPU (@LeiCheng42 on X: the most CPU of
 // anything while Codex runs). A macOS `sample` or Activity Monitor names
 // none of Go's frames, so this is the one way to see where the Go side
-// spends it; `magpie cpu` asks for it and writes the file the user sends.
+// spends it; `chongyun cpu` asks for it and writes the file the user sends.
 
 import (
 	"bytes"
@@ -20,7 +20,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // CPUPath is where the gateway answers a CPU profile.
@@ -66,7 +66,7 @@ var cpuSecond = time.Second
 // cpuRefused says why r may not have the CPU profile, "" when it may: the
 // same callers as the heap profile (heapRefused).
 func cpuRefused(r *http.Request) string {
-	return profileRefused(r, "CPU profile", "magpie cpu")
+	return profileRefused(r, "CPU profile", "chongyun cpu")
 }
 
 // cpuProfile answers CPUPath: the "cpu" profile (gzipped protobuf, as go
@@ -90,7 +90,7 @@ func (s *Server) cpuProfile(w http.ResponseWriter, r *http.Request) {
 		secs = n
 	}
 	if !cpuRecording.CompareAndSwap(false, true) {
-		writeError(w, provider.Chat, http.StatusConflict, "magpie is recording a CPU profile already: wait for that one to finish, then run magpie cpu again")
+		writeError(w, provider.Chat, http.StatusConflict, "chongyun is recording a CPU profile already: wait for that one to finish, then run chongyun cpu again")
 		return
 	}
 	defer cpuRecording.Store(false)
@@ -99,7 +99,7 @@ func (s *Server) cpuProfile(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	if err := pprof.StartCPUProfile(&buf); err != nil {
 		// another profiler of this process (a test's -cpuprofile)
-		writeError(w, provider.Chat, http.StatusConflict, "magpie couldn't start a CPU profile: "+err.Error())
+		writeError(w, provider.Chat, http.StatusConflict, "chongyun couldn't start a CPU profile: "+err.Error())
 		return
 	}
 	t := time.NewTimer(time.Duration(secs) * cpuSecond)

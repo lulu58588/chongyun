@@ -13,12 +13,12 @@ import (
 	"testing"
 
 	"github.com/klauspost/compress/zstd"
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
-// "not a magpie backup" was all a sync said whatever the server sent where
+// "not a chongyun backup" was all a sync said whatever the server sent where
 // the backup should be (JasonLeeForOnly on Discord, over several versions),
 // and nothing in magpie could get past it. Each case below is a server
 // behaving as a real one does: one that compresses though asked not to, a
@@ -183,12 +183,12 @@ func TestServerAnswerSaid(t *testing.T) {
 			[]string{"XML document", "<d:error>"}, "xml", false},
 		// a write that never landed left an empty file
 		"empty": {answer{status: 200, ctype: "application/octet-stream", body: []byte{}},
-			[]string{"is empty (0 bytes)", "magpie webdav upload"}, "empty", true},
+			[]string{"is empty (0 bytes)", "chongyun webdav upload"}, "empty", true},
 		// another app's file at the same path
 		"other app": {answer{status: 200, ctype: "application/octet-stream", body: []byte(`{"format":"cc-switch-backup","version":3,"data":"..."}`)},
 			[]string{`"cc-switch-backup" file`, "another app", "upload"}, "format", true},
 		"json": {answer{status: 200, ctype: "application/json", body: []byte(`[1,2,3]`)},
-			[]string{"JSON file that isn't a magpie backup (7 bytes)"}, "json", true},
+			[]string{"JSON file that isn't a chongyun backup (7 bytes)"}, "json", true},
 		"zip": {answer{status: 200, ctype: "application/octet-stream", body: append([]byte("PK\x03\x04"), make([]byte, 40)...)},
 			[]string{"application/zip (44 bytes)"}, "other", true},
 	}

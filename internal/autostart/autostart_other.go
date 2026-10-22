@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 func record() string {
@@ -44,7 +44,7 @@ func enable(exe string) error {
 	}
 	// the Exec key's quoting: in double quotes, \ " ` $ escaped
 	q := strings.NewReplacer(`\`, `\\`, `"`, `\"`, "`", "\\`", `$`, `\$`).Replace(exe)
-	body := "[Desktop Entry]\nType=Application\nName=magpie\nComment=one place to pick every agent's model\n" +
+	body := "[Desktop Entry]\nType=Application\nName=chongyun\nComment=one place to pick every agent's model\n" +
 		"Exec=\"" + q + "\" " + Arg + "\nTerminal=false\nX-GNOME-Autostart-enabled=true\n"
 	return edit.WriteAtomic(p, []byte(body))
 }

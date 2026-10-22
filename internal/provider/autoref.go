@@ -28,7 +28,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // AutoPrefix starts the id agents are given for a group magpie found:
@@ -40,7 +40,7 @@ const autoID = "auto"
 
 // errAutoID refuses "auto" as a new provider's id: auto/<model> names the
 // groups magpie finds.
-var errAutoID = errors.New(`"auto" starts the ids of the groups magpie finds (auto/<model>); pick another id`)
+var errAutoID = errors.New(`"auto" starts the ids of the groups chongyun finds (auto/<model>); pick another id`)
 
 // autoRefsOn reports whether auto/<model> names found groups: unless the
 // user has a provider of their own with the id "auto", saved before the

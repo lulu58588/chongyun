@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // What the user adds by hand to the model list magpie writes for Codex
@@ -57,10 +57,10 @@ func TestCodexCatalogKeepsWhatTheUserAdded(t *testing.T) {
 			t.Errorf("%s: the user's keys are gone: %v %v", when, m1["supports_reasoning_summaries"], m1["default_reasoning_summary"])
 		}
 		if _, ok := m1["multi_agent_version"]; ok {
-			t.Errorf("%s: a version magpie no longer writes stayed", when)
+			t.Errorf("%s: a version chongyun no longer writes stayed", when)
 		}
 		if m1["base_instructions"] == nil || m1["supports_parallel_tool_calls"] != true {
-			t.Errorf("%s: magpie's own keys are gone", when)
+			t.Errorf("%s: chongyun's own keys are gone", when)
 		}
 	}
 
@@ -108,6 +108,6 @@ func TestCodexCatalogRemovedWhenNothingAdded(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(list); err == nil {
-		t.Error("magpie's list stayed after it stepped out")
+		t.Error("chongyun's list stayed after it stepped out")
 	}
 }

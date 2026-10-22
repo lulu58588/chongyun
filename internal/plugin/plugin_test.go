@@ -18,8 +18,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // sandbox gives the test its own magpie folders and the Bun on PATH; a
@@ -492,7 +492,7 @@ func TestPluginsChangedElsewhere(t *testing.T) {
 	}
 
 	if !slices.ContainsFunc(Cached(), func(p Provider) bool { return p.ID == "elsewhere" }) {
-		t.Fatalf("the other magpie's providers unknown: %+v", Cached())
+		t.Fatalf("the other chongyun's providers unknown: %+v", Cached())
 	}
 	if _, err := Providers(ctx); err != nil {
 		t.Fatal(err)

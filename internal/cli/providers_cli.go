@@ -15,117 +15,116 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/stats"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 var amber = lipgloss.NewStyle().Foreground(lipgloss.AdaptiveColor{Light: "#B45309", Dark: "#F2B544"})
 
 const providerUsage = `usage:
-  magpie providers                        list providers, keys and who uses them
-  magpie presets                          list the vendors magpie knows out of the box
-  magpie provider <id>                    show one provider and its models
-  magpie provider add <preset> <key>      add a preset vendor   e.g. magpie provider add deepseek sk-…
+  chongyun providers                        list providers, keys and who uses them
+  chongyun presets                          list the vendors chongyun knows out of the box
+  chongyun provider <id>                    show one provider and its models
+  chongyun provider add <preset> <key>      add a preset vendor   e.g. chongyun provider add deepseek sk-…
                                           again, it adds another (deepseek-2); k=v pairs too: id, name, header.X-Foo
-  magpie provider add <name> k=v…         add a custom vendor   k: url, anthropic, responses, gemini, decide, key, models, catalog, icon, header.X-Foo, balance, balance.path, balance.method, balance.token, models.url, search, user-agent,
+  chongyun provider add <name> k=v…         add a custom vendor   k: url, anthropic, responses, gemini, decide, key, models, catalog, icon, header.X-Foo, balance, balance.path, balance.method, balance.token, models.url, search, user-agent,
                                           access.key, access.secret (a Volcengine access key, or a Tencent Cloud SecretId and SecretKey, for its plan's windows)
-  magpie provider set <id> k=v…           change a provider's settings, with the same k=v pairs as add;
+  chongyun provider set <id> k=v…           change a provider's settings, with the same k=v pairs as add;
                                           codex=as-sent sends Codex's Responses requests as Codex sent them
                                           (a relay that checks they are Codex's own), codex=default fits them;
                                           user-agent=agent sends the User-Agent the agent gave (pi, opencode…)
-                                          in place of magpie's, for a plan that serves only agents it names;
-                                          user-agent=magpie, the default, sends magpie's;
+                                          in place of chongyun's, for a plan that serves only agents it names;
+                                          user-agent=chongyun, the default, sends chongyun's;
                                           compaction=native asks the provider Codex's own compaction and hands
                                           Codex its sealed item as it came (a Responses API, a ChatGPT account,
-                                          Copilot), compaction=magpie, the default, has magpie summarise
+                                          Copilot), compaction=chongyun, the default, has chongyun summarise
                                           additional-tools=on sends a tool Claude Code's tool search loads to its
                                           Responses API where it was loaded (an additional_tools item, which
                                           keeps the cache); additional-tools=default puts it with the other tools
-  magpie provider key <id> <key>          change the API key
-  magpie provider icon <id> <file|name>   give a custom provider a picture (PNG, JPEG, SVG…) or a built-in icon
-  magpie provider fallback <id> <provider/model>…   where requests go when it's out of quota or down (none clears)
-  magpie provider models <id> [ids…]      fetch the vendor's model list, or choose which models to expose:
+  chongyun provider key <id> <key>          change the API key
+  chongyun provider icon <id> <file|name>   give a custom provider a picture (PNG, JPEG, SVG…) or a built-in icon
+  chongyun provider fallback <id> <provider/model>…   where requests go when it's out of quota or down (none clears)
+  chongyun provider models <id> [ids…]      fetch the vendor's model list, or choose which models to expose:
                                           ids… replace the list, +id adds one, -id takes one out, all: the default,
                                           none: serve none of them, its balance and usage still shown
-  magpie provider refresh <id>            fetch the vendor's model list again (as the app's Fetch models)
-  magpie provider refresh-every <id> [6h|1d|off]
-                                          have the gateway (magpie serve, the app) fetch the list again by itself
+  chongyun provider refresh <id>            fetch the vendor's model list again (as the app's Fetch models)
+  chongyun provider refresh-every <id> [6h|1d|off]
+                                          have the gateway (chongyun serve, the app) fetch the list again by itself
                                           once it is that old (at least 10m; off: only when asked)
-  magpie provider auto-include <id> [rule…|none]
+  chongyun provider auto-include <id> [rule…|none]
                                           rules over a model's id (a glob with *, e.g. 'gpt-*' '*claude*', or
                                           're:…' a regular expression): the listed models one matches are exposed
                                           now, and each one a later fetch newly lists; picks are only added to
-  magpie provider account-models <id> [account|key [ids…|all]]
+  chongyun provider account-models <id> [account|key [ids…|all]]
                                           the models one account or key alone serves; all: every model the provider has
-  magpie provider account-cap <id> [account [percent|off]]
+  chongyun provider account-cap <id> [account [percent|off]]
                                           use a subscription account up to a share of each usage window (e.g. 70):
                                           at it, routing takes the account for used up until the window renews
-  magpie provider account-cap <id> <account> --window <name> [percent|none|default]
+  chongyun provider account-cap <id> <account> --window <name> [percent|none|default]
                                           a share for one window alone (e.g. "5 hours" 50): none is no cap on it,
                                           default has it follow the account's cap
-  magpie provider account-concurrency <id> [account|key [n|off|default]]
+  chongyun provider account-concurrency <id> [account|key [n|off|default]]
                                           how many requests one account or key has out at once, over every model,
                                           routing group and agent: its own, off for none, default for the provider's
-  magpie provider queue <id> [length [seconds]]
+  chongyun provider queue <id> [length [seconds]]
                                           how many may wait for each account or key past its limit, and how long;
                                           past either a request is turned away with a 429 (0: no bound)
-  magpie provider rpm <id> [n|off]        how many requests each account or key sends the vendor in any minute;
+  chongyun provider rpm <id> [n|off]        how many requests each account or key sends the vendor in any minute;
                                           one more waits for room, up to 2 minutes, then is turned away with a 429
-  magpie provider quota-rest <id> [30m|6h|7d|until 08:00|until 00:00+08:00|default]
+  chongyun provider quota-rest <id> [30m|6h|7d|until 08:00|until 00:00+08:00|default]
                                           how long a key sits out once the vendor says it is out of its allowance
                                           without saying when it is back (default: 15 minutes; at most 8 days),
                                           or until the time of day a daily allowance comes back, on this
                                           computer's clock or at the vendor's offset from UTC
-  magpie provider rest-cap <id> [1m|30m|6h|1d|off|default]
+  chongyun provider rest-cap <id> [1m|30m|6h|1d|off|default]
                                           the most a key or account sits out while it keeps failing or being
                                           rate limited, its rest doubling each time from a minute (default:
                                           10 minutes for a failure, 30 for a rate limit; at most 8 days);
                                           off: one that fails without saying why (a relay's 5xx) doesn't
                                           rest at all, while out of quota, its key refused or rate limited
                                           still rests it
-  magpie provider listed <id> yes|no      no: its models serve only through routing groups, not in the list
-  magpie provider off|on <id>             switch it off (kept, but no agent or request uses it), or on again
-  magpie provider test <id> [--as codex|claude-code] [model…]
+  chongyun provider listed <id> yes|no      no: its models serve only through routing groups, not in the list
+  chongyun provider off|on <id>             switch it off (kept, but no agent or request uses it), or on again
+  chongyun provider test <id> [--as codex|claude-code] [model…]
                                           send a tiny request through each endpoint, or to each model;
                                           --as asks it as that agent does, for a relay that serves only it
-  magpie provider rm <id>                 remove a provider
+  chongyun provider rm <id>                 remove a provider
 
-  e.g. magpie provider add "My Relay" url=https://relay.example.com/v1 key=sk-…
-       magpie provider add "Own Claude" anthropic=https://gw.example.com key=sk-… catalog=anthropic
-       magpie provider add "My Relay" url=https://relay.example.com/v1 key=sk-… header.X-Org-Id=acme
-       magpie provider add remote-magpie sk-magpie-… url=http://192.168.1.20:3425 id=office
-                                   (another computer's magpie, shared on its network: its models and routing
+  e.g. chongyun provider add "My Relay" url=https://relay.example.com/v1 key=sk-…
+       chongyun provider add "Own Claude" anthropic=https://gw.example.com key=sk-… catalog=anthropic
+       chongyun provider add "My Relay" url=https://relay.example.com/v1 key=sk-… header.X-Org-Id=acme
+       chongyun provider add remote-magpie sk-magpie-… url=http://192.168.1.20:3425 id=office
+                                   (another computer's chongyun, shared on its network: its models and routing
                                     groups as office/…, each request sent on in the API the agent spoke)
-       magpie provider add bailian-decision sk-… workspace=<workspace id>   (or region=ap-southeast-1, or region=token-plan with an sk-sp- key)
-       magpie provider add bailian-token-plan sk-sp-…   (Bailian's Token Plan: its chat models, and its decision model for routing groups;
+       chongyun provider add bailian-decision sk-… workspace=<workspace id>   (or region=ap-southeast-1, or region=token-plan with an sk-sp- key)
+       chongyun provider add bailian-token-plan sk-sp-…   (Bailian's Token Plan: its chat models, and its decision model for routing groups;
                                     qwen-token-plan is the Qwen AI platform's, qwen-decision its pay-as-you-go decision model)
-       magpie provider add google-vertex project=my-project impersonate=vertex@my-project.iam.gserviceaccount.com
+       chongyun provider add google-vertex project=my-project impersonate=vertex@my-project.iam.gserviceaccount.com
                                    (Google Vertex AI in your Google Cloud project, with no key: signed with gcloud's
                                     Application Default Credentials (gcloud auth application-default login) unless
                                     credentials=<file> names another, a service account key too; impersonate= needs
                                     roles/iam.serviceAccountTokenCreator on that account; location= global (the
                                     default), us, eu or a region such as us-central1; set changes them, empty clears)
-       magpie provider add "My Decider" decide=https://decide.example.com/v1 key=sk-… models=my-decision-model
+       chongyun provider add "My Decider" decide=https://decide.example.com/v1 key=sk-… models=my-decision-model
                                    (a System One API, POST …/systemone: it routes groups, its models are never an agent's)
-       magpie provider add anthropic sk-… id=anthropic-ws2 name="Anthropic WS2" header.anthropic-workspace-id=wrkspc_…
-       magpie provider set my-relay models.url=https://relay.example.com/api/models catalog=
-       magpie provider set my-relay search=yes
+       chongyun provider add anthropic sk-… id=anthropic-ws2 name="Anthropic WS2" header.anthropic-workspace-id=wrkspc_…
+       chongyun provider set my-relay models.url=https://relay.example.com/api/models catalog=
+       chongyun provider set my-relay search=yes
                                    (the relay answers Claude Code's WebSearch and Codex's web_search itself:
-                                    those go to it as sent, not through magpie's own search)
-       magpie provider add ollama url=http://192.168.1.5:11434/v1 anthropic=http://192.168.1.5:11434
+                                    those go to it as sent, not through chongyun's own search)
+       chongyun provider add ollama url=http://192.168.1.5:11434/v1 anthropic=http://192.168.1.5:11434
                                    (Ollama, LM Studio, oMLX or MLX-Serve on another port or computer)
-       magpie provider set ollama unmasked=yes
+       chongyun provider set ollama unmasked=yes
                                    (a model on this computer or the local network: Settings' redaction leaves its
                                     requests as written; not for a local relay that passes them on to a vendor)
-       magpie provider add "My Relay" url=https://relay.example.com/v1 key=sk-… balance=https://relay.example.com/api/usage/token balance.path='$data.total_available / 500000'
-       magpie provider set my-relay balance.path='(1 - credits.monthlyCredits / 70) %'
-       magpie provider set my-relay balance.method=POST
+       chongyun provider add "My Relay" url=https://relay.example.com/v1 key=sk-… balance=https://relay.example.com/api/usage/token balance.path='$data.total_available / 500000'
+       chongyun provider set my-relay balance.path='(1 - credits.monthlyCredits / 70) %'
+       chongyun provider set my-relay balance.method=POST
                                    (a balance endpoint that answers only a POST: asked with no body)
-       magpie provider set my-relay balance=https://relay.example.com/api/user/self balance.path='$data.quota / 500000' balance.token=<access token> header.New-Api-User=<user id>
+       chongyun provider set my-relay balance=https://relay.example.com/api/user/self balance.path='$data.quota / 500000' balance.token=<access token> header.New-Api-User=<user id>
                                    (a new-api relay's whole account: its access token and user id, from its personal settings)
                                    (balance.path: where the amount is in the reply, or a sum of those with + - * / and
                                     brackets; $ or ¥ in front adds the sign, % after it shows a percent of 1;
@@ -133,12 +132,12 @@ const providerUsage = `usage:
                                     a list's items are a.*.used, or a[status=active].used for those that match,
                                     in sum() max() min() count(): 'sum(a.*.used) / sum(a.*.cap) %'; one the reply
                                     hasn't shows — and the others still show)
-       magpie provider set my-relay context=272k context.gpt-6=1m
+       chongyun provider set my-relay context=272k context.gpt-6=1m
                                    (context: how long a request agents are told the models take, over what the
                                     vendor or models.dev says; context.<model> for one of them; empty clears)
-       magpie provider set opencode-go family=ocgo
-       magpie provider set my-relay id=relay   (renames it: groups and agents on my-relay/… move to relay/…)
-                                   (family: a tag for which agents are shown its models, see magpie visible)`
+       chongyun provider set opencode-go family=ocgo
+       chongyun provider set my-relay id=relay   (renames it: groups and agents on my-relay/… move to relay/…)
+                                   (family: a tag for which agents are shown its models, see chongyun visible)`
 
 // keyColumn is what magpie providers says of p's key or account.
 func keyColumn(p provider.Provider) string {
@@ -175,7 +174,7 @@ func keyColumn(p provider.Provider) string {
 // signedOut is Provider.SignedOut, for a test to stand in for.
 var signedOut = provider.Provider.SignedOut
 
-// providers: `magpie providers`
+// providers: `chongyun providers`
 func providers() error {
 	all := provider.All()
 	// a providers.json that can't be read is not "no providers yet": what
@@ -185,7 +184,7 @@ func providers() error {
 		if bad != nil {
 			return bad
 		}
-		fmt.Println(muted.Render("no providers yet ·"), "magpie provider add deepseek sk-…", muted.Render("· magpie presets lists the vendors"))
+		fmt.Println(muted.Render("no providers yet ·"), "chongyun provider add deepseek sk-…", muted.Render("· chongyun presets lists the vendors"))
 		return nil
 	}
 	uses := usesByProvider()
@@ -235,7 +234,7 @@ func providers() error {
 		}
 		back := ""
 		if x.Provider != "" {
-			back = " · magpie provider add " + x.Provider + " brings it back"
+			back = " · chongyun provider add " + x.Provider + " brings it back"
 		}
 		fmt.Println(" ", muted.Render(name+" is signed in but not offered: "+x.Why+back))
 	}
@@ -261,7 +260,7 @@ func usesByProvider() map[string][]string {
 	return out
 }
 
-// presets: `magpie presets`
+// presets: `chongyun presets`
 func presets() error {
 	have := map[string]bool{}
 	for _, p := range provider.All() {
@@ -280,18 +279,18 @@ func presets() error {
 	for _, pr := range append(all, provider.Presets()...) {
 		if pr.Kind != kind {
 			kind = pr.Kind
-			fmt.Println(faint.Render("  " + map[provider.Kind]string{provider.KindPartner: "partners (sponsors)", provider.KindVendor: "vendors", provider.KindRelay: "relays", provider.KindLocal: "local", provider.KindRemote: "another computer's magpie"}[kind]))
+			fmt.Println(faint.Render("  " + map[provider.Kind]string{provider.KindPartner: "partners (sponsors)", provider.KindVendor: "vendors", provider.KindRelay: "relays", provider.KindLocal: "local", provider.KindRemote: "another computer's chongyun"}[kind]))
 		}
 		name := bold.Render(pr.Name)
 		if pr.Sponsored && pr.Kind != provider.KindPartner {
 			name += " " + faint.Render("sponsored")
 		}
-		state := muted.Render("magpie provider add " + pr.ID + " <key>")
+		state := muted.Render("chongyun provider add " + pr.ID + " <key>")
 		if pr.NoKey {
-			state = muted.Render("magpie provider add " + pr.ID)
+			state = muted.Render("chongyun provider add " + pr.ID)
 		}
 		if pr.ID == provider.VertexPreset {
-			state = muted.Render("magpie provider add " + pr.ID + " project=<project id>")
+			state = muted.Render("chongyun provider add " + pr.ID + " project=<project id>")
 		}
 		if have[pr.ID] {
 			state = green.Render("✓ added")
@@ -301,7 +300,7 @@ func presets() error {
 	return nil
 }
 
-// models: `magpie models [<agent>]` — the catalog every agent sees, or the
+// models: `chongyun models [<agent>]` — the catalog every agent sees, or the
 // one agent is shown and what is kept from it
 func models(args []string) error {
 	entries := provider.Catalog()
@@ -321,14 +320,14 @@ func models(args []string) error {
 		entries, hidden = provider.CatalogFor(agentID)
 	}
 	if _, only := provider.PickedModels(agentID); len(entries) == 0 && agentID != "" && only {
-		fmt.Println(amber.Render("!"), agentID, "is shown none of them: it is shown only the models picked for it, and none is", muted.Render("· tick some in its list on the Agents page, or magpie visible "+agentID+" --show-new"))
+		fmt.Println(amber.Render("!"), agentID, "is shown none of them: it is shown only the models picked for it, and none is", muted.Render("· tick some in its list on the Agents page, or chongyun visible "+agentID+" --show-new"))
 	} else if len(entries) == 0 && agentID != "" {
 		names, _ := provider.VisibleTo(agentID)
-		fmt.Println(amber.Render("!"), agentID, "is shown none of them: nothing is in", strings.Join(names, ", "), muted.Render("· magpie visible "+agentID+" all shows it every model"))
+		fmt.Println(amber.Render("!"), agentID, "is shown none of them: nothing is in", strings.Join(names, ", "), muted.Render("· chongyun visible "+agentID+" all shows it every model"))
 	} else if len(entries) == 0 && bad != nil {
 		return bad
 	} else if len(entries) == 0 {
-		fmt.Println(muted.Render("no models yet · add a provider first:"), "magpie provider add deepseek sk-…")
+		fmt.Println(muted.Render("no models yet · add a provider first:"), "chongyun provider add deepseek sk-…")
 		return nil
 	}
 	w := 0
@@ -365,7 +364,7 @@ func models(args []string) error {
 		}
 		if ids, why := notExposed(p); len(ids) > 0 {
 			fmt.Println(faint.Render("  "+p.Name+": "+plural(len(ids), "more model")+" in its list, not exposed ("+why+"): ") + muted.Render(listSome(ids, 6)))
-			fmt.Println(faint.Render("    magpie provider models " + p.ID + " +<model> exposes one"))
+			fmt.Println(faint.Render("    chongyun provider models " + p.ID + " +<model> exposes one"))
 		}
 	}
 	fmt.Println(faint.Render("  " + advertisedURL() + "/v1"))
@@ -401,7 +400,7 @@ func listSome(ids []string, n int) string {
 	return strings.Join(ids, ", ")
 }
 
-// providerCmd: `magpie provider <verb> …`
+// providerCmd: `chongyun provider <verb> …`
 func providerCmd(args []string) error {
 	if len(args) < 2 {
 		return fmt.Errorf("%s", providerUsage)
@@ -413,7 +412,7 @@ func providerCmd(args []string) error {
 	case "set":
 		// the same k=v pairs as add, on a provider already here
 		if len(rest) < 2 {
-			return fmt.Errorf("magpie provider set <id> k=v…\n\n%s", providerUsage)
+			return fmt.Errorf("chongyun provider set <id> k=v…\n\n%s", providerUsage)
 		}
 		p, err := provider.Find(rest[0])
 		if err != nil {
@@ -449,14 +448,14 @@ func providerCmd(args []string) error {
 		return nil
 	case "key":
 		if len(rest) != 2 {
-			return fmt.Errorf("magpie provider key <id> <key>")
+			return fmt.Errorf("chongyun provider key <id> <key>")
 		}
 		p, err := provider.Find(rest[0])
 		if err != nil {
 			return err
 		}
 		if p.IsVertex() {
-			return fmt.Errorf("%s is asked with your Google credentials, not an API key · magpie provider set %s credentials=<file> impersonate=<service account> changes them", p.Name, p.ID)
+			return fmt.Errorf("%s is asked with your Google credentials, not an API key · chongyun provider set %s credentials=<file> impersonate=<service account> changes them", p.Name, p.ID)
 		}
 		p.Key = rest[1]
 		if err := provider.Save(*p); err != nil {
@@ -466,7 +465,7 @@ func providerCmd(args []string) error {
 		return nil
 	case "icon":
 		if len(rest) != 2 {
-			return fmt.Errorf("magpie provider icon <id> <picture file | built-in name | \"\">")
+			return fmt.Errorf("chongyun provider icon <id> <picture file | built-in name | \"\">")
 		}
 		p, err := provider.Find(rest[0])
 		if err != nil {
@@ -491,7 +490,7 @@ func providerCmd(args []string) error {
 		// where requests go when this provider is out of quota, rate
 		// limited or down; "none" clears the list
 		if len(rest) < 1 {
-			return fmt.Errorf("magpie provider fallback <id> [provider/model… | none]")
+			return fmt.Errorf("chongyun provider fallback <id> [provider/model… | none]")
 		}
 		p, err := provider.Find(rest[0])
 		if err != nil {
@@ -502,7 +501,7 @@ func providerCmd(args []string) error {
 			if !(len(rest) == 2 && rest[1] == "none") {
 				for _, id := range rest[1:] {
 					if _, _, ok := provider.Resolve(id); !ok {
-						return fmt.Errorf("magpie knows no model %q (magpie models lists them)", id)
+						return fmt.Errorf("chongyun knows no model %q (chongyun models lists them)", id)
 					}
 					p.Fallback = append(p.Fallback, id)
 				}
@@ -515,7 +514,7 @@ func providerCmd(args []string) error {
 			}
 		}
 		if len(p.Fallback) == 0 {
-			fmt.Println(p.Name, muted.Render("has no fallback · magpie provider fallback "+p.ID+" <provider/model>…"))
+			fmt.Println(p.Name, muted.Render("has no fallback · chongyun provider fallback "+p.ID+" <provider/model>…"))
 			return nil
 		}
 		fmt.Println(green.Render("✓"), p.Name, "falls back to", strings.Join(p.Fallback, muted.Render(" → ")),
@@ -523,7 +522,7 @@ func providerCmd(args []string) error {
 		return nil
 	case "rm", "remove", "delete":
 		if len(rest) != 1 {
-			return fmt.Errorf("magpie provider rm <id>")
+			return fmt.Errorf("chongyun provider rm <id>")
 		}
 		p, err := provider.Find(rest[0])
 		if err != nil {
@@ -550,7 +549,7 @@ func providerCmd(args []string) error {
 			}
 		}
 		if len(rest) < 1 {
-			return fmt.Errorf("magpie provider test <id> [--as codex|claude-code] [model…]")
+			return fmt.Errorf("chongyun provider test <id> [--as codex|claude-code] [model…]")
 		}
 		p, err := provider.Find(rest[0])
 		if err != nil {
@@ -604,7 +603,7 @@ func providerCmd(args []string) error {
 		// no: the provider's models leave the list agents see and serve
 		// only through the routing groups they are in
 		if len(rest) != 2 || (rest[1] != "yes" && rest[1] != "no") {
-			return fmt.Errorf("magpie provider listed <id> yes|no")
+			return fmt.Errorf("chongyun provider listed <id> yes|no")
 		}
 		p, err := provider.Find(rest[0])
 		if err != nil {
@@ -624,7 +623,7 @@ func providerCmd(args []string) error {
 		// off: kept with its keys, but agents are given none of its
 		// models and no request goes to it
 		if len(rest) != 1 {
-			return fmt.Errorf("magpie provider %s <id>", verb)
+			return fmt.Errorf("chongyun provider %s <id>", verb)
 		}
 		p, err := provider.Find(rest[0])
 		if err != nil {
@@ -643,14 +642,14 @@ func providerCmd(args []string) error {
 		return nil
 	case "models", "refresh", "fetch":
 		if len(rest) < 1 {
-			return fmt.Errorf("magpie provider %s <id> [model ids to expose…]", verb)
+			return fmt.Errorf("chongyun provider %s <id> [model ids to expose…]", verb)
 		}
 		p, err := provider.Find(rest[0])
 		if err != nil {
 			return err
 		}
 		if len(rest) > 1 && verb != "models" {
-			return fmt.Errorf("magpie provider %s <id> fetches its list · magpie provider models <id> <ids…> picks from it", verb)
+			return fmt.Errorf("chongyun provider %s <id> fetches its list · chongyun provider models <id> <ids…> picks from it", verb)
 		}
 		if len(rest) > 1 {
 			before := *p
@@ -689,7 +688,7 @@ func providerCmd(args []string) error {
 		}
 		return showProvider(*p)
 	}
-	// `magpie provider <id>`
+	// `chongyun provider <id>`
 	p, err := provider.Find(verb)
 	if err != nil {
 		return err
@@ -697,10 +696,10 @@ func providerCmd(args []string) error {
 	return showProvider(*p)
 }
 
-// addProvider: `magpie provider add <preset> [key]` or `magpie provider add <name> k=v…`
+// addProvider: `chongyun provider add <preset> [key]` or `chongyun provider add <name> k=v…`
 func addProvider(rest []string) error {
 	if len(rest) == 0 {
-		return fmt.Errorf("magpie provider add <preset> <key>   or   magpie provider add <name> k=v…\n\n%s", providerUsage)
+		return fmt.Errorf("chongyun provider add <preset> <key>   or   chongyun provider add <name> k=v…\n\n%s", providerUsage)
 	}
 	if len(rest) == 1 && slices.ContainsFunc(provider.Excluded(), func(x provider.Exclusion) bool { return x.Provider == strings.ToLower(rest[0]) }) {
 		// a signed-in account the user removed comes back with its picks
@@ -714,7 +713,7 @@ func addProvider(rest []string) error {
 		p = pr
 		if len(rest) > 1 && !strings.Contains(rest[1], "=") {
 			if p.IsVertex() {
-				return fmt.Errorf("%s is asked with your Google credentials, not an API key · magpie provider add %s project=<your Google Cloud project's id>", p.Name, p.ID)
+				return fmt.Errorf("%s is asked with your Google credentials, not an API key · chongyun provider add %s project=<your Google Cloud project's id>", p.Name, p.ID)
 			}
 			p.Key = rest[1]
 			rest = rest[2:]
@@ -733,7 +732,7 @@ func addProvider(rest []string) error {
 	id, err := provider.Add(p)
 	if err != nil && p.IsVertex() && (p.Vertex == nil || strings.TrimSpace(p.Vertex.Project) == "") {
 		// the pair that gives the project, which Save's words don't name
-		return fmt.Errorf("%w · magpie provider add %s project=<your Google Cloud project's id>", err, p.Preset)
+		return fmt.Errorf("%w · chongyun provider add %s project=<your Google Cloud project's id>", err, p.Preset)
 	}
 	if err != nil {
 		return err
@@ -771,14 +770,14 @@ func announce(id string) error {
 	}
 	n := len(saved.Exposed())
 	if saved.DecideOnly() {
-		fmt.Println("  it routes groups: magpie group set <id> effort=auto classifier="+saved.ID+"/"+saved.Jev(),
+		fmt.Println("  it routes groups: chongyun group set <id> effort=auto classifier="+saved.ID+"/"+saved.Jev(),
 			muted.Render("· or a rule's intent=…"))
 		return nil
 	}
 	if n == 0 {
-		fmt.Println(amber.Render("!"), "no models exposed yet ·", "magpie provider models", saved.ID, "<ids…>")
+		fmt.Println(amber.Render("!"), "no models exposed yet ·", "chongyun provider models", saved.ID, "<ids…>")
 	} else {
-		fmt.Printf("  %d models in the catalog · %s\n", n, muted.Render("magpie models"))
+		fmt.Printf("  %d models in the catalog · %s\n", n, muted.Render("chongyun models"))
 	}
 	return nil
 }
@@ -803,9 +802,9 @@ func showProvider(p provider.Provider) error {
 		kv("search", "by itself"+muted.Render("  a client's web search goes to it as sent"))
 	}
 	if p.PassUserAgent {
-		why := "  the User-Agent the agent gave, not magpie's"
+		why := "  the User-Agent the agent gave, not chongyun's"
 		if !p.PassesUserAgent() {
-			why = "  but magpie's: it goes as a client of " + p.Name + "'s own"
+			why = "  but chongyun's: it goes as a client of " + p.Name + "'s own"
 		}
 		kv("user-agent", "agent's"+muted.Render(why))
 	}
@@ -842,7 +841,7 @@ func showProvider(p provider.Provider) error {
 		}
 		project := v.Project
 		if !p.Ready() {
-			project = amber.Render(cmp.Or(project, "not set")) + muted.Render("  magpie provider set "+p.ID+" project=…")
+			project = amber.Render(cmp.Or(project, "not set")) + muted.Render("  chongyun provider set "+p.ID+" project=…")
 		}
 		kv("project", project)
 		kv("location", v.Location)
@@ -857,7 +856,7 @@ func showProvider(p provider.Provider) error {
 	case p.Ready():
 		kv("key", muted.Render("none needed"))
 	default:
-		kv("key", amber.Render("not set")+muted.Render("  magpie provider key "+p.ID+" …"))
+		kv("key", amber.Render("not set")+muted.Render("  chongyun provider key "+p.ID+" …"))
 	}
 	kv("catalog", p.Catalog)
 	kv("website", p.Website)
@@ -896,7 +895,7 @@ func showProvider(p provider.Provider) error {
 	}
 	kv("models", fmt.Sprintf("%d exposed of %d %s", len(ms), len(p.Available()), muted.Render("from "+src)))
 	if ids, why := notExposed(p); len(ids) > 0 {
-		kv("not shown", fmt.Sprintf("%s %s", listSome(ids, 8), muted.Render("· "+why+" · magpie provider models "+p.ID+" +<model> exposes one")))
+		kv("not shown", fmt.Sprintf("%s %s", listSome(ids, 8), muted.Render("· "+why+" · chongyun provider models "+p.ID+" +<model> exposes one")))
 	}
 	names := p.ModelNames()
 	for i, m := range ms {
@@ -1072,9 +1071,9 @@ func applyPairs(p *provider.Provider, pairs []string) error {
 			switch strings.ToLower(v) {
 			case "agent", "pass", "yes", "on":
 				on = true
-			case "magpie", "default", "no", "off":
+			case "chongyun", "default", "no", "off":
 			default:
-				return fmt.Errorf("user-agent=agent|magpie, not %q", v)
+				return fmt.Errorf("user-agent=agent|chongyun, not %q", v)
 			}
 			if on && p.Account != nil {
 				return fmt.Errorf("%s signs in as its own client, which sends the User-Agent it does; user-agent= is for a provider with an API key", p.Name)
@@ -1095,10 +1094,10 @@ func applyPairs(p *provider.Provider, pairs []string) error {
 			switch strings.ToLower(v) {
 			case "native", "yes", "on":
 				p.NativeCompaction = true
-			case "magpie", "default", "no", "off":
+			case "chongyun", "default", "no", "off":
 				p.NativeCompaction = false
 			default:
-				return fmt.Errorf("compaction=native|magpie, not %q", v)
+				return fmt.Errorf("compaction=native|chongyun, not %q", v)
 			}
 		case "unmasked":
 			// yes: a model on this computer or the local network gets the
@@ -1203,7 +1202,7 @@ func ago(t time.Time) string {
 	}
 }
 
-// refreshLive re-fetches the model list of every ready provider; `magpie sync`
+// refreshLive re-fetches the model list of every ready provider; `chongyun sync`
 // calls it after the catalog download.
 func refreshLive(ctx context.Context) {
 	var names []string
@@ -1230,9 +1229,9 @@ func refreshLive(ctx context.Context) {
 func keyNote() string {
 	if settings.Load().LAN || gateway.OnNetwork() {
 		if gateway.InContainer() {
-			return "(anything works inside the container; from its host and other machines, an enabled gateway key — magpie gateway-key add <name>)"
+			return "(anything works inside the container; from its host and other machines, an enabled gateway key — chongyun gateway-key add <name>)"
 		}
-		return "(anything works from this machine; from others, an enabled gateway key — magpie gateway-key add <name>)"
+		return "(anything works from this machine; from others, an enabled gateway key — chongyun gateway-key add <name>)"
 	}
 	return "(anything works; the gateway only listens on localhost)"
 }
@@ -1267,10 +1266,9 @@ func advertisedURL() string {
 	return gateway.URL()
 }
 
-// serve: `magpie serve` — the gateway alone, in the foreground.
+// serve: `chongyun serve` — the gateway alone, in the foreground.
 func serve() error {
 	s := gateway.New()
-	go stats.Run(version, "serve")
 	go catalog.KeepFresh() // new models' prices, in a gateway left running
 	// a signed-in account's list exists only at its vendor: asked for here
 	// as the app and the terminal ask (#1789), or a headless gateway offered
@@ -1285,7 +1283,7 @@ func serve() error {
 	go agent.KeepCodexDaemonCurrent(context.Background())
 	go agent.KeepCodexRolloutsPortable(context.Background())
 	public := advertisedURL()
-	fmt.Println(green.Render("●"), "magpie gateway on", bold.Render(gateway.URL()))
+	fmt.Println(green.Render("●"), "chongyun gateway on", bold.Render(gateway.URL()))
 	fmt.Println(muted.Render("  OpenAI  "), public+"/v1/chat/completions", muted.Render("·"), public+"/v1/responses")
 	fmt.Println(muted.Render("  Anthropic"), public+"/v1/messages")
 	fmt.Println(muted.Render("  key     "), gateway.Token, muted.Render(keyNote()))
@@ -1300,9 +1298,9 @@ func serve() error {
 		fmt.Println(amber.Render("!"), err) // served without it, as no providers
 	}
 	if n == 0 {
-		fmt.Println(amber.Render("!"), "no models yet ·", "magpie provider add deepseek sk-…")
+		fmt.Println(amber.Render("!"), "no models yet ·", "chongyun provider add deepseek sk-…")
 	} else {
-		fmt.Printf("  %d models · %s\n", n, muted.Render("magpie models"))
+		fmt.Printf("  %d models · %s\n", n, muted.Render("chongyun models"))
 	}
 	for _, x := range provider.Excluded() {
 		if x.SignedOut {
@@ -1312,7 +1310,7 @@ func serve() error {
 	return s.ListenAndServe(context.Background())
 }
 
-// importCmd adds the provider a magpie://import link describes, after
+// importCmd adds the provider a chongyun://import link describes, after
 // showing it: magpie import [-y] <link>.
 func importCmd(args []string) error {
 	yes := false
@@ -1326,7 +1324,7 @@ func importCmd(args []string) error {
 		}
 	}
 	if link == "" {
-		return errors.New("magpie import [-y] 'magpie://import?…'")
+		return errors.New("chongyun import [-y] 'chongyun://import?…'")
 	}
 	p, err := provider.ParseImport(link)
 	if err != nil {
@@ -1350,7 +1348,7 @@ func importCmd(args []string) error {
 		}
 	}
 	if p.Key == "" && !p.Ready() {
-		fmt.Println(amber.Render("!"), "the link has no key · magpie provider key", p.ID, "<key>")
+		fmt.Println(amber.Render("!"), "the link has no key · chongyun provider key", p.ID, "<key>")
 	}
 	return saveNew(p)
 }
@@ -1365,12 +1363,12 @@ func fetchedFrom(p provider.Provider) string {
 	return p.Name
 }
 
-// accountModelsCmd: `magpie provider account-models <id> [account|key
+// accountModelsCmd: `chongyun provider account-models <id> [account|key
 // [ids…|all]]` — the models one account or key of a provider alone serves
 // (#474), each account's with none named, all for every one the provider has.
 func accountModelsCmd(rest []string) error {
 	if len(rest) < 1 {
-		return fmt.Errorf("magpie provider account-models <id> [account|key [model ids…|all]]")
+		return fmt.Errorf("chongyun provider account-models <id> [account|key [model ids…|all]]")
 	}
 	p, err := provider.Find(rest[0])
 	if err != nil {
@@ -1425,7 +1423,7 @@ func accountModelsCmd(rest []string) error {
 // (provider.AccountCaps); with --window <name>, the share of that window
 // alone (provider.AccountWindowCaps).
 func accountCapCmd(rest []string) error {
-	usage := fmt.Errorf("magpie provider account-cap <id> [account [percent|off]]\n       magpie provider account-cap <id> <account> --window <name> [percent|none|default]")
+	usage := fmt.Errorf("chongyun provider account-cap <id> [account [percent|off]]\n       chongyun provider account-cap <id> <account> --window <name> [percent|none|default]")
 	window, windowSet := "", false
 	for i := 0; i < len(rest); i++ {
 		a := rest[i]
@@ -1531,7 +1529,7 @@ func parseWindowCap(s string) (int, error) {
 // /v1/magpie/concurrency and on the app's account rows.
 func accountConcurrencyCmd(rest []string) error {
 	if len(rest) < 1 {
-		return fmt.Errorf("magpie provider account-concurrency <id> [account|key [n|off|default]]")
+		return fmt.Errorf("chongyun provider account-concurrency <id> [account|key [n|off|default]]")
 	}
 	p, err := provider.Find(rest[0])
 	if err != nil {
@@ -1595,7 +1593,7 @@ func accountConcurrencyCmd(rest []string) error {
 // (#892).
 func queueCmd(rest []string) error {
 	if len(rest) < 1 || len(rest) > 3 {
-		return fmt.Errorf("magpie provider queue <id> [length [seconds]]")
+		return fmt.Errorf("chongyun provider queue <id> [length [seconds]]")
 	}
 	p, err := provider.Find(rest[0])
 	if err != nil {
@@ -1645,7 +1643,7 @@ func queueCmd(rest []string) error {
 // free models take 20).
 func rpmCmd(rest []string) error {
 	if len(rest) < 1 || len(rest) > 2 {
-		return fmt.Errorf("magpie provider rpm <id> [n|off]")
+		return fmt.Errorf("chongyun provider rpm <id> [n|off]")
 	}
 	p, err := provider.Find(rest[0])
 	if err != nil {
@@ -1679,7 +1677,7 @@ func rpmCmd(rest []string) error {
 // vendor says one is out of its allowance without saying when it is back
 // (#1772: Ollama Cloud's weekly limit, asked again every 15 minutes).
 func quotaRestCmd(rest []string) error {
-	usage := fmt.Errorf("magpie provider quota-rest <id> [30m|6h|7d|until 08:00|until 00:00+08:00|default]")
+	usage := fmt.Errorf("chongyun provider quota-rest <id> [30m|6h|7d|until 08:00|until 00:00+08:00|default]")
 	if len(rest) == 3 && (rest[1] == "until" || rest[1] == "at") {
 		rest = []string{rest[0], rest[2]}
 	}
@@ -1714,7 +1712,7 @@ func quotaRestCmd(rest []string) error {
 	} else if d := p.QuotaRestFor(); d > 0 {
 		fmt.Printf("%s · a key out of its allowance, with no word of when it is back, sits out %s\n", p.Name, restWords(d))
 	} else {
-		fmt.Printf("%s · a key out of its allowance, with no word of when it is back, sits out 15 minutes (magpie's own)\n", p.Name)
+		fmt.Printf("%s · a key out of its allowance, with no word of when it is back, sits out 15 minutes (chongyun's own)\n", p.Name)
 	}
 	return nil
 }
@@ -1723,7 +1721,7 @@ func quotaRestCmd(rest []string) error {
 // while they keep failing or being rate limited (#2008).
 func restCapCmd(rest []string) error {
 	if len(rest) < 1 || len(rest) > 2 {
-		return fmt.Errorf("magpie provider rest-cap <id> [1m|30m|6h|1d|off|default]")
+		return fmt.Errorf("chongyun provider rest-cap <id> [1m|30m|6h|1d|off|default]")
 	}
 	p, err := provider.Find(rest[0])
 	if err != nil {
@@ -1742,11 +1740,11 @@ func restCapCmd(rest []string) error {
 		}
 	}
 	if p.NoFailRest() {
-		fmt.Printf("%s · a key or account that fails without saying why doesn't rest: the next request asks it again. Out of quota or credit, its key refused or its model not served still rests it; rate limited, at most 30 minutes (magpie's own)\n", p.Name)
+		fmt.Printf("%s · a key or account that fails without saying why doesn't rest: the next request asks it again. Out of quota or credit, its key refused or its model not served still rests it; rate limited, at most 30 minutes (chongyun's own)\n", p.Name)
 	} else if p.RestCap > 0 {
 		fmt.Printf("%s · a key or account that keeps failing sits out at most %s\n", p.Name, restWords(time.Duration(p.RestCap)*time.Minute))
 	} else {
-		fmt.Printf("%s · a key or account that keeps failing sits out at most 10 minutes, 30 when rate limited (magpie's own)\n", p.Name)
+		fmt.Printf("%s · a key or account that keeps failing sits out at most 10 minutes, 30 when rate limited (chongyun's own)\n", p.Name)
 	}
 	return nil
 }
@@ -1812,7 +1810,7 @@ func printMoved(moved []agent.Move) {
 	}
 }
 
-// editPicks works out a provider's picks from `magpie provider models <id>
+// editPicks works out a provider's picks from `chongyun provider models <id>
 // args…`: plain ids replace them, all (or -) gives the default back, and
 // +id / -id add one to or take one out of the models exposed now, so a
 // user adding a model keeps the rest (MOMO on Discord: 35 exposed → 8).
@@ -1830,7 +1828,7 @@ func editPicks(p provider.Provider, args []string) ([]string, error) {
 		return slices.Clone(args), nil
 	}
 	if edits != len(args) {
-		return nil, fmt.Errorf("give either the whole list (magpie provider models %s a b c) or only changes (+a -b), not both", p.ID)
+		return nil, fmt.Errorf("give either the whole list (chongyun provider models %s a b c) or only changes (+a -b), not both", p.ID)
 	}
 	picks := slices.Clone(p.Models)
 	if len(picks) == 0 {
@@ -1855,7 +1853,7 @@ func editPicks(p provider.Provider, args []string) ([]string, error) {
 	}
 	if len(picks) == 0 {
 		// no picks means the default list, not none
-		return nil, fmt.Errorf("that leaves no model exposed · to serve none of %s's models: magpie provider models %s none; to keep them for routing groups alone: magpie provider listed %s no", p.Name, p.ID, p.ID)
+		return nil, fmt.Errorf("that leaves no model exposed · to serve none of %s's models: chongyun provider models %s none; to keep them for routing groups alone: chongyun provider listed %s no", p.Name, p.ID, p.ID)
 	}
 	return picks, nil
 }
@@ -1905,7 +1903,7 @@ func printPicksChange(before, after provider.Provider, args []string) {
 		fmt.Println(" ", amber.Render("-"), list(gone))
 	}
 	if replaced && len(gone) > 0 && len(after.Models) > 0 {
-		fmt.Println(muted.Render("  the ids given are now the whole list · to add one and keep the rest: magpie provider models " + after.ID + " +<model>"))
+		fmt.Println(muted.Render("  the ids given are now the whole list · to add one and keep the rest: chongyun provider models " + after.ID + " +<model>"))
 	}
 	avail := map[string]bool{}
 	for _, m := range after.Available() {
@@ -1922,7 +1920,7 @@ func printPicksChange(before, after provider.Provider, args []string) {
 // provider's list by itself (#2135).
 func refreshEveryCmd(rest []string) error {
 	if len(rest) < 1 || len(rest) > 2 {
-		return fmt.Errorf("magpie provider refresh-every <id> [30m|6h|1d|off]")
+		return fmt.Errorf("chongyun provider refresh-every <id> [30m|6h|1d|off]")
 	}
 	p, err := provider.Find(rest[0])
 	if err != nil {
@@ -1937,9 +1935,9 @@ func refreshEveryCmd(rest []string) error {
 		}
 	}
 	if d := p.RefreshInterval(); d > 0 {
-		fmt.Printf("%s · its model list is fetched by the gateway every %s (magpie serve, or the app, running)\n", p.Name, p.RefreshEvery)
+		fmt.Printf("%s · its model list is fetched by the gateway every %s (chongyun serve, or the app, running)\n", p.Name, p.RefreshEvery)
 	} else {
-		fmt.Printf("%s · its model list is fetched only when asked (magpie provider refresh %s, or Fetch models)\n", p.Name, p.ID)
+		fmt.Printf("%s · its model list is fetched only when asked (chongyun provider refresh %s, or Fetch models)\n", p.Name, p.ID)
 	}
 	return nil
 }
@@ -1948,7 +1946,7 @@ func refreshEveryCmd(rest []string) error {
 // are exposed by (#2135); none clears them.
 func autoIncludeCmd(rest []string) error {
 	if len(rest) < 1 {
-		return fmt.Errorf("magpie provider auto-include <id> [rule…|none]")
+		return fmt.Errorf("chongyun provider auto-include <id> [rule…|none]")
 	}
 	p, err := provider.Find(rest[0])
 	if err != nil {

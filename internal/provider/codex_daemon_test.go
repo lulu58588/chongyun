@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 func TestIsManagedDaemon(t *testing.T) {
@@ -207,7 +207,7 @@ func TestRestartCodexDaemon(t *testing.T) {
 	// the daemon of the CODEX_HOME magpie writes auth.json in, which is the
 	// user's own CODEX_HOME when that is set
 	if got, want := read(".home"), "/somewhere/else"; got != want || filepath.Clean(got) != filepath.Dir(codexAuthPath()) {
-		t.Errorf("CODEX_HOME %q, want %q (where magpie writes auth.json)", got, want)
+		t.Errorf("CODEX_HOME %q, want %q (where chongyun writes auth.json)", got, want)
 	}
 	if got := read(".stdin"); got != "other" {
 		t.Errorf("stdin is a %s, want the null device", got)

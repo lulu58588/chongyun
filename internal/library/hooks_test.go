@@ -253,7 +253,7 @@ func TestHooksTheUsersEditsAreTheirs(t *testing.T) {
 	write(t, settings, strings.Replace(s, "gofmt -w .", "gofmt -w ./cmd", 1))
 	ok(t)(HookAgents("fmt", []string{}))
 	if got := hooksOf(t, settings, "PostToolUse"); len(got) != 1 || !strings.Contains(got[0], "./cmd") {
-		t.Errorf("the user's edit of magpie's entry was taken out: %v", got)
+		t.Errorf("the user's edit of chongyun's entry was taken out: %v", got)
 	}
 
 	// a changed hook goes out as it was and in as it is
@@ -276,7 +276,7 @@ func TestHooksUnreadableFileLeftAlone(t *testing.T) {
 		t.Fatal(err)
 	}
 	if read(t, codexHooks) != bad {
-		t.Error("a hooks.json magpie can't read was written over")
+		t.Error("a hooks.json chongyun can't read was written over")
 	}
 	if !slices.ContainsFunc(res.Problems, func(p Problem) bool { return p.Agent == "codex" && p.What == "hook:bark" }) {
 		t.Errorf("problems: %+v", res.Problems)

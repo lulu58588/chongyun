@@ -11,10 +11,10 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // openAIVideos is an upstream serving OpenAI's Videos API under /v1, as a
@@ -380,7 +380,7 @@ func TestCustomProviderVideoTheUserMarks(t *testing.T) {
 		t.Fatal("a model studio doesn't have was marked")
 	}
 	if err := provider.SetModelKind("studio/sora-like-2", "audio"); err == nil {
-		t.Fatal("a kind magpie doesn't know was taken")
+		t.Fatal("a kind chongyun doesn't know was taken")
 	}
 	for _, ref := range []string{"studio/sora-like-2", "studio/typed-video-1", "studio/vid-1", "studio/gpt-5.5"} {
 		if err := provider.SetModelKind(ref, ""); err != nil {

@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #1454: Claude Code's auto mode classifier, through magpie, asked
@@ -216,7 +216,7 @@ func TestClaudeFiveFiveThinkingOffOnTheWire(t *testing.T) {
 		{"classifier to Sonnet 5 as it came", "/v1/messages", strings.ReplaceAll(classifier, "%s", "claude-sonnet-5"), 1, `{"type":"disabled"}`},
 		{"count_tokens to Sonnet 5.5", "/v1/messages/count_tokens",
 			`{"model":"relay/claude-sonnet-5-5","thinking":{"type":"disabled"},"messages":[{"role":"user","content":"hi"}]}`, 1, `{"type":"between_tools"}`},
-		{"a name magpie can't read is asked again", "/v1/messages", strings.ReplaceAll(classifier, "%s", "s55"), 2, `{"type":"between_tools"}`},
+		{"a name chongyun can't read is asked again", "/v1/messages", strings.ReplaceAll(classifier, "%s", "s55"), 2, `{"type":"between_tools"}`},
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			up.mu.Lock()
@@ -311,13 +311,13 @@ func TestHaikuFiveFiveSamplingOnTheWire(t *testing.T) {
 		{"classifier to Haiku 5.5", "/v1/messages", strings.ReplaceAll(classifier, "%s", "claude-haiku-5-5"), 1, ""},
 		{"top_p and top_k to Haiku 5.5", "/v1/messages",
 			`{"model":"relay/claude-haiku-5-5","max_tokens":64,"top_p":0.9,"top_k":40,"messages":[{"role":"user","content":"hi"}]}`, 1, ""},
-		{"magpie's own classifier from chat", "/v1/chat/completions",
+		{"chongyun's own classifier from chat", "/v1/chat/completions",
 			`{"model":"relay/claude-haiku-5-5","stream":false,"temperature":0,"max_tokens":2048,"messages":[{"role":"user","content":"which kind?"}]}`, 1, ""},
 		{"Haiku 4.5 keeps its temperature", "/v1/messages", strings.ReplaceAll(classifier, "%s", "claude-haiku-4-5"), 1, "0"},
-		{"a name magpie can't read is asked again", "/v1/messages", strings.ReplaceAll(classifier, "%s", "h55"), 2, ""},
+		{"a name chongyun can't read is asked again", "/v1/messages", strings.ReplaceAll(classifier, "%s", "h55"), 2, ""},
 		// the same request from a Chat client is translated, where the
 		// name can't be read to leave the sampling out up front either
-		{"a name magpie can't read is asked again from chat", "/v1/chat/completions",
+		{"a name chongyun can't read is asked again from chat", "/v1/chat/completions",
 			`{"model":"relay/h55","stream":false,"temperature":0,"max_tokens":2048,"messages":[{"role":"user","content":"which kind?"}]}`, 2, ""},
 	} {
 		t.Run(c.name, func(t *testing.T) {

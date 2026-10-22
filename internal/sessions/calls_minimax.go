@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // MiniMax Code's calls (#1605, LukeZ1988: MiniMax Code was missing from
@@ -44,7 +44,7 @@ func MiniMaxDir() string {
 func minimaxSessions() string { return filepath.Join(MiniMaxDir(), "v2", "sessions") }
 
 // mcodeGateway is the provider MiniMax Code names a call to magpie's entry by.
-const mcodeGateway = "custom_provider:magpie"
+const mcodeGateway = "custom_provider:chongyun"
 
 // minimaxCallFiles are each session's messages files: messages.jsonl, and
 // any other generation of it the session's history-catalog.json keeps

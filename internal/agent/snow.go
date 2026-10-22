@@ -39,8 +39,8 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // snowProfile is the name of the profile magpie writes.
@@ -90,7 +90,7 @@ func snowIn(at place) *Agent {
 		return "default"
 	}
 	// onOurs says Snow is on magpie's profile: the active one, and a key
-	// magpie gave it, so a profile of the user's own named "magpie" is not
+	// magpie gave it, so a profile of the user's own named "chongyun" is not
 	// taken for it
 	onOurs := func() bool {
 		if active() != snowProfile {
@@ -253,7 +253,7 @@ func snowIn(at place) *Agent {
 				return ""
 			}
 			if m := cfg.Get("requestMethod").String(); m != "" && m != "chat" {
-				return "Snow CLI's requestMethod (profiles/" + snowProfile + ".json) is " + m + ", not chat, so magpie's gateway won't take its requests"
+				return "Snow CLI's requestMethod (profiles/" + snowProfile + ".json) is " + m + ", not chat, so chongyun's gateway won't take its requests"
 			}
 			return wiringOff("Snow CLI", ours, func(k string) (string, bool) {
 				g := cfg.Get(k)
@@ -266,7 +266,7 @@ func snowIn(at place) *Agent {
 			Set: func(v string) error {
 				ref, through := strings.CutPrefix(v, magpieID+"/")
 				if through && !isMagpie(ref) {
-					return fmt.Errorf("%s isn't a model in magpie's catalog (magpie models snow lists them)", ref)
+					return fmt.Errorf("%s isn't a model in chongyun's catalog (chongyun models snow lists them)", ref)
 				}
 				if through {
 					base := active()
@@ -326,14 +326,14 @@ func snowIn(at place) *Agent {
 				// leaving magpie's profile: for the user's profile with
 				// that model. A model no profile of theirs is on is
 				// refused rather than written into one on the way out:
-				// `magpie snow --help` took magpie out of Snow and left
+				// `chongyun snow --help` took magpie out of Snow and left
 				// "--help" as the model of the profile it went back to
 				// (#1457). An empty value goes back to the one they were on.
 				to := ""
 				if v != "" {
 					to = snowFindProfile(profiles, v, stashLoad()[keyActive])
 					if to == "" {
-						return fmt.Errorf("%q is neither a model through magpie nor the model of one of Snow CLI's profiles: nothing was changed (magpie models snow lists them; magpie snow default goes back to your own profile)", v)
+						return fmt.Errorf("%q is neither a model through chongyun nor the model of one of Snow CLI's profiles: nothing was changed (chongyun models snow lists them; chongyun snow default goes back to your own profile)", v)
 					}
 				}
 				return leave(to)
@@ -363,13 +363,13 @@ func snowIn(at place) *Agent {
 					if v == "" {
 						return nil
 					}
-					return errors.New("Snow CLI's light model can be set here on magpie's profile: pick a model through magpie as its model first")
+					return errors.New("Snow CLI's light model can be set here on chongyun's profile: pick a model through chongyun as its model first")
 				}
 				ref := model(snowProfile)
 				if v != "" {
 					r, ok := strings.CutPrefix(v, magpieID+"/")
 					if !ok || !isMagpie(r) {
-						return errors.New("Snow CLI's light model goes to the gateway with its main model: pick one through magpie")
+						return errors.New("Snow CLI's light model goes to the gateway with its main model: pick one through chongyun")
 					}
 					ref = r
 				}
@@ -412,7 +412,7 @@ func snowIn(at place) *Agent {
 					if v == "" {
 						return nil
 					}
-					return errors.New("Snow CLI's thinking can be set here on magpie's profile: pick a model through magpie as its model first")
+					return errors.New("Snow CLI's thinking can be set here on chongyun's profile: pick a model through chongyun as its model first")
 				}
 				var err error
 				if v == "" {

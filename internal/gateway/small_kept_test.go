@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // manyEyes is a key of a router listing n models that see, the cheapest a
@@ -122,7 +122,7 @@ func TestAutoVisionSeesEachChange(t *testing.T) {
 		t.Fatal(err)
 	}
 	if m := AutoVision(); m != "router/google/gemini-3-flash" {
-		t.Fatalf("AutoVision = %q after another magpie took Haiku out", m)
+		t.Fatalf("AutoVision = %q after another chongyun took Haiku out", m)
 	}
 
 	// a setting saved moves what it is kept by

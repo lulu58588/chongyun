@@ -159,7 +159,7 @@ func TestSubagentsLeaveTheUsersFiles(t *testing.T) {
 		t.Errorf("the user's edit was written over:\n%s", read(t, codex))
 	}
 	if !strings.Contains(read(t, oc), "You review code, twice.") {
-		t.Errorf("magpie's untouched OpenCode file wasn't updated:\n%s", read(t, oc))
+		t.Errorf("chongyun's untouched OpenCode file wasn't updated:\n%s", read(t, oc))
 	}
 	var codexSaid bool
 	for _, p := range res.Problems {
@@ -174,7 +174,7 @@ func TestSubagentsLeaveTheUsersFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(oc); !os.IsNotExist(err) {
-		t.Errorf("magpie's OpenCode file stayed: %v", err)
+		t.Errorf("chongyun's OpenCode file stayed: %v", err)
 	}
 	if read(t, codex) != edited || !strings.Contains(read(t, own), "My own reviewer.") {
 		t.Error("removing took the user's files")

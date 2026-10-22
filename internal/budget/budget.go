@@ -38,11 +38,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/gwbudget"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/gwbudget"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // sums is what a key's calls came to in a window.
@@ -307,7 +307,7 @@ func (r *Refusal) Error() string {
 	if !r.Spent {
 		what += fmt.Sprintf(", with %d requests in flight holding the rest", r.InFlight)
 	}
-	return fmt.Sprintf("magpie gateway key %q has used %s for this %s; it resets at %s",
+	return fmt.Sprintf("chongyun gateway key %q has used %s for this %s; it resets at %s",
 		r.Key, what, (&access.Limit{Period: r.Period, Days: r.Days, Hours: r.Hours}).Per(), r.Reset.Format("2006-01-02 15:04 MST"))
 }
 

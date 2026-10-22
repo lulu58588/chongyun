@@ -30,8 +30,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The vendors' sign-in pages; vars so tests can point them elsewhere.
@@ -248,7 +248,7 @@ func StartSignInWith(agent string, o SignInOptions) (SignInState, error) {
 	// one moved onto its plugin signs in there: an account signed in to
 	// here would be the built-in's, which nothing serves now
 	if PluginServes(agent) {
-		return SignInState{}, fmt.Errorf("%s runs on its plugin: sign in through the plugin (magpie plugin login %s)", agent, agent)
+		return SignInState{}, fmt.Errorf("%s runs on its plugin: sign in through the plugin (chongyun plugin login %s)", agent, agent)
 	}
 	s := &signInFlow{verifier: randomToken(48), state: randomToken(24), done: make(chan struct{}), site: site}
 	if err := s.pickProxy(agent, o); err != nil {
@@ -389,7 +389,7 @@ func (s *signInFlow) begin() error {
 		}
 		startGoogleSignIn(s, app, ln.Addr().(*net.TCPAddr).Port, challenge)
 	default:
-		return fmt.Errorf("magpie can't sign in to %s accounts", agent)
+		return fmt.Errorf("chongyun can't sign in to %s accounts", agent)
 	}
 
 	if ln != nil || blocked != "" {
@@ -539,7 +539,7 @@ func (s *signInFlow) pastedCallback(raw string) error {
 	select {
 	case <-s.done:
 	case <-ctx.Done():
-		return errors.New("the sign-in is still finishing; magpie shows the account when it's done")
+		return errors.New("the sign-in is still finishing; chongyun shows the account when it's done")
 	}
 	switch st := s.status(); st.State {
 	case "done":
@@ -676,7 +676,7 @@ func (s *signInFlow) callback(w http.ResponseWriter, r *http.Request) {
 	}
 	q := r.URL.Query()
 	if s.status().State != "waiting" {
-		signInPage(w, false, "This sign-in is over", "Start it again from magpie.")
+		signInPage(w, false, "This sign-in is over", "Start it again from chongyun.")
 		return
 	}
 	if e := q.Get("error"); e != "" {
@@ -690,12 +690,12 @@ func (s *signInFlow) callback(w http.ResponseWriter, r *http.Request) {
 	}
 	if q.Get("state") != s.state || q.Get("code") == "" {
 		// not ours: someone else's page, or a stale tab
-		signInPage(w, false, "This link isn't from magpie's sign-in", "Start it again from magpie.")
+		signInPage(w, false, "This link isn't from chongyun's sign-in", "Start it again from chongyun.")
 		return
 	}
 	if !s.claim() {
 		// its address was pasted too, and that one is being finished
-		signInPage(w, false, "This sign-in is already finishing", "magpie shows the account when it's done.")
+		signInPage(w, false, "This sign-in is already finishing", "chongyun shows the account when it's done.")
 		return
 	}
 	ctx, cancel := context.WithTimeout(s.via(r.Context()), 30*time.Second)
@@ -713,7 +713,7 @@ func (s *signInFlow) callback(w http.ResponseWriter, r *http.Request) {
 		var using bool
 		if err = keepLogin(ctx, func() (err error) { using, err = addLogin(l); return err }); err == nil {
 			s.finish(SignInState{State: "done", User: l.User, Plan: l.Plan, Using: using})
-			signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to magpie. You can close this tab.", l.User))
+			signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to chongyun. You can close this tab.", l.User))
 			return
 		}
 	}
@@ -738,7 +738,7 @@ func (s *signInFlow) googleDone(ctx context.Context, w http.ResponseWriter, app 
 		using = true
 	}
 	s.finish(SignInState{State: "done", User: g.user, Plan: plan, Using: using})
-	signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to magpie. You can close this tab.", g.user))
+	signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to chongyun. You can close this tab.", g.user))
 }
 
 // exchange trades the code for tokens and makes them into a login.
@@ -945,7 +945,7 @@ func signInPage(w http.ResponseWriter, ok bool, title, msg string) {
 		mark = `<path d="M7 7l10 10M17 7L7 17"/>`
 	}
 	fmt.Fprintf(w, `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>magpie · %[1]s</title><style>
+<title>chongyun · %[1]s</title><style>
 :root{--bg:#fafafa;--fg:#111;--muted:#6b6b6b;--line:#e4e4e4;--card:#fff}
 @media (prefers-color-scheme:dark){:root{--bg:#0e0e0e;--fg:#f2f2f2;--muted:#9a9a9a;--line:#262626;--card:#161616}}
 *{box-sizing:border-box}html,body{height:100%%;margin:0}

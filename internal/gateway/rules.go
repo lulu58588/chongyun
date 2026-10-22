@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // ruleClock is the time a turn's rules look at (a rule's hours), and its
@@ -817,5 +817,5 @@ func pausedError(asked string, paused []provider.Paused) string {
 		}
 		bits = append(bits, fmt.Sprintf("%s (%s: %s)", p.Member, by, strings.Join(p.When, " · ")))
 	}
-	return fmt.Sprintf("every model of %s is paused now by its rules: %s; change the rules on Magpie's Routing page, or ask again when they end", asked, strings.Join(bits, ", "))
+	return fmt.Sprintf("every model of %s is paused now by its rules: %s; change the rules on Chongyun's Routing page, or ask again when they end", asked, strings.Join(bits, ", "))
 }

@@ -51,7 +51,7 @@ func TestTOMLBigFileParsesInLinearTime(t *testing.T) {
 	for i := 0; b.Len() < 3<<20; i++ {
 		fmt.Fprintf(&b, "[projects.\"/Users/me/p%d\"]\ntrust_level = \"trusted\" # note\n\n", i)
 	}
-	b.WriteString("model_provider = \"magpie\"\n")
+	b.WriteString("model_provider = \"chongyun\"\n")
 	lines := splitLines("model_provider = \"x\"\n" + b.String())
 	start := time.Now()
 	f, err := parseTOMLFile(lines)

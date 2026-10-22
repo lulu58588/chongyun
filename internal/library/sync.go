@@ -6,7 +6,7 @@ import (
 	"os"
 	"slices"
 
-	"github.com/yetone/magpie/internal/mcpauth"
+	"github.com/lulu58588/magpie/internal/mcpauth"
 )
 
 // Result is what a change did to the agents.

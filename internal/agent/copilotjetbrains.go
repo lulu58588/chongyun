@@ -19,7 +19,7 @@ package agent
 //	  "isCustomModel": true, "modelCapabilities": {"name": …, "maxInputTokens": …,
 //	  "maxOutputTokens": …, "toolCalling": true, "vision": …}}}
 //
-// So magpie adds the provider "magpie" there: its catalog, each model at the
+// So magpie adds the provider "chongyun" there: its catalog, each model at the
 // gateway's /v1/chat/completions, sent with the key as a Bearer token (the
 // key is the file's, not the IDE's password safe). Tool calling is on, as
 // Copilot's agent mode lists only models that call tools; a model's
@@ -48,8 +48,8 @@ import (
 	"runtime"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // copilotJBID is the agent's id, and what its token names.
@@ -172,7 +172,7 @@ func copilotJetBrainsAt(path string, installed func() bool) *Agent {
 				return copilotJBWrite(path)
 			},
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie", Note: "every magpie model in Copilot Chat's model picker"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun", Note: "every chongyun model in Copilot Chat's model picker"}}
 			},
 		}},
 	}, path)
@@ -248,5 +248,5 @@ func copilotJBModelsJSON(hidden map[string]bool) map[string]any {
 
 // what copilotjetbrains says after a change (notice.go)
 var (
-	noticeCopilotjetbrains = newNotice("magpie's models are in Copilot Chat's model picker in your JetBrains IDE, under magpie, once the IDE restarts. They need Copilot signed in to GitHub on a plan with Bring Your Own Key: Copilot Free, Pro and Pro+ have it, Business and Enterprise when the organisation's policy allows it.")
+	noticeCopilotjetbrains = newNotice("chongyun's models are in Copilot Chat's model picker in your JetBrains IDE, under chongyun, once the IDE restarts. They need Copilot signed in to GitHub on a plan with Bring Your Own Key: Copilot Free, Pro and Pro+ have it, Business and Enterprise when the organisation's policy allows it.")
 )

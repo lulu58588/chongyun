@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // setAgentsV1 turns settings.CodexAgentsV1 on or off as the Settings page's
@@ -86,7 +86,7 @@ func TestCodexAgentsV1WarnsWhenCodexOwnV2IsOn(t *testing.T) {
 				t.Fatal(err)
 			}
 			if after := read(); after != before {
-				t.Fatalf("magpie wrote to the config:\n%s\n→\n%s", before, after)
+				t.Fatalf("chongyun wrote to the config:\n%s\n→\n%s", before, after)
 			}
 			if mt := modTime(t, cx.Path); !mt.Equal(bt) {
 				t.Fatalf("the config was rewritten: %v → %v", bt, mt)
@@ -133,7 +133,7 @@ func TestCodexAgentsV1WarnsByLegacySelectedProfileFeatures(t *testing.T) {
 				t.Fatal(err)
 			}
 			if after := read(); after != before {
-				t.Fatalf("magpie wrote to the config:\n%s\n→\n%s", before, after)
+				t.Fatalf("chongyun wrote to the config:\n%s\n→\n%s", before, after)
 			}
 			n := cx.Notice()
 			if tc.warn {
@@ -171,7 +171,7 @@ func TestCodexAgentsV1NoWarningWhenCodexOwnV2IsOff(t *testing.T) {
 				t.Fatal(err)
 			}
 			if after := read(); after != before {
-				t.Fatalf("magpie wrote to the config:\n%s\n→\n%s", before, after)
+				t.Fatalf("chongyun wrote to the config:\n%s\n→\n%s", before, after)
 			}
 			if n := cx.Notice(); strings.Contains(n, "multi_agent_v2") {
 				t.Fatalf("a warning with Codex's own V2 off: %q", n)
@@ -216,7 +216,7 @@ func TestCodexAgentsV1UnexpectedFeaturesShapeNotBlocked(t *testing.T) {
 		t.Fatalf("the config was rewritten:\n%s\n→\n%s", before, after)
 	}
 	if n := cx.Notice(); strings.Contains(n, "multi_agent_v2") {
-		t.Fatalf("a conflict warning for a shape magpie doesn't read: %q", n)
+		t.Fatalf("a conflict warning for a shape chongyun doesn't read: %q", n)
 	}
 }
 

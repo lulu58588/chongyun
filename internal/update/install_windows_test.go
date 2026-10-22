@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// What the last update moved aside can still be running (a `magpie serve`
+// What the last update moved aside can still be running (a `chongyun serve`
 // started before it), and then can't be removed or replaced: the running
 // exe goes beside it and the new version still goes in.
 func TestInstallBinaryBesideARunningOld(t *testing.T) {

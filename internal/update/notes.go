@@ -32,7 +32,12 @@ func NotesFeed() string {
 // ReleasePage is version's page on GitHub, where its notes are when the
 // site can't give them (#661).
 func ReleasePage(version string) string {
-	return "https://github.com/yetone/magpie-releases/releases/tag/v" + strings.TrimPrefix(strings.TrimSpace(version), "v")
+	// this build publishes nowhere of its own: the page is the version
+	// itself, so the notes still read.
+	if Site == "" {
+		return "v" + strings.TrimPrefix(strings.TrimSpace(version), "v")
+	}
+	return Site + "/releases/tag/v" + strings.TrimPrefix(strings.TrimSpace(version), "v")
 }
 
 // NotesBetween asks the site for the notes of every release after after

@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func codebuddyHome(t *testing.T) string {
@@ -71,9 +71,9 @@ func TestCodeBuddyCode(t *testing.T) {
 		t.Fatalf("models: %v", m)
 	}
 	pro := ms[1].(map[string]any)
-	if pro["id"] != "deepseek/pro" || pro["vendor"] != "magpie" || pro["apiKey"] != "magpie-codebuddy" ||
+	if pro["id"] != "deepseek/pro" || pro["vendor"] != "chongyun" || pro["apiKey"] != "magpie-codebuddy" ||
 		pro["url"] != gatewayV1()+"/chat/completions" || pro["supportsToolCall"] != true {
-		t.Fatalf("magpie model: %v", pro)
+		t.Fatalf("chongyun model: %v", pro)
 	}
 	if av, _ := json.Marshal(m["availableModels"]); string(av) != `["my-model","deepseek/pro"]` {
 		t.Fatalf("availableModels: %s", av)

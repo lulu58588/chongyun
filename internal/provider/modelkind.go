@@ -6,8 +6,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // What a model makes, as the user says it (shen-joe, #1399): a provider set
@@ -104,7 +104,7 @@ func setModelKind(ref, kind string) (bool, error) {
 			return false, errors.New(p.ID + " makes images and videos only as its own API does: none of its models can be said to make them")
 		}
 		if !p.hasKindable(model) {
-			return false, fmt.Errorf("%s has no model %s (magpie provider %s lists them)", p.ID, model, p.ID)
+			return false, fmt.Errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
 		}
 	}
 	s := settings.Load()

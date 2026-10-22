@@ -521,7 +521,7 @@ func readAiHubMix(b []byte) (string, error) {
 		return "", errors.New("no balance in the reply")
 	}
 	if v < 0 {
-		return "", errors.New("this key has no limit, and AiHubMix tells a key only what is left on it: give magpie the account's access token (AiHubMix → Settings → Generate System Access Token) in this provider's settings to see the account's balance, or give the key a limit in AiHubMix's console")
+		return "", errors.New("this key has no limit, and AiHubMix tells a key only what is left on it: give chongyun the account's access token (AiHubMix → Settings → Generate System Access Token) in this provider's settings to see the account's balance, or give the key a limit in AiHubMix's console")
 	}
 	return money("$", v), nil
 }

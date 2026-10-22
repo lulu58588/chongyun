@@ -41,7 +41,7 @@ func TestSkillCopyEditReachesTheOthers(t *testing.T) {
 			}
 		}
 		if !ours(cl, "pdf") || !ours(cx, "pdf") || isLink(t, cx) {
-			t.Fatal("the copies aren't magpie's any more")
+			t.Fatal("the copies aren't chongyun's any more")
 		}
 	}
 	if !backedUp(t, "Read PDFs") {

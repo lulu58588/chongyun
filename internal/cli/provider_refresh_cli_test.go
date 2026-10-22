@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // magpie provider refresh <id> fetches a provider's list again, as the

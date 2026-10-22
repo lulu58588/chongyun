@@ -7,12 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agentplug"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/agentplug"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 	"gopkg.in/yaml.v3"
 )
 
@@ -33,7 +33,7 @@ func pluggedHome(t *testing.T, srcs ...string) string {
 	for i, src := range srcs {
 		dir := filepath.Join(home, "plugins", "p"+string(rune('a'+i)))
 		os.MkdirAll(dir, 0o755)
-		os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"p`+string(rune('a'+i))+`","magpie":{"agent":"./agent.js"}}`), 0o644)
+		os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"p`+string(rune('a'+i))+`","chongyun":{"agent":"./agent.js"}}`), 0o644)
 		os.WriteFile(filepath.Join(dir, "agent.js"), []byte(src), 0o644)
 		l.Plugins = append(l.Plugins, plugin.Entry{Spec: dir})
 	}
@@ -78,7 +78,7 @@ func TestPluggedYAML(t *testing.T) {
 		t.Fatalf("get %q, check %q", f.Get(), a.Check())
 	}
 	if !containsOption(f.Options(map[string]string{"model": f.Get()}), "magpie/deepseek/pro") {
-		t.Fatal("magpie's models aren't offered")
+		t.Fatal("chongyun's models aren't offered")
 	}
 	if err := f.Set("magpie/deepseek/pro"); err != nil {
 		t.Fatal(err)
@@ -180,7 +180,7 @@ export function connect() { throw new Error("no gateway for me"); }`,
 		got = append(got, e)
 	}
 	all := strings.Join(got, "\n")
-	if !strings.Contains(all, `"codex" is magpie's own`) || !strings.Contains(all, "agent.format") || len(errs) != 3 {
+	if !strings.Contains(all, `"codex" is chongyun's own`) || !strings.Contains(all, "agent.format") || len(errs) != 3 {
 		t.Fatalf("errors: %v", errs)
 	}
 	codex, _ := Find("codex")

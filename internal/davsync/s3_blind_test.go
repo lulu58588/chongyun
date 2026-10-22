@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // #1776 (tsuixl, Aliyun OSS, which answers a conditional PUT 400

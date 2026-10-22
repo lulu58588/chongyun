@@ -7,7 +7,7 @@ import (
 )
 
 // #874: a subscription signed in to one account of magpie's could never be
-// signed out — "magpie uses … first; put another account first", with no
+// signed out — "chongyun uses … first; put another account first", with no
 // other account to put first. The only one goes; with another there, the
 // first still waits for it to be put first.
 func TestForgetOnlyFirstLogin(t *testing.T) {

@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agentplug"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agentplug"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // plugAgents switches on a plugin for each agent module in srcs, in the
@@ -20,7 +20,7 @@ func plugAgents(t *testing.T, h string, srcs ...string) {
 	var l plugin.List
 	for i, src := range srcs {
 		dir := filepath.Join(h, "plugins", "p"+string(rune('a'+i)))
-		write(t, filepath.Join(dir, "package.json"), `{"name":"p`+string(rune('a'+i))+`","magpie":{"agent":"./agent.js"}}`)
+		write(t, filepath.Join(dir, "package.json"), `{"name":"p`+string(rune('a'+i))+`","chongyun":{"agent":"./agent.js"}}`)
 		write(t, filepath.Join(dir, "agent.js"), src)
 		l.Plugins = append(l.Plugins, plugin.Entry{Spec: dir})
 	}

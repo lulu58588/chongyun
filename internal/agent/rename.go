@@ -4,7 +4,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // RenameProvider gives a provider another id (provider.Rename) and moves
@@ -89,7 +89,7 @@ func RenameProvider(from, to string) ([]string, error) {
 // subscription's id (provider.OnAccountIDs) to a free one, the agents on it
 // with it, so the subscription is listed once signed in: a "WorkBuddy" key
 // saved as workbuddy before WorkBuddy's plan was a subscription hid it, and
-// signing in to it said "signed in, but magpie can't list it". Run at
+// signing in to it said "signed in, but chongyun can't list it". Run at
 // start-up; errors are swallowed as RenameLegacy's are.
 func MoveOffAccountIDs() {
 	for _, id := range provider.OnAccountIDs() {

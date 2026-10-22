@@ -12,8 +12,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func detectHome(t *testing.T) {

@@ -28,7 +28,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Env names the environment variables a token is taken from when Settings

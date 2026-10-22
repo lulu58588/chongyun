@@ -169,7 +169,7 @@ func TestNPMInfoGivesIcon(t *testing.T) {
 			return
 		}
 		name := strings.TrimSuffix(strings.TrimPrefix(r.URL.Path, "/"), "/latest")
-		w.Write([]byte(`{"version":"0.1.1","magpie":{"agent":"./a.agent.js","icon":"` + icons[name] + `"}}`))
+		w.Write([]byte(`{"version":"0.1.1","chongyun":{"agent":"./a.agent.js","icon":"` + icons[name] + `"}}`))
 	})
 	names := []string{}
 	for n := range icons {

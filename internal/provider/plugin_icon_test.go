@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // Lemon on Discord: can a plugin give its provider its own icon? The auth

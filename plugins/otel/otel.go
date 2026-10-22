@@ -9,10 +9,10 @@
 package otel
 
 import (
-	"github.com/yetone/magpie/internal/otlp"
-	"github.com/yetone/magpie/internal/pluginrt"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/otlp"
+	"github.com/lulu58588/magpie/internal/pluginrt"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 func init() {

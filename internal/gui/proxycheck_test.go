@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/netproxy"
 )
 
 // proxyCheckRig: a trace page at a name that resolves nowhere

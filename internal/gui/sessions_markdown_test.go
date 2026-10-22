@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/sessions"
 )
 
 // A session is exported as Markdown (#1276): in the app to Downloads, never

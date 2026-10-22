@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // KiloVersion is the Kilo CLI release magpie says it is to the Kilo

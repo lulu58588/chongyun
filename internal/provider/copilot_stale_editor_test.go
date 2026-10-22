@@ -137,7 +137,7 @@ func TestCopilotSignInKeptOverStaleEditor(t *testing.T) {
 		t.Fatal("no copilot")
 	}
 	if _, err := p.Fetch(context.Background()); err != nil {
-		t.Fatalf("fetch with magpie's sign-in: %v", err)
+		t.Fatalf("fetch with chongyun's sign-in: %v", err)
 	}
 }
 

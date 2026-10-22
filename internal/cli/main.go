@@ -13,133 +13,133 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/claudebridge"
-	"github.com/yetone/magpie/internal/davsync"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/imagemcp"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/pluginrt"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/profile"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/tui"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/claudebridge"
+	"github.com/lulu58588/magpie/internal/davsync"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/imagemcp"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/pluginrt"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/profile"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/tui"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // version is the root main package's, set at build time
 // (-ldflags "-X main.version=…") and handed over by Main.
 var version = "dev"
 
-const usage = `magpie — one place to pick every agent's model
+const usage = `chongyun — 崇云科技的统一 AI 模型网关 / one place to pick every agent's model
 
-  magpie                          open the app: a window plus a menu bar icon
-  magpie tray                     start in the menu bar only
-  magpie panel                    open the menu bar icon's quick panel, or close it
-  magpie autostart [on|off]       open magpie (in the menu bar) when you log in, or say whether it does
-  magpie tui                      the same thing, in the terminal (serves the gateway while open when no magpie does)
-  magpie web [--addr host:port] [--lan] [--no-open] [--gateway] [--tls-cert <file> --tls-key <file>]
+  chongyun                          open the app: a window plus a menu bar icon
+  chongyun tray                     start in the menu bar only
+  chongyun panel                    open the menu bar icon's quick panel, or close it
+  chongyun autostart [on|off]       open chongyun (in the menu bar) when you log in, or say whether it does
+  chongyun tui                      the same thing, in the terminal (serves the gateway while open when no chongyun does)
+  chongyun web [--addr host:port] [--lan] [--no-open] [--gateway] [--tls-cert <file> --tls-key <file>]
                                   the app's window in a browser, with the gateway (no desktop needed: WSL, a server over SSH)
                                   a new key each run; MAGPIE_WEB_KEY (16+ letters, digits, - . _ ~) keeps one, signed in for 400 days
                                   behind a reverse proxy, MAGPIE_WEB_URL=https://<the page there> prints the link through it
                                   --gateway: gateway mode, no Agents, Sessions or Library (on by itself with no agents here; Settings › General turns it off)
                                   --tls-cert/--tls-key: the page and the gateway over https:// to other computers
-  magpie ls                       list detected agents and their settings
-  magpie <agent>                  show one agent
-  magpie <agent> <model>          set an agent's model   e.g. magpie claude deepseek/deepseek-chat
-  magpie <agent> <field>          show one field   e.g. magpie codex effort
-  magpie <agent> <field> <value>  set another field   e.g. magpie codex effort high
-  magpie <agent> default          take magpie out: the agent back on what it had before
-  magpie <agent> <field> default  that field back to the agent's own default
-  magpie <command> --help         what a command or an agent takes; -h or --help anywhere does nothing else
+  chongyun ls                       list detected agents and their settings
+  chongyun <agent>                  show one agent
+  chongyun <agent> <model>          set an agent's model   e.g. chongyun claude deepseek/deepseek-chat
+  chongyun <agent> <field>          show one field   e.g. chongyun codex effort
+  chongyun <agent> <field> <value>  set another field   e.g. chongyun codex effort high
+  chongyun <agent> default          take chongyun out: the agent back on what it had before
+  chongyun <agent> <field> default  that field back to the agent's own default
+  chongyun <command> --help         what a command or an agent takes; -h or --help anywhere does nothing else
 
-  magpie save <name>              snapshot every agent's settings as a profile
-  magpie use <name>               apply a profile
-  magpie profiles                 list profiles
-  magpie rm <name>                delete a profile
+  chongyun save <name>              snapshot every agent's settings as a profile
+  chongyun use <name>               apply a profile
+  chongyun profiles                 list profiles
+  chongyun rm <name>                delete a profile
 
-  magpie backup [--no-keys] [--no-library] [file]    providers, keys, settings, profiles, agent models and the library in one file, sealed with a passphrase
-  magpie restore [--no-agents] [--no-library] <file> put a backup in on this machine
-  magpie webdav [on <address>|set k=v…|now|off]      the same, kept the same on every computer through a WebDAV folder (magpie webdav help)
-  magpie s3 [on s3://<bucket>[/<prefix>]|set k=v…|now|off]   the same through an S3-compatible bucket: AWS, R2, B2, MinIO… (magpie s3 help)
-  magpie github [on github://<owner>/<repo>[/<folder>]|set k=v…|now|off]   the same in an encrypted GitHub repository (magpie github help)
+  chongyun backup [--no-keys] [--no-library] [file]    providers, keys, settings, profiles, agent models and the library in one file, sealed with a passphrase
+  chongyun restore [--no-agents] [--no-library] <file> put a backup in on this machine
+  chongyun webdav [on <address>|set k=v…|now|off]      the same, kept the same on every computer through a WebDAV folder (chongyun webdav help)
+  chongyun s3 [on s3://<bucket>[/<prefix>]|set k=v…|now|off]   the same through an S3-compatible bucket: AWS, R2, B2, MinIO… (chongyun s3 help)
+  chongyun github [on github://<owner>/<repo>[/<folder>]|set k=v…|now|off]   the same in an encrypted GitHub repository (chongyun github help)
 
-  magpie library [sync|instructions|mcp|skill]   the instructions, MCP servers and skills written into every agent (magpie library help)
+  chongyun library [sync|instructions|mcp|skill]   the instructions, MCP servers and skills written into every agent (chongyun library help)
 
-  magpie providers                list your providers: host, key, models, who uses them
-  magpie presets                  the vendors magpie knows: add one with just a key
-  magpie provider add <preset> <key>   e.g. magpie provider add deepseek sk-…
-  magpie provider add <name> k=v…      a custom vendor (magpie provider for the fields)
-  magpie provider key|models|test|rm <id>
-  magpie provider fallback <id> <provider/model>…   use these when it's out of quota or down
-  magpie import [-y] <link>       add the provider a magpie://import?… link describes
-  magpie models [<agent>]         every model agents can pick, as provider/model; an agent's, and why others aren't
-  magpie model name <provider/model> <name>|--reset       the name a model goes by, everywhere
-  magpie model efforts <provider/model> <l>,<l>|--reset   the reasoning levels a model offers (magpie model help)
-  magpie visible [<agent> <family|provider|group>,… | all | --only-picked | --show-new]
-                                  which models an agent is shown: families (magpie provider/group set <id> family=…),
+  chongyun providers                list your providers: host, key, models, who uses them
+  chongyun presets                  the vendors chongyun knows: add one with just a key
+  chongyun provider add <preset> <key>   e.g. chongyun provider add deepseek sk-…
+  chongyun provider add <name> k=v…      a custom vendor (chongyun provider for the fields)
+  chongyun provider key|models|test|rm <id>
+  chongyun provider fallback <id> <provider/model>…   use these when it's out of quota or down
+  chongyun import [-y] <link>       add the provider a chongyun://import?… link describes
+  chongyun models [<agent>]         every model agents can pick, as provider/model; an agent's, and why others aren't
+  chongyun model name <provider/model> <name>|--reset       the name a model goes by, everywhere
+  chongyun model efforts <provider/model> <l>,<l>|--reset   the reasoning levels a model offers (chongyun model help)
+  chongyun visible [<agent> <family|provider|group>,… | all | --only-picked | --show-new]
+                                  which models an agent is shown: families (chongyun provider/group set <id> family=…),
                                   or only the models ticked for it, a new one off until it is ticked
-  magpie search [add <api> <key>|rm <api>]   Tavily, Brave, Exa, Firecrawl, You.com, DeepSeek or SearXNG for web search when no provider can search
-  magpie groups                   routing groups: several models agents pick as one, group/<id>
-  magpie group add <name> models=<m1>,<m2> [routing=smart|order|rotate|usage|pace] [stays=auto|session|turn|off]
-  magpie group <id> | set <id> k=v… | rm <id>   show, change or remove one (magpie group help for more)
-  magpie accounts [agent] [--json]  every subscription magpie knows, with each one's allowance used and when it resets
-  magpie accounts add <agent>     sign in to one more Claude, ChatGPT or Google (Gemini CLI, Antigravity) subscription
-  magpie accounts add copilot [--host <name>.ghe.com]   one more Copilot account, on github.com or an enterprise's GHE.com
-  magpie accounts discovery [on|off]   read agents' sign-ins (default on; MAGPIE_NO_ACCOUNTS=1 disables too)
-  magpie accounts import <codex|claude|antigravity|factory> <file>... [--yes]   bring in accounts from other tools' files (Codex's auth.json, Cockpit Tools, CLIProxyAPI, Sub2API); the tool a ChatGPT or Claude file came from is signed out of it
-  magpie accounts switch <agent> <email>   sign the agent in to another of them
-  magpie accounts refresh         renew the saved ChatGPT sign-ins now (the gateway does it daily)
-  magpie accounts checkin         WorkBuddy's daily check-in (签到) for each WorkBuddy account, now (Settings can do it daily)
-  magpie accounts project <gemini|antigravity> <email> <project>   the Google Cloud project a Google account's requests go to
-  magpie accounts alias <agent> <email> [<name>|--clear]   a name of your own for an account, shown on its card, in the menu bar and in magpie quota
-  magpie accounts switch-only codex [on|off]   only switch Codex's own sign-in to an account with room; its requests go straight to OpenAI, never through magpie
-  magpie claude-code [install [--yes]|remove]   the Claude Code a Claude subscription runs; install downloads Anthropic's own build, checked against its manifest, for a server or container without one
-  magpie plugin [add <package>|rm|update|on|off|login <provider>|logout <provider>]
+  chongyun search [add <api> <key>|rm <api>]   Tavily, Brave, Exa, Firecrawl, You.com, DeepSeek or SearXNG for web search when no provider can search
+  chongyun groups                   routing groups: several models agents pick as one, group/<id>
+  chongyun group add <name> models=<m1>,<m2> [routing=smart|order|rotate|usage|pace] [stays=auto|session|turn|off]
+  chongyun group <id> | set <id> k=v… | rm <id>   show, change or remove one (chongyun group help for more)
+  chongyun accounts [agent] [--json]  every subscription chongyun knows, with each one's allowance used and when it resets
+  chongyun accounts add <agent>     sign in to one more Claude, ChatGPT or Google (Gemini CLI, Antigravity) subscription
+  chongyun accounts add copilot [--host <name>.ghe.com]   one more Copilot account, on github.com or an enterprise's GHE.com
+  chongyun accounts discovery [on|off]   read agents' sign-ins (default off; MAGPIE_NO_ACCOUNTS=1 disables too)
+  chongyun accounts import <codex|claude|antigravity|factory> <file>... [--yes]   bring in accounts from other tools' files (Codex's auth.json, Cockpit Tools, CLIProxyAPI, Sub2API); the tool a ChatGPT or Claude file came from is signed out of it
+  chongyun accounts switch <agent> <email>   sign the agent in to another of them
+  chongyun accounts refresh         renew the saved ChatGPT sign-ins now (the gateway does it daily)
+  chongyun accounts checkin         WorkBuddy's daily check-in (签到) for each WorkBuddy account, now (Settings can do it daily)
+  chongyun accounts project <gemini|antigravity> <email> <project>   the Google Cloud project a Google account's requests go to
+  chongyun accounts alias <agent> <email> [<name>|--clear]   a name of your own for an account, shown on its card, in the menu bar and in chongyun quota
+  chongyun accounts switch-only codex [on|off]   only switch Codex's own sign-in to an account with room; its requests go straight to OpenAI, never through chongyun
+  chongyun claude-code [install [--yes]|remove]   the Claude Code a Claude subscription runs; install downloads Anthropic's own build, checked against its manifest, for a server or container without one
+  chongyun plugin [add <package>|rm|update|on|off|login <provider>|logout <provider>]
                                   OpenCode provider plugins and pi packages: subscriptions signed in to, and served, through a plugin
-  magpie plugin move|migrate <subscription>   run a built-in subscription's accounts on its community plugin
+  chongyun plugin move|migrate <subscription>   run a built-in subscription's accounts on its community plugin
 
-  magpie serve [--web[=host:port]] [--tls-cert <file> --tls-key <file>]
-                                  run the gateway alone (the app runs it too); --web serves magpie web's page too, from the same process (127.0.0.1:3430 unless told);
+  chongyun serve [--web[=host:port]] [--tls-cert <file> --tls-key <file>]
+                                  run the gateway alone (the app runs it too); --web serves chongyun web's page too, from the same process (127.0.0.1:3430 unless told);
                                   with a certificate and key (PEM; MAGPIE_TLS_CERT, MAGPIE_TLS_KEY) other computers reach both over https://
-  magpie daemon [install|uninstall|start|stop|restart|status]
-                                  magpie serve as a service of yours, from boot or login and started again when it stops (systemd --user on Linux, launchd on the Mac)
-  magpie daemon install [--web] [--lan] [--addr host:port] [--no-web] [--tls-cert <file> --tls-key <file>|--no-tls]
-                                  --web: the service serves magpie web's page too, with a key kept across restarts; installed again, it keeps what it served
-  magpie daemon web [on|off] [--lan] [--addr host:port]
+  chongyun daemon [install|uninstall|start|stop|restart|status]
+                                  chongyun serve as a service of yours, from boot or login and started again when it stops (systemd --user on Linux, launchd on the Mac)
+  chongyun daemon install [--web] [--lan] [--addr host:port] [--no-web] [--tls-cert <file> --tls-key <file>|--no-tls]
+                                  --web: the service serves chongyun web's page too, with a key kept across restarts; installed again, it keeps what it served
+  chongyun daemon web [on|off] [--lan] [--addr host:port]
                                   the service's page: its link, or turn it on or off
-  magpie healthcheck              exit 0 when the gateway answers (a container's HEALTHCHECK)
-  magpie heap [<file>]            a Go heap profile of the running magpie, with its memory numbers, for a report of it using too much memory
-  magpie cpu [<file>] [--seconds N]   a Go CPU profile of the running magpie over 30s (5..120) while you use it, for a report of it using too much CPU
-  magpie gateway-key list|add <name>|rotate <id>|remove <id>   manage the keys clients use to call a shared gateway
-  magpie gateway-key limit <id> [list|off|reset [n]|remove <n>|[add] day|week|month|<N>d|<N>h --tokens N --cost USD --cache-reads]   a key's own limits, and what it used
-  magpie gateway-key models <id> [all|<provider>/<model>|<provider>/* ...]   the models a key may use, every one unless it names some
-  magpie gateway-key quotas <id> [on|off]   whether a key held to a budget, models or accounts is told the quotas of what it may use
-  magpie mcp image                the image and video generation MCP server an agent is given from the library (stdio)
-  magpie usage [today|7d|30d|all] tokens and cost per agent, model and subscription account (30d)
-  magpie usage --csv [--account <name>] [today|7d|30d|all]   every request as CSV (or one account's): the model asked for, sent and served, tokens, cost, time, status, account
-  magpie usage [--csv [--account <name>]] --last <dur>|--days <n>   the same for a window ending now (24h, 90m, 1.5 days), not from a midnight
-  magpie sessions [--model <m>] [--folder <f>] [--json]   the latest Claude Code, Codex, OpenCode and Pi sessions, with what each cost
-  magpie sessions --days N|today|all [--model <m>] [--folder <f>] [--json]
+  chongyun healthcheck              exit 0 when the gateway answers (a container's HEALTHCHECK)
+  chongyun heap [<file>]            a Go heap profile of the running chongyun, with its memory numbers, for a report of it using too much memory
+  chongyun cpu [<file>] [--seconds N]   a Go CPU profile of the running chongyun over 30s (5..120) while you use it, for a report of it using too much CPU
+  chongyun gateway-key list|add <name>|rotate <id>|remove <id>   manage the keys clients use to call a shared gateway
+  chongyun gateway-key limit <id> [list|off|reset [n]|remove <n>|[add] day|week|month|<N>d|<N>h --tokens N --cost USD --cache-reads]   a key's own limits, and what it used
+  chongyun gateway-key models <id> [all|<provider>/<model>|<provider>/* ...]   the models a key may use, every one unless it names some
+  chongyun gateway-key quotas <id> [on|off]   whether a key held to a budget, models or accounts is told the quotas of what it may use
+  chongyun mcp image                the image and video generation MCP server an agent is given from the library (stdio)
+  chongyun usage [today|7d|30d|all] tokens and cost per agent, model and subscription account (30d)
+  chongyun usage --csv [--account <name>] [today|7d|30d|all]   every request as CSV (or one account's): the model asked for, sent and served, tokens, cost, time, status, account
+  chongyun usage [--csv [--account <name>]] --last <dur>|--days <n>   the same for a window ending now (24h, 90m, 1.5 days), not from a midnight
+  chongyun sessions [--model <m>] [--folder <f>] [--json]   the latest Claude Code, Codex, OpenCode and Pi sessions, with what each cost
+  chongyun sessions --days N|today|all [--model <m>] [--folder <f>] [--json]
                                   what every session spent, day by day, with the top models and folders (7 days)
-  magpie quota [<provider>] [--json]  what is left of every subscription, plan and key balance
-  magpie quota wait <provider|account> [--timeout <d>] [--quiet]
+  chongyun quota [<provider>] [--json]  what is left of every subscription, plan and key balance
+  chongyun quota wait <provider|account> [--timeout <d>] [--quiet]
                                   block until that subscription (any of its accounts) or account has allowance again
-  magpie quota history [<provider|account>] [--days N] [--json]
+  chongyun quota history [<provider|account>] [--days N] [--json]
                                   each window's readings over time, kept 45 days
-  magpie statusline [<provider|account>]   one line for Claude Code's status line: the session's model and each account's windows
-  magpie sync                     refresh the model catalog and vendor model lists
-  magpie agents                   list every supported agent
-  magpie update [check] [--proxy <url>] [--mirror <prefix>]
+  chongyun statusline [<provider|account>]   one line for Claude Code's status line: the session's model and each account's windows
+  chongyun sync                     refresh the model catalog and vendor model lists
+  chongyun agents                   list every supported agent
+  chongyun update [check] [--proxy <url>] [--mirror <prefix>]
                                   install the newest release (check: only say if there is one); --proxy: an
                                   http(s):// or socks5:// proxy for it; --mirror: a GitHub download mirror put
                                   before the github.com URL (none unless given; still checked against usemagpie.ai's SHA-256)
-  magpie update mirror [<prefix>|off]  the mirror every update, the app's own too, is downloaded through
-  magpie update auto [on|off] [download|notify] [30m|1h|6h|24h]
+  chongyun update mirror [<prefix>|off]  the mirror every update, the app's own too, is downloaded through
+  chongyun update auto [on|off] [download|notify] [30m|1h|6h|24h]
                                   whether the app looks for updates by itself, how often (6h), and whether
                                   it downloads one at once or only says it is out (notify: for metered networks)
 
@@ -165,19 +165,19 @@ func Main(v string) {
 		if len(os.Args) > 1 {
 			switch os.Args[1] {
 			case "-v", "--version", "version":
-				fmt.Println("magpie", version)
+				fmt.Println("chongyun", version)
 				return
 			case "-h", "--help", "help":
 				fmt.Print(usage)
 				return
 			}
 		}
-		fmt.Fprintln(os.Stderr, "magpie:", err)
+		fmt.Fprintln(os.Stderr, "chongyun:", err)
 		os.Exit(1)
 	}
 	slices.Sort(ignored)
 	for _, v := range ignored {
-		fmt.Fprintf(os.Stderr, "magpie: ignoring %s: not an absolute path (the programs magpie starts still get it)\n", v)
+		fmt.Fprintf(os.Stderr, "chongyun: ignoring %s: not an absolute path (the programs chongyun starts still get it)\n", v)
 	}
 	if provider.TookOpenedURL(os.Args[1:]) {
 		// Claude Code, signing in for magpie, handed over the page to open
@@ -198,7 +198,7 @@ func Main(v string) {
 			code = e.code
 		}
 		if msg := err.Error(); msg != "" {
-			fmt.Fprintln(os.Stderr, "magpie:", msg)
+			fmt.Fprintln(os.Stderr, "chongyun:", msg)
 		}
 		os.Exit(code)
 	}
@@ -247,10 +247,10 @@ func run(args []string) error {
 	settings.Migrate()
 	// every built-in plugin starts on (plugins.yml), on a new install too
 	if _, err := pluginrt.Settle(); err != nil {
-		fmt.Fprintf(os.Stderr, "magpie: plugins.yml: %v\n", err)
+		fmt.Fprintf(os.Stderr, "chongyun: plugins.yml: %v\n", err)
 	}
 	if _, err := pluginrt.Refresh(); err != nil {
-		fmt.Fprintf(os.Stderr, "magpie: plugins.yml: %v\n", err)
+		fmt.Fprintf(os.Stderr, "chongyun: plugins.yml: %v\n", err)
 	}
 	// the providers and settings read once for every agent's fields, which
 	// the moves below look at (a write among them reads them again)
@@ -295,9 +295,9 @@ func run(args []string) error {
 		gateway.Serves = "tui"
 		return runTUI()
 	}
-	// a magpie:// link the system handed over (Windows, Linux): the app
+	// a chongyun:// link the system handed over (Windows, Linux): the app
 	// opens it for the user to confirm
-	if strings.HasPrefix(strings.ToLower(args[0]), "magpie:") {
+	if strings.HasPrefix(strings.ToLower(args[0]), "chongyun:") {
 		if !hasGUI {
 			return importCmd(args)
 		}
@@ -317,7 +317,7 @@ func run(args []string) error {
 	case "web":
 		return webCmd(args[1:])
 	case "app", "gui":
-		// `magpie gui settings`: the window on that tab, as a restart to
+		// `chongyun gui settings`: the window on that tab, as a restart to
 		// update from it comes back (update.RelaunchArgs)
 		if len(args) > 1 {
 			return runWindow(args[1])
@@ -340,7 +340,7 @@ func run(args []string) error {
 		fmt.Print(usage)
 		return nil
 	case "-v", "--version", "version":
-		fmt.Println("magpie", version)
+		fmt.Println("chongyun", version)
 		return nil
 	case "ls", "list":
 		// in the order the app lists them; those hidden there come last, dimmed
@@ -422,20 +422,20 @@ func run(args []string) error {
 		return err
 	}
 	// no agent form takes a flag: one is never set as a model or a value
-	// (`magpie snow --verbose` would take magpie out of Snow, #1457)
+	// (`chongyun snow --verbose` would take magpie out of Snow, #1457)
 	if f := flagArg(args[1:]); f != "" {
 		return fmt.Errorf("unknown flag %s: nothing was changed\n\n%s", f, strings.TrimRight(agentHelp(a), "\n"))
 	}
 	if len(a.Fields) == 0 && a.Import != nil {
-		// `magpie cindy`: it takes magpie through its own link, confirmed there
+		// `chongyun cindy`: it takes magpie through its own link, confirmed there
 		if len(args) > 1 {
 			link := a.Import()
 			if link == "" {
 				// Lody takes only a gateway on this computer's loopback
-				return fmt.Errorf("%s takes magpie only at a loopback address, and the gateway is at %s: nothing was opened", a.Name, gateway.URL())
+				return fmt.Errorf("%s takes chongyun only at a loopback address, and the gateway is at %s: nothing was opened", a.Name, gateway.URL())
 			}
 			openInBrowser(link)
-			fmt.Println(green.Render("✓"), bold.Render(a.Name), muted.Render("opened to add magpie — confirm it there"))
+			fmt.Println(green.Render("✓"), bold.Render(a.Name), muted.Render("opened to add chongyun — confirm it there"))
 			fmt.Println(muted.Render("  " + link))
 			return nil
 		}
@@ -452,13 +452,13 @@ func run(args []string) error {
 			}
 			return set(a, a.Fields[0].Key, "")
 		}
-		// `magpie codex model`: a field's name alone asks what it is set to,
+		// `chongyun codex model`: a field's name alone asks what it is set to,
 		// where it was set as the model (model = "model"). Claude Code's
 		// opus is a model's name as well as a tier's, and stays the model
 		if f := a.Field(args[1]); f != nil && !modelAlias(a, args[1]) {
 			return showField(a, f)
 		}
-		// `magpie codex xhigh`: a bare value that belongs to a non-model field
+		// `chongyun codex xhigh`: a bare value that belongs to a non-model field
 		// (effort levels, for instance) is routed there; anything else is a model.
 		if f := fieldForValue(a, args[1]); f != nil {
 			return set(a, f.Key, args[1])
@@ -518,7 +518,7 @@ func set(a *agent.Agent, key, value string) error {
 	// sonnet put Claude Code back on its DeepSeek endpoint, which refused
 	// Sonnet, and only "✓ Claude Code model sonnet" was printed)
 	if wired && now != "" && !a.Wired() {
-		fmt.Println(muted.Render(fmt.Sprintf("  disconnected from magpie: %s is %s's own, sent to the endpoint it had before magpie; magpie %s <model> with one of magpie's models connects it again", now, a.Name, a.ID)))
+		fmt.Println(muted.Render(fmt.Sprintf("  disconnected from chongyun: %s is %s's own, sent to the endpoint it had before chongyun; chongyun %s <model> with one of chongyun's models connects it again", now, a.Name, a.ID)))
 	}
 	if a.Notice != nil && (!f.Live || !wired && a.Wired()) {
 		if n := a.Notice(); n != "" {
@@ -541,18 +541,18 @@ func modelAlias(a *agent.Agent, w string) bool {
 func fieldAsValue(a *agent.Agent, f, g *agent.Field, value string) error {
 	for _, name := range []string{f.Key + " " + value, f.Key + "_" + value} {
 		if h := a.Field(name); h != nil {
-			return fmt.Errorf("%q is one field of %s's: magpie %s %s shows it", h.Label, a.Name, a.ID, h.Key)
+			return fmt.Errorf("%q is one field of %s's: chongyun %s %s shows it", h.Label, a.Name, a.ID, h.Key)
 		}
 	}
 	if g.Options != nil {
 		if o := g.Options(a.Values()); len(o) == 1 && o[0].Value == "on" {
-			return fmt.Errorf("%q is a switch of %s's, not a value for its %s: magpie %s %s on", value, a.Name, f.Label, a.ID, g.Key)
+			return fmt.Errorf("%q is a switch of %s's, not a value for its %s: chongyun %s %s on", value, a.Name, f.Label, a.ID, g.Key)
 		}
 	}
-	return fmt.Errorf("%q is a field of %s's, not a value for its %s: magpie %s %s shows it", value, a.Name, f.Label, a.ID, g.Key)
+	return fmt.Errorf("%q is a field of %s's, not a value for its %s: chongyun %s %s shows it", value, a.Name, f.Label, a.ID, g.Key)
 }
 
-// showField is `magpie <agent> <field>`: what the field is set to, as set
+// showField is `chongyun <agent> <field>`: what the field is set to, as set
 // prints it
 func showField(a *agent.Agent, f *agent.Field) error {
 	v := f.Get()
@@ -563,7 +563,7 @@ func showField(a *agent.Agent, f *agent.Field) error {
 	return nil
 }
 
-// disconnect is `magpie <agent> default` on an agent magpie is wired into:
+// disconnect is `chongyun <agent> default` on an agent magpie is wired into:
 // the Agents page's Disconnect, which puts back what the user had before
 // magpie — Claude Code's own model, its endpoint — where a field's default
 // leaves the agent as installed (__jingling on X: magpie claude default
@@ -584,7 +584,7 @@ func disconnect(a *agent.Agent) error {
 		}
 		fmt.Println(green.Render("✓"), bold.Render(a.Name), muted.Render(f.Label), shown)
 	}
-	fmt.Println(muted.Render("  disconnected from magpie, back to what it had before"))
+	fmt.Println(muted.Render("  disconnected from chongyun, back to what it had before"))
 	if a.Notice != nil {
 		if n := a.Notice(); n != "" {
 			fmt.Println(muted.Render("  ↻ " + n))
@@ -677,9 +677,9 @@ func list(agents []*agent.Agent, detectedOnly bool, dimFrom int) error {
 			}
 			if a.Import != nil {
 				if a.Added != nil && a.Added() {
-					r.vals = value.Render("magpie added")
+					r.vals = value.Render("chongyun added")
 				} else {
-					r.vals = label.Render("magpie "+a.ID+" add") + faint.Render("  to add magpie")
+					r.vals = label.Render("chongyun "+a.ID+" add") + faint.Render("  to add chongyun")
 				}
 			}
 		}
@@ -708,7 +708,7 @@ func profiles(args []string) error {
 			return err
 		}
 		if len(ps) == 0 {
-			fmt.Println(muted.Render("no profiles yet · magpie save <name>"))
+			fmt.Println(muted.Render("no profiles yet · chongyun save <name>"))
 			return nil
 		}
 		detected := agent.Detected()
@@ -723,7 +723,7 @@ func profiles(args []string) error {
 		return nil
 	case "save":
 		if len(args) < 2 {
-			return fmt.Errorf("usage: magpie save <name>")
+			return fmt.Errorf("usage: chongyun save <name>")
 		}
 		p, err := profile.Snapshot()
 		if err != nil {
@@ -739,7 +739,7 @@ func profiles(args []string) error {
 		return nil
 	case "use":
 		if len(args) < 2 {
-			return fmt.Errorf("usage: magpie use <name>")
+			return fmt.Errorf("usage: chongyun use <name>")
 		}
 		ps, err := profile.Load()
 		if err != nil {
@@ -760,7 +760,7 @@ func profiles(args []string) error {
 		return nil
 	case "rm":
 		if len(args) < 2 {
-			return fmt.Errorf("usage: magpie rm <name>")
+			return fmt.Errorf("usage: chongyun rm <name>")
 		}
 		if err := profile.Delete(args[1]); err != nil {
 			return err

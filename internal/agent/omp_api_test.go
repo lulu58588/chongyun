@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -53,7 +53,7 @@ func TestOmpModelsAskedOnTheirNativeAPI(t *testing.T) {
 	if err := yaml.Unmarshal(b, &file); err != nil {
 		t.Fatal(err)
 	}
-	pm := file["providers"].(map[string]any)["magpie"].(map[string]any)
+	pm := file["providers"].(map[string]any)["chongyun"].(map[string]any)
 	if pm["api"] != "openai-completions" || pm["baseUrl"] != gatewayV1() || pm["auth"] != "none" {
 		t.Fatalf("provider: %v", pm)
 	}

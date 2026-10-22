@@ -7,7 +7,7 @@ import (
 
 // #2206 (SuInk): a Claude account's allowance heard only as Claude Code
 // answered (NoteClaudeLimits) is on the cards another magpie is told
-// (CachedCards), not "nothing read on that magpie yet". A reading started
+// (CachedCards), not "nothing read on that chongyun yet". A reading started
 // after it stands in its place, and one started before it doesn't.
 func TestCachedCardsTellHeardClaudeLimits(t *testing.T) {
 	claudeUsageCards(t, "", nil) // a@example.com signed in, nothing read

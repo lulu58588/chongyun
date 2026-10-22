@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // scribe is a vendor with OpenAI's speech-to-text APIs; what each path was
@@ -53,11 +53,11 @@ func (sc *scribe) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// what OpenAI answers: JSON by default, the bare text when asked
 	if r.FormValue("response_format") == "text" {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		io.WriteString(w, "Hello from the magpie.\n")
+		io.WriteString(w, "Hello from the chongyun.\n")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	io.WriteString(w, `{"text":"Hello from the magpie.","usage":{"type":"tokens","input_tokens":14,"input_token_details":{"text_tokens":0,"audio_tokens":14},"output_tokens":7,"total_tokens":21}}`)
+	io.WriteString(w, `{"text":"Hello from the chongyun.","usage":{"type":"tokens","input_tokens":14,"input_token_details":{"text_tokens":0,"audio_tokens":14},"output_tokens":7,"total_tokens":21}}`)
 }
 
 func (sc *scribe) got(path string) ([][]byte, []string) {
@@ -144,9 +144,9 @@ func formOf(t *testing.T, ctype string, body []byte) (map[string]string, []byte)
 // boundary, and the vendor's answer comes back; it is in the usage ledger.
 func TestTranscriptionGoesToTheModelsProvider(t *testing.T) {
 	s, sc := scribed(t)
-	body, ctype := audioFormBody(t, "model", "ears/whisper-1", "language", "zh", "prompt", "magpie", "response_format", "json", "temperature", "0")
+	body, ctype := audioFormBody(t, "model", "ears/whisper-1", "language", "zh", "prompt", "chongyun", "response_format", "json", "temperature", "0")
 	code, _, raw := postAudio(t, s, "/v1/audio/transcriptions", ctype, body)
-	if code != 200 || !strings.Contains(raw, `"text":"Hello from the magpie."`) {
+	if code != 200 || !strings.Contains(raw, `"text":"Hello from the chongyun."`) {
 		t.Fatalf("%d %s", code, raw)
 	}
 	sent, types := sc.got("/v1/audio/transcriptions")
@@ -157,7 +157,7 @@ func TestTranscriptionGoesToTheModelsProvider(t *testing.T) {
 	if !bytes.Equal(audio, voice) || vals["filename"] != "voice.webm" || vals["file type"] != "audio/webm" {
 		t.Fatalf("audio arrived as %d bytes %q (%s), not the %d sent", len(audio), vals["filename"], vals["file type"], len(voice))
 	}
-	if vals["model"] != "whisper-1" || vals["language"] != "zh" || vals["prompt"] != "magpie" || vals["response_format"] != "json" || vals["temperature"] != "0" {
+	if vals["model"] != "whisper-1" || vals["language"] != "zh" || vals["prompt"] != "chongyun" || vals["response_format"] != "json" || vals["temperature"] != "0" {
 		t.Fatalf("vendor's form %v", vals)
 	}
 	var recs []usage.Record
@@ -202,7 +202,7 @@ func TestTranscriptAsTextKeepsItsType(t *testing.T) {
 	s, _ := scribed(t)
 	body, ctype := audioFormBody(t, "model", "ears/whisper-1", "response_format", "text")
 	code, h, raw := postAudio(t, s, "/v1/audio/transcriptions", ctype, body)
-	if code != 200 || raw != "Hello from the magpie.\n" || h.Get("Content-Type") != "text/plain; charset=utf-8" {
+	if code != 200 || raw != "Hello from the chongyun.\n" || h.Get("Content-Type") != "text/plain; charset=utf-8" {
 		t.Fatalf("%d %q %q", code, h.Get("Content-Type"), raw)
 	}
 }

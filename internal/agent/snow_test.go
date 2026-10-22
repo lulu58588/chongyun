@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // snowDefault is a profile as Snow CLI 0.9.2 writes it for someone on a
@@ -134,12 +134,12 @@ func TestSnow(t *testing.T) {
 	if !strings.Contains(readFile(ours), `"companionMuted": true`) {
 		t.Errorf("the profile's other settings are gone:\n%s", readFile(ours))
 	}
-	if got := snowActive(dir); got != "magpie" {
+	if got := snowActive(dir); got != "chongyun" {
 		t.Fatalf("active profile %q", got)
 	}
 	// config.json is a copy of the active profile, as Snow's switch makes it
 	if readFile(filepath.Join(dir, "config.json")) != readFile(ours) {
-		t.Fatalf("config.json isn't magpie's profile:\n%s", readFile(filepath.Join(dir, "config.json")))
+		t.Fatalf("config.json isn't chongyun's profile:\n%s", readFile(filepath.Join(dir, "config.json")))
 	}
 	if readFile(filepath.Join(dir, "profiles", "default.json")) != snowDefault || readFile(filepath.Join(dir, "profiles", "work.json")) != snowWork {
 		t.Fatal("a profile of the user's was rewritten")
@@ -148,7 +148,7 @@ func TestSnow(t *testing.T) {
 		t.Fatalf("model after pick: %q", got)
 	}
 	if !a.Wired() {
-		t.Fatal("not connected on magpie's model")
+		t.Fatal("not connected on chongyun's model")
 	}
 	if msg := a.Check(); msg != "" {
 		t.Fatalf("check: %s", msg)
@@ -156,7 +156,7 @@ func TestSnow(t *testing.T) {
 	// its own profile's list doesn't take magpie's for the user's
 	for _, o := range a.Field("model").Options(a.Values()) {
 		if o.Group == "Snow CLI" && o.Value == "deepseek/pro" {
-			t.Fatalf("magpie's profile listed as the user's: %+v", o)
+			t.Fatalf("chongyun's profile listed as the user's: %+v", o)
 		}
 	}
 
@@ -209,7 +209,7 @@ func TestSnowOwnProfile(t *testing.T) {
 	}
 	ours := filepath.Join(dir, "profiles", "magpie.json")
 	if body := readFile(ours); strings.Contains(body, "oauth") || strings.Contains(body, "secret") {
-		t.Fatalf("the user's sign-in copied into magpie's profile:\n%s", body)
+		t.Fatalf("the user's sign-in copied into chongyun's profile:\n%s", body)
 	}
 	if sc := snowCfg(t, ours); sc["requestMethod"] != "chat" {
 		t.Fatalf("requestMethod %v", sc["requestMethod"])
@@ -291,10 +291,10 @@ func TestSnowUsersMagpieProfile(t *testing.T) {
 	snowUser(t, dir)
 	mine := filepath.Join(dir, "profiles", "magpie.json")
 	os.WriteFile(mine, []byte(snowWork), 0o644)
-	os.WriteFile(filepath.Join(dir, "active-profile.json"), []byte(`{"activeProfile": "magpie"}`), 0o644)
+	os.WriteFile(filepath.Join(dir, "active-profile.json"), []byte(`{"activeProfile": "chongyun"}`), 0o644)
 	a, _ := Find("snow")
 	if got := a.Values()["model"]; got != "kimi-k3" || a.Wired() {
-		t.Fatalf("the user's own magpie profile reads %q, wired %v", got, a.Wired())
+		t.Fatalf("the user's own chongyun profile reads %q, wired %v", got, a.Wired())
 	}
 	if err := a.Apply("model", "magpie/deepseek/pro"); err != nil {
 		t.Fatal(err)
@@ -305,8 +305,8 @@ func TestSnowUsersMagpieProfile(t *testing.T) {
 	if err := a.Apply("model", ""); err != nil {
 		t.Fatal(err)
 	}
-	if readFile(mine) != snowWork || snowActive(dir) != "magpie" {
-		t.Fatalf("the user's magpie profile not back (active %q):\n%s", snowActive(dir), readFile(mine))
+	if readFile(mine) != snowWork || snowActive(dir) != "chongyun" {
+		t.Fatalf("the user's chongyun profile not back (active %q):\n%s", snowActive(dir), readFile(mine))
 	}
 }
 
@@ -404,7 +404,7 @@ func TestSnowSyncedKeepsTheUsers(t *testing.T) {
 		t.Fatalf("a sync wrote over the user's window: %v", sc["maxContextTokens"])
 	}
 	if readFile(filepath.Join(dir, "config.json")) != readFile(ours) {
-		t.Fatal("config.json not magpie's profile")
+		t.Fatal("config.json not chongyun's profile")
 	}
 	// a model the catalog has no limits for: Snow's own default output,
 	// text-only as the gateway takes it, and the window as the user set it
@@ -423,7 +423,7 @@ func TestSnowSyncedKeepsTheUsers(t *testing.T) {
 		t.Fatal(err)
 	}
 	if sc = snowCfg(t, ours); sc["maxContextTokens"] != float64(204800) {
-		t.Fatalf("a window from magpie's last profile: %v", sc["maxContextTokens"])
+		t.Fatalf("a window from chongyun's last profile: %v", sc["maxContextTokens"])
 	}
 }
 
@@ -516,7 +516,7 @@ func TestSnowSmallModel(t *testing.T) {
 		t.Fatalf("small follows the model, got %q", v)
 	}
 	if opts := a.Field("small").Options(a.Values()); len(opts) == 0 {
-		t.Fatal("no small options on magpie's profile")
+		t.Fatal("no small options on chongyun's profile")
 	}
 	if err := a.Apply("small", "magpie/relay/glm-4.6"); err != nil {
 		t.Fatal(err)
@@ -526,7 +526,7 @@ func TestSnowSmallModel(t *testing.T) {
 		t.Fatalf("small pick: %v", sc)
 	}
 	if readFile(filepath.Join(dir, "config.json")) != readFile(ours) {
-		t.Fatal("config.json not copied from magpie's profile")
+		t.Fatal("config.json not copied from chongyun's profile")
 	}
 	if v := a.Values()["small"]; v != "magpie/relay/glm-4.6" {
 		t.Fatalf("small read back %q", v)
@@ -630,7 +630,7 @@ func TestSnowThinking(t *testing.T) {
 		t.Fatalf("chatThinking: %v", ct)
 	}
 	if readFile(filepath.Join(dir, "config.json")) != readFile(ours) {
-		t.Fatal("config.json not copied from magpie's profile")
+		t.Fatal("config.json not copied from chongyun's profile")
 	}
 	// kept through a sync and a new model
 	if err := a.Sync(); err != nil {
@@ -673,7 +673,7 @@ func snowFiles(t *testing.T, dir string) map[string]string {
 }
 
 // A model Snow has no profile on, set while on magpie's, is refused and
-// changes nothing: `magpie snow --help` took magpie out of Snow (deleted
+// changes nothing: `chongyun snow --help` took magpie out of Snow (deleted
 // profiles/magpie.json, put back the active profile) and wrote "--help"
 // as the model of the profile it went back to (#1457, blackrion). An
 // unknown model through magpie is refused the same way, on and off it.
@@ -682,7 +682,7 @@ func TestSnowUnknownModelChangesNothing(t *testing.T) {
 	snowUser(t, dir)
 	a, _ := Find("snow")
 	if err := a.Field("model").Set("magpie/nope/x"); err == nil {
-		t.Error("an unknown model through magpie taken off magpie")
+		t.Error("an unknown model through chongyun taken off chongyun")
 	}
 	if err := a.Apply("model", "magpie/deepseek/pro"); err != nil {
 		t.Fatal(err)

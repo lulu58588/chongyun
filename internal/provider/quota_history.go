@@ -35,8 +35,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/lastgood"
 )
 
 const (

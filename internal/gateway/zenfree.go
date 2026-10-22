@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // OpenCode Zen's free models (-free) are served to OpenCode alone: a

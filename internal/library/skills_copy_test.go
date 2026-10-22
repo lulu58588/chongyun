@@ -39,7 +39,7 @@ func TestSkillCopyFollowsTheLibrary(t *testing.T) {
 		t.Fatal("claude's pdf is still a link")
 	}
 	if !ours(p, "pdf") {
-		t.Fatal("the copy isn't magpie's")
+		t.Fatal("the copy isn't chongyun's")
 	}
 
 	version = "two"
@@ -51,7 +51,7 @@ func TestSkillCopyFollowsTheLibrary(t *testing.T) {
 		t.Fatalf("forms.md after the update: %q", s)
 	}
 	if !ours(p, "pdf") {
-		t.Fatal("the copy made again isn't magpie's")
+		t.Fatal("the copy made again isn't chongyun's")
 	}
 
 	// a skill changed in the library's folder by hand reaches it on a sync
@@ -120,7 +120,7 @@ func TestSkillCopySwapSurvivesAnUndeletableFile(t *testing.T) {
 	write(t, filepath.Join(skillDir("pdf"), "sub/forms.md"), "forms two")
 	ok(t)(Sync())
 	if !ours(p, "pdf") {
-		t.Fatal("the copy isn't magpie's after a swap with an undeletable file")
+		t.Fatal("the copy isn't chongyun's after a swap with an undeletable file")
 	}
 	if s := read(t, filepath.Join(p, "SKILL.md")); !strings.Contains(s, "PDFs two") {
 		t.Fatalf("claude's copy after the update:\n%s", s)
@@ -137,7 +137,7 @@ func TestSkillCopySwapSurvivesAnUndeletableFile(t *testing.T) {
 	// a later sync still knows the copy and is not refused
 	ok(t)(Sync())
 	if !ours(p, "pdf") {
-		t.Fatal("the copy isn't magpie's on the next sync")
+		t.Fatal("the copy isn't chongyun's on the next sync")
 	}
 
 	// once the file can be removed, the next sync clears what was left
@@ -173,7 +173,7 @@ func TestWSLSkillCopySwapSurvivesAnUndeletableFile(t *testing.T) {
 	ok(t)(InstallSkills(src, []string{"pdf"}, []string{wslCodex}))
 	p := filepath.Join(h, ".codex/skills/pdf")
 	if linked(p) || !ours(p, "pdf") || read(t, filepath.Join(p, "sub/forms.md")) != "forms one" {
-		t.Fatal("codex@wsl didn't get magpie's copy")
+		t.Fatal("codex@wsl didn't get chongyun's copy")
 	}
 	sub := filepath.Join(p, "sub")
 	if err := os.Chmod(sub, 0o555); err != nil {
@@ -192,7 +192,7 @@ func TestWSLSkillCopySwapSurvivesAnUndeletableFile(t *testing.T) {
 		t.Errorf("changed: %v", res.Changed)
 	}
 	if !ours(p, "pdf") {
-		t.Fatal("codex@wsl's copy isn't magpie's after a swap with an undeletable file")
+		t.Fatal("codex@wsl's copy isn't chongyun's after a swap with an undeletable file")
 	}
 	if !strings.Contains(read(t, filepath.Join(p, "SKILL.md")), "Changed") || read(t, filepath.Join(p, "sub/forms.md")) != "forms two" {
 		t.Fatal("codex@wsl's copy wasn't made again whole")

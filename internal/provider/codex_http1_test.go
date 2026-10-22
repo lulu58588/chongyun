@@ -14,8 +14,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // h2Vendor is a TLS server offering HTTP/2 that notes, for each request,

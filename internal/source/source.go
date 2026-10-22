@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 const (

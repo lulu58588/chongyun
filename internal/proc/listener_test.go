@@ -67,12 +67,12 @@ func TestIsMagpie(t *testing.T) {
 	for path, want := range map[string]bool{
 		"/Applications/Magpie.app/Contents/MacOS/magpie": true,
 		"/usr/local/bin/magpie":                          true,
-		`C:\Users\u\AppData\Local\magpie\magpie.exe`:     true,
-		`C:\Users\u\AppData\Local\magpie\magpie.exe.old`: true,
+		`C:\Users\u\AppData\Local\chongyun\magpie.exe`:     true,
+		`C:\Users\u\AppData\Local\chongyun\magpie.exe.old`: true,
 		// an update that finds .old still held leaves the running exe at
 		// .old-2, the name it holds the gateway port under
-		`C:\Users\u\AppData\Local\magpie\magpie.exe.old-2`: true,
-		`C:\Users\u\AppData\Local\magpie\magpie.exe.old-3`: true,
+		`C:\Users\u\AppData\Local\chongyun\magpie.exe.old-2`: true,
+		`C:\Users\u\AppData\Local\chongyun\magpie.exe.old-3`: true,
 		"/home/u/magpie.old-2":                             true,
 		"/home/u/dial.old-4":                               true,
 		// the numbered suffix is an update's, not another program's

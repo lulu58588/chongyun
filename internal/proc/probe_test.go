@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // probeScript is a CLI that is a script starting another program and
@@ -211,7 +211,7 @@ func TestEndProbesThenExitLeavesNothing(t *testing.T) {
 	cmd.Env = append(os.Environ(), "MAGPIE_PROC_EXIT_HELPER=1")
 	out, err := cmd.Output()
 	if err != nil {
-		t.Fatalf("the exiting magpie: %v\n%s", err, out)
+		t.Fatalf("the exiting chongyun: %v\n%s", err, out)
 	}
 	var pid int
 	for _, l := range strings.Split(string(out), "\n") {
@@ -220,10 +220,10 @@ func TestEndProbesThenExitLeavesNothing(t *testing.T) {
 		}
 	}
 	if pid == 0 {
-		t.Fatalf("the exiting magpie named no child:\n%s", out)
+		t.Fatalf("the exiting chongyun named no child:\n%s", out)
 	}
 	t.Cleanup(func() { _ = syscall.Kill(pid, syscall.SIGKILL) })
 	if !gone(pid) {
-		t.Fatalf("what the probe started (pid %d) outlived magpie's exit after EndProbes", pid)
+		t.Fatalf("what the probe started (pid %d) outlived chongyun's exit after EndProbes", pid)
 	}
 }

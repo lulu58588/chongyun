@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 	"golang.org/x/sys/unix"
 )
 
@@ -78,7 +78,7 @@ func TestUserPathTakesAgentVars(t *testing.T) {
 		t.Fatalf("PI_CODING_AGENT_DIR = %q, want the profile's %q", got, pi)
 	}
 	if got := os.Getenv("CODEX_HOME"); got != "/started/with" {
-		t.Fatalf("CODEX_HOME = %q: the one magpie was started with was replaced", got)
+		t.Fatalf("CODEX_HOME = %q: the one chongyun was started with was replaced", got)
 	}
 	for _, v := range []string{"GROK_HOME", "CLAUDE_CONFIG_DIR"} {
 		if _, set := os.LookupEnv(v); set {
@@ -121,7 +121,7 @@ func TestLoginEnvProxyVarsNotSet(t *testing.T) {
 	UserPath()
 	for _, v := range ProxyVars {
 		if _, set := os.LookupEnv(v); set {
-			t.Fatalf("%s set in magpie's own environment", v)
+			t.Fatalf("%s set in chongyun's own environment", v)
 		}
 	}
 	if got := LoginEnv("HTTP_PROXY"); got != "http://127.0.0.1:7890" {
@@ -201,7 +201,7 @@ func TestLoginEnvClaudeProvidersNotSet(t *testing.T) {
 	UserPath()
 	for _, v := range agentenv.ClaudeProviders {
 		if _, set := os.LookupEnv(v); set {
-			t.Fatalf("%s set in magpie's own environment", v)
+			t.Fatalf("%s set in chongyun's own environment", v)
 		}
 	}
 	if got := LoginEnv("CLAUDE_CODE_USE_BEDROCK"); got != "1" {
@@ -290,10 +290,10 @@ func TestAskShellOwnSession(t *testing.T) {
 		t.Fatalf("the fake shell's answer: %q", out)
 	}
 	if mine := strconv.Itoa(syscall.Getpgrp()); f[0] == mine {
-		t.Fatalf("the login shell ran in magpie's process group %s: a shell there takes the terminal from magpie", mine)
+		t.Fatalf("the login shell ran in chongyun's process group %s: a shell there takes the terminal from chongyun", mine)
 	}
 	if sid, err := unix.Getsid(0); err == nil && f[1] == strconv.Itoa(sid) && f[1] != "0" {
-		t.Fatalf("the login shell ran in magpie's session %s: it can take magpie's terminal", f[1])
+		t.Fatalf("the login shell ran in chongyun's session %s: it can take chongyun's terminal", f[1])
 	}
 	zsh, err := exec.LookPath("zsh")
 	if err != nil {

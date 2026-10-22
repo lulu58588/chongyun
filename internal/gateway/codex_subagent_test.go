@@ -10,8 +10,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // chatgptSeen stands in for the ChatGPT backend, noting each request's
@@ -185,7 +185,7 @@ func TestCodexSubagentModelNotServedKeepsTheAsked(t *testing.T) {
 		t.Fatalf("ChatGPT was asked for %v, not the model asked", got)
 	}
 	r := lastRoute(s)
-	if r.Subagent == nil || r.Subagent.To != "codex/gpt-9" || r.Subagent.Kept != "no ChatGPT account on in magpie serves it" {
+	if r.Subagent == nil || r.Subagent.To != "codex/gpt-9" || r.Subagent.Kept != "no ChatGPT account on in chongyun serves it" {
 		t.Fatalf("trace: %+v", r.Subagent)
 	}
 }

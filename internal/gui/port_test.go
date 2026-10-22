@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // freePort is a port nothing listens on now.
@@ -116,7 +116,7 @@ func TestSetPortMovesTheGateway(t *testing.T) {
 		t.Fatal("the gateway still answers on the old port")
 	}
 	if !gateway.Running() {
-		t.Fatal("magpie doesn't find its own gateway on the new port")
+		t.Fatal("chongyun doesn't find its own gateway on the new port")
 	}
 
 	// the Settings page's other choices, saved, leave the port as it is
@@ -159,7 +159,7 @@ func TestSetPortServesWhenTheOldOneWasTaken(t *testing.T) {
 	served.Store(nil)
 	t.Cleanup(func() { served.Store(nil) })
 	if gateway.Running() {
-		t.Fatal("another program taken for magpie")
+		t.Fatal("another program taken for chongyun")
 	}
 	to := freePort(t)
 	if _, err := setPort(to); err != nil {

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Claude Science, started on magpie's gateway, sends what its client sends
@@ -66,7 +66,7 @@ func TestClaudeScienceIsServedMagpiesModels(t *testing.T) {
 		}
 		real, ok := aliased(m.ID)
 		if !ok {
-			t.Errorf("%q is no alias of magpie's", m.ID)
+			t.Errorf("%q is no alias of chongyun's", m.ID)
 		}
 		alias[real] = m.ID
 	}

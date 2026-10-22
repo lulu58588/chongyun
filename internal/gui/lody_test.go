@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/agent"
 )
 
 type importWindows struct {
@@ -57,7 +57,7 @@ func TestLodyImportHandoff(t *testing.T) {
 		t.Fatalf("Lody's row says added: %s", b)
 	}
 	if cindy == nil || cindy.Added == nil || *cindy.Added {
-		t.Fatalf("Cindy without magpie: %+v, want added false", cindy)
+		t.Fatalf("Cindy without chongyun: %+v, want added false", cindy)
 	}
 	if b, _ := json.Marshal(cindy); !strings.Contains(string(b), `"added":false`) {
 		t.Fatalf("Cindy's row leaves added out: %s", b)

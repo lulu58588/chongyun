@@ -19,15 +19,15 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/codexcat"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/codexcat"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Codex talks the OpenAI Responses API. Signed in to ChatGPT, it is
@@ -38,7 +38,7 @@ import (
 // answers the rest — the model list included, so magpie's models join
 // OpenAI's in /model. Not signed in, the built-in provider can't run, and
 // magpie is a provider of its own: a [model_providers.magpie] table,
-// `model_provider = "magpie"`, and a model catalog file for /model. So it
+// `model_provider = "chongyun"`, and a model catalog file for /model. So it
 // is too for Codex signed in with an API key, often one a relay issued:
 // Codex then never asks for the model list (its models manager skips the
 // fetch for an API key), so its picker was the models it was built with
@@ -56,10 +56,10 @@ import (
 //
 // The [model_providers.magpie] table stays once written. A thread keeps the
 // provider it was started on, and one started on magpie can't be opened
-// again without the table ("Model provider `magpie` not found"), whichever
+// again without the table ("Model provider `chongyun` not found"), whichever
 // way Codex is routed now. Codex looks model_provider up in the tables as
 // it loads config.toml (codex-rs config: "Model provider `{id}` not
-// found"), so `model_provider = "magpie"` without the table keeps it from
+// found"), so `model_provider = "chongyun"` without the table keeps it from
 // loading its config at all, a new thread too: magpie never writes the one
 // without the other, takes model_provider out whenever it steps out as the
 // provider (disconnected, unwired, joined beside the sign-in), and Sync
@@ -88,8 +88,8 @@ func codex(home string) *Agent { return codexIn(here(home)) }
 // V1 over, or magpie couldn't read that config to tell. magpie writes nothing
 // here — the setting is the user's own to turn off.
 var (
-	codexV1ConflictNotice  = newNotice("Codex's own multi_agent_v2 is on in the config magpie routes, which takes over the multi-agent V1 magpie's models ask for; turn it off in Codex's config to run subagents on magpie's models.")
-	codexV1ReadErrorNotice = newNotice("Codex's multi-agent V1 is on, but magpie couldn't read Codex's config to check its own multi_agent_v2.")
+	codexV1ConflictNotice  = newNotice("Codex's own multi_agent_v2 is on in the config chongyun routes, which takes over the multi-agent V1 chongyun's models ask for; turn it off in Codex's config to run subagents on chongyun's models.")
+	codexV1ReadErrorNotice = newNotice("Codex's multi-agent V1 is on, but chongyun couldn't read Codex's config to check its own multi_agent_v2.")
 )
 
 // multiAgentV2OnIn reads one [features] table for Codex's own multi_agent_v2,
@@ -413,7 +413,7 @@ func codexIn(at place) *Agent {
 	}
 	putProvider := func() error {
 		kvs := []edit.KV{
-			{Path: "name", Value: "magpie"},
+			{Path: "name", Value: "chongyun"},
 			{Path: "base_url", Value: at.v1()},
 			{Path: "wire_api", Value: "responses"},
 			{Path: "experimental_bearer_token", Value: keptBearerToken("model_providers." + magpieID)},
@@ -429,7 +429,7 @@ func codexIn(at place) *Agent {
 			// gets the header set there, the user's others kept; written
 			// inline beside that table it defined http_headers twice and
 			// every model switch failed (wztlink1013 on Discord).
-			{Path: "http_headers", Value: edit.Inline{{Path: "x-openai-actor-authorization", Value: "magpie"}}},
+			{Path: "http_headers", Value: edit.Inline{{Path: "x-openai-actor-authorization", Value: "chongyun"}}},
 		}
 		// the table's capabilities, the user's or the background
 		// compaction's, aren't lost as it is written again
@@ -454,7 +454,7 @@ func codexIn(at place) *Agent {
 	// namesMagpie: the config has Codex on magpie as its provider, at its
 	// top or in a profile. Codex then reads [model_providers.magpie] as it
 	// loads the config, before any thread: without the table it loads no
-	// config at all ("Model provider `magpie` not found"), the app and the
+	// config at all ("Model provider `chongyun` not found"), the app and the
 	// CLI both, whatever the model.
 	namesMagpie := func() bool {
 		if asProvider() {
@@ -988,7 +988,7 @@ func codexIn(at place) *Agent {
 		if api() && !isMagpie(v) {
 			id := codexOwnViaMagpie(v)
 			if id == "" {
-				return fmt.Errorf("Codex's sign-in is magpie API, and magpie serves no %s: switch Codex's ChatGPT subscription on in magpie, or set Codex's sign-in to ChatGPT", v)
+				return fmt.Errorf("Codex's sign-in is chongyun API, and chongyun serves no %s: switch Codex's ChatGPT subscription on in chongyun, or set Codex's sign-in to ChatGPT", v)
 			}
 			v = id
 		}
@@ -1186,7 +1186,7 @@ func codexIn(at place) *Agent {
 			if err := asyncCompaction(routed()); err != nil {
 				return err
 			}
-			// model_provider = "magpie" left with its table gone (taken by
+			// model_provider = "chongyun" left with its table gone (taken by
 			// another tool, or a hand edit), which keeps Codex from loading
 			// its config at all, connected to magpie or not (Tystem on
 			// Discord): the table is written back, as it stays once written
@@ -1281,7 +1281,7 @@ func codexIn(at place) *Agent {
 		},
 		Check: func() string {
 			if namesMagpie() && noProvider() {
-				return "Codex's config names magpie as its model_provider but has no [model_providers.magpie], so Codex can't load its config (\"Model provider `magpie` not found\"): magpie writes it back when it next syncs, or connect Codex again"
+				return "Codex's config names chongyun as its model_provider but has no [model_providers.magpie], so Codex can't load its config (\"Model provider `chongyun` not found\"): chongyun writes it back when it next syncs, or connect Codex again"
 			}
 			if !wired() {
 				return ""
@@ -1294,7 +1294,7 @@ func codexIn(at place) *Agent {
 				}
 				for _, k := range []string{"model", "model_provider", "openai_base_url", "model_catalog_json"} {
 					if v, ok := t[k]; ok && v != get(k) {
-						return "Codex's profile " + p + " sets its own " + k + " (" + v + "), which Codex takes over magpie's"
+						return "Codex's profile " + p + " sets its own " + k + " (" + v + "), which Codex takes over chongyun's"
 					}
 				}
 			}
@@ -1305,24 +1305,24 @@ func codexIn(at place) *Agent {
 					return err.Error()
 				}
 				if t["base_url"] != at.v1() || !keyHolds(t["experimental_bearer_token"], at.gwKey()) || t["wire_api"] != "responses" {
-					return "Codex's [model_providers.magpie] no longer points at magpie's gateway (" + at.v1() + ")"
+					return "Codex's [model_providers.magpie] no longer points at chongyun's gateway (" + at.v1() + ")"
 				}
 				if c := get("model_catalog_json"); !ownCatalog(c) {
-					return "Codex's model_catalog_json is no longer magpie's list"
+					return "Codex's model_catalog_json is no longer chongyun's list"
 				}
 				if _, err := os.Stat(catalogPath); err != nil {
-					return "magpie's model list for Codex (" + catalogPath + ") is gone"
+					return "chongyun's model list for Codex (" + catalogPath + ") is gone"
 				}
 			case viaBase():
 				if u := get("openai_base_url"); strings.TrimSuffix(u, "/") != at.codexURL() {
-					return "Codex's openai_base_url is " + u + ", not magpie's gateway at " + at.codexURL()
+					return "Codex's openai_base_url is " + u + ", not chongyun's gateway at " + at.codexURL()
 				}
 			default:
-				return "Codex's config no longer sends its model through magpie (no openai_base_url or model_provider of magpie's), so Codex asks OpenAI for a model OpenAI doesn't have"
+				return "Codex's config no longer sends its model through chongyun (no openai_base_url or model_provider of chongyun's), so Codex asks OpenAI for a model OpenAI doesn't have"
 			}
 			for id, u := range ccSwitchTables() {
 				if u != at.v1() {
-					return "Codex's [model_providers." + id + "] (CC Switch's) sends to " + u + ", not magpie's gateway: a Codex thread started on it goes there when reopened, a magpie model picked in it too"
+					return "Codex's [model_providers." + id + "] (CC Switch's) sends to " + u + ", not chongyun's gateway: a Codex thread started on it goes there when reopened, a chongyun model picked in it too"
 				}
 			}
 			return ""
@@ -1405,7 +1405,7 @@ func codexIn(at place) *Agent {
 						return edit.DelTOMLKey(path, "agents", "default_subagent_model")
 					}
 					if isMagpie(v) && !routed() {
-						return fmt.Errorf("pick a model through magpie for Codex first; its subagents can then have one of their own")
+						return fmt.Errorf("pick a model through chongyun for Codex first; its subagents can then have one of their own")
 					}
 					if err := edit.SetTOMLKey(path, "agents", "default_subagent_model", v); err != nil {
 						return err
@@ -1430,13 +1430,13 @@ func codexIn(at place) *Agent {
 					var out, groups []Option
 					for _, e := range provider.CodexSubagentModels() {
 						if e.Group != "" {
-							groups = append(groups, Option{Value: e.ID, Label: e.Name, Note: "routing group · via magpie",
+							groups = append(groups, Option{Value: e.ID, Label: e.Name, Note: "routing group · via chongyun",
 								Icon: e.Provider.Icon, Icons: e.Icons, Group: RoutingGroups, Ref: e.ID})
 							continue
 						}
-						note := e.Provider.Name + " · via magpie"
+						note := e.Provider.Name + " · via chongyun"
 						if a := e.Provider.Account; a != nil && a.User != "" {
-							note = a.User + " · via magpie"
+							note = a.User + " · via chongyun"
 						}
 						out = append(out, Option{Value: e.ID, Label: e.Name, Note: note, Icon: e.Provider.Icon,
 							Group: e.Provider.Name, Ref: e.ID, Context: e.Context})
@@ -1476,7 +1476,7 @@ func codexIn(at place) *Agent {
 						return dropMemories()
 					}
 					if isMagpie(v) && !routed() {
-						return fmt.Errorf("pick a model through magpie for Codex first; its memories can then be written with one of magpie's")
+						return fmt.Errorf("pick a model through chongyun for Codex first; its memories can then be written with one of chongyun's")
 					}
 					for _, k := range []string{"extract_model", "consolidation_model"} {
 						if err := edit.SetTOMLKey(path, "memories", k, v); err != nil {
@@ -1520,9 +1520,9 @@ func codexIn(at place) *Agent {
 				},
 				Options: func(map[string]string) []Option {
 					return []Option{
-						{Value: "", Label: "ChatGPT", Note: "magpie's models join Codex's own; Codex stays signed in to ChatGPT, and while the Codex app blocks its account (out of allowance, no credits left) magpie is Codex's provider, so the app still sends"},
-						{Value: "chatgpt", Label: "Always ChatGPT", Note: "as ChatGPT, and kept so while the Codex app blocks its account: magpie never becomes Codex's provider. The Codex app may then send nothing till the account has room; Codex CLI goes on through magpie"},
-						{Value: "api", Label: "magpie API", Note: "magpie is Codex's provider; the Codex app is in its API state, with magpie's models only. Codex's Chrome control needs the ChatGPT sign-in, so pick ChatGPT to keep it"},
+						{Value: "", Label: "ChatGPT", Note: "chongyun's models join Codex's own; Codex stays signed in to ChatGPT, and while the Codex app blocks its account (out of allowance, no credits left) chongyun is Codex's provider, so the app still sends"},
+						{Value: "chatgpt", Label: "Always ChatGPT", Note: "as ChatGPT, and kept so while the Codex app blocks its account: chongyun never becomes Codex's provider. The Codex app may then send nothing till the account has room; Codex CLI goes on through chongyun"},
+						{Value: "api", Label: "chongyun API", Note: "chongyun is Codex's provider; the Codex app is in its API state, with chongyun's models only. Codex's Chrome control needs the ChatGPT sign-in, so pick ChatGPT to keep it"},
 					}
 				},
 			},

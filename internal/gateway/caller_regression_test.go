@@ -14,10 +14,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 func TestLoopbackRemainsPermissive(t *testing.T) {
@@ -54,7 +54,7 @@ func TestNetworkGatewayNeedsAKey(t *testing.T) {
 	}
 	keys, _ := access.List()
 	secret, _ := access.Update("copy-key", access.Change{Key: keys[0].ID})
-	for _, token := range []string{"", "anything", "magpie", "sk-magpie-stale", secret} {
+	for _, token := range []string{"", "anything", "chongyun", "sk-magpie-stale", secret} {
 		for _, header := range []string{"Authorization", "x-api-key", "query"} {
 			r := httptest.NewRequest("GET", "/v1/models", nil)
 			r.RemoteAddr = "192.168.1.9:5000"
@@ -184,7 +184,7 @@ func TestLegacyCallerWithReadOnlyConfiguration(t *testing.T) {
 		t.Fatal("fallback attribution missing", recs)
 	}
 	for _, rec := range recs {
-		if rec.CallerKeyID != recs[0].CallerKeyID || rec.CallerKeyName != "Magpie" || rec.ProviderKeyID != provider.KeyID("upstream") {
+		if rec.CallerKeyID != recs[0].CallerKeyID || rec.CallerKeyName != "Chongyun" || rec.ProviderKeyID != provider.KeyID("upstream") {
 			t.Fatal("fallback attribution changed", rec)
 		}
 	}

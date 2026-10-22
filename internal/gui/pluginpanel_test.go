@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // copyTree copies a testdata folder to to.
@@ -54,7 +54,7 @@ func panelPlugins(t *testing.T) (on, off, first, second string) {
 	copyTree(t, "testdata/panel-plugin", off)
 	for i, dir := range []string{first, second} {
 		copyTree(t, "testdata/page-plugin", dir)
-		pkg := `{"name":"usage-` + string(rune('a'+i)) + `","version":"0.1.0","magpie":{"page":{"title":"Usage ` + string(rune('A'+i)) + `","file":"page/index.html","replaces":"usage"},"permissions":["usage:summary"]}}`
+		pkg := `{"name":"usage-` + string(rune('a'+i)) + `","version":"0.1.0","chongyun":{"page":{"title":"Usage ` + string(rune('A'+i)) + `","file":"page/index.html","replaces":"usage"},"permissions":["usage:summary"]}}`
 		if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(pkg), 0o644); err != nil {
 			t.Fatal(err)
 		}

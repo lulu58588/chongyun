@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Disconnect leaves Codex as it was before magpie was wired in (Fate on
@@ -40,7 +40,7 @@ func TestCodexDisconnect(t *testing.T) {
 			was := top()
 			cx := codex(home)
 			if cx.Wired() {
-				t.Fatal("wired before magpie set anything")
+				t.Fatal("wired before chongyun set anything")
 			}
 			if err := cx.Apply("model", "fake/m1"); err != nil {
 				t.Fatal(err)
@@ -52,7 +52,7 @@ func TestCodexDisconnect(t *testing.T) {
 				t.Fatal(err)
 			}
 			if !cx.Wired() {
-				t.Fatalf("not wired on a magpie model:\n%s", read())
+				t.Fatalf("not wired on a chongyun model:\n%s", read())
 			}
 			if err := cx.Disconnect(); err != nil {
 				t.Fatal(err)
@@ -67,13 +67,13 @@ func TestCodexDisconnect(t *testing.T) {
 				t.Fatalf("own provider table changed:\n%s", read())
 			}
 			if _, err := os.Stat(filepath.Join(home, ".codex", "magpie-models.json")); err == nil {
-				t.Error("magpie's catalog left")
+				t.Error("chongyun's catalog left")
 			}
 			if cx.Wired() || cx.Drift() != nil {
 				t.Fatalf("still wired (drift %+v):\n%s", cx.Drift(), read())
 			}
 			if _, ok := appliedLoad()["codex"]; ok {
-				t.Error("magpie still remembers setting Codex")
+				t.Error("chongyun still remembers setting Codex")
 			}
 			for _, k := range []string{"codex.model", "codex.effort", "codex.provider", "codex.catalog"} {
 				if v, ok := stashLoad()[here(home).key(k)]; ok {
@@ -143,7 +143,7 @@ func TestClaudeDisconnect(t *testing.T) {
 				want := parse()
 				a := claude(home)
 				if a.Wired() {
-					t.Fatal("wired before magpie set anything")
+					t.Fatal("wired before chongyun set anything")
 				}
 				if err := a.Apply("model", "deepseek/pro"); err != nil {
 					t.Fatal(err)
@@ -158,7 +158,7 @@ func TestClaudeDisconnect(t *testing.T) {
 					t.Fatal(err)
 				}
 				if !a.Wired() {
-					t.Fatal("not wired on a magpie model")
+					t.Fatal("not wired on a chongyun model")
 				}
 				if out == "default" {
 					if err := a.Apply("model", ""); err != nil {
@@ -177,7 +177,7 @@ func TestClaudeDisconnect(t *testing.T) {
 					t.Fatal("still wired")
 				}
 				if _, ok := appliedLoad()["claude"]; ok && out == "disconnect" {
-					t.Error("magpie still remembers setting Claude Code")
+					t.Error("chongyun still remembers setting Claude Code")
 				}
 				for k := range stashLoad() {
 					if strings.HasPrefix(k, "claude.env.") {
@@ -204,7 +204,7 @@ func TestGeminiDisconnect(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !g.Wired() {
-		t.Fatal("not wired on a magpie model")
+		t.Fatal("not wired on a chongyun model")
 	}
 	if err := g.Disconnect(); err != nil {
 		t.Fatal(err)
@@ -234,10 +234,10 @@ func TestDisconnectUnwiredLeavesConfig(t *testing.T) {
 }
 
 // An auth Gemini CLI doesn't know, set on its provider field, is refused
-// before magpie is taken out. `magpie gemini <a model it has no option
+// before magpie is taken out. `chongyun gemini <a model it has no option
 // for>` sets that field (it is the first), and took Gemini CLI off magpie,
 // its sign-in and key put back, before saying the auth was unknown: the
-// sibling of `magpie snow --help` (#1457).
+// sibling of `chongyun snow --help` (#1457).
 func TestGeminiUnknownAuthChangesNothing(t *testing.T) {
 	home, _ := codexHome(t, "", "")
 	dir := filepath.Join(home, ".gemini")

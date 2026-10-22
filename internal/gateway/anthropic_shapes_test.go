@@ -11,7 +11,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // strictRelay checks the request as CHCP and Keenc's Vertex relay do

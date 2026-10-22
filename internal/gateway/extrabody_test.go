@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // withExtraBody gives the saved provider id the extraBody written.

@@ -15,9 +15,9 @@ import (
 	"time"
 
 	"github.com/klauspost/compress/zstd"
-	"github.com/yetone/magpie/internal/codexcat"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/codexcat"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // chatgpt stands in for the ChatGPT backend behind CodexBase.
@@ -374,7 +374,7 @@ func TestCodexMagpieModelKeepsReasoningInput(t *testing.T) {
 	body := `{"model":"fake/m1","input":[{"type":"reasoning","content":[{"type":"reasoning_text","text":"thought"}],"encrypted_content":"foreign-token"}]}`
 	got, compact := codexInput([]byte(body), true)
 	if compact || string(got) != body {
-		t.Errorf("magpie input: %s, compact: %t", got, compact)
+		t.Errorf("chongyun input: %s, compact: %t", got, compact)
 	}
 }
 
@@ -838,7 +838,7 @@ func TestCodexOwnModelKeyRefused(t *testing.T) {
 	req.Header.Set("Authorization", "Bearer sk-relay-key")
 	New().Handler().ServeHTTP(rec, req)
 	body := rec.Body.String()
-	if rec.Code != 401 || !strings.Contains(body, "Incorrect API key provided") || !strings.Contains(body, "pick one of magpie's models") {
+	if rec.Code != 401 || !strings.Contains(body, "Incorrect API key provided") || !strings.Contains(body, "pick one of chongyun's models") {
 		t.Fatalf("%d %s", rec.Code, body)
 	}
 }

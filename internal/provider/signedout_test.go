@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // Saved accounts of an agent not signed in where magpie looks (a magpie
@@ -73,7 +73,7 @@ func TestSavedButSignedOut(t *testing.T) {
 		// an item there, which the keychain won't give
 		codexKeychain = &fakeKeychain{findErr: errKeychainUnread, items: map[string][]byte{codexKeychainAccount(filepath.Join(home, ".codex")): []byte(`{}`)}}
 		if codex = excluded(); codex == nil || strings.Contains(codex.Why, "isn't signed in here") || !codex.Retry ||
-			!strings.Contains(codex.Why, "Allow magpie") || !strings.Contains(codex.Why, `cli_auth_credentials_store = "file"`) {
+			!strings.Contains(codex.Why, "Allow chongyun") || !strings.Contains(codex.Why, `cli_auth_credentials_store = "file"`) {
 			t.Fatalf("%s, item not read: %+v", store, codex)
 		}
 

@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 // Kimi Code's calls (#1607, infinitr0us: its direct calls to api.kimi.com
@@ -38,7 +38,7 @@ import (
 // The record alone carries everything a call needs.
 //
 // A call Kimi made through magpie's own entry (internal/agent's kimi.go
-// writes it as the provider "magpie", its model tables keyed
+// writes it as the provider "chongyun", its model tables keyed
 // "magpie/<provider>/<model>") is the gateway's to count: it logged the
 // call itself, with the provider and account that answered.
 //

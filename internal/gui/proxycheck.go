@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/netproxy"
 )
 
 // Settings › Proxy's Test (#2076, c4ex): whether the proxy in force is the

@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // computerUseShots are n distinct w×h JPEG screenshots as data URLs: a
@@ -148,7 +148,7 @@ func TestComputerUseTurnTiming(t *testing.T) {
 		// each turn adds a screenshot to those sent before
 		body := computerUseTurn("codex/gpt-5.5", shots[:n+turn-1])
 		local, all := tt.turn(t, s, body, fmt.Sprint(turn))
-		t.Logf("turn %d: %d images, %d MB: magpie %v before the upstream had it, %v in all", turn, n+turn-1, len(body)>>20, local, all)
+		t.Logf("turn %d: %d images, %d MB: chongyun %v before the upstream had it, %v in all", turn, n+turn-1, len(body)>>20, local, all)
 	}
 }
 
@@ -197,7 +197,7 @@ func TestCopilotLongTurnTiming(t *testing.T) {
 		body := largeConversation(provider.Responses, "copilot/gpt-6.1-sol", words)
 		for turn := 1; turn <= 3; turn++ {
 			local, all := tt.turn(t, s, body, fmt.Sprintf("%dk-%d", words/1000, turn))
-			t.Logf("%d KB, turn %d: magpie %v before the upstream had it, %v in all", len(body)>>10, turn, local, all)
+			t.Logf("%d KB, turn %d: chongyun %v before the upstream had it, %v in all", len(body)>>10, turn, local, all)
 		}
 	}
 }

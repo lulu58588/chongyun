@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // stubLookup answers names from m for the test, and forgets what earlier
@@ -105,6 +105,6 @@ func TestLANModelListNotThroughProxy(t *testing.T) {
 		t.Fatalf("%s: %s %s", remote.URL, res.Status, b)
 	}
 	if !strings.Contains(string(b), "codex/gpt-6.1-sol") {
-		t.Fatalf("not the other magpie's list: %s", b)
+		t.Fatalf("not the other chongyun's list: %s", b)
 	}
 }

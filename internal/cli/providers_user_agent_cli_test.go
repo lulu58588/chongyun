@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // user-agent=agent has a key+URL provider pass the agent's User-Agent on
@@ -15,17 +15,17 @@ func TestProviderUserAgentPair(t *testing.T) {
 	if err := applyPairs(&p, []string{"user-agent=agent"}); err != nil || !p.PassUserAgent {
 		t.Fatalf("agent: %v %v", p.PassUserAgent, err)
 	}
-	if err := applyPairs(&p, []string{"user-agent=magpie"}); err != nil || p.PassUserAgent {
-		t.Fatalf("magpie: %v %v", p.PassUserAgent, err)
+	if err := applyPairs(&p, []string{"user-agent=chongyun"}); err != nil || p.PassUserAgent {
+		t.Fatalf("chongyun: %v %v", p.PassUserAgent, err)
 	}
-	if err := applyPairs(&p, []string{"user-agent=claude"}); err == nil || !strings.Contains(err.Error(), "agent|magpie") {
+	if err := applyPairs(&p, []string{"user-agent=claude"}); err == nil || !strings.Contains(err.Error(), "agent|chongyun") {
 		t.Fatalf("a made-up value: %v", err)
 	}
 	a := provider.Provider{ID: "zcode", Name: "ZCode", Account: &provider.Account{Agent: "zcode"}}
 	if err := applyPairs(&a, []string{"user-agent=agent"}); err == nil || a.PassUserAgent {
 		t.Fatalf("an account took it: %v", err)
 	}
-	if err := applyPairs(&a, []string{"user-agent=magpie"}); err != nil {
+	if err := applyPairs(&a, []string{"user-agent=chongyun"}); err != nil {
 		t.Fatalf("an account turning it off: %v", err)
 	}
 }
@@ -38,10 +38,10 @@ func TestProviderCompactionPair(t *testing.T) {
 	if err := applyPairs(&p, []string{"compaction=native"}); err != nil || !p.NativeCompaction {
 		t.Fatalf("native: %v %v", p.NativeCompaction, err)
 	}
-	if err := applyPairs(&p, []string{"compaction=magpie"}); err != nil || p.NativeCompaction {
-		t.Fatalf("magpie: %v %v", p.NativeCompaction, err)
+	if err := applyPairs(&p, []string{"compaction=chongyun"}); err != nil || p.NativeCompaction {
+		t.Fatalf("chongyun: %v %v", p.NativeCompaction, err)
 	}
-	if err := applyPairs(&p, []string{"compaction=sometimes"}); err == nil || !strings.Contains(err.Error(), "native|magpie") {
+	if err := applyPairs(&p, []string{"compaction=sometimes"}); err == nil || !strings.Contains(err.Error(), "native|chongyun") {
 		t.Fatalf("a made-up value: %v", err)
 	}
 	c := provider.Provider{ID: "chat", Name: "Chat", Chat: "https://chat.example/v1", Key: "k"}

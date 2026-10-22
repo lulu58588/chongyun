@@ -8,8 +8,8 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func TestKimi(t *testing.T) {
@@ -100,8 +100,8 @@ max_steps_per_turn = 100
 	raw := read()
 	p := table("providers.magpie")
 	m := table(`models."magpie/deepseek/pro"`)
-	if p["type"] != "kimi" || p["api_key"] != "magpie" || !strings.HasSuffix(p["base_url"], "/v1") ||
-		m["provider"] != "magpie" || m["model"] != "deepseek/pro" || m["max_context_size"] == "" ||
+	if p["type"] != "kimi" || p["api_key"] != "chongyun" || !strings.HasSuffix(p["base_url"], "/v1") ||
+		m["provider"] != "chongyun" || m["model"] != "deepseek/pro" || m["max_context_size"] == "" ||
 		table(`models."magpie/deepseek/flash"`) == nil {
 		t.Fatalf("tables:\n%s", raw)
 	}
@@ -137,7 +137,7 @@ max_steps_per_turn = 100
 	}
 	valid()
 	raw = read()
-	if f.Get() != "kimi-code/kimi-for-coding" || strings.Contains(raw, "magpie") {
+	if f.Get() != "kimi-code/kimi-for-coding" || strings.Contains(raw, "chongyun") {
 		t.Fatalf("reset:\n%s", raw)
 	}
 	// and Sync, with magpie out, writes nothing back
@@ -151,7 +151,7 @@ max_steps_per_turn = 100
 		t.Fatal(err)
 	}
 	valid()
-	if strings.Contains(read(), "magpie") {
+	if strings.Contains(read(), "chongyun") {
 		t.Fatalf("own:\n%s", read())
 	}
 }
@@ -184,7 +184,7 @@ func TestKimiNoConfig(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, _ = os.ReadFile(a.Path)
-	if strings.Contains(string(b), "magpie") {
+	if strings.Contains(string(b), "chongyun") {
 		t.Fatalf("reset:\n%s", b)
 	}
 }
@@ -239,7 +239,7 @@ func TestKimiKeepsTheUsersSettings(t *testing.T) {
 			t.Errorf("%s: the user's settings not kept:\n%s", when, raw)
 		}
 		if p.Type != "kimi" || p.BaseURL == "http://127.0.0.1:1/v1" || p.BaseURL == "" || p.APIKey == "" {
-			t.Errorf("%s: magpie's own parts not written:\n%s", when, raw)
+			t.Errorf("%s: chongyun's own parts not written:\n%s", when, raw)
 		}
 	}
 	check("sync")

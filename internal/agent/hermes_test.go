@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -47,8 +47,8 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw := read()
-	mp, _ := providers(c)["magpie"].(map[string]any)
-	if m["default"] != "deepseek/pro" || m["provider"] != "magpie" || m["base_url"] != "https://openrouter.ai/api/v1" ||
+	mp, _ := providers(c)["chongyun"].(map[string]any)
+	if m["default"] != "deepseek/pro" || m["provider"] != "chongyun" || m["base_url"] != "https://openrouter.ai/api/v1" ||
 		providers(c)["mine"] == nil || mp == nil || mp["api_mode"] != "chat_completions" || !strings.HasSuffix(mp["base_url"].(string), "/v1") ||
 		!strings.Contains(raw, "# mine") {
 		t.Fatalf("config:\n%s", raw)
@@ -75,7 +75,7 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw = read()
-	if m["default"] != "moonshotai/kimi-k3" || m["provider"] != "openrouter" || providers(c)["magpie"] == nil || providers(c)["mine"] == nil {
+	if m["default"] != "moonshotai/kimi-k3" || m["provider"] != "openrouter" || providers(c)["chongyun"] == nil || providers(c)["mine"] == nil {
 		t.Fatalf("own:\n%s", raw)
 	}
 	a := hermes(home)
@@ -100,7 +100,7 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw = read()
-	if m["default"] != "claude-opus-5" || m["provider"] != "anthropic" || providers(c)["magpie"] != nil || providers(c)["mine"] == nil || a.Wired() {
+	if m["default"] != "claude-opus-5" || m["provider"] != "anthropic" || providers(c)["chongyun"] != nil || providers(c)["mine"] == nil || a.Wired() {
 		t.Fatalf("disconnect, own model:\n%s", raw)
 	}
 
@@ -110,7 +110,7 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw = read()
-	if m["default"] != "claude-opus-5" || m["provider"] != "anthropic" || providers(c)["magpie"] != nil {
+	if m["default"] != "claude-opus-5" || m["provider"] != "anthropic" || providers(c)["chongyun"] != nil {
 		t.Fatalf("disconnect:\n%s", raw)
 	}
 
@@ -121,7 +121,7 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw = read()
-	if m["provider"] != nil || m["default"] != nil || providers(c)["magpie"] != nil || c["agent"] == nil {
+	if m["provider"] != nil || m["default"] != nil || providers(c)["chongyun"] != nil || c["agent"] == nil {
 		t.Fatalf("disconnect, no provider:\n%s", raw)
 	}
 }
@@ -153,7 +153,7 @@ func TestHermesProfiles(t *testing.T) {
 	bot := write("profiles/coder/config.yaml", "# coder bot\nmodel:\n  default: kimi-k3\n  provider: moonshot\nproviders:\n  mine:\n    base_url: https://x\n")
 	write("profiles/coder/SOUL.md", "coder\n")
 	// cloned from a main config already on magpie
-	clone := write("profiles/writer/config.yaml", "model:\n  default: deepseek/pro\n  provider: magpie\n")
+	clone := write("profiles/writer/config.yaml", "model:\n  default: deepseek/pro\n  provider: chongyun\n")
 	// deleted (a tombstone beside it), and a name Hermes doesn't allow
 	gone := write("profiles/old/config.yaml", "model:\n  default: x\n")
 	write("profiles/.deleted/old", "")
@@ -167,7 +167,7 @@ func TestHermesProfiles(t *testing.T) {
 	has := func(p string) bool {
 		c, _ := read(p)
 		ps, _ := c["providers"].(map[string]any)
-		return ps["magpie"] != nil
+		return ps["chongyun"] != nil
 	}
 
 	a := hermes(home)
@@ -181,7 +181,7 @@ func TestHermesProfiles(t *testing.T) {
 		t.Fatalf("coder after connect:\n%s", raw)
 	}
 	if has(gone) || has(bad) {
-		t.Fatal("a deleted or invalid profile got magpie")
+		t.Fatal("a deleted or invalid profile got chongyun")
 	}
 
 	// a profile made later gets it at the next sync
@@ -349,7 +349,7 @@ func TestHermesKeepsTheUsersSettings(t *testing.T) {
 			}
 			if mp.BaseURL == "http://127.0.0.1:1/v1" || mp.APIKey == "" || mp.APIMode != "chat_completions" || mp.Headers["User-Agent"] != "hermes-agent" ||
 				slices.Contains(mp.Models, "gone/old") || !slices.Contains(mp.Models, "kimi/k3") {
-				t.Errorf("%s: magpie's own parts not written in %s:\n%s", when, p, raw)
+				t.Errorf("%s: chongyun's own parts not written in %s:\n%s", when, p, raw)
 			}
 		}
 	}
@@ -383,7 +383,7 @@ func TestHermesWithAGatewayKeyOfTheUsers(t *testing.T) {
 		t.Fatal(err)
 	}
 	if d := a.Check(); d != "" {
-		t.Fatalf("as magpie wrote it: %s", d)
+		t.Fatalf("as chongyun wrote it: %s", d)
 	}
 	secret, err := access.Update("add-key", access.Change{Name: "hermes"})
 	if err != nil {
@@ -447,7 +447,7 @@ func TestHermesWithAKeyInItsEnvFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	// the reporter's provider, as he wrote it
-	mine := "model:\n  default: deepseek/pro\n  provider: magpie\nproviders:\n  magpie:\n    name: magpie\n    api_key: \"${MAGPIE_API_KEY}\"\n    api_mode: chat_completions\n    base_url: " + here(home).v1() + "\n"
+	mine := "model:\n  default: deepseek/pro\n  provider: chongyun\nproviders:\n  chongyun:\n    name: chongyun\n    api_key: \"${MAGPIE_API_KEY}\"\n    api_mode: chat_completions\n    base_url: " + here(home).v1() + "\n"
 	if err := os.WriteFile(path, []byte(mine), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -459,7 +459,7 @@ func TestHermesWithAKeyInItsEnvFile(t *testing.T) {
 	}
 	for _, c := range []struct{ name, line string }{
 		{"a gateway key", "MAGPIE_API_KEY=" + secret},
-		{"magpie's own key, quoted", "export MAGPIE_API_KEY=\"" + gateway.Token + "\""},
+		{"chongyun's own key, quoted", "export MAGPIE_API_KEY=\"" + gateway.Token + "\""},
 	} {
 		os.WriteFile(env, []byte("OPENROUTER_API_KEY=sk-or\n"+c.line+"\n"), 0o600)
 		if d := a.Check(); d != "" {
@@ -489,14 +489,14 @@ func TestHermesWithAKeyInItsEnvFile(t *testing.T) {
 	}
 	// a variable only the shell sets, which magpie doesn't see: unknown
 	if d := a.Check(); d != "" {
-		t.Fatalf("a variable magpie can't see is drift: %s", d)
+		t.Fatalf("a variable chongyun can't see is drift: %s", d)
 	}
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	ref("a variable magpie can't see")
+	ref("a variable chongyun can't see")
 	if _, err := os.Stat(env); err == nil {
-		t.Fatal("a sync made a .env for a variable magpie can't see")
+		t.Fatal("a sync made a .env for a variable chongyun can't see")
 	}
 	// a key the gateway doesn't take
 	os.WriteFile(env, []byte("# keys\nMAGPIE_API_KEY=sk-not-this-gateways\nOTHER=1\n"), 0o600)
@@ -522,7 +522,7 @@ func TestHermesWithAKeyInItsEnvFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	if v, _ := edit.GetYAML(path, "providers.magpie.api_key"); v != gateway.Token {
-		t.Fatalf("a value that doesn't reach magpie is kept: %q", v)
+		t.Fatalf("a value that doesn't reach chongyun is kept: %q", v)
 	}
 }
 

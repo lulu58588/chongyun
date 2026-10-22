@@ -9,8 +9,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A magpie added as a Remote magpie lists here what its user picked there,
@@ -62,7 +62,7 @@ func TestRemoteMagpieListsThePicks(t *testing.T) {
 
 	// the list it gives another magpie, asked as one asks
 	req := httptest.NewRequest("GET", "/v1/models", nil)
-	req.Header.Set("User-Agent", "magpie")
+	req.Header.Set("User-Agent", "chongyun")
 	for _, h := range []string{provider.DrawersHeader, provider.VideomakersHeader, provider.PricesHeader, provider.DecidersHeader} {
 		req.Header.Set(h, "1")
 	}
@@ -101,6 +101,6 @@ func TestRemoteMagpieListsThePicks(t *testing.T) {
 	if !slices.Equal(here, picked) {
 		var v struct{ Data []json.RawMessage }
 		json.Unmarshal(body, &v)
-		t.Fatalf("the remote picked %d: %v\nthis magpie lists %d: %v\n(the remote's list had %d entries)", len(picked), picked, len(here), here, len(v.Data))
+		t.Fatalf("the remote picked %d: %v\nthis chongyun lists %d: %v\n(the remote's list had %d entries)", len(picked), picked, len(here), here, len(v.Data))
 	}
 }

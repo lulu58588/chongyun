@@ -19,17 +19,16 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/wailsapp/wails/v3/pkg/events"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/autostart"
-	"github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/omarchy"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/shortcut"
-	"github.com/yetone/magpie/internal/stats"
-	"github.com/yetone/magpie/internal/update"
-	"github.com/yetone/magpie/internal/webview2env"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/autostart"
+	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/omarchy"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/shortcut"
+	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/webview2env"
 )
 
 //go:embed tray.png
@@ -179,8 +178,8 @@ func (h *host) ChooseFolder(title string) (string, error) {
 }
 
 // panelTitle names the panel for Hyprland's rule, which places it, and
-// for niri, which finds it by it (the main window is "magpie")
-const panelTitle = "magpie panel"
+// for niri, which finds it by it (the main window is "chongyun")
+const panelTitle = "chongyun panel"
 
 // FitPanel grows or shrinks the panel to its content and keeps it anchored
 // under the tray icon; a shown panel glides there when g says how. height
@@ -302,7 +301,7 @@ const panelStart = 520
 // Run starts the desktop app: a menu bar icon whose click drops down a compact
 // panel, plus a regular window for when you want it to stay around.
 // showMain opens the window immediately; otherwise only the tray icon appears.
-// link is a magpie:// link the app was started with, to confirm and import.
+// link is a chongyun:// link the app was started with, to confirm and import.
 func Run(version string, showMain bool, link string) error {
 	Version = version
 	webkitDefaults()
@@ -322,7 +321,7 @@ func Run(version string, showMain bool, link string) error {
 	keepWebData()
 	go func() {
 		if err := registerScheme(); err != nil {
-			log.Println("magpie:// links:", err)
+			log.Println("chongyun:// links:", err)
 		}
 		// Windows has no installer to put magpie in the Start menu
 		shortcut.Ensure()
@@ -343,17 +342,16 @@ func Run(version string, showMain bool, link string) error {
 	// the app has started (applyZoom)
 	h.textSize.Store(int64(settings.Load().TextSize))
 	zoom := h.zoom()
-	go stats.Run(version, "app")
 	handler := devShell(h)
 	if handler == nil {
 		handler = Handler(h, startBackend())
 	}
 	h.app = application.New(application.Options{
-		// Windows and Linux start a new process for a magpie:// link (or a
+		// Windows and Linux start a new process for a chongyun:// link (or a
 		// second launch); it hands its arguments to the running one and quits.
 		// The Mac sends the link to the running app itself.
 		SingleInstance: singleInstance(h),
-		Name:           "magpie",
+		Name: "崇云科技",
 		Description:    "one place to pick every agent's model",
 		Icon:           appIconFor(),
 		Assets:         application.AssetOptions{Handler: ownWindow(handler)},
@@ -382,7 +380,7 @@ func Run(version string, showMain bool, link string) error {
 			updates.install(false)
 		},
 		// Wails exits on some webview errors; say why before it does.
-		ErrorHandler: func(err error) { log.Println("magpie:", err) },
+		ErrorHandler: func(err error) { log.Println("chongyun:", err) },
 	})
 	// Windows without the WebView2 runtime can make no window: Wails would
 	// exit on the first, with nothing on screen to say why (#1806). The
@@ -496,10 +494,10 @@ func Run(version string, showMain bool, link string) error {
 	if runtime.GOOS == "linux" {
 		// set before the tray starts, it is the item's id too, which
 		// Omarchy's bar pins it by (Wails calls it "Wails" otherwise)
-		h.tray.SetLabel("magpie")
+		h.tray.SetLabel("崇云科技")
 		go dropTrayName()
 	}
-	h.tray.SetTooltip("magpie")
+	h.tray.SetTooltip("崇云科技")
 	if icon, template := trayIconFor(runtime.GOOS, traySchemeLight()); template {
 		h.tray.SetTemplateIcon(icon)
 	} else {
@@ -676,7 +674,7 @@ func (h *host) setBird(b []byte) {
 func panelOptions(goos, theme string) application.WebviewWindowOptions {
 	o := application.WebviewWindowOptions{
 		Name:            "panel",
-		Title:           "magpie",
+		Title: "崇云科技",
 		URL:             "/?mode=panel" + theme,
 		Width:           panelWidth,
 		Height:          520,
@@ -719,12 +717,12 @@ func panelOptions(goos, theme string) application.WebviewWindowOptions {
 	return o
 }
 
-// OpenPanel has Run open the quick panel once it starts, as `magpie panel`
-// does; a second `magpie panel` toggles it in the running one. Omarchy's bar
+// OpenPanel has Run open the quick panel once it starts, as `chongyun panel`
+// does; a second `chongyun panel` toggles it in the running one. Omarchy's bar
 // icon runs it (see omarchy.AddWidget).
 var OpenPanel bool
 
-// OpenView is the tab the window opens on, as `magpie gui settings` asks:
+// OpenView is the tab the window opens on, as `chongyun gui settings` asks:
 // a restart to update comes back where it was asked for.
 var OpenView string
 

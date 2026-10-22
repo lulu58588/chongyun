@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // A request one magpie passes on to another (a Remote magpie provider)
@@ -91,7 +91,7 @@ func TestRemoteMagpieKeepsTheSession(t *testing.T) {
 		got := arrived[len(arrived)-1]
 		mu.Unlock()
 		if got.Get(SessionHeader) != "trace-A" || got.Get(tc.header) != tc.native {
-			t.Errorf("%s: the remote magpie was sent %s=%q %s=%q; want trace-A, %s", tc.path, SessionHeader, got.Get(SessionHeader), tc.header, got.Get(tc.header), tc.native)
+			t.Errorf("%s: the remote chongyun was sent %s=%q %s=%q; want trace-A, %s", tc.path, SessionHeader, got.Get(SessionHeader), tc.header, got.Get(tc.header), tc.native)
 		}
 		if r := there(i + 1); r.Session != "trace-A" || r.NativeSession != tc.native || r.Agent != tc.agent {
 			t.Errorf("%s: the remote recorded agent %q session %q native %q; want %s, trace-A, %s", tc.path, r.Agent, r.Session, r.NativeSession, tc.agent, tc.native)

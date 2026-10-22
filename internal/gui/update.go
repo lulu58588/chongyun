@@ -13,9 +13,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // updater keeps the app current. It asks the feed at start-up and every six
@@ -143,8 +143,8 @@ var (
 
 // place takes what an update replaces on goos: the .app the binary is in,
 // else the binary itself. On a Mac that is the terminal build too (gui
-// false: magpie-cli-darwin, or `magpie web` from it), which has no .app to
-// be in and which `magpie update` replaces the same way; before, its page
+// false: magpie-cli-darwin, or `chongyun web` from it), which has no .app to
+// be in and which `chongyun update` replaces the same way; before, its page
 // only ever offered the release page. The app's own binary copied out of
 // its .app isn't replaced by the terminal build.
 func (u *updater) place(goos string, gui bool) {

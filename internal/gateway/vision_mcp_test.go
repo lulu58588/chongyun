@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/budget"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/budget"
 )
 
 // visionPost sends one JSON-RPC body to the image recognition MCP server
@@ -154,7 +154,7 @@ func TestVisionMCPGuarded(t *testing.T) {
 		t.Fatalf("a page on this computer: %d %s", w.Code, w.Body.String())
 	}
 	m := readMCP(t, visionPost(h, there, analyzeCall(file, ""), "Authorization", "Bearer "+secrets[0]))
-	if !m.Result.IsError || !strings.Contains(m.Result.Content[0].Text, "only for an agent on the computer magpie runs on") {
+	if !m.Result.IsError || !strings.Contains(m.Result.Content[0].Text, "only for an agent on the computer chongyun runs on") {
 		t.Fatalf("another computer's file path: %+v", m)
 	}
 	// through a tunnel to this computer, too

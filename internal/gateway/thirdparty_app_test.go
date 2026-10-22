@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // What docs/integrating.md promises an app magpie has no adapter for (#918):
@@ -20,7 +20,7 @@ func TestThirdPartyAppIsCountedAsItself(t *testing.T) {
 	rec := httptest.NewRecorder()
 	New().Handler().ServeHTTP(rec, httptest.NewRequest("GET", "/api/hello", nil))
 	var hello struct{ Name string }
-	if rec.Code != 200 || json.Unmarshal(rec.Body.Bytes(), &hello) != nil || hello.Name != "magpie" {
+	if rec.Code != 200 || json.Unmarshal(rec.Body.Bytes(), &hello) != nil || hello.Name != "chongyun" {
 		t.Fatalf("GET /api/hello: %d %s", rec.Code, rec.Body.String())
 	}
 

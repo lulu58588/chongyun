@@ -16,16 +16,16 @@ import (
 	"time"
 	"unicode/utf16"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/sessions"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/wslrun"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/wslrun"
 )
 
 // An agent installed in a WSL distro reads its config there, not in
@@ -442,7 +442,7 @@ var wslKinds = []wslKind{
 	{id: "fx", name: "fx", dir: ".fx", in: fxIn,
 		restart: newNotice("{agent} in WSL {distro} reads its settings at start-up — restart open fx sessions to use this.")},
 	{id: "commandcode", name: "Command Code", dir: ".commandcode", bin: "command-code", in: commandCodeIn,
-		restart: newNotice("{agent} in WSL {distro} wants its own sign-in there (cmd login) even for models through magpie, and reads its settings at start-up — restart open Command Code sessions to use this.")},
+		restart: newNotice("{agent} in WSL {distro} wants its own sign-in there (cmd login) even for models through chongyun, and reads its settings at start-up — restart open Command Code sessions to use this.")},
 	{id: "minimax-code", name: "MiniMax Code", dir: ".minimax", bin: "mcode", in: miniMaxIn,
 		restart: newNotice("{agent} in WSL {distro} reads its settings at start-up — restart open mcode sessions to use this."),
 		asleep: func(key string) func(map[string]string) []Option {
@@ -528,7 +528,7 @@ var wslKinds = []wslKind{
 	// Block's goose, by its folder alone: a goose command may be pressly's
 	// database migration tool
 	{id: "goose", name: "Goose", dir: ".config/goose", in: func(at place) *Agent { return gooseIn(at, filepath.Join(at.home, ".config")) },
-		restart: newNotice("{agent} in WSL {distro} loads its providers at start-up — restart open goose sessions to use magpie's models."),
+		restart: newNotice("{agent} in WSL {distro} loads its providers at start-up — restart open goose sessions to use chongyun's models."),
 		asleep:  wslOwnAsleep("goose", "model")},
 	// Reasonix's native CLI (1.39 on), by its command and the version it
 	// gives: the historical npm client is reasonix too, and ~/.reasonix is
@@ -1420,7 +1420,7 @@ func wslSetting(cfg, key string) (val string, ok bool) {
 // (notice.go)
 var (
 	noticeWSLNotMirrored = newNotice("WSL {distro} is in {net} networking, not mirrored, so its {agent} was pointed at Windows ({url}) rather than 127.0.0.1; that answers only while the gateway listens beyond loopback and Windows' firewall lets WSL in. For 127.0.0.1, set networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig and run wsl --shutdown, then pick the model again.")
-	noticeWSLNoMode      = newNotice("magpie couldn't ask WSL {distro} its networking mode (it has no wslinfo) and %UserProfile%\\.wslconfig doesn't set it to mirrored, so its {agent} was pointed at Windows ({url}) rather than 127.0.0.1; that answers only while the gateway listens beyond loopback and Windows' firewall lets WSL in. For 127.0.0.1, set networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig and run wsl --shutdown, then pick the model again.")
-	noticeWSLNoRelay     = newNotice("WSL {distro} is in {net} networking with localhostForwarding=false in %UserProfile%\\.wslconfig, so 127.0.0.1 there, where its {agent} was pointed, isn't relayed to Windows, where magpie listens. Remove localhostForwarding=false under [wsl2] (it is on by default) and run wsl --shutdown.")
-	noticeWSLAsleep      = newNotice("WSL {distro} isn't running: magpie shows what it last saw there, and starts it only to change something.")
+	noticeWSLNoMode      = newNotice("chongyun couldn't ask WSL {distro} its networking mode (it has no wslinfo) and %UserProfile%\\.wslconfig doesn't set it to mirrored, so its {agent} was pointed at Windows ({url}) rather than 127.0.0.1; that answers only while the gateway listens beyond loopback and Windows' firewall lets WSL in. For 127.0.0.1, set networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig and run wsl --shutdown, then pick the model again.")
+	noticeWSLNoRelay     = newNotice("WSL {distro} is in {net} networking with localhostForwarding=false in %UserProfile%\\.wslconfig, so 127.0.0.1 there, where its {agent} was pointed, isn't relayed to Windows, where chongyun listens. Remove localhostForwarding=false under [wsl2] (it is on by default) and run wsl --shutdown.")
+	noticeWSLAsleep      = newNotice("WSL {distro} isn't running: chongyun shows what it last saw there, and starts it only to change something.")
 )

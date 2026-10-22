@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // Aside keeps one folder per account, ~/.aside/u/<id>, each with its own
@@ -23,7 +23,7 @@ import (
 //	 "profileAccountBindings": {...}}
 //
 // magpie configures the account picked on magpie (the Aside row's account
-// field, `magpie aside account u1`), else the one Aside has active, else u0:
+// field, `chongyun aside account u1`), else the one Aside has active, else u0:
 // a missing or unreadable accounts.json says nothing about which account is
 // active, so it is u0, as before there was a choice — never "no accounts".
 

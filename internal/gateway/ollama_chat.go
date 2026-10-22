@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Ollama's own chat routes, POST /api/chat and POST /api/generate, for a

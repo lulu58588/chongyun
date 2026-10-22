@@ -44,7 +44,7 @@ func compilePattern(p string) (*regexp.Regexp, error) {
 		}
 		x, err := regexp.Compile("^(?:" + re + ")$")
 		if err != nil {
-			return nil, fmt.Errorf("%q is not a regular expression magpie can read: %v", p, err)
+			return nil, fmt.Errorf("%q is not a regular expression chongyun can read: %v", p, err)
 		}
 		return x, nil
 	}

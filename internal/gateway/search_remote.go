@@ -6,14 +6,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A Remote magpie searches the web for the models it serves as it would
 // for its own agents: by the model's provider, when that searches by
 // itself, else with its own searcher. Its list says which of the two for
-// each model (web_search: "native" or "magpie"), and a web search offered
+// each model (web_search: "native" or "chongyun"), and a web search offered
 // to one of them goes to it as it was offered rather than being run here
 // with this magpie's searcher (Player on Discord: remoteMagpie/glm-5.3's
 // searches went to another model). Only a model it searches by itself,
@@ -29,7 +29,7 @@ const SearchingHeader = "X-Magpie-Searching"
 // Web search as a Remote magpie's list says it.
 const (
 	searchNative = "native"
-	searchMagpie = "magpie"
+	searchMagpie = "chongyun"
 )
 
 // remoteSearch is how a Remote magpie says it searches the web for model,

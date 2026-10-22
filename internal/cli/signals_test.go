@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // deaths records what the signal handler would die of, and takes the
@@ -50,7 +50,7 @@ func diesOf(t *testing.T, died chan os.Signal, want os.Signal) {
 			t.Fatalf("died of %v, want %v", s, want)
 		}
 	case <-time.After(3 * time.Second):
-		t.Fatalf("%v didn't end magpie", want)
+		t.Fatalf("%v didn't end chongyun", want)
 	}
 }
 
@@ -58,7 +58,7 @@ func livesOn(t *testing.T, died chan os.Signal, why string) {
 	t.Helper()
 	select {
 	case s := <-died:
-		t.Fatalf("magpie died of %v %s", s, why)
+		t.Fatalf("chongyun died of %v %s", s, why)
 	case <-time.After(300 * time.Millisecond):
 	}
 }
@@ -116,7 +116,7 @@ func TestInterruptWhileEndingProbes(t *testing.T) {
 	stop()                             // and the command is done
 	select {
 	case s := <-died:
-		t.Fatalf("magpie died of %v in a command ending itself on Ctrl+C", s)
+		t.Fatalf("chongyun died of %v in a command ending itself on Ctrl+C", s)
 	case <-time.After(2 * time.Second):
 	}
 }

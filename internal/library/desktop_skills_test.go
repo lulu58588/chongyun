@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/desktopdir"
+	"github.com/lulu58588/magpie/internal/desktopdir"
 )
 
 // desktopAccount makes a skills-plugin for one of Claude Desktop's

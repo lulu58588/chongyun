@@ -12,11 +12,11 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // Unexpanded folder variables must not send a config write into ./~/….
@@ -106,7 +106,7 @@ func TestGooseRunsOnMagpie(t *testing.T) {
 		vals = append(vals, o.Value)
 	}
 	if !slices.Contains(vals, "magpie/relay/glm-4.6") || !slices.Contains(vals, "magpie/oa/gpt-5.5") {
-		t.Fatalf("magpie's models not offered: %v", vals)
+		t.Fatalf("chongyun's models not offered: %v", vals)
 	}
 	if err := f.Set("magpie/relay/glm-4.6"); err != nil {
 		t.Fatal(err)
@@ -136,7 +136,7 @@ func TestGooseRunsOnMagpie(t *testing.T) {
 	if err := json.Unmarshal([]byte(readFile(file)), &p); err != nil {
 		t.Fatalf("%v: %s", err, readFile(file))
 	}
-	if p.Name != "magpie" || p.Engine != "openai" || p.BaseURL != gatewayV1() ||
+	if p.Name != "chongyun" || p.Engine != "openai" || p.BaseURL != gatewayV1() ||
 		p.Headers["Authorization"] != "Bearer "+gateway.TokenFor("goose") || p.APIKeyEnv == nil || *p.APIKeyEnv != "" ||
 		p.RequiresAuth == nil || *p.RequiresAuth || p.DynamicModels == nil || *p.DynamicModels || !p.Skip {
 		t.Fatalf("provider: %s", readFile(file))
@@ -251,12 +251,12 @@ func TestGooseOffersOnlyItsConfiguredProviders(t *testing.T) {
 	}
 
 	// the reporter's: magpie alone
-	os.WriteFile(a.Path, []byte("active_provider: magpie\nGOOSE_PROVIDER: magpie\nGOOSE_MODEL: zhipu/glm-5.3\nproviders:\n  magpie:\n    enabled: true\n    model: zhipu/glm-5.3\n    configured: true\n"), 0o644)
+	os.WriteFile(a.Path, []byte("active_provider: chongyun\nGOOSE_PROVIDER: chongyun\nGOOSE_MODEL: zhipu/glm-5.3\nproviders:\n  chongyun:\n    enabled: true\n    model: zhipu/glm-5.3\n    configured: true\n"), 0o644)
 	if got := natives(); len(got) != 0 {
-		t.Fatalf("a goose on magpie alone is offered %v", got)
+		t.Fatalf("a goose on chongyun alone is offered %v", got)
 	}
 
-	os.WriteFile(a.Path, []byte("active_provider: magpie\nproviders:\n  magpie:\n    configured: true\n  anthropic:\n    enabled: true\n    model: claude-sonnet-4-5\n    configured: true\n  openai:\n    enabled: true\n    configured: false\ngoogle_configured: true\n"), 0o644)
+	os.WriteFile(a.Path, []byte("active_provider: chongyun\nproviders:\n  chongyun:\n    configured: true\n  anthropic:\n    enabled: true\n    model: claude-sonnet-4-5\n    configured: true\n  openai:\n    enabled: true\n    configured: false\ngoogle_configured: true\n"), 0o644)
 	got := natives()
 	if !got["anthropic"] || !got["google"] || got["openai"] || got["openrouter"] {
 		t.Fatalf("configured anthropic (map) and google (marker), not openai or openrouter; got %v", got)
@@ -312,7 +312,7 @@ func TestGooseModelInEitherLayout(t *testing.T) {
 	os.MkdirAll(filepath.Dir(a.Path), 0o755)
 
 	// the reporter's: migrated, magpie in use, and another provider set up
-	writeFile(t, a.Path, "# mine\nGOOSE_MODE: auto\nactive_provider: magpie\nproviders:\n  magpie:\n    enabled: true\n    model: zhipu/glm-5.3\n    configured: true\n  anthropic:\n    enabled: true\n    model: claude-sonnet-4-5\n    configured: true\n")
+	writeFile(t, a.Path, "# mine\nGOOSE_MODE: auto\nactive_provider: chongyun\nproviders:\n  chongyun:\n    enabled: true\n    model: zhipu/glm-5.3\n    configured: true\n  anthropic:\n    enabled: true\n    model: claude-sonnet-4-5\n    configured: true\n")
 	if got := f.Get(); got != "magpie/zhipu/glm-5.3" {
 		t.Fatalf("model = %q, want magpie/zhipu/glm-5.3", got)
 	}
@@ -326,7 +326,7 @@ func TestGooseModelInEitherLayout(t *testing.T) {
 		t.Fatalf("model = %q", got)
 	}
 	if m, _ := edit.GetYAML(a.Path, "providers.magpie.model"); m != "zhipu/glm-5.3" {
-		t.Fatalf("magpie's entry changed: %s", readFile(a.Path))
+		t.Fatalf("chongyun's entry changed: %s", readFile(a.Path))
 	}
 	if _, ok := edit.GetYAMLTop(a.Path, "GOOSE_PROVIDER"); ok {
 		t.Fatalf("flat keys written beside the map: %s", readFile(a.Path))
@@ -348,7 +348,7 @@ func TestGooseModelInEitherLayout(t *testing.T) {
 		t.Fatal(err)
 	}
 	if a.Check() == "" {
-		t.Fatal("magpie in use through active_provider, a rewritten base_url not noticed")
+		t.Fatal("chongyun in use through active_provider, a rewritten base_url not noticed")
 	}
 
 	if err := f.Set(""); err != nil {
@@ -361,14 +361,14 @@ func TestGooseModelInEitherLayout(t *testing.T) {
 		t.Fatalf("active_provider left: %s", readFile(a.Path))
 	}
 	if _, ok := edit.GetYAML(a.Path, "providers.magpie.model"); ok {
-		t.Fatalf("magpie's entry left: %s", readFile(a.Path))
+		t.Fatalf("chongyun's entry left: %s", readFile(a.Path))
 	}
 	if m, _ := edit.GetYAML(a.Path, "providers.anthropic.model"); m != "claude-opus-5-5" {
 		t.Fatalf("anthropic's entry lost: %s", readFile(a.Path))
 	}
 
 	// a stale flat key beside the map: goose takes active_provider's
-	writeFile(t, a.Path, "GOOSE_PROVIDER: openai\nGOOSE_MODEL: gpt-5.5\nactive_provider: magpie\nproviders:\n  magpie:\n    model: relay/glm-4.6\n")
+	writeFile(t, a.Path, "GOOSE_PROVIDER: openai\nGOOSE_MODEL: gpt-5.5\nactive_provider: chongyun\nproviders:\n  chongyun:\n    model: relay/glm-4.6\n")
 	if got := f.Get(); got != "magpie/relay/glm-4.6" {
 		t.Fatalf("model = %q, want active_provider's", got)
 	}
@@ -381,7 +381,7 @@ func TestGooseModelInEitherLayout(t *testing.T) {
 	if err := f.Set("magpie/relay/glm-4.6"); err != nil {
 		t.Fatal(err)
 	}
-	if got := readFile(a.Path); got != "GOOSE_PROVIDER: magpie\nGOOSE_MODEL: relay/glm-4.6\n" {
+	if got := readFile(a.Path); got != "GOOSE_PROVIDER: chongyun\nGOOSE_MODEL: relay/glm-4.6\n" {
 		t.Fatalf("old layout rewritten:\n%s", got)
 	}
 	if got := gooseUses(t, a.Path); got != "magpie/relay/glm-4.6" {
@@ -448,7 +448,7 @@ func TestGooseKeepsTheUsersSettings(t *testing.T) {
 		}
 		if got.BaseURL != gatewayV1() || got.Engine != "openai" || got.Headers["Authorization"] != "Bearer "+gateway.TokenFor("goose") ||
 			slices.Contains(ids, "gone/old") || !slices.Contains(ids, "deepseek/pro") {
-			t.Errorf("%s: magpie's own parts not written:\n%s", when, raw)
+			t.Errorf("%s: chongyun's own parts not written:\n%s", when, raw)
 		}
 	}
 	check("sync")

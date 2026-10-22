@@ -9,7 +9,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
 // #1277: a magpie.exe kept at C:\ may not write there, so it can't replace
@@ -34,7 +34,7 @@ func TestUpdateNotWritableSaysWhy(t *testing.T) {
 
 	dir := t.TempDir()
 	exe := filepath.Join(dir, "magpie.exe")
-	if err := os.WriteFile(exe, []byte("magpie"), 0o755); err != nil {
+	if err := os.WriteFile(exe, []byte("chongyun"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.Chmod(dir, 0o555); err != nil {
@@ -48,7 +48,7 @@ func TestUpdateNotWritableSaysWhy(t *testing.T) {
 	u.check()
 	j := u.json()
 	if j.State != "available" || j.Stuck != "not-writable" || j.StuckDir != dir {
-		t.Fatalf("a binary in a folder magpie can't write to: %+v", j)
+		t.Fatalf("a binary in a folder chongyun can't write to: %+v", j)
 	}
 
 	// where the system can ask for the password, it updates as before

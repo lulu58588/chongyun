@@ -26,7 +26,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/agentenv"
 )
 
 const (
@@ -77,6 +77,10 @@ func Run(m *testing.M) int {
 // RunIn is Run with setup called on the temporary home before the tests,
 // for fixtures that live in it.
 func RunIn(m *testing.M, setup func(home string)) int {
+	// the build reads an agent's sign-in only when the user asks for it
+	// (MAGPIE_ACCOUNT_DISCOVERY); the tests here are about that code, so
+	// they turn it on for the run.
+	os.Setenv("MAGPIE_ACCOUNT_DISCOVERY", "1")
 	if home := os.Getenv(Marker); home != "" {
 		// started again by one of the tests: keep what it set up
 		if err := checkChild(home); err != nil {

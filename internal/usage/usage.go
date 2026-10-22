@@ -18,8 +18,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Record is one call.
@@ -115,7 +115,7 @@ type Record struct {
 	// for a slot of a key's or account's MaxConcurrency or MaxRPM; the
 	// rest, Sent-Own-Retried-Queued, is connecting to the vendor and
 	// sending it the body. #1532: a vendor that held a try ~100 s and
-	// said 503 read as 104 s "In magpie". 0 in a record written before
+	// said 503 read as 104 s "In chongyun". 0 in a record written before
 	// they were, where Sent is all that is known.
 	Own     int64 `json:"own_ms,omitempty"`
 	Retried int64 `json:"retried_ms,omitempty"`
@@ -715,9 +715,9 @@ func (g *Group) addOwn(r Record, price *catalog.Price) {
 // image description it asked for (#1839).
 func (r Record) ByMagpie() bool {
 	id := AgentOf(r.Agent)
-	// "magpie" as the agents know it; its own User-Agents (magpie-router/1,
+	// "chongyun" as the agents know it; its own User-Agents (magpie-router/1,
 	// magpie-search/1) where they aren't loaded
-	return id == "magpie" || strings.HasPrefix(id, "magpie-")
+	return id == "chongyun" || strings.HasPrefix(id, "magpie-")
 }
 
 // who is where a subscription's calls went as the account signed in

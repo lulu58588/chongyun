@@ -7,8 +7,8 @@ import (
 	"testing"
 )
 
-// `magpie snow a/m` puts Snow CLI on a magpie profile and makes it the
-// active one; `magpie snow default` puts back the profile the user was on,
+// `chongyun snow a/m` puts Snow CLI on a magpie profile and makes it the
+// active one; `chongyun snow default` puts back the profile the user was on,
 // its files as they were.
 func TestAgentSnowDefault(t *testing.T) {
 	groupsHome(t)
@@ -48,8 +48,8 @@ func TestAgentSnowDefault(t *testing.T) {
 			t.Fatalf("not wired (%s missing):\n%s", want, s)
 		}
 	}
-	if !strings.Contains(read("active-profile.json"), `"magpie"`) || read("config.json") != s {
-		t.Fatalf("magpie's profile isn't the active one:\n%s\n%s", read("active-profile.json"), read("config.json"))
+	if !strings.Contains(read("active-profile.json"), `"chongyun"`) || read("config.json") != s {
+		t.Fatalf("chongyun's profile isn't the active one:\n%s\n%s", read("active-profile.json"), read("config.json"))
 	}
 	if err := run([]string{"snow", "default"}); err != nil {
 		t.Fatal(err)

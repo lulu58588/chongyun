@@ -15,7 +15,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // When no provider can search, magpie's web_search tool is answered by a
@@ -243,7 +243,7 @@ func (s *Server) askSearchAPI(ctx context.Context, a provider.SearchAPI, query s
 			getAt(provider.YouFreeSearch, url.Values{"query": {query}, "count": {fmt.Sprint(searchHits)}})
 		}
 	default:
-		return nil, fmt.Errorf("magpie can't ask %q", a.Vendor)
+		return nil, fmt.Errorf("chongyun can't ask %q", a.Vendor)
 	}
 	if err != nil {
 		return nil, err

@@ -21,7 +21,7 @@ func TestClaudePlan(t *testing.T) {
 	top, entries := claudePlan(models, 272000, nil)
 	want := map[string]int{"mythos-magpie-2": 131000, "anthropic/magpie-4": 1000000, "magpie/v/gpt-6.1-sol": 400000}
 	if top != 1000000 || !reflect.DeepEqual(entries, want) {
-		t.Fatalf("magpie's default: %d %v", top, entries)
+		t.Fatalf("chongyun's default: %d %v", top, entries)
 	}
 	// no top-level window: every model runs at the largest, the [1m] one's 1M
 	top, entries = claudePlan(models, 0, nil)

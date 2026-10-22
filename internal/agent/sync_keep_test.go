@@ -31,9 +31,9 @@ func TestPiKeepsTheirKeysInMagpiesProvider(t *testing.T) {
 	// the block as magpie wrote it, with the optimizer's key added
 	writeFile(t, piModels, `{
   "providers": {
-    "magpie": {
+    "chongyun": {
       "api": "openai-completions",
-      "apiKey": "magpie",
+      "apiKey": "chongyun",
       "baseUrl": "http://127.0.0.1:3425/v1",
       "compat": {
         "sendSessionAffinityHeaders": true
@@ -44,7 +44,7 @@ func TestPiKeepsTheirKeysInMagpiesProvider(t *testing.T) {
           "name": "Old"
         }
       ],
-      "name": "magpie"
+      "name": "chongyun"
     }
   }
 }
@@ -57,7 +57,7 @@ func TestPiKeepsTheirKeysInMagpiesProvider(t *testing.T) {
 	}
 	ms, _ := json.Marshal(p["models"])
 	if strings.Contains(string(ms), "gone/old-model") || !strings.Contains(string(ms), "relay/glm-4.6") {
-		t.Fatalf("models not magpie's list: %s", ms)
+		t.Fatalf("models not chongyun's list: %s", ms)
 	}
 
 	// synced already: the next sync writes nothing
@@ -84,7 +84,7 @@ func TestPiKeepsTheirKeysInMagpiesProvider(t *testing.T) {
 func TestOpenCodeAndCrushKeepTheirKeysInMagpiesProvider(t *testing.T) {
 	home := syncHome(t)
 	cfg := filepath.Join(home, ".config", "opencode", "opencode.json")
-	writeFile(t, cfg, `{"model":"magpie/relay/glm-4.6","provider":{"magpie":{"name":"magpie","npm":"@ai-sdk/openai-compatible","options":{"baseURL":"http://127.0.0.1:3425/v1","apiKey":"magpie","setCacheKey":true},"models":{"gone/old-model":{"name":"Old"}}}}}`)
+	writeFile(t, cfg, `{"model":"magpie/relay/glm-4.6","provider":{"chongyun":{"name":"chongyun","npm":"@ai-sdk/openai-compatible","options":{"baseURL":"http://127.0.0.1:3425/v1","apiKey":"chongyun","setCacheKey":true},"models":{"gone/old-model":{"name":"Old"}}}}}`)
 	oc := opencode(home, filepath.Join(home, ".config"))
 	if err := oc.Sync(); err != nil {
 		t.Fatal(err)
@@ -103,7 +103,7 @@ func TestOpenCodeAndCrushKeepTheirKeysInMagpiesProvider(t *testing.T) {
 	}
 
 	cr := filepath.Join(home, ".config", "crush", "crush.json")
-	writeFile(t, cr, `{"providers":{"magpie":{"type":"openai","name":"magpie","base_url":"http://127.0.0.1:3425/v1","api_key":"magpie","extra_headers":{"X-Mine":"1"},"models":[]}}}`)
+	writeFile(t, cr, `{"providers":{"chongyun":{"type":"openai","name":"chongyun","base_url":"http://127.0.0.1:3425/v1","api_key":"chongyun","extra_headers":{"X-Mine":"1"},"models":[]}}}`)
 	c := crushAt(here(home), cr, filepath.Join(home, ".local", "share", "crush", "crush.json"))
 	if err := c.Sync(); err != nil {
 		t.Fatal(err)

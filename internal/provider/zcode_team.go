@@ -50,7 +50,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/appdir"
 )
 
 func (k zcodeKey) team() bool { return k.Org != "" && k.Project != "" }

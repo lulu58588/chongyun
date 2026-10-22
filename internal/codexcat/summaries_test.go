@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // Codex before 0.145 loads no catalog an entry of which lacks
@@ -57,7 +57,7 @@ func TestKeepUserKeys(t *testing.T) {
 		t.Error("a file that doesn't parse: changed")
 	}
 	if got := Keep(b, b); string(got) != string(b) {
-		t.Error("magpie's own file: changed")
+		t.Error("chongyun's own file: changed")
 	}
 
 	cur := `{"models":[
@@ -81,13 +81,13 @@ func TestKeepUserKeys(t *testing.T) {
 		t.Errorf("user's object: %v", m1["x_note"])
 	}
 	if _, ok := m1["context_window"]; ok {
-		t.Error("a window magpie left out came back")
+		t.Error("a window chongyun left out came back")
 	}
 	if _, ok := m1["auto_review_model_override"]; ok {
-		t.Error("an auto-review model magpie took out came back")
+		t.Error("an auto-review model chongyun took out came back")
 	}
 	if m1["shell_type"] != "unified_exec" {
-		t.Errorf("a key magpie writes: %v", m1["shell_type"])
+		t.Errorf("a key chongyun writes: %v", m1["shell_type"])
 	}
 	// Codex's own entry: its cache's value is magpie's; a key of the user's stays
 	if own["supports_reasoning_summaries"] != true || own["x_mine"] != json.Number("1") {

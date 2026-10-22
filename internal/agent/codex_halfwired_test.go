@@ -5,20 +5,20 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Tystem on Discord: Codex wouldn't load its config ("Model provider
-// `magpie` not found") with model_provider = "magpie" and model =
+// `chongyun` not found") with model_provider = "magpie" and model =
 // "deepseek-flash" left in config.toml and no [model_providers.magpie],
 // and magpie showed Codex as not connected. Codex refuses the whole config
 // so, not just an old thread: Check says so, and Sync writes the table
 // back, at the top and for a profile alike.
 func TestCodexProviderWithoutTable(t *testing.T) {
 	for _, tc := range []struct{ name, config string }{
-		{"top", "model_provider = \"magpie\"\nmodel = \"deepseek-flash\"\n"},
-		{"profile", "profile = \"ds\"\n\n[profiles.ds]\nmodel_provider = \"magpie\"\nmodel = \"deepseek-flash\"\n"},
+		{"top", "model_provider = \"chongyun\"\nmodel = \"deepseek-flash\"\n"},
+		{"profile", "profile = \"ds\"\n\n[profiles.ds]\nmodel_provider = \"chongyun\"\nmodel = \"deepseek-flash\"\n"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			home, read := codexHome(t, "", tc.config)
@@ -64,7 +64,7 @@ func TestCodexSteppingOutLeavesNoHalfState(t *testing.T) {
 				t.Fatalf("model_provider left:\n%s", read())
 			}
 			if tb, _ := edit.GetTOMLTable(cx.Path, "model_providers.magpie"); tb == nil {
-				t.Fatalf("table gone, for the threads started on magpie:\n%s", read())
+				t.Fatalf("table gone, for the threads started on chongyun:\n%s", read())
 			}
 		})
 	}
@@ -79,7 +79,7 @@ func TestConnectWithNoModels(t *testing.T) {
 	}
 	_, err := codex(home).ConnectHow()
 	var nm *NoModelsError
-	if !errors.As(err, &nm) || nm.Agent != "Codex" || !strings.Contains(err.Error(), "Add a provider or subscription in magpie first, then connect Codex") {
+	if !errors.As(err, &nm) || nm.Agent != "Codex" || !strings.Contains(err.Error(), "Add a provider or subscription in chongyun first, then connect Codex") {
 		t.Fatalf("%v", err)
 	}
 }

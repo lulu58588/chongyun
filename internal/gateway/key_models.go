@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A gateway key may be held to some models (#882, access.Key.Models): it
@@ -345,14 +345,14 @@ func (s *Server) onKeys(r *http.Request, p provider.Provider, model, asked strin
 
 // keyModelError is what a request for a model its key may not use is told.
 func keyModelError(who access.Identity, model string) string {
-	return fmt.Sprintf("The gateway key %q may not use %s; it may use %s. Change the key's models in magpie's Gateway page, or use a model it has.",
+	return fmt.Sprintf("The gateway key %q may not use %s; it may use %s. Change the key's models in chongyun's Gateway page, or use a model it has.",
 		who.KeyName, model, strings.Join(who.Models, ", "))
 }
 
 // keyAccountsError is what a request every candidate of which was an
 // account or key its key may not use is told.
 func keyAccountsError(who access.Identity, model string) string {
-	return fmt.Sprintf("The gateway key %q is not allowed to use the accounts behind %s: no account or key behind it is one the key may use; it may use %s. Change the key's accounts in magpie's Gateway page, or use an account it has.",
+	return fmt.Sprintf("The gateway key %q is not allowed to use the accounts behind %s: no account or key behind it is one the key may use; it may use %s. Change the key's accounts in chongyun's Gateway page, or use an account it has.",
 		who.KeyName, model, keyAccountNames(who))
 }
 

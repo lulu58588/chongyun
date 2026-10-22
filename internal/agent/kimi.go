@@ -5,7 +5,7 @@ package agent
 // Python kimi-cli's in ~/.kimi ($KIMI_SHARE_DIR), in the same shape (see
 // KimiDir): the model sessions start with as default_model, a key
 // of its [models."<key>"] tables, each naming a [providers.<name>] table and
-// the model to ask it for. magpie adds itself as the provider "magpie" (the
+// the model to ask it for. magpie adds itself as the provider "chongyun" (the
 // gateway, spoken to as Kimi's own chat completions, so the thinking goes
 // both ways as reasoning_content) and one model table per catalog model,
 // keyed "magpie/<provider>/<model>", so the catalog joins Kimi's /model
@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // kimiModelTable is the header prefix of every model table magpie writes.
@@ -284,14 +284,14 @@ func kimiIn(at place) *Agent {
 				return err.Error()
 			}
 			if m == nil {
-				return "Kimi Code's [models." + strconv.Quote(v) + "] (config.toml) is gone, so it no longer reaches magpie"
+				return "Kimi Code's [models." + strconv.Quote(v) + "] (config.toml) is gone, so it no longer reaches chongyun"
 			}
 			t, err := edit.GetTOMLTable(path, providerTable)
 			if err != nil {
 				return err.Error()
 			}
 			if t == nil {
-				return "Kimi Code's [" + providerTable + "] (config.toml) is gone, so it no longer reaches magpie"
+				return "Kimi Code's [" + providerTable + "] (config.toml) is gone, so it no longer reaches chongyun"
 			}
 			return wiringOff("Kimi Code", path, func(k string) (string, bool) { v, ok := t[k]; return v, ok },
 				"base_url", at.v1(), "api_key", at.gwKey())

@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // Prime Agent (#1528) is an agent of its own, wired as Pi is but in
@@ -48,7 +48,7 @@ func TestPrimeAgent(t *testing.T) {
 	if err := a.Connect(); err != nil {
 		t.Fatal(err)
 	}
-	for k, want := range map[string]string{"defaultProvider": "magpie", "defaultModel": "relay/glm-4.6",
+	for k, want := range map[string]string{"defaultProvider": "chongyun", "defaultModel": "relay/glm-4.6",
 		"theme": "dark", "subagentDefaultModel": "xai/grok-4.6", "allowedModels.0": "xai/grok-4.6"} {
 		if v, _ := edit.GetJSON(settings, k); v != want {
 			t.Fatalf("%s = %q:\n%s", k, v, readFile(settings))
@@ -63,7 +63,7 @@ func TestPrimeAgent(t *testing.T) {
 	if mine := file.Providers["mine"]; mine == nil || mine["apiKey"] != "MINE_KEY" {
 		t.Fatalf("their provider:\n%s", readFile(models))
 	}
-	got := file.Providers["magpie"]
+	got := file.Providers["chongyun"]
 	if got["baseUrl"] != gateway.URL()+"/v1" || got["api"] != "openai-completions" || got["apiKey"] != "magpie-prime-agent" {
 		t.Fatalf("models:\n%s", readFile(models))
 	}

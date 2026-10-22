@@ -4,8 +4,8 @@ package agent
 // ~/.qoder by default. A provider of one's own is an entry of "providers",
 // its models picked as "<provider>/<model>":
 //
-//	{"providers":{"magpie":{"displayName":"magpie","protocol":"openai",
-//	   "baseUrl":"http://127.0.0.1:3425/v1","apiKey":"magpie","model":…,
+//	{"providers":{"chongyun":{"displayName": "崇云科技","protocol":"openai",
+//	   "baseUrl":"http://127.0.0.1:3425/v1","apiKey":"chongyun","model":…,
 //	   "models":[{"model":…,"displayName":…,"contextWindow":…,"maxOutputTokens":…,
 //	     "capabilities":{"tools":true,"vision":…,"thinking":{"modes":["enabled"],
 //	       "supportsEffort":true,"supportedEffortLevels":[…]}}}]}},
@@ -34,8 +34,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 func qoder(home string) *Agent {
@@ -318,7 +318,7 @@ func qoderProviderAt(agent, model, v1 string) map[string]any {
 		}
 		ms = append(ms, e)
 	}
-	return map[string]any{"displayName": "magpie", "protocol": "openai", "baseUrl": v1,
+	return map[string]any{"displayName": "崇云科技", "protocol": "openai", "baseUrl": v1,
 		"apiKey": agentKeyAt(agent, v1), "model": model, "models": ms}
 }
 

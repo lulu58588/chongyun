@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // The terminal serves the gateway while it is open, as the app does, when
@@ -82,7 +82,7 @@ func serveGateway(ctx context.Context) (wait func()) {
 // nothing else to say: served here, or why agents can't reach it.
 func gatewayStatus() string {
 	if gw.here.Load() {
-		return sMuted.Render("● gateway " + gateway.URL() + " · served while magpie tui is open")
+		return sMuted.Render("● gateway " + gateway.URL() + " · served while chongyun tui is open")
 	}
 	if e := gw.err.Load(); e != nil && *e != "" {
 		return sBad.Render("✗ ") + sText.Render("gateway not running: "+*e)
@@ -92,5 +92,5 @@ func gatewayStatus() string {
 
 // gatewayGoneNote is said as the terminal quits having served the gateway.
 func gatewayGoneNote() string {
-	return "magpie: the gateway stopped with magpie tui; agents connected to magpie reach it while magpie tui, magpie web or magpie serve runs"
+	return "chongyun: the gateway stopped with chongyun tui; agents connected to chongyun reach it while chongyun tui, chongyun web or chongyun serve runs"
 }

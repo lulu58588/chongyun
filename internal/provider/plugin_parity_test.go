@@ -5,9 +5,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // movedGrok is Grok moved onto its plugin, which lists grok-new.

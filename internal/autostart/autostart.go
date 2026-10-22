@@ -81,7 +81,7 @@ func self() (string, error) {
 	// a Mac app opened where it was downloaded runs from a copy the system
 	// makes somewhere random, gone at the next login
 	if strings.Contains(exe, "/AppTranslocation/") {
-		return "", errors.New("move magpie to Applications first, then turn this on")
+		return "", errors.New("move chongyun to Applications first, then turn this on")
 	}
 	return exe, nil
 }

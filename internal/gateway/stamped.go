@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // stampedFor is how long what a stamped keeps is used while the stamp

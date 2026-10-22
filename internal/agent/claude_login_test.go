@@ -5,10 +5,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func saveDeepseek(t *testing.T) {
@@ -35,16 +35,16 @@ func TestClaudeKeepsItsClaudeAISignIn(t *testing.T) {
 		t.Fatal("Claude Code has no sign-in field")
 	}
 	if o := login.Options(a.Values()); len(o) != 0 {
-		t.Fatalf("sign-ins offered before Claude Code runs through magpie: %v", o)
+		t.Fatalf("sign-ins offered before Claude Code runs through chongyun: %v", o)
 	}
 	if err := login.Set("claudeai"); err == nil {
-		t.Fatal("a sign-in kept before Claude Code runs through magpie")
+		t.Fatal("a sign-in kept before Claude Code runs through chongyun")
 	}
 	if err := a.Apply("model", "deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	if tok, _ := env("ANTHROPIC_AUTH_TOKEN"); tok != gateway.Token {
-		t.Fatalf("magpie's key by default, got %q", tok)
+		t.Fatalf("chongyun's key by default, got %q", tok)
 	}
 	if o := login.Options(a.Values()); len(o) != 2 {
 		t.Fatalf("sign-ins %v", o)
@@ -97,7 +97,7 @@ func TestClaudeKeepsItsClaudeAISignIn(t *testing.T) {
 	if err := edit.SetJSON(path, edit.KV{Path: "env.ANTHROPIC_AUTH_TOKEN", Value: "sk-other"}); err != nil {
 		t.Fatal(err)
 	}
-	if c := a.Check(); !strings.Contains(c, "sends magpie that key, not its claude.ai sign-in") {
+	if c := a.Check(); !strings.Contains(c, "sends chongyun that key, not its claude.ai sign-in") {
 		t.Fatalf("a key beside the sign-in kept: %q", c)
 	}
 	if err := a.Reapply(); err != nil {
@@ -110,20 +110,20 @@ func TestClaudeKeepsItsClaudeAISignIn(t *testing.T) {
 		t.Fatal(err)
 	}
 	if tok, _ := env("ANTHROPIC_AUTH_TOKEN"); tok != gateway.Token || a.Values()["login"] != "" || a.Drift() != nil {
-		t.Fatalf("magpie's key again: token %q, values %v, drift %+v", tok, a.Values(), a.Drift())
+		t.Fatalf("chongyun's key again: token %q, values %v, drift %+v", tok, a.Values(), a.Drift())
 	}
 	// magpie's key emptied or taken out by hand: said, with the way to keep it so
 	if err := edit.SetJSON(path, edit.KV{Path: "env.ANTHROPIC_AUTH_TOKEN", Value: ""}); err != nil {
 		t.Fatal(err)
 	}
 	if c := a.Check(); !strings.Contains(c, "is empty") || !strings.Contains(c, "set its sign-in to claude.ai") {
-		t.Fatalf("magpie's key emptied: %q", c)
+		t.Fatalf("chongyun's key emptied: %q", c)
 	}
 	if err := edit.DelJSON(path, "env.ANTHROPIC_AUTH_TOKEN"); err != nil {
 		t.Fatal(err)
 	}
 	if c := a.Check(); !strings.Contains(c, "is gone") {
-		t.Fatalf("magpie's key gone: %q", c)
+		t.Fatalf("chongyun's key gone: %q", c)
 	}
 	if v, _ := edit.GetJSON(path, "theme"); v != "dark" {
 		t.Fatal("theme lost")
@@ -151,7 +151,7 @@ func TestClaudeSignInThroughDisconnect(t *testing.T) {
 		t.Fatalf("switched off:\n%s", readFile(path))
 	}
 	if v := a.Values()["login"]; v != "" {
-		t.Fatalf("sign-in %q off magpie", v)
+		t.Fatalf("sign-in %q off chongyun", v)
 	}
 	if err := a.Connect(); err != nil {
 		t.Fatal(err)

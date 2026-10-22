@@ -195,7 +195,7 @@ func TestCopilotQuotaWithoutEditorsSignIn(t *testing.T) {
 		}
 	}
 	if card == nil {
-		t.Fatal("no Copilot card: an account signed in from magpie alone was left out")
+		t.Fatal("no Copilot card: an account signed in from chongyun alone was left out")
 	}
 	if card.User != "hubot" || card.Plan != "Pro+" || len(card.Windows) != 1 {
 		t.Fatalf("Copilot card = %+v", *card)

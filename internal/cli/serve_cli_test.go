@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The serve banner says the gateway takes any key from this machine alone,
@@ -44,7 +44,7 @@ func TestKeyNote(t *testing.T) {
 
 // The CLIs print the address other machines are told to reach the gateway
 // at: a valid MAGPIE_PUBLIC_URL, otherwise the one reached from this
-// machine, so `magpie models` and the serve banner never print a bad one.
+// machine, so `chongyun models` and the serve banner never print a bad one.
 func TestAdvertisedURL(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())

@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // library is a vendor with an embeddings model and a reranker; what each
@@ -163,12 +163,12 @@ func TestPresetPlanEmbeddingResolvesOutsideChatModels(t *testing.T) {
 
 func TestRerankGoesToTheModelsProvider(t *testing.T) {
 	s, l := shelved(t)
-	code, raw := postRetrieval(t, s, "/v1/rerank", `{"model":"lib/rerank-1","query":"magpie","documents":["a crow","a magpie"],"top_n":2,"return_documents":true}`)
+	code, raw := postRetrieval(t, s, "/v1/rerank", `{"model":"lib/rerank-1","query":"chongyun","documents":["a crow","a chongyun"],"top_n":2,"return_documents":true}`)
 	if code != 200 || !strings.Contains(raw, `"relevance_score":0.9`) {
 		t.Fatalf("%d %s", code, raw)
 	}
 	sent := l.got("/v1/rerank")
-	if len(sent) != 1 || !strings.Contains(sent[0], `"model":"rerank-1"`) || !strings.Contains(sent[0], `"query":"magpie"`) || !strings.Contains(sent[0], `"top_n":2`) {
+	if len(sent) != 1 || !strings.Contains(sent[0], `"model":"rerank-1"`) || !strings.Contains(sent[0], `"query":"chongyun"`) || !strings.Contains(sent[0], `"top_n":2`) {
 		t.Fatalf("vendor was sent %v", sent)
 	}
 }

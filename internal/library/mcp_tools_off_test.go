@@ -10,7 +10,7 @@ import (
 
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // handEdit sets key in the server's entry of the agent's file as the user
@@ -105,7 +105,7 @@ func TestToolsOffInTheEntry(t *testing.T) {
 		}
 		// magpie's are only those it added: the user's write_file isn't
 		if mine := l.applied(id).ToolsOff["fs"]; !slices.Equal(mine, []string{"delete", "read_file"}) {
-			t.Errorf("%s: magpie's: %v", id, mine)
+			t.Errorf("%s: chongyun's: %v", id, mine)
 		}
 	}
 
@@ -214,7 +214,7 @@ func TestToolsOffClaudeDeny(t *testing.T) {
 	}
 	l, _ := load()
 	if r := l.applied("claude").ToolRules; !slices.Equal(r, []string{"mcp__web-1__read_page", "mcp__web-1__search"}) {
-		t.Errorf("magpie's: %v", r)
+		t.Errorf("chongyun's: %v", r)
 	}
 
 	ok(t)(ServerTools("web-1", []string{"search"}))

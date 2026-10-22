@@ -2,7 +2,7 @@ package provider
 
 // The cards another magpie is told (CachedCards) as fresh as this magpie
 // knows them, not only as the Usage page last read them (jorben, #1313).
-// A magpie that serves only other magpies (`magpie serve` in a container)
+// A magpie that serves only other magpies (`chongyun serve` in a container)
 // has nobody on its Usage page, so the page's cards were never read
 // there, while the same accounts' allowances are read all the time
 // behind the requests: the account switching and the Codex warm-up
@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // cardFace is what a card is named and drawn with.
@@ -163,7 +163,7 @@ func withAccountReadings(cards []SubscriptionQuota) []SubscriptionQuota {
 // when it told it after q was read: the windows a request's answer gave
 // are kept apart from the readings (claudeUsage), and telling them drops
 // the account's reading (StaleAllowance), so a magpie only requests reach
-// (`magpie serve` for a Remote magpie) had a card for nobody (#2206,
+// (`chongyun serve` for a Remote magpie) had a card for nobody (#2206,
 // SuInk). A reading started after it stands, as it is newer.
 func withHeardClaude(q SubscriptionQuota, l Login) SubscriptionQuota {
 	if l.Agent != "claude" {

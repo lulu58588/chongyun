@@ -27,8 +27,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 func pencil(home string) *Agent {
@@ -69,7 +69,7 @@ func pencil(home string) *Agent {
 				return edit.SetJSON(path, edit.KV{Path: key, Value: theirsKept(path, key, func() any { return pencilProviderJSON(gateway.URL()) }, "models")()})
 			},
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie", Note: "every magpie model in Pencil's model picker"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun", Note: "every chongyun model in Pencil's model picker"}}
 			},
 		}},
 	}
@@ -113,11 +113,11 @@ func pencilProviderJSON(gw string) map[string]any {
 		e["compat"] = map[string]any{}
 		ms = append(ms, e)
 	}
-	return map[string]any{"name": "magpie", "baseUrl": gw + "/v1", "api": "openai-completions",
+	return map[string]any{"name": "崇云科技", "baseUrl": gw + "/v1", "api": "openai-completions",
 		"apiKey": agentKeyAt("pencil", gw), "models": ms}
 }
 
 // what pencil says after a change (notice.go)
 var (
-	noticePencil = newNotice("Pencil reads its custom models at start-up — restart Pencil to see magpie's models in its model picker.")
+	noticePencil = newNotice("Pencil reads its custom models at start-up — restart Pencil to see chongyun's models in its model picker.")
 )

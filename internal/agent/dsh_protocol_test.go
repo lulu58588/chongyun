@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -89,9 +89,9 @@ func TestDshRoutesAModelOnItsNativeAPI(t *testing.T) {
 		api, base, name string
 		models          []string
 	}{
-		"magpie":           {"openai-completions", gatewayV1(), "Magpie", []string{"deepseek/pro", "deepseek/flash"}},
-		"magpie-responses": {"openai-responses", gatewayV1(), "Magpie · Responses", []string{"resp/gpt-5.5"}},
-		"magpie-anthropic": {"anthropic-messages", gateway.URL(), "Magpie · Anthropic", []string{"anth/claude-sonnet-5"}},
+		"chongyun":           {"openai-completions", gatewayV1(), "Chongyun", []string{"deepseek/pro", "deepseek/flash"}},
+		"magpie-responses": {"openai-responses", gatewayV1(), "Chongyun · Responses", []string{"resp/gpt-5.5"}},
+		"magpie-anthropic": {"anthropic-messages", gateway.URL(), "Chongyun · Anthropic", []string{"anth/claude-sonnet-5"}},
 	} {
 		r, ok := ps[key]
 		if !ok {
@@ -147,7 +147,7 @@ func TestDshRoutesAModelOnItsNativeAPI(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, _ = os.ReadFile(web)
-	if s := string(b); strings.Contains(s, "magpie") || !strings.Contains(s, "      mine:\n") {
+	if s := string(b); strings.Contains(s, "chongyun") || !strings.Contains(s, "      mine:\n") {
 		t.Fatalf("disconnect:\n%s", s)
 	}
 }
@@ -161,11 +161,11 @@ func TestDshSyncMovesAStartToItsModelsRoute(t *testing.T) {
 	home, dir, web := dshProtocolHome(t)
 	dshKeyFixture(dir)
 	old := "# Your patch layer for this dsh profile.\n" +
-		"- id: llm-pi-ai # magpie\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n" +
+		"- id: llm-pi-ai # chongyun\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n" +
 		"      mine:\n        displayName: Mine\n        apiKeyEnv: MINE_API_KEY\n        api: openai-completions\n        baseURL: https://mine.example/v1\n        models:\n          - id: m1\n" +
-		"      magpie:\n        displayName: Magpie\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        reasoning: high\n        models:\n" +
+		"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        reasoning: high\n        models:\n" +
 		"          - id: deepseek/pro\n          - id: deepseek/flash\n          - id: resp/gpt-5.5\n          - id: anth/claude-sonnet-5\n" +
-		"- id: agent-default-model # magpie\n  config:\n    provider: magpie\n    model: \"resp/gpt-5.5\"\n    reasoningEffort: \"medium\"\n"
+		"- id: agent-default-model # chongyun\n  config:\n    provider: chongyun\n    model: \"resp/gpt-5.5\"\n    reasoningEffort: \"medium\"\n"
 	os.WriteFile(web, []byte(old), 0o644)
 	a := dsh(home)
 	if err := a.Sync(); err != nil {
@@ -176,11 +176,11 @@ func TestDshSyncMovesAStartToItsModelsRoute(t *testing.T) {
 	if !strings.Contains(s, "    provider: magpie-responses\n") || !strings.Contains(s, "resp/gpt-5.5") || !strings.Contains(s, "reasoningEffort: \"medium\"") && !strings.Contains(s, "reasoningEffort: medium") {
 		t.Fatalf("start not moved with its model:\n%s", s)
 	}
-	if !strings.Contains(s, "- id: agent-default-model # magpie\n") {
-		t.Fatalf("the start lost magpie's mark:\n%s", s)
+	if !strings.Contains(s, "- id: agent-default-model # chongyun\n") {
+		t.Fatalf("the start lost chongyun's mark:\n%s", s)
 	}
 	ps := dshPiProviders(t, web)
-	if contains(dshRouteModelIDs(ps["magpie"]), "resp/gpt-5.5") || !contains(dshRouteModelIDs(ps["magpie-responses"]), "resp/gpt-5.5") {
+	if contains(dshRouteModelIDs(ps["chongyun"]), "resp/gpt-5.5") || !contains(dshRouteModelIDs(ps["magpie-responses"]), "resp/gpt-5.5") {
 		t.Fatalf("routes:\n%s", s)
 	}
 	if !strings.Contains(s, "reasoning: high") || a.Field("model").Get() != "magpie/resp/gpt-5.5" || a.Check() != "" {
@@ -221,7 +221,7 @@ func TestDshCheckSaysAStartOnAnotherRoutesModel(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(web)
-	wrong := strings.Replace(string(b), "    provider: magpie-responses\n", "    provider: magpie\n", 1)
+	wrong := strings.Replace(string(b), "    provider: magpie-responses\n", "    provider: chongyun\n", 1)
 	os.WriteFile(web, []byte(wrong), 0o644)
 	if d := a.Check(); !strings.Contains(d, "doesn't list") {
 		t.Fatalf("check: %q\n%s", d, wrong)

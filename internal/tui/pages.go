@@ -19,11 +19,11 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/fx"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/fx"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 type page int
@@ -133,20 +133,20 @@ func (m model) updateProviders(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 		if p.IsVertex() {
 			// its token is minted from the user's Google credentials
-			m.flash, m.flashOK = p.Name+" takes no key · magpie provider set "+p.ID+" credentials=… impersonate=… changes its Google credentials", false
+			m.flash, m.flashOK = p.Name+" takes no key · chongyun provider set "+p.ID+" credentials=… impersonate=… changes its Google credentials", false
 			return m, nil
 		}
 		in := newInput("the API key")
 		in.EchoMode = textinput.EchoPassword
 		in.EchoCharacter = '•'
 		m.openAsk(ask{crumbs: []string{"providers", p.Name, "key"}, input: in,
-			hint: "now " + dash(provider.Mask(p.Key)) + " · the key is kept in magpie's providers file",
+			hint: "now " + dash(provider.Mask(p.Key)) + " · the key is kept in chongyun's providers file",
 			onEnter: func(v string) tea.Cmd {
 				return saveProvider(p.ID, func(p *provider.Provider) { p.Key = v; provider.ForgetBalances() }, p.Name+" key "+provider.Mask(v))
 			}})
 	case "w":
 		if p.IsVertex() {
-			m.flash, m.flashOK = p.Name+" is asked at your Google Cloud project · magpie provider set "+p.ID+" project=… location=… changes it", false
+			m.flash, m.flashOK = p.Name+" is asked at your Google Cloud project · chongyun provider set "+p.ID+" project=… location=… changes it", false
 			return m, nil
 		}
 		pr := provider.Preset(p.Preset)
@@ -176,7 +176,7 @@ func (m model) updateProviders(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		if pr == nil || pr.Endpoint == "" {
-			m.flash, m.flashOK = p.Name+" is asked at its vendor's address · magpie provider set "+p.ID+" url=… changes a custom one's", false
+			m.flash, m.flashOK = p.Name+" is asked at its vendor's address · chongyun provider set "+p.ID+" url=… changes a custom one's", false
 			return m, nil
 		}
 		now := p.Chat
@@ -200,7 +200,7 @@ func (m model) updateProviders(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		in := newInput("a tag, e.g. relay")
 		in.SetValue(p.Family)
 		m.openAsk(ask{crumbs: []string{"providers", p.Name, "family"}, input: in, empty: true,
-			hint: "agents can be shown only some families: magpie visible <agent> <family>",
+			hint: "agents can be shown only some families: chongyun visible <agent> <family>",
 			onEnter: func(v string) tea.Cmd {
 				return saveProvider(p.ID, func(p *provider.Provider) { p.Family = v }, p.Name+" family "+dash(v))
 			}})
@@ -443,7 +443,7 @@ func (m *model) openProviderModels(id string) {
 // on Discord didn't find it there).
 func kindNote(k provider.Kind) string {
 	if k == provider.KindRemote {
-		return "another computer's magpie, shared on its network"
+		return "another computer's chongyun, shared on its network"
 	}
 	return string(k)
 }
@@ -469,7 +469,7 @@ func (m *model) openPresets() {
 	}
 	m.pk = picker{
 		crumbs: []string{"providers", "add"},
-		input:  newInput("a vendor magpie knows, or custom for your own API"),
+		input:  newInput("a vendor chongyun knows, or custom for your own API"),
 		items:  items,
 		onPick: func(id string) tea.Cmd {
 			if i := slices.IndexFunc(customAPIs, func(c customAPI) bool { return c.id == id }); i >= 0 {
@@ -543,7 +543,7 @@ func customURLAsk(api customAPI) ask {
 				}
 				in := newInput(u.Hostname())
 				return askMsg{ask{crumbs: []string{"providers", "add", "custom", "name"}, input: in,
-					hint: "its name in magpie · enter for " + u.Hostname(), empty: true,
+					hint: "its name in chongyun · enter for " + u.Hostname(), empty: true,
 					onEnter: func(name string) tea.Cmd {
 						return func() tea.Msg {
 							if name == "" {
@@ -630,7 +630,7 @@ func addKeyAsk(p provider.Provider) ask {
 	in := newInput("the API key")
 	in.EchoMode = textinput.EchoPassword
 	in.EchoCharacter = '•'
-	hint := "the key is kept in magpie's providers file"
+	hint := "the key is kept in chongyun's providers file"
 	if p.KeysURL != "" {
 		hint = "keys: " + p.KeysURL
 	}
@@ -649,7 +649,7 @@ func addKeyAsk(p provider.Provider) ask {
 func vertexProjectAsk(p provider.Provider) ask {
 	return ask{crumbs: []string{"providers", "add", p.Name, "project"}, input: newInput("your Google Cloud project's id"), empty: true,
 		hint: "no key: signed with gcloud's Application Default Credentials (gcloud auth application-default login)\n" +
-			"magpie provider set " + provider.FreeID(p.ID) + " location=… credentials=… impersonate=… changes the rest",
+			"chongyun provider set " + provider.FreeID(p.ID) + " location=… credentials=… impersonate=… changes the rest",
 		onEnter: func(project string) tea.Cmd {
 			p.Vertex = &provider.Vertex{Project: project}
 			return addCmd(p)
@@ -1161,7 +1161,7 @@ func (m model) viewUsage() string {
 	}
 	d := m.direct
 	if s.Calls == 0 && d.Calls == 0 {
-		b.WriteString(pad + "  " + sMuted.Render("no calls in this time · route an agent through magpie and its usage shows up here"))
+		b.WriteString(pad + "  " + sMuted.Render("no calls in this time · route an agent through chongyun and its usage shows up here"))
 		return b.String()
 	}
 	names := map[string]string{}
@@ -1173,14 +1173,14 @@ func (m model) viewUsage() string {
 		room = max(2, room/2)
 	}
 	if s.Calls == 0 {
-		b.WriteString(pad + "  " + sMuted.Render("no calls through magpie in this time") + "\n\n")
+		b.WriteString(pad + "  " + sMuted.Render("no calls through chongyun in this time") + "\n\n")
 	} else {
 		m.usageBlock(&b, s, room, names)
 	}
 	// the calls the agents made on their own, as the app's Requests tab
 	// counts them beside the gateway's (Kumo31 on Discord)
 	if d.Calls > 0 {
-		b.WriteString(pad + "  " + sFaint.Render("not through magpie · the agents' own requests, read from their session files") + "\n")
+		b.WriteString(pad + "  " + sFaint.Render("not through chongyun · the agents' own requests, read from their session files") + "\n")
 		m.usageBlock(&b, d, room, names)
 	}
 	return strings.TrimRight(b.String(), "\n")
@@ -1229,7 +1229,7 @@ func (m model) usageBlock(b *strings.Builder, s usage.Summary, room int, names m
 		}
 		for i, g := range gs {
 			if i == room {
-				b.WriteString(pad + "  " + sFaint.Render(fmt.Sprintf("and %d more · magpie usage", len(gs)-room)) + "\n")
+				b.WriteString(pad + "  " + sFaint.Render(fmt.Sprintf("and %d more · chongyun usage", len(gs)-room)) + "\n")
 				break
 			}
 			share := fmt.Sprintf("%3.0f%%", 100*float64(g.Tokens())/float64(max(1, s.Tokens())))

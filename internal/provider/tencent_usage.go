@@ -159,7 +159,7 @@ func tencentPlanCards(ctx context.Context, p Provider, region string, now func()
 		} `json:"Response"`
 	}
 	if err == nil && (json.Unmarshal(raw, &list) != nil || list.Response == nil) {
-		err = fmt.Errorf("Tencent Cloud DescribeTokenPlanList: a reply magpie can't read: %s", shapeOf(raw))
+		err = fmt.Errorf("Tencent Cloud DescribeTokenPlanList: a reply chongyun can't read: %s", shapeOf(raw))
 	}
 	tag := keyTag("tencent "+region, p.AccessKeyID)
 	if err != nil {

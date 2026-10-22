@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // An agent plugin with no model key is connect only (#2374, a Raycast
@@ -31,7 +31,7 @@ export function connect({ gateway, model, models }) {
 }`)
 	path := filepath.Join(home, ".launcher", "providers.json")
 	os.MkdirAll(filepath.Dir(path), 0o755)
-	os.WriteFile(path, []byte(`{"theme":"dark","providers":{"magpie":{"key":"mine"}}}`), 0o644)
+	os.WriteFile(path, []byte(`{"theme":"dark","providers":{"chongyun":{"key":"mine"}}}`), 0o644)
 	read := func() (map[string]any, map[string]any) {
 		t.Helper()
 		var c map[string]any
@@ -40,7 +40,7 @@ export function connect({ gateway, model, models }) {
 			t.Fatalf("%v: %s", err, b)
 		}
 		ps, _ := c["providers"].(map[string]any)
-		m, _ := ps["magpie"].(map[string]any)
+		m, _ := ps["chongyun"].(map[string]any)
 		return c, m
 	}
 
@@ -64,7 +64,7 @@ export function connect({ gateway, model, models }) {
 		t.Fatal(err)
 	}
 	c, m := read()
-	if how.How != "magpie" || m["base"] != gateway.URL()+"/v1" || m["key"] != gateway.TokenFor("launcher") || m["given"] != "undefined" || c["theme"] != "dark" {
+	if how.How != "chongyun" || m["base"] != gateway.URL()+"/v1" || m["key"] != gateway.TokenFor("launcher") || m["given"] != "undefined" || c["theme"] != "dark" {
 		t.Fatalf("connected %+v: %v", how, c)
 	}
 	if _, ok := c["model"]; ok {

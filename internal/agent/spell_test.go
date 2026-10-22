@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 func TestSpell(t *testing.T) {
@@ -50,7 +50,7 @@ func TestSpell(t *testing.T) {
 // before.
 func TestSpellRefusesMagpieModelNotOffered(t *testing.T) {
 	syncHome(t)
-	if err := provider.Save(provider.Provider{ID: "remote", Name: "Remote magpie", Key: "k", Chat: "http://127.0.0.1:1/v1", Models: []string{"group/smart", "codex/gpt-5.5"}}); err != nil {
+	if err := provider.Save(provider.Provider{ID: "remote", Name: "Remote chongyun", Key: "k", Chat: "http://127.0.0.1:1/v1", Models: []string{"group/smart", "codex/gpt-5.5"}}); err != nil {
 		t.Fatal(err)
 	}
 	if err := settings.Save(settings.Settings{Visible: map[string][]string{"pi": {"relay"}, "codex": {"relay"}}}); err != nil {

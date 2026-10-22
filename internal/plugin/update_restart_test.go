@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// TestTerminalUpdateRestartsTheHost (#952): `magpie plugin update` in a
+// TestTerminalUpdateRestartsTheHost (#952): `chongyun plugin update` in a
 // terminal installs a newer version without changing plugins.json, so the
 // app running beside it went on with the host it had (0.1.17's code after
 // the update to 0.1.18) until that was killed. What bun installs in Dir()
@@ -64,6 +64,6 @@ func TestTerminalUpdateRestartsTheHost(t *testing.T) {
 	Restart()
 	checkList()
 	if hostStale.Load() {
-		t.Fatal("this magpie's own restart was taken for another magpie's change")
+		t.Fatal("this chongyun's own restart was taken for another chongyun's change")
 	}
 }

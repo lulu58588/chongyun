@@ -33,11 +33,11 @@ func init() {
 		return
 	}
 	app := application.New(application.Options{
-		Name: "magpie panel space regression",
+		Name: "chongyun panel space regression",
 		Mac:  application.MacOptions{ActivationPolicy: application.ActivationPolicyAccessory},
 		Assets: application.AssetOptions{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "text/html")
-			fmt.Fprint(w, `<p>magpie</p>`)
+			fmt.Fprint(w, `<p>chongyun</p>`)
 		})},
 	})
 	h := &host{app: app}
@@ -62,14 +62,14 @@ func init() {
 			fail("%s: the panel isn't a non-activating panel", how)
 		}
 		if application.InvokeSyncWithResult(appFrontmost) {
-			fail("%s: magpie is frontmost before the icon is clicked; the test can't tell", how)
+			fail("%s: chongyun is frontmost before the icon is clicked; the test can't tell", how)
 		}
 		application.InvokeSync(func() { w.Show().Focus() }) // the icon clicked
 		waitFor(how+": the panel shows", func() bool { return application.InvokeSyncWithResult(func() bool { return windowOpen(w) }) })
 		// activation is asked for and comes a moment later: give it time
 		time.Sleep(500 * time.Millisecond)
 		if application.InvokeSyncWithResult(appFrontmost) {
-			fail("%s: showing the panel brought magpie to the front, which takes the user to the Space of its other windows", how)
+			fail("%s: showing the panel brought chongyun to the front, which takes the user to the Space of its other windows", how)
 		}
 		if !application.InvokeSyncWithResult(func() bool { return canBeKey(w) }) {
 			fail("%s: the panel can't be made key, so it never takes the keyboard", how)

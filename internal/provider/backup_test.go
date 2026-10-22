@@ -8,7 +8,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/plugin"
 )
 
 // Restoring and syncing a keyless provider keep this machine's balance

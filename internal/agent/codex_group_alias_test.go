@@ -6,14 +6,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // #750: Codex put on the group magpie found for gpt-6.1-sol
 // (group/auto-gpt-6-1-sol), and its config.toml then naming the model as
 // vendors spell it, gpt-6.1-sol, with openai_base_url still magpie's: the
 // gateway takes gpt-6.1-sol as that same group, so Codex is connected, not
-// "switched off group/auto-gpt-6-1-sol outside magpie". A model of
+// "switched off group/auto-gpt-6-1-sol outside chongyun". A model of
 // another group, or of none, is still drift.
 func TestCodexGroupByItsModelName(t *testing.T) {
 	for _, auth := range []string{`{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, ""} {
@@ -52,7 +52,7 @@ func TestCodexGroupByItsModelName(t *testing.T) {
 		// with nothing sending it to magpie, gpt-6.1-sol goes to OpenAI
 		os.WriteFile(path, []byte("model = \"gpt-6.1-sol\"\n"), 0o644)
 		if cx.Wired() {
-			t.Errorf("auth %q: wired on gpt-6.1-sol with no route to magpie", auth)
+			t.Errorf("auth %q: wired on gpt-6.1-sol with no route to chongyun", auth)
 		}
 		// another group's model is not what magpie set, nor is one no group
 		// has; beside the ChatGPT sign-in either is a pick in Codex's /model

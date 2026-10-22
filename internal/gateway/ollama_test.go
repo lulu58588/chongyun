@@ -11,9 +11,9 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // ollamaPlan is a provider with a model that sees, thinks and has a
@@ -237,7 +237,7 @@ func TestOllamaRoutesGuarded(t *testing.T) {
 	_, secrets := newCaller(t, "Visual Studio")
 	for _, rt := range routes {
 		at := rt.method + " " + rt.path
-		for _, hdr := range [][]string{nil, {"Authorization", "Bearer magpie"}, {"Authorization", "Bearer sk-magpie-wrong"}} {
+		for _, hdr := range [][]string{nil, {"Authorization", "Bearer chongyun"}, {"Authorization", "Bearer sk-magpie-wrong"}} {
 			resetAuthThrottle()
 			refused(at+" from the LAN with "+strings.Join(hdr, " "), do(rt.method, rt.path, rt.body, "192.168.1.9:5000", "192.168.1.2:3425", hdr...), http.StatusUnauthorized)
 		}

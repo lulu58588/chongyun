@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // Codex sends its requests to magpie's gateway, http://127.0.0.1:3425, the
@@ -256,7 +256,7 @@ func codexProxyOK(cfg, base string) bool {
 // how to get it there.
 func codexProxiedDetail(base, proxy, from string) string {
 	host := strings.TrimPrefix(base, "http://")
-	d := "Codex sends its requests for magpie (" + host + ") through the proxy at " + netproxy.Redact(proxy) + ", set in " + from + ", and that proxy doesn't pass them on to magpie: every turn fails, with 502 Bad Gateway, whichever model it is on. " +
+	d := "Codex sends its requests for chongyun (" + host + ") through the proxy at " + netproxy.Redact(proxy) + ", set in " + from + ", and that proxy doesn't pass them on to chongyun: every turn fails, with 502 Bad Gateway, whichever model it is on. " +
 		"Have the proxy send 127.0.0.1 direct (a DIRECT rule for 127.0.0.0/8, or rule mode rather than global), "
 	switch {
 	case strings.Contains(strings.ToUpper(from), "_PROXY"):
@@ -266,5 +266,5 @@ func codexProxiedDetail(base, proxy, from string) string {
 	default:
 		d += "or add export NO_PROXY=127.0.0.1 to your shell profile (~/.zshrc): Codex in a terminal and the ChatGPT app's Codex both read it, "
 	}
-	return d + "then quit and reopen Codex. Until then, Disconnect from magpie puts Codex's config back as it was."
+	return d + "then quit and reopen Codex. Until then, Disconnect from chongyun puts Codex's config back as it was."
 }

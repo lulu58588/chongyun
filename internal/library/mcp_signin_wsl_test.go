@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
 )
 
 // A WSL agent under NAT reaches the gateway at Windows' address, where a

@@ -3,8 +3,8 @@ package gateway
 import (
 	"net/http"
 
-	"github.com/yetone/magpie/internal/filememo"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // holdCatalog has a request hold the catalog it built first, and the files it

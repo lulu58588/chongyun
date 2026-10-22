@@ -19,10 +19,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/netproxy"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // QuotaWindow is one rolling allowance reported by a subscription provider.
@@ -711,7 +711,7 @@ func markClaudeUsageAsked() {
 }
 
 // AskClaudeUsage is the user asking to see Claude's usage — opening the
-// Usage page, refreshing it, `magpie quota` — so Claude Code's /usage is
+// Usage page, refreshing it, `chongyun quota` — so Claude Code's /usage is
 // run at once rather than when the next unasked reading is due
 // (claudeUsageWait); the next SubscriptionUsage waits for it.
 func AskClaudeUsage() {
@@ -852,13 +852,13 @@ func claudeWindows(ctx context.Context, user string, active bool) ([]QuotaWindow
 }
 
 var (
-	errClaudeNotAsked = errors.New("not read yet: magpie reads Claude's usage by running Claude Code's /usage")
+	errClaudeNotAsked = errors.New("not read yet: chongyun reads Claude's usage by running Claude Code's /usage")
 	errClaudeSaved    = errors.New("not read yet: refresh this account's card to have Claude Code's /usage read it")
 )
 
 // savedRefresh says ctx is the refresh of the card of the saved Claude
 // account user, the one ask that runs Claude Code for a saved account. The
-// Usage page opened, its timer, `magpie quota` and routing keep to what
+// Usage page opened, its timer, `chongyun quota` and routing keep to what
 // was read: a run in every saved account's directory for each of them
 // would start Claude Code once per account.
 func savedRefresh(ctx context.Context, user string) bool {

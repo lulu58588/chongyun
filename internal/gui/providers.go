@@ -14,14 +14,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/autostart"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/update"
-	"github.com/yetone/magpie/internal/upstream"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/autostart"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/upstream"
 )
 
 // The providers page: the vendors the user added, the presets they can add
@@ -970,7 +970,7 @@ func failMove(rw http.ResponseWriter, err error) {
 
 // errRetired answers a move back to a built-in subscription, which magpie
 // no longer runs: its plugin does.
-var errRetired = errors.New("magpie's built-in subscriptions are retired: their community plugins run them")
+var errRetired = errors.New("chongyun's built-in subscriptions are retired: their community plugins run them")
 
 // moveProvider and adoptProvider are provider.Move and Adopt, for tests
 // to stand in for.
@@ -1520,27 +1520,27 @@ func providerRoutes(mux *http.ServeMux, w Windows) {
 					in.PriceRate = old.PriceRate
 				}
 				// how long its keys rest out of quota is set in
-				// providers.json or with `magpie provider quota-rest`,
+				// providers.json or with `chongyun provider quota-rest`,
 				// which the form doesn't show: kept as it was (#1772)
 				if in.QuotaRest == 0 && old != nil {
 					in.QuotaRest = old.QuotaRest
 				}
-				// and the time of day they are back, set with `magpie
+				// and the time of day they are back, set with `chongyun
 				// provider quota-rest <id> until 08:00` (#2008)
 				if in.QuotaResetAt == "" && old != nil {
 					in.QuotaResetAt = old.QuotaResetAt
 				}
 				// and the most they sit out while they keep failing, set
-				// with `magpie provider rest-cap` (#2008)
+				// with `chongyun provider rest-cap` (#2008)
 				if in.RestCap == 0 && old != nil {
 					in.RestCap = old.RestCap
 				}
-				// and Codex's requests as sent, set with `magpie provider
+				// and Codex's requests as sent, set with `chongyun provider
 				// set <id> codex=as-sent` (#1758)
 				if !in.CodexAsSent && old != nil {
 					in.CodexAsSent = old.CodexAsSent
 				}
-				// and additional_tools taken, set with `magpie provider
+				// and additional_tools taken, set with `chongyun provider
 				// set <id> additional-tools=on` (#2660)
 				if !in.AdditionalTools && old != nil {
 					in.AdditionalTools = old.AdditionalTools

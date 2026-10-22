@@ -7,7 +7,7 @@ package agent
 // profile's, in its User folder, and each other profile's in its own:
 // vscodeProfiles), a JSONC array VS Code watches and reads again when it
 // changes. magpie adds a group of its own there,
-// {"vendor": "customendpoint", "name": "magpie"}, listing the catalog: each
+// {"vendor": "customendpoint", "name": "chongyun"}, listing the catalog: each
 // model at the gateway's /v1/chat/completions with tool calling on (agent
 // mode lists only models that call tools). A group's apiKey can't be
 // written in the file: VS Code reads it from its secret storage alone, so
@@ -37,9 +37,9 @@ import (
 	"strings"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/proc"
 )
 
 // vscodeDefault is chat.defaultModel, a key with a dot in it, escaped for
@@ -271,7 +271,7 @@ func vscodeKindAt(k vscodeKind, dir string) *Agent {
 			if c := k.chat(); c.unsupported {
 				return c.notice(k.name)
 			} else if c.vendor != vendor {
-				return k.name + "'s Copilot Chat " + c.version + " lists a group for " + c.vendor + " and magpie's is for " + vendor + "; magpie writes it again when it next starts"
+				return k.name + "'s Copilot Chat " + c.version + " lists a group for " + c.vendor + " and chongyun's is for " + vendor + "; chongyun writes it again when it next starts"
 			}
 			header, want := "requestHeaders.Authorization", "Bearer "+k.token()
 			if vendor == vscodeOAI {
@@ -579,9 +579,9 @@ func vscodeNewer(a, b string) bool {
 
 // what VS Code and its forks say after a change (notice.go)
 var (
-	noticeVSCodeJoined = newNotice("magpie's models are in {agent}'s Chat model picker, under magpie, in each of its profiles (VS Code 1.122 or later). If they don't show, run Developer: Reload Window in {agent}.")
+	noticeVSCodeJoined = newNotice("chongyun's models are in {agent}'s Chat model picker, under chongyun, in each of its profiles (VS Code 1.122 or later). If they don't show, run Developer: Reload Window in {agent}.")
 	noticeVSCodeSetup  = newNotice("{agent}'s Chat features must be enabled (chat.disableAIFeatures=false) and its product.json must include defaultChatAgent and trustedExtensionAuthAccess for GitHub.copilot-chat. Then run Developer: Reload Window in {agent}.")
-	noticeVSCodeNoChat = newNotice("Install GitHub Copilot Chat in {agent} to see magpie's models in its Chat.")
-	noticeVSCodeOld    = newNotice("{agent}'s GitHub Copilot Chat {version} has neither a Custom Endpoint nor an OpenAI Compatible provider, so it can't list magpie's models.")
-	noticeVSCodeOAI    = newNotice("magpie's models are in {agent}'s Chat model picker under magpie, from GitHub Copilot Chat {version}'s OpenAI Compatible provider, which it offers only while it is signed in to GitHub with a personal Copilot plan.")
+	noticeVSCodeNoChat = newNotice("Install GitHub Copilot Chat in {agent} to see chongyun's models in its Chat.")
+	noticeVSCodeOld    = newNotice("{agent}'s GitHub Copilot Chat {version} has neither a Custom Endpoint nor an OpenAI Compatible provider, so it can't list chongyun's models.")
+	noticeVSCodeOAI    = newNotice("chongyun's models are in {agent}'s Chat model picker under chongyun, from GitHub Copilot Chat {version}'s OpenAI Compatible provider, which it offers only while it is signed in to GitHub with a personal Copilot plan.")
 )

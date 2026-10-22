@@ -23,7 +23,7 @@ func TestDshHomePatchLayer(t *testing.T) {
 	userStart := "- id: agent-default-model\n  config:\n    provider: deepseek-official\n    model: deepseek-v4-pro\n"
 	os.WriteFile(hp, []byte("# shared by web and desktop\n"+
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n      mine:\n        displayName: Mine\n        apiKeyEnv: MINE_API_KEY\n        api: openai-completions\n        baseURL: https://mine.example/v1\n        models:\n          - id: m1\n"+
-		"      magpie:\n        displayName: Magpie\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: "+gatewayV1()+"\n        models:\n          - id: old/gone\n"+
+		"      chongyun:\n        displayName: Chongyun\n        apiKeyEnv: "+dshKeyRef+"\n        api: openai-completions\n        baseURL: "+gatewayV1()+"\n        models:\n          - id: old/gone\n"+
 		userStart), 0o644)
 	read := func(p string) string { b, _ := os.ReadFile(p); return string(b) }
 	a := dsh(home)
@@ -37,7 +37,7 @@ func TestDshHomePatchLayer(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := read(hp)
-	for _, want := range []string{"# shared by web and desktop\n", "      mine:\n", "- id: deepseek/pro", "- id: deepseek/flash", "provider: magpie", `model: "deepseek/pro"`} {
+	for _, want := range []string{"# shared by web and desktop\n", "      mine:\n", "- id: deepseek/pro", "- id: deepseek/flash", "provider: chongyun", `model: "deepseek/pro"`} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q in the home layer:\n%s", want, s)
 		}
@@ -58,7 +58,7 @@ func TestDshHomePatchLayer(t *testing.T) {
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if s := read(hp); !strings.Contains(s, "      magpie:\n") || !strings.Contains(s, "      mine:\n") || a.Check() != "" {
+	if s := read(hp); !strings.Contains(s, "      chongyun:\n") || !strings.Contains(s, "      mine:\n") || a.Check() != "" {
 		t.Fatalf("check %q, home layer:\n%s", a.Check(), s)
 	}
 
@@ -67,7 +67,7 @@ func TestDshHomePatchLayer(t *testing.T) {
 	if err := f.Set("deepseek-flash"); err != nil {
 		t.Fatal(err)
 	}
-	if s := read(hp); strings.Contains(s, "      magpie:\n") || !strings.Contains(s, "      mine:\n") {
+	if s := read(hp); strings.Contains(s, "      chongyun:\n") || !strings.Contains(s, "      mine:\n") {
 		t.Fatalf("home layer:\n%s", s)
 	}
 

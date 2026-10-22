@@ -3,8 +3,8 @@ package agent
 import (
 	"strings"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // keyAt is the key an agent that reaches the gateway at gw sends it. On

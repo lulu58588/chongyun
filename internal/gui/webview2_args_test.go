@@ -11,7 +11,7 @@ import (
 	"testing"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
-	"github.com/yetone/magpie/internal/webview2env"
+	"github.com/lulu58588/magpie/internal/webview2env"
 )
 
 // wailsBrowserArgs is the command line Wails v3.0.0-beta.24 makes from the
@@ -46,7 +46,7 @@ func TestWebView2ArgsMergeTheUsers(t *testing.T) {
 		{"none set", "", []string{"--disable-features=msSmartScreenProtection"}},
 		{"the reporter's", "--disable-features=RendererCodeIntegrity",
 			[]string{"--disable-features=msSmartScreenProtection,RendererCodeIntegrity"}},
-		{"twice, with magpie's own and a repeat", `--disable-features=A,msSmartScreenProtection --disable-features="B, A"`,
+		{"twice, with chongyun's own and a repeat", `--disable-features=A,msSmartScreenProtection --disable-features="B, A"`,
 			[]string{"--disable-features=msSmartScreenProtection,A,B"}},
 		{"enable and others kept", "  --enable-features=X,Y\t--remote-debugging-port=9333 --proxy-server=\"http://h:1 x\" --enable-features=Y,Z --lang=de ",
 			[]string{"--disable-features=msSmartScreenProtection", "--enable-features=X,Y,Z", "--remote-debugging-port=9333", `--proxy-server="http://h:1 x"`, "--lang=de"}},

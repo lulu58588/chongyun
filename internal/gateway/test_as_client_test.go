@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // clientOnlyRelay is a relay that serves only the agents its plan is sold
@@ -120,7 +120,7 @@ func TestModelTestAsClient(t *testing.T) {
 	}
 	New().Handler().ServeHTTP(rec, req)
 	if rec.Code != 200 {
-		t.Fatalf("Claude Code through magpie: %d %s", rec.Code, rec.Body.String())
+		t.Fatalf("Claude Code through chongyun: %d %s", rec.Code, rec.Body.String())
 	}
 
 	r = test(provider.ClientClaudeCode, "claude-opus-4-8")

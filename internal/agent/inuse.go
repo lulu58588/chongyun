@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Models are magpie's models the agent is set to, as catalog ids

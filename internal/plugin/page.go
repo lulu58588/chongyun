@@ -148,7 +148,7 @@ func Window(target string) (w *WindowSpec, only bool) {
 			Panels      []part   `json:"panels"`
 			Actions     []part   `json:"actions"`
 			Permissions []string `json:"permissions"`
-		} `json:"magpie"`
+		} `json:"chongyun"`
 	}
 	if json.Unmarshal(b, &pkg) != nil {
 		return nil, false

@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // The routings besides the default, smart, in order.
@@ -76,7 +76,7 @@ func SetKeepLogin(id string, keep bool) error {
 		return err
 	}
 	if p.Account == nil || p.Account.Agent != p.ID || !slices.Contains(switchedAgents, p.ID) {
-		return fmt.Errorf("magpie doesn't sign %s in to another of its accounts", p.Name)
+		return fmt.Errorf("chongyun doesn't sign %s in to another of its accounts", p.Name)
 	}
 	chosen := p.KeepLogin && p.KeepLoginAs != ""
 	p.KeepLogin, p.KeepLoginAs = keep, ""
@@ -98,7 +98,7 @@ func SetSwitchOnly(id string, on bool) error {
 		return err
 	}
 	if p.Account == nil || p.Account.Agent != p.ID || p.ID != "codex" {
-		return fmt.Errorf("magpie doesn't route %s's own requests for account failover", p.Name)
+		return fmt.Errorf("chongyun doesn't route %s's own requests for account failover", p.Name)
 	}
 	p.SwitchOnly = on
 	return Save(*p)

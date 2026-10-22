@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // fakeOlderGateway is the test binary run as another process holding the
@@ -24,7 +24,7 @@ func fakeOlderGateway(addr string) {
 	}
 	http.Serve(ln, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		io.WriteString(w, `{"name":"magpie","version":"0.1.550","models":3}`)
+		io.WriteString(w, `{"name":"chongyun","version":"0.1.550","models":3}`)
 	}))
 }
 
@@ -114,7 +114,7 @@ func TestGatewayFixQuitsOnlyAMagpie(t *testing.T) {
 	}
 	select {
 	case <-otherEnded:
-		t.Fatal("ended a program that isn't magpie")
+		t.Fatal("ended a program that isn't chongyun")
 	case <-time.After(300 * time.Millisecond):
 	}
 	if served.Load() != nil {
@@ -124,7 +124,7 @@ func TestGatewayFixQuitsOnlyAMagpie(t *testing.T) {
 	<-otherEnded
 
 	// an older magpie is quit, and this one serves at once
-	old, oldEnded := start("magpie")
+	old, oldEnded := start("chongyun")
 	_ = old
 	if g := providersState().Gateway; !g.Older || g.Mine {
 		t.Fatalf("not seen as older: %+v", g)
@@ -136,7 +136,7 @@ func TestGatewayFixQuitsOnlyAMagpie(t *testing.T) {
 	select {
 	case <-oldEnded:
 	case <-time.After(5 * time.Second):
-		t.Fatal("the older magpie is still running")
+		t.Fatal("the older chongyun is still running")
 	}
 	gw := served.Load()
 	if g := providersState().Gateway; gw == nil || !g.Mine || !g.Running || g.Older {

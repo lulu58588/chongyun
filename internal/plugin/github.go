@@ -391,7 +391,7 @@ func readTagged(pc context.Context, t Tagged, branch string) (Tagged, bool, bool
 			Page       struct {
 				File string `json:"file"`
 			} `json:"page"`
-		} `json:"magpie"`
+		} `json:"chongyun"`
 	}
 	if json.Unmarshal(pb, &pj) != nil || !pkgName.MatchString(pj.Name) {
 		return t, false, true, nil

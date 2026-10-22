@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Every agent's model picker has two halves: the models the agent reaches
@@ -20,7 +20,7 @@ import (
 // the gateway gets the vendor's reply in whichever API the agent speaks.
 
 // magpieID is the provider id agents know the gateway by.
-const magpieID = "magpie"
+const magpieID = "chongyun"
 
 // RoutingGroups is the picker's group of routing groups.
 const RoutingGroups = "Routing groups"
@@ -56,7 +56,7 @@ func viaMagpie(agent, prefix string) []Option {
 	// requests go to the first in magpie's order: another one when that
 	// one is paused, or when the agent is kept signed in to an account
 	// that isn't first (#1957, parkavenue9639: every codex/gpt-* read
-	// "A · via magpie" while each went to B). Asked once a provider.
+	// "A · via chongyun" while each went to B). Asked once a provider.
 	firsts := map[string]string{}
 	firstUser := func(p provider.Provider) string {
 		a := p.Account
@@ -74,13 +74,13 @@ func viaMagpie(agent, prefix string) []Option {
 	var tiered map[string]bool // provider.UltraModels, read at the first fast model
 	for _, e := range shown {
 		if e.Group != "" {
-			groups = append(groups, Option{Value: prefix + e.ID, Label: e.Name, Note: "routing group · via magpie",
+			groups = append(groups, Option{Value: prefix + e.ID, Label: e.Name, Note: "routing group · via chongyun",
 				Icon: e.Provider.Icon, Icons: e.Icons, Group: RoutingGroups, Ref: e.ID})
 			continue
 		}
-		note := e.Provider.Name + " · via magpie"
+		note := e.Provider.Name + " · via chongyun"
 		if a := e.Provider.Account; a != nil {
-			note = firstUser(e.Provider) + " · via magpie"
+			note = firstUser(e.Provider) + " · via chongyun"
 		}
 		o := Option{Value: prefix + e.ID, Label: e.Name, Note: note,
 			Icon: e.Provider.Icon, Group: e.Provider.Name, Ref: e.ID, Free: e.Free, Rate: e.Rate, RateWas: e.RateWas, Context: e.Context, own: own[e.Provider.ID],

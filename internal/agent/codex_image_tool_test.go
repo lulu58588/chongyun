@@ -21,15 +21,15 @@ func TestCodexMagpieProviderCarriesActorAuthorization(t *testing.T) {
 	}
 	cfg := read()
 	if !strings.Contains(cfg, "[model_providers.magpie]") {
-		t.Fatalf("no magpie provider table:\n%s", cfg)
+		t.Fatalf("no chongyun provider table:\n%s", cfg)
 	}
-	if !strings.Contains(cfg, `"x-openai-actor-authorization" = "magpie"`) {
-		t.Fatalf("magpie provider table carries no actor-authorization header:\n%s", cfg)
+	if !strings.Contains(cfg, `"x-openai-actor-authorization" = "chongyun"`) {
+		t.Fatalf("chongyun provider table carries no actor-authorization header:\n%s", cfg)
 	}
 	// uses_openai_actor_authorization() also requires !requires_openai_auth:
 	// the header beside that key would turn the flag off again.
 	if strings.Contains(cfg, "requires_openai_auth") {
-		t.Fatalf("magpie provider table requires OpenAI auth, hiding the actor header:\n%s", cfg)
+		t.Fatalf("chongyun provider table requires OpenAI auth, hiding the actor header:\n%s", cfg)
 	}
 	if c := cx.Check(); c != "" {
 		t.Fatal(c)

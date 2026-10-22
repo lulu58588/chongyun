@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A Clef asked through magpie's System One API gets the images the request
@@ -46,7 +46,7 @@ func TestSystemOneClefImages(t *testing.T) {
 	})
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest("POST", "/v1/systemone", strings.NewReader(string(body)))
-	req.Header.Set("Authorization", "Bearer magpie")
+	req.Header.Set("Authorization", "Bearer chongyun")
 	New().Handler().ServeHTTP(rec, req)
 	if rec.Code != 200 || !strings.Contains(rec.Body.String(), `"noul":0.97`) {
 		t.Fatalf("%d %.300s", rec.Code, rec.Body)

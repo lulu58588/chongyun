@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A ChatGPT backend slow to hand over its model list doesn't hold magpie's
@@ -44,7 +44,7 @@ func TestCodexModelListBackendSlow(t *testing.T) {
 	select {
 	case <-done:
 	case <-time.After(3 * time.Second):
-		t.Fatal("magpie's model list waited on the backend past the time Codex gives it")
+		t.Fatal("chongyun's model list waited on the backend past the time Codex gives it")
 	}
 	var list struct {
 		Models []map[string]any `json:"models"`

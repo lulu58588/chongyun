@@ -34,17 +34,17 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/library"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/profile"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/profile"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // addPlugins is backup.AddPlugins: a var so a test installs nothing.
@@ -768,7 +768,7 @@ func run(ctx context.Context, first time.Duration) {
 }
 
 func collect(c Config) (backup.Bundle, error) {
-	b, err := backup.Collect(c.Keys, "magpie")
+	b, err := backup.Collect(c.Keys, "chongyun")
 	if b.Settings == nil {
 		s := settings.Load()
 		b.Settings = &s
@@ -1081,7 +1081,7 @@ func syncOnce(ctx context.Context, c Config, st *state) error {
 	// push writes b over etag; were, as the parts on the server and here
 	// were before it, is kept when the write is blind
 	push := func(b backup.Bundle, etag string, were blind) error {
-		b.Created, b.App = time.Now().UTC(), "magpie"
+		b.Created, b.App = time.Now().UTC(), "chongyun"
 		sealed, err := backup.Seal(b, c.Passphrase)
 		if err != nil {
 			return err

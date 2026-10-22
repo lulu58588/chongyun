@@ -20,8 +20,8 @@ import (
 	"github.com/pelletier/go-toml/v2"
 	"github.com/tidwall/jsonc"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // sandbox is a home with every agent magpie can give the library to, and
@@ -707,7 +707,7 @@ func TestInstructions(t *testing.T) {
 		t.Errorf("claude after:\n%q", s)
 	}
 	if _, err := os.Stat(cx); !os.IsNotExist(err) {
-		t.Error("codex's AGENTS.md, only magpie's, is still there")
+		t.Error("codex's AGENTS.md, only chongyun's, is still there")
 	}
 	if es, _ := os.ReadDir(BackupDir()); len(es) == 0 {
 		t.Error("nothing was backed up")
@@ -1372,7 +1372,7 @@ func TestDsh(t *testing.T) {
 	}
 	s := read(t, web)
 	for _, want := range []string{"- id: llm-deepseek\n  config:\n    thinking: enabled\n", "serverName: engram", "cwd: !!js process.cwd()",
-		"toolCallTimeoutMs: 5000", "- insert: # magpie\n    - id: magpie-mcp-fs\n      name: \"@deepseek-ai/dsh-mcp-client\""} {
+		"toolCallTimeoutMs: 5000", "- insert: # chongyun\n    - id: magpie-mcp-fs\n      name: \"@deepseek-ai/dsh-mcp-client\""} {
 		if !strings.Contains(s, want) {
 			t.Errorf("web profile lacks %q:\n%s", want, s)
 		}
@@ -1393,7 +1393,7 @@ func TestDsh(t *testing.T) {
 		t.Errorf("desktop:\n%q", s)
 	}
 	s = read(t, web)
-	if strings.Contains(s, "# magpie") || !strings.Contains(s, "serverName: engram") || !strings.Contains(s, "cwd: !!js process.cwd()") {
+	if strings.Contains(s, "# chongyun") || !strings.Contains(s, "serverName: engram") || !strings.Contains(s, "cwd: !!js process.cwd()") {
 		t.Errorf("web:\n%s", s)
 	}
 	if s := read(t, filepath.Join(d, "AGENTS.md")); s != "# Mine\n" {
@@ -1433,7 +1433,7 @@ func TestDshImportKeepsJS(t *testing.T) {
 	ok(t)(ImportServer("engram"))
 	ok(t)(SaveServer("engram", Server{Name: "engram", Transport: "stdio", Command: "engram", Args: []string{"mcp"}, Agents: []string{"dsh"}}))
 	s := read(t, p)
-	if !strings.Contains(s, "- insert: # magpie") || !strings.Contains(s, `cwd: !!js "process.cwd()"`) || strings.Count(s, "serverName") != 1 {
+	if !strings.Contains(s, "- insert: # chongyun") || !strings.Contains(s, `cwd: !!js "process.cwd()"`) || strings.Count(s, "serverName") != 1 {
 		t.Errorf("patch list:\n%s", s)
 	}
 }

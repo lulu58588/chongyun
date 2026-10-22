@@ -30,8 +30,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 const fallbackCooldown = time.Minute
@@ -669,11 +669,11 @@ func cappedError(model string, ws []Weighed, now time.Time) (string, time.Time) 
 	capped, noCredits := heldBy(ws)
 	switch {
 	case !noCredits:
-		return fmt.Sprintf("usage cap reached: every account that serves %q is held at the usage cap set on it in magpie — %s. magpie uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
+		return fmt.Sprintf("usage cap reached: every account that serves %q is held at the usage cap set on it in chongyun — %s. chongyun uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
 	case !capped:
-		return fmt.Sprintf("usage limit reached: every account that serves %q has used up its allowance and is set in magpie not to spend its credits — %s. magpie uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
+		return fmt.Sprintf("usage limit reached: every account that serves %q has used up its allowance and is set in chongyun not to spend its credits — %s. chongyun uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
 	}
-	return fmt.Sprintf("usage limit reached: every account that serves %q is held by magpie — %s. magpie uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
+	return fmt.Sprintf("usage limit reached: every account that serves %q is held by chongyun — %s. chongyun uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
 }
 
 // checkpointCappedError is cappedError for a request whose native
@@ -683,7 +683,7 @@ func cappedError(model string, ws []Weighed, now time.Time) (string, time.Time) 
 func checkpointCappedError(model string, cp checkpointWriter, ws []Weighed, now time.Time) (string, time.Time) {
 	held, soonest := heldReasons(ws, now)
 	capped, noCredits := heldBy(ws)
-	return fmt.Sprintf("usage limit reached on the one account this conversation can go to — %s. The conversation was compacted natively by %s, and only that key or account can read the compaction it sealed, so magpie doesn't send it to another account that serves %q, which would refuse it; the routing mode and how conversations stay don't change that. magpie uses it again once that window renews; %s, or start a new conversation", strings.Join(held, "; "), cp.Who, model, heldAdvice(capped, noCredits)), soonest
+	return fmt.Sprintf("usage limit reached on the one account this conversation can go to — %s. The conversation was compacted natively by %s, and only that key or account can read the compaction it sealed, so chongyun doesn't send it to another account that serves %q, which would refuse it; the routing mode and how conversations stay don't change that. chongyun uses it again once that window renews; %s, or start a new conversation", strings.Join(held, "; "), cp.Who, model, heldAdvice(capped, noCredits)), soonest
 }
 
 // heldReasons is what holds each account of ws held at a share, and the
@@ -714,11 +714,11 @@ func heldReasons(ws []Weighed, now time.Time) ([]string, time.Time) {
 func heldAdvice(capped, noCredits bool) string {
 	switch {
 	case !noCredits:
-		return "raise or lift the cap in magpie (Providers → the account's cap, or magpie provider account-cap)"
+		return "raise or lift the cap in chongyun (Providers → the account's cap, or chongyun provider account-cap)"
 	case !capped:
-		return "to go on now, if an account holds credits, let it spend them (Usage → the account's Use credits, or magpie quota credits <account> on)"
+		return "to go on now, if an account holds credits, let it spend them (Usage → the account's Use credits, or chongyun quota credits <account> on)"
 	}
-	return "to go on now, raise or lift a cap (Providers → the account's cap, or magpie provider account-cap) or, if an account holds credits, let it spend them (Usage → the account's Use credits, or magpie quota credits <account> on)"
+	return "to go on now, raise or lift a cap (Providers → the account's cap, or chongyun provider account-cap) or, if an account holds credits, let it spend them (Usage → the account's Use credits, or chongyun quota credits <account> on)"
 }
 
 // heldBy says what holds the accounts of ws held at a share: a usage cap
@@ -812,7 +812,7 @@ func barredError(model string, ws []Weighed) string {
 			names = append(names, w.Name)
 		}
 	}
-	return fmt.Sprintf("model %q is set not to be served by any account or key of %s: each one's own list of models leaves it out. Add it to an account's models in magpie (Providers → the account's Models), or pick another model", model, strings.Join(names, ", "))
+	return fmt.Sprintf("model %q is set not to be served by any account or key of %s: each one's own list of models leaves it out. Add it to an account's models in chongyun (Providers → the account's Models), or pick another model", model, strings.Join(names, ", "))
 }
 
 // asideOf is how the trace tells the keys made for another protocol than

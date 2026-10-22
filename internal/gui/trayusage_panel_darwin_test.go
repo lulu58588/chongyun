@@ -29,7 +29,7 @@ func init() {
 	}
 	seen := make(chan string, 2)
 	app := application.New(application.Options{
-		Name: "magpie tray regression",
+		Name: "chongyun tray regression",
 		Mac:  application.MacOptions{ActivationPolicy: application.ActivationPolicyProhibited},
 		Assets: application.AssetOptions{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/seen" {

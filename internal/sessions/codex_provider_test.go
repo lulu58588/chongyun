@@ -64,23 +64,23 @@ func TestMoveCodexProvider(t *testing.T) {
 	os.Chtimes(main, old, old)
 	seg := filepath.Join(codex, "sessions", "2026", "09", "23", "rollout-2026-09-23T00-27-05-"+mgCX+"_01a0c9f1-3d6f-7f33-b3bd-25c1dd14251b.jsonl")
 	segOrig, _ := os.ReadFile(seg)
-	os.WriteFile(filepath.Join(codex, "config.toml"), []byte("model = \"gpt-6\"\nmodel_provider = \"magpie\"\n\n[model_providers.magpie]\nname = \"magpie\"\n"), 0o644)
+	os.WriteFile(filepath.Join(codex, "config.toml"), []byte("model = \"gpt-6\"\nmodel_provider = \"chongyun\"\n\n[model_providers.magpie]\nname = \"chongyun\"\n"), 0o644)
 	db := codexStateDB(t, codex, mgCX, "custom")
 
 	m, ok := findManaged(ListAgent("codex"), mgCX)
-	if !ok || m.Provider != "custom" || m.UsesProvider != "magpie" {
-		t.Fatalf("listed %q, uses %q; want custom, magpie", m.Provider, m.UsesProvider)
+	if !ok || m.Provider != "custom" || m.UsesProvider != "chongyun" {
+		t.Fatalf("listed %q, uses %q; want custom, chongyun", m.Provider, m.UsesProvider)
 	}
 
-	mv, err := MoveCodexProvider(mgCX, "magpie")
+	mv, err := MoveCodexProvider(mgCX, "chongyun")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if mv.From != "custom" || mv.To != "magpie" || len(mv.Files) != 1 || mv.Files[0] != main || len(mv.DB) != 1 {
+	if mv.From != "custom" || mv.To != "chongyun" || len(mv.Files) != 1 || mv.Files[0] != main || len(mv.DB) != 1 {
 		t.Fatalf("moved %+v", mv)
 	}
 	now, _ := os.ReadFile(main)
-	if want := bytes.Replace(orig, []byte(`"model_provider":"custom"`), []byte(`"model_provider":"magpie"`), 1); !bytes.Equal(now, want) {
+	if want := bytes.Replace(orig, []byte(`"model_provider":"custom"`), []byte(`"model_provider":"chongyun"`), 1); !bytes.Equal(now, want) {
 		t.Fatalf("the file became\n%s", now)
 	}
 	if fi, _ := os.Stat(main); !fi.ModTime().Equal(old) {
@@ -89,7 +89,7 @@ func TestMoveCodexProvider(t *testing.T) {
 	if b, _ := os.ReadFile(seg); !bytes.Equal(b, segOrig) {
 		t.Error("a segment naming no provider was changed")
 	}
-	if p, title, arch := threadProvider(t, db, mgCX); p != "magpie" || title != "the title" || arch != 1 {
+	if p, title, arch := threadProvider(t, db, mgCX); p != "chongyun" || title != "the title" || arch != 1 {
 		t.Errorf("thread row %q %q %d", p, title, arch)
 	}
 	if p, _, _ := threadProvider(t, db, "other"); p != "custom" {
@@ -103,7 +103,7 @@ func TestMoveCodexProvider(t *testing.T) {
 	if !strings.HasPrefix(mv.Backup, os.Getenv("XDG_CONFIG_HOME")) || !strings.Contains(mv.Backup, filepath.Join("trash", "codex-provider")) {
 		t.Errorf("backup in %s", mv.Backup)
 	}
-	if m, _ := findManaged(ListAgent("codex"), mgCX); m.Provider != "magpie" {
+	if m, _ := findManaged(ListAgent("codex"), mgCX); m.Provider != "chongyun" {
 		t.Fatalf("listed as %q after the move", m.Provider)
 	}
 
@@ -121,7 +121,7 @@ func TestMoveCodexProvider(t *testing.T) {
 	// one being written is left alone
 	hot := time.Now()
 	os.Chtimes(main, hot, hot)
-	if _, err := MoveCodexProvider(mgCX, "magpie"); !errors.Is(err, ErrActive) {
+	if _, err := MoveCodexProvider(mgCX, "chongyun"); !errors.Is(err, ErrActive) {
 		t.Fatalf("err %v, want ErrActive", err)
 	}
 	if b, _ := os.ReadFile(main); !bytes.Equal(b, orig) {
@@ -174,8 +174,8 @@ func TestCodexProviderIn(t *testing.T) {
 	if p := CodexProviderIn(d); p != "openai" {
 		t.Fatalf("no config: %q", p)
 	}
-	os.WriteFile(filepath.Join(d, "config.toml"), []byte("model_provider = \"custom\"\nprofile = \"m\"\n[profiles.m]\nmodel_provider = \"magpie\"\n"), 0o644)
-	if p := CodexProviderIn(d); p != "magpie" {
+	os.WriteFile(filepath.Join(d, "config.toml"), []byte("model_provider = \"custom\"\nprofile = \"m\"\n[profiles.m]\nmodel_provider = \"chongyun\"\n"), 0o644)
+	if p := CodexProviderIn(d); p != "chongyun" {
 		t.Fatalf("profile: %q", p)
 	}
 }

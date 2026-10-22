@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // ZCode's row picks which of magpie's models its picker lists, as every
@@ -92,7 +92,7 @@ func TestZCodeModelList(t *testing.T) {
 		t.Fatalf("the user's own provider went: %s", b)
 	}
 	var ids []string
-	for id := range c.Provider["magpie"].Models {
+	for id := range c.Provider["chongyun"].Models {
 		ids = append(ids, id)
 	}
 	if !slices.Equal(ids, []string{"relay/m1"}) {

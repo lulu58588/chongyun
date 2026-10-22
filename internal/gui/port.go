@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/yetone/magpie/internal/agent"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // portJSON is what setting the gateway's port did: the port it is on, the
@@ -96,7 +96,7 @@ func setPort(p int) (portJSON, error) {
 	}
 	gw := served.Load()
 	if gw == nil && gateway.Running() && magpieOnPort(gateway.Port()) {
-		return portJSON{}, fmt.Errorf("another magpie serves the gateway at %s: set its port there, or quit it first", gateway.URL())
+		return portJSON{}, fmt.Errorf("another chongyun serves the gateway at %s: set its port there, or quit it first", gateway.URL())
 	}
 	host := "127.0.0.1"
 	if cur.LAN {

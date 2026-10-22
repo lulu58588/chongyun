@@ -37,7 +37,7 @@ func TestGatewayTraceIsLoopbackOnly(t *testing.T) {
 		}
 		// the console names the magpie routing from the trace it plays
 		if got.Pid != os.Getpid() || got.Serves != Serves {
-			t.Errorf("the trace doesn't name its magpie: pid %d serves %q", got.Pid, got.Serves)
+			t.Errorf("the trace doesn't name its chongyun: pid %d serves %q", got.Pid, got.Serves)
 		}
 	})
 

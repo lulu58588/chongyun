@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // A model whose window is known says so, rather than Codex taking it for

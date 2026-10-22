@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Codex's own models, routed through magpie, keep what Codex knows of them
@@ -196,7 +196,7 @@ func TestCodexCatalogSaysTextOnly(t *testing.T) {
 	if !strings.Contains(text.Description, "text only") || !strings.Contains(text.Description, "Names & levels") || !catalog.MagpieAdded("", text.Slug, text.Description) {
 		t.Errorf("text-only model: %q", text.Description)
 	}
-	if sees.Description != "Sees via magpie" || group.Description != "Words via magpie" || found.Description != "Found via magpie" {
+	if sees.Description != "Sees via chongyun" || group.Description != "Words via chongyun" || found.Description != "Found via chongyun" {
 		t.Errorf("a model that sees, a group and a found one: %q, %q, %q", sees.Description, group.Description, found.Description)
 	}
 }

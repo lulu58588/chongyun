@@ -16,7 +16,7 @@ import (
 	"github.com/pelletier/go-toml/v2"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // Hooks (#1790) are commands an agent runs at a point of its turn: when
@@ -132,7 +132,7 @@ var claudeHookEvents = []string{"PreToolUse", "PostToolUse", "PostToolUseFailure
 
 func hookSpecOf(t *Target) (*hookSpec, string) {
 	if t.Agent.WSL != "" {
-		return nil, fmt.Sprintf("magpie gives hooks only to agents on this computer, not yet to %s in WSL", t.Agent.Name)
+		return nil, fmt.Sprintf("chongyun gives hooks only to agents on this computer, not yet to %s in WSL", t.Agent.Name)
 	}
 	switch t.Agent.ID {
 	case "claude":
@@ -184,7 +184,7 @@ func hookSpecOf(t *Target) (*hookSpec, string) {
 		// agent-home/config.toml, the same [[hooks.<Event>]] shape
 		return grokHookSpec(t.MCP.Path), ""
 	}
-	return nil, fmt.Sprintf("%s has no hooks magpie can write", t.Agent.Name)
+	return nil, fmt.Sprintf("%s has no hooks chongyun can write", t.Agent.Name)
 }
 
 // event is the agent's own name for h's event, or why it has none.
@@ -356,7 +356,7 @@ func readHooksFile(path string) ([]byte, error) {
 	}
 	j := jsonc.ToJSON(raw)
 	if !json.Valid(j) {
-		return nil, fmt.Errorf("%s isn't JSON magpie can read: it is left as it is", path)
+		return nil, fmt.Errorf("%s isn't JSON chongyun can read: it is left as it is", path)
 	}
 	if !gjson.ParseBytes(j).IsObject() {
 		return nil, fmt.Errorf("%s isn't a JSON object: it is left as it is", path)
@@ -917,7 +917,7 @@ func codexRekey(cfg, hooksPath string, moved map[string]map[int]int) (func() err
 	}
 	for k := range need {
 		if !slices.ContainsFunc(spans, func(s span) bool { return s.key == k }) {
-			return nil, fmt.Errorf("%s keeps Codex's trust of %s in a way magpie can't move: take the hook out in Codex's /hooks instead", cfg, k)
+			return nil, fmt.Errorf("%s keeps Codex's trust of %s in a way chongyun can't move: take the hook out in Codex's /hooks instead", cfg, k)
 		}
 	}
 	return func() error {

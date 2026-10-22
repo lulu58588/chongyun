@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // claudeTwoAccounts signs Claude Code in to a@example.com, then to
@@ -141,7 +141,7 @@ func TestClaudeAccountProxyEditedByTheUserStays(t *testing.T) {
 	}
 	// what was still magpie's goes
 	if v := claudeEnvOf(t, settingsPath, "HTTP_PROXY"); v != "" {
-		t.Fatalf("magpie's HTTP_PROXY = %q stayed", v)
+		t.Fatalf("chongyun's HTTP_PROXY = %q stayed", v)
 	}
 	// and with the user's own there, b's isn't written over it
 	claudeSwitch(t, "b@example.com")

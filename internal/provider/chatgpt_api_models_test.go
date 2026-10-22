@@ -20,7 +20,7 @@ func TestChatGPTAPIListsCodexModels(t *testing.T) {
 		{"slug":"gpt-6-luna","display_name":"GPT-6-Luna","priority":1,"context_window":272000,"supported_reasoning_levels":[{"effort":"low"},{"effort":"xhigh"}]},
 		{"slug":"gpt-5.5","display_name":"GPT-5.5 (Codex)","priority":2},
 		{"slug":"gpt-hidden","display_name":"Hidden","priority":3},
-		{"slug":"deepseek/deepseek-v4","display_name":"DeepSeek V4","description":"DeepSeek V4 via magpie","priority":4}]}`), 0o644)
+		{"slug":"deepseek/deepseek-v4","display_name":"DeepSeek V4","description":"DeepSeek V4 via chongyun","priority":4}]}`), 0o644)
 	f := newFakeOpenAI(t)
 	if st := signInVia(t, f, "oaiapp_1", same); st.State != "done" {
 		t.Fatalf("sign-in %+v", st)

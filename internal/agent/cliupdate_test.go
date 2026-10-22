@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 func TestNewerVersions(t *testing.T) {
@@ -61,7 +61,7 @@ func TestInstalledVersion(t *testing.T) {
 		}
 	}
 	if v := (&Agent{ID: "unknown-cli", Bin: "pi"}).InstalledVersion(); v != "" {
-		t.Errorf("a CLI magpie doesn't know: %q", v)
+		t.Errorf("a CLI chongyun doesn't know: %q", v)
 	}
 }
 

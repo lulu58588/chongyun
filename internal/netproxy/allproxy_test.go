@@ -19,7 +19,7 @@ func TestAllProxyFromTheEnvironment(t *testing.T) {
 
 	t.Setenv("all_proxy", "socks5h://127.0.0.1:1080")
 	t.Setenv("NO_PROXY", "internal.example, .corp.example:443")
-	gh, _ := url.Parse("https://github.com/yetone/magpie-releases/releases/download/v1/magpie")
+	gh, _ := url.Parse("https://github.com/lulu58588/magpie-releases/releases/download/v1/magpie")
 	if p, err := For(gh); err != nil || p == nil || p.String() != "socks5h://127.0.0.1:1080" {
 		t.Fatalf("ALL_PROXY: %v %v", p, err)
 	}

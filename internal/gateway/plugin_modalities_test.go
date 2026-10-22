@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A plugin's model is listed with every kind of input and output the

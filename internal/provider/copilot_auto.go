@@ -45,7 +45,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/catalog"
 )
 
 // CopilotAuto is the model id that has Copilot pick the model.

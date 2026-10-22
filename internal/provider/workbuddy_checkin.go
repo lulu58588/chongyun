@@ -46,8 +46,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 const (
@@ -190,10 +190,10 @@ func readCheckins(path string) (map[string]WorkBuddyCheckin, error) {
 			if err == nil {
 				err = errors.New("it holds null")
 			}
-			err = fmt.Errorf("%s doesn't parse (%v): magpie leaves it as it is and checks in no account of it until it does", path, err)
+			err = fmt.Errorf("%s doesn't parse (%v): chongyun leaves it as it is and checks in no account of it until it does", path, err)
 		}
 	default:
-		err = fmt.Errorf("%s can't be read (%v): magpie leaves it as it is and checks in no account of it until it can", path, err)
+		err = fmt.Errorf("%s can't be read (%v): chongyun leaves it as it is and checks in no account of it until it can", path, err)
 	}
 	checkinsReadMu.Lock()
 	defer checkinsReadMu.Unlock()
@@ -301,7 +301,7 @@ func wbCheckin(ctx context.Context, a wbAccount) WorkBuddyCheckin {
 
 // wbCheckinUnauthorized is wbCheckinRefused, told apart on a 401: WorkBuddy's
 // gateway answers a token it refuses with a bare 401 (an HTML page, so the
-// card said only "Unauthorized" and "magpie tries again later", every 30
+// card said only "Unauthorized" and "chongyun tries again later", every 30
 // minutes, all day; モモコ on Discord, a Free account, signing in again
 // didn't help). The account's credits are read with the same headers at
 // once: when they read, the sign-in is good and it is the check-in alone

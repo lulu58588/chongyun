@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // priceHome keeps a test off the machine's own settings, providers and
@@ -298,7 +298,7 @@ func TestSetModelPriceTellsNoAgent(t *testing.T) {
 // A price for a model the provider does not serve never applies, and nothing
 // says so afterwards: the entry is simply there, and the model is counted at
 // the catalogue's price as if the user had never said anything. Refused at the
-// point of writing, the way `magpie model name` refuses the same id. A removal
+// point of writing, the way `chongyun model name` refuses the same id. A removal
 // is exempt, so an entry left for a model that has since gone can be cleared.
 func TestSetModelPriceRefusesAModelTheProviderDoesNotServe(t *testing.T) {
 	priceHome(t)

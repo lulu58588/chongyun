@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 // OpenCode reads its config from $OPENCODE_CONFIG_DIR when that is set
@@ -72,7 +72,7 @@ func TestOpenChamberModel(t *testing.T) {
 	}
 	cfg := filepath.Join(ocDir, "opencode.json")
 	if _, ok := edit.GetJSON(cfg, "provider.magpie.options.baseURL"); !ok {
-		t.Fatalf("no magpie provider in OpenCode's config: %s", readFile(cfg))
+		t.Fatalf("no chongyun provider in OpenCode's config: %s", readFile(cfg))
 	}
 	if v := ch.Field("model").Get(); v != "magpie/fake/m1" {
 		t.Fatalf("model = %q", v)
@@ -141,7 +141,7 @@ func TestOpenChamberSettingsOnly(t *testing.T) {
 		t.Fatal("made a preferences.json")
 	}
 	if _, ok := edit.GetJSON(filepath.Join(home, ".config", "opencode", "opencode.json"), "provider.magpie"); !ok {
-		t.Fatal("no magpie provider in OpenCode's config")
+		t.Fatal("no chongyun provider in OpenCode's config")
 	}
 	bad := `{"fields":[]}`
 	writeFile(t, filepath.Join(dir, "preferences.json"), bad)
@@ -173,9 +173,9 @@ func TestOpenCodeOnAModelNotInItsList(t *testing.T) {
 		t.Fatal(err)
 	}
 	if v, _ := edit.GetJSON(oc.Path, "model"); strings.HasPrefix(v, "magpie/") {
-		t.Fatalf("still on magpie: %s", readFile(oc.Path))
+		t.Fatalf("still on chongyun: %s", readFile(oc.Path))
 	}
 	if _, ok := edit.GetJSON(oc.Path, "provider.magpie"); ok {
-		t.Fatalf("magpie's provider left: %s", readFile(oc.Path))
+		t.Fatalf("chongyun's provider left: %s", readFile(oc.Path))
 	}
 }

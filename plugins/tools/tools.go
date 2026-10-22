@@ -10,9 +10,9 @@
 package tools
 
 import (
-	"github.com/yetone/magpie/internal/gwtool"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/pluginrt"
+	"github.com/lulu58588/magpie/internal/gwtool"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/pluginrt"
 )
 
 func init() {

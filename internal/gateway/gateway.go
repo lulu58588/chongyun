@@ -29,17 +29,17 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/awake"
-	"github.com/yetone/magpie/internal/gwbudget"
-	"github.com/yetone/magpie/internal/gwmw"
-	"github.com/yetone/magpie/internal/gwtool"
-	"github.com/yetone/magpie/internal/plugin"
-	"github.com/yetone/magpie/internal/pluginrt"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/redact"
-	"github.com/yetone/magpie/internal/settings"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/awake"
+	"github.com/lulu58588/magpie/internal/gwbudget"
+	"github.com/lulu58588/magpie/internal/gwmw"
+	"github.com/lulu58588/magpie/internal/gwtool"
+	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/magpie/internal/pluginrt"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/redact"
+	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // DefaultAddr is where the gateway listens unless Settings' port or
@@ -48,7 +48,7 @@ const DefaultAddr = "127.0.0.1:3425"
 
 // Token is the bearer token agents are told to use. The gateway only
 // listens on loopback and accepts anything, but agents insist on one.
-const Token = "magpie"
+const Token = "chongyun"
 
 // TokenFor is the token an agent that says nothing of itself in its
 // User-Agent is told to use, so the gateway still knows it: Alma's requests
@@ -73,7 +73,7 @@ func agentOf(r *http.Request) string {
 		// cursor-agent talks to Cursor's backend alone, never to a
 		// gateway: a Cursor User-Agent here is Cursor Private Inference's
 		// ("Cursor-CLI/…") sent with a key other than its own, the one
-		// typed in its Open configuration or a model's settings ("magpie"),
+		// typed in its Open configuration or a model's settings ("chongyun"),
 		// and it is shown its models as with its key (mamba on Discord)
 		return "cursor-local"
 	}
@@ -227,7 +227,7 @@ func namesInCatalog() map[string]bool {
 // switchedOff says a request for model went nowhere because p, which
 // serves it, is switched off in magpie (provider.Provider.Off).
 func switchedOff(p provider.Provider, model string) string {
-	return fmt.Sprintf("%s is switched off in Magpie, so %q is not served; switch it on again in Magpie's Providers to use it", p.Name, model)
+	return fmt.Sprintf("%s is switched off in Chongyun, so %q is not served; switch it on again in Chongyun's Providers to use it", p.Name, model)
 }
 
 // Version is set by main.
@@ -306,8 +306,8 @@ func ServedBy() Served {
 		Pid     int    `json:"pid"`
 		Serves  string `json:"serves"`
 	}
-	if decodeJSON(b, &info) != nil || info.Name != "magpie" {
-		return Served{Running: bytes.Contains(b, []byte(`"magpie"`)), Window: bytes.Contains(b, []byte(`"window":true`))}
+	if decodeJSON(b, &info) != nil || info.Name != "chongyun" {
+		return Served{Running: bytes.Contains(b, []byte(`"chongyun"`)), Window: bytes.Contains(b, []byte(`"window":true`))}
 	}
 	return Served{Running: true, Window: info.Window, Version: info.Version, Pid: info.Pid, Serves: info.Serves}
 }
@@ -537,7 +537,7 @@ func (s *Server) ListenAndServe(ctx context.Context) error {
 	s.lnMu.Unlock()
 	// the observers plugins registered (usage.Observer) run while this
 	// process serves, and plugins turned on or off elsewhere (the window,
-	// `magpie plugin builtin`) come and go here too
+	// `chongyun plugin builtin`) come and go here too
 	stopObservers := usage.ServeObservers()
 	defer stopObservers()
 	// and the user's own routing groups are served while plugins/groups is
@@ -666,7 +666,7 @@ func (s *Server) Handler() http.Handler {
 	// Claude Desktop's third-party gateway looks for one here before it
 	// takes the address
 	mux.HandleFunc("GET /api/hello", func(w http.ResponseWriter, r *http.Request) {
-		writeJSON(w, 200, map[string]any{"name": "magpie", "version": Version})
+		writeJSON(w, 200, map[string]any{"name": "崇云科技", "version": Version})
 	})
 	// the Ollama API's model routes, for a client that takes a custom
 	// endpoint only as an Ollama server (ollama.go)
@@ -737,7 +737,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /v1beta/models", s.geminiModels)
 	mux.HandleFunc("POST /v1beta/models/{call...}", s.gemini)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		writeError(w, provider.Chat, http.StatusNotFound, "magpie serves /v1/chat/completions, /v1/responses, /v1/messages, /v1/systemone, /v1/images/generations, /v1/images/edits, /v1/videos, /v1/embeddings, /v1/rerank, /v1/audio/transcriptions, /v1/audio/translations and /v1beta/models/*")
+		writeError(w, provider.Chat, http.StatusNotFound, "chongyun serves /v1/chat/completions, /v1/responses, /v1/messages, /v1/systemone, /v1/images/generations, /v1/images/edits, /v1/videos, /v1/embeddings, /v1/rerank, /v1/audio/transcriptions, /v1/audio/translations and /v1beta/models/*")
 	})
 	return s.counted(holdCatalog(corsGuard(callerGuard(withCaller(keyLimited(mux))))))
 }
@@ -750,7 +750,7 @@ func (s *Server) Handler() http.Handler {
 // gateway. A plain GET is told to POST.
 func responsesOverHTTP(w http.ResponseWriter, r *http.Request) {
 	if strings.EqualFold(r.Header.Get("Upgrade"), "websocket") {
-		writeError(w, provider.Responses, http.StatusUpgradeRequired, "magpie relays Responses over HTTP only: send POST /v1/responses (streamed as SSE); Responses over a WebSocket is not served")
+		writeError(w, provider.Responses, http.StatusUpgradeRequired, "chongyun relays Responses over HTTP only: send POST /v1/responses (streamed as SSE); Responses over a WebSocket is not served")
 		return
 	}
 	w.Header().Set("Allow", "POST")
@@ -765,7 +765,7 @@ func responsesOverHTTP(w http.ResponseWriter, r *http.Request) {
 var catalogSize stamped[struct{}, int]
 
 func (s *Server) info(w http.ResponseWriter, r *http.Request) {
-	out := map[string]any{"name": "magpie", "version": Version, "models": catalogSize.get(struct{}{}, func() int { return len(provider.Catalog()) }), "window": Window,
+	out := map[string]any{"name": "崇云科技", "version": Version, "models": catalogSize.get(struct{}{}, func() int { return len(provider.Catalog()) }), "window": Window,
 		"apis": []string{"/v1/chat/completions", "/v1/responses", "/v1/messages", "/v1/systemone", "/v1beta/models/{model}:generateContent", "/v1/images/generations", "/v1/images/edits", "/v1/videos", "/v1/embeddings", "/v1/rerank", "/v1/audio/transcriptions", "/v1/audio/translations", "/v1/magpie/quotas", "/v1/magpie/quotas/history", "/v1/magpie/usage", "/v1/magpie/usage/requests", "/v1/magpie/route", "/v1/magpie/trace", SearchMCPPath, VisionMCPPath, ToolsMCPPath}}
 	// which process serves, for another magpie on this computer to name it
 	// on its Routing page (#2606); not told to another machine
@@ -786,7 +786,7 @@ func (s *Server) info(w http.ResponseWriter, r *http.Request) {
 // told its quotas is told those of what it may use (scopeQuotas, #2216).
 func (s *Server) quotas(w http.ResponseWriter, r *http.Request) {
 	if !local(r) && !sharedWith(r) {
-		writeError(w, provider.Chat, http.StatusForbidden, "magpie's quotas are told to another machine only when magpie is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)")
+		writeError(w, provider.Chat, http.StatusForbidden, "chongyun's quotas are told to another machine only when chongyun is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)")
 		return
 	}
 	scope, ok := scopeQuotas(w, r)
@@ -810,7 +810,7 @@ func (s *Server) quotas(w http.ResponseWriter, r *http.Request) {
 // /v1/magpie/quotas stays the snapshot.
 func (s *Server) quotasHistory(w http.ResponseWriter, r *http.Request) {
 	if !local(r) && !sharedWith(r) {
-		writeError(w, provider.Chat, http.StatusForbidden, "magpie's quotas are told to another machine only when magpie is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)")
+		writeError(w, provider.Chat, http.StatusForbidden, "chongyun's quotas are told to another machine only when chongyun is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)")
 		return
 	}
 	scope, ok := scopeQuotas(w, r)
@@ -826,7 +826,7 @@ func (s *Server) quotasHistory(w http.ResponseWriter, r *http.Request) {
 // show: its own cache, however old, and no vendor asked for it.
 func (s *Server) quotaCards(w http.ResponseWriter, r *http.Request) {
 	if !local(r) && !sharedWith(r) {
-		writeError(w, provider.Chat, http.StatusForbidden, "magpie's quotas are told to another machine only when magpie is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)")
+		writeError(w, provider.Chat, http.StatusForbidden, "chongyun's quotas are told to another machine only when chongyun is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)")
 		return
 	}
 	scope, ok := scopeQuotas(w, r)
@@ -852,7 +852,7 @@ const remoteRefreshGap = 30 * time.Second
 // is named, then the cards are answered as quotaCards answers them.
 func (s *Server) quotaCardsRefresh(w http.ResponseWriter, r *http.Request) {
 	if !local(r) && !sharedWith(r) {
-		writeError(w, provider.Chat, http.StatusForbidden, "magpie's quotas are told to another machine only when magpie is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)")
+		writeError(w, provider.Chat, http.StatusForbidden, "chongyun's quotas are told to another machine only when chongyun is shared on the local network (Settings → Share on local network) and the request carries its API key (Authorization: Bearer <key> or x-api-key: <key>)")
 		return
 	}
 	scope, ok := scopeQuotas(w, r)
@@ -861,7 +861,7 @@ func (s *Server) quotaCardsRefresh(w http.ResponseWriter, r *http.Request) {
 	}
 	id, user := r.URL.Query().Get("provider"), r.URL.Query().Get("user")
 	if strings.Contains(id, "/") || provider.IsRemoteCard(id) { // a card this magpie has from another: not passed on
-		writeError(w, provider.Chat, http.StatusBadRequest, "this magpie reads only its own cards again")
+		writeError(w, provider.Chat, http.StatusBadRequest, "this chongyun reads only its own cards again")
 		return
 	}
 	// a key told only some cards (#2216) has only those read again: a
@@ -1029,7 +1029,7 @@ func drawerObjects(r *http.Request) []map[string]any {
 			}
 			name := cmp.Or(m.Name, m.ID)
 			o := map[string]any{"id": p.ID + "/" + m.ID, "object": "model", "type": "model", "kind": "image", "created": 0,
-				"owned_by": p.ID, "display_name": name, "magpie_label": name + " · " + p.Name,
+				"owned_by": p.ID, "display_name": name, "chongyun_label": name + " · " + p.Name,
 				"modalities": map[string]any{"input": []string{"text"}, "output": []string{"image"}}}
 			if m.Images {
 				o["modalities"] = map[string]any{"input": []string{"text", "image"}, "output": []string{"image"}}
@@ -1057,7 +1057,7 @@ func videomakerObjects(r *http.Request) []map[string]any {
 			}
 			name := cmp.Or(m.Name, m.ID)
 			out = append(out, map[string]any{"id": p.ID + "/" + m.ID, "object": "model", "type": "model", "kind": "video", "created": 0,
-				"owned_by": p.ID, "display_name": name, "magpie_label": name + " · " + p.Name,
+				"owned_by": p.ID, "display_name": name, "chongyun_label": name + " · " + p.Name,
 				"modalities": map[string]any{"input": []string{"text", "image"}, "output": []string{"video"}}})
 		}
 	}
@@ -1126,14 +1126,14 @@ func (s *Server) models(w http.ResponseWriter, r *http.Request) {
 			}
 			if prices {
 				if pr, ok := provider.EntryPriceIn(st, find, e); ok {
-					m["magpie_price"] = pr
+					m["chongyun_price"] = pr
 				}
 			}
 			// for another magpie: its name as the agents' lists here call
 			// it, with its provider's after it unless the user wants it
 			// plain, so two providers' models of one name are told apart
 			// there as they are here
-			m["magpie_label"] = labels[i]
+			m["chongyun_label"] = labels[i]
 			if agentOf(r) == "cursor-local" {
 				cursorLocalModel(m, e)
 			}
@@ -1157,7 +1157,7 @@ func (s *Server) models(w http.ResponseWriter, r *http.Request) {
 		labels := provider.Labels(deciders)
 		for i, e := range deciders {
 			m := modelObject(e)
-			m["kind"], m["magpie_label"] = "decision", labels[i]
+			m["kind"], m["chongyun_label"] = "decision", labels[i]
 			m["native_endpoints"] = []string{"/v1/systemone"}
 			data = append(data, m)
 		}
@@ -1783,7 +1783,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 		msg := unknownModel(call.Model, "")
 		if g, ok := provider.DisabledGroup(asked); ok {
 			call.Error = "group switched off"
-			msg = fmt.Sprintf("the routing group %s is switched off in Magpie, so %q is not served; switch it on again on Magpie's Routing page to use it", g.Name, call.Model)
+			msg = fmt.Sprintf("the routing group %s is switched off in Chongyun, so %q is not served; switch it on again on Chongyun's Routing page to use it", g.Name, call.Model)
 		} else if g, _, ok := provider.FindGroup(asked); ok && g.Decides() {
 			// a group of decision models answers System One, not this
 			call.Status, call.Error = 400, "a decision group"
@@ -2117,7 +2117,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 		} else {
 			msg, back = cappedError(call.Model, held, time.Now())
 			if strictHeld != nil {
-				msg += ". The conversation stays strictly on that account (Stays: Strict), so magpie doesn't move it to another"
+				msg += ". The conversation stays strictly on that account (Stays: Strict), so chongyun doesn't move it to another"
 			}
 			record = cappedRecord(held)
 		}

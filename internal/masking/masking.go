@@ -7,10 +7,10 @@ package masking
 import (
 	"net/http"
 
-	"github.com/yetone/magpie/internal/gwmw"
-	"github.com/yetone/magpie/internal/pii"
-	"github.com/yetone/magpie/internal/redact"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/gwmw"
+	"github.com/lulu58588/magpie/internal/pii"
+	"github.com/lulu58588/magpie/internal/redact"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // Masker masks as the settings say, read on each call.

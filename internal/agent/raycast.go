@@ -25,7 +25,7 @@ package agent
 // Raycast watches the file and picks a change up without a restart. The
 // model is picked in Raycast's own model picker (Quick AI, AI Chat, AI
 // Commands), not in a file, so what magpie sets is whether its models are in
-// that picker: one entry of the providers list, id "magpie". The user's other
+// that picker: one entry of the providers list, id "chongyun". The user's other
 // entries, the top-level tools block and comments stay, and so does a key
 // magpie doesn't write in its own entry (include_user_email,
 // additional_parameters, a model's description). Raycast's User-Agent isn't
@@ -42,8 +42,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
 )
 
 // raycastApp is Raycast's macOS bundle.
@@ -85,7 +85,7 @@ func raycast(home string) *Agent {
 			},
 			Set: func(v string) error { return write(v != "") },
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie", Note: "every magpie model in Raycast AI's model picker (Raycast Pro)"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun", Note: "every chongyun model in Raycast AI's model picker (Raycast Pro)"}}
 			},
 		}},
 	}
@@ -136,7 +136,7 @@ func raycastProviderYAML(gw string) raycastProvider {
 			ReasoningEffort: raycastSupported{len(m.Efforts) > 0},
 		}})
 	}
-	return raycastProvider{ID: magpieID, Name: "magpie", BaseURL: gw + "/v1",
+	return raycastProvider{ID: magpieID, Name: "崇云科技", BaseURL: gw + "/v1",
 		APIKeys: map[string]string{magpieID: agentKeyAt("raycast", gw)}, Models: ms}
 }
 

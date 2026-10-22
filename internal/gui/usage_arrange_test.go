@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The tray panel's Allowances tab leaves out the subscriptions set hidden
@@ -123,7 +123,7 @@ func TestUsageArrangeCountClient(t *testing.T) {
 	for _, bad := range []string{
 		`{"count":{"client":"claude-code","as":"codex"}}`,
 		`{"count":{"client":"magpie-router","as":"codex"}}`,
-		`{"count":{"client":"my-bridge","as":"magpie"}}`,
+		`{"count":{"client":"my-bridge","as":"chongyun"}}`,
 		`{"count":{"client":"my-bridge","as":"Python-urllib"}}`,
 		`{"count":{"client":"","as":"codex"}}`,
 	} {

@@ -1,14 +1,14 @@
 package usage
 
 import (
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/settings"
 	"math"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 func resetUsageTest(t *testing.T) {

@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/proc"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Gemini CLI only speaks Google's own API, so "provider" here is how it
@@ -133,11 +133,11 @@ func geminiIn(at place) *Agent {
 			if routed() {
 				return nil
 			}
-			return fmt.Errorf("pick a model via magpie instead; that routes Gemini CLI through the gateway")
+			return fmt.Errorf("pick a model via chongyun instead; that routes Gemini CLI through the gateway")
 		}
 		// an auth it doesn't know is refused before magpie is taken out:
-		// `magpie gemini <a model it has no option for>` comes here, and
-		// unrouted Gemini CLI first, as `magpie snow --help` took magpie
+		// `chongyun gemini <a model it has no option for>` comes here, and
+		// unrouted Gemini CLI first, as `chongyun snow --help` took magpie
 		// out of Snow (#1457)
 		switch id {
 		case "", "custom", "google", "vertex", "api-key":
@@ -210,7 +210,7 @@ func geminiIn(at place) *Agent {
 				return d
 			}
 			if a := auth(); a != "gemini-api-key" {
-				return "Gemini CLI signs in with " + orDefault(a) + " rather than magpie's key, so it asks Google directly"
+				return "Gemini CLI signs in with " + orDefault(a) + " rather than chongyun's key, so it asks Google directly"
 			}
 			return ""
 		},
@@ -229,11 +229,11 @@ func geminiIn(at place) *Agent {
 					key := Option{Value: "api-key", Label: "API key", Icon: "gemini-color"}
 					switch {
 					case magpieKey() != "":
-						key.Note = "the Google key from magpie's providers"
+						key.Note = "the Google key from chongyun's providers"
 					case envKey() != "":
 						key.Note = "GEMINI_API_KEY from ~/.gemini/.env"
 					default:
-						key.Note = "needs GEMINI_API_KEY — add Google Gemini in magpie's providers"
+						key.Note = "needs GEMINI_API_KEY — add Google Gemini in chongyun's providers"
 					}
 					out := []Option{
 						{Value: "google", Label: "Google", Icon: "gemini-color", Note: "Google account · OAuth sign-in"},
@@ -244,7 +244,7 @@ func geminiIn(at place) *Agent {
 					case "custom":
 						out = append(out, Option{Value: "custom", Note: hostOf(base()) + " (from .env)"})
 					case magpieID:
-						out = append(out, Option{Value: magpieID, Label: "magpie", Note: "the local gateway · every provider's models"})
+						out = append(out, Option{Value: magpieID, Label: "崇云科技", Note: "the local gateway · every provider's models"})
 					}
 					return out
 				},

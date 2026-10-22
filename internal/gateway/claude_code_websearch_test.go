@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // ccRelayReply is an Anthropic stream saying one word.
@@ -88,11 +88,11 @@ func TestClaudeCodeWebSearchKeepsMetadata(t *testing.T) {
 		}
 		check(t, f)
 		if strings.Contains(string(f.got), "web_search_20250305") {
-			t.Errorf("server tool sent to a relay magpie doesn't know searches: %s", f.got)
+			t.Errorf("server tool sent to a relay chongyun doesn't know searches: %s", f.got)
 		}
 	})
 
-	t.Run("magpie searches", func(t *testing.T) {
+	t.Run("chongyun searches", func(t *testing.T) {
 		f := &fake{t: t, reply: ccRelayReply, refuse: ccOnly}
 		setHome(t, t.TempDir())
 		setup(t, provider.Anthropic, f)
@@ -118,7 +118,7 @@ func TestClaudeCodeWebSearchKeepsMetadata(t *testing.T) {
 		}
 		check(t, f)
 		if !strings.Contains(string(f.got), `"name":"web_search"`) {
-			t.Errorf("magpie's search not offered: %s", f.got)
+			t.Errorf("chongyun's search not offered: %s", f.got)
 		}
 	})
 

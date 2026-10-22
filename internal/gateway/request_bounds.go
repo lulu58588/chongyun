@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/klauspost/compress/zstd"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // Bound a single body and its read time without limiting how long a client
@@ -97,7 +97,7 @@ func decodedBody(r *http.Request) (io.ReadCloser, error) {
 		}
 		rd = g
 	default:
-		return nil, fmt.Errorf("%w: magpie can't read a %q body; send it as identity, gzip or zstd", errBodyEncoding, enc)
+		return nil, fmt.Errorf("%w: chongyun can't read a %q body; send it as identity, gzip or zstd", errBodyEncoding, enc)
 	}
 	r.Header.Del("Content-Encoding")
 	return rd, nil
@@ -253,7 +253,7 @@ func readSized(r io.Reader, declared int64) ([]byte, error) {
 // and a bare "Payload Too Large" read as the model's or the vendor's
 // (#1422). writeError adds what to do about it.
 func overLimit(limit int64) error {
-	return fmt.Errorf("request body is over magpie's gateway limit of %s (decoded); the provider was not asked", sizeWord(limit))
+	return fmt.Errorf("request body is over chongyun's gateway limit of %s (decoded); the provider was not asked", sizeWord(limit))
 }
 
 // sizeWord is a byte count in MB, or in KB or bytes when it is smaller,

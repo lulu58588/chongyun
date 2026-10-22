@@ -22,19 +22,19 @@ func TestCodexProviderIsNotJoined(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !cx.Joined() || !cx.Beside() {
-		t.Fatalf("a magpie model beside the sign-in: joined %v, beside %v", cx.Joined(), cx.Beside())
+		t.Fatalf("a chongyun model beside the sign-in: joined %v, beside %v", cx.Joined(), cx.Beside())
 	}
 	if err := cx.Field("login").Set("api"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
 		t.Fatalf("api:\n%s", cfg)
 	}
 	if cx.Joined() || cx.Beside() {
-		t.Fatalf("magpie API: joined %v, beside %v", cx.Joined(), cx.Beside())
+		t.Fatalf("chongyun API: joined %v, beside %v", cx.Joined(), cx.Beside())
 	}
 	if !cx.Wired() {
-		t.Fatal("magpie API: not wired")
+		t.Fatal("chongyun API: not wired")
 	}
 
 	// the ChatGPT account held by the Codex app: magpie its provider too
@@ -49,7 +49,7 @@ func TestCodexProviderIsNotJoined(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) || cx.Joined() {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) || cx.Joined() {
 		t.Fatalf("held: joined %v\n%s", cx.Joined(), cfg)
 	}
 	codexUsedUp = func() bool { return false }

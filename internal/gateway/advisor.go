@@ -7,7 +7,7 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // advisorTools fits Claude Code's advisor (/advisor, --advisor) to the

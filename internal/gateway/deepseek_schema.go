@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/tidwall/gjson"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // deepseekToolPatterns normalizes the ECMAScript null escape \0 in tool schemas

@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/gwmw"
-	"github.com/yetone/magpie/internal/maskrec"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/gwmw"
+	"github.com/lulu58588/magpie/internal/maskrec"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A masked request is recorded for Settings → Privacy: each value by its

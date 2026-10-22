@@ -67,7 +67,7 @@ func sideTimeout(ctx context.Context) (sideTimedOut, bool) {
 // told apart (#2318).
 func canceled(ctx context.Context) (int, string) {
 	if t, ok := sideTimeout(ctx); ok {
-		return 499, "magpie stopped waiting: its " + t.what + " had " + t.Error()
+		return 499, "chongyun stopped waiting: its " + t.what + " had " + t.Error()
 	}
 	return 499, "the agent canceled the request"
 }

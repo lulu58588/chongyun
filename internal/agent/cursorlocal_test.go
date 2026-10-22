@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/usage"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/usage"
 )
 
 // Cursor Private Inference (#299) is found by its product.json among the
@@ -104,7 +104,7 @@ func TestCursorLocalConnects(t *testing.T) {
 		t.Fatalf("fields %d, wired %v before connecting", len(a.Fields), a.Wired())
 	}
 	how, err := a.ConnectHow()
-	if err != nil || how.How != "magpie" || !a.Wired() {
+	if err != nil || how.How != "chongyun" || !a.Wired() {
 		t.Fatalf("connect: %+v %v, wired %v", how, err, a.Wired())
 	}
 	want := map[string]string{"CURSOR_LOCAL_AGENT_BASE_URL": gateway.URL() + "/v1", "CURSOR_LOCAL_AGENT_API_KEY": gateway.TokenFor(CursorLocalID)}

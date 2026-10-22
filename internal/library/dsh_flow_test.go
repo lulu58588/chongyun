@@ -14,7 +14,7 @@ func TestDshFlowPatchList(t *testing.T) {
 	write(t, p, "# Your patch layer for this dsh profile\n[ { id: some-plugin, disabled: false } ]\n")
 	ok(t)(SaveServer("", Server{Name: "fs", Transport: "stdio", Command: "npx", Args: []string{"-y", "@mcp/fs"}, Agents: []string{"dsh"}}))
 	s := read(t, p)
-	for _, want := range []string{"# Your patch layer for this dsh profile\n- id: some-plugin\n  disabled: false\n", "- insert: # magpie\n    - id: magpie-mcp-fs\n", `serverName: "fs"`} {
+	for _, want := range []string{"# Your patch layer for this dsh profile\n- id: some-plugin\n  disabled: false\n", "- insert: # chongyun\n    - id: magpie-mcp-fs\n", `serverName: "fs"`} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q in\n%s", want, s)
 		}
@@ -33,7 +33,7 @@ func TestDshDocStartPatchList(t *testing.T) {
 	if !strings.HasPrefix(s, "---\n") {
 		t.Fatalf("the document start marker lost:\n%s", s)
 	}
-	for _, want := range []string{"id: \"ui-settings-general\"", "- insert: # magpie\n    - id: magpie-mcp-fs\n"} {
+	for _, want := range []string{"id: \"ui-settings-general\"", "- insert: # chongyun\n    - id: magpie-mcp-fs\n"} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q in\n%s", want, s)
 		}
@@ -73,7 +73,7 @@ func TestDshDocStartOnlyFirst(t *testing.T) {
 		"[]\n---\n- id: a\n",
 	} {
 		write(t, p, raw)
-		if _, err := dshRead(p); err == nil || !strings.Contains(err.Error(), "not a list of entries magpie can edit") {
+		if _, err := dshRead(p); err == nil || !strings.Contains(err.Error(), "not a list of entries chongyun can edit") {
 			t.Fatalf("%q: want the file refused, got %v", raw, err)
 		}
 	}

@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/update"
+	"github.com/lulu58588/magpie/internal/update"
 )
 
-// `magpie update` in the Docker image (/magpie, run as nonroot) failed with
+// `chongyun update` in the Docker image (/magpie, run as nonroot) failed with
 // the rename's "permission denied"; it now says to pull the new image.
 // Outside a container it goes on to the download as before.
 func TestUpdateInContainerSaysPullTheImage(t *testing.T) {
@@ -22,14 +22,14 @@ func TestUpdateInContainerSaysPullTheImage(t *testing.T) {
 	}
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// no checksum: a download is refused before anything is fetched or written
-		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", URL: "https://github.com/yetone/magpie-releases/releases/tag/v0.1.11",
+		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", URL: "https://github.com/lulu58588/magpie-releases/releases/tag/v0.1.11",
 			Assets: map[string]update.Asset{update.BinaryAsset(): {URL: "http://" + r.Host + "/asset"}}})
 	}))
 	defer srv.Close()
 	t.Setenv("MAGPIE_UPDATE_FEED", srv.URL)
 	dir := t.TempDir()
-	exe := filepath.Join(dir, "magpie")
-	if err := os.WriteFile(exe, []byte("magpie"), 0o755); err != nil {
+	exe := filepath.Join(dir, "chongyun")
+	if err := os.WriteFile(exe, []byte("chongyun"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.Chmod(dir, 0o555); err != nil {

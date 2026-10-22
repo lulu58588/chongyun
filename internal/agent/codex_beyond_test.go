@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yetone/magpie/internal/access"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // A Codex signed in to ChatGPT that reaches the gateway from another
@@ -38,7 +38,7 @@ func TestCodexBeyondLoopbackNotJoined(t *testing.T) {
 	}
 	cfg := read()
 	if p, _ := edit.GetTOMLTop(cx.Path, "model_provider"); p != magpieID {
-		t.Fatalf("model_provider %q, want magpie\n%s", p, cfg)
+		t.Fatalf("model_provider %q, want chongyun\n%s", p, cfg)
 	}
 	if k, _ := edit.GetTOMLTable(cx.Path, "model_providers."+magpieID); k["experimental_bearer_token"] != lan {
 		t.Fatalf("provider key %q, want the LAN sharing key\n%s", k["experimental_bearer_token"], cfg)
@@ -50,6 +50,6 @@ func TestCodexBeyondLoopbackNotJoined(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cfg := read(); strings.Contains(cfg, "model_provider =") || strings.Contains(cfg, "openai_base_url") {
-		t.Fatalf("Codex's own model still through magpie:\n%s", cfg)
+		t.Fatalf("Codex's own model still through chongyun:\n%s", cfg)
 	}
 }

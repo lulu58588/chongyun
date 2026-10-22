@@ -9,10 +9,10 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/yetone/magpie/internal/backup"
-	"github.com/yetone/magpie/internal/lastgood"
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // A providers.json that can't be read is never pushed as no providers: a

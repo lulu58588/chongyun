@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
-// #2008 (Gaudi-XIX): a provider's own rest cap (`magpie provider rest-cap`)
+// #2008 (Gaudi-XIX): a provider's own rest cap (`chongyun provider rest-cap`)
 // is where a key that keeps failing, or keeps being rate limited as soon
 // as its rest is over, stops doubling: past the gateway's 10 and 30
 // minutes for a free key that is down for hours, or short of them.
@@ -53,7 +53,7 @@ func TestRestCapOr(t *testing.T) {
 
 // Kismet Alan on Discord: a relay or account pool whose unknown errors
 // come now and then, the next request often going through, is set never
-// to rest after one (`magpie provider rest-cap <id> off`). Its 5xx and its
+// to rest after one (`chongyun provider rest-cap <id> off`). Its 5xx and its
 // dropped connection rest it no more, nor count toward a backoff; what
 // says why still rests it as before: a rate limit (magpie's own 30
 // minutes cap), out of quota, its key refused, its model not served.

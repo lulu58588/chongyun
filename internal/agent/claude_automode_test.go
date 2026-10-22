@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // claudeAutoModeHome is a sandbox HOME with a provider serving a Claude
@@ -58,7 +58,7 @@ func TestClaudeAutoModeModel(t *testing.T) {
 	}
 	opts := f.Options(nil)
 	if !containsOption(opts, "relay/claude-haiku-4-5") || !containsOption(opts, "relay/deepseek-pro") {
-		t.Fatalf("options miss magpie's models: %v", opts)
+		t.Fatalf("options miss chongyun's models: %v", opts)
 	}
 	if containsOption(opts, "relay/claude-opus-5-5") {
 		t.Fatalf("Opus 5.5 is offered, which Claude Code won't classify with: %v", opts)
@@ -67,7 +67,7 @@ func TestClaudeAutoModeModel(t *testing.T) {
 		t.Fatalf("Opus 5.5 taken: %v %q", err, env(claudeAutoModeEnv))
 	}
 	if err := f.Set("claude-haiku-4-5"); err == nil || env(claudeAutoModeEnv) != "" {
-		t.Fatalf("a model magpie doesn't serve taken: %v %q", err, env(claudeAutoModeEnv))
+		t.Fatalf("a model chongyun doesn't serve taken: %v %q", err, env(claudeAutoModeEnv))
 	}
 	if err := f.Set("relay/claude-haiku-4-5"); err != nil {
 		t.Fatal(err)

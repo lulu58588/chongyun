@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yetone/magpie/internal/testenv"
+	"github.com/lulu58588/magpie/internal/testenv"
 )
 
 // A Claude account's allowance is what Claude Code last told: shown again

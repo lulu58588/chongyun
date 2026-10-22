@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yetone/magpie/internal/provider"
-	"github.com/yetone/magpie/internal/settings"
+	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/settings"
 )
 
 // The allow list (lc on Discord, magpie in Docker on a public host): the
@@ -28,7 +28,7 @@ import (
 // reaches such a proxy at the proxy.
 
 // AllowIPsEnv names the environment variable that sets the list, in place
-// of Settings' (for Docker and `magpie web`).
+// of Settings' (for Docker and `chongyun web`).
 const AllowIPsEnv = "MAGPIE_ALLOW_IPS"
 
 // AllowIPs is the allow list in force, as written, and whether
@@ -199,13 +199,13 @@ func allowed(r *http.Request) (addr, why string, ok bool) {
 // list, or (unknown) settings.json, which holds the list, can't be read.
 func notAllowed(addr string, unknown bool) string {
 	if unknown {
-		return "magpie couldn't read its settings.json in " + settings.Dir() + ", which holds its allow list, so it answers only this computer until it can, and this request came from " + addr + ": repair that file, or set the list in " + AllowIPsEnv
+		return "chongyun couldn't read its settings.json in " + settings.Dir() + ", which holds its allow list, so it answers only this computer until it can, and this request came from " + addr + ": repair that file, or set the list in " + AllowIPsEnv
 	}
-	return "magpie answers only the addresses on its allow list (" + AllowIPsEnv + ", or Settings → Network and sharing → Allowed addresses), and this request came from " + addr + ": add it there to let it in"
+	return "chongyun answers only the addresses on its allow list (" + AllowIPsEnv + ", or Settings → Network and sharing → Allowed addresses), and this request came from " + addr + ": add it there to let it in"
 }
 
 // AllowGuard refuses a request from an address the allow list leaves out,
-// 403, before anything else looks at it: the page `magpie web` serves.
+// 403, before anything else looks at it: the page `chongyun web` serves.
 func AllowGuard(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if addr, why, ok := allowed(r); !ok {

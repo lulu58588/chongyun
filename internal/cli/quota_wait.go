@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // How often magpie quota wait reads the allowance again: shortly after the
@@ -77,7 +77,7 @@ func resolveQuotaTarget(arg string, qs []provider.SubscriptionQuota, find func(s
 			if slices.ContainsFunc(qs, t.has) {
 				return t, nil
 			}
-			return quotaTarget{}, fmt.Errorf("%s has no account %s · magpie quota %s lists its accounts", id, u, id)
+			return quotaTarget{}, fmt.Errorf("%s has no account %s · chongyun quota %s lists its accounts", id, u, id)
 		}
 	}
 	var hits []quotaTarget
@@ -97,9 +97,9 @@ func resolveQuotaTarget(arg string, qs []provider.SubscriptionQuota, find func(s
 		return quotaTarget{}, fmt.Errorf("%s is an account of more than one subscription: name one of %s", arg, strings.Join(names, ", "))
 	}
 	if find != nil && find(arg) {
-		return quotaTarget{}, fmt.Errorf("%s has no subscription or plan whose allowance magpie reads: sign in to it first, or magpie quota lists what there is", arg)
+		return quotaTarget{}, fmt.Errorf("%s has no subscription or plan whose allowance chongyun reads: sign in to it first, or chongyun quota lists what there is", arg)
 	}
-	return quotaTarget{}, fmt.Errorf("no subscription, plan or account %s · magpie quota lists them", arg)
+	return quotaTarget{}, fmt.Errorf("no subscription, plan or account %s · chongyun quota lists them", arg)
 }
 
 // quotaWait is magpie quota wait's loop, with what it reads, the clock and
@@ -255,7 +255,7 @@ func quotaWaitCmd(args []string) error {
 			}
 			timeout = d
 		case strings.HasPrefix(a, "-"):
-			return exitError{2, fmt.Errorf("unknown flag %s · %s", a, "magpie quota wait <provider|account> [--timeout <duration>] [--quiet]")}
+			return exitError{2, fmt.Errorf("unknown flag %s · %s", a, "chongyun quota wait <provider|account> [--timeout <duration>] [--quiet]")}
 		default:
 			if arg != "" {
 				return exitError{2, fmt.Errorf("one subscription or account at a time: %s or %s", arg, a)}
@@ -264,7 +264,7 @@ func quotaWaitCmd(args []string) error {
 		}
 	}
 	if arg == "" {
-		return exitError{2, fmt.Errorf("wait for what? magpie quota wait <provider|account>, such as codex")}
+		return exitError{2, fmt.Errorf("wait for what? chongyun quota wait <provider|account>, such as codex")}
 	}
 	ctx, stop := interruptContext()
 	defer stop()
@@ -298,7 +298,7 @@ func quotaWaitCmd(args []string) error {
 		return false
 	}
 	if t.user == "" && !slices.ContainsFunc(qs, func(q provider.SubscriptionQuota) bool { return t.has(q) && !skip(q) }) {
-		return exitError{2, fmt.Errorf("none of %s's accounts is on in magpie · turn one on, or name the account", t.provider)}
+		return exitError{2, fmt.Errorf("none of %s's accounts is on in chongyun · turn one on, or name the account", t.provider)}
 	}
 	first := true
 	w := quotaWait{

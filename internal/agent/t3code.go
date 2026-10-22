@@ -16,7 +16,7 @@ package agent
 // user's ~/.claude settings read as Claude Code reads them) with the
 // instance's environment added, and lists Claude's models and its custom
 // models, each sent as Claude Code's model. So magpie is an instance of its
-// own, "magpie": Claude Code pointed at the gateway (ANTHROPIC_BASE_URL and
+// own, "chongyun": Claude Code pointed at the gateway (ANTHROPIC_BASE_URL and
 // the token Claude Code is routed with, so its requests are Claude Code's
 // to the gateway, tiers and all), every magpie model one of its custom
 // models, a 1M one marked [1m] as magpie marks it for Claude Code, with
@@ -42,11 +42,11 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/agentenv"
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/edit"
-	"github.com/yetone/magpie/internal/gateway"
-	"github.com/yetone/magpie/internal/provider"
+	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/magpie/internal/provider"
 )
 
 // t3Instance is the key of magpie's provider instance in T3 Code's
@@ -104,7 +104,7 @@ func t3code(home string) *Agent {
 				return edit.SetJSON(path, edit.KV{Path: t3Instance, Value: t3Merged(path, gateway.URL())})
 			},
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "magpie", Icon: "magpie", Note: "every magpie model as a provider in T3 Code, on Claude Code"}}
+				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun", Note: "every chongyun model as a provider in T3 Code, on Claude Code"}}
 			},
 		}},
 	}
@@ -164,7 +164,7 @@ func t3InstanceJSON(path, gw string) map[string]any {
 		environment = append(environment, map[string]any{"name": claudeReviewEnv, "value": "0", "sensitive": false})
 	}
 	return map[string]any{
-		"driver": "claudeAgent", "displayName": "magpie", "enabled": true,
+		"driver": "claudeAgent", "displayName": "崇云科技", "enabled": true,
 		"environment": environment,
 		"config":      config,
 	}

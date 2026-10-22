@@ -10,9 +10,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/yetone/magpie/internal/appdir"
-	"github.com/yetone/magpie/internal/catalog"
-	"github.com/yetone/magpie/internal/edit"
+	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/magpie/internal/edit"
 )
 
 const zedProvider = "language_models.openai_compatible.magpie"
@@ -243,5 +243,5 @@ func zedProviderJSON(path string) map[string]any {
 
 // what zed says after a change (notice.go)
 var (
-	noticeZed = newNotice("Restart Zed if it still asks for an API key: magpie has configured its gateway credential in the system credential store.")
+	noticeZed = newNotice("Restart Zed if it still asks for an API key: chongyun has configured its gateway credential in the system credential store.")
 )
