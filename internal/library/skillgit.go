@@ -1,6 +1,6 @@
 package library
 
-// Skills from any git repository (sunset on Discord): GitLab, a company's
+// Skills from any git repository (sunset 报告): GitLab, a company's
 // own GitLab on its intranet, Gitea, a bare repository on this machine.
 // magpie can't ask such a host for a tarball or its commits the way it
 // asks GitHub, so it runs the user's own git, which signs in to the host

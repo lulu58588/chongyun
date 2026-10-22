@@ -434,7 +434,7 @@ func readRequestState(now time.Time) requestState {
 		}
 		return strings.Compare(a.Path, b.Path)
 	})
-	ids, _ := json.Marshal(provider.SessionIdentities(sessions.CodexDir()))
+	ids, _ := json.Marshal(provider.SessionIdentities())
 	codexIdentityKey, _ := json.Marshal(codexIdentities)
 	renamed, _ := json.Marshal(provider.Renamed())
 	cfg := settings.Load()

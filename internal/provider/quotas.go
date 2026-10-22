@@ -20,7 +20,7 @@ func Quotas(ctx context.Context) []SubscriptionQuota {
 // Providers page (SetOrder), each provider's cards as they came; a card of
 // no provider here (a remote magpie's) after them all. The window's Usage
 // page and the tray panel's Allowances tab draw them so, where the user
-// hasn't arranged the cards themselves (Zhenbao TONG on Discord: the
+// hasn't arranged the cards themselves (Zhenbao TONG 报告: the
 // providers moved in the window, the tray kept its own order).
 func InProviderOrder(qs []SubscriptionQuota) []SubscriptionQuota {
 	at := map[string]int{}

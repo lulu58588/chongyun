@@ -169,7 +169,7 @@ func TestVSCodeRoundTrip(t *testing.T) {
 // chatLanguageModels.json and settings.json, not the default's: magpie's
 // group and default model go in each profile's too, a profile that uses the
 // default's is left alone, and switched off every file is as it was
-// (TJHHHH on Discord: the Agents window listed magpie, the side Chat didn't)
+// (TJHHHH 报告: the Agents window listed magpie, the side Chat didn't)
 func TestVSCodeProfiles(t *testing.T) {
 	home := syncHome(t)
 	dir := filepath.Join(home, "vscode", "User")
@@ -234,7 +234,7 @@ func TestVSCodeUA(t *testing.T) {
 	}
 }
 
-// VS Code Insiders is its own row (wani on Discord): its User folder is
+// VS Code Insiders is its own row (wani 报告): its User folder is
 // "Code - Insiders" beside VS Code's "Code", connected it writes only there,
 // and its models send a token of its own, since its chat's User-Agent is
 // Stable's; VS Code's files are left alone

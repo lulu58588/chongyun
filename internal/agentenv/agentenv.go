@@ -124,7 +124,7 @@ var NotPaths = map[string]bool{
 // ClaudeProviders are Claude Code's switches that send its requests to a
 // cloud's endpoint (Amazon Bedrock, Vertex AI, …) in place of
 // ANTHROPIC_BASE_URL, so a Claude Code wired to magpie with one on never
-// reaches it (jw1dev on X). The login shell is asked for them
+// reaches it (jw1dev 报告). The login shell is asked for them
 // (proc.LoginEnv), for magpie to say when a terminal's Claude Code has one
 // on, but they are never set in magpie's own environment, and a test's
 // sandbox clears them. They are Claude Code 2.1.300's (Ie() in its bundle).

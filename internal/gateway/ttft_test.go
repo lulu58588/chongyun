@@ -387,7 +387,7 @@ func burstChunks(proto provider.Protocol, words, per, out int) [][]string {
 
 // A reply whose first word came at once and the rest only after a wait,
 // all in one burst, wrote nothing over the wait, and tells no speed (John
-// on Discord: a Kimi Code reply to OpenCode read 1,367 tok/s): before,
+// 报告: a Kimi Code reply to OpenCode read 1,367 tok/s): before,
 // its 5,000 tokens over the 600 ms from its first word to its end read
 // about 8,300 tok/s. The burst is 5,000 tokens so that the time magpie
 // takes to pass it on (138 ms on a busy macOS runner at 8db24fd6) reads

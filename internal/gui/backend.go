@@ -127,7 +127,7 @@ func serveGatewayLocked() *gateway.Server {
 		}
 		// a magpie too busy to answer the question in time (a small
 		// server, one starting), or another program, has the port: a
-		// second listen only fails (K.Liu on Discord: magpie web beside
+		// second listen only fails (K.Liu 报告: magpie web beside
 		// the service logged "bind: address already in use")
 		if gateway.Taken() {
 			if !takenSaid.Swap(true) {

@@ -31,8 +31,13 @@ func TestViaMagpieNamesTheAccountFirstInOrder(t *testing.T) {
 	me, _ := json.Marshal(auth("me@example.com", "acct-1"))
 	home, _ := codexHome(t, string(me), "model = \"gpt-5.5\"\n")
 	os.WriteFile(filepath.Join(home, ".codex", "models_cache.json"), []byte(`{"models":[{"slug":"gpt-5.5","display_name":"GPT-5.5","priority":1}]}`), 0o644)
-	b, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "spare@example.com", "on": true,
-		"seen": time.Now(), "auth": auth("spare@example.com", "acct-2")}})
+	b, _ := json.Marshal([]map[string]any{
+		// chongyun keeps the account it signed the agent in to in its own
+		// logins.json, marked as the one the agent is on: it never reads
+		// the agent's own file to find out which account that is.
+		{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(), "auth": auth("me@example.com", "acct-1")},
+		{"agent": "codex", "user": "spare@example.com", "on": true, "seen": time.Now(), "auth": auth("spare@example.com", "acct-2")},
+	})
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), b, 0o600)
 	provider.ForgetAccounts()

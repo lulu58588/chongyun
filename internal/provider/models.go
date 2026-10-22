@@ -179,7 +179,7 @@ var listsRead atomic.Int64
 
 // ListsRead is how many times a provider's saved lists have been asked
 // for whole in this process: a test counts them to say a request reads
-// them once, not once a key (@NetRozee on X).
+// them once, not once a key (@NetRozee 报告).
 func ListsRead() int64 { return listsRead.Load() }
 
 // liveAll is live with the models that draw or make videos too
@@ -207,7 +207,7 @@ func (p Provider) Fetch(ctx context.Context) ([]catalog.Model, error) {
 // the list fetched before had and the one fetched now doesn't. The new
 // list replaces the old one, and a pick made from the old list goes with
 // it — kept, it stayed among the models agents see, as if typed in by
-// hand, though the vendor serves it no more (akic404 on Discord: a remote
+// hand, though the vendor serves it no more (akic404 报告: a remote
 // magpie offering far fewer models, and one of its providers renamed,
 // still listed every old "ws-ba5my…/qwen3.6-max" here after a Refresh).
 // A pick the old list didn't have was typed in by hand, and stays; a
@@ -575,7 +575,7 @@ type newFetch struct {
 func newDue(ps []Provider) (due, skipped []newFetch) {
 	for _, p := range ps {
 		// a list of decision models fetched before magpie kept their
-		// windows and input, or not fetched yet (ARNO on Discord)
+		// windows and input, or not fetched yet (ARNO 报告)
 		// one switched off isn't asked (leftAlone): a signed-in
 		// agent's list asks its CLI or the vendor
 		if p.Off {
@@ -1187,7 +1187,7 @@ func (p Provider) fetchPerKey(ctx context.Context, keys []KeyAccount) ([]catalog
 	at := map[string]int{}
 	// each model's keys as a set beside its list, and the models of the
 	// list before that each key saw: with a thousand keys, looking along
-	// the lists for every key and model took seconds (@NetRozee on X)
+	// the lists for every key and model took seconds (@NetRozee 报告)
 	var has []map[string]bool
 	add := func(m catalog.Model, id string) int {
 		i, ok := at[m.ID]
@@ -1371,7 +1371,7 @@ func (p Provider) Serves(k KeyAccount, model string) bool { return p.Serving(mod
 // request, a provider of a thousand keys had its list's file looked at a
 // thousand times, and each model's thousand keys looked along, before a
 // request went out: a tenth of a second a request, seconds for five
-// thousand keys (@NetRozee on X).
+// thousand keys (@NetRozee 报告).
 func (p Provider) Serving(model string) func(KeyAccount) bool {
 	x, ok := p.keyLists()
 	if !ok {
@@ -1532,7 +1532,7 @@ func (p Provider) Picks() []string {
 // they were saved put first, when they held every model listed then. A
 // Claude account whose user picked every model (Select all, or the TUI's
 // toggles) was served the list as it was then, and never Haiku 5.5 when
-// models.dev listed it (wakaka on Discord, after 9b51428e). A model that
+// models.dev listed it (wakaka 报告, after 9b51428e). A model that
 // was listed and left unpicked stays left out, and so do new ones beside
 // picks that left any out. Picks saved before PickedFrom was kept are taken
 // to have held every model when they hold every one released up to the
@@ -1627,7 +1627,7 @@ func (p Provider) Thinks(model string) bool {
 // subscription serves other models at no cost to them (catalog.Model's
 // Free: WorkBuddy's "x0.00", Qoder's is_free, Cline's free models). Its
 // credits running out then says nothing of those: they draw on none
-// (Creat.wu on Discord). False for a model not on the list, or where no
+// (Creat.wu 报告). False for a model not on the list, or where no
 // model is free.
 func (p Provider) PaidBesideFree(model string) bool {
 	listed, paid, free := false, false, false
@@ -1738,7 +1738,7 @@ func borrowedEfforts(id string) []string {
 		return e
 	}
 	// one newer than this machine's catalog: its maker's line's levels
-	// (gpt-6.1-sol, NextCommit on Discord)
+	// (gpt-6.1-sol, NextCommit 报告)
 	e, _ := catalog.KinEfforts(makerCatalogs(), id)
 	return e
 }
@@ -1833,7 +1833,7 @@ func (p Provider) pluginListPrice(model string) (catalog.Price, bool) {
 // the "Free" cost tier and no allowance counts, Qoder's and WorkBuddy's
 // x0 models. Such a model is the vendor's own, sold per token nowhere, so
 // no catalog prices it, and without this its calls showed no cost at all
-// (太陽と向日葵 on Discord, on SWE-2 after Devin's quota was used up).
+// (太陽と向日葵 报告, on SWE-2 after Devin's quota was used up).
 // Only where no list price is known: a free model a catalog prices keeps
 // that price, as it did.
 func (p Provider) pluginFree(model string) bool {
@@ -1891,7 +1891,7 @@ var cursorFast = regexp.MustCompile(`^((?:.*/)?grok-[0-9][^/@]*?)(?:-(?:minimal|
 // pricing"), and "Fast mode for long context (>256k) is billed at 3x
 // standard rates" ($6, $1.5, $18). No catalog lists these ids, so a call
 // on Cursor's grok-4.7-fast, or on a routing group of it, had no cost at
-// all (TradingLife on Discord).
+// all (TradingLife 报告).
 var cursorFastPrices = map[string]catalog.Price{
 	"grok-4.7": {Input: 4, CacheRead: 1, Output: 12,
 		Tiers: []catalog.Tier{{Above: 256000, Input: 6, CacheRead: 1.5, Output: 18}}},
@@ -1941,7 +1941,7 @@ var grokBuildFast = regexp.MustCompile(`^(grok-[0-9][0-9.]*)-build-fast(?:@[0-9]
 // https://x.ai/news/grok-4-7, read 2026-10-15). No catalog lists
 // grok-4.7-build-fast, so every call a routing group of Cursor's and
 // Grok's Grok 4.7 fast sent to Grok was unpriced, and the group's cost
-// left out half its calls (TradingLife on Discord, after cbc96b599 priced
+// left out half its calls (TradingLife 报告, after cbc96b599 priced
 // Cursor's half). Only on a Grok account: no other vendor serves the id.
 func (p Provider) grokFastPrice(model string) (catalog.Price, bool) {
 	if p.Account == nil || p.Account.Agent != "grok" && p.PluginProvider() != "grok" {
@@ -2669,7 +2669,7 @@ func IDs() []string {
 // A vendor models.dev doesn't list (a custom provider, a proxy, a plugin
 // whose list says none, as Cline's) serves models it knows from others, under
 // the vendor's prefix too: cline-free/mimo-v2.6-flash is mimo-v2.6-flash.
-// A window the vendor lists under catalog.LeastWindow (512, H20 on Discord)
+// A window the vendor lists under catalog.LeastWindow (512, H20 报告)
 // is no window: models.dev's answers, else none, and the agent's default.
 func ListedWindow(m catalog.Model) int {
 	if n := catalog.Window(m.Context); n > 0 {
@@ -2839,7 +2839,7 @@ func OutputsOf(providerID string) map[string]int {
 }
 
 // SetModelOutputs makes a provider's reply limits outs, by model id, "*"
-// for all of them, as its editor's Max output says (ARNO on Discord: a
+// for all of them, as its editor's Max output says (ARNO 报告: a
 // model's maxTokens was wrong, and only the context window could be set in
 // the editor): those it leaves out are taken away, and every one set has
 // to be a model the provider serves, as for SetModelOutput. Nothing is

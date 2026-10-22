@@ -20,7 +20,7 @@ var hyprland = omarchy.Hyprland
 // onBarIcon is told whether magpie's icon is in Omarchy's bar once Settings'
 // Bar icon has changed it. The app then takes its tray item out of the bar's
 // tray (setTrayInBar), so the bar shows one magpie, not the widget and the
-// tray icon side by side (Alex on Discord: two icons with Bar icon on).
+// tray icon side by side (Alex 报告: two icons with Bar icon on).
 var onBarIcon func(on bool)
 
 // omarchyTheme is the Omarchy theme the page draws with, when on Omarchy.

@@ -59,7 +59,7 @@ func pluginWindow(t *testing.T, id string) int {
 
 // A plugin's model listed without a window (Cline's feed says none) takes
 // the one models.dev gives its model under the vendor's prefix, and the
-// window the user sets on the provider over both (ARNO on Discord, v0.1.815).
+// window the user sets on the provider over both (ARNO 报告, v0.1.815).
 func TestPluginModelWindow(t *testing.T) {
 	clinePlugin(t)
 	p, err := Find("cline")

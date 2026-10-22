@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A provider's Fallback picker draws the first dozen models that match; when
 // more match, it says how many more there are and that typing narrows them
-// (01huadalang on Discord: "怎么只有这么几个" — the rest looked missing), and a
+// (01huadalang 报告: "怎么只有这么几个" — the rest looked missing), and a
 // typed filter finds one past the dozen. In English and Chinese.
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");

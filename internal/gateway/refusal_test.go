@@ -224,7 +224,7 @@ func TestRefusalWithNobodyLeftIsAnError(t *testing.T) {
 
 	// a model asked by its own name, on Anthropic's API: the vendor's
 	// refusal as it said it, for Claude Code to switch to its fallback
-	// model on, which a 400 isn't to it (DD on Discord)
+	// model on, which a 400 isn't to it (DD 报告)
 	fresh(t)
 	a = &scripted{replies: []reply{{200, "text/event-stream", anthropicRefusal}}}
 	scriptedOn(t, "a", provider.Anthropic, a)

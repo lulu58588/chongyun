@@ -15,7 +15,7 @@ import (
 // clineUnwrapped is a Cline reply with the {success, data} envelope its API
 // puts a whole (non-streamed) answer in taken off: {"success":true,"data":
 // {chat.completion}} goes on as the completion, which every client of the
-// Chat API reads at the top (6094S on Discord: Alma's tool-model calls
+// Chat API reads at the top (6094S 报告: Alma's tool-model calls
 // failed with "Invalid JSON response"), and the translators read it so too.
 // {"success":false,"error":…} goes on as an error, {"error":{"message":…}},
 // with a 502 when it came with a 2xx. A stream, a compressed reply and any

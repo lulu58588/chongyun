@@ -27,7 +27,7 @@ func (p Provider) Via(ctx context.Context) context.Context {
 // ProxyChoice is the proxy requests made on the provider's behalf go
 // through, as netproxy.With takes it: for one account of a subscription
 // that holds several, or one key of a provider that holds several
-// (Beyfish_Wang on X: 不同 key 走不同的代理), its own (AccountProxies),
+// (Beyfish_Wang 报告: 不同 key 走不同的代理), its own (AccountProxies),
 // else the provider's (Proxy); "" follows the global one. An account in
 // use beside the agent's own is made afresh by some agents (AlsoOn),
 // without the provider's settings: those are read from providers.json.
@@ -90,7 +90,7 @@ func ViaLogin(ctx context.Context, id, user string) context.Context {
 // (Codex's own, relayed as it came): through the proxy of the account it
 // is signed in to.
 func ViaSignedIn(ctx context.Context, id string) context.Context {
-	if l, ok := liveLogin(id); ok {
+	if l, ok := ownActive(id); ok {
 		return ViaLogin(ctx, id, l.User)
 	}
 	return Via(ctx, id)

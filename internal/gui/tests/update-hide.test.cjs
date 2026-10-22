@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The header's Update pill can be kept away (Wang Hsiaohi on Discord). Its ×,
+// The header's Update pill can be kept away (Wang Hsiaohi 报告). Its ×,
 // shown with the pointer over it, hides it for that version: it stays away
 // after a reload and comes back once a newer version is out; a right-click
 // does the same, and the × sits off the pill, so a click meant for Update

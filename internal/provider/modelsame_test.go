@@ -132,7 +132,7 @@ func TestModelSameAsMergesFoundGroup(t *testing.T) {
 
 // A provider added "Only through routing groups" whose relay lists a
 // model by its display name ("GPT-6 Sol") joins the group magpie found
-// for gpt-6-sol, as a tidy Claude id joins its own (Chill on Discord).
+// for gpt-6-sol, as a tidy Claude id joins its own (Chill 报告).
 // Spaces, "_" and "-" are one gap; the words in them still count, so
 // gpt-6 and its -mini or -sol stay apart, and so does OpenAI's dated
 // snapshot from the alias.

@@ -1,6 +1,6 @@
 package provider
 
-// Qoder's daily credits (ARNO on Discord: 100 Credits a day, claimed as
+// Qoder's daily credits (ARNO 报告: 100 Credits a day, claimed as
 // wallechfox/qoder-checkin claims them): Qoder and Qoder CN list an
 // account's campaigns on their openapi host, the day's credits among them
 // (actionType CLAIM_BENEFIT), and claim one with a POST. While the setting

@@ -41,7 +41,7 @@ func gatewayKeysTo(out io.Writer, args []string) error {
 		return gatewayKeyQuotas(out, args[1:])
 	}
 	// add <name> --key <value>: the key keeps a value its clients already
-	// send (love1sbug on X); "--key -" reads it from stdin, out of the
+	// send (love1sbug 报告); "--key -" reads it from stdin, out of the
 	// shell's history
 	var own string
 	if action == "add" && len(args) == 4 && args[2] == "--key" {

@@ -9,7 +9,7 @@ import (
 
 // The process listening on a port, and its program: how the GUI finds the
 // older magpie that keeps the gateway's port and quits it, when the user
-// asks it to (leslie_luo on Discord: the page said an older magpie served
+// asks it to (leslie_luo 报告: the page said an older magpie served
 // the gateway, with no way to find it and quit it).
 
 // ErrDenied is a process this user may not end: another user's, or one
@@ -58,7 +58,7 @@ func IsMagpie(path string) bool {
 	n = strings.TrimSuffix(n, ".old")
 	n = strings.TrimSuffix(n, ".new")
 	n = strings.TrimSuffix(n, ".exe")
-	for _, name := range []string{"magpie", "magpie", "dial"} {
+	for _, name := range []string{"chongyun", "dial"} {
 		if n == name || strings.HasPrefix(n, name+"-") || strings.HasPrefix(n, name+"_") {
 			return true
 		}
@@ -85,7 +85,7 @@ func isOldCount(s string) bool {
 // or a VM, which serves on it from inside: OrbStack's helper, Docker
 // Desktop's backend and vpnkit, docker-proxy, Podman's gvproxy, Lima's
 // (Colima's, Rancher Desktop's) host agent, WSL's relay. A magpie answering
-// there runs in that container (leslie_luo on Discord: magpie v0.1.552 in
+// there runs in that container (leslie_luo 报告: magpie v0.1.552 in
 // OrbStack held 3425, and its helper was named as the program to quit),
 // which only the container's own tools stop.
 func IsForwarder(path string) bool {

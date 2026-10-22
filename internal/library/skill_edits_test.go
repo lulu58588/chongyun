@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// Joren on Discord: with skills given as copies, an agent's edit of one was
+// Joren 报告: with skills given as copies, an agent's edit of one was
 // undone at magpie's next start, the sync making the copy again from the
 // library's. The newest edit goes to the library and every other agent
 // instead; the library's own change wins when it is newer, and an edit that

@@ -15,7 +15,7 @@ import (
 // itself, else with its own searcher. Its list says which of the two for
 // each model (web_search: "native" or "magpie"), and a web search offered
 // to one of them goes to it as it was offered rather than being run here
-// with this magpie's searcher (Player on Discord: remoteMagpie/glm-5.3's
+// with this magpie's searcher (Player 报告: remoteMagpie/glm-5.3's
 // searches went to another model). Only a model it searches by itself,
 // natively, is one this magpie may search with for its other models: a
 // search magpie runs for another model is marked (SearchingHeader), and

@@ -61,11 +61,6 @@ func TestQianfanTokenPlan(t *testing.T) {
 	if got := p.planModels([]catalog.Model{{ID: "glm-5.3"}}); len(got) != 1 || got[0].ID != "glm-5.3" {
 		t.Fatalf("listed: %+v", got)
 	}
-	// an entry imported from another app at the plan's endpoints is the preset
-	im, _ := imported("Qianfan", "bce-v3/x", endpoints{anthropic: "https://qianfan.baidubce.com/anthropic/tokenplan/personal"}, nil)
-	if im.Preset != "baidu-qianfan" || im.Icon != "baiducloud-color" {
-		t.Fatalf("imported: %+v", im)
-	}
 	// the id the preset carried its first day still names it, and a
 	// provider saved under it is the preset since renamed
 	old, err := FromPreset("qianfan-token-plan")

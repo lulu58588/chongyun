@@ -31,7 +31,7 @@ func TestAskedLang(t *testing.T) {
 	}
 }
 
-// What's new follows the page's language (freecss on Discord): the notes
+// What's new follows the page's language (freecss 报告): the notes
 // are asked of the site in it, and kept for it alone; a page in another
 // language gets its own.
 func TestWhatsNewInPageLang(t *testing.T) {

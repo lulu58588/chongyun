@@ -19,7 +19,7 @@ import (
 // and magpie's goes when Claude Code is taken off magpie. One that reaches
 // max without xhigh (GLM, DeepSeek) is said to have xhigh too: the gateway
 // runs it at max, and Claude Code's Ultracode needs xhigh_effort
-// (leesunrise2364 on Discord, Ultracode missing on Desktop).
+// (leesunrise2364 报告, Ultracode missing on Desktop).
 func TestClaudeModelCapabilities(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)

@@ -10,17 +10,20 @@ import (
 	"time"
 )
 
-func codexSignIn(t *testing.T, home, email, refresh string) {
+// codexSignIn keeps a ChatGPT account in logins.json, as chongyun's own
+// sign-in does: the account it signed in to is kept there, beside the
+// others.
+func codexSignIn(t *testing.T, email, refresh string) {
 	t.Helper()
-	exp := float64(time.Now().Add(time.Hour).Unix())
-	writeFile(t, filepath.Join(home, ".codex", "auth.json"), map[string]any{
+	auth := map[string]any{
 		"auth_mode": "chatgpt",
 		"tokens": map[string]any{
 			"id_token":      fakeJWT(map[string]any{"email": email, "https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": "plus"}}),
-			"access_token":  fakeJWT(map[string]any{"exp": exp}),
+			"access_token":  fakeJWT(map[string]any{"exp": float64(time.Now().Add(time.Hour).Unix())}),
 			"refresh_token": refresh, "account_id": "acct-" + email,
 		},
-	})
+	}
+	codexOwnLogin(t, email, "plus", auth)
 }
 
 func loginUsers(ls []Login) (users []string, active string) {
@@ -35,9 +38,7 @@ func loginUsers(ls []Login) (users []string, active string) {
 
 func TestCodexLogins(t *testing.T) {
 	home := signIn(t)
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	codexSignIn(t, "work@example.com", "r-work")
 
 	users, active := loginUsers(Logins("codex"))
 	if strings.Join(users, ",") != "me@example.com,work@example.com" || active != "work@example.com" {
@@ -47,7 +48,7 @@ func TestCodexLogins(t *testing.T) {
 		t.Fatalf("logins.json mode: %v %v", fi, err)
 	}
 	// the agent refreshes the active login in place; a switch keeps that
-	codexSignIn(t, home, "work@example.com", "r-work-2")
+	codexSignIn(t, "work@example.com", "r-work-2")
 
 	if err := SwitchLogin("codex", "ME@example.com"); err != nil {
 		t.Fatal(err)
@@ -78,13 +79,23 @@ func TestCodexLogins(t *testing.T) {
 	}
 }
 
-func TestCodexDuplicateLoginsCollapse(t *testing.T) {
-	home := signIn(t)
-	codexSignIn(t, home, "me@example.com", "r")
-	auth, err := os.ReadFile(filepath.Join(home, ".codex", "auth.json"))
-	if err != nil {
-		t.Fatal(err)
+// loginsCodexAuthOf is the sign-in chongyun keeps for the codex account
+// user: what the agent is signed in to with, in logins.json.
+func loginsCodexAuthOf(t *testing.T, user string) json.RawMessage {
+	t.Helper()
+	for _, l := range readLogins() {
+		if l.Agent == "codex" && l.User == user {
+			return l.Auth
+		}
 	}
+	t.Fatalf("no saved codex account %q", user)
+	return nil
+}
+
+func TestCodexDuplicateLoginsCollapse(t *testing.T) {
+	signIn(t)
+	codexSignIn(t, "me@example.com", "r")
+	auth := loginsCodexAuthOf(t, "me@example.com")
 	now := time.Now().UTC()
 	if err := writeLogins([]savedLogin{
 		{Agent: "codex", User: "me@example.com", Plan: "plus", Seen: now.Add(-time.Hour), On: true, First: true, Auth: auth},
@@ -130,27 +141,14 @@ func TestSideLoginsNotCollapsed(t *testing.T) {
 }
 
 func TestClaudeLogins(t *testing.T) {
-	home := claudeHome(t)
-	cred := claudeSignIn(t, home, time.Now().Add(time.Hour))
-	profile := filepath.Join(home, ".claude.json")
-	writeFile(t, profile, map[string]any{
-		"numStartups":  1234567890123,
-		"oauthAccount": map[string]any{"emailAddress": "a@example.com", "accountUuid": "u-a"},
-	})
-	rememberLogins(true)
-
-	// signing in to another account in Claude Code
-	writeFile(t, cred, map[string]any{
-		"claudeAiOauth": map[string]any{"accessToken": "sk-ant-oat01-b", "refreshToken": "sk-ant-ort01-b",
-			"expiresAt": time.Now().Add(time.Hour).UnixMilli(), "subscriptionType": "pro"},
-		"mcpOAuth": map[string]any{"keep": true},
-	})
-	writeFile(t, profile, map[string]any{
-		"numStartups":  1234567890123,
-		"oauthAccount": map[string]any{"emailAddress": "b@example.com", "accountUuid": "u-b"},
-	})
-	forgetClaudeCredential()
-	rememberLogins(true)
+	claudeHome(t)
+	// the accounts chongyun keeps, each of them in logins.json
+	claudeAccountSignIn(t, "a@example.com", "max", time.Now().Add(time.Hour))
+	// the second account has a sign-in of its own: two accounts of one
+	// Claude credential are one account
+	claudeOwnLogin(t, claudeTestSignIn{email: "b@example.com", plan: "pro",
+		access: "sk-ant-oat01-b", refresh: "sk-ant-ort01-b", expiry: time.Now().Add(time.Hour)})
+	forgetAccountCaches()
 
 	users, active := loginUsers(Logins("claude"))
 	if strings.Join(users, ",") != "a@example.com,b@example.com" || active != "b@example.com" {
@@ -159,43 +157,19 @@ func TestClaudeLogins(t *testing.T) {
 	if err := SwitchLogin("claude", "a@example.com"); err != nil {
 		t.Fatal(err)
 	}
-	var c map[string]any
-	readJSON(cred, &c)
-	if o, _ := c["claudeAiOauth"].(map[string]any); o["refreshToken"] != "sk-ant-ort01-old" {
-		t.Fatalf("credentials not switched: %v", o)
-	}
-	b, _ := os.ReadFile(profile)
-	var p map[string]json.RawMessage
-	json.Unmarshal(b, &p)
-	if string(p["numStartups"]) != "1234567890123" || !strings.Contains(string(p["oauthAccount"]), "a@example.com") {
-		t.Fatalf(".claude.json after switch: %s", b)
-	}
 	if _, active := loginUsers(Logins("claude")); active != "a@example.com" {
 		t.Fatalf("active after switch: %q", active)
 	}
+	// the account switched to runs Claude Code with the sign-in chongyun
+	// keeps for it, in a config directory of its own
+	dir, err := claudeSavedDir("a@example.com")
+	if err != nil {
+		t.Fatal(err)
+	}
+	c, ok := readClaudeDir(dir)
+	if !ok || c.OAuth.RefreshToken != "sk-ant-ort01-old" {
+		t.Fatalf("the sign-in the account runs with: %+v", c)
+	}
 }
 
-func TestRemovedAccountIsNotRemembered(t *testing.T) {
-	home := signIn(t)
-	if err := Delete("codex"); err != nil {
-		t.Fatal(err)
-	}
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
-	for _, l := range readLogins() {
-		if l.Agent == "codex" && l.User == "work@example.com" {
-			t.Fatal("a sign-in of a removed account was saved")
-		}
-	}
-	if err := ShowAccount("codex"); err != nil {
-		t.Fatal(err)
-	}
-	rememberLogins(true)
-	saved := false
-	for _, l := range readLogins() {
-		saved = saved || l.Agent == "codex" && l.User == "work@example.com"
-	}
-	if !saved {
-		t.Fatal("bringing the account back should save its sign-in again")
-	}
-}
+// 崇云不读别家的登录态，此用例随之移除。

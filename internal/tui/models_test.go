@@ -50,6 +50,12 @@ func fakeCodex(t *testing.T, h string) (down string) {
 		"refresh_token": "r", "account_id": "acct-1",
 	}})
 	write(t, filepath.Join(h, ".codex", "auth.json"), string(b))
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	logins, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "me@example.com", "plan": "pro",
+		"active": true, "seen": time.Now(), "auth": json.RawMessage(b)}})
+	write(t, filepath.Join(filepath.Dir(provider.Path()), "logins.json"), string(logins))
 	provider.ForgetAccounts()
 	t.Cleanup(func() {
 		provider.CodexBase = old

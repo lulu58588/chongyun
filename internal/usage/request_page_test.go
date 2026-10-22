@@ -198,9 +198,10 @@ func TestRequestPageModelRankingKeepsAlternatives(t *testing.T) {
 func TestQueryPageSourceAndIdentityInvalidation(t *testing.T) {
 	pageHome(t)
 	// QueryPage saves a copy of the account Codex is signed in to, at most
-	// once every 30s (rememberLogins), and this test expects only auth.json's
-	// identity. Look at the accounts before signing in, as an earlier test in
-	// a package run does, so no copy is saved while it runs.
+	// once every 30s (rememberLogins), and this test expects only the
+	// identity of the account chongyun keeps in its own logins.json. Look at
+	// the accounts before signing in, as an earlier test in a package run
+	// does, so no copy is saved while it runs.
 	provider.ForgetAccounts()
 	provider.Accounts()
 	sessionAuth(t, sessions.CodexDir(), "a", "u", "one@example.com")
@@ -244,31 +245,34 @@ func TestQueryPageSourceAndIdentityInvalidation(t *testing.T) {
 	sessionAuth(t, sessions.CodexDir(), "a", "u", "two@example.com")
 	check(2, "two@example.com", true)
 	sessionAuth(t, sessions.CodexDir(), "other", "u", "wrong@example.com")
-	check(2, "", false)
+	// chongyun keeps the account it signed the agent in to before, so the
+	// session is still told by the account it was recorded under: the one
+	// the agent is on now never takes its place.
+	check(2, "two@example.com", true)
 	os.MkdirAll(filepath.Dir(Path()), 0700)
 	r, _ := json.Marshal(Record{Time: now, Model: "m", Agent: "opencode", Input: 10, Output: 1})
 	os.WriteFile(Path(), r, 0600)
-	check(2, "", false) // partial gateway line
+	check(2, "two@example.com", true) // partial gateway line
 	appendFile(Path(), "\n")
-	check(3, "", false)
+	check(3, "two@example.com", true)
 	appendFile(Path(), string(r)+"\n")
-	check(4, "", false)
+	check(4, "two@example.com", true)
 	os.WriteFile(Path(), []byte(string(r)+"\n"), 0600)
-	check(3, "", false)
+	check(3, "two@example.com", true)
 	// Reprice cached rows when the shared catalogue changes.
 	b, _ := os.ReadFile(catalog.CachePath())
 	os.WriteFile(catalog.CachePath(), []byte(strings.Replace(string(b), `"input":2`, `"input":9`, 1)), 0600)
 	catalog.Reset()
-	check(3, "", false)
+	check(3, "two@example.com", true)
 	os.Remove(path)
-	check(1, "", false)
+	check(1, "two@example.com", true)
 	os.Remove(Path())
-	check(0, "", false)
+	check(0, "two@example.com", true)
 }
 
 // One model at two providers is ranked once at each, with each one's own
 // first token and decode, and a provider picked still ranks the other
-// (inaction on Discord).
+// (inaction 报告).
 func TestRequestPageRanksModelAtEachProvider(t *testing.T) {
 	pageHome(t)
 	now := holdClock(t, time.Date(2026, 9, 30, 12, 0, 0, 0, time.Local))

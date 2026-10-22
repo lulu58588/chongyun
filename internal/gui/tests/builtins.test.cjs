@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Plugins › Built-in (Lxxyx on X: too much to look through): magpie's
+// Plugins › Built-in (Lxxyx 报告: too much to look through): magpie's
 // built-in plugins (internal/pluginrt, plugins/), each with a switch kept in
 // plugins.yml. Off, a plugin's parts leave the window: its page leaves the
 // nav — the sidebar's and the header's — and an address kept for it opens

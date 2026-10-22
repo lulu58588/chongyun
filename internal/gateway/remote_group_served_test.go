@@ -16,7 +16,7 @@ import (
 // A remote magpie asked for one of its routing groups answers with the
 // member the group routed to: that is the group picking, not the vendor
 // serving another model, so neither the route nor the usage row is marked
-// swapped, and both say the group routed it (莫 on Discord: group/auto-…
+// swapped, and both say the group routed it (莫 报告: group/auto-…
 // answered by deepseek/deepseek-v4.1-flash, shown amber). A vendor that
 // does serve another model is still marked, through the remote magpie or
 // through a group of the computer's own. Here the gateway is both

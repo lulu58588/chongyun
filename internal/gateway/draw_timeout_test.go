@@ -67,7 +67,7 @@ func (d *deadlines) RoundTrip(r *http.Request) (*http.Response, error) {
 	return d.next.RoundTrip(r)
 }
 
-// neighbads on X: a slow image endpoint needed longer than the 5 minutes
+// neighbads 报告: a slow image endpoint needed longer than the 5 minutes
 // drawing was given. Settings' Image generation timeout of 30 minutes
 // is what a drawing's request goes to the vendor with, through the
 // gateway's own transport; with none set it is 5 minutes, as before.

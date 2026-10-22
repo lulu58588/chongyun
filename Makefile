@@ -81,10 +81,14 @@ icons:
 	@# macOS 26 draws the Dock icon from AppIcon.icon, light and dark (Xcode 26's actool);
 	@# the compiled Assets.car is kept in the tree so a release needn't have it
 	@go run build/icon/gen.go glyph 1024 build/darwin/AppIcon.icon/Assets/chongyun.png
-	@rm -rf build/darwin/actool && mkdir -p build/darwin/actool
-	@xcrun actool build/darwin/AppIcon.icon --compile build/darwin/actool --platform macosx \
-		--minimum-deployment-target 11.0 --app-icon AppIcon --output-partial-info-plist build/darwin/actool/partial.plist >/dev/null
-	@mv build/darwin/actool/Assets.car build/darwin/Assets.car && rm -rf build/darwin/actool
+	@if xcrun --find actool >/dev/null 2>&1; then \
+		rm -rf build/darwin/actool && mkdir -p build/darwin/actool; \
+		xcrun actool build/darwin/AppIcon.icon --compile build/darwin/actool --platform macosx \
+			--minimum-deployment-target 11.0 --app-icon AppIcon --output-partial-info-plist build/darwin/actool/partial.plist >/dev/null; \
+		mv build/darwin/actool/Assets.car build/darwin/Assets.car && rm -rf build/darwin/actool; \
+	else \
+		echo "  (no actool: the macOS 26 themed icon needs the full Xcode; the .icns is built)"; \
+	fi
 
 release: clean build
 	@mkdir -p dist

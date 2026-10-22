@@ -279,7 +279,7 @@ func TestMovedFactoryPayloadTooLarge(t *testing.T) {
 
 // A vendor's byte cap reaches an agent on the OpenAI routes in words pi
 // knows (its overflow.ts matches request_too_large), so pi compacts and
-// tries once more instead of stopping — @wilsonxuuuu on X, whose pi got
+// tries once more instead of stopping — @wilsonxuuuu 报告, whose pi got
 // an api_error 413 and never compacted.
 func TestPayloadTooLargeSaysRequestTooLargeToPi(t *testing.T) {
 	const nginx = "<html>\r\n<head><title>413 Request Entity Too Large</title></head>\r\n<body>\r\n<center><h1>413 Request Entity Too Large</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n"

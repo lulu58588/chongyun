@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A group's member may be sent in its vendor's fast mode (vs on Discord:
+// A group's member may be sent in its vendor's fast mode (vs 报告:
 // "gpt-6.1 sol · high · fast"). The group's card reads "· fast" after the
 // member's reasoning; in the group editor a model that has a fast mode
 // (canFast) shows a toggle beside its reasoning, "Standard speed" or

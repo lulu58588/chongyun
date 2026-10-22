@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// PAMI on Discord: magpie model price m 10,50,1,12.5 --tier 272k 20,75,2,25
+// PAMI 报告: magpie model price m 10,50,1,12.5 --tier 272k 20,75,2,25
 // gives what the whole request costs over 272K input, as OpenAI bills
 // gpt-6-astra, and a fifth part is the 1-hour cache write. Both are kept,
 // counted and shown; a size that isn't one, or a tier short of a part, is
@@ -37,7 +37,7 @@ func TestModelPriceTierCmd(t *testing.T) {
 		t.Errorf("chongyun model prices: %q; want its tier", out)
 	}
 
-	// PAMI on Discord: four parts give no 1-hour cache write but a Claude
+	// PAMI 报告: four parts give no 1-hour cache write but a Claude
 	// model's — gpt-6-astra was shown "$20 (1 hour) at 2× input", a write
 	// OpenAI has no price for
 	if strings.Contains(out, "1 hour") || strings.Contains(out, "2× input") {

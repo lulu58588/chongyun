@@ -254,7 +254,7 @@ func TestMCPProxyKeepsQueryAndHeaders(t *testing.T) {
 
 // A server that refuses even the token magpie just renewed no longer takes
 // the sign-in: it is marked run out, for the Library to say so rather than
-// "Signed in" beside the server's refusal (新v学员 on Discord), and the
+// "Signed in" beside the server's refusal (新v学员 报告), and the
 // agent is told to sign in again, never with a 401.
 func TestMCPProxyRefusedAfterRenewalRunsOut(t *testing.T) {
 	fresh(t)

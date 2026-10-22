@@ -53,7 +53,7 @@ func (v *adaptiveVendor) last() map[string]any {
 	return v.bodies[len(v.bodies)-1]
 }
 
-// Keenc on Discord: claude-opus-5-5 answers 400 to thinking.type=enabled,
+// Keenc 报告: claude-opus-5-5 answers 400 to thinking.type=enabled,
 // and magpie sent it so — relaying an agent's budget as it came, and
 // building one for a model magpie knows by another name than the vendor's.
 // Every request reaching an Anthropic endpoint for it asks adaptive

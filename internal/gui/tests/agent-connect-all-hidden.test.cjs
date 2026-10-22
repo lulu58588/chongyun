@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Every model taken out of an agent's list, then the agent switched off
-// (塔哥 on Discord, Grok Build): connecting it again is refused until one
+// (塔哥 报告, Grok Build): connecting it again is refused until one
 // is picked, and the Pick that picks one is in a connected agent's row
 // only. The refused switch opens the agent's list itself, a model picked
 // there lets it connect; so does the Get started card's chip.

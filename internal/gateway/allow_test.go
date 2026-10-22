@@ -14,7 +14,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// lc on Discord, magpie in Docker on a public host: with an allow list,
+// lc 报告, magpie in Docker on a public host: with an allow list,
 // a request from an address outside it is refused 403 even with an
 // enabled gateway key, saying why; one inside it is judged by its key as
 // before; loopback and this computer's own addresses are always let in.

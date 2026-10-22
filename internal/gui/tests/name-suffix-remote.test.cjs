@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// ARNO on Discord (我在设置里关闭了"模型名称带供应商"但是接入的remote-magpie的
+// ARNO 报告 (我在设置里关闭了"模型名称带供应商"但是接入的remote-magpie的
 // 模型名字还是带上了…): a remote magpie's models are named in its list with
 // its own provider after them ("DeepSeek Chat · Relay A"), by that magpie's
 // setting, and Off here kept it. Names & levels says what the agents' lists

@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A routing group opened from its row folds back from the editor's heading
-// (ARNO on Discord: 路由组详情现在可以单击展开，是否可以再加上单击收起):
+// (ARNO 报告: 路由组详情现在可以单击展开，是否可以再加上单击收起):
 // a click, or Enter on it, closes the editor while nothing was changed;
 // with a change it stays open and says to Save or Cancel, so no edit is
 // lost. Nothing is saved by folding. The heading looks as every editor's

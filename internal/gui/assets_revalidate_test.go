@@ -14,7 +14,7 @@ import (
 
 // The page's files go out to be asked for again by their content's hash,
 // so a browser or a cache in front of `chongyun web` never keeps an older
-// version's app.js under a newer page (Jorben on Discord); an unchanged
+// version's app.js under a newer page (Jorben 报告); an unchanged
 // one comes back as a 304, and boot.js and the API keep their own rules.
 func TestPageFilesRevalidate(t *testing.T) {
 	h := t.TempDir()

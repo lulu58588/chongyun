@@ -250,7 +250,7 @@ func TestNoSearchAPINoTool(t *testing.T) {
 	}
 }
 
-// DeepSeek's Search API (TJHHHH on Discord) is asked as its docs say
+// DeepSeek's Search API (TJHHHH 报告) is asked as its docs say
 // (api-docs.deepseek.com/guides/search): POST /v1/tools/search with the
 // key as a Bearer and {query, count}, a query cut to its 128 characters.
 // Its reply's summary is the page's text, since content is empty without

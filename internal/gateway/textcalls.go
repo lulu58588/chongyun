@@ -154,7 +154,7 @@ func chatToolNames(body []byte) map[string]bool {
 // nowhere; and, when it doesn't, how much of s's end could be one's
 // beginning still being written. A DSML close begins one too: DeepSeek
 // writes its calls wrapper's close however it likes (</｜｜DSML｜｜ calls>,
-// 喜欢一个人 on Discord), and one left behind with nothing before it, after
+// 喜欢一个人 报告), and one left behind with nothing before it, after
 // calls an upstream made of the invokes, is held to be dropped, not shown.
 func textCallAt(s string) (at, tail int) {
 	at = -1
@@ -822,7 +822,7 @@ func wholeTextCalls(msg map[string]json.RawMessage, names map[string]bool) (wrot
 	}
 	if made {
 		// the upstream made the calls itself: only tags left in its
-		// text go (</｜｜DSML｜｜ calls>, 喜欢一个人 on Discord)
+		// text go (</｜｜DSML｜｜ calls>, 喜欢一个人 报告)
 		if !tagsOnly(s[at:]) {
 			return false, false
 		}

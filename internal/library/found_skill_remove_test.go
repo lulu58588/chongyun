@@ -68,7 +68,7 @@ func TestRemoveFoundSkill(t *testing.T) {
 	}
 }
 
-// wongxy on Discord (资源库技能支持批量删除): the skills the agents have of
+// wongxy 报告 (资源库技能支持批量删除): the skills the agents have of
 // their own go several at once, each as RemoveFoundSkill takes one. One
 // that can't be taken out (its agent's folder can't be written) stays, in
 // Unremoved, as it was; the others go all the same, with their backups.

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Share on local network in a container (莫 on Discord: magpie in Docker on
+// Share on local network in a container (莫 报告: magpie in Docker on
 // a NAS showed the container's own 172.17.x address): the addresses magpie
 // finds for itself there are the container's, which other devices can't
 // reach. Served over the network (magpie web), the page offers the host it

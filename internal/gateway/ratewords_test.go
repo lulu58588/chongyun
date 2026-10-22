@@ -18,7 +18,7 @@ func TestRateLimitIsNotQuota(t *testing.T) {
 		`{"error":{"message":"Resource has been exhausted (e.g. check quota).","status":"RESOURCE_EXHAUSTED"}}`:                       failQuota,
 		`{"error":{"message":"You exceeded your current quota","type":"insufficient_quota"}}`:                                         failCredit,
 		// Zhipu's pay-as-you-go endpoint answering a Coding Plan's key
-		// (kkgg on Discord: shown as "429 · rate limited")
+		// (kkgg 报告: shown as "429 · rate limited")
 		`{"error":{"code":"1113","message":"余额不足或无可用资源包,请充值。"}}`:                                              failCredit,
 		`{"error":{"message":"Zhipu GLM: 余额不足或无可用资源包,请充值。","type":"rate_limit_error"}}`:                       failCredit,
 		`{"error":{"code":"1113","message":"Insufficient balance or no resource package. Please recharge."}}`: failCredit,

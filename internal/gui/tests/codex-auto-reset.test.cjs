@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A Codex account spending a reset by itself (StringKe on Discord: resets
+// A Codex account spending a reset by itself (StringKe 报告: resets
 // gifted to the account, used once its week is out), a standing say of the
 // account's (#719, thedavidweng): every named Codex account's card has a
 // row that names both times it uses one — the week running out, a reset

@@ -439,7 +439,7 @@ func TestSealDerivesOnce(t *testing.T) {
 
 // A backup carries the plugins from npm, which the other machine installs,
 // and names the subscriptions it brought the settings of with no account
-// there (yapechan on Discord: the import said providers were added, and
+// there (yapechan 报告: the import said providers were added, and
 // none showed).
 func TestRestorePluginsAndSignIn(t *testing.T) {
 	home(t)

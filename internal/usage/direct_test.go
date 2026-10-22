@@ -13,7 +13,7 @@ import (
 // Direct sums up only the calls the agents made on their own, as their
 // session files tell them — a Codex turn on the user's own ChatGPT sign-in,
 // say — by agent, model and session, priced by their model; the gateway's
-// calls stay Summarize's (Kumo31 on Discord: Codex used outside magpie was
+// calls stay Summarize's (Kumo31 报告: Codex used outside magpie was
 // on the window's Usage tab but not in magpie usage).
 func TestDirectCountsOnlySessionFileCalls(t *testing.T) {
 	home := t.TempDir()

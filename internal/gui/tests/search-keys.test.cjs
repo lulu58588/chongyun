@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Settings' Web search section, a search API with several keys
-// (SlouchyQuill on Discord, after dsh-tavily-pool): under it a row of its
+// (SlouchyQuill 报告, after dsh-tavily-pool): under it a row of its
 // keys, In turn (the default) or In order, sent as pick "turns" or "order";
 // for Tavily, what each key has used of its limit, read once as the page
 // is drawn and again, fresh, on Check again. Each key is shown masked; a

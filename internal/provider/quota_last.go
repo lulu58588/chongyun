@@ -188,7 +188,7 @@ func (c *lastQuotasT) reported(key string) (SubscriptionQuota, bool) {
 // magpie started is still out, rather than by none — with none, every
 // account counts as unused and the first in order went first, until the
 // reading came back and put another first, taking conversations off the
-// account that had them cached (vincentzhang on Discord).
+// account that had them cached (vincentzhang 报告).
 func lastAllowances(agent string) map[string]Allowance {
 	logins, ok := usageLogins(agent)
 	if !ok {

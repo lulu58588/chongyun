@@ -22,7 +22,6 @@ import (
 	"github.com/lulu58588/chongyun/internal/appdir"
 	"github.com/lulu58588/chongyun/internal/netproxy"
 	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // QuotaWindow is one rolling allowance reported by a subscription provider.
@@ -42,7 +41,7 @@ type QuotaWindow struct {
 	// RunsOutAt is when the soonest of what is left is lost, and RunsOut
 	// how much (in Unit), when it runs out apart from the window's reset:
 	// WorkBuddy's credits come in packages that each end on their own
-	// day. Smart routing takes it for the window's renewal (cdredfox on X).
+	// day. Smart routing takes it for the window's renewal (cdredfox 报告).
 	RunsOutAt *time.Time `json:"runsOutAt,omitempty"`
 	RunsOut   float64    `json:"runsOut,omitempty"`
 	// Family is the model family a per-model window belongs to (Antigravity's
@@ -246,9 +245,6 @@ var subscriptionTimeout = 20 * time.Second
 // cached it comes back at once, and a stale copy is refreshed in the
 // background; only the very first call waits, for as long as ctx allows.
 func SubscriptionUsage(ctx context.Context) []SubscriptionQuota {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
 	c := &subscriptionUsageCache
 	c.Lock()
 	have, fresh := c.data != nil, time.Since(c.at) < time.Minute
@@ -386,9 +382,6 @@ func chosenWindows(ws []QuotaWindow, chosen map[string]bool, base func(string) s
 
 // fetchSubscriptionUsage asks every signed-in vendor at once.
 func fetchSubscriptionUsage(ctx context.Context) []SubscriptionQuota {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
 	ctx, _ = quotaReading(ctx)
 	// read for every card's caller alike, or for the one card ctx reads
 	// again (RefreshUsage), as long as a refresh of them all would be
@@ -455,13 +448,12 @@ func fetchSubscriptionUsage(ctx context.Context) []SubscriptionQuota {
 	// where the built-in's stood
 	moved("cursor")
 	moved("grok")
-	if home, err := os.UserHomeDir(); err == nil {
-		if p, ok := codexAccount(home); ok && !hidden["codex"] {
+	{
+		if p, ok := codexAccount(); ok && !hidden["codex"] {
 			if ls := accountsOf("codex"); len(ls) > 1 {
 				fetches = append(fetches, perLogin(via("codex"), ls, accountCard("codex"))...)
 			} else {
-				dir := appdir.CodexHomeIn(home)
-				fetches = append(fetches, withUser(ctx, p.Account.User, func() SubscriptionQuota { return codexSubscriptionUsage(viaLogin("codex", p.Account.User), dir) }))
+				fetches = append(fetches, withUser(ctx, p.Account.User, func() SubscriptionQuota { return codexSubscriptionUsage(viaLogin("codex", p.Account.User), p.Account.User) }))
 			}
 		}
 		// Every Copilot account magpie knows, the editors' or the CLI's own
@@ -577,12 +569,19 @@ func (e *accountStatusError) Error() string { return http.StatusText(e.status) }
 // a Team seat isn't the email alone `claude auth status` gives.
 func claudeSubscriptionUsage(ctx context.Context, user string) SubscriptionQuota {
 	q := SubscriptionQuota{Provider: "claude", Name: "Claude Code", Icon: "claude-color", Windows: []QuotaWindow{}}
-	if _, _, ok := claudeCredential(); !ok {
-		q.Error = "Claude Code is signed out; run claude auth login"
-		return q
+	loginsMu.Lock()
+	ls := readLogins()
+	loginsMu.Unlock()
+	for _, l := range ls {
+		if l.Agent != "claude" || !strings.EqualFold(l.User, user) {
+			continue
+		}
+		q.Plan = l.Plan
+		if why := claudeSignedOut(l); why != "" {
+			q.Error = why
+			return q
+		}
 	}
-	_, plan, _ := claudeIdentity()
-	q.Plan = plan
 	var err error
 	q.Windows, err = claudeWindows(ctx, user, true)
 	if err != nil {
@@ -670,7 +669,7 @@ var claudeUsageWait = func() time.Duration {
 // sessions (a .jsonl in a project's folder under its projects/) was written
 // to since. A var so tests can say.
 var claudeUsedSince = func(t time.Time) bool {
-	projects := filepath.Join(filepath.Dir(claudeCredentialsPath()), "projects")
+	projects := filepath.Join(appdir.ClaudeDir(), "projects")
 	dirs, _ := os.ReadDir(projects)
 	for _, d := range dirs {
 		root := filepath.Join(projects, d.Name())
@@ -886,19 +885,19 @@ func claudeScopeModel(name string) string {
 	return strings.NewReplacer(" ", "-", ".", "-").Replace(strings.ToLower(name))
 }
 
-func codexSubscriptionUsage(ctx context.Context, dir string) SubscriptionQuota {
+func codexSubscriptionUsage(ctx context.Context, user string) SubscriptionQuota {
 	q := SubscriptionQuota{Provider: "codex", Name: "Codex", Icon: "codex-color", Windows: []QuotaWindow{}}
 	if holding(ctx) {
 		q.Error = errNotAsked.Error()
 		return q
 	}
-	token, accountID, err := codexToken(ctx, dir)
+	token, accountID, err := savedLoginToken(ctx, "codex", user)
 	if err != nil {
 		q.Error = err.Error()
 		return q
 	}
 	q.Plan, q.Windows, q.Resets, q.Balance, q.Held, err = codexWindows(ctx, token, accountID)
-	if b, _, rerr := readCodexLogin(dir, false); rerr == nil {
+	if b := codexLoginAuth(Login{Agent: "codex", User: user}); len(b) > 0 {
 		q.Until = codexUntil(b, time.Now())
 	}
 	if err != nil {

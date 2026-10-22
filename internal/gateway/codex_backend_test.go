@@ -116,8 +116,33 @@ func codexChatGPTAuth(t *testing.T, email string) {
 	if err := os.WriteFile(filepath.Join(dir, "auth.json"), auth, 0o600); err != nil {
 		t.Fatal(err)
 	}
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	if err := os.MkdirAll(filepath.Dir(provider.Path()), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	logins := mustJSON([]map[string]any{
+		{"agent": "codex", "user": email, "active": true, "seen": time.Now(), "auth": json.RawMessage(auth)},
+	})
+	if err := os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), logins, 0o600); err != nil {
+		t.Fatal(err)
+	}
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)
+}
+
+// codexSignedOut takes chongyun's own sign-in away: no account of its own
+// to serve, where the agent's own file is left as it was.
+func codexSignedOut(t *testing.T) {
+	t.Helper()
+	if err := os.MkdirAll(filepath.Dir(provider.Path()), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{}), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	provider.ForgetAccounts()
 }
 
 // A turn relayed on Codex's own ChatGPT sign-in is that codex account's
@@ -205,7 +230,7 @@ func TestCodexServedNamesTheAccountThatSigned(t *testing.T) {
 		t.Fatalf("another account's token: %s %s", id, acct)
 	}
 	t.Setenv("CODEX_HOME", t.TempDir())
-	provider.ForgetAccounts()
+	codexSignedOut(t)
 	if id, acct = codexServed(provider.CodexBase, http.Header{}, nil); id != "openai" || acct != "" {
 		t.Fatalf("no sign-in: %s %s", id, acct)
 	}

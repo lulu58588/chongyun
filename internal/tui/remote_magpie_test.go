@@ -13,7 +13,7 @@ import (
 
 // A remote magpie is added from the TUI with its address, as the app's
 // editor and magpie provider add remote-magpie … url=… add it, and its
-// address is changed there later (akic404 on Discord: the TUI had no place
+// address is changed there later (akic404 报告: the TUI had no place
 // for it, only the key).
 func TestTUIAddsARemoteMagpieWithItsAddress(t *testing.T) {
 	home(t)
@@ -92,11 +92,11 @@ func TestTUIAddsARemoteMagpieWithItsAddress(t *testing.T) {
 
 // Adding a provider fetches its list and says what came of it — how many
 // models, or why none — and m on the Providers page fetches it again, as
-// the app editor's Fetch models does (akic404 on Discord: added from the TUI,
+// the app editor's Fetch models does (akic404 报告: added from the TUI,
 // a remote magpie had 0 models, with nothing said and no way to fetch
 // them).
 // The add list says what Remote magpie is, another computer's magpie, and
-// doesn't file it under the relays (Avalon on Discord: "供应商添加中没有
+// doesn't file it under the relays (Avalon 报告: "供应商添加中没有
 // Remote magpie 的选项").
 func TestTUIAddListSaysRemoteMagpieIsAnotherComputers(t *testing.T) {
 	home(t)

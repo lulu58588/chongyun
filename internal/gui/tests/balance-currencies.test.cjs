@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A balance in two currencies (gakki on Discord): DeepSeek tells an
+// A balance in two currencies (gakki 报告): DeepSeek tells an
 // account's CNY and USD at once, "$11.12 · ¥-0.05", and the trend under it
 // is the USD's alone (balanceTrend.currency "$"). The curve's legend, its
 // readings and its pace are said in dollars, not with the other currency

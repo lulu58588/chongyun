@@ -14,12 +14,12 @@ import (
 
 // zenDeprecated is OpenCode Zen's answer to a request for exo-free, as it
 // was on 2026-10-10 (HTTP/2 410, content-type: application/json), while
-// its /zen/v1/models still listed exo-free (MOMO on Discord).
+// its /zen/v1/models still listed exo-free (MOMO 报告).
 const zenDeprecated = `{"type":"error","error":{"type":"ModelDeprecated","message":"Model exo-free has been deprecated."},"metadata":{"model":"exo-free"}}`
 
 // zenUnsupported is OpenCode Zen's answer to a request for glm-5-free, a
 // free model it had stopped serving, as it was on 2026-10-10 (HTTP 401,
-// application/json), with the public key (Jeremy.Zhou on Discord: models
+// application/json), with the public key (Jeremy.Zhou 报告: models
 // no longer free should leave the list).
 const zenUnsupported = `{"type":"error","error":{"type":"ModelError","message":"Model glm-5-free is not supported"}}`
 

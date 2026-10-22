@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Antigravity's allowance a row a pool of models, each with its 5-hour and
-// its weekly window (a user on Discord: 这里显示5h 和一周剩余比较好吧，现在
+// its weekly window (a user 报告: 这里显示5h 和一周剩余比较好吧，现在
 // 是只显示5h，这3个模型都是一样的，没必要分开…多加个7day 条就好). When an
 // account's windows name a pool — the models that share one allowance,
 // Gemini, Claude & GPT — the Usage page's card shows each pool's 5 hours

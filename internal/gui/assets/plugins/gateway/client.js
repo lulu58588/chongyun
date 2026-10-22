@@ -73,7 +73,7 @@ function renderGatewayView() {
   renderGateway();
   $("#gatewayKeysBlock").hidden = !providers.gateway.lan;
   // not shared, the keys are left out; this line says where they come from,
-  // as a tunnel to loopback is refused until sharing is on (DD on Discord)
+  // as a tunnel to loopback is refused until sharing is on (DD 报告)
   $("#gatewayKeysOff").hidden = !!providers.gateway.lan;
   if (!providers.gateway.lan) gatewayKeyDraft = null;
   if (gatewayKeyDraft === null && gatewayLimit === null && !$("#gatewayKeys .rename-in")) renderGatewayKeys();
@@ -82,7 +82,7 @@ function renderGatewayView() {
   renderActivity();
 }
 
-// The status card's button (leslie_luo on Discord: told to quit the older
+// The status card's button (leslie_luo 报告: told to quit the older
 // magpie serving the gateway, with no way to tell which one it was): with
 // an older magpie on the port it quits that one, checked to be magpie by
 // its process, and this one serves the gateway at once; otherwise it
@@ -117,7 +117,7 @@ function gatewayFixSays(o) {
   const p = { port: o.port || "", pid: o.pid || "", path: o.path || "", v: o.version || "", error: o.error || "" };
   switch (o.reason) {
     case "not-magpie": return t("Port {port} is held by {path} (pid {pid}), which isn't magpie, so magpie leaves it alone. Quit it yourself, or move the gateway to another port in Settings.", p);
-    // leslie_luo on Discord: an old magpie in OrbStack, its helper named
+    // leslie_luo 报告: an old magpie in OrbStack, its helper named
     // as the program to quit
     case "container": return t("Port {port} is forwarded by {path} (pid {pid}) to a container or a VM: the magpie {v} answering there runs inside it, out of this magpie's reach. Stop that container (docker ps lists it, docker stop <name> stops it, or stop it in OrbStack or Docker Desktop), or move this magpie's gateway to another port in Settings.", p);
     case "unseen": return t("magpie can't see which process holds port {port}: it runs as another user or as administrator. Quit it there.", p);
@@ -254,7 +254,7 @@ const ai = new GoogleGenAI({
 const r = await ai.models.generateContent({ model: "${m}", contents: "hi" });
 console.log(r.text);`,
   },
-  // magpie's own System One API (ARNO on Discord: gateway添加system one
+  // magpie's own System One API (ARNO 报告: gateway添加system one
   // api 有想法吗): a decision model — Jev, Clef, Bailian's — answers typed
   // questions about a state; no SDK speaks it, so no shell variables
   systemone: {

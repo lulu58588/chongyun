@@ -55,7 +55,7 @@ func pngFile(t *testing.T) (string, string) {
 }
 
 // magpie's image recognition is an MCP server of its own beside the web
-// search's (JonahFu on X): an agent lists one analyze_image tool and calls
+// search's (JonahFu 报告): an agent lists one analyze_image tool and calls
 // it with a file on this computer, and the model that describes images
 // answers — with a full description, or what the prompt asks.
 func TestVisionMCPAnalyzesImage(t *testing.T) {

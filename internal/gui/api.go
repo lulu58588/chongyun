@@ -206,11 +206,9 @@ type agentJSON struct {
 	// NoNames: its own list doesn't name magpie's models as Names in agents'
 	// lists says (agent.NoNames), for that setting to say so
 	NoNames bool `json:"noNames,omitempty"`
-	// Source: what an agent not connected runs on now (agent.Source), and
 	// Stale: copies of a connected one still running on the list they
 	// started with (agent.Stale), for the line under its name
-	Source string `json:"source,omitempty"`
-	Stale  int    `json:"stale,omitempty"`
+	Stale int `json:"stale,omitempty"`
 	// StaleCopies: those copies, each with what it is and when it
 	// started, for the opened row to say which is left to reopen and how
 	StaleCopies []agent.StaleCopy `json:"staleCopies,omitempty"`
@@ -245,7 +243,7 @@ type profileJSON struct {
 	// (#467); a value that reads as a key or a token is left out
 	Agents []profile.Group `json:"agents"`
 	// InUse: the setup is this profile now, applying it would change
-	// nothing (profile.InUse); the page marks it so (superhtoooth on X:
+	// nothing (profile.InUse); the page marks it so (superhtoooth 报告:
 	// nothing said which profile was in use)
 	InUse bool `json:"inUse,omitempty"`
 }
@@ -383,9 +381,6 @@ type settingsJSON struct {
 	TerminalApps    []terminalChoice `json:"terminalApps,omitempty"`
 	TerminalDefault string           `json:"terminalDefault,omitempty"`
 	OTelEnv         bool             `json:"otelEnv,omitempty"`
-	// NoAccountsEnv is MAGPIE_NO_ACCOUNTS set, which keeps account
-	// discovery off for this run whatever Settings has (#1535)
-	NoAccountsEnv bool `json:"noAccountsEnv,omitempty"`
 	// whether the page is in gateway mode and why (gatewayMode); Web says
 	// it is served by magpie web, where the mode can be set
 	GatewayOn  bool   `json:"gatewayOn,omitempty"`
@@ -623,7 +618,6 @@ func settingsState() settingsJSON {
 		s.NotifyProblem = notifyProblem()
 	}
 	s.ProxyNow, s.ProxySource = netproxy.Describe()
-	s.NoAccountsEnv = settings.AccountDiscoveryOff() && !s.NoAccountDiscovery
 	for _, name := range []string{"MAGPIE_OTEL_ENABLED", "MAGPIE_OTEL_ENDPOINT", "MAGPIE_OTEL_HEADERS", "MAGPIE_OTEL_METRICS", "MAGPIE_OTEL_BODIES", "MAGPIE_OTEL_BODIES_WHOLE", "MAGPIE_OTEL_SESSIONS"} {
 		if _, ok := os.LookupEnv(name); ok {
 			s.OTelEnv = true
@@ -728,7 +722,7 @@ func init() {
 // with nothing to check them by, and a cache in front of `chongyun web` (a
 // proxy, a CDN, a tunnel's) could keep an older version's app.js under the
 // new index.html after an update: a page without what that version added,
-// such as the request archive switch (Jorben on Discord). An unchanged
+// such as the request archive switch (Jorben 报告). An unchanged
 // file is a 304.
 //
 // The page itself names each of its scripts and styles with its content's
@@ -758,7 +752,7 @@ func revalidated(next http.Handler) http.Handler {
 		// a file asked for by the address the page names it by, its
 		// content's hash, is the same at that address for good: a browser
 		// keeps it and doesn't ask again, which a slow link to `chongyun web`
-		// feels at every load (akic404 on Discord). Another version's hash,
+		// feels at every load (akic404 报告). Another version's hash,
 		// or none, is asked for again as before.
 		if v := r.URL.Query().Get("v"); v != "" && v == hex.EncodeToString(sum[:6]) {
 			rw.Header().Set("Cache-Control", "max-age=31536000, immutable")
@@ -1270,8 +1264,6 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 		in.UpdateMirror = cur.UpdateMirror
 		// gateway mode, set on its own (gateway-mode)
 		in.GatewayMode = cur.GatewayMode
-		in.NoAccountDiscovery = cur.NoAccountDiscovery // set on its own (account-discovery below, or the CLI)
-		in.AccountDiscovery = cur.AccountDiscovery    // the same, the other way round (the CLI)
 		if v := strings.TrimSpace(in.Vision); v != "" && v != "off" && v != cur.Vision {
 			if _, _, ok := provider.Resolve(v); !ok {
 				fail(rw, fmt.Errorf("no model %s to describe images", v))
@@ -1370,25 +1362,6 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 		}
 		writeJSON(rw, settingsState())
 	})
-	// whether agents' sign-ins are read and served as subscriptions
-	// (#1535): saved, the accounts read before are forgotten at once
-	mux.HandleFunc("POST /api/settings/account-discovery", func(rw http.ResponseWriter, r *http.Request) {
-		var in struct {
-			Off bool `json:"off"`
-		}
-		if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
-			fail(rw, err)
-			return
-		}
-		s := settings.Load()
-		s.NoAccountDiscovery = in.Off
-		if err := settings.Save(s); err != nil {
-			fail(rw, err)
-			return
-		}
-		provider.ForgetAccounts()
-		writeJSON(rw, settingsState())
-	})
 	// the version the header's Update pill is hidden for, until a newer one
 	// is out: set from the pill, cleared ("") from Settings
 	mux.HandleFunc("POST /api/settings/update-skip", func(rw http.ResponseWriter, r *http.Request) {
@@ -1431,7 +1404,7 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 		writeJSON(rw, settingsState())
 	})
 	// whether the gateway's /v1/models lists each model by its id without
-	// the provider as well (settings.BareModelIDs, love1sbug on X)
+	// the provider as well (settings.BareModelIDs, love1sbug 报告)
 	mux.HandleFunc("POST /api/settings/bare-ids", func(rw http.ResponseWriter, r *http.Request) {
 		var in struct{ On bool }
 		if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
@@ -2003,7 +1976,7 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 		}
 		writeJSON(rw, settingsState())
 	})
-	// the allow list (lc on Discord): the addresses other computers may
+	// the allow list (lc 报告): the addresses other computers may
 	// reach magpie from, as IPs and CIDR ranges; none lets every address in.
 	// One that would shut out the page saving it (magpie web, opened from
 	// another computer) is refused, and so is any while MAGPIE_ALLOW_IPS
@@ -2039,7 +2012,7 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 		}
 		writeJSON(rw, settingsState())
 	})
-	// the gateway's port (Magic_zero on Discord), set on its own: it moves
+	// the gateway's port (Magic_zero 报告), set on its own: it moves
 	// the gateway and every agent connected to it
 	mux.HandleFunc("POST /api/settings/port", func(rw http.ResponseWriter, r *http.Request) {
 		var in struct{ Port int }
@@ -2070,7 +2043,7 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 		}
 		writeJSON(rw, settingsState())
 	})
-	// one masking rule changed in place (nf1qaz2w on Discord): the rule at
+	// one masking rule changed in place (nf1qaz2w 报告): the rule at
 	// At, which must still be Was, becomes Rule, checked as an added one is.
 	// A rule that can't be used is said and every rule is kept as it was.
 	mux.HandleFunc("POST /api/settings/redact-rule", func(rw http.ResponseWriter, r *http.Request) {
@@ -2227,7 +2200,7 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 		fail(rw, fmt.Errorf("no search API %q", in.Vendor))
 	})
 	// what each of a search API's keys has used of its limit (SlouchyQuill
-	// on Discord), the keys masked; fresh reads again what was read lately
+	// 报告), the keys masked; fresh reads again what was read lately
 	mux.HandleFunc("POST /api/settings/search-quota", func(rw http.ResponseWriter, r *http.Request) {
 		var in struct {
 			Vendor string
@@ -2365,7 +2338,6 @@ func state() stateJSON {
 			aj.Stale = len(aj.StaleCopies)
 			aj.Joined = a.Joined != nil && a.Joined()
 		} else {
-			aj.Source = a.Source()
 			aj.Failover = a.FailingOver != nil && a.FailingOver()
 		}
 		if a.Import != nil {
@@ -2454,7 +2426,7 @@ func fail(rw http.ResponseWriter, err error) {
 	if errors.As(err, &signedIn) {
 		out["code"], out["agent"], out["user"] = "signed_in", signedIn.Agent, signedIn.User
 	}
-	// a text that isn't a group to import (laincatx on X), said in the
+	// a text that isn't a group to import (laincatx 报告), said in the
 	// reader's language
 	var share *provider.ShareError
 	if errors.As(err, &share) {

@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Claude Code wired to magpie while a provider switch magpie can't take out
-// sends its requests elsewhere (jw1dev on X: CLAUDE_CODE_USE_BEDROCK=1 kept
+// sends its requests elsewhere (jw1dev 报告: CLAUDE_CODE_USE_BEDROCK=1 kept
 // in the env, Bedrock refused magpie's model, magpie said nothing). Check
 // says which variable and where, and the row says it in the window's
 // language: the line under the name and the Reconnect pill carry the advice,

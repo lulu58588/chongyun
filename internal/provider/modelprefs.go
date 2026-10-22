@@ -297,7 +297,7 @@ func setModelEfforts(ref string, efforts []string) (bool, error) {
 // gateway sends it no reasoning field on any API — Chat's
 // reasoning_effort, Responses' reasoning, Anthropic's thinking and
 // output_config effort — as it does a model known not to think
-// (yuexian7 on Discord: models.dev lists a model with reasoning, and the
+// (yuexian7 报告: models.dev lists a model with reasoning, and the
 // vendor answers reasoning_effort with 422 while the request without it
 // works). Off gives it the levels it had again.
 func SetModelReasonless(ref string, on bool) error {
@@ -408,7 +408,7 @@ func setModelImage(ref string, images *bool) (bool, error) {
 
 // SetModelAPI says which one of a provider's APIs a model is asked on —
 // chat, responses, anthropic or gemini — for a relay whose one key serves some of
-// its models on one and others on another (01huadalang on Discord: 有的供应商
+// its models on one and others on another (01huadalang 报告: 有的供应商
 // 一个 api 里有很多模型但是不同协议); "" leaves it to the vendor's list and
 // the URLs the provider has, as before. It must be an API the provider has
 // a URL for: a preset's or a subscription's as well as a custom
@@ -470,7 +470,7 @@ func (p Provider) ModelAPI(model string) (Protocol, bool) {
 
 // modelAPI is whether proto is one a model can be set to be asked on: the
 // three magpie translates between, and a Gemini URL's generateContent
-// (Kayphoon on Discord: a custom provider's Gemini format, which a model's
+// (Kayphoon 报告: a custom provider's Gemini format, which a model's
 // own choice didn't offer)
 func modelAPI(proto Protocol) bool {
 	return slices.Contains(Protocols, proto) || proto == Gemini
@@ -625,7 +625,7 @@ func ImageOverride(pid, model string) (bool, bool) {
 }
 
 // ImageOverrideIn is ImageOverride from settings s already read: a list of
-// many models reads them once, not for each (lml on Discord, Windows).
+// many models reads them once, not for each (lml 报告, Windows).
 func ImageOverrideIn(s settings.Settings, pid, model string) (bool, bool) {
 	v, ok := s.ModelImages[pid+"/"+model]
 	return v, ok

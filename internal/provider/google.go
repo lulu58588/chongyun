@@ -27,8 +27,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
-	"path/filepath"
 	"runtime"
 	"slices"
 	"sort"
@@ -38,7 +36,6 @@ import (
 	"time"
 
 	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // CodeAssist is Google's Code Assist API, which magpie only speaks
@@ -130,79 +127,11 @@ type googleAccount struct {
 	app  googleApp
 	user string
 	auth googleAuth
-	own  bool // Gemini CLI's own sign-in
 }
 
-// geminiDir is where Gemini CLI keeps its sign-in.
-func geminiDir() string {
-	home, _ := os.UserHomeDir()
-	return filepath.Join(home, ".gemini")
-}
-
-// geminiOwnLogin reads Gemini CLI's own Google sign-in. One another app's
-// OAuth client minted there isn't Gemini CLI's: Google refreshes a token
-// only for the client that minted it, so it is left alone. (Antigravity's
-// CLI, agy, keeps its sign-in in the system keyring, not here.)
-func geminiOwnLogin() (googleAccount, bool) {
-	path := filepath.Join(geminiDir(), "oauth_creds.json")
-	var a googleAuth
-	if !readJSON(path, &a) || a.RefreshToken == "" {
-		return googleAccount{}, false
-	}
-	var id struct {
-		IDToken string `json:"id_token"`
-	}
-	readJSON(path, &id)
-	if c := googleClientOf(id.IDToken); c != "" && c != geminiApp.clientID {
-		return googleAccount{}, false
-	}
-	var accts struct {
-		Active string `json:"active"`
-	}
-	readJSON(filepath.Join(geminiDir(), "google_accounts.json"), &accts)
-	user := accts.Active
-	if user == "" {
-		user = "Google"
-	}
-	// the project Gemini CLI is told to use, in its own .env
-	a.Project = envFileValue(filepath.Join(geminiDir(), ".env"), "GOOGLE_CLOUD_PROJECT")
-	if a.Project == "" {
-		a.Project = savedGoogleProject("gemini", user)
-	}
-	app, _ := googleAppOf("gemini")
-	return googleAccount{app: app, user: user, auth: a, own: true}, true
-}
-
-// googleClientOf is the OAuth client a Google ID token was minted for, ""
-// when there is none to tell.
-func googleClientOf(idToken string) string {
-	c := jwtClaims(idToken)
-	if azp := claimString(c, "azp"); azp != "" {
-		return azp
-	}
-	return claimString(c, "aud")
-}
-
-// envFileValue is one KEY=value of a dotenv file.
-func envFileValue(path, key string) string {
-	v, _ := edit.GetEnvFile(path, key)
-	return v
-}
-
-// savedGoogleProject is the project the user named for the agent's own
-// account, which logins.json keeps beside it.
-func savedGoogleProject(agent, user string) string {
-	loginsMu.Lock()
-	defer loginsMu.Unlock()
-	for _, l := range readLogins() {
-		if l.Agent == agent && strings.EqualFold(l.User, user) {
-			return l.Project
-		}
-	}
-	return ""
-}
-
-// googleSaved is the sign-in of an account magpie keeps.
+// googleSaved is the sign-in of an account chongyun keeps: its tokens as
+// logins.json holds them, with the project the account's requests are
+// billed to.
 func googleSaved(agent string, l savedLogin) (googleAccount, bool) {
 	var a googleAuth
 	if l.own() || json.Unmarshal(l.Auth, &a) != nil || a.RefreshToken == "" {
@@ -222,23 +151,12 @@ type googleLogin struct {
 
 // googleLogins lists an app's accounts, the first in use first.
 func googleLogins(agent string) []googleLogin {
-	own, hasOwn := googleAccount{}, false
-	if agent == "gemini" {
-		own, hasOwn = geminiOwnLogin()
-	}
-	ownUser := ""
-	if hasOwn {
-		ownUser = own.user
-	}
 	var out []googleLogin
-	for _, l := range sideLogins(agent, ownUser, func(l savedLogin) bool {
+	for _, l := range sideLogins(agent, "", func(l savedLogin) bool {
 		_, ok := googleSaved(agent, l)
 		return ok
 	}) {
-		a := own
-		if !l.saved.own() {
-			a, _ = googleSaved(agent, l.saved)
-		}
+		a, _ := googleSaved(agent, l.saved)
 		a.user = l.User
 		out = append(out, googleLogin{l.Login, a})
 	}
@@ -270,11 +188,7 @@ func forgetGoogleLogin(agent, user string) error {
 // addGoogleLogin keeps an account magpie just signed in.
 func addGoogleLogin(agent, user, plan string, a googleAuth) error {
 	auth, _ := json.Marshal(a)
-	ownUser := ""
-	if own, ok := geminiOwnLogin(); ok && agent == "gemini" {
-		ownUser = own.user
-	}
-	return addSideLogin(savedLogin{Agent: agent, User: user, Plan: plan, Auth: auth, Project: a.Project}, ownUser, func(savedLogin) {})
+	return addSideLogin(savedLogin{Agent: agent, User: user, Plan: plan, Auth: auth, Project: a.Project}, "", func(savedLogin) {})
 }
 
 // SetGoogleProject names the Google Cloud project an account's requests
@@ -360,15 +274,11 @@ func (g googleAccount) token(ctx context.Context) (string, error) {
 		ExpiresIn   int64  `json:"expires_in"`
 	}
 	if err := postToken(ctx, googleTokenURL, "application/x-www-form-urlencoded", []byte(form.Encode()), &fresh); err != nil || fresh.AccessToken == "" {
-		how := "sign in again from chongyun"
-		if g.own {
-			how = "run gemini and sign in again"
-		}
 		msg := "no token"
 		if err != nil {
 			msg = err.Error()
 		}
-		return "", fmt.Errorf("%s is signed out (%s); %s", g.app.name, msg, how)
+		return "", fmt.Errorf("%s is signed out (%s); sign in again from chongyun", g.app.name, msg)
 	}
 	t = googleAuth{AccessToken: fresh.AccessToken, RefreshToken: g.auth.RefreshToken,
 		Expiry: time.Now().Add(time.Duration(fresh.ExpiresIn) * time.Second).UnixMilli()}
@@ -650,9 +560,6 @@ func (g googleAccount) geminiProject(ctx context.Context) (googleProject, error)
 // Google Cloud project named, with Google's reason when it gave one.
 func (g googleAccount) needsProject(why string) error {
 	msg := "Google serves Gemini CLI's sign-in only to Gemini Code Assist Standard and Enterprise, which bill a Google Cloud project: name it with `chongyun accounts project gemini " + g.user + " <project-id>`"
-	if g.own {
-		msg += " or GOOGLE_CLOUD_PROJECT in ~/.gemini/.env"
-	}
 	msg += ". A personal Google account is served to Antigravity instead: add it under Antigravity in chongyun"
 	if why != "" {
 		msg = why + " — " + msg
@@ -1009,7 +916,7 @@ func (g googleAccount) modelInfo(ctx context.Context) ([]googleModelInfo, error)
 		// (#1918, kchen0x). b68377dae told them by tagDescription, which
 		// then named the model moved to; Google has since left it empty
 		// or made it a notice ("GPT-OSS will be removed…"), and the chips
-		// came back (新v学员 on Discord, 10-20). Such a model is named for
+		// came back (新v学员 报告, 10-20). Such a model is named for
 		// its own id when its enum names that id (MODEL_GOOGLE_GEMINI_2_5_
 		// FLASH, where the models Antigravity names truly are
 		// MODEL_PLACEHOLDER_M…), or when another family's model of that

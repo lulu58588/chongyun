@@ -153,7 +153,7 @@ func windowUsage(t *testing.T, used map[string][2]float64) {
 	}
 }
 
-// Each window can have a cap of its own (willz on Discord): a friend's
+// Each window can have a cap of its own (willz 报告): a friend's
 // account stops when its five hours reach 50%, while its week may go to
 // 40%. At 60% of its five hours it is held, though its week is low, and
 // the request goes to the next account; at 20% and 30% it is under both

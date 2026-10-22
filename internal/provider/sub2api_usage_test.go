@@ -130,9 +130,6 @@ func keyLimitsHome(t *testing.T) {
 				busy = busy || e.loading
 			}
 			keyAllowances.Unlock()
-			devinStatus.Lock()
-			busy = busy || devinStatus.refreshing
-			devinStatus.Unlock()
 		}
 		restart()
 	})
@@ -606,7 +603,7 @@ func TestKeyAllowanceRenewed(t *testing.T) {
 }
 
 // A sub2api login JWT added for the account's balance, then removed
-// (lx_78654 on Discord): the editor's "Use …/api/v1/user/profile" left
+// (lx_78654 报告): the editor's "Use …/api/v1/user/profile" left
 // that URL behind, which the key alone can never ask, so the card said
 // "Allowance unavailable" for good. Without the token, the panel's query
 // for the key is asked with the key, as a key with no JWT is; the account

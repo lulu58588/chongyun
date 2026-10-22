@@ -171,7 +171,7 @@ func TestCodexCatalogServiceTiers(t *testing.T) {
 
 // Codex turns a pasted image away for a model without "image" itself, so
 // /model says such a model is text-only and where that is changed, and the
-// entry still reads as magpie's (KimYx0207 on X).
+// entry still reads as magpie's (KimYx0207 报告).
 func TestCodexCatalogSaysTextOnly(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)

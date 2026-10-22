@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// ARNO on Discord: decision models (Jev) make a routing group of their own,
+// ARNO 报告: decision models (Jev) make a routing group of their own,
 // asked at /v1/systemone (provider/decide_group.go). The group editor's
 // Add a model picker offers a group of decision models only decision
 // models, and a group of models that hold conversations only those and

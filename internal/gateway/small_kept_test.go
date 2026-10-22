@@ -152,6 +152,10 @@ func TestAutoVisionSeesEachChange(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth), 0o600); err != nil {
 		t.Fatal(err)
 	}
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	chongyunLogins(t, chongyunCodexLogin("me@example.com", auth))
 	provider.ForgetAccounts() // the 30s accounts are looked for again in
 	t.Cleanup(provider.ForgetAccounts)
 	if m := AutoVision(); m != "codex/gpt-6.1-sol" {

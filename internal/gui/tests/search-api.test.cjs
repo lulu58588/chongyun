@@ -4,7 +4,7 @@
 // SearXNG picked asks for its address; Add sends the API, its key and its
 // address; Remove takes one away; a key magpie refuses is said in the row,
 // what was typed kept. A saved key is shown in its row and hidden again, or
-// copied, as a provider's is (OnurBen on Discord). Every API takes a base URL
+// copied, as a provider's is (OnurBen 报告). Every API takes a base URL
 // of the user's own (#1580), on a line under the key: empty is the vendor's,
 // and one set shows in the field when its API is picked again, so a new key
 // alone keeps it. You.com is added with no key, for its free search

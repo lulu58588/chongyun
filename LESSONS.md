@@ -141,7 +141,7 @@ content before you rest an account.**
 - Seen 1× (2026-10-05).
 
 **Fix what the error is about, not only how it is worded.**
-- e63fbb0e (kkgg on Discord, "GLM 直接429了"): Zhipu answered a GLM Coding
+- e63fbb0e (kkgg 报告, "GLM 直接429了"): Zhipu answered a GLM Coding
   Plan key sent to its pay-as-you-go endpoint with 429 1113 "余额不足". The
   commit relabelled the 429 as out of credit, and nothing in magpie tells the
   user the key belongs on the Coding Plan endpoint, which is what would make
@@ -397,7 +397,7 @@ browser API is tried in the real Linux app too.
 - 18e82adc6 (10-11) traded the layouts in a view transition. The GUI suite
   passed in WebKit, but under Wayland magpie turns WebKitGTK's compositing
   off, and WebKitGTK 2.52 crashed in the transition and froze the window
-  (f5dd4d604, a reporter on X).
+  (f5dd4d604, a reporter 报告).
 - Seen 1× (2026-10-12).
 
 **A path that differs by OS is tested with each OS's value.**

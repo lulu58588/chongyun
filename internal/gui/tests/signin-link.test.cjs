@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The sign-in link in sight (StringKe on Discord: the sign-in page only
+// The sign-in link in sight (StringKe 报告: the sign-in page only
 // opened in the default browser, with no link to take to another one).
 // While a sign-in waits, its link shows on one line under the question,
 // selectable whole, with a copy button beside it that copies the link;

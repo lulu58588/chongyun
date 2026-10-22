@@ -8,7 +8,7 @@ import (
 )
 
 // A plugin's account showing its defaults alone says why on the
-// Providers page, as the app's editor does (gnayiab on X: magpie's TUI in
+// Providers page, as the app's editor does (gnayiab 报告: magpie's TUI in
 // WSL had Cursor with Auto alone and nothing said).
 func TestProvidersSayWhyAListFellBack(t *testing.T) {
 	home(t)

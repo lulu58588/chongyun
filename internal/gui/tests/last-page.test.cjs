@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // The window opens on the page the reader last left, as a Mac app comes back
-// as it was (molvqingtai and lc on Discord asked for Routing first, and for
+// as it was (molvqingtai and lc 报告 asked for Routing first, and for
 // the sidebar's order to be the reader's): left on Routing, the window opened
 // again (no ?view=) and reloaded is on Routing, its tab picked, nothing
 // scrolled. A page asked for (?view=, the tray's links) wins over the one

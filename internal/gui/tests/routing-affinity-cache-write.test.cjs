@@ -5,7 +5,7 @@ const { test } = require("node:test");
 const { chromium, webkit } = require("playwright");
 
 // Auto affinity counts what the vendor wrote to its cache with what it
-// read (vilicvane on Discord: a first turn reads nothing and writes the
+// read (vilicvane 报告: a first turn reads nothing and writes the
 // whole prompt). The Routing page says both: a conversation kept for a
 // cache just written doesn't read as "read 0 tokens", and one moved says
 // it wrote too little as well.

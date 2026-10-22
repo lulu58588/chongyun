@@ -44,7 +44,7 @@ func miseNode(t *testing.T, data string) (prefix string) {
 
 // An agent installed with npm -g under mise's Node is found on PATH as
 // mise's shim, ~/.local/share/mise/shims/snow, a link to the mise binary,
-// which says nothing of npm (flp on Discord). The program it runs is asked
+// which says nothing of npm (flp 报告). The program it runs is asked
 // of mise (mise which snow, as it answered: …/installs/node/22/bin/snow),
 // and updated with that Node's own npm into its own prefix, then mise
 // reshim.

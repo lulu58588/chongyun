@@ -11,7 +11,7 @@ import (
 // account, gpt-5.5 with web_search). Codex starts an item by the added's
 // id and finishes one by the done's, so with two ids a message was shown
 // twice, once as it streamed and once finished, and a web search stayed
-// started (echo_ts on Discord, once ec7f47432 relayed Codex on Copilot
+// started (echo_ts 报告, once ec7f47432 relayed Codex on Copilot
 // instead of translating it). An upstream whose ids already agree goes
 // through as it came.
 type idTidy struct {

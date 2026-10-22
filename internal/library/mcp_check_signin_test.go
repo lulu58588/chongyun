@@ -10,7 +10,7 @@ import (
 
 // A server magpie is signed in to is checked as the gateway relays it: a
 // token the server ended early is renewed and asked again with, so the row
-// doesn't say "needs sign-in" beside "Signed in" (新v学员 on Discord). A
+// doesn't say "needs sign-in" beside "Signed in" (新v学员 报告). A
 // token refused just after it was renewed, or one that can't be renewed,
 // is a sign-in that has run out: the check says so, and the record does,
 // for the tag to read "Sign-in ran out". The check isn't run again for it.

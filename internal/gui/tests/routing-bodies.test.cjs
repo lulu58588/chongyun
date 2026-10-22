@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A request on the Routing page opens to its request and response (Fate
-// on Discord: a Codex prediction there couldn't be opened to what was sent
+// 报告: a Codex prediction there couldn't be opened to what was sent
 // and what came back). Its story's head has "Request and response": the
 // gateway's recent calls' copy by the route's id, read when asked; once
 // they have let it go, the request archive's copy when it was on, and

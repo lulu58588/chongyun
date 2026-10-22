@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// ARNO on Discord: the Sessions page's agent tabs had grown a thick Windows
+// ARNO 报告: the Sessions page's agent tabs had grown a thick Windows
 // scrollbar, arrows and all, under them. The strip (and a provider's region
 // picker, which shares its class) set scrollbar-width, and in Chromium — so
 // WebView2 — that drops every ::-webkit-scrollbar rule, the app's thin thumb

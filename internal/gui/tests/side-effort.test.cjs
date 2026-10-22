@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// How hard the models magpie asks on its own think (MOMO on Discord,
+// How hard the models magpie asks on its own think (MOMO 报告,
 // "外置模型能不能提供思考深度选项"): Settings › Models has, beside Image
 // recognition's model and the searcher's, a chip that opens the app's menu
 // (no native select) with Default and only the levels that model has. A

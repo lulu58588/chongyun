@@ -32,10 +32,6 @@ func TestNvidiaModelScopePresets(t *testing.T) {
 		if pr := Preset(c.id); pr.Kind != KindRelay || pr.NoKey {
 			t.Fatalf("%s: %+v", c.id, pr)
 		}
-		im, _ := imported("x", "k", endpoints{chat: c.chat + "/"}, nil)
-		if im.Preset != c.id || im.Icon != c.icon {
-			t.Fatalf("%s imported: %+v", c.id, im)
-		}
 	}
 	// ModelScope is not DashScope: the Qwen presets stay where they were
 	if Preset("qwen-cn").Chat != "https://dashscope.aliyuncs.com/compatible-mode/v1" {

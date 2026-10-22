@@ -7,7 +7,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// StringKe on Discord: the menu bar shows one account's use, picked in
+// StringKe 报告: the menu bar shows one account's use, picked in
 // Settings, not the one in use. A card id "claude|*" follows the account
 // the gateway goes to first, whichever that is now, and the tooltip names it.
 func TestTrayInUse(t *testing.T) {
@@ -54,7 +54,7 @@ func TestTrayInUse(t *testing.T) {
 	}
 }
 
-// okingkee on X: three Codex accounts, the menu bar on "account in use".
+// okingkee 报告: three Codex accounts, the menu bar on "account in use".
 // A used its allowance up and the gateway went on to B, but the menu bar
 // stayed on A: it asked whom the agent is signed in to. It follows the
 // account that answered last, while that is lately; else, as before, the

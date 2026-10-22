@@ -42,7 +42,7 @@ func TestCreditsExhaustedIsOutOfCredit(t *testing.T) {
 }
 
 // An account out of credits on a model that costs them still serves the
-// models its subscription gives free (Creat.wu on Discord: WorkBuddy AI's
+// models its subscription gives free (Creat.wu 报告: WorkBuddy AI's
 // glm-5.3-flash used the credits up, and the account was skipped for its
 // free models). Through a plugin, as a moved WorkBuddy's requests go:
 // fake-1 is free (x0.00), deepseek-v4-pro costs credits. The refusal

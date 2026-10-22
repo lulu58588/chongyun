@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -19,9 +20,10 @@ func TestClaudeTeamSeatBesidePersonal(t *testing.T) {
 	noAnthropic(t)
 	fakeClaudeLogin(t, fakeClaudeAccount{email: "same@example.com", org: "Acme", orgUUID: "o-team", plan: "team", refresh: "sk-ant-ort01-team"}, "", true)
 
-	cred := claudeSignIn(t, home, time.Now().Add(time.Hour))
-	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{
-		"emailAddress": "same@example.com", "organizationUuid": "o-personal", "organizationName": "same@example.com's Organization"}})
+	cred := filepath.Join(home, ".claude", ".credentials.json")
+	// the personal account is chongyun's own sign-in too: it keeps it in
+	// logins.json, beside the seat, and Claude Code runs on it there
+	claudeAccountSignIn(t, "same@example.com", "max", time.Now().Add(time.Hour))
 	if err := Delete("claude"); err != nil {
 		t.Fatal(err)
 	}
@@ -35,6 +37,9 @@ func TestClaudeTeamSeatBesidePersonal(t *testing.T) {
 	}
 	finishInBrowser(t, st, "the-code")
 	st = waitDone(t, st.ID)
+	// the seat is added beside the personal account, which the agent
+	// stays on: chongyun does not move the agent off the account it is on
+	// when another one is signed in to
 	if st.State != "done" || st.User != "same@example.com · Acme" || st.Plan != "team" || st.Using {
 		t.Fatalf("state %+v", st)
 	}
@@ -67,6 +72,13 @@ func TestSaveKeepsAccountIDs(t *testing.T) {
 // its own: added beside the personal one, and either can be switched to.
 func TestCodexTeamWorkspaceBesidePersonal(t *testing.T) {
 	home := signIn(t) // me@example.com, personal Pro, workspace acct-1
+	// the sign-in where Codex keeps it, as chongyun's own sign-in left it
+	for _, l := range readLogins() {
+		if l.Agent == "codex" {
+			os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
+			os.WriteFile(filepath.Join(home, ".codex", "auth.json"), l.Auth, 0o600)
+		}
+	}
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]any{
 			"id_token": fakeJWT(map[string]any{"email": "me@example.com",
@@ -88,6 +100,9 @@ func TestCodexTeamWorkspaceBesidePersonal(t *testing.T) {
 		t.Fatal(err)
 	}
 	finishInBrowser(t, st, "code")
+	// the workspace is added beside the personal plan, which the agent
+	// stays on: chongyun does not move the agent off the account it is on
+	// when another one is signed in to
 	if st = waitDone(t, st.ID); st.State != "done" || st.User != "me@example.com · Team" || st.Using {
 		t.Fatalf("state %+v", st)
 	}
@@ -97,9 +112,11 @@ func TestCodexTeamWorkspaceBesidePersonal(t *testing.T) {
 	}
 	auth := filepath.Join(home, ".codex", "auth.json")
 	var a codexAuth
+	// the agent runs on the personal plan it was signed in to
 	if readJSON(auth, &a); a.Tokens.AccountID != "acct-1" {
-		t.Fatal("the personal sign-in was replaced")
+		t.Fatalf("the agent is on %q", a.Tokens.AccountID)
 	}
+	// and either of the two can be switched to
 	if err := SwitchLogin("codex", "me@example.com · Team"); err != nil {
 		t.Fatal(err)
 	}
@@ -107,6 +124,15 @@ func TestCodexTeamWorkspaceBesidePersonal(t *testing.T) {
 		t.Fatalf("switched to %q", a.Tokens.AccountID)
 	}
 	if users, active = loginUsers(Logins("codex")); len(users) != 2 || active != "me@example.com · Team" {
+		t.Fatalf("after the switch: %v, active %q", users, active)
+	}
+	if err := SwitchLogin("codex", "me@example.com"); err != nil {
+		t.Fatal(err)
+	}
+	if readJSON(auth, &a); a.Tokens.AccountID != "acct-1" {
+		t.Fatalf("switched to %q", a.Tokens.AccountID)
+	}
+	if users, active = loginUsers(Logins("codex")); len(users) != 2 || active != "me@example.com" {
 		t.Fatalf("after the switch: %v, active %q", users, active)
 	}
 }

@@ -80,10 +80,8 @@ func readAllowancesAgain(t *testing.T, agent string) map[string]Allowance {
 // first reading, nor while the window stays full, nor twice for one
 // renewal.
 func TestClaudeAccountToldRenewed(t *testing.T) {
-	home := claudeHome(t)
-	claudeSignIn(t, home, time.Now().Add(time.Hour))
-	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "a@example.com", "accountUuid": "u-a"}})
-	rememberLogins(true)
+	claudeHome(t)
+	claudeAccountSignIn(t, "a@example.com", "max", time.Now().Add(time.Hour))
 	var user string
 	for _, l := range Logins("claude") {
 		if l.Active {

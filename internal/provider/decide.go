@@ -137,7 +137,7 @@ func (p Provider) pluginDecisions() []catalog.Model {
 }
 
 // OpenRouter lists its decision models apart from its chat models (ARNO
-// on Discord): its /models has the chat ones alone, Jev Router among them
+// 报告): its /models has the chat ones alone, Jev Router among them
 // (typesafe/jev-router, a chat model that picks one), and
 // /models?output_modalities=decisions the ones that answer System One's
 // questions at /systemone (liquid/d1, cloudflare/clef, ~typesafe/jev-latest
@@ -210,7 +210,7 @@ func (p Provider) decideListDue() bool {
 	return !ok || !slices.ContainsFunc(live, func(m catalog.Model) bool { return m.Context > 0 || m.ImageInput != nil })
 }
 
-// Cloudflare's own decision models on Workers AI (ARNO on Discord): Clef
+// Cloudflare's own decision models on Workers AI (ARNO 报告): Clef
 // and Clef Flash answer System One's questions as Jev does, but each is
 // run at its own address (…/ai/run/@cf/cloudflare/clef) and takes the
 // request as it is, its model named "clef" or "clef-flash", where Jev is
@@ -336,7 +336,7 @@ func (p Provider) decideModels() []catalog.Model {
 }
 
 // A decision model's window and whether it reads images, as its vendor's
-// docs give them where its list doesn't (ARNO on Discord: decision models
+// docs give them where its list doesn't (ARNO 报告: decision models
 // showed neither on the Gateway list): Jev holds 32k tokens of state and
 // reads text alone (TypeSafe's docs; OpenRouter's and Vercel's lists say
 // 32000 too), Cloudflare's Clef and Clef Flash 65,536 and up to 4 images,
@@ -560,7 +560,7 @@ func Deciders() []Entry {
 // offer: of a provider whose decision models are listed beside its chat
 // models (OpenRouter's, a Bailian plan's, a plugin's, a remote magpie's),
 // with picks saved, those among the picks alone, as its editor shows the
-// rest unpicked (coeo91 on Discord: two OpenRouter models picked, and a
+// rest unpicked (coeo91 报告: two OpenRouter models picked, and a
 // new group's picker listed OpenRouter's twenty-odd decision models after
 // them). With none picked every one is offered, as before. keep, when
 // given, says a decision model a group names already, offered whatever
@@ -814,7 +814,7 @@ func (p Provider) fetchDecide(ctx context.Context) ([]catalog.Model, error) {
 		return p.decideModels(), nil
 	}
 	// the list where the user said its models are, asked as given, query
-	// and all (ARNO on Discord: OpenRouter's decision models are at
+	// and all (ARNO 报告: OpenRouter's decision models are at
 	// …/models?output_modalities=decisions; its /models lists chat models
 	// only, and only Jev's of those were kept): every model in it is one
 	list, all := p.Decide+"/models", false

@@ -42,8 +42,14 @@ func TestSubscriptionAccountSkippedForModelItLacks(t *testing.T) {
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("plus@example.com", "acct-plus")), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
+		// chongyun keeps the account it signed the agent in to in its own
+		// logins.json, marked as the one the agent is on: it never reads
+		// the agent's own file to find out which account that is.
+		{"agent": "codex", "user": "plus@example.com", "active": true, "seen": time.Now(), "auth": auth("plus@example.com", "acct-plus")},
 		{"agent": "codex", "user": "free@example.com", "on": true, "seen": time.Now(), "auth": auth("free@example.com", "acct-free")},
 	}), 0o600)
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
 
 	var tried []string
 	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

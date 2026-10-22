@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // The Usage page's Requests tab ranks one model at each provider it went to
-// (inaction on Discord: "相同模型在不同提供商的速度情况"). The chart's split
+// (inaction 报告: "相同模型在不同提供商的速度情况"). The chart's split
 // has "Model · provider": glm-5.3 at Zhipu and at ZCode are two rows of the
 // ranking, each with its own speed and first token, the fastest first by
 // Speed; a click lists that provider's requests of that model, a click again

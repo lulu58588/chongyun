@@ -211,7 +211,7 @@ func (s *slowFrames) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // Codex counts only events toward its stream idle timeout, not the
-// comments it is kept alive with (fadenoob on Discord: "stream
+// comments it is kept alive with (fadenoob 报告: "stream
 // disconnected before completion: idle timeout waiting for SSE", Codex
 // reconnecting turn after turn). Each held try waited up to its own 4
 // minutes, so a second one held after a first that failed late kept Codex

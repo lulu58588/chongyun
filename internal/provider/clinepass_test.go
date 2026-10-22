@@ -23,7 +23,7 @@ func TestPlanModels(t *testing.T) {
 		t.Fatalf("kept: %+v", got)
 	}
 	// none of the plan's listed: the plan's own, then Cline's free models
-	// as its desktop app lists them (lml on Discord)
+	// as its desktop app lists them (lml 报告)
 	got = p.planModels(nil)
 	if len(got) != n+len(clineFree) || got[0].ID != "cline-pass/glm-5.3" {
 		t.Fatalf("plan's: %+v", got)

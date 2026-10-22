@@ -60,20 +60,10 @@ func copilotLapsedNote(user string, lapsed bool) {
 
 var errUnchanged = errors.New("unchanged")
 
-// copilotLapsedBy says GitHub refused app's sign-in, with nothing standing
-// in for it: its token refused, and an editor's token's stand-in, the
-// Copilot CLI's sign-in of the same account, refused too or not there.
+// copilotLapsedBy says GitHub refused app's sign-in: its token refused,
+// and nothing stands in for it.
 func copilotLapsedBy(app copilotApp) bool {
-	if !copilotRefusedToken(app.Token) {
-		return false
-	}
-	if app.cli || app.src == "" {
-		return true
-	}
-	if cli, ok := copilotStandIn(app); ok && !copilotRefusedToken(cli.Token) {
-		return false
-	}
-	return true
+	return copilotRefusedToken(app.Token)
 }
 
 // copilotLapse marks the account of app signed out, with the token GitHub
@@ -84,11 +74,6 @@ func copilotLapse(app copilotApp) {
 		return
 	}
 	marks := []string{copilotTokenMark(app.Token)}
-	if app.src != "" && !app.cli {
-		if cli, ok := copilotStandIn(app); ok {
-			marks = append(marks, copilotTokenMark(cli.Token))
-		}
-	}
 	err := editSideLogin("copilot", app.User, func(ls []savedLogin, i int) ([]savedLogin, error) {
 		was := strings.Split(ls[i].Refused, ",")
 		if ls[i].Lapsed == copilotLapsedText && !slices.ContainsFunc(marks, func(m string) bool { return !slices.Contains(was, m) }) {

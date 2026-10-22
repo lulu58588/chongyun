@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// lc on Discord (安装skills的时候，没有跳过已经安装的): installing a set of
+// lc 报告 (安装skills的时候，没有跳过已经安装的): installing a set of
 // skills from a repository stopped at the first one the library's folder
 // already had, and none of the set was installed. Now the set installs, and
 // the toast names the ones the library had already and the ones skipped,

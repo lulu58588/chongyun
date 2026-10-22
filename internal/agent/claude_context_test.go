@@ -55,7 +55,7 @@ func TestClaudeContextWindow(t *testing.T) {
 	}
 	// a 1M model is marked [1m], which Claude Code takes for 1M whatever
 	// the window says; beside a tier that isn't, the window told is the
-	// main's own, and the tier compacts by its own (多喝热水 on Discord:
+	// main's own, and the tier compacts by its own (多喝热水 报告:
 	// the tier's read as the main's), under Full window and without it
 	set("model", "v/big[1m]")
 	if window() != "" {

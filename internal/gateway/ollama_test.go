@@ -37,7 +37,7 @@ func ollamaPlan(t *testing.T, chat string) {
 }
 
 // A client that takes a custom endpoint only as an Ollama server (Visual
-// Studio's Copilot BYOK, wani on Discord; VS Code's Copilot Ollama
+// Studio's Copilot BYOK, wani 报告; VS Code's Copilot Ollama
 // provider) asks /api/version, lists /api/tags and reads each model's
 // capabilities and window from /api/show, then chats on
 // /v1/chat/completions. The list is magpie's catalog by its ids, and a

@@ -15,11 +15,8 @@ import (
 // meantime is theirs, and magpie doesn't undo it.
 func TestCodexSwitchedBackWhenItHasRoom(t *testing.T) {
 	home := signIn(t) // me@example.com, acct-1
-	rememberLogins(true)
-	codexSignIn(t, home, "spare@example.com", "r-spare")
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	codexSignIn(t, "spare@example.com", "r-spare")
+	codexSignIn(t, "work@example.com", "r-work")
 	if err := SetLoginOn("codex", "spare@example.com", true); err != nil {
 		t.Fatal(err)
 	}

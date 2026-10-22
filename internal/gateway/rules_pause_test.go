@@ -14,7 +14,7 @@ var peak = &provider.TimeWindow{From: "09:00", To: "18:00", Days: []string{"mon"
 
 // A rule that sends a turn to another member in a vendor's peak hours
 // still leaves the vendor's model behind it: when the member sent to fails,
-// the turn falls back onto it (what John on Discord asked to stop). A pause
+// the turn falls back onto it (what John 报告 asked to stop). A pause
 // rule keeps it out of the group in those hours: not first, not a
 // fallback, not where the conversation was, and back once they end.
 func TestPauseKeepsAMemberOutInItsHours(t *testing.T) {

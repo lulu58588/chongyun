@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// A routing group with max ticked offers max in omp (whqtian on Discord:
+// A routing group with max ticked offers max in omp (whqtian 报告:
 // only xhigh was listed though max was picked, while Pi had it). omp has
 // taken max in models.yml since 16.4.0; only an older one, or one whose
 // version isn't known, has max stand in as xhigh. A group that names both

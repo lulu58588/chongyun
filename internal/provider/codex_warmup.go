@@ -137,9 +137,6 @@ func (c codexWarmer) owned() map[string]string {
 // the times of day dayAts ("06:00", none for none), or the account's own
 // (ownAt) — and keeps what it saw.
 func (c codexWarmer) warmNow(ctx context.Context, which string, dayAts []string) []CodexWarm {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
 	st := readWarmState(c.path)
 	now := c.now()
 	own := c.owned()
@@ -370,9 +367,6 @@ func warmCodexLogin(ctx context.Context, user string) error {
 	}
 	l := ls[i]
 	token := func(ctx context.Context) (string, string, error) { return savedLoginToken(ctx, "codex", l.User) }
-	if l.Active {
-		token = func(ctx context.Context) (string, string, error) { return codexToken(ctx, codexHome()) }
-	}
 	model, effort, err := warmModel(l.User)
 	if err != nil {
 		return err

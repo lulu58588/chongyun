@@ -11,7 +11,7 @@ import (
 
 // A model of DeepSeek's own picked in dsh's /model, which dsh saves in its
 // settings over the patch list, leaves dsh connected: magpie's route is
-// still in its list, beside DeepSeek's (Fate on Discord: DSH went back to
+// still in its list, beside DeepSeek's (Fate 报告: DSH went back to
 // Not connected). Disconnect then takes the route, magpie's start and its
 // key out, and the model picked in dsh stays.
 func TestDshOwnPickStaysConnected(t *testing.T) {

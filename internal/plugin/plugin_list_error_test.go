@@ -12,7 +12,7 @@ import (
 
 // A plugin that never got its vendor's list says why, for the provider
 // and each account: the editor shows it over the plugin's short defaults
-// (gnayiab on X: Cursor in WSL listing Auto alone, with nothing saying
+// (gnayiab 报告: Cursor in WSL listing Auto alone, with nothing saying
 // its list had failed). Its list come in, nothing is said.
 func TestFallenBackListSaysWhy(t *testing.T) {
 	for _, throws := range []string{"", "1", "own"} {

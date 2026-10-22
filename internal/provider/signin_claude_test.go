@@ -93,10 +93,8 @@ echo "Login successful."
 	oldExe, oldOpener := claudeExecutable, claudeURLOpener
 	claudeExecutable = func() string { return exe }
 	claudeURLOpener = func() string { return browser }
-	forgetClaudeStatus()
 	t.Cleanup(func() {
 		claudeExecutable, claudeURLOpener = oldExe, oldOpener
-		forgetClaudeStatus()
 	})
 	endClaudeSignIns(t)
 	return exe
@@ -175,9 +173,18 @@ func TestClaudeSignInByPaste(t *testing.T) {
 	if st = waitDone(t, st.ID); st.State != "done" || st.User != "paste@example.com" || st.Plan != "pro" || !st.Using {
 		t.Fatalf("state %+v", st)
 	}
-	c, _, ok := claudeCredential()
-	if !ok || c.OAuth.RefreshToken != "sk-ant-ort01-paste" {
-		t.Fatalf("Claude Code's credentials %+v", c.OAuth)
+	ls := readLogins()
+	found := false
+	for _, l := range ls {
+		if l.Agent == "claude" && strings.EqualFold(l.User, "paste@example.com") {
+			if c, ok := parseClaudeCredentials(l.Auth); !ok || c.OAuth.RefreshToken != "sk-ant-ort01-paste" {
+				t.Fatalf("Claude Code's credentials %+v", c.OAuth)
+			}
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("the account was not kept: %+v", ls)
 	}
 	// the sign-in's own directory is gone
 	if es, _ := os.ReadDir(claudeDirsRoot()); len(es) != 0 {
@@ -216,8 +223,7 @@ func TestClaudeSignInByPastedAddress(t *testing.T) {
 func TestClaudeSavedAccountDir(t *testing.T) {
 	home := claudeHome(t)
 	noAnthropic(t)
-	cred := claudeSignIn(t, home, time.Now().Add(time.Hour))
-	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "old@example.com"}})
+	cred := claudeCodeSignIn(t, home, time.Now().Add(time.Hour))
 	fakeClaudeLogin(t, fakeClaudeAccount{email: "side@example.com", name: "Side", plan: "max", refresh: "sk-ant-ort01-side"}, "", true)
 
 	st, err := StartSignIn("claude")
@@ -225,9 +231,15 @@ func TestClaudeSavedAccountDir(t *testing.T) {
 		t.Fatal(err)
 	}
 	finishInBrowser(t, st, "the-code")
-	if st = waitDone(t, st.ID); st.State != "done" || st.Using {
+	// the account chongyun signed in to is the one the agent is on
+	if st = waitDone(t, st.ID); st.State != "done" || !st.Using {
 		t.Fatalf("state %+v", st)
 	}
+	// the agent is signed in to another account: the one before it is on
+	// beside it, and runs Claude Code in a config directory of its own
+	cred = claudeCodeSignIn(t, home, time.Now().Add(time.Hour))
+	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "old@example.com"}})
+	claudeRemember(t, home)
 	if err := SetLoginOn("claude", "side@example.com", true); err != nil {
 		t.Fatal(err)
 	}

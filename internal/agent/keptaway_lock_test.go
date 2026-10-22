@@ -14,7 +14,7 @@ import (
 )
 
 // magpie's own files written while a sync's filter is on, with ~/.config a
-// link into another folder (a dotfiles repo; ylorn on Discord): the window's
+// link into another folder (a dotfiles repo; ylorn 报告): the window's
 // size saved after a resize (settings.Save, under the settings' lock) and
 // wsl.json (under wsl's) are written, the filter leaves them as they are,
 // and nothing waits on the lock its own writer holds. The GUI hung for

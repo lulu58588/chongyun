@@ -13,7 +13,7 @@ import (
 // throttling; Cerebras's per-minute limit) is not the conversation outgrowing
 // the model: said as "prompt is too long", Claude Code compacted after each
 // one, and with the limit still on, compacted again within a turn or two until
-// it stopped as "Autocompact is thrashing" (StringKe on Discord).
+// it stopped as "Autocompact is thrashing" (StringKe 报告).
 func TestRateLimitNotContextOverflow(t *testing.T) {
 	for _, msg := range []string{
 		"Bedrock: Too many tokens, please wait before trying again.",

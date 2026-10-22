@@ -59,7 +59,7 @@ func codexSpawnRequest(t *testing.T, model string) string {
 // Codex's spawn_agent names only the first five models of its catalog
 // to the lead (codex-rs MAX_SPAWN_AGENT_MODEL_OVERRIDES), though it takes
 // any model of it: with 40 of magpie's in the catalog, the lead saw none
-// of them (Gearclickist on Discord: "Codex subagents on any model" on,
+// of them (Gearclickist 报告: "Codex subagents on any model" on,
 // and only a few models could be picked). The tool now names every model
 // a subagent of that lead can work on, at CodexPath and at /v1; for a
 // lead the ChatGPT backend answers in multi-agent V2, whose subagents'
@@ -181,7 +181,7 @@ func searchedSpawnDescription(t *testing.T, body []byte) string {
 // tools: Codex 0.162 defers its multi-agent V1 tools behind tool_search,
 // and the lead gets spawn_agent, with Codex's five models, in the
 // tool_search_output Codex puts in the conversation. v0.1.1214 widened
-// only the tools, so the lead still saw five (Gearclickist on Discord,
+// only the tools, so the lead still saw five (Gearclickist 报告,
 // after v0.1.1214). testdata/workdir/codex-0.162.1-tool-search.json is
 // real Codex 0.162.1's second request of such a turn, on fake/m1 of a
 // catalog of 40, captured in a sandbox CODEX_HOME.

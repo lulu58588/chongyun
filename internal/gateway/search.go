@@ -81,7 +81,7 @@ type CallFor struct {
 	// was the next one magpie tried in its place, and the Routing view
 	// says so. Picked is that the first was the one picked in Settings.
 	// A fallback that said nothing read as magpie ignoring the pick
-	// (Gearclickist on Discord: Grok picked, Codex's model searched).
+	// (Gearclickist 报告: Grok picked, Codex's model searched).
 	// NotSearched is that the first answered without searching at all
 	// (errNotSearched), apart from searching and naming no page.
 	Instead      string `json:"instead,omitempty"`
@@ -112,7 +112,7 @@ func searchesItself(p provider.Provider, proto provider.Protocol) bool {
 		// and mai-code-1.1-flash each answered a request offering it with
 		// web_search_call items and cited pages (2026-10-17, a real
 		// account). Translated for magpie's search instead, Codex's every
-		// turn on Copilot lost the relay (echo_ts on Discord).
+		// turn on Copilot lost the relay (echo_ts 报告).
 		return (p.Account.Agent == "codex" || p.Account.Agent == "copilot" || p.ID == "grok" || p.PluginProvider() == "grok") && proto == provider.Responses ||
 			p.IsPlugin() && saidTo
 	}
@@ -229,7 +229,7 @@ func searchesAlone(p provider.Provider, model string) bool {
 // that marks some of its models as ones that search (pluginSearches): one
 // magpie may search with, with those models only (searchableModel).
 // Command Code's searched for themselves but were left out of the
-// searcher picker and magpie's own pick (01huadalang on Discord), and so
+// searcher picker and magpie's own pick (01huadalang 报告), and so
 // was every plugin's, Trae's search model among them (01huadalang, 10-20).
 func partSearcher(p provider.Provider) bool {
 	if p.IsPlugin() {
@@ -484,7 +484,7 @@ func RelaysSaidToSearch() []provider.Provider {
 // holds, when it is given. Only a model the user enabled is picked (what
 // agents are offered, Exposed), never one of the rest of the vendor's
 // list: OpenRouter turned away an unpicked anthropic/claude-haiku-5.5 for
-// the user's region (JonahFu on X).
+// the user's region (JonahFu 报告).
 func smallModel(p provider.Provider, keep func(catalog.Model) bool) string {
 	id, _ := smallReady(p, keep, provider.Chat)
 	return id
@@ -727,7 +727,7 @@ const searchersInTurn = 3
 // way to none: the search APIs, when set up, search in its place
 // (webSearch), and Settings says it didn't search (SearcherFailed). Handed
 // on, a search for Grok, picked, went to Codex's gpt-6-astra, a pricier
-// model the user hadn't picked, on every search (Gearclickist on Discord).
+// model the user hadn't picked, on every search (Gearclickist 报告).
 func (s *Server) modelSearch(ctx context.Context, query string) (string, []Hit, error) {
 	p, model, ok := searcher()
 	if !ok {
@@ -900,7 +900,7 @@ var errFoundNothing = errors.New("found nothing")
 
 // errNotSearched is a searcher's reply with no search in it at all: the
 // vendor ran no search, the tool dropped or left unused, and the model
-// answered from what it knew (Gearclickist on Discord: grok-4.7 answered
+// answered from what it knew (Gearclickist 报告: grok-4.7 answered
 // in 1.4k tokens, the size of a request with no search tool, where one
 // that searched took 6k-66k). It is found nothing too.
 var errNotSearched = fmt.Errorf("answered without searching the web: %w", errFoundNothing)

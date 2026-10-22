@@ -187,7 +187,7 @@ func Installs() []Install {
 
 // npmNeedsAdmin marks the npm commands of out with prefix, npm's global
 // folder, when it is one this user can't write in: Node.js's own under
-// Program Files, where npm's prefix was left there (新v学员 on Discord),
+// Program Files, where npm's prefix was left there (新v学员 报告),
 // whose npm install -g fails with EPERM outside a terminal opened as
 // administrator.
 func npmNeedsAdmin(out []Install, prefix string) {
@@ -265,7 +265,7 @@ var cliShared = map[string]bool{"codex": true, "claude": true, "gemini": true, "
 // folder or config is, its command-line program isn't — not on PATH nor
 // where users' tools go (proc.FindTool) nor where its own installer puts
 // it — and nothing else that reads the folder is either (cliHeld): no
-// desktop app of its (DeepSeek Harness Desktop, star on Discord), no
+// desktop app of its (DeepSeek Harness Desktop, star 报告), no
 // editor extension, no IDE. That is an uninstall that left ~/.dsh (#843),
 // ~/.claude (#2177) or ~/.hermes/config.yaml (#2173) behind. The Agents
 // page shows it as gone, with none of its settings, and Install another

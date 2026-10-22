@@ -171,7 +171,7 @@ func perModelValue(typ reflect.Type, table string) reflect.Value {
 	return reflect.Zero(typ)
 }
 
-// How often a refused request is asked again (DD on Discord) is set by the
+// How often a refused request is asked again (DD 报告) is set by the
 // Settings page, null for every one left, and kept by a save from a page
 // that doesn't send it.
 func TestSettingsRefusalRetries(t *testing.T) {
@@ -201,7 +201,7 @@ func TestSettingsRefusalRetries(t *testing.T) {
 	}
 }
 
-// How long an image is given to be drawn (neighbads on X) is set by the
+// How long an image is given to be drawn (neighbads 报告) is set by the
 // Settings page, 0 for the default 5 minutes, kept by a save from a page
 // that doesn't send it, and refused past 60 with the saved value kept.
 func TestSettingsImageTimeout(t *testing.T) {

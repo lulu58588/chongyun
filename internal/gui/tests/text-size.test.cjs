@@ -140,7 +140,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         assert.equal((await page.locator("#textSizeRow .name").textContent()).trim(), name);
         assert.deepEqual((await segs.allTextContents()).map((s) => s.trim()), ["100%", "110%", "125%", "150%"]);
         assert.equal(await segs.nth(0).evaluate((b) => b.classList.contains("on")), true, "100% starts picked");
-        // the name alone (1ooogle on X), the keys in the choices' tooltip
+        // the name alone (1ooogle 报告), the keys in the choices' tooltip
         assert.equal(await page.locator("#textSizeRow .sub").count(), 0);
         const tip = await page.locator("#textSizeSegs").getAttribute("title");
         assert(tip.includes(mod === "Meta" ? "⌘0" : "Ctrl+0"), tip);

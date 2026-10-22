@@ -12,7 +12,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// Sorghum on Discord: each of magpie's models in Kimi Code has the name
+// Sorghum 报告: each of magpie's models in Kimi Code has the name
 // magpie shows for it (display_name) and, where magpie knows it, its most
 // output (max_output_size, the new Kimi Code's max_completion_tokens); a
 // value the user set in the table themselves stays, while one magpie wrote

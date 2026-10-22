@@ -21,7 +21,7 @@ const claudeCodeUsage = "usage: chongyun claude-code                  which Clau
 
 // claudeCodeCmd: magpie claude-code [install [--yes]|remove]. A Claude
 // subscription is answered by Claude Code, and signed in to through it; a
-// server or a container has none (Jorben on Discord), so magpie downloads
+// server or a container has none (Jorben 报告), so magpie downloads
 // Anthropic's build when asked, as Anthropic's installer does.
 func claudeCodeCmd(args []string) error {
 	if len(args) == 0 {

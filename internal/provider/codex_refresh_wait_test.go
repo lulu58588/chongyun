@@ -13,13 +13,11 @@ import (
 // A Codex refresh OpenAI is answering is waited for though whoever asked
 // gave up: the answer holds the rotated refresh token, and dropping it
 // leaves the saved account with the spent one, refused on the next
-// refresh (willz on Discord: a saved account read as signed out while its
+// refresh (willz 报告: a saved account read as signed out while its
 // requests still went through).
 func TestCodexRefreshOutlivesItsCaller(t *testing.T) {
-	home := signIn(t)
-	rememberLogins(true) // me@ saved…
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true) // …and codex is on work@ now
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
 
 	arrived, release := make(chan struct{}), make(chan struct{})
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

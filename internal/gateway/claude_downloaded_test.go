@@ -15,7 +15,7 @@ import (
 
 // A machine with no Claude Code of its own (a server, a container) answers
 // a Claude subscription's request with the one `chongyun claude-code install`
-// downloaded into magpie's cache (Jorben on Discord): before, the request
+// downloaded into magpie's cache (Jorben 报告): before, the request
 // failed "Claude Code is not installed" with that build right there.
 func TestClaudeSubscriptionRunsTheDownloadedClaudeCode(t *testing.T) {
 	if runtime.GOOS == "windows" {

@@ -200,7 +200,7 @@
 
   // morph makes old what neu is, keeping old's nodes wherever they are of
   // the same kind: a card drawn again for the next request is patched in
-  // place, not put in afresh (Zhenzhen on Discord: each live request
+  // place, not put in afresh (Zhenzhen 报告: each live request
   // flashed the whole card, its cells coming in again). Handlers set as
   // properties come along; one added with addEventListener wouldn't, so
   // nothing morphed has one.
@@ -230,7 +230,7 @@
   // a card that folds (Routing's, opts.foldable) keeps the reader's
   // choice: folded, it is its head alone, with how full the window is
   // beside the title, so the request list under it has the room
-  // (0xBCD18E on X: it took most of the height, three rows were left)
+  // (0xBCD18E 报告: it took most of the height, three rows were left)
   let ctxShut = false;
   try { ctxShut = localStorage.getItem("magpie.ctxShut") === "1"; } catch {}
   // opts.open: this request was opened to see its context window (the
@@ -293,7 +293,7 @@
     };
     grid.addEventListener("pointerover", (e) => { if (cur && e.target.parentElement === grid) showTip(e.target); });
     grid.addEventListener("pointerleave", () => { tip.hidden = true; delete grid.dataset.f; });
-    // a cell clicked opens the text of what it shows (masaka on Discord)
+    // a cell clicked opens the text of what it shows (masaka 报告)
     grid.addEventListener("click", (e) => {
       if (!cur || e.target.parentElement !== grid) return;
       const c = cur.cells[[...grid.children].indexOf(e.target)];
@@ -387,7 +387,7 @@
       }
       // the state's words are all there, one shown: the pill is as wide as
       // the widest in any language, so the model beside it doesn't move as
-      // a request goes from Live to Counted (dumplings on Discord: each
+      // a request goes from Live to Counted (dumplings 报告: each
       // request made the card jitter)
       const state = live ? "live" : p.counted ? "counted" : "est";
       const st = el("span", "ctx-state " + state);
@@ -458,7 +458,7 @@
         // once shown, the cache keeps its place, so nothing under it moves
         // up and back down. A request under way has read no cache yet:
         // the last request's stays, dimmed and named as the last one's,
-        // until this one's answer says (dumplings on Discord: each new
+        // until this one's answer says (dumplings 报告: each new
         // request flashed it to "—" and an empty bar, the dash against
         // 命中). Nothing to show is said in words, with no bar
         const shown = known || (live ? lastCache : null);
@@ -576,7 +576,7 @@
     };
   }
 
-  // ---------- the text of a part (masaka on Discord) ----------
+  // ---------- the text of a part (masaka 报告) ----------
 
   // A part of the card clicked opens what the request sent there, read
   // from the request's body: an item alone (a tool, a file, a turn), or
@@ -1057,7 +1057,7 @@
     // the leanest band: the windows within 3% of the cheapest on the curve,
     // the share tune counts as costing the same. Timed, the advice keeps a
     // window that waits no longer than now, so a window the reader picked
-    // past the band (yapechan on Discord: a larger one) comes back as the
+    // past the band (yapechan 报告: a larger one) comes back as the
     // advice and isn't the leanest; it says so, names the band, and offers
     // the band's largest window, the one of them that compacts least
     const curve = (a.compact && a.compact.curve) || [];

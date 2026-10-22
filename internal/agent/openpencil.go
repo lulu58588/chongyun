@@ -1,7 +1,7 @@
 package agent
 
 // OpenPencil (ZSeven-W/openpencil, the openpencil-desktop app; @JC_be_better
-// on X) is a design canvas whose chat runs models through "builtin agents"
+// 报告) is a design canvas whose chat runs models through "builtin agents"
 // of the user's own: an Anthropic or OpenAI-compatible endpoint, a key and
 // a list of models, each listed in its chat's model picker. It keeps them
 // in one settings.json in the platform's config folder, dirs::config_dir()

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// PAMI on Discord: Anthropic bills a 1-hour cache write at 2× input and a
+// PAMI 报告: Anthropic bills a 1-hour cache write at 2× input and a
 // 5-minute one at 1.25×, and its usage says which were which
 // (cache_creation's ephemeral_5m/1h_input_tokens). Both the API's usage and
 // the Claude subscription's carry the split, which goes back out to an

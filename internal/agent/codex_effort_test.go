@@ -101,7 +101,7 @@ func TestCodexCustomProviderModelHasEfforts(t *testing.T) {
 	}
 }
 
-// Default on Codex's effort control stays Default (lgtm on Discord: picked
+// Default on Codex's effort control stays Default (lgtm 报告: picked
 // on Codex · WSL Ubuntu, it turned into medium): an effort left unset is
 // not written in when a model is picked or the catalog synced, and the
 // control reads it as Default, with the level Codex then takes beside it —

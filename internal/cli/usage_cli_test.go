@@ -103,7 +103,7 @@ func TestUsageProviderKeys(t *testing.T) {
 
 // magpie usage shows, beside the gateway's calls, those the agents made on
 // their own, read from their session files, as the window's Usage page
-// does (Kumo31 on Discord: Codex used outside magpie wasn't in it).
+// does (Kumo31 报告: Codex used outside magpie wasn't in it).
 func TestUsageShowsCallsNotThroughMagpie(t *testing.T) {
 	groupsHome(t)
 	now := holdUsageClock(t, time.Date(2026, 9, 30, 12, 0, 0, 0, time.Local))

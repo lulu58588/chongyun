@@ -51,7 +51,7 @@ func readSearchReply(t *testing.T, w *httptest.ResponseRecorder) searchReply {
 }
 
 // Codex's web.run on a ChatGPT account's model in magpie posted to
-// /v1/alpha/search and got 404, which ended the turn (anton on Discord).
+// /v1/alpha/search and got 404, which ended the turn (anton 报告).
 // It goes to the ChatGPT backend's search as Codex sends it there itself:
 // on the account's sign-in, the model as the backend knows it, the rest
 // of the request as it came; an account out of its allowance passes it

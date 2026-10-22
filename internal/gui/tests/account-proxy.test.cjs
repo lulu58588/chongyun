@@ -6,7 +6,7 @@
 // that doesn't follow Codex's, and Custom with no address is refused
 // before anything is posted. A pick moves nothing and the page stays where
 // it is. A subscription with one account has no such lines. A provider's
-// keys have the same lines, a key by its fingerprint (Beyfish_Wang on X:
+// keys have the same lines, a key by its fingerprint (Beyfish_Wang 报告:
 // 不同 key 走不同的代理), and one with one key none. In English and
 // Chinese.
 const assert = require("node:assert/strict");

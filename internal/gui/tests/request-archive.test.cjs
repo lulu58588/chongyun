@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The request archive (Jorben on Discord): its switch sits at the top right
+// The request archive (Jorben 报告): its switch sits at the top right
 // of the Usage page's request list, beside the requests' sum, off unless
 // turned on; with sync not set up with an s3:// bucket it can't be turned on
 // and says why, with one it posts settings/archive and its tooltip says the

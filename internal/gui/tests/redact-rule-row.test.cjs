@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Settings' Masking rules row (TechVerser on X: 这个地方错位了吗？): its words
+// Settings' Masking rules row (TechVerser 报告: 这个地方错位了吗？): its words
 // are shown in full, and its fields — a name, prefix or regex, what to match,
 // Add — sit on one line under them, from the row's left edge to its right,
 // none on top of another, the rules already added listed after it as before.

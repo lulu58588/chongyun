@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"errors"
+	"github.com/lulu58588/chongyun/internal/appdir"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -417,7 +418,7 @@ func TestClaudeUsageIdle(t *testing.T) {
 // to since then; its other files don't count.
 func TestClaudeUsedSince(t *testing.T) {
 	claudeHome(t)
-	project := filepath.Join(filepath.Dir(claudeCredentialsPath()), "projects", "-Users-x-proj")
+	project := filepath.Join(appdir.ClaudeDir(), "projects", "-Users-x-proj")
 	if err := os.MkdirAll(project, 0o700); err != nil {
 		t.Fatal(err)
 	}

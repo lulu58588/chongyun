@@ -436,7 +436,7 @@ func TestAlmaLook(t *testing.T) {
 // ~/.local/share/alma on Linux (its README; $XDG_DATA_HOME/alma, or
 // ALMA_DATA_DIR) and answers on Alma's port: magpie finds it there, and its
 // magpie provider gets Alma's key on the next Sync, so its requests read as
-// Alma's rather than the AI SDK's (Lutra.x on Discord). A Mac's Alma is
+// Alma's rather than the AI SDK's (Lutra.x 报告). A Mac's Alma is
 // looked for where it was.
 func TestAlmaServerKeyed(t *testing.T) {
 	home := syncHome(t)
@@ -496,7 +496,7 @@ func TestAlmaServerKeyed(t *testing.T) {
 // on the next Sync, with nothing else sent, and only once.
 // Wiring Alma makes the model magpie draws with Alma's image generation
 // model, listed on magpie's provider as one that makes images, when Alma
-// has none picked (Sorghum on Discord); one the user picked is theirs.
+// has none picked (Sorghum 报告); one the user picked is theirs.
 func TestAlmaImageGen(t *testing.T) {
 	syncHome(t)
 	if err := provider.Save(provider.Provider{ID: "img", Name: "Img", Key: "k", Chat: "http://127.0.0.1:1/v1", Models: []string{"gpt-image-1"}}); err != nil {

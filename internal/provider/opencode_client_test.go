@@ -22,7 +22,7 @@ func openCodeDecode(t *testing.T, id string, descending bool) (ms, counter uint6
 }
 
 // Zen's free tier answers 403 FreeTierError ("can only be used from within
-// OpenCode") to a session id OpenCode couldn't have made (c9cu on Discord:
+// OpenCode") to a session id OpenCode couldn't have made (c9cu 报告:
 // muse-spark-1.3-contributor-free from Pi worked one day and not the
 // next). Checked against opencode.ai with the same request:
 // ses_e9283da055b15JwOAra76bwUx4, a sha256 cut to the shape that magpie

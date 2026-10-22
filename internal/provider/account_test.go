@@ -17,7 +17,6 @@ import (
 	"time"
 
 	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // fakeJWT is a token whose payload is the given claims; nobody checks the
@@ -47,21 +46,15 @@ func signIn(t *testing.T) string {
 	t.Setenv("USERPROFILE", home) // Windows: os.UserHomeDir reads this, not HOME
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
-	exp := float64(time.Now().Add(time.Hour).Unix())
-	writeFile(t, filepath.Join(home, ".codex", "auth.json"), map[string]any{
-		"auth_mode": "chatgpt",
-		"tokens": map[string]any{
-			"id_token":      fakeJWT(map[string]any{"email": "me@example.com", "https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": "pro", "chatgpt_account_id": "acct-1"}}),
-			"access_token":  fakeJWT(map[string]any{"exp": exp}),
-			"refresh_token": "r", "account_id": "acct-1",
-		},
-	})
+	// the accounts are chongyun's own: logins.json is where it keeps them
+	codexOwnLogin(t, "me@example.com", "pro", codexAuthBlob("me@example.com", "pro", "acct-1", time.Now().Add(time.Hour)))
+	// the Copilot account the editors are signed in to: the one served
+	// first, as it was when chongyun read the editors' own sign-in
+	ownFirstLogin(t, savedLogin{Agent: "copilot", User: "octocat", Plan: "Individual",
+		Auth: []byte(`{"oauth_token":"gho_x"}`)})
 	// Codex lists its models in its own cache; magpie reads that, nothing else.
 	writeFile(t, filepath.Join(home, ".codex", "models_cache.json"), map[string]any{
 		"models": []any{map[string]any{"slug": "gpt-5.5", "display_name": "GPT-5.5", "visibility": "list", "priority": 1}},
-	})
-	writeFile(t, filepath.Join(home, ".config", "github-copilot", "apps.json"), map[string]any{
-		"github.com:Iv1.x": map[string]any{"user": "octocat", "oauth_token": "gho_x"},
 	})
 	return home
 }
@@ -76,18 +69,6 @@ func isolate(t testing.TB) {
 	claudeExecutable = func() string { return "" }
 	// the machine's own devin, if it has one, is no test's
 	DevinExecutable = func() string { return "" }
-	forgetClaudeCredential()
-	forgetClaudeStatus()
-	devinStatus.forget()
-	// nor Codex's keychain item (#2367): a test's has nothing in it,
-	// whatever the system
-	oldCodexKeychain, oldCodexHere := codexKeychain, codexKeychainHere
-	codexKeychain = &fakeKeychain{}
-	resetCodexKeychain()
-	// a test's keychain answers at once: however loaded the machine, a
-	// read isn't taken for one waiting on a prompt
-	oldHold := keychainHold
-	keychainHold = time.Minute
 	// nor an account's allowance another test read, which LoginUsage and
 	// the Usage page share
 	loginUsageCache.Lock()
@@ -104,12 +85,6 @@ func isolate(t testing.TB) {
 	t.Cleanup(func() {
 		claudeKeychain, claudeBase, claudeExecutable = oldKeychain, oldBase, oldExe
 		DevinExecutable = oldDevin
-		codexKeychain, codexKeychainHere = oldCodexKeychain, oldCodexHere
-		keychainHold = oldHold
-		resetCodexKeychain()
-		forgetClaudeCredential()
-		forgetClaudeStatus()
-		devinStatus.forget()
 	})
 }
 
@@ -237,31 +212,17 @@ func TestAccountsAreProviders(t *testing.T) {
 
 	// signed out: gone, and a stale picks entry is not a provider
 	Save(Provider{ID: "copilot", Models: []string{"gpt-5.5"}})
-	os.Remove(filepath.Join(os.Getenv("XDG_CONFIG_HOME"), "github-copilot", "apps.json"))
+	if err := ForgetLogin("copilot", "octocat"); err != nil {
+		t.Fatal(err)
+	}
 	if _, ok := find(All(), "copilot"); ok {
-		t.Fatal("copilot still listed after sign-out")
+		t.Fatal("copilot still listed after the account was forgotten")
 	}
 
 	// no Claude credential in this home: no claude provider
 	if _, ok := find(All(), "claude"); ok {
 		t.Fatal("claude listed without credentials")
 	}
-}
-
-// claudeSignIn writes a Claude Code OAuth login into a temp home.
-func claudeSignIn(t *testing.T, home string, expiry time.Time) string {
-	t.Helper()
-	path := filepath.Join(home, ".claude", ".credentials.json")
-	writeFile(t, path, map[string]any{
-		"claudeAiOauth": map[string]any{
-			"accessToken": "sk-ant-oat01-old", "refreshToken": "sk-ant-ort01-old",
-			"expiresAt": expiry.UnixMilli(), "subscriptionType": "max",
-			"scopes": []string{"user:inference", "user:profile"},
-		},
-		// what magpie must not clobber when it writes a refreshed token back
-		"mcpOAuth": map[string]any{"plugin:slack:slack|x": map[string]any{"serverName": "Slack"}},
-	})
-	return path
 }
 
 // claudeHome sets up a temp home with the usual env; the caller adds credentials.
@@ -274,13 +235,12 @@ func claudeHome(t *testing.T) string {
 	t.Setenv("USERPROFILE", home)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
-	forgetClaudeCredential()
 	return home
 }
 
 func TestClaudeAccountIsProvider(t *testing.T) {
-	home := claudeHome(t)
-	creds := claudeSignIn(t, home, time.Now().Add(time.Hour))
+	claudeHome(t)
+	claudeAccountSignIn(t, "max@example.com", "max", time.Now().Add(time.Hour))
 
 	// Claude's models are the catalog's: magpie asks Anthropic nothing with
 	// the account's sign-in, not even its model list
@@ -301,7 +261,7 @@ func TestClaudeAccountIsProvider(t *testing.T) {
 	t.Cleanup(catalog.Reset)
 
 	p, ok := find(All(), "claude")
-	if !ok || p.Account == nil || p.Account.User != "Claude Max" || p.Account.Plan != "max" || !p.Ready() {
+	if !ok || p.Account == nil || p.Account.User != "max@example.com" || p.Account.Plan != "max" || !p.Ready() {
 		t.Fatalf("claude: %+v %v", p, ok)
 	}
 	if p.Anthropic != claudeBase || p.Chat != "" || p.Responses != "" || p.Host() == "" {
@@ -353,11 +313,12 @@ func TestClaudeAccountIsProvider(t *testing.T) {
 		t.Fatalf("prepare: %s", p.Prepare([]byte(body)))
 	}
 
-	// signing out of Claude Code removes the provider
-	os.Remove(creds)
-	forgetClaudeCredential()
+	// the account forgotten, the provider goes with it
+	if err := ForgetLogin("claude", "max@example.com"); err != nil {
+		t.Fatal(err)
+	}
 	if _, ok := find(All(), "claude"); ok {
-		t.Fatal("claude still listed after sign-out")
+		t.Fatal("claude still listed after the account was forgotten")
 	}
 }
 
@@ -528,29 +489,6 @@ func TestCopilotModelsWithoutEndpointsOnChat(t *testing.T) {
 	}
 }
 
-// Logging out of Claude Code can leave its credentials behind; what the CLI
-// says wins, so a signed-out account is not a provider.
-func TestClaudeSignedOut(t *testing.T) {
-	shellFakes(t)
-	home := claudeHome(t)
-	claudeSignIn(t, home, time.Now().Add(time.Hour))
-	status := `{"loggedIn": true, "email": "me@example.com", "subscriptionType": "max"}`
-	exe := filepath.Join(home, "claude")
-	fake := func() {
-		testenv.Program(t, exe, "#!/bin/sh\ncat <<'X'\n"+status+"\nX\n")
-		forgetClaudeStatus()
-	}
-	claudeExecutable = func() string { return exe }
-	fake()
-	if p, ok := find(All(), "claude"); !ok || p.Account.User != "me@example.com" {
-		t.Fatalf("signed in: %+v %v", p, ok)
-	}
-	status = `{"loggedIn": false, "authMethod": "none"}`
-	fake()
-	if _, ok := find(All(), "claude"); ok {
-		t.Fatal("claude listed after sign-out")
-	}
-}
 
 func TestLastRole(t *testing.T) {
 	for body, want := range map[string]string{

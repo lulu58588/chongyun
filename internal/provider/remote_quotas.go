@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-// A remote magpie's quotas (莫 on Discord): a computer whose providers are
+// A remote magpie's quotas (莫 报告): a computer whose providers are
 // another's magpie (remote-magpie) has the accounts signed in there, not
 // here, so its Usage page, menu bar and magpie quota had nothing to show.
 // They now show the other magpie's cards as it last read them, each named

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// nf1qaz2w on Discord: "mcp现在好像只能看到有几个工具，看不到具体的工具名和描述".
+// nf1qaz2w 报告: "mcp现在好像只能看到有几个工具，看不到具体的工具名和描述".
 // A server that listed its tools shows them under its row, by name and what
 // each says it does, when its "N tools" status is clicked: no editor opens,
 // nothing scrolls, the list fits a narrow window, and Check again under it

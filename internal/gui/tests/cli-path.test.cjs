@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Settings › About › Command line (PAMI on Discord): whether `magpie` in a
+// Settings › About › Command line (PAMI 报告): whether `magpie` in a
 // terminal opened now runs this app, said for each shell (a dot, no left
 // border), and Add to PATH, which posts /api/cli and shows the answer. On
 // Windows a program not named magpie.exe (the site's portable download,

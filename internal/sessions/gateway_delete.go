@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// Deleting a gateway session (lc on Discord: a Claude Code session seen only
+// Deleting a gateway session (lc 报告: a Claude Code session seen only
 // through magpie's gateway was listed "read only"). Such a session has no
 // file of the agent's on this computer, so what magpie can delete is what it
 // keeps of it: its row in the session lists, and the conversation text it

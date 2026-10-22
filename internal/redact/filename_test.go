@@ -33,7 +33,7 @@ func TestFileNameIsNoEmail(t *testing.T) {
 	}
 }
 
-// Image names as apps ship them (willz on Discord: image@2x.png), other
+// Image names as apps ship them (willz 报告: image@2x.png), other
 // files named so (intro@2x.mp4), and a scale before an extension that is a
 // domain too (icon@2x.zip) are no address either. An address on a real
 // domain still is: .ai, .io, and .zip, .mov and .md with no scale.

@@ -77,7 +77,7 @@ func TestCommandCodeSearchesForSomeModels(t *testing.T) {
 // tool (modelSearches), not only a provider whose every model searches:
 // Command Code's searching models searched for themselves, but were left
 // out of the picker, so a model that can't search was searched for by
-// another provider or by none (01huadalang on Discord: the picker named
+// another provider or by none (01huadalang 报告: the picker named
 // Antigravity alone). Only its models that search are offered, and none
 // under its zero-data-retention header.
 func TestCommandCodeSearchesForOtherModels(t *testing.T) {

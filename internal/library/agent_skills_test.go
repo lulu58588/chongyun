@@ -224,7 +224,7 @@ func TestDevinInstructions(t *testing.T) {
 }
 
 // Qwen Code reads QWEN.md in its folder ($QWEN_HOME, else ~/.qwen) before
-// every conversation (wongxy on Discord): the library's instructions reach
+// every conversation (wongxy 报告): the library's instructions reach
 // it there, after what the user wrote, which stays; its settings'
 // context.fileName, a JSONC list whose first non-empty name Qwen Code
 // writes itself, names another file.

@@ -65,7 +65,7 @@ func (p Provider) RestKey(k KeyInfo) string { return p.RestKeys()(k) }
 // RestKeys is RestKey for each of a provider's keys in turn, whether it
 // has more than one on found once: found again for every key, a list of
 // a thousand keys was read a thousand times over, and the Providers page
-// took seconds to draw it, minutes for five thousand (@NetRozee on X).
+// took seconds to draw it, minutes for five thousand (@NetRozee 报告).
 func (p Provider) RestKeys() func(KeyInfo) string {
 	several := p.severalOn()
 	return func(k KeyInfo) string {
@@ -121,7 +121,7 @@ func (p Provider) KeysOn() []KeyAccount {
 	out := []KeyAccount{p.first()}
 	// a set, not a look along the list for each key: the gateway asks
 	// this for every request, and a thousand keys made it half a million
-	// looks (@NetRozee on X)
+	// looks (@NetRozee 报告)
 	seen := make(map[string]bool, len(p.Keys)+1)
 	seen[p.Key] = true
 	for _, k := range p.Keys {
@@ -138,7 +138,7 @@ var keysListed atomic.Int64
 
 // KeysListed is how many times a provider's keys on have been listed in
 // this process: a test counts them, not the time a page or request took,
-// to say they are listed once and not once a key (@NetRozee on X).
+// to say they are listed once and not once a key (@NetRozee 报告).
 func KeysListed() int64 { return keysListed.Load() }
 
 // AddKey saves one more key for a provider, on: it takes requests after
@@ -264,7 +264,7 @@ func AddKeys(id string, keys []string, proto Protocol) (added, had int, err erro
 // keyReadsAtOnce is how many of one provider's keys have their balance,
 // plan or limits read from the vendor at once. Every key at once was a
 // thousand requests to one relay together for a provider of a thousand
-// keys (@NetRozee on X); other providers' keys are read beside them.
+// keys (@NetRozee 报告); other providers' keys are read beside them.
 const keyReadsAtOnce = 8
 
 // keySlots is one read's slots, keyReadsAtOnce for each provider.
@@ -495,7 +495,7 @@ func RemoveKey(id, keyRef string) error {
 	return Save(*p)
 }
 
-// RemoveKeys forgets several keys at once (361 on Discord: hundreds of
+// RemoveKeys forgets several keys at once (361 报告: hundreds of
 // keys, some dead): those named that it has. The first key, when it is
 // among them, gives its place to the next one on that stays. One key in
 // use always stays: removing every key in use is refused.

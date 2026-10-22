@@ -28,7 +28,7 @@ func pickEfforts(t *testing.T, vision, searcher string) {
 	}
 }
 
-// The reasoning level picked for Image recognition (MOMO on Discord) is
+// The reasoning level picked for Image recognition (MOMO 报告) is
 // what its model is asked at, fitted to the levels it has, with room to
 // think in; Default is magpie's own, the least it has, as before. The
 // model's own requests, from an agent, are sent as they came.
@@ -192,7 +192,7 @@ func (u *searchUp) serve(models ...string) http.HandlerFunc {
 	}
 }
 
-// The reasoning level picked for the searcher (MOMO on Discord) is asked
+// The reasoning level picked for the searcher (MOMO 报告) is asked
 // of its model in its vendor's words: a Claude that thinks only
 // adaptively is asked output_config.effort, an older Claude a budget
 // alone, OpenAI's Responses reasoning.effort; "none" turns thinking off,

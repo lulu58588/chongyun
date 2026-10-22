@@ -29,7 +29,6 @@ func cardOf(cs []SubscriptionQuota, provider, user string) *SubscriptionQuota {
 // on disk, dated. Telling it asks nobody.
 func TestCachedCardsTellBackgroundReadings(t *testing.T) {
 	signIn(t) // Codex on me@example.com
-	rememberLogins(true)
 	var asked atomic.Int32
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/backend-api/wham/usage" {
@@ -90,7 +89,6 @@ func TestCachedCardsTellBackgroundReadings(t *testing.T) {
 // The page's card stands when it was read after the background's reading.
 func TestCachedCardsKeepALaterPageRead(t *testing.T) {
 	signIn(t)
-	rememberLogins(true)
 	t.Cleanup(func() {
 		loginUsageCache.Lock()
 		loginUsageCache.m = nil

@@ -4,7 +4,7 @@
 // Network lists them by origin. One is added from a field and its Add
 // button (or Enter), saved as the gateway cleaned it, and taken away with
 // its Remove; a browser extension is added by its origin
-// (chrome-extension://<id>, SkyAerope on Discord); a wildcard, a URL that
+// (chrome-extension://<id>, SkyAerope 报告); a wildcard, a URL that
 // isn't an origin or an extension id no browser gives is refused, said in
 // the page's language, and nothing is saved. At a 440px panel every row
 // fits, and no click moves the page. English and Chinese, Chromium and

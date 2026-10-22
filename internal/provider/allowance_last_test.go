@@ -14,13 +14,11 @@ import (
 // is still out, routing goes by what each said last, kept on disk — not by
 // none, which counts every account unused and put the first in order
 // first, until the reading came back and put the other first again
-// (vincentzhang on Discord: a restart moved a session to the first
+// (vincentzhang 报告: a restart moved a session to the first
 // account, the next back to the second, and its prompt cache was lost).
 func TestAllowancesBeforeFirstReading(t *testing.T) {
-	home := signIn(t)
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
 	reset := func() {
 		loginUsageCache.Lock()
 		loginUsageCache.m = nil

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Fate on Discord: a set of instructions was made and written, Claude Code
+// Fate 报告: a set of instructions was made and written, Claude Code
 // switched on below, and its CLAUDE.md didn't change — the agents read the
 // set in use (the round button), which was the empty Default. The agents'
 // head now says which set they read; an open set not in use has a Switch the

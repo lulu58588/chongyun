@@ -6,7 +6,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// Model ids without the provider (settings.BareModelIDs; love1sbug on X):
+// Model ids without the provider (settings.BareModelIDs; love1sbug 报告):
 // a client moved from another proxy (CLIProxyAPI) asks for gpt-5.6-sol,
 // not codex/gpt-5.6-sol, and picks its model from /v1/models. The gateway
 // has always taken a bare id (GroupFor, then Resolve); with the setting on,

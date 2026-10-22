@@ -17,7 +17,7 @@ func codexFastAsk(tier string) string {
 
 // A provider the user added by its address is sent the tier Codex asked
 // for, Fast's and Ultrafast's, on its Responses API and on its Chat API
-// (hsiangron on X: both were left out).
+// (hsiangron 报告: both were left out).
 func TestOwnProviderGetsTier(t *testing.T) {
 	for _, proto := range []provider.Protocol{provider.Responses, provider.Chat} {
 		for _, tier := range []string{"priority", "ultrafast", "flex"} {

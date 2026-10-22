@@ -37,7 +37,7 @@ type ServerHealth struct {
 	State string `json:"state"`
 	Tools int    `json:"tools"`
 	// ToolList is each tool's name and what it says it does, as tools/list
-	// gave them, for the page to list (nf1qaz2w on Discord); at most
+	// gave them, for the page to list (nf1qaz2w 报告); at most
 	// maxToolList, while Tools counts every one
 	ToolList []Tool `json:"toolList,omitempty"`
 	// Why is the kind of error, for the page to put in its own words:
@@ -52,7 +52,7 @@ type ServerHealth struct {
 	OAuth bool `json:"oauth,omitempty"`
 	// SignIn is magpie's sign-in to a streamable HTTP server as the check
 	// left it: one whose renewed token the server refused has run out
-	// since, and the page's tag says so (新v学员 on Discord)
+	// since, and the page's tag says so (新v学员 报告)
 	SignIn *mcpauth.Status `json:"signIn,omitempty"`
 	// Step is what a server that timed out was asked and didn't answer
 	// (initialize, notifications/initialized, tools/list, or connect: an

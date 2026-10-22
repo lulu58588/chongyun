@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Many keys at once (361 on Discord: 密钥比较多的话，需要批量导入的话就不方便了):
+// Many keys at once (361 报告: 密钥比较多的话，需要批量导入的话就不方便了):
 // a key provider's Add another key has Paste several, a box that takes keys
 // one a line or separated by commas, counts them, and posts keys/import;
 // pasting several into the one key's field opens it with them. The note

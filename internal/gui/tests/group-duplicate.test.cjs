@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// lc on Discord: a routing group can be duplicated. Its row's menu (right-
+// lc 报告: a routing group can be duplicated. Its row's menu (right-
 // click, or a click on its logos) has Duplicate under Move up and Move
 // down, which posts groups/copy with the group's id and "<name> copy" in
 // the reader's language; the list is drawn as the answer has it, the copy

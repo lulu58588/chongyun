@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // The Codex app reads the sign-in only when it opens. After magpie switches
 // Codex to another account it stays on the one before, shows that account's
-// limits and, once they are spent, sends in no thread (CavillZhang on X).
+// limits and, once they are spent, sends in no thread (CavillZhang 报告).
 // Codex's accounts say so, with the account the app is on and what moves it
 // (quit and open it again), until the app reopens or "Got it" is clicked.
 // In every language, Chromium and WebKit, wide and narrow.

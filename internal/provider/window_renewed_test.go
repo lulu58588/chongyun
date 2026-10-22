@@ -6,6 +6,17 @@ import (
 	"time"
 )
 
+// claudeWindowAccount keeps a Claude account in logins.json, the account
+// the agent is on: chongyun's own sign-in does that, and two accounts
+// holding one sign-in are one account's sign-in under two names, which it
+// refuses to save.
+func claudeWindowAccount(t *testing.T, email, plan string) savedLogin {
+	t.Helper()
+	return claudeOwnLogin(t, claudeTestSignIn{email: email, plan: plan,
+		access: "sk-ant-oat01-" + email, refresh: "sk-ant-ort01-" + email,
+		expiry: time.Now().Add(time.Hour)})
+}
+
 // A window whose reset has passed has started again, however the reading
 // came: Claude Code's /usage tells a reset to the minute and can lag it,
 // so a fresh run can say 100% of a session that reset a minute ago. Such a
@@ -86,16 +97,14 @@ func TestNextLoginTakesAPassedResetAsRenewed(t *testing.T) {
 		t.Run(agent, func(t *testing.T) {
 			var on, spare string
 			if agent == "codex" {
-				home := signIn(t) // me@example.com
-				rememberLogins(true)
-				codexSignIn(t, home, "work@example.com", "r-work")
-				rememberLogins(true)
+				_ = signIn(t) // me@example.com
+				codexSignIn(t, "work@example.com", "r-work")
 				on, spare = "work@example.com", "me@example.com"
 			} else {
-				home := claudeHome(t)
-				claudeSignIn(t, home, time.Now().Add(time.Hour))
-				writeFile(t, home+"/.claude.json", map[string]any{"oauthAccount": map[string]any{"emailAddress": "a@example.com", "accountUuid": "u-a"}})
-				rememberLogins(true)
+				// chongyun's own accounts: the one the agent is on is
+				// marked in logins.json, the one beside it is on
+				claudeHome(t)
+				claudeWindowAccount(t, "a@example.com", "max")
 				loginsMu.Lock()
 				ls := upsertLogin(readLogins(), savedLogin{Agent: "claude", User: "b@example.com", Plan: "max", Seen: time.Now().UTC(),
 					Auth: mustJSONRaw(t, map[string]any{"claudeAiOauth": map[string]any{"accessToken": "sk-ant-oat01-b", "refreshToken": "sk-ant-ort01-b",

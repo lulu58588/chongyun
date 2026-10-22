@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// cdredfox on X: WorkBuddy's credits come in packages that each end on
+// cdredfox 报告: WorkBuddy's credits come in packages that each end on
 // their own day, and the Credits window has no reset. The plugin says when
 // the soonest credits left run out (runsOutAt, runsOut), and the Usage
 // card says so under the window, "232.4 credits expire tomorrow 00:39 ·

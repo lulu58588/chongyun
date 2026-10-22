@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// wztlink1013 on Discord (Windows, Codex 0.162.0): switching Codex's model
+// wztlink1013 报告 (Windows, Codex 0.162.0): switching Codex's model
 // on the Agents page failed with "config.toml: edited TOML is invalid: toml:
 // key http_headers should be a table, not a value". The config held magpie's
 // provider headers as their own table, which a rewrite of

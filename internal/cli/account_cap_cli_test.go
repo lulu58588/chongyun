@@ -33,6 +33,17 @@ func TestAccountCapCmd(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(home, ".codex", "auth.json"), auth, 0o600); err != nil {
 		t.Fatal(err)
 	}
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	logins, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "me@example.com", "active": true,
+		"seen": time.Now(), "auth": json.RawMessage(auth)}})
+	if err := os.MkdirAll(filepath.Dir(provider.Path()), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), logins, 0o600); err != nil {
+		t.Fatal(err)
+	}
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)
 
@@ -65,7 +76,7 @@ func TestAccountCapCmd(t *testing.T) {
 	if c := provider.AccountCapOf("codex", "me@example.com"); c != 0 {
 		t.Fatalf("off left %d", c)
 	}
-	// a window's own (willz on Discord): the five hours at 50%, the week
+	// a window's own (willz 报告): the five hours at 50%, the week
 	// with none, then back to the account's
 	if err := providerCmd([]string{"provider", "account-cap", "codex", "me@example.com", "--window", "5 Hours", "50%"}); err != nil {
 		t.Fatal(err)

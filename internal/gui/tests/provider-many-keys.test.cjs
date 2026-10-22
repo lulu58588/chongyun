@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Hundreds of keys on one provider (361 on Discord: 导入了几百个 key，账号列表
+// Hundreds of keys on one provider (361 报告: 导入了几百个 key，账号列表
 // 铺满整屏): the Accounts list shows the first five and All 300 keys; opened,
 // a filter, a page of 50 rows and how many more, and removing many at once
 // (those turned off, those failing for good, those the filter matches) after

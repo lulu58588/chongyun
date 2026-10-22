@@ -148,6 +148,10 @@ func TestRevokedSignInPassedOverTillSignedInAgain(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(os.Getenv("HOME"), ".codex", "auth.json"), mustJSON(auth), 0o600); err != nil {
 		t.Fatal(err)
 	}
+	// chongyun keeps what it signed the agent in to in its own logins.json:
+	// a sign-in anew is the account with the new credential, and the mark
+	// of the revoked sign-in is gone with it.
+	chongyunLogins(t, chongyunCodexLogin("me@example.com", auth))
 	provider.ForgetAccounts()
 	turn("signed in again", "a new conversation", "acct-1")
 	if got := codexLapsed(t, "me@example.com"); got != "" {

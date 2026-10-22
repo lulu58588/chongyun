@@ -65,7 +65,7 @@ func callbackAddress(t *testing.T, st SignInState, code, state string) string {
 	return q.Get("redirect_uri") + "?" + url.Values{"code": {code}, "state": {state}}.Encode()
 }
 
-// Jorben on Discord: magpie in Docker on a cloud server, its web UI in his
+// Jorben 报告: magpie in Docker on a cloud server, its web UI in his
 // browser; ChatGPT sends the browser back to localhost:1455, which is his
 // own machine, and the sign-in never finished. The address pasted finishes it.
 func TestCodexSignInFromPastedAddress(t *testing.T) {

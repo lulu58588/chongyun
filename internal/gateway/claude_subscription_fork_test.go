@@ -19,7 +19,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
-// ylorn on Discord: a lead Claude Code routed by group/orchestrator to a
+// ylorn 报告: a lead Claude Code routed by group/orchestrator to a
 // Claude subscription starts sub-agents with run_in_background, and they
 // died mid-run with "API Error: 409 the agent's turn is already being
 // resumed". Claude Code's fork sub-agent (2.1.294's "Fork started —
@@ -45,10 +45,16 @@ func TestClaudeForksAnsweringTheLeadsCallsEachGetAnAnswer(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
 	os.MkdirAll(filepath.Join(home, ".claude"), 0o755)
-	os.WriteFile(filepath.Join(home, ".claude", ".credentials.json"), mustJSON(map[string]any{"claudeAiOauth": map[string]any{
-		"accessToken": "tok-lead", "refreshToken": "r-lead", "expiresAt": time.Now().Add(24 * time.Hour).UnixMilli(), "subscriptionType": "max"}}), 0o600)
+	creds := map[string]any{"claudeAiOauth": map[string]any{
+		"accessToken": "tok-lead", "refreshToken": "r-lead", "expiresAt": time.Now().Add(24 * time.Hour).UnixMilli(), "subscriptionType": "max"}}
+	os.WriteFile(filepath.Join(home, ".claude", ".credentials.json"), mustJSON(creds), 0o600)
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "lead@example.com", "accountUuid": "u-lead"}}), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	chongyunLogins(t, map[string]any{"agent": "claude", "user": "lead@example.com", "plan": "max", "active": true, "on": true,
+		"seen": time.Now(), "auth": creds, "profile": map[string]any{"emailAddress": "lead@example.com", "accountUuid": "u-lead"}})
 
 	// Claude Code: a turn it is told from the start calls Agent three
 	// times, then makes the calls through its MCP server one after another,

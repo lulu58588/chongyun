@@ -25,7 +25,7 @@ func advisorTurn(model, advisor string) string {
 
 // Claude Code's advisor names its model as Claude Code names its own: on
 // magpie, by magpie's id, which the vendor doesn't know, so the request was
-// turned away whole and the advisor never ran (JackChou on Discord). The
+// turned away whole and the advisor never ran (JackChou 报告). The
 // advisor's model now goes as the upstream's own name for it when it is
 // the same provider's Claude model; one the upstream can't run (another
 // provider's, a vendor's model asked) is left out and the turn still
@@ -98,7 +98,7 @@ func advisorSaid(t *testing.T, name, b string, on bool) {
 		t.Errorf("%s: advisor on, but its instructions (%v) or tool_addition (%v) lost: %s", name, instructions, ref, b)
 	case !on && (instructions || ref):
 		// the model called advisor() as the agent's tool: "No such tool
-		// available: advisor" (JackChou on Discord)
+		// available: advisor" (JackChou 报告)
 		t.Errorf("%s: advisor left out, but its instructions (%v) or tool_addition (%v) still sent: %s", name, instructions, ref, b)
 	case !on && !strings.Contains(b, advisorGone):
 		t.Errorf("%s: advisor left out without saying so: %s", name, b)
@@ -111,7 +111,7 @@ func advisorSaid(t *testing.T, name, b string, on bool) {
 // A translation has no advisor to offer: the tool goes with every other
 // server tool, and Claude Code's instructions to call it are said to be
 // void, so the model doesn't call advisor() as one of the agent's tools
-// (JackChou on Discord: "找不到对应工具").
+// (JackChou 报告: "找不到对应工具").
 func TestAdvisorLeftOutOnTranslation(t *testing.T) {
 	for _, c := range []struct {
 		name  string

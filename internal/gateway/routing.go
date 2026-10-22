@@ -192,7 +192,7 @@ var (
 	// answers a GLM Coding Plan's key at the pay-as-you-go endpoint (1113
 	// "余额不足或无可用资源包，请充值") — out of credit, not a rate limit;
 	// WorkBuddy's 429 14018 "Credits exhausted. Please visit the link
-	// below to purchase add-on packs…" too (Creat.wu on Discord)
+	// below to purchase add-on packs…" too (Creat.wu 报告)
 	brokeWords = regexp.MustCompile(`(?i)insufficient.?(balance|credit|fund)|\bcredits? (are )?exhausted\b|余额不足|欠费|请充值`)
 	// quotaWords: it has used up what its plan allows for now.
 	usedUpWords = regexp.MustCompile(`(?i)quota|usage.?limit|out of budget|budget (exceeded|exhausted)|limit.?reached|hit your .*limit|limit.{0,24}resets|exceeded.*(plan|limit)|额度|用量|套餐|上限`)
@@ -653,7 +653,7 @@ func resetsAt(body []byte, now time.Time) time.Duration {
 // received at 2026-09-21T17:17:32Z said 01:18:11, 39 seconds later read as
 // UTC+8, 8 hours later as UTC). Read with resetsWhen's offset alone, it was
 // not read at all, and the key rested a quarter of an hour, not until the
-// time Z.ai named (Player on Discord: "reset at 2026-10-15 20:12", "not
+// time Z.ai named (Player 报告: "reset at 2026-10-15 20:12", "not
 // asked again before 17:12"). Only these words, then a whole date and a
 // time to the minute at least, with no digit, colon or zone after it.
 var zhipuResets = regexp.MustCompile(`(?:\bYour limit will reset at|您的限额将在)\s*(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?(\s*\S{0,3})`)
@@ -663,7 +663,7 @@ var zhipuResets = regexp.MustCompile(`(?:\bYour limit will reset at|您的限额
 // Remote magpie's user, may be on another clock than this magpie's, so the
 // offset goes with it: "20:12 UTC+8" today, else "Oct 16 09:00 UTC+8".
 // Without it a magpie on UTC+8 said "not asked again before 17:12" to a
-// user who couldn't tell whose 17:12 it was (Player on Discord).
+// user who couldn't tell whose 17:12 it was (Player 报告).
 func heldClock(t, now time.Time) string { return heldClockIn(t, now, time.Local) }
 
 // heldClockIn is heldClock on the clock of loc.
@@ -897,7 +897,7 @@ func (s *Server) restAfterMarked(c candidate, status int, header http.Header, bo
 		r.Link, _ = provider.Verification([]byte(r.said))
 	default:
 		// the provider set never to rest after a failure that says nothing
-		// of why (provider.RestCapOff; Kismet Alan on Discord: a relay's
+		// of why (provider.RestCapOff; Kismet Alan 报告: a relay's
 		// or an account pool's unknown errors come now and then, and the
 		// next request often goes through): it isn't set aside, nor its
 		// failure counted. A key refused, a model not served, or a window
@@ -978,7 +978,7 @@ func (s *Server) restAfterMarked(c candidate, status int, header http.Header, bo
 	// out of credit, or of a quota, on a model that costs credits where
 	// the subscription serves other models free is that model's: the free
 	// ones draw on no credits, and the account still serves them (Creat.wu
-	// on Discord: WorkBuddy AI's 14018 "Credits exhausted" on glm-5.3-flash
+	// 报告: WorkBuddy AI's 14018 "Credits exhausted" on glm-5.3-flash
 	// rested the account, and its free models went nowhere). A free model
 	// the vendor refuses all the same rests on its own refusal.
 	if (why == failCredit || why == failQuota) && c.p.PaidBesideFree(c.model) {
@@ -1006,7 +1006,7 @@ func (s *Server) restAfterMarked(c candidate, status int, header http.Header, bo
 // only the model it was about, when it came from another computer's magpie
 // (a Remote magpie provider, LAN share): that magpie serves each of its
 // models from its own providers and rests them itself, so one of them out
-// of quota there says nothing of the others (bigsteven on Discord: the
+// of quota there says nothing of the others (bigsteven 报告: the
 // remote's 429 for one model rested every model on it for the 3 hours it
 // named). A restricted account, or one its vendor wants verified first, is
 // that computer's account too, on the model it serves there (#1849: the

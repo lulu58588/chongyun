@@ -18,7 +18,7 @@ import (
 // lets those headers go on to a provider reached with a key, as the agent
 // sent them (gateway.go: fromCodex, fromClaudeCode), so the agent's own
 // requests are served, while a test request, magpie's own, was turned away
-// and said the provider didn't work (耍赖天都爱 on Discord). A test can be
+// and said the provider didn't work (耍赖天都爱 报告). A test can be
 // asked as one of them asks instead (TestAs): on the API that agent's
 // requests go to, streamed as they are, with the headers the gateway last
 // let through for it.

@@ -59,7 +59,7 @@ func TestCodexAutoReviewStandIn(t *testing.T) {
 	}
 }
 
-// Adam on Discord: Codex's auto-review was answered 404 magpie knows no
+// Adam 报告: Codex's auto-review was answered 404 magpie knows no
 // model "codex-auto-review". Codex's config may name its model as a routing
 // group's bare name (or Codex's spelling of a group's model, #750), which
 // its turns reach; the review stood in for by that name reaches the group
@@ -139,7 +139,7 @@ func TestCodexAutoReviewReachesItsTurnsModel(t *testing.T) {
 // Claude Code (here as T3 Code runs it) names each of Anthropic's models by
 // its full id; every id of a family goes to the model Claude Code's tier for
 // that family is set to, whether or not a provider of the user's serves the
-// id itself (KevinXC on Discord: claude-sonnet-4-6 went to the sonnet tier,
+// id itself (KevinXC 报告: claude-sonnet-4-6 went to the sonnet tier,
 // claude-sonnet-5 and claude-fable-5-1 to the Claude account, spent, 429).
 func TestClaudeTierStandInByFamily(t *testing.T) {
 	setHome(t, t.TempDir())
@@ -217,7 +217,7 @@ func TestClaudeTierStandInByFamily(t *testing.T) {
 	}
 }
 
-// tbxark on X: a script Claude Code starts (a hook, its statusline, a
+// tbxark 报告: a script Claude Code starts (a hook, its statusline, a
 // plugin's) inherits its ANTHROPIC_BASE_URL and token, and asked magpie
 // for claude-sonnet-4-6 as Python-urllib: 404 unknown model, while Claude
 // Code's own requests went to its tier. A client magpie knows as no agent,

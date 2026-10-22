@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// @jiahao_jayden on X: every skill's row had a chip for each agent magpie
+// @jiahao_jayden 报告: every skill's row had a chip for each agent magpie
 // knew of, WorkBuddy among them though it wasn't installed (一排有点密恐了).
 // The library lists an agent gone from this computer (gone: true) only
 // while it still has something magpie gave it, so that can be taken out:

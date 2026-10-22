@@ -215,7 +215,7 @@ func TestReseatUnmovable(t *testing.T) {
 	}
 }
 
-// Found groups turned off (蓝猫 on Discord) take every group/auto-… away:
+// Found groups turned off (蓝猫 报告) take every group/auto-… away:
 // an agent on one is moved to its model from the first provider still
 // serving it, however that one spells it, rather than to its own default.
 func TestReseatFoundGroupsOff(t *testing.T) {

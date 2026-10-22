@@ -297,7 +297,7 @@ func rpmGateway(t *testing.T, v *minuteVendor, limit int) (*Server, string) {
 	return s, gw.URL
 }
 
-// coeo91 on Discord: OpenRouter's free models take 20 requests a minute,
+// coeo91 报告: OpenRouter's free models take 20 requests a minute,
 // which a limit at once of 1 didn't keep to. With a MaxRPM of 2, through
 // the real server, two requests go at once and the third waits until the
 // first is a minute (and the slack) old, then is answered; the vendor,

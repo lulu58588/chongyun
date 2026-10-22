@@ -101,7 +101,7 @@ func copilotNames() string {
 // are kept, each with its own token, and one switched to or removed leaves
 // the other as it was.
 func TestCopilotSameLoginOnTwoHosts(t *testing.T) {
-	signIn(t) // the editors' own: octocat on github.com
+	signIn(t) // chongyun's own Copilot account: octocat on github.com
 	hostsServer(t)
 
 	if st := copilotSignInAt(t, "a.ghe.com"); st.User != "mona@a.ghe.com" || st.Plan != "Enterprise" || st.Using {
@@ -158,36 +158,7 @@ func TestCopilotSameLoginOnTwoHosts(t *testing.T) {
 	}
 }
 
-// The editors signed in to mona on github.com, mona on an enterprise's
-// host signed in from magpie is another account, kept beside it, not
-// dropped as the editors' own (#1220).
-func TestCopilotOwnAndSameNamedGHE(t *testing.T) {
-	home := signIn(t)
-	writeFile(t, filepath.Join(home, ".config", "github-copilot", "apps.json"), map[string]any{
-		"github.com:Iv1.x": map[string]any{"user": "mona", "oauth_token": "gho_own"},
-	})
-	hostsServer(t)
-	if got := copilotNames(); got != "mona*" {
-		t.Fatalf("before: %s", got)
-	}
-	st := copilotSignInAt(t, "a.ghe.com")
-	if st.User != "mona@a.ghe.com" || st.Using {
-		t.Fatalf("signed in: %+v", st)
-	}
-	if got := copilotNames(); got != "mona* mona@a.ghe.com" {
-		t.Fatalf("listed: %s", got)
-	}
-	if toks := copilotTokens(); toks["mona"] != "gho_own " || toks["mona@a.ghe.com"] != "gho_a.ghe.com a.ghe.com" {
-		t.Fatalf("tokens: %v", toks)
-	}
-	// github.com's mona signed in from magpie is still the editors' own
-	if st := copilotSignInAt(t, "github.com"); st.User != "mona" || !st.Using {
-		t.Fatalf("github.com: %+v", st)
-	}
-	if got := copilotNames(); got != "mona* mona@a.ghe.com" {
-		t.Fatalf("after github.com: %s", got)
-	}
-}
+// 崇云不读别家的登录态，此用例随之移除。
 
 // A logins.json written before #1220 reads as it did: an enterprise's
 // account saved under its login alone is named with its host and keeps its
@@ -227,40 +198,7 @@ func TestCopilotLoginsBeforeHosts(t *testing.T) {
 	}
 }
 
-// The editors' own account on an enterprise's host, remembered by its
-// login alone before #1220, is the same account named with its host: still
-// hidden when it was removed in magpie, with its id.
-func TestCopilotOwnGHERenamed(t *testing.T) {
-	home := signIn(t)
-	t.Setenv("COPILOT_HOME", filepath.Join(home, "copilot-home"))
-	writeFile(t, filepath.Join(home, ".config", "github-copilot", "apps.json"), map[string]any{
-		"a.ghe.com:Iv1.x": map[string]any{"user": "mona", "oauth_token": "gho_own"},
-	})
-	old := `[{"id": "3333333333333333", "agent": "copilot", "user": "mona", "plan": "Enterprise", "seen": "2026-10-05T10:00:00Z", "auth": null, "hidden": "hidden"}]`
-	os.MkdirAll(filepath.Dir(loginsPath()), 0o700)
-	if err := os.WriteFile(loginsPath(), []byte(old), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	if got := copilotNames(); got != "" {
-		t.Fatalf("a hidden account came back: %s", got)
-	}
-	var own []savedLogin
-	for _, l := range readLogins() {
-		if l.Agent == "copilot" {
-			own = append(own, l)
-		}
-	}
-	if len(own) != 1 || own[0].User != "mona@a.ghe.com" || own[0].ID != "3333333333333333" || own[0].Hidden == "" || own[0].Plan != "Enterprise" {
-		t.Fatalf("own: %+v", own)
-	}
-	// its plan, read again, is kept on it
-	refreshCopilotEntitlement(copilotApp{User: "mona@a.ghe.com", Token: "gho_own", Host: "a.ghe.com"}, "Business", "")
-	for _, l := range readLogins() {
-		if l.Agent == "copilot" && l.Plan != "Business" {
-			t.Fatalf("plan not kept: %+v", l)
-		}
-	}
-}
+// 崇云不读别家的登录态，此用例随之移除。
 
 // oldGHEFiles writes logins.json as magpie kept it before #1220 — mona
 // on a.ghe.com saved under her login alone — and providers.json with
@@ -352,32 +290,7 @@ func TestCopilotRenameKeepsSettings(t *testing.T) {
 	}
 }
 
-// The editors' own enterprise account, renamed with its host, keeps its
-// cap too.
-func TestCopilotOwnGHERenameKeepsSettings(t *testing.T) {
-	home := signIn(t)
-	t.Setenv("COPILOT_HOME", filepath.Join(home, "copilot-home"))
-	renameFailedAt = time.Time{}
-	writeFile(t, filepath.Join(home, ".config", "github-copilot", "apps.json"), map[string]any{
-		"a.ghe.com:Iv1.x": map[string]any{"user": "mona", "oauth_token": "gho_own"},
-	})
-	os.MkdirAll(filepath.Dir(loginsPath()), 0o700)
-	if err := os.WriteFile(loginsPath(), []byte(`[{"id": "3333333333333333", "agent": "copilot", "user": "mona", "seen": "2026-10-05T10:00:00Z", "auth": null}]`), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(Path(), []byte(`{"providers": [{"id": "copilot", "accountCaps": {"mona": 60}, "accountProxies": {"mona": "direct"}}]}`), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	if got := copilotNames(); got != "mona@a.ghe.com*" {
-		t.Fatalf("listed: %s", got)
-	}
-	if AccountCapOf("copilot", "mona@a.ghe.com") != 60 || ProxyOfLogin("copilot", "mona@a.ghe.com") != "direct" {
-		t.Fatalf("settings: cap %d proxy %q", AccountCapOf("copilot", "mona@a.ghe.com"), ProxyOfLogin("copilot", "mona@a.ghe.com"))
-	}
-	if got := savedCopilotUsers(t); got != "mona@a.ghe.com" {
-		t.Fatalf("logins.json: %s", got)
-	}
-}
+// 崇云不读别家的登录态，此用例随之移除。
 
 // A providers.json that can't be read is not one without settings: the
 // account isn't written under its new name, its settings stranded under

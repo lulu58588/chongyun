@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
-// Lemon on Discord: can a plugin give its provider its own icon? The auth
+// Lemon 报告: can a plugin give its provider its own icon? The auth
 // hook's icon (or package.json's magpie.icon) is a data:image URI, kept
 // at once as a picture given by hand is, or an https URL, fetched in the
 // background through FetchIcon's checks; it comes before the market's,

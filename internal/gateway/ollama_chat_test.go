@@ -78,7 +78,7 @@ func ndjson(t *testing.T, body string) []gjson.Result {
 	return out
 }
 
-// Zed's Ollama provider (super_lalalalala on Discord) chats on
+// Zed's Ollama provider (super_lalalalala 报告) chats on
 // /api/chat, which magpie answered 404: it is served now, as
 // /v1/chat/completions is, with Zed's own request (crates/ollama
 // ChatRequest: stream true, keep_alive, options num_ctx/num_predict/

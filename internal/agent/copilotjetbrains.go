@@ -3,7 +3,7 @@ package agent
 // GitHub Copilot in JetBrains IDEs (IntelliJ IDEA, PyCharm, GoLand, …, and
 // Android Studio; the github-copilot-intellij plugin) takes models of other
 // vendors through Bring Your Own Key: Copilot Chat's model picker, Manage
-// Models…, Add Custom Endpoint Provider (KamToHung on Discord). The plugin
+// Models…, Add Custom Endpoint Provider (KamToHung 报告). The plugin
 // keeps none of it itself: it asks the Copilot language server it bundles
 // (copilot-language-server, the npm @github/copilot-language-server), which
 // keeps every provider in one JSON object, byok.json in

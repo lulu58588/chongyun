@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Number units (John on Discord; #740 made K / M / B the default): a large
+// Number units (John 报告; #740 made K / M / B the default): a large
 // count is shortened in K / M / B ("1.54B", "80M") in Chinese too, unless
 // Settings' Number units picks 万 / 亿 ("15.4 亿", an axis's "8000 万"),
 // the rest staying Chinese either way — every count on the Usage page (#476: the Overview, the

@@ -147,7 +147,7 @@ var tokenQueries = []struct{ account, key, field string }{
 
 // keyQueryOf is p asking its panel's query for a key when its Balance URL
 // is an account query left without the token it needs: the token removed
-// after the editor's "Use …/api/v1/user/profile" (lx_78654 on Discord),
+// after the editor's "Use …/api/v1/user/profile" (lx_78654 报告),
 // where the key could only be refused and the card said "Allowance
 // unavailable" for good. The same panel's key query is asked with the key
 // instead, its field read as that query's unless the user wrote one of
@@ -342,7 +342,7 @@ func deepSeekAmounts(b []byte) ([]deepSeekAmount, error) {
 		return nil, errors.New("no balance in the reply")
 	}
 	// DeepSeek lists an account's currencies (CNY, USD) in an order that
-	// changes from one read to the next (gakki on Discord), so they are
+	// changes from one read to the next (gakki 报告), so they are
 	// put in one of magpie's own: a currency with money left first, then
 	// by its code. The first is the one the trend follows and an alert
 	// reads (balanceSeries, BalanceNumber), so it mustn't swap places
@@ -389,7 +389,7 @@ func SplitWords(split []BalancePart) string {
 }
 
 // readDeepSeekSplit is what each currency's balance is made of: the
-// granted credit apart from the money topped up (wwcraft_ on Discord),
+// granted credit apart from the money topped up (wwcraft_ 报告),
 // for a currency that has some granted. One with none granted is all
 // topped up, its total already that, so it adds nothing.
 func readDeepSeekSplit(b []byte) []BalancePart {
@@ -1324,7 +1324,7 @@ const OpenCodeConsole = "https://opencode.ai/console"
 // packages/console/app/src/lib/inference-proxy.ts; /zen/v1/usage and
 // /inference/v1/usage answer 404), and its docs give the balance only on
 // the console's Credits card (console/billing.mdx, "Check your balance").
-// The card used to be left out unsaid (ttmrmx on X).
+// The card used to be left out unsaid (ttmrmx 报告).
 var errOpenCodeNoBalance = errors.New("OpenCode tells no API key its balance: Zen's pay-as-you-go credits are shown only in the OpenCode console (" + OpenCodeConsole + ", Overview → Credits, to the workspace's owners and admins)")
 
 // openCodeZen says p is at OpenCode Zen, whose credits OpenCode keeps from
@@ -1370,7 +1370,7 @@ func sub2APIKeyLimits(p Provider) bool {
 // card tells that key's balance. Any case, in one or two braces or as
 // ${…}: {key}, {apiKey}, {api_key}, {API_KEY}, {token}, {{key}}, ${API_KEY}.
 // {token} is the key too: it is what a vendor's own error names the value
-// in "Authorization: Bearer {token}" (lx_78654 on Discord, whose header
+// in "Authorization: Bearer {token}" (lx_78654 报告, whose header
 // went with "{token}" in it as written, and the vendor refused it).
 var balanceKeyNames = regexp.MustCompile(`(?i)\$?\{\{?\s*(?:key|api[_-]?key|token)\s*\}?\}`)
 
@@ -1387,7 +1387,7 @@ func withBalanceKey(s, key string, inURL bool) string {
 // pasted there: the query is asked as with no token, the key as a Bearer
 // the way a chat request sends it, not the key bare in Authorization as
 // a new-api access token goes, which a vendor that wants "Bearer <key>"
-// refuses (lx_78654 on Discord).
+// refuses (lx_78654 报告).
 func keyNotToken(p Provider) Provider {
 	t := strings.TrimSpace(p.BalanceToken)
 	if len(t) > 7 && strings.EqualFold(t[:7], "bearer ") {

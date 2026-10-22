@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Codex's lead picks each subagent's model itself, and Codex's own config
-// can't overrule it (willz on Discord), so magpie puts every Codex subagent
+// can't overrule it (willz 报告), so magpie puts every Codex subagent
 // on a model set in Codex's row: a square opening the app's model picker
 // (no native select) with magpie's models, another provider's too (#1633),
 // Default first. A model picked is posted and lights the square; Default

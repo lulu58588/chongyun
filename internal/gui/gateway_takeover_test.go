@@ -28,7 +28,7 @@ func fakeOlderGateway(addr string) {
 	}))
 }
 
-// The Gateway page's button (leslie_luo on Discord: the page said an older
+// The Gateway page's button (leslie_luo 报告: the page said an older
 // magpie served the gateway, and there was no telling which one to quit).
 // It quits the process on the gateway's port only when its program is a
 // magpie, by its pid and path, then serves the gateway here at once; a
@@ -124,7 +124,7 @@ func TestGatewayFixQuitsOnlyAMagpie(t *testing.T) {
 	<-otherEnded
 
 	// an older magpie is quit, and this one serves at once
-	old, oldEnded := start("magpie")
+	old, oldEnded := start("chongyun")
 	_ = old
 	if g := providersState().Gateway; !g.Older || g.Mine {
 		t.Fatalf("not seen as older: %+v", g)

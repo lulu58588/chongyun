@@ -257,7 +257,7 @@ func TestZenPublicListsNewFreeModels(t *testing.T) {
 	}
 }
 
-// z'x on Discord: Test on an OpenCode Zen provider with the public key
+// z'x 报告: Test on an OpenCode Zen provider with the public key
 // always failed. It asked public for claude-fable-5 on Messages and
 // gemini-3-flash on Gemini, which public doesn't reach, and big-pickle on
 // Responses, where Zen doesn't serve it. Now each API is asked for a free

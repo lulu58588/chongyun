@@ -17,7 +17,7 @@ import (
 )
 
 // What a vendor wrote itself and checks when it comes back goes back as the
-// vendor wrote it, with masking on (Jeremy.Zhou on Discord: OpenCode Zen
+// vendor wrote it, with masking on (Jeremy.Zhou 报告: OpenCode Zen
 // answered 400 until 脱敏密钥 and 脱敏个人信息 were turned off).
 
 // sign is the fake vendor's thinking signature: it covers the text exactly,

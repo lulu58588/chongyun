@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Each usage window of an account can have a cap of its own beside the
-// account's (willz on Discord: a friend's account stops at 50% of its five
+// account's (willz 报告: a friend's account stops at 50% of its five
 // hours, while its week has its own 40%). A window's meter on the account's
 // row is a button: a click opens the app's own menu (no native select) of
 // the account's cap, no cap on this window, a share, or Other… typed in

@@ -41,7 +41,7 @@ func TestCLISignInFirstLinkAsPrinted(t *testing.T) {
 	}
 }
 
-// 𝕏 on Discord: "grok login gave no link to open", without what the CLI
+// 𝕏 报告: "grok login gave no link to open", without what the CLI
 // said. A login that fails says its last line, and the endpoint its error
 // names isn't taken for the page to open.
 func TestCLISignInSaysWhyNoLink(t *testing.T) {

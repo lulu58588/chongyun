@@ -260,7 +260,7 @@ func desktopModels(entries []provider.Entry, knowsMythos bool) []map[string]any 
 // magpie's whose id has "[1m]" gets nothing of that (PIt gives supports1m
 // to a bare id alone, and OIt folds a "[1m]" row only into a bare one
 // beside it), so it was shown as the plain model, by name alone, and the
-// switch read as doing the reverse of what it says (杰多夫 on Discord).
+// switch read as doing the reverse of what it says (杰多夫 报告).
 // The row is described as Desktop describes its own 1M entry
 // (desktop1MSaid); its id, which Desktop hands Claude Code, has the "[1m]"
 // that gives a session the 1M window.
@@ -286,7 +286,7 @@ const desktop1MSaid = "1M context window"
 // 2.7032: the first so tagged, or the one also is_family_default). Untagged,
 // a subagent on "sonnet" or "haiku" asked for Claude Code's own
 // claude-sonnet-… and that, unserved, went to the chat's model: every
-// subagent ran on it, whatever its tier (WilianWeng on Discord). The user
+// subagent ran on it, whatever its tier (WilianWeng 报告). The user
 // picks a model per tier in magpie; a Claude model magpie serves stands in
 // for its own tier while its tier has none picked.
 var DesktopTierNames = []string{"opus", "sonnet", "haiku", "fable"}

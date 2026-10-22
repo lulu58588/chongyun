@@ -18,7 +18,7 @@ package gateway
 //
 // So magpie draws there as the doc says: watermark false, the images as
 // JSON, one request per image asked for, and a ratio sent as the doc's 2K
-// size for it, or turned away with what to do instead (JL on Discord).
+// size for it, or turned away with what to do instead (JL 报告).
 
 import (
 	"context"

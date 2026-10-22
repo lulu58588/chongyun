@@ -91,7 +91,7 @@ func noneResting(t *testing.T) {
 
 // With one ChatGPT account, Codex's own turn the backend says it is too
 // busy for (529) is asked again of the same account, after the pause the
-// accounts loop takes, as Codex sent it (夜松云 on Discord): the answer
+// accounts loop takes, as Codex sent it (夜松云 报告): the answer
 // reaches Codex, nothing of the failure.
 func TestCodexOneAccountOverloadAskedAgain(t *testing.T) {
 	o := &overloadedBackend{replies: []reply{{529, "application/json", overloadedStatus}, {200, "", codexAnswer}}}

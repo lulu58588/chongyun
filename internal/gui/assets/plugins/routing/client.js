@@ -341,12 +341,12 @@ function routingPage(part) {
   // burst at its end (usage.DecodeWindow, #731: a whole Gemini tool call,
   // 8264 tokens 1 ms before the end, read 8,264,000 tok/s)
   // A reply that reasoned counts its answer, its output less the
-  // reasoning, from its first text (usage.DecodeOf, tony on Discord):
+  // reasoning, from its first text (usage.DecodeOf, tony 报告):
   // the reasoning was written before the stream showed any, OpenAI's
   // encrypted and its summary sent when done, and counting it read
   // gpt-6.1-sol at 163 tok/s. The reply's reasoning is its served try's.
   // A reply held back and let go in a burst at its end tells no speed
-  // (usage.DecodeOf, John on Discord: Kimi Code at 2,237 tok/s): its
+  // (usage.DecodeOf, John 报告: Kimi Code at 2,237 tok/s): its
   // content came in under a quarter of its window (flow), or its answer
   // at over 20 times the pace its reasoning came before its first text.
   function decodeOf(r, ms, ttft, firstText, flow = r.flow, firstReasoning = r.firstReasoning, reasoningHidden = r.reasoningHidden) {
@@ -1091,7 +1091,7 @@ function routingPage(part) {
   // model were 53 rows alike); opened, it heads them as a group in the
   // group does. Which are open is remembered by provider and model.
   // A provider's accounts for one model fold the same way, and so does a
-  // group in the group, from its heading (Aiirobyte on Discord: a group of
+  // group in the group, from its heading (Aiirobyte 报告: a group of
   // many accounts pushed the groups to edit far down the page). Keys start
   // folded; accounts and a group in the group start folded when LONG or
   // more of them, else open. Which the reader opened or folded is kept, by
@@ -1157,7 +1157,7 @@ function routingPage(part) {
   // every flight, and measured each leg and each wire end anew — with
   // three agents sending at once, ~10 s of a 40 s look at the page went to
   // getTotalLength and getPointAtLength alone, and the page lagged
-  // (yg6888 on X: "打开页面很卡").
+  // (yg6888 报告: "打开页面很卡").
   const measured = new WeakMap(); // path → { d, L, tips, pts }
   function measure(p) {
     const d = p.isConnected && p.getAttribute("d");
@@ -1376,7 +1376,7 @@ function routingPage(part) {
   // marked with: its maker's own where it has one, else one of the rest
   // picked by its id, so it stays the same from one request to the next.
   // None is red: red on this page is a failure, and an agent marked in it
-  // read as one (zhouatie on X: "openai" drew rose, its dot and wire red).
+  // read as one (zhouatie 报告: "openai" drew rose, its dot and wire red).
   // routing-agent-hue-not-red.test.cjs holds every colour here away from it.
   const HUES = {
     claude: "#d97757", codex: "#6366f1", gemini: "#0ea5e9", copilot: "#a855f7", cursor: "#14b8a6", opencode: "#eab308",
@@ -1696,7 +1696,7 @@ function routingPage(part) {
   // header tells of the route the log tells of: its provider or group,
   // and how it routes
   // It names how the route routes where that can be changed, and takes
-  // the reader to where it is (xczzhh on X: it said Smart, and nothing
+  // the reader to where it is (xczzhh 报告: it said Smart, and nothing
   // changed it); a provider with only one account or key on has nothing
   // to route, and says so instead.
   let headOf = null; // what the head tells of, told again once the pools are in
@@ -1934,7 +1934,7 @@ function routingPage(part) {
     renderBodies(r);
     renderCtx(r);
   }
-  // A request's request and response (Fate on Discord: a request on this
+  // A request's request and response (Fate 报告: a request on this
   // page, a Codex prediction say, couldn't be opened to what was sent and
   // what came back). The gateway's recent calls keep the last 40 calls'
   // bodies, cut at 256 KB and in memory only, read when asked as the
@@ -2000,7 +2000,7 @@ function routingPage(part) {
   // ("is answering…", then "answered in 4.0 s…" over two lines at a
   // phone's width), and its head gets View usage and Replay, taller than
   // the words, once it is done. So each new request moved the context
-  // window under it up and back down (dumplings on Discord: the card
+  // window under it up and back down (dumplings 报告: the card
   // jittered on every request). A request picked, a replay or a past day
   // is drawn at its own height. A change of width measures it again at
   // once, as it is then (the list coming in under it can take a
@@ -2030,7 +2030,7 @@ function routingPage(part) {
   // its session's prompts request by request; drawn again only when what
   // it shows changes. Live, the next request is patched into the card
   // that is there, so only what changed changes and nothing under it moves
-  // (Zhenzhen on Discord: each new request flashed the whole card, and its
+  // (Zhenzhen 报告: each new request flashed the whole card, and its
   // grid went and came back); a request the reader picks comes in afresh,
   // its cells one after another
   //
@@ -2256,7 +2256,7 @@ function routingPage(part) {
   const routedWhy = (tr) => t("{sent} is a routing group of the remote magpie, and it routed the request to {served}: the group picking one of its models, not the vendor swapping the model.", { sent: tr.model, served: tr.served });
   window.routedWhy = routedWhy;
   // the provider an aggregator (OpenRouter …) said answered behind it:
-  // DeepInfra, Novita… (leslie_luo on Discord)
+  // DeepInfra, Novita… (leslie_luo 报告)
   function upstreamTag(tr) {
     const k = el("span", "upstream", t("Upstream: {upstream}", { upstream: tr.upstream }));
     k.title = upstreamWhy(tr);
@@ -2282,7 +2282,7 @@ function routingPage(part) {
     if (r.kind === "luna_reserve") return t("{agent} sent this turn on Luna Reserve, which it turns to once the plan's own allowance is used up; it picks the model itself.", { agent });
     // the searcher asked first failed or found nothing, and this one
     // searched in its place: say which and why, not just who searched
-    // (Gearclickist on Discord: Grok picked, Codex's model searched)
+    // (Gearclickist 报告: Grok picked, Codex's model searched)
     if (r.kind === "web_search" && r.for?.instead) {
       const f = r.for;
       const whom = f.mcp ? t("{agent}'s call to magpie's web_search MCP tool", { agent: agentName(f.agent) })
@@ -2875,7 +2875,7 @@ function routingPage(part) {
     // agent's fitted to the model's levels — after the one the agent
     // asked for when that was another (xhigh → max), so a level the
     // agent didn't pick reads as the agent's or as magpie's at a glance
-    // (呆滞 on X: Pi 里面选择是 xhigh 但是 magpie 里面显示的是 max);
+    // (呆滞 报告: Pi 里面选择是 xhigh 但是 magpie 里面显示的是 max);
     // how it came to be is in its title and the request's story. Short of
     // room, where it went gives way first, then the level asked for, then
     // the one sent, each cut with an ellipsis in its own box (#435,
@@ -3808,12 +3808,12 @@ function routingPage(part) {
   const gFound = el("div", "rt-gfound");
   // how the agents' lists name every group, one setting for them all (and
   // for the providers' models), so it sits over the groups rather than in
-  // one group's editor (PAMI on Discord)
+  // one group's editor (PAMI 报告)
   const gNames = el("div", "rt-gnames");
   // the groups go with the routing groups built-in plugin; the pools stay
   for (const n of [gHead, gFound, gNames, gList]) n.dataset.feature = "groups";
   // and off (the Essentials preset leaves it off), where they were
-  // the page says so and turns it on (bigbenniu on X: past the requests
+  // the page says so and turns it on (bigbenniu 报告: past the requests
   // there was nothing, and no word of where New group had gone). The
   // groups magpie finds route all the same.
   const gOff = el("div", "rt-goff");
@@ -4076,7 +4076,7 @@ function routingPage(part) {
   // Discord: they could only be removed one at a time); null otherwise
   let gSel = null;
   // gQ: the groups filtered by name and by the models in them, as many
-  // as there may be (PAMI on Discord); kept across redraws, never taken
+  // as there may be (PAMI 报告); kept across redraws, never taken
   // out of the page while it is there
   const gQ = el("input", "sess-filter rt-gfilter");
   gQ.type = "search";
@@ -4084,7 +4084,7 @@ function routingPage(part) {
   gQ.autocomplete = "off";
   gQ.oninput = () => renderGroups();
   gQ.onkeydown = (e) => { if (e.key === "Escape" && gQ.value) { e.stopPropagation(); gQ.value = ""; renderGroups(); } };
-  // gImport: Import a group's box (laincatx on X): the text pasted, kept
+  // gImport: Import a group's box (laincatx 报告): the text pasted, kept
   // in the page across redraws as gQ is, and what the import added and
   // left out once it has; null while closed
   let gImport = null;
@@ -4196,7 +4196,7 @@ function routingPage(part) {
     replaceKeeping(gList, rows);
     renderPools();
   }
-  // Copy to share (laincatx on X): the group as text, its models, routing
+  // Copy to share (laincatx 报告): the group as text, its models, routing
   // and rules and no key (provider.ShareGroup), for anyone to paste into
   // their magpie's Import
   async function shareGroup(g) {
@@ -4517,7 +4517,7 @@ function routingPage(part) {
     row.oncontextmenu = (e) => { e.preventDefault(); groupMenu(ics, g); };
     row.append(ics, main, tags, edit);
     // a group of the user's switches off as a whole, kept as it is (PAMI
-    // on Discord); one magpie found is removed rather (provider.SwitchGroup)
+    // 报告); one magpie found is removed rather (provider.SwitchGroup)
     if (!g.auto) {
       const sw = el("button", "lib-switch rt-gon" + (g.disabled ? "" : " on"));
       sw.type = "button";
@@ -4583,10 +4583,10 @@ function routingPage(part) {
       { name: "Move up", icon: MOVE_UP, key: ALT + "↑", off: up < 0, run: () => moveGroup(g.id, up, true) },
       { name: "Move down", icon: MOVE_DOWN, key: ALT + "↓", off: down < 0, run: () => moveGroup(g.id, down, true) },
       // the group as it is, models, routing and rules, listed after it, to
-      // change without touching the one agents use (lc on Discord)
+      // change without touching the one agents use (lc 报告)
       { name: "Duplicate", icon: COPY_ICON, sep: true, tip: t("A copy of {name} with its models, routing and rules, listed after it", { name: g.name }),
         run: async () => { if (!groupDirty() || await confirmDiscard()) groupAction("copy", { id: g.id, name: t("{name} copy", { name: g.name }) }, t("Duplicated {name}", { name: g.name })); } },
-      // the group as text for someone else's magpie (laincatx on X)
+      // the group as text for someone else's magpie (laincatx 报告)
       { name: "Copy to share", icon: OUT, tip: t("{name} as text to paste into another magpie: its models, routing and rules, no key", { name: g.name }),
         run: () => shareGroup(g) },
     ]);
@@ -4669,7 +4669,7 @@ function routingPage(part) {
     const d = gEdit.draft;
     // whoever opened it, a draft has what the editor and Add read: a group
     // made from a model (newGroupWith) had no fast, and Add threw on it
-    // and did nothing (悠悠哥 on Discord)
+    // and did nothing (悠悠哥 报告)
     for (const k of ["members", "match", "matched", "fast", "off", "rules"]) if (!Array.isArray(d[k])) d[k] = [];
     if (!d.weights || typeof d.weights !== "object") d.weights = {};
     const ed = el("div", "editor rt-gedit");
@@ -4684,7 +4684,7 @@ function routingPage(part) {
     // a new one's is made from its name
     if (g && d.id === undefined) d.id = g.id;
     // an open group folds back into its row from its heading, as it opened
-    // from the row (ARNO on Discord) — only while nothing in it has
+    // from the row (ARNO 报告) — only while nothing in it has
     // changed, so a stray click never throws an edit away; Cancel does that.
     // Its own class, not .fold: that is the Models head's chip, whose
     // padding and corners made the heading's line curve at its ends and
@@ -4720,7 +4720,7 @@ function routingPage(part) {
     // what the agents' lists will call it (#868: an agent's narrow menu
     // cut it to "· rou…"); whether "· routing group" follows the name is
     // one setting for every group, over the list (drawNames), not one in
-    // here (PAMI on Discord); a group saved here is one the user made
+    // here (PAMI 报告); a group saved here is one the user made
     const sfxSaid = el("span", "hint");
     const sayLabel = () => {
       sfxSaid.textContent = t("Agents’ lists show “{label}”", { label: (d.name.trim() || t("New group")) + (suffixMode() === "on" ? " · routing group" : "") }) +
@@ -4770,7 +4770,7 @@ function routingPage(part) {
       if (keep) list.querySelector(`.rt-mhandle[data-at="${to}"]`)?.focus({ preventScroll: true });
     };
     // memberHandle is a named member's place in the order, which is also
-    // its handle (PAMI on Discord: only Up, one step a click): drag it to
+    // its handle (PAMI 报告: only Up, one step a click): drag it to
     // move the model, or Alt+↑/↓ from the keyboard; Up and Down stay
     // beside it. The grip that says so shows only on hover, as on the
     // groups' cards.
@@ -5060,7 +5060,7 @@ function routingPage(part) {
     ed.append(kLab, kw);
     drawSink();
     // a member slow to begin its answer: waited for, or the next asked
-    // or after as many minutes as the user types (Kismet Alan on Discord)
+    // or after as many minutes as the user types (Kismet Alan 报告)
     const fHint = el("div", "hint"), fw = el("div", "ctx-wrap first-wrap");
     const firstIn = keys(input("", t("e.g. 5")));
     firstIn.classList.add("ctx-in", "first-in");
@@ -5111,7 +5111,7 @@ function routingPage(part) {
     ed.append(el("label", "", t("Every member busy")), patW);
     drawPatience();
     // the window agents are told: the largest member's, the smallest's, or
-    // one the user names (Mikan on Discord)
+    // one the user names (Mikan 报告)
     const ctxHint = el("div", "hint"), ctxW = el("div", "ctx-wrap");
     const ctxIn = keys(input(d.context > 0 ? ctxShort(d.context).toLowerCase() : "", t("e.g. 200k")));
     ctxIn.classList.add("ctx-in");
@@ -5161,7 +5161,7 @@ function routingPage(part) {
     // quiet + beside them adds one from the app's menu, and a set one is
     // taken off with its ×. A new rule starts as an intent, the common case
     // (the owner, 10-14: every rule showed all ten conditions, empty —
-    // "用户要输入、填写这么多东西，太恐怖了"; CherryL1quor on X took Jev for
+    // "用户要输入、填写这么多东西，太恐怖了"; CherryL1quor 报告 took Jev for
     // the effort alone while the intent sat among the others).
     const RULE_PAUSE = "M6 4.5v7M10 4.5v7", RULE_SEND = "M3 8h9M8.5 4.5 12 8l-3.5 3.5", RULE_EFFORT = "M3 11.5a5 5 0 0 1 10 0M8 11.5l2.5-3.5";
     // how a part works, said under an ⓘ beside it rather than in a
@@ -5349,7 +5349,7 @@ function routingPage(part) {
         }
         // agents: the ones magpie knows, the others it has heard from, and
         // any typed by the name the gateway gives a client it doesn't know
-        // (raikyou on Discord: SillyTavern, one's own app)
+        // (raikyou 报告: SillyTavern, one's own app)
         if (kinds.includes("agents")) {
           const clients = state.clients || state.agents || [];
           const agentsName = () => r.agents.length ? r.agents.map((id) => clients.find((a) => a.id === id)?.name || id).join(", ") : t("any agent");
@@ -5376,7 +5376,7 @@ function routingPage(part) {
           if (mine === "agents") focus = () => { ag.focus({ preventScroll: true }); ag.onclick({ stopPropagation() {} }); };
         }
         // folders: the project the agent works in, as it tells its model
-        // (Cario0x on X), typed comma separated; a folder inside one counts
+        // (Cario0x 报告), typed comma separated; a folder inside one counts
         if (kinds.includes("folders")) {
           const fd = el("span", "rt-cond fd" + (r.folders?.length ? " on" : ""));
           fd.onclick = (e) => { if (e.target === fd || e.target.tagName === "SPAN") fi.focus(); };
@@ -5490,7 +5490,7 @@ function routingPage(part) {
         };
         warn();
         // what it does: send the turn there first, or keep the model out
-        // of the group while the rule holds (John on Discord: a model
+        // of the group while the rule holds (John 报告: a model
         // paused in its vendor's peak hours). Sending is the plain case and
         // goes unsaid; a pause says so before the model, and turns back
         // from there or from the rule's menu.
@@ -5837,7 +5837,7 @@ function routingPage(part) {
   // Every request redraws what is above the routing groups: the stage gains
   // or loses a row, the story a line, the lists theirs. The view kept its
   // scrollTop, so all of it pushed the groups down or pulled them up under
-  // the reader, a group being edited too (Jerell.OvO on Discord). The view
+  // the reader, a group being edited too (Jerell.OvO 报告). The view
   // keeps a part of itself where it is on the screen instead (keepInView in
   // app.js): the groups, while they are in the upper half of the view or a
   // field in them has the focus, else the lists, while they are; with
@@ -5845,7 +5845,7 @@ function routingPage(part) {
   // The groups too while the pointer is on them, low in the view as they
   // are at the page's foot: a manual group's card, its pick a click away,
   // slid down from under the pointer as the requests list above it grew
-  // (cwfox67 on X).
+  // (cwfox67 报告).
   const rv = $("#view-routing");
   keepInView(rv, () => {
     const mid = rv.getBoundingClientRect().top + rv.clientHeight / 2;
@@ -6155,7 +6155,7 @@ function routingPage(part) {
     fit();
   }
   // a Manual group's model, switched here as its card's radios do (#2489,
-  // Jerell.OvO on Discord): CC Switch's one provider on at a time, from
+  // Jerell.OvO 报告): CC Switch's one provider on at a time, from
   // the tray. A row a group of two or more that is on, its picked
   // member a button that opens the members as a menu.
   function panelPicks() {

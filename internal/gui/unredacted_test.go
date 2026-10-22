@@ -10,7 +10,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// lc on Discord: the editor's "Send requests unmasked" is saved on a
+// lc 报告: the editor's "Send requests unmasked" is saved on a
 // preset added afresh (Ollama) and on one saved again, and /api/providers
 // gives it back for the editor to open with.
 func TestProviderSaveKeepsUnredacted(t *testing.T) {

@@ -15,7 +15,7 @@ import (
 // picked nvm's "newest-looking" folder by name, and in plain string order
 // v9.11.2 comes after v22.12.0: a codex, claude or gemini installed under a
 // Node the terminal doesn't use was found, run and updated in place of the
-// terminal's (found while answering 悠悠哥 on Discord, 9f407cafa). The
+// terminal's (found while answering 悠悠哥 报告, 9f407cafa). The
 // folders are taken in the order a terminal would reach them instead: the
 // manager's default first, then the highest version.
 

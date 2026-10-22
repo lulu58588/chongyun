@@ -1,12 +1,12 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// yapechan on Discord: after an import or a WebDAV sync no providers showed
+// yapechan 报告: after an import or a WebDAV sync no providers showed
 // on the other computer, and nothing said why. A backup or a sync carries a
 // subscription's settings, never its sign-in, so a subscription shows only
 // once signed in to there. The sync's status and the import's result now
 // name the subscriptions not signed in on this computer (by the name the
 // Add sheet gives them), and the import says which plugins it added and
 // which it couldn't. In English, Chinese, Japanese and German, Chromium and
-// WebKit, at 900 and 440px. 悠悠哥 on Discord asked why sync said ChatGPT
+// WebKit, at 900 and 440px. 悠悠哥 报告 asked why sync said ChatGPT
 // wasn't signed in: the line says the synced settings use it, and that one
 // not used here needs nothing (zh-TW too, 1100 and 420px). The API is faked; nothing is synced.
 const assert = require("node:assert/strict");

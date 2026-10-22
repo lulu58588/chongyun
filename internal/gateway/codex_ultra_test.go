@@ -46,6 +46,15 @@ func copilotSol(t *testing.T) *copilotUp {
 	os.WriteFile(filepath.Join(cfg, "github-copilot", "apps.json"), mustJSON(map[string]any{
 		"github.com:Iv1.x": map[string]any{"user": "wlll5", "oauth_token": "gho_656_" + t.Name()},
 	}), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// editor's own file to find out which account that is.
+	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
+	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
+		{"agent": "copilot", "user": "wlll5", "active": true, "seen": time.Now(), "auth": map[string]any{"oauth_token": "gho_656_" + t.Name()}},
+	}), 0o600)
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
 	c := &copilotUp{}
 	api := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/models" {
@@ -259,7 +268,7 @@ func TestCopilotUltraSubagentWithWebSearch(t *testing.T) {
 }
 
 // A Codex turn on Copilot offering web_search is relayed as Codex sent it,
-// as Copilot runs the search itself (echo_ts on Discord: translated for
+// as Copilot runs the search itself (echo_ts 报告: translated for
 // magpie's search, every turn lost the relay); one whose tools mark an
 // argument "encrypted" is made again unmarked, with the search or without,
 // since Copilot seals that argument and can't open it on the next turn.

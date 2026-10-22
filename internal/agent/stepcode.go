@@ -309,7 +309,6 @@ func stepcodeIn(at place) *Agent {
 	dir := stepcodeDir(at)
 	path := filepath.Join(dir, "config.toml")
 	modelsPath := filepath.Join(dir, "models.json")
-	authPath := filepath.Join(dir, "auth.json")
 
 	block := theirsKept(modelsPath, "providers."+magpieID, func() any { return stepcodeProvider(at) }, "models")
 	// the entries of enabledModels a sync took out (scope_gone.go)
@@ -625,7 +624,7 @@ func stepcodeIn(at place) *Agent {
 					return nil
 				},
 				Options: func(cur map[string]string) []Option {
-					return append(ownOptions(authPath, cur["model"]), viaMagpie("stepcode", magpieID+"/")...)
+					return append(ownOptions(cur["model"]), viaMagpie("stepcode", magpieID+"/")...)
 				},
 			},
 		},

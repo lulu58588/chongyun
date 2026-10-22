@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-// sunset on Discord: skills from GitLab, and from a company's own GitLab
+// sunset 报告: skills from GitLab, and from a company's own GitLab
 // on its intranet. What the user types is read as a git repository, with
 // a GitLab page's ref and folder; what git would take as an option, or a
 // transport that runs a command, is refused.

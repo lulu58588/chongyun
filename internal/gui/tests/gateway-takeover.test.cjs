@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The Gateway card's button (leslie_luo on Discord: the page said an older
+// The Gateway card's button (leslie_luo 报告: the page said an older
 // magpie served the gateway, with no way to quit it). With an older magpie
 // on the port it reads "Quit magpie {v} and take over" and asks the backend
 // to; once this one serves, it is "Restart gateway" and restarts it. A

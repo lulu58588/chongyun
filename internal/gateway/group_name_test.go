@@ -9,7 +9,7 @@ import (
 
 // A routing group renamed keeps its id, and a client the user typed the
 // group's name into (ZCode's model field) asks for it by that name: the
-// name is the group's, as its id is (MOMO on Discord: "magpie knows no
+// name is the group's, as its id is (MOMO 报告: "magpie knows no
 // model" after magpie group set <id> name=…). A model a provider serves
 // by that id stays the provider's, and a name two groups share names
 // neither.

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// One model tested on its own (yonghe on Discord): in a provider's editor a
+// One model tested on its own (yonghe 报告): in a provider's editor a
 // model chip's right-click opens a menu, "Test this model", which posts
 // provider/test with that model alone; its dot and title show how it
 // answered, as Test models shows them, a second model's test keeps the

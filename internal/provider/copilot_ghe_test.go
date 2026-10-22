@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"strings"
 	"sync"
 	"testing"
@@ -187,48 +185,3 @@ func TestCopilotGHESignIn(t *testing.T) {
 	}
 }
 
-// `copilot login --host acme.ghe.com` is read, and served at its
-// enterprise; a github.com sign-in beside it still comes first, and a
-// GitHub Enterprise Server's is left out.
-func TestCopilotCLIGHELogin(t *testing.T) {
-	home := signIn(t)
-	os.Remove(filepath.Join(home, ".config", "github-copilot", "apps.json"))
-	cli := filepath.Join(home, "copilot-home")
-	t.Setenv("COPILOT_HOME", cli)
-	os.MkdirAll(cli, 0o700)
-	srv, _ := gheServer(t, "gho_ent")
-	oldSecret := copilotCLISecret
-	copilotCLISecret = func(string) string { return "" }
-	defer func() { copilotCLISecret = oldSecret }()
-
-	write := func(s string) { os.WriteFile(filepath.Join(cli, "config.json"), []byte(s), 0o600) }
-	write(`{"lastLoggedInUser":{"host":"https://acme.ghe.com","login":"mona_acme"},
-		"loggedInUsers":[{"host":"https://acme.ghe.com","login":"mona_acme"}],
-		"copilotTokens":{"https://acme.ghe.com:mona_acme":"gho_ent"}}`)
-	p, ok := find(All(), "copilot")
-	if !ok || p.Account.User != "mona_acme@acme.ghe.com" {
-		t.Fatalf("copilot: %+v", p)
-	}
-	ms, err := p.Fetch(context.Background())
-	if err != nil || len(ms) != 2 || ms[0].ID != "gpt-5.5" {
-		t.Fatalf("models: %+v %v", ms, err)
-	}
-	req, _ := http.NewRequest("POST", "https://copilot-api.acme.ghe.com/chat/completions", nil)
-	if err := p.Sign(context.Background(), req, Chat, []byte(`{"messages":[{"role":"user","content":"hi"}]}`)); err != nil {
-		t.Fatal(err)
-	}
-	if req.URL.String() != srv.URL+"/copilot-api.acme.ghe.com/chat/completions" || req.Header.Get("Authorization") != "Bearer gho_ent" {
-		t.Fatalf("signed: %s %v", req.URL, req.Header)
-	}
-
-	write(`{"lastLoggedInUser":{"host":"https://acme.ghe.com","login":"mona_acme"},
-		"loggedInUsers":[{"host":"https://acme.ghe.com","login":"mona_acme"},{"host":"https://github.com","login":"octocat"}],
-		"copilotTokens":{"https://acme.ghe.com:mona_acme":"gho_ent","https://github.com:octocat":"gho_dot"}}`)
-	if app, ok := copilotCLILogin(); !ok || app.User != "octocat" || app.Host != "" || app.Token != "gho_dot" {
-		t.Fatalf("github.com first: %+v", app)
-	}
-	write(`{"lastLoggedInUser":{"host":"https://github.example.com","login":"ghes"},"copilotTokens":{"https://github.example.com:ghes":"gho_ghes"}}`)
-	if app, ok := copilotCLILogin(); ok {
-		t.Fatalf("a GitHub Enterprise Server sign-in was taken: %+v", app)
-	}
-}

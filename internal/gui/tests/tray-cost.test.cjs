@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Settings › Menu bar cost (BussanQ on Discord: the today card in the menu
+// Settings › Menu bar cost (BussanQ 报告: the today card in the menu
 // bar with the tokens alone): an On/Off row under the pace row, on by
 // default; Off posts trayNoCost and On takes it back; a save of another
 // setting keeps it; the row is there on every OS and with no card, as the

@@ -311,7 +311,7 @@ var wslKinds = []wslKind{
 			if key == "model" {
 				// the providers of its auth.json are the distro's files
 				return func(cur map[string]string) []Option {
-					return append(ownOptions("", cur["model"]), viaMagpie("pi", magpieID+"/")...)
+					return append(ownOptions(cur["model"]), viaMagpie("pi", magpieID+"/")...)
 				}
 			}
 			return nil
@@ -322,7 +322,7 @@ var wslKinds = []wslKind{
 		asleep: func(key string) func(map[string]string) []Option {
 			if key == "model" {
 				return func(cur map[string]string) []Option {
-					return append(ownOptions("", cur["model"]), viaMagpie("omo", magpieID+"/")...)
+					return append(ownOptions(cur["model"]), viaMagpie("omo", magpieID+"/")...)
 				}
 			}
 			return nil
@@ -333,7 +333,7 @@ var wslKinds = []wslKind{
 		asleep: func(key string) func(map[string]string) []Option {
 			if key == "model" {
 				return func(cur map[string]string) []Option {
-					return append(ownOptions("", cur["model"]), viaMagpie("prime-agent", magpieID+"/")...)
+					return append(ownOptions(cur["model"]), viaMagpie("prime-agent", magpieID+"/")...)
 				}
 			}
 			return nil
@@ -480,7 +480,7 @@ var wslKinds = []wslKind{
 		restart: newNotice("{agent} in WSL {distro} reads its settings as a session starts — open sessions keep the model they have; new ones use this.")},
 	{id: "qoder-cn", name: "Qoder CN", dir: ".qoder-cn", bin: "qoderclicn", in: qoderCNIn,
 		restart: newNotice("{agent} in WSL {distro} reads its settings as a session starts — open sessions keep the model they have; new ones use this.")},
-	// lgtm on Discord: magpie didn't find a CodeBuddy Code installed in WSL
+	// lgtm 报告: magpie didn't find a CodeBuddy Code installed in WSL
 	{id: "codebuddy", name: "CodeBuddy Code", dir: ".codebuddy", bin: "codebuddy", in: codebuddyIn,
 		restart: newNotice("{agent} in WSL {distro} reads its model when a session starts — restart open codebuddy sessions, or run /clear in them, to use this.")},
 	// Cline's CLI, and its VS Code extension in a Remote - WSL window, which
@@ -547,7 +547,7 @@ var wslKinds = []wslKind{
 			switch key {
 			case "model", "planner":
 				return func(cur map[string]string) []Option {
-					out := append(ownOptions("", cur[key]), viaMagpie("reasonix", magpieID+"/")...)
+					out := append(ownOptions(cur[key]), viaMagpie("reasonix", magpieID+"/")...)
 					if key == "planner" {
 						out = append([]Option{{Value: "off", Label: "off", Note: "Disable the separate planner"}}, out...)
 					}
@@ -580,7 +580,7 @@ func wslOwnAsleep(id string, keys ...string) func(string) func(map[string]string
 			return nil
 		}
 		return func(cur map[string]string) []Option {
-			return append(ownOptions("", cur[key]), viaMagpie(id, magpieID+"/")...)
+			return append(ownOptions(cur[key]), viaMagpie(id, magpieID+"/")...)
 		}
 	}
 }
@@ -900,7 +900,7 @@ const (
 	// wslRunningAge is how long which distros run is taken as wsl.exe
 	// said: one the user stops (wsl --shutdown or --terminate, to repair
 	// WSL) is seen stopped within it, before anything opens its files,
-	// which would start it again (TJHHHH on Discord)
+	// which would start it again (TJHHHH 报告)
 	wslRunningAge = 3 * time.Second
 	// wslRunningFailedAge is how long wsl.exe failing to say is kept: each
 	// ask that times out holds wsl's lock, and so the GUI, for 10s, and
@@ -1174,7 +1174,7 @@ const wslProbeVersion = 2
 //
 // A command is also looked for in the folders its installers put it in
 // (wslbin): sh -l reads ~/.profile but not ~/.bashrc, where bun's and
-// nvm's installers add theirs to PATH (whqtian on Discord: a WSL omp from
+// nvm's installers add theirs to PATH (whqtian 报告: a WSL omp from
 // bun was never asked its version, so its models still offered xhigh).
 // It is asked with its own folder on PATH, where bun's script finds bun.
 //

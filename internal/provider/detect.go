@@ -13,7 +13,7 @@ import (
 )
 
 // Which APIs a vendor or relay serves behind the one URL the user typed is
-// found by asking (01huadalang on Discord: 一键检测支持什么协议，发一个最小
+// found by asking (01huadalang 报告: 一键检测支持什么协议，发一个最小
 // 请求看是否返回200): each of the three magpie speaks upstream — Chat
 // Completions, Responses and Anthropic Messages — is sent the smallest
 // request Test sends, at that URL as the API takes it, and what answered
@@ -207,7 +207,7 @@ func (p Provider) DetectDecide(ctx context.Context, model string) Detection {
 }
 
 // ModelDetection is what each API answered for one model
-// (01huadalang on Discord: 应该能看出来选择的模型支持情况…有的仅支持
+// (01huadalang 报告: 应该能看出来选择的模型支持情况…有的仅支持
 // response 有的双协议).
 type ModelDetection struct {
 	Model   string      `json:"model"`

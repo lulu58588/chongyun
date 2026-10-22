@@ -5,17 +5,42 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 )
 
+// keepaliveCodexSignIn keeps a ChatGPT account in logins.json, as
+// chongyun's own sign-in does: the account it signed in to is kept there,
+// with the sign-in it has.
+func keepaliveCodexSignIn(t *testing.T, email, plan, accountID, refresh string) {
+	t.Helper()
+	auth := map[string]any{
+		"auth_mode": "chatgpt",
+		"tokens": map[string]any{
+			"id_token":      fakeJWT(map[string]any{"email": email, "https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": plan, "chatgpt_account_id": accountID}}),
+			"access_token":  fakeJWT(map[string]any{"exp": float64(time.Now().Add(time.Hour).Unix())}),
+			"refresh_token": refresh, "account_id": accountID,
+		},
+	}
+	codexOwnLogin(t, email, plan, auth)
+}
+
+// keepaliveSavedAuth is the sign-in chongyun keeps for the codex account user.
+func keepaliveSavedAuth(t *testing.T, user string) string {
+	t.Helper()
+	for _, l := range readLogins() {
+		if l.Agent == "codex" && l.User == user {
+			return string(l.Auth)
+		}
+	}
+	t.Fatalf("no saved codex account %q", user)
+	return ""
+}
+
 func TestRenewLogins(t *testing.T) {
-	home := signIn(t)
-	rememberLogins(true) // me@ saved…
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true) // …and codex is on work@ now
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
 
 	var got []string
 	status := http.StatusOK
@@ -61,10 +86,10 @@ func TestRenewLogins(t *testing.T) {
 	if !strings.Contains(string(l.Auth), `"r-2"`) || time.Since(l.Renewed) > time.Minute || !renewalDue(l, keepAliveEvery, time.Now().Add(25*time.Hour)) {
 		t.Fatalf("saved after renewal: %+v", l)
 	}
-	var live codexAuth
-	readJSON(filepath.Join(home, ".codex", "auth.json"), &live)
-	if live.Tokens.RefreshToken != "r-work" {
-		t.Fatalf("the agent's own sign-in changed: %+v", live.Tokens)
+	// the account the agent is on keeps the sign-in chongyun has for it:
+	// the renewal of the other account did not touch it
+	if auth := keepaliveSavedAuth(t, "work@example.com"); !strings.Contains(auth, "r-work") {
+		t.Fatalf("the agent's own sign-in changed: %s", auth)
 	}
 
 	// no answer worth the name: it may yet renew, so nothing is marked
@@ -91,15 +116,7 @@ func TestRenewLogins(t *testing.T) {
 
 	// signed in again: no longer lapsed, once it's saved again
 	status = http.StatusOK
-	writeFile(t, filepath.Join(home, ".codex", "auth.json"), map[string]any{
-		"auth_mode": "chatgpt",
-		"tokens": map[string]any{
-			"id_token":      fakeJWT(map[string]any{"email": "me@example.com", "https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": "pro", "chatgpt_account_id": "acct-1"}}),
-			"access_token":  fakeJWT(map[string]any{"exp": float64(time.Now().Add(time.Hour).Unix())}),
-			"refresh_token": "r-new", "account_id": "acct-1",
-		},
-	})
-	rememberLogins(true)
+	keepaliveCodexSignIn(t, "me@example.com", "pro", "acct-1", "r-new")
 	if err := SwitchLogin("codex", "work@example.com"); err != nil {
 		t.Fatal(err)
 	}

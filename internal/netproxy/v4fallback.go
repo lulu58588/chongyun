@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// IPv4 fallback (tony on Discord: models.dev and the update check failed
+// IPv4 fallback (tony 报告: models.dev and the update check failed
 // with a bare EOF, direct or not, while curl got through). Where a TUN
 // (xray, Clash's) takes every connection but can't carry IPv6 out, a
 // connection to a site's IPv6 address is accepted, so the dialer's own

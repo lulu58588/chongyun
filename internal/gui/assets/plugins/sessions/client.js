@@ -23,7 +23,7 @@ magpie.plugin("sessions", (ctx) => {
   let query = "";
   // The filter also finds a session by what was said in it: the server
   // reads the agent's conversations a moment after the last keystroke, and
-  // a new keystroke cancels the read it was on (YOU on Discord: a session
+  // a new keystroke cancels the read it was on (YOU 报告: a session
   // the gateway recorded is named ses_…, and its words are how it is
   // remembered). found is that search, for one agent and one query.
   let found = null;       // { agent, needle, hits: Map(id -> hit), busy, cut, unread, searched, total, error }
@@ -56,7 +56,7 @@ magpie.plugin("sessions", (ctx) => {
   let focus = null;           // { agent, id, until }: a session to bring into sight once drawn
   let recordingBusy = false;
   // An open folder draws its latest SM_PAGE sessions and a "Show N more"
-  // that adds the next page where it is (ChildhoodAndy on X: with thousands
+  // that adds the next page where it is (ChildhoodAndy 报告: with thousands
   // of sessions, switching to the page or to another agent, a keystroke in
   // the filter and opening a session each drew every row again, 17,000
   // elements for 1,000 sessions, and scrolling stuttered). drawnIn is how
@@ -74,7 +74,7 @@ magpie.plugin("sessions", (ctx) => {
   // A session seen only through magpie's gateway has no folder magpie knows
   // (its agent's files are on another computer, in a container or under
   // another config folder): such sessions are grouped by that, not under
-  // "No folder" with the agent's own (lc on Discord).
+  // "No folder" with the agent's own (lc 报告).
   const GW = "\x00gateway";
   const groupOf = (s) => s.cwd || (s.gateway ? GW : "");
   const groupName = (k) => k === GW ? t("Seen through the gateway") : k ? baseName(k) : t("No folder");
@@ -248,7 +248,7 @@ magpie.plugin("sessions", (ctx) => {
   // gateway, in gateway mode, or once recording is on or text is kept. A
   // switch that says what it keeps and where, and, while there is kept
   // text, a delete that says what it deletes and asks first in magpie's own
-  // dialog (lee on Discord: a bare checkbox and a lone trash icon under the
+  // dialog (lee 报告: a bare checkbox and a lone trash icon under the
   // tabs read as stray controls).
   const recordingApplies = () => typeof data?.recording === "boolean"
     && (data.recording || data.recorded || (typeof gatewayMode !== "undefined" && gatewayMode) || !!data.sessions?.some((s) => s.gateway));

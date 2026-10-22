@@ -269,7 +269,13 @@ func TestSyncCatalogAgesCodexCache(t *testing.T) {
 	home := syncHome(t)
 	dir := filepath.Join(home, ".codex")
 	writeFile(t, filepath.Join(dir, "auth.json"), `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the agent's own file is never read to find out.
+	codexLoginSaved(t, "me@example.com", map[string]any{"tokens": map[string]any{"access_token": "x", "id_token": "x.e30.x"}})
 	writeFile(t, filepath.Join(dir, "config.toml"), "model = \"relay/glm-4.6\"\nopenai_base_url = \""+codexGatewayURL()+"\"\n")
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "beside")
 	cache := filepath.Join(dir, "models_cache.json")
 	writeFile(t, cache, `{"fetched_at":"2026-09-25T10:00:00Z","etag":"W/\"v1\"","client_version":"0.155.1","models":[{"slug":"gpt-5.5"}]}`)
 	SyncCatalog()

@@ -270,7 +270,7 @@ func TestWSLMagpieImage(t *testing.T) {
 	}
 }
 
-// TJHHHH on Discord: magpie kept starting WSL while they repaired it. An
+// TJHHHH 报告: magpie kept starting WSL while they repaired it. An
 // agent made while its distro ran, which the user then stops (wsl
 // --shutdown), is no target: writing the library there would start it.
 // Giving it something says the distro isn't running.

@@ -18,7 +18,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
-// Kai on Discord (0.1.1278): Claude Code asks claude/claude-opus-5-5 at
+// Kai 报告 (0.1.1278): Claude Code asks claude/claude-opus-5-5 at
 // high effort, both Claude accounts are out of their limit, and the Claude
 // provider's own Fallback, a Codex subscription model, takes the request —
 // streamed or not.
@@ -45,15 +45,21 @@ func TestClaudeAccountsSpentFallBackToCodex(t *testing.T) {
 		return "h." + base64.RawURLEncoding.EncodeToString(b) + ".s"
 	}
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
-	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(map[string]any{"auth_mode": "chatgpt", "tokens": map[string]any{
+	codexAuth := map[string]any{"auth_mode": "chatgpt", "tokens": map[string]any{
 		"id_token":      claims(map[string]any{"email": "me@example.com"}),
 		"access_token":  claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix(), "who": "acct-1"}),
-		"refresh_token": "r-acct-1", "account_id": "acct-1"}}), 0o600)
-	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
-	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
-		{"agent": "claude", "user": "me@example.com", "plan": "max", "on": true, "seen": time.Now(), "auth": oauth("tok-me", "max")},
-		{"agent": "claude", "user": "pro@example.com", "plan": "pro", "on": true, "seen": time.Now(), "auth": oauth("tok-pro", "pro")},
-	}), 0o600)
+		"refresh_token": "r-acct-1", "account_id": "acct-1"}}
+	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(codexAuth), 0o600)
+	// chongyun keeps the accounts it signed the agents in to in its own
+	// logins.json, marking there the account each agent is on: it never
+	// reads the agents' own files to find out which account that is.
+	chongyunLogins(t,
+		map[string]any{"agent": "claude", "user": "me@example.com", "plan": "max", "active": true, "on": true, "seen": time.Now(),
+			"auth": oauth("tok-me", "max"), "profile": map[string]any{"emailAddress": "me@example.com", "accountUuid": "u-me"}},
+		map[string]any{"agent": "claude", "user": "pro@example.com", "plan": "pro", "on": true, "seen": time.Now().Add(-time.Minute),
+			"auth": oauth("tok-pro", "pro"), "profile": map[string]any{"emailAddress": "pro@example.com"}},
+		chongyunCodexLogin("me@example.com", codexAuth),
+	)
 	dir := t.TempDir()
 	log := filepath.Join(dir, "log")
 	// every account is out of its limit: the CLI says so in a result

@@ -8,7 +8,7 @@
 // call magpie timed keeps its own speed. Claude Code's, Claude Desktop's
 // and Codex's files tell one: a Codex call in a turn of several is timed
 // from what asked for it, before its first output item, to its last
-// (Fallmonkey on Discord). A narrow window shows it as a wide one does. The rows are real ledger rows read
+// (Fallmonkey 报告). A narrow window shows it as a wide one does. The rows are real ledger rows read
 // from Claude Code's session files of claude-opus-5-5 replies; the first,
 // 2,558 tokens in 25,987 ms, measured 100.6 tok/s on Claude Code's own stream
 // (--include-partial-messages) from its first thinking event to its end.

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The protocol each request was sent upstream in (蓝猫 on Discord: 「请求」
+// The protocol each request was sent upstream in (蓝猫 报告: 「请求」
 // 列表里每条请求显示它用的是 Anthropic / Responses / Chat 哪种协议): the
 // Usage page's Requests list tags each row with it, "Chat → Anthropic"
 // for one translated from the agent's own, Gemini for one on Gemini's

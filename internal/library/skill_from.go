@@ -14,7 +14,7 @@ import (
 )
 
 // Where a skill came from, for the page to group it with the others from
-// the same repository (White Immortal on Discord: the skills of
+// the same repository (White Immortal 报告: the skills of
 // github.com/mattpocock/skills together, however each came in). One
 // installed from GitHub says so itself; for the others it is traced:
 // CC Switch's record, the skills CLI's lock (npx skills add, in
@@ -317,7 +317,7 @@ func noteFrom(src Source, root string, cands []Candidate) int {
 			}
 			// the library's own copy, every file of it the repository's:
 			// it is that skill, and updates from there as one installed
-			// from it does (RockyShowlle on X). One linked to a folder
+			// from it does (RockyShowlle 报告). One linked to a folder
 			// elsewhere is kept by whatever put it there (npx skills, a
 			// git checkout), and an edited one stays only grouped.
 			if dir := skillDir(s.Name); s.Source == nil && !linked(dir) && sameTree(dir, filepath.Join(root, filepath.FromSlash(c.Path))) {

@@ -18,7 +18,7 @@ const (
 var OneAuthOrder = []string{AuthXAPIKey, AuthBearer}
 
 // BothAuthRefused is a 401 whose body says x-api-key and Authorization
-// can't both be sent (Aloha on Discord: "鉴权 header， x-api-key 和
+// can't both be sent (Aloha 报告: "鉴权 header， x-api-key 和
 // Authorization 不可以同时存在"), in Chinese or English.
 func BothAuthRefused(status int, body []byte) bool {
 	if status != http.StatusUnauthorized {

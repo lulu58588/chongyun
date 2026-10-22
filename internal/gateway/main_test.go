@@ -46,10 +46,6 @@ func isolatedTests(m *testing.M) (int, error) {
 		return 1, err
 	}
 	defer os.RemoveAll(home)
-	// this build reads an agent's sign-in only when the user asks for it
-	// (AccountDiscovery); the tests here are about that code, so they turn
-	// it on for the run.
-	os.Setenv("MAGPIE_ACCOUNT_DISCOVERY", "1")
 	for name, value := range map[string]string{
 		"HOME": home, "USERPROFILE": home,
 		"XDG_CONFIG_HOME": filepath.Join(home, ".config"),

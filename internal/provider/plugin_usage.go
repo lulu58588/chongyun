@@ -180,7 +180,7 @@ func quotaOfPlugin(q SubscriptionQuota, u plugin.Usage) SubscriptionQuota {
 // asked for by its bare id (grok-4.7, picked before the list had sizes,
 // which the plugin runs at its default size): that is the same model, on
 // the same allowance. So a bare id is in the set when one of its @sizes
-// is, and an @size when its bare id is (Will on Discord). Any other suffix
+// is, and an @size when its bare id is (Will 报告). Any other suffix
 // (ZCode's -Trial) names a model of its own, and one @size doesn't stand
 // for another.
 type idSet struct {

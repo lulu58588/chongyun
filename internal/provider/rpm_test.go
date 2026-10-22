@@ -2,7 +2,7 @@ package provider
 
 import "testing"
 
-// A limit on requests a minute (coeo91 on Discord) is kept with the
+// A limit on requests a minute (coeo91 报告) is kept with the
 // provider, within 0–MaxRPMLimit, and 0 takes it off; a subscription's is
 // kept with its picks and is every account's of it.
 func TestSetRPM(t *testing.T) {

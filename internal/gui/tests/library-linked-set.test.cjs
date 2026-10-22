@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// 新v学员 on Discord: one ~/.agents/AGENTS.md kept by hand, shared by every
+// 新v学员 报告: one ~/.agents/AGENTS.md kept by hand, shared by every
 // agent. A new set of instructions can be kept in a file of the user's own
 // (Keep in a file…, ~/.agents/AGENTS.md filled in), which sends the file
 // with the set; a set kept so says where, is tagged Your file, warns that

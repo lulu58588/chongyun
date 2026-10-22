@@ -8,7 +8,7 @@
 // id are one row, the alias's, or the dated one's while that is the value
 // set. In English and Chinese. No backend: the API is faked here.
 // The fold row ends Claude Code's own rows, which come after magpie's
-// (abledo on Discord: they hid every magpie model below the fold), though
+// (abledo 报告: they hid every magpie model below the fold), though
 // the account is listed among magpie's (where it was, Claude Code was
 // headed twice);
 // a click on it leaves the keys to the filter (focus went to the page, and

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// magpie web on a phone (jiakun_zhao on X: 移动端的显示效果非常不友好，甚至滚动
+// magpie web on a phone (jiakun_zhao 报告: 移动端的显示效果非常不友好，甚至滚动
 //会抽搐). The header is two rows, the magpie and the icons over the tabs at
 // their size, sliding sideways, the one open in sight; a setting's control
 // too wide beside its name goes under it rather than cut the name; iOS isn't

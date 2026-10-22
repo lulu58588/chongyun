@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// The page's state says which profile is in use (superhtoooth on X: the
+// The page's state says which profile is in use (superhtoooth 报告: the
 // panel's button read 方案 1, 方案 2, a count taken for the name, and
 // nothing said which profile was in use). Through the page's own calls: a
 // profile saved under a name is in use at once, another applied is, and a

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// lc on Discord: https://github.com/crystaldba/postgres-mcp pasted into
+// lc 报告: https://github.com/crystaldba/postgres-mcp pasted into
 // Library › MCP › Discover said only "Nothing matches". An address the market
 // finds nothing at now says so — over the servers found by its name, when
 // there are any — and offers to add it by hand, the form filled in with what

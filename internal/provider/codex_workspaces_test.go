@@ -12,20 +12,57 @@ import (
 	"time"
 )
 
+// emptyCodexHome sets up a temp home with the usual env and no
+// account signed in: the test signs in to the seats it wants, and they are
+// the accounts there are.
+func emptyCodexHome(t *testing.T) string {
+	t.Helper()
+	isolate(t)
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("USERPROFILE", home) // Windows: os.UserHomeDir reads this, not HOME
+	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
+	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
+	return home
+}
+
 // codexWorkspaceSignIn signs Codex in to a seat of email's in a Team
-// workspace: two of them read alike, "email · Team".
+// workspace: two of them read alike, "email · Team". The account is
+// chongyun's own, so it is kept in logins.json, and it is the account the
+// agent is signed in to.
 func codexWorkspaceSignIn(t *testing.T, home, email, workspace, refresh string) {
 	t.Helper()
 	exp := float64(time.Now().Add(time.Hour).Unix())
+	id := fakeJWT(map[string]any{"email": email, "https://api.openai.com/auth": map[string]any{
+		"chatgpt_plan_type": "team", "chatgpt_account_id": workspace}})
 	writeFile(t, filepath.Join(home, ".codex", "auth.json"), map[string]any{
 		"auth_mode": "chatgpt",
 		"tokens": map[string]any{
-			"id_token": fakeJWT(map[string]any{"email": email, "https://api.openai.com/auth": map[string]any{
-				"chatgpt_plan_type": "team", "chatgpt_account_id": workspace}}),
+			"id_token":      id,
 			"access_token":  fakeJWT(map[string]any{"exp": exp}),
 			"refresh_token": refresh, "account_id": workspace,
 		},
 	})
+	l, err := codexLogin(id, fakeJWT(map[string]any{"exp": exp}), refresh, workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	l.On, l.Active, l.Seen = true, true, time.Now().UTC()
+	loginsMu.Lock()
+	defer loginsMu.Unlock()
+	ls := readLogins()
+	for i := range ls {
+		if ls[i].Agent == "codex" {
+			ls[i].On = false
+		}
+	}
+	ls = upsertLogin(ls, l)
+	// the seat is the account the agent is signed in to, under the name it
+	// is kept by (two seats of one email read alike)
+	ls = setOwnActive(ls, l.Agent, codexLiveName(l.User, l.Auth))
+	if err := writeLogins(ls); err != nil {
+		t.Fatal(err)
+	}
 }
 
 // workspaceOf is the workspace a saved Codex account's credentials are
@@ -44,18 +81,16 @@ func workspaceOf(t *testing.T, user string) (workspace, refresh string) {
 }
 
 // Two Codex accounts of one email in two Team workspaces are two accounts
-// in every way (vincentzhang on Discord: removing one, or codex logout on
+// in every way (vincentzhang 报告: removing one, or codex logout on
 // one, had the other ask to be signed in again). They read alike, and
 // everything that went by the name took both: removing the one not in use
 // signed Codex out of the other (it looked like the last), and a refresh
 // of one was written over the other's credentials too.
 func TestCodexWorkspacesOfOneEmail(t *testing.T) {
-	home := signIn(t)
+	home := emptyCodexHome(t)
 	auth := filepath.Join(home, ".codex", "auth.json")
 	codexWorkspaceSignIn(t, home, "me@example.com", "ws-one", "r-one")
-	rememberLogins(true)
 	codexWorkspaceSignIn(t, home, "me@example.com", "ws-two", "r-two")
-	rememberLogins(true)
 
 	users, active := loginUsers(Logins("codex"))
 	if len(users) != 2 {
@@ -139,7 +174,8 @@ func TestCodexWorkspacesSavedAlike(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		saved = append(saved, savedLogin{Agent: "codex", User: "me@example.com · Team", Plan: "team", Auth: b})
+		saved = append(saved, savedLogin{Agent: "codex", User: "me@example.com · Team", Plan: "team", Auth: b,
+			On: true, Seen: time.Now().UTC()})
 	}
 	if err := writeLogins(saved); err != nil {
 		t.Fatal(err)
@@ -173,15 +209,13 @@ func TestCodexWorkspacesSavedAlike(t *testing.T) {
 func TestCodexWorkspaceSessionIdentities(t *testing.T) {
 	home := signIn(t)
 	codexWorkspaceSignIn(t, home, "me@example.com", "ws-one", "r-one")
-	rememberLogins(true)
 	codexWorkspaceSignIn(t, home, "me@example.com", "ws-two", "r-two")
-	rememberLogins(true)
 	_, active := loginUsers(Logins("codex"))
 	if active == "me@example.com · Team" || !strings.HasPrefix(active, "me@example.com · Team · ") {
 		t.Fatalf("the second seat is saved as %q", active)
 	}
 	byWorkspace := map[string][]string{}
-	for _, id := range SessionIdentities(filepath.Join(home, ".codex")) {
+	for _, id := range SessionIdentities() {
 		if id.Agent == "codex" {
 			byWorkspace[id.AccountID] = append(byWorkspace[id.AccountID], id.User)
 		}

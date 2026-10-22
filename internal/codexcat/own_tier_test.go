@@ -10,7 +10,7 @@ import (
 // A model of a provider the user added by its address is offered the tiers
 // Codex's own entry gives the same model, Ultrafast among them, and Fast on
 // another GPT model; none on any other, nor on one not added by its address
-// (hsiangron on X: Fast and Ultrafast weren't there to pick).
+// (hsiangron 报告: Fast and Ultrafast weren't there to pick).
 func TestOwnProviderTiers(t *testing.T) {
 	v1Home(t, `{"etag":"W/\"a\"","models":[{"slug":"gpt-6-sol","base_instructions":"x","service_tiers":[{"id":"priority","name":"Fast","description":"f"},{"id":"ultrafast","name":"Ultrafast","description":"u"}]}]}`)
 	ms := []catalog.Model{

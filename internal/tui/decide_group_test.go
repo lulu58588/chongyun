@@ -8,7 +8,7 @@ import (
 )
 
 // The member picker offers a group of decision models only decision
-// models, a chat group none, and a new group both (ARNO on Discord).
+// models, a chat group none, and a new group both (ARNO 报告).
 func TestMemberOptionsDecisionGroup(t *testing.T) {
 	home(t)
 	if err := provider.Save(provider.Provider{ID: "ja", Name: "JA", Key: "k1", Decide: "http://127.0.0.1:1/v1"}); err != nil {

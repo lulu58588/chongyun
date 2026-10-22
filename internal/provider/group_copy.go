@@ -8,7 +8,7 @@ import (
 )
 
 // CopyGroup makes a group of the user's that is the group id as it is now
-// (lc on Discord): its models and patterns, routing, rules, classifier,
+// (lc 报告): its models and patterns, routing, rules, classifier,
 // effort, context, levels, fast and off members, under name — "<name>
 // copy" when empty, numbered past a name or id in use — listed right after
 // the one it copies. A found group's copy is the user's, with the members

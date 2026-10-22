@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/agent"
 )
 
-// The Agents page calls cursor-agent Cursor CLI (@G_Z_Y on X), but the
+// The Agents page calls cursor-agent Cursor CLI (@G_Z_Y 报告), but the
 // MCP servers and skills the Library gives it go to ~/.cursor, which the
 // Cursor editor reads too: the Library's row is Cursor, and the agent
 // itself is still Cursor CLI everywhere else.

@@ -476,7 +476,7 @@ func claudeVersionOf(model string) (major, minor int, ok bool) {
 // group's member, mapped to the vendor's later), or by magpie fitting an
 // effort to it — goes as thinking.type=adaptive, with the budget as the
 // effort it is nearest in output_config.effort unless one is there (Keenc
-// on Discord: claude-opus-5-5 answered 400). Read off the model the body
+// 报告: claude-opus-5-5 answered 400). Read off the model the body
 // is sent with, the vendor's own name; any other request, older Claudes'
 // included, goes as it came, and "disabled" stays. The thinking enabled
 // shows (display "summarized" by default) is still shown: Opus 4.7 and
@@ -1109,7 +1109,7 @@ func resultSaid(b aBlock) []aBlock {
 // a web search it ran — whose input is no call of the client's. A
 // tool_use block whose start carries its whole input, as a relay in front
 // of another vendor's model may send it with no input_json_delta after
-// (蓝猫 on Discord), keeps that input; Anthropic's own start has an empty
+// (蓝猫 报告), keeps that input; Anthropic's own start has an empty
 // one, its deltas after.
 type anthropicDecoder struct {
 	server map[int]bool
@@ -1305,7 +1305,7 @@ func stopFromAnthropic(s string) string {
 		return "length"
 	case "tool_use",
 		// an Anthropic-shaped relay in front of another vendor's model,
-		// passing on OpenAI's reasons as they came (蓝猫 on Discord)
+		// passing on OpenAI's reasons as they came (蓝猫 报告)
 		"tool_calls", "function_call":
 		return "tool"
 	case "length":

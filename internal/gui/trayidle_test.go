@@ -6,9 +6,9 @@ import (
 	"github.com/lulu58588/chongyun/internal/usage"
 )
 
-// ylorn on Discord: with no cards in the menu bar the tooltip said only
+// ylorn 报告: with no cards in the menu bar the tooltip said only
 // "magpie". It says magpie over today's total: every token, split into
-// input, output and cache (NextCommit on Discord), then the cost in
+// input, output and cache (NextCommit 报告), then the cost in
 // Settings' currency ("+" when some calls had no price, none when none had
 // one) and the requests.
 func TestTrayIdleTip(t *testing.T) {

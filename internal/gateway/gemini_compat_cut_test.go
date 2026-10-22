@@ -78,7 +78,7 @@ func TestGeminiCompatRelayEndedShort(t *testing.T) {
 
 	// whole, with [DONE] or without it, it goes as it came, its one
 	// finish_reason "tool_calls" as it made a call (chatTidy, 喜欢一个人
-	// on Discord), never a second one added
+	// 报告), never a second one added
 	for what, reply := range map[string]string{
 		"whole":            compatCall + compatStop + compatDone,
 		"whole, no [DONE]": compatCall + compatStop,

@@ -161,10 +161,15 @@ func TestReasoningTextNotSentToCodexAccount(t *testing.T) {
 		return "h." + base64.RawURLEncoding.EncodeToString(b) + ".s"
 	}
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
-	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(map[string]any{"auth_mode": "chatgpt", "tokens": map[string]any{
+	auth := map[string]any{"auth_mode": "chatgpt", "tokens": map[string]any{
 		"id_token":      claims(map[string]any{"email": "me@example.com"}),
 		"access_token":  claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}),
-		"refresh_token": "r", "account_id": "acct-1"}}), 0o600)
+		"refresh_token": "r", "account_id": "acct-1"}}
+	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	chongyunLogins(t, chongyunCodexLogin("me@example.com", auth))
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)
 	u := &openaiStrict{}
@@ -190,7 +195,7 @@ func TestReasoningTextNotSentToCodexAccount(t *testing.T) {
 }
 
 // openaiItems stands in for the ChatGPT backend and OpenAI's API as they
-// check a reasoning item (jue on Discord): one with its text in it is
+// check a reasoning item (jue 报告): one with its text in it is
 // turned away with the 400 the backend answers, naming the item; one
 // with nothing sealed in it is looked up and not found, store being
 // false (#1008). Each request's path and input are kept.
@@ -268,7 +273,7 @@ func switchedBackFromDeepSeek(model string) string {
 		`{"type":"message","role":"user","content":[{"type":"input_text","text":"继续"}]}]}`
 }
 
-// jue on Discord: Codex on DeepSeek, then back on its own GPT, failed its
+// jue 报告: Codex on DeepSeek, then back on its own GPT, failed its
 // next turn with OpenAI's 400 over input[8].content, the reasoning
 // DeepSeek wrote. Every way a request for one of OpenAI's models reaches
 // OpenAI's Responses endpoint through magpie — Codex's turn and its

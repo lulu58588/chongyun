@@ -121,7 +121,7 @@ func resetsTraced(srv *Server) []string {
 
 // Codex's one account, its week used up, with the user's leave to spend
 // its resets by itself: one is spent and the turn goes through (StringKe
-// on Discord: resets gifted to the account, used once the week is out).
+// 报告: resets gifted to the account, used once the week is out).
 func TestCodexAutoResetOneAccount(t *testing.T) {
 	codexSignedIn(t)
 	b := newResetBackend(t, "acct-1")

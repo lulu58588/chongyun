@@ -35,19 +35,17 @@ func fakeKiroManagement(t *testing.T) *[]string {
 	return &asked
 }
 
-// A Builder ID sign-in (kiro-cli's here) names no profile and Kiro lists
-// none for it (#422); it is asked with Builder ID's service profile, as
-// kiro-cli and the IDE do — which is how the move learns whose it is.
+// A Builder ID sign-in names no profile and Kiro lists none for it (#422);
+// it is asked with Builder ID's service profile, as the CLI and the IDE do.
 func TestKiroBuilderIDTakesItsServiceProfile(t *testing.T) {
 	kiroSandbox(t)
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	asked := fakeKiroManagement(t)
-	writeKiroCLI(t, map[string]any{
-		"kirocli:odic:token": map[string]any{"access_token": "at", "refresh_token": "rt", "expires_at": "2099-01-01T00:00:00Z",
-			"region": "us-east-1", "start_url": kiroBuilderIDStart, "oauth_flow": "DeviceCode"},
-		"kirocli:odic:device-registration": map[string]any{"client_id": "cid", "client_secret": "sec"},
-	})
-	a, err := KiroAuthOf(context.Background(), "", "", false)
+	home := filepath.Join(t.TempDir(), "kiro-account")
+	os.MkdirAll(home, 0o700)
+	os.WriteFile(filepath.Join(home, kiroTokenFile), []byte(`{"accessToken":"at","refreshToken":"rt","expiresAt":"2099-01-01T00:00:00Z",
+		"authMethod":"IdC","region":"us-east-1","clientId":"cid","clientSecret":"sec","provider":"BuilderId"}`), 0o600)
+	a, err := KiroAuthOf(context.Background(), "", home, false)
 	if err != nil || a.Profile != kiroBuilderIDProfile || a.Region != "us-east-1" {
 		t.Fatalf("auth = %+v %v", a, err)
 	}
@@ -59,18 +57,17 @@ func TestKiroBuilderIDTakesItsServiceProfile(t *testing.T) {
 }
 
 // An Identity Center sign-in still has its profile listed; one that turns
-// out to be Builder ID's (the IDE's file not saying) takes Builder ID's
+// out to be Builder ID's (the sign-in not saying) takes Builder ID's
 // profile when Kiro says it has none to list.
 func TestKiroBuilderIDFoundByKirosAnswer(t *testing.T) {
 	kiroSandbox(t)
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	asked := fakeKiroManagement(t)
-	dir := kiroIDEDir()
-	os.MkdirAll(dir, 0o755)
-	os.WriteFile(filepath.Join(dir, "kiro-auth-token.json"), []byte(`{"accessToken":"at","refreshToken":"rt","expiresAt":"2099-01-01T00:00:00Z",
-		"authMethod":"IdC","region":"us-east-1","clientIdHash":"h"}`), 0o600)
-	os.WriteFile(filepath.Join(dir, "h.json"), []byte(`{"clientId":"cid","clientSecret":"sec"}`), 0o600)
-	a, err := KiroAuthOf(context.Background(), "", "", false)
+	home := filepath.Join(t.TempDir(), "kiro-account")
+	os.MkdirAll(home, 0o700)
+	os.WriteFile(filepath.Join(home, kiroTokenFile), []byte(`{"accessToken":"at","refreshToken":"rt","expiresAt":"2099-01-01T00:00:00Z",
+		"authMethod":"IdC","region":"us-east-1","clientId":"cid","clientSecret":"sec"}`), 0o600)
+	a, err := KiroAuthOf(context.Background(), "", home, false)
 	if err != nil || a.Profile != kiroBuilderIDProfile {
 		t.Fatalf("auth = %+v %v", a, err)
 	}

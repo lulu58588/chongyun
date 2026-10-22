@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-// Lemon on Discord: can a plugin be installed straight from git (GitHub)?
+// Lemon 报告: can a plugin be installed straight from git (GitHub)?
 // bun add takes github:owner/repo, owner/repo, a GitHub URL and git+…
 // URLs, and installs the package at node_modules/<the name its own
 // package.json gives>, not the spec's.

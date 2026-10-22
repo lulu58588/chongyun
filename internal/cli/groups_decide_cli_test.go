@@ -8,7 +8,7 @@ import (
 )
 
 // magpie group add takes decision models for a group of them alone, asked
-// at /v1/systemone (ARNO on Discord), and refuses one beside a chat model.
+// at /v1/systemone (ARNO 报告), and refuses one beside a chat model.
 func TestGroupAddDecisionModels(t *testing.T) {
 	groupsHome(t)
 	for _, p := range []provider.Provider{

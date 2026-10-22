@@ -20,7 +20,7 @@ func (n noVendor) RoundTrip(r *http.Request) (*http.Response, error) {
 	return nil, errors.New("no network in this test")
 }
 
-// ttmrmx on X: an OpenCode Zen key's balance card wasn't shown at all.
+// ttmrmx 报告: an OpenCode Zen key's balance card wasn't shown at all.
 // OpenCode tells no key the workspace's credits, so the card says that,
 // and where they are shown, on every surface that asks a key's balance:
 // the Usage page's cards (KeyBalances) and the editor, TUI and CLI

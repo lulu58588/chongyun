@@ -11,7 +11,7 @@ import (
 
 // An Inline value given to SetTOMLTable goes into the spelling the file
 // already has for that key. Codex's config.toml held magpie's provider
-// headers as their own table (wztlink1013 on Discord, Windows), and the
+// headers as their own table (wztlink1013 报告, Windows), and the
 // inline http_headers written beside it defined the key twice: "edited TOML
 // is invalid: toml: key http_headers should be a table, not a value".
 func TestSetTOMLTableInlineMergesUsersSpelling(t *testing.T) {

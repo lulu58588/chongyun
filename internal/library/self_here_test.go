@@ -70,19 +70,19 @@ func storedCommand(t *testing.T, name string) string {
 // to the agents and to the check, and keeps it.
 func TestOwnServerFromElsewhereRunsThisMagpie(t *testing.T) {
 	for _, c := range []struct{ name, stored string }{
-		{"Windows' chongyun", `C:\Users\xiaoqian\Downloads\magpie-windows-amd64.exe`},
-		{"a Mac's chongyun", "/Volumes/gone-1439/Chongyun.app/Contents/MacOS/magpie"},
+		{"Windows' chongyun", `C:\Users\xiaoqian\Downloads\chongyun-windows-amd64.exe`},
+		{"a Mac's chongyun", "/Volumes/gone-1439/Chongyun.app/Contents/MacOS/chongyun"},
 		{"moved out of Downloads", ""},
-		{"a sync from a chongyun that names it", "magpie"},
+		{"a sync from a chongyun that names it", "chongyun"},
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			h := sandbox(t)
-			here := filepath.Join(h, "Programs", "Chongyun", "magpie-windows-amd64.exe")
+			here := filepath.Join(h, "Programs", "Chongyun", "chongyun-windows-amd64.exe")
 			write(t, here, "")
 			thisMagpie(t, here)
 			stored := c.stored
 			if stored == "" { // it was here, in Downloads, and has gone
-				stored = filepath.Join(h, "Downloads", "magpie-windows-amd64.exe")
+				stored = filepath.Join(h, "Downloads", "chongyun-windows-amd64.exe")
 				write(t, stored, "")
 				if err := os.Remove(stored); err != nil {
 					t.Fatal(err)
@@ -154,8 +154,8 @@ func TestUsersOwnServerStaysAsItIs(t *testing.T) {
 // each time. Put there, it runs that computer's magpie.
 func TestCarriedOwnServerIsEachComputersMagpie(t *testing.T) {
 	h := sandbox(t)
-	mac := filepath.Join(h, "mac", "Chongyun.app", "Contents", "MacOS", "magpie")
-	win := filepath.Join(h, "win", "magpie-windows-amd64.exe")
+	mac := filepath.Join(h, "mac", "Chongyun.app", "Contents", "MacOS", "chongyun")
+	win := filepath.Join(h, "win", "chongyun-windows-amd64.exe")
 	write(t, mac, "")
 	write(t, win, "")
 	own := func(cmd string) Server {
@@ -201,7 +201,7 @@ func TestCarriedOwnServerIsEachComputersMagpie(t *testing.T) {
 
 	// a bundle from a magpie before #1439, with the Mac's path in it
 	old := *onMac
-	old.MCP = []*Server{{Name: selfServerName, Transport: "stdio", Command: "/Volumes/gone-1439/Chongyun.app/Contents/MacOS/magpie", Args: []string{"mcp", "image"}, Agents: []string{"codex"}}}
+	old.MCP = []*Server{{Name: selfServerName, Transport: "stdio", Command: "/Volumes/gone-1439/Chongyun.app/Contents/MacOS/chongyun", Args: []string{"mcp", "image"}, Agents: []string{"codex"}}}
 	ok(t)(Put(&old))
 	if got := codexCommand(t, h, selfServerName); got != win {
 		t.Errorf("an old bundle: Codex starts %q, want %q", got, win)

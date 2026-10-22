@@ -140,7 +140,7 @@ func usageTo(out io.Writer, args []string) error {
 	loadCostCurrency()
 	// s is the calls through magpie, d the calls the agents made on their
 	// own, read from their session files: the window's Requests tab counts
-	// them too (Kumo31 on Discord). Asked together, both are of one day when
+	// them too (Kumo31 报告). Asked together, both are of one day when
 	// midnight falls while they are read.
 	s, d := stats.Summaries(period)
 	title := map[stats.Period]string{stats.Today: "today", stats.Week: "last 7 days", stats.Month: "last 30 days", stats.All: "all time"}[s.Period]
@@ -197,7 +197,7 @@ func printUsage(out io.Writer, s stats.Summary, title string, names map[string]s
 	fmt.Fprintln(out, muted.Render("  in "+fmtTokens(s.Input)+"  out "+fmtTokens(s.Output)+"  cache read "+fmtTokens(s.CacheRead)+"  cache write "+fmtTokens(s.CacheWrite)+"  reasoning "+fmtTokens(s.Reasoning)),
 		func() string {
 			// requests, each counted once by how it ended: one a later try
-			// answered is not an error (小一 on Discord)
+			// answered is not an error (小一 报告)
 			more := ""
 			if s.Errors > 0 {
 				more += muted.Render(" · ") + plural(s.Errors, "error")

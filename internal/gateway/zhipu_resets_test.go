@@ -14,7 +14,7 @@ import (
 
 // Zhipu's 1308 and 1310, in the words its error code pages give (docs.z.ai
 // api-code, docs.bigmodel.cn api-code). zaiPlayer is the refusal as Player
-// quoted it on Discord (2026-10-15 08:25 UTC), its time to the minute.
+// quoted it 报告 (2026-10-15 08:25 UTC), its time to the minute.
 const (
 	zaiPlayer = "Usage limit reached for 5 hour. Your limit will reset at 2026-10-15 20:12"
 	zai1308   = "Usage limit reached for 5 hour. Your limit will reset at 2026-10-15 20:12:13"
@@ -97,7 +97,7 @@ func TestHeldClock(t *testing.T) {
 	}
 }
 
-// Player on Discord: a Z.ai key refused with 1308, which names 20:12 in
+// Player 报告: a Z.ai key refused with 1308, which names 20:12 in
 // Beijing's time, rested a quarter of an hour, and the refusal given again
 // said "not asked again before 17:12", a time of no zone the vendor never
 // named. It rests until the time Z.ai named, and says it with its offset.

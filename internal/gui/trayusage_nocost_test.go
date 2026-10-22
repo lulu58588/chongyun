@@ -10,7 +10,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/usage"
 )
 
-// Settings › Menu bar cost off (settings.TrayNoCost, BussanQ on Discord):
+// Settings › Menu bar cost off (settings.TrayNoCost, BussanQ 报告):
 // magpie's today and last-7-days cards in the menu bar, their tooltip and
 // the tooltip with no cards say the tokens and requests alone, no money
 // and no count of calls with no known price; on, the default, the cost.

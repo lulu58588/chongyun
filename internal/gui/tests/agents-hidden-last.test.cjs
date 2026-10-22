@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// 0xZaTe on Discord (#feedback): the Agents page listed the agents hidden by
+// 0xZaTe 报告 (#feedback): the Agents page listed the agents hidden by
 // hand first in its fold, right under the agent in use and above the ones
 // nothing is set on, each with its Show. Hidden read as pinned (看着反而像是
 // 一个置顶功能了 … 现在反而更显眼了). Now they come last, after Not set up,

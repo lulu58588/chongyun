@@ -13,7 +13,7 @@ import (
 )
 
 // The Gateway page lists the models a key can be held to, the routing
-// groups first (Magic_zero on Discord), and keeps what was picked for it
+// groups first (Magic_zero 报告), and keeps what was picked for it
 // (#882).
 func TestCallerKeyModelsRoutes(t *testing.T) {
 	sandboxHome(t)

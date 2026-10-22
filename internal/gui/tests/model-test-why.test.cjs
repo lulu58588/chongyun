@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Which models can be tested on their own, and why not where they can't (ARNO
-// on Discord: 有些provider里的模型可以右击检测，有些却不可以，为什么？). A
+// 报告: 有些provider里的模型可以右击检测，有些却不可以，为什么？). A
 // signed-in account sent requests at an endpoint (Codex) has the chip's
 // right-click and Test models as a key does. One reached through its agent's
 // own API (Kiro: modelTest "own-api") and a classifier ("decide") still open
@@ -29,7 +29,7 @@ const providers = [
     account: { agent: "kiro", agentName: "Kiro", user: "k@example.com", plan: "PRO", logins: [{ user: "k@example.com", plan: "PRO", active: true, on: true }] },
   },
   // a System One provider (OpenRouter's) with a model typed in by hand
-  // (ARNO on Discord), and Workers AI, whose models can't each be asked
+  // (ARNO 报告), and Workers AI, whose models can't each be asked
   {
     ...base, id: "or-decide", name: "Deciders", decide: "https://openrouter.ai/api/v1", decideTest: true, chosen: ["respan/span-01"],
     models: [{ id: "liquid/d1", name: "", on: true }, { id: "respan/span-01", name: "", on: true }], key: { set: true, masked: "sk-…one" },

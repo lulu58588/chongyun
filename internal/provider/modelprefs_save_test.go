@@ -12,7 +12,7 @@ import (
 // The provider editor's Names & levels are made with its Save, all at
 // once: each is made as SetModelName, SetModelEfforts and SetModelImage
 // make it, and the agents' files are rewritten once, not once a change
-// (ARNO on Discord: every reasoning level ticked was applied on its own,
+// (ARNO 报告: every reasoning level ticked was applied on its own,
 // so picking them lagged).
 func TestSetModelPrefs(t *testing.T) {
 	prefsHome(t)

@@ -565,7 +565,7 @@ func (l *Library) changeSets(c InstructionsChange) error {
 		l.Instructions.Sets = slices.DeleteFunc(l.Instructions.Sets, func(s InstrSet) bool { return s.ID == id })
 	}
 	// an empty set in use gives the agents nothing, so a set added, or one
-	// given text, is the one they read from then on (Fate on Discord: a new
+	// given text, is the one they read from then on (Fate 报告: a new
 	// set was written into no agent while the Default set read was empty)
 	if c.Activate == "" && c.Shared == nil && setText(l.sharedPath()) == "" {
 		if x := c.Create; x != nil {

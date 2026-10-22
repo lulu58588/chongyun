@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // One rule for a group's speed, in the Usage page's ranking, its Output speed
-// card and the overview's lists (Fallmonkey on Discord): gpt-6.1-sol showed a
+// card and the overview's lists (Fallmonkey 报告): gpt-6.1-sol showed a
 // tok/s that was the one reply of its 260 calls that used no tool (the only
 // Codex turn its session file times) beside "260 requests", while Claude
 // Code, whose rows on the Requests tab say "≥100 tok/s" by the dozen, showed
@@ -17,7 +17,7 @@
 // the time after its first token. A Codex turn of one call is measured, and
 // its answer's floor told, only over a second or more after its first token
 // and 100 tokens or more; else it tells the least it wrote at over the whole
-// turn (Fallmonkey on Discord: a first token at 6.8 s, the model working,
+// turn (Fallmonkey 报告: a first token at 6.8 s, the model working,
 // and the rest 0.2 s later in one push, read as 1,900 tok/s), by the same
 // 1,000-token rule as Claude Code's whole-time floor (Fallmonkey again: an
 // 11-token astra answer in 2.75 s read ≥4 tok/s, while an 815-token Claude

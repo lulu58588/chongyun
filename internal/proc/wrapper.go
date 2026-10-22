@@ -4,7 +4,7 @@ package proc
 // version manager: `exec mise x "claude" -- "claude" "$@"` in
 // ~/.local/bin/claude. Inside `mise x` the command is looked up on PATH
 // again, and with ~/.local/bin before mise's own folders it is that same
-// script: it runs itself until killed (deluxe on Discord, Omarchy Linux: a
+// script: it runs itself until killed (deluxe 报告, Omarchy Linux: a
 // magpie started from the desktop, without the shell's mise environment,
 // never showed the Claude sign-in link). The program such a script stands
 // for is asked of mise, `mise which <name>`, and run directly.

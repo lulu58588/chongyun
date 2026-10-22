@@ -49,7 +49,7 @@ func keptEffortModels(t *testing.T, models ...string) {
 	}
 }
 
-// 悠悠哥 on Discord: the default thinking effort set on one of magpie's
+// 悠悠哥 报告: the default thinking effort set on one of magpie's
 // models in WorkBuddy was put back to magpie's on every sync. WorkBuddy's
 // Settings > Models saves an edited model whole into models.json, with
 // reasoning.defaultEffort (empty for its Auto) and the vendor of the

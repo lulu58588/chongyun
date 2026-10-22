@@ -56,7 +56,7 @@ func codexPlanList(free bool) string {
 	return string(b)
 }
 
-// Raven on Discord: Codex signed in to a Free ChatGPT account, a Pro 5x
+// Raven 报告: Codex signed in to a Free ChatGPT account, a Pro 5x
 // ("prolite") one saved beside it and used first. The codex provider listed
 // only the Free plan's three models, fetched with the sign-in Codex has, so
 // GPT-6.1-Sol and the rest of the Pro plan's were nowhere to pick. Its list
@@ -86,8 +86,11 @@ func TestCodexProviderListsEveryAccountsModels(t *testing.T) {
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("free@example.com", "acct-free", "free")), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
+		{"agent": "codex", "user": "free@example.com", "plan": "free", "active": true, "seen": time.Now(), "auth": auth("free@example.com", "acct-free", "free")},
 		{"agent": "codex", "user": "pro@example.com", "plan": "prolite", "on": true, "seen": time.Now(), "auth": auth("pro@example.com", "acct-prolite", "prolite")},
 	}), 0o600)
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
 
 	var mu sync.Mutex
 	var tried []string

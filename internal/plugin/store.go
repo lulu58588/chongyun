@@ -508,7 +508,7 @@ func notPlugin(target string) error {
 // plugin, and fetches each git one again. A plugin pinned to a version
 // that npm has a newer one of is updated too, and unpinned, as its row's
 // Update does: the page counts it in Update all, and the CLI's update
-// says it installs the newest of each (ARNO on Discord: a plugin updated
+// says it installs the newest of each (ARNO 报告: a plugin updated
 // with Update all still said an update was out, pinned where it was). A
 // pinned one already at npm's newest stays as its spec says.
 func Update(ctx context.Context) error {
@@ -744,7 +744,7 @@ func bunAdd(ctx context.Context, bun, spec string) error {
 // holds back every version younger than it, and a registry of the user's
 // own (an .npmrc) may not have the newest yet. Either way bun installs an
 // older version and exits 0, so an update said it was done and nothing
-// changed (sweanng424 on Discord: Factory stayed at 0.1.18 with 0.1.21 out,
+// changed (sweanng424 报告: Factory stayed at 0.1.18 with 0.1.21 out,
 // through restarts and the hourly updates). Asked for the version, bun
 // says why it can't install it.
 func installAt(ctx context.Context, pkg, version string) error {

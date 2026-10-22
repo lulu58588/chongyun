@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// nf1qaz2w on Discord: each of an MCP server's listed tools has a switch.
+// nf1qaz2w 报告: each of an MCP server's listed tools has a switch.
 // One the library has turned off shows off (dimmed); a click flips that
 // switch at once, sends the tools turned off, opens no editor and scrolls
 // nothing; quick clicks go as one request once the first is answered. The

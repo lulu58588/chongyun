@@ -50,7 +50,7 @@ func TestUserPath(t *testing.T) {
 
 // A desktop app started from the Finder doesn't have the variables a shell
 // profile exports either; the agents' folders among them come from the login
-// shell by the time UserPath returns (atie on Discord: PI_CODING_AGENT_DIR in
+// shell by the time UserPath returns (atie 报告: PI_CODING_AGENT_DIR in
 // the shell, Pi's models.json still written to ~/.pi/agent). One magpie was
 // started with is kept, and one the profile leaves empty isn't set.
 func TestUserPathTakesAgentVars(t *testing.T) {
@@ -90,7 +90,7 @@ func TestUserPathTakesAgentVars(t *testing.T) {
 	}
 }
 
-// liu_dyj on X: a NO_PROXY=127.0.0.1 in .zshrc keeps the Codex a terminal
+// liu_dyj 报告: a NO_PROXY=127.0.0.1 in .zshrc keeps the Codex a terminal
 // or the ChatGPT app runs off the proxy, while magpie, opened from the Dock
 // without it, warned that Codex went through the proxy. The login shell's
 // proxy variables are read (LoginEnv) but never set in magpie's own
@@ -172,7 +172,7 @@ func TestLoginEnvUnexportedNotCounted(t *testing.T) {
 	}
 }
 
-// jw1dev on X: CLAUDE_CODE_USE_BEDROCK=1 sends Claude Code to Bedrock past
+// jw1dev 报告: CLAUDE_CODE_USE_BEDROCK=1 sends Claude Code to Bedrock past
 // magpie. One in the profile is read (LoginEnv), for magpie to say so, but
 // never set in magpie's own environment, where every agent magpie starts
 // would take it.
@@ -273,7 +273,7 @@ func TestShellEnvNushell(t *testing.T) {
 }
 
 // The login shell is asked outside magpie's process group and session (DD
-// on Discord: magpie web → zsh: suspended (tty input)). An interactive zsh
+// 报告: magpie web → zsh: suspended (tty input)). An interactive zsh
 // in magpie's session puts itself in the terminal's foreground, which left
 // magpie's group in the background there: Ctrl-C no longer reached it, and
 // anything in the group that touched the terminal had the kernel stop all
@@ -453,7 +453,7 @@ func TestShellEnvRealFish(t *testing.T) {
 // zellij's auto-start in config.fish) or is too slow to come up
 // interactively never prints the probe; the shell is asked again as a
 // login shell only, and MAGPIE_SHELL_PROBE=1 tells the profile who asks
-// (John on Discord, fish set with chsh).
+// (John 报告, fish set with chsh).
 func TestAskShellProfileExecsOrHangs(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)

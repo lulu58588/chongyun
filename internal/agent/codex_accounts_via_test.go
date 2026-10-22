@@ -35,10 +35,17 @@ func TestCodexAccountsOfferedViaMagpie(t *testing.T) {
 	me, _ := json.Marshal(auth("me@example.com", "acct-1"))
 	cache := []byte(`{"models":[{"slug":"gpt-5.5","display_name":"GPT-5.5","priority":1}]}`)
 	logins := func(on bool) {
-		b, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "spare@example.com", "on": on,
-			"seen": time.Now(), "auth": auth("spare@example.com", "acct-2")}})
+		// chongyun keeps the account it signed the agent in to in its own
+		// logins.json, marked as the one the agent is on: it never reads
+		// the agent's own file to find out which account that is.
+		b, _ := json.Marshal([]map[string]any{
+			{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(), "auth": auth("me@example.com", "acct-1")},
+			{"agent": "codex", "user": "spare@example.com", "on": on, "seen": time.Now(), "auth": auth("spare@example.com", "acct-2")},
+		})
 		os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 		os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), b, 0o600)
+		provider.ForgetAccounts()
+		t.Cleanup(provider.ForgetAccounts)
 	}
 	via := func(a *Agent) (direct, magpie []Option) {
 		for _, o := range a.Fields[0].Options(nil) {
@@ -80,6 +87,9 @@ func TestCodexAccountsOfferedViaMagpie(t *testing.T) {
 
 	t.Run("on its own sign-in, one account", func(t *testing.T) {
 		home, _ := codexHome(t, string(me), "model = \"gpt-5.5\"\n")
+		// chongyun never reads the agent's own sign-in: a Codex signed in to
+		// ChatGPT is one chongyun wired beside that sign-in.
+		codexBeside(t, home, "beside")
 		os.WriteFile(filepath.Join(home, ".codex", "models_cache.json"), cache, 0o644)
 		logins(false)
 		if _, magpie := via(codex(home)); len(magpie) != 0 {

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A plugin that serves one model from several sources (sunset on Discord:
+// A plugin that serves one model from several sources (sunset 报告:
 // the Our Free Model plugin's buddy/deepseek-v4.1-flash, cline/… and
 // kilo/…, each named "DeepSeek-V4.1-Flash" at 0.1×) drew chips that read
 // alike, the source only in the tooltip. Models of one list that would

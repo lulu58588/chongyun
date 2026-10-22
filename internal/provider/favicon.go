@@ -29,7 +29,7 @@ import (
 // A new-api or one-api site names its logo only in /api/status, which its
 // page's script reads to set the tab's icon; the page itself names none, or
 // the panel's own /logo.png, and its /favicon.ico is the panel's too, the
-// same on every such site (wiixdede on X: every relay got new-api's icon).
+// same on every such site (wiixdede 报告: every relay got new-api's icon).
 // Its logo is taken from there, or one its page was given by hand, and one
 // with neither gets name's first letters on a tile.
 func FaviconFor(ctx context.Context, base, name string) (string, error) {

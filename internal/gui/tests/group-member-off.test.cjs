@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A group's member may be switched off (#feedback on Discord: testing
+// A group's member may be switched off (#feedback 报告: testing
 // routing rules meant removing models and adding them back, losing their
 // order). The card says "(off)" after it; in the editor each member has a
 // switch, on unless the group has it in off. Clicking it moves nothing on

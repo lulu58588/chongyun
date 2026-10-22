@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // The Usage page's Agents list hides the clients a reader doesn't care
-// about (ikunbots on X: Go-http-client, AsyncOpenAI, curl, python-httpx and
+// about (ikunbots 报告: Go-http-client, AsyncOpenAI, curl, python-httpx and
 // magpie beside Pi and their own agent). A row's actions (its "…" button,
 // or a right-click) hide it from the list; the totals and the chart still
 // count it. A quiet line under the list says how many are hidden and opens

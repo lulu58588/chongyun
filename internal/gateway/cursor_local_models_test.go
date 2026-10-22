@@ -121,7 +121,7 @@ func TestCursorLocalModels(t *testing.T) {
 
 	// asked with another key of magpie's, typed in its Open configuration,
 	// it still says who it is in its User-Agent and is shown its own list,
-	// with the fields its Reasoning control needs (mamba on Discord)
+	// with the fields its Reasoning control needs (mamba 报告)
 	for _, ua := range []string{"Cursor-CLI/unknown", "Cursor/3.23.12"} {
 		got := list(Token, ua)
 		if got["ds/flash"] != nil || got["fake/m1"] == nil {

@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// 37FlowAI on X: a skill in a private repository installs with the GitHub
+// 37FlowAI 报告: a skill in a private repository installs with the GitHub
 // token set in Settings, through GitHub's API, which redirects to codeload;
 // the token goes to the API alone. Without a token, or with one that can't
 // read it, the error says where the token is set.

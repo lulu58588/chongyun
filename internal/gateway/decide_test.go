@@ -782,7 +782,7 @@ func TestJevConfidence(t *testing.T) {
 	}
 }
 
-// A Clef on Workers AI (ARNO on Discord) is asked at its own run, with
+// A Clef on Workers AI (ARNO 报告) is asked at its own run, with
 // the System One request as it is and the model named as Clef names
 // itself, and answers in Cloudflare's envelope.
 func TestClefOnCloudflare(t *testing.T) {

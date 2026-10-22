@@ -10,7 +10,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// Many keys at once (361 on Discord: a provider added with hundreds of
+// Many keys at once (361 报告: a provider added with hundreds of
 // keys): pasted into the key field of a new provider, the first is its key
 // and the others its accounts, each once; and keys/remove-many removes the
 // ones named in one go, saying how many.

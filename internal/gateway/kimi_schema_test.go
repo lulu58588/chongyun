@@ -80,7 +80,7 @@ func TestKimiToolEnumTypes(t *testing.T) {
 // A schema a tool's $ref reaches goes to Kimi with a type: Kimi expands
 // the $ref and refuses a target with none, 400 "At path 'properties.b':
 // detected infinite recursion without termination condition", and Codex on
-// k3 failed outright (chaosy on Discord). Codex sends zod's $defs with a
+// k3 failed outright (chaosy 报告). Codex sends zod's $defs with a
 // oneOf or allOf def untyped, as captured from Codex 0.162.1 (b, c); raw
 // clients send defs typed by nothing but their keywords, or by nothing at
 // all. Each goes on the chat route, the Anthropic route and from Codex's

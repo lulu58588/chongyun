@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A curl command from a vendor's docs, pasted into a custom provider's Base
-// URL or API key, fills the form in (@mark_li21 on X: 能支持通过curl例子直接
+// URL or API key, fills the form in (@mark_li21 报告: 能支持通过curl例子直接
 // 导入provider不？): the base URL from the request's URL with its endpoint cut
 // off, spelled as the API it names wants it, that API picked, the key from
 // its auth header unless it only stands for one ($OPENAI_API_KEY, %KEY%,

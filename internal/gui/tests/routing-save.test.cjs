@@ -3,7 +3,7 @@
 // Session…) are picked in its editor and made with its Save, as the rest of
 // the editor is; Cancel drops them. A click used to post provider/route and
 // redraw the editor at once, so looking through what each option says
-// lagged, and saved a pick only looked at (01huadalang on Discord, on a
+// lagged, and saved a pick only looked at (01huadalang 报告, on a
 // WorkBuddy AI subscription with several accounts). Stays, which a
 // provider's Routing page row had alone, is beside Routing in the editor
 // too. Accounts and keys alike; nothing is sent, redrawn or scrolled before

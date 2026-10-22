@@ -12,7 +12,7 @@ package provider
 // through the plugin's fetch, which sends them as the account (its access
 // token, renewed when near its end); the page's own signature
 // (x-timestamp, x-signature) goes with them, though MiniMax doesn't check
-// it now. The international site has the same check-in (ARNO on Discord):
+// it now. The international site has the same check-in (ARNO 报告):
 // its page has the Daily check-in panel, and its /signin/status and /claim
 // answer as the China site's do, refusing a bad signature and then asking
 // for a sign-in.

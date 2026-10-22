@@ -26,7 +26,7 @@ func tuneCalls(agent, model string, n int) []sessions.Call {
 	return out
 }
 
-// The windows Tuned for you offers Codex for a model (zhemu on Discord: a
+// The windows Tuned for you offers Codex for a model (zhemu 报告: a
 // CLIProxyAPI provider's GPT model with 1M, Settings › Long conversations
 // at 750K, offered no more than 412K, the largest prompt it had been sent).
 // A model whose window magpie doesn't know is offered up to 1M, not capped

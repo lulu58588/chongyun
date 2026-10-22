@@ -10,7 +10,7 @@ import (
 
 // A request a group answered on its third member, after the first refused
 // (its row kept for what it billed) and the second failed, is one request
-// answered on a retry, not a failure (小一 on Discord): the refused try's
+// answered on a retry, not a failure (小一 报告): the refused try's
 // row is marked handed on, and the answer's row says how many tries it
 // took. A request that fails outright is the one failure.
 func TestRetriedRequestCountsOnce(t *testing.T) {

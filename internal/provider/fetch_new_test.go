@@ -113,19 +113,24 @@ func TestFetchNewAccount(t *testing.T) {
 	}
 }
 
-// codexSignedIn signs Codex in under home, with no list of its own kept:
-// a built-in account whose list magpie fetches.
+// codexSignedIn signs Codex in the way chongyun does: the account is kept
+// in chongyun's own logins.json, marked as the one the agent is on, and the
+// agent's own file is written too, as the agent keeps its sign-in there.
+// No list of its own is kept: a built-in account whose list chongyun
+// fetches.
 func codexSignedIn(t *testing.T, home string) {
 	t.Helper()
 	exp := float64(time.Now().Add(24 * time.Hour).Unix())
-	writeFile(t, filepath.Join(home, ".codex", "auth.json"), map[string]any{
+	auth := map[string]any{
 		"auth_mode": "chatgpt",
 		"tokens": map[string]any{
 			"id_token":      fakeJWT(map[string]any{"email": "me@example.com", "https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": "pro", "chatgpt_account_id": "acct-1"}}),
 			"access_token":  fakeJWT(map[string]any{"exp": exp}),
 			"refresh_token": "r", "account_id": "acct-1",
 		},
-	})
+	}
+	writeFile(t, filepath.Join(home, ".codex", "auth.json"), auth)
+	codexOwnLogin(t, "me@example.com", "pro", auth)
 	forgetAccountCaches()
 }
 

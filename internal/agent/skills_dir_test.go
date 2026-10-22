@@ -8,7 +8,7 @@ import (
 
 // Skill installers (npx skills and the like) make <folder>/skills for
 // every agent they know. A folder holding only that is no sign the agent is
-// here; anything the agent writes beside it is (qtwaiter on X: Goose, Crush,
+// here; anything the agent writes beside it is (qtwaiter 报告: Goose, Crush,
 // Command Code, fx, Devin, Hermes and Droid listed, none installed).
 func TestSkillsOnlyFolderIsNotInstalled(t *testing.T) {
 	t.Setenv("PATH", t.TempDir())

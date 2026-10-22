@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The task done alert (itieniu on X: 长任务跑完叮铃一声): Settings › Usage
+// The task done alert (itieniu 报告: 长任务跑完叮铃一声): Settings › Usage
 // has "Task done alert", Off to begin with, then 1, 3 or 10 minutes; a pick
 // saves turnDoneAlert in seconds, another setting saved later keeps it, and
 // no click moves the page. Every language, wide and narrow; the API is

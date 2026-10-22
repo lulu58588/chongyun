@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// StringKe on Discord: the Antigravity plugin can't sign in. An OAuth
+// StringKe 报告: the Antigravity plugin can't sign in. An OAuth
 // method that asks nothing is called with no inputs, as OpenCode's TUI
 // calls it; opencode-antigravity-auth, handed an empty object, took it for
 // OpenCode's CLI and waited on a "Project ID" prompt on magpie's stdin, the

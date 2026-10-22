@@ -302,7 +302,7 @@ func TestLedgerSingleSnapshotAndLocalSession(t *testing.T) {
 }
 
 // A model at a provider is named by both, with the provider's icon, so
-// one model's speed at each provider reads apart (inaction on Discord).
+// one model's speed at each provider reads apart (inaction 报告).
 func TestLedgerNamesModelAtProvider(t *testing.T) {
 	sandboxHome(t)
 	now := holdUsageClock(t, time.Date(2026, 9, 30, 12, 0, 0, 0, time.Local))

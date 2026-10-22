@@ -74,7 +74,7 @@ func agentOf(r *http.Request) string {
 		// gateway: a Cursor User-Agent here is Cursor Private Inference's
 		// ("Cursor-CLI/…") sent with a key other than its own, the one
 		// typed in its Open configuration or a model's settings ("magpie"),
-		// and it is shown its models as with its key (mamba on Discord)
+		// and it is shown its models as with its key (mamba 报告)
 		return "cursor-local"
 	}
 	return usage.AgentOf(ua)
@@ -148,7 +148,7 @@ var claudeFamily = regexp.MustCompile(`^claude-(?:[0-9][0-9.-]*-)?(?:opus|sonnet
 // claudeTierStandIn is the model Claude Code is set to use for the tier of
 // a full Claude id it names (StandIn), even one magpie serves: Claude Code
 // asks for claude-haiku-… by name for its small tasks, and a wrapper (T3
-// Code, KevinXC on Discord) asks for every model by its full id, so
+// Code, KevinXC 报告) asks for every model by its full id, so
 // claude-sonnet-5 went to the Claude account magpie serves it on, spent,
 // while claude-sonnet-4-6, which no provider of the user's listed, went to
 // the sonnet tier. Every id of a family now goes to its tier, as Claude
@@ -161,7 +161,7 @@ var claudeFamily = regexp.MustCompile(`^claude-(?:[0-9][0-9.-]*-)?(?:opus|sonnet
 // naming such an id that magpie doesn't serve is taken for one Claude Code
 // started: a hook, statusline or plugin script inherits Claude Code's
 // ANTHROPIC_BASE_URL and token, and asks for claude-sonnet-4-6 by name,
-// which went nowhere, a 404 (tbxark on X). It gets Claude Code's tier too.
+// which went nowhere, a 404 (tbxark 报告). It gets Claude Code's tier too.
 // An id the user does serve (a Claude account, an Anthropic key) goes
 // where it is served, and an agent magpie knows keeps its own models.
 func claudeTierStandIn(r *http.Request, agent, asked string) string {
@@ -709,7 +709,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("POST /v1/messages", keepsSignIn(s.handle(provider.Anthropic)))
 	mux.HandleFunc("POST /messages", keepsSignIn(s.handle(provider.Anthropic)))
 	mux.HandleFunc("POST /v1/systemone", s.serveSystemOne)
-	// Codex's web.run tool (anton on Discord)
+	// Codex's web.run tool (anton 报告)
 	mux.HandleFunc("POST /v1"+AlphaSearchPath, s.alphaSearch)
 	mux.HandleFunc("POST "+AlphaSearchPath, s.alphaSearch)
 	mux.HandleFunc("POST /v1/messages/count_tokens", keepsSignIn(s.countTokens))
@@ -959,7 +959,7 @@ func modelObject(e provider.Entry) map[string]any {
 // Its picker (cursor-agent-exec, 3.23.12) keeps a row's capabilities only
 // when they say it streams, calls tools and writes text (supports_tool_use,
 // supports_streaming, output_modalities); without them it shows the model
-// with no Reasoning control (mamba on Discord). Which levels it offers it
+// with no Reasoning control (mamba 报告). Which levels it offers it
 // decides itself, from the id after its last "/" (claude-opus-4-7, gpt-5.5,
 // gemini-*, which needs supports_reasoning), and it sends a Claude's level
 // only on Anthropic Messages, so a Claude any API would do is asked there.
@@ -1104,7 +1104,7 @@ func (s *Server) models(w http.ResponseWriter, r *http.Request) {
 		tiers := codexTiers(shown)
 		// each model by its bare id as well, after the provider/model ids,
 		// when the user asked for it (settings.BareModelIDs): a client
-		// moved from another proxy asks for gpt-5.6-sol (love1sbug on X).
+		// moved from another proxy asks for gpt-5.6-sol (love1sbug 报告).
 		// Never for another magpie, whose provider would list each twice.
 		// Each row is the entry the bare id reaches, its label that one's.
 		rows, ids := slices.Clip(shown), map[int]string{}
@@ -1154,7 +1154,7 @@ func (s *Server) models(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get(provider.DecidersHeader) != "" {
 		// the decision models its own pickers offer: of a provider with
 		// picks (OpenRouter's twenty-odd), the picked ones, so another
-		// magpie lists what its Gateway page shows (GokoShiki on Discord)
+		// magpie lists what its Gateway page shows (GokoShiki 报告)
 		deciders := keyAllowed(r, provider.OfferedDeciders(nil))
 		for i := range deciders {
 			deciders[i].Name = cmp.Or(deciders[i].Name, deciders[i].Model)
@@ -1449,7 +1449,7 @@ func (s *Server) handle(from provider.Protocol) http.HandlerFunc {
 		}
 		// Codex with magpie as its provider: spawn_agent names every
 		// model a subagent may be put on, not only Codex's first five
-		// (Gearclickist on Discord)
+		// (Gearclickist 报告)
 		if from == provider.Responses && (fromCodex(r.Header) || agentOf(r) == "codex") {
 			body = spawnAgentModels(r, body, model, false)
 		}
@@ -1467,7 +1467,7 @@ func (s *Server) handle(from provider.Protocol) http.HandlerFunc {
 		// with (provider.TestAs), whatever serves this model: a
 		// subscription's, a Chat provider's or a translated one's request
 		// never takes them on, and Claude Code may never be on a relay's
-		// Messages model before the test is asked (neiko on Discord)
+		// Messages model before the test is asked (neiko 报告)
 		if from == provider.Anthropic && fromClaudeCode(r.Header) {
 			seen := http.Header{}
 			for k, vs := range r.Header {
@@ -1734,14 +1734,14 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 		// Codex's config on a group by its bare name (model = "my-group",
 		// or gpt-6.1-sol for group/auto-gpt-6-1-sol): its turns reached the
 		// group, and its auto-review's codex-auto-review, stood in for by
-		// that same name, went on unresolved, a 404 (Adam on Discord)
+		// that same name, went on unresolved, a 404 (Adam 报告)
 		asked = grouped(at(m))
 	}
 	if m := s.codexMemoryStandIn(r, call.Agent, agent, call.Kind, asked); m != "" {
 		asked = m
 	}
 	// a Codex subagent on the model set for Codex's subagents, whatever
-	// its lead asked for (willz on Discord), and a Claude Desktop
+	// its lead asked for (willz 报告), and a Claude Desktop
 	// subagent's tool turn on the one set for Desktop's; one already put
 	// on it by the ChatGPT backend's route is recorded as asked for the
 	// model it was
@@ -1816,7 +1816,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 	g, ms, isGroup := provider.FindGroup(asked)
 	g = g.Live() // a manual group's rules wait
 	// a model on this machine or the local network that the user set to
-	// go unmasked gets the request as written (lc on Discord); the log
+	// go unmasked gets the request as written (lc 报告); the log
 	// keeps the masked one
 	if unredactedRoute(p, isGroup, ms) {
 		masked, body = body, plain
@@ -1833,7 +1833,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 		return
 	}
 	// a model a pause rule holds for now is out of the group: not first,
-	// not a failover, not where the conversation was (John on Discord: a
+	// not a failover, not where the conversation was (John 报告: a
 	// model paused in its vendor's peak hours)
 	var paused []provider.Paused
 	if isGroup {
@@ -2424,12 +2424,12 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 		// while another candidate could answer instead: the last one's
 		// refusal isn't asked again, so holding it only kept a lone relay's
 		// thinking from Claude Code and Codex until the text began, all at
-		// once (iTianbao on X). Gemini's goes as it comes there too: a
+		// once (iTianbao 报告). Gemini's goes as it comes there too: a
 		// reply that only reasoned is asked again in place, its reasoning
 		// kept and the next try's after it (streamTranslated, #667), so
 		// holding it kept Codex on a Gemini model with nothing at all,
 		// not even response.created, for the whole of its thinking
-		// (LuckymanJC on Discord).
+		// (LuckymanJC 报告).
 		hw.thinkingShown = !refusesAfterThinking(c.model) || last
 		hw.ctx, hw.alive, hw.streams = r.Context(), kept, streams
 		report := cacheReport
@@ -2612,7 +2612,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 		if provider.Reasonless(c.p.ID, c.model) {
 			// a model the user said takes no reasoning ask is sent none,
 			// in a group or not, at a fixed effort or not: not even
-			// reasoning turned off (yuexian7 on Discord: its vendor
+			// reasoning turned off (yuexian7 报告: its vendor
 			// answers reasoning_effort with 422)
 			quiet = true
 			attemptBody, picked = withoutAnyReasoning(from, attemptBody), false
@@ -2634,7 +2634,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 		}
 		// Ultrafast goes first to an account whose plan offers it, and an
 		// account whose own list doesn't is asked for priority (Fast)
-		// instead, which every plan with Fast takes (yxinyu715 on X): asked
+		// instead, which every plan with Fast takes (yxinyu715 报告): asked
 		// by the client in either of OpenAI's APIs, or by a pick (#1954)
 		openAI := from == provider.Chat || from == provider.Responses
 		if (openAI && askedTier(attemptBody) == "ultrafast" || ultra && from == provider.Anthropic) && !takesTier(c, "ultrafast") {
@@ -2974,7 +2974,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 			// asking its full 384K for a 700K conversation (max_completion_
 			// tokens, passed as max_tokens since #2355) was refused as too
 			// long, where every other member of its group answered
-			// (molvqingtai on Discord). The same one is asked again for what
+			// (molvqingtai 报告). The same one is asked again for what
 			// the window has left, as the vendor counted it
 			if left := replyLeft(wordsOf(hw.errBody())); left >= leastReplyLeft {
 				if _, ok := withReplyCap(from, attemptBody, left); ok {
@@ -3178,7 +3178,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 			continue
 		}
 		// the ChatGPT backend's 502 "response protection is unavailable"
-		// (vs on Discord): the same history fails the same on every one
+		// (vs 报告): the same history fails the same on every one
 		// of its accounts and models, so none of them is asked it again,
 		// nor this one after a moment, and nobody rests — 62 compactions
 		// had cost 616 tries, and the accounts their allowances. Another
@@ -3241,7 +3241,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 			// ChatGPT closed the connection before answering a large
 			// request (#1628): it may on any account, it often passes, and
 			// no account is at fault for it, so the next is asked and this
-			// one doesn't rest (ylorn on Discord: acct-1 had rested for it).
+			// one doesn't rest (ylorn 报告: acct-1 had rested for it).
 			// The last one left is asked again after a moment, as for any
 			// 503, before the agent is told
 			if other == nil {
@@ -3458,7 +3458,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 			// nobody is left, and the agent speaks Anthropic's Messages:
 			// it has the refusal as the vendor said it, stop_reason
 			// "refusal" and its stop_details, which Claude Code answers by
-			// asking its own fallback model (DD on Discord), where a 400
+			// asking its own fallback model (DD 报告), where a 400
 			// is only an error to it
 		} else if hw.refused && !hw.passing {
 			// nobody is left: the agent is told it was refused, as a
@@ -3623,7 +3623,7 @@ func (s *Server) serve(w http.ResponseWriter, r *http.Request, from provider.Pro
 			RequestID: call.Usage.RequestID, ResponseID: call.Usage.ResponseID, Endpoint: endpointOf(r, from, call.To, lastTried, model), Stop: call.Usage.Stop, Archive: call.archiveName()}
 		if tries > 1 {
 			// answered, or not, after a try that failed first: the ledger
-			// counts it once, as the request it is (小一 on Discord)
+			// counts it once, as the request it is (小一 报告)
 			rec.Tries = tries
 		}
 		failedWith(&rec, call.Status, call.Error, call.Usage.ErrType)
@@ -3697,7 +3697,7 @@ func (s *Server) attempt(w http.ResponseWriter, r *http.Request, from provider.P
 	// a Claude model is asked on Messages whatever API the client spoke,
 	// for the cache breakpoints the translation adds: OpenCode speaks Chat
 	// for every model, and a relay drops cache_control on Chat, so every
-	// turn was billed uncached (ReturnTrue on Discord, after #997)
+	// turn was billed uncached (ReturnTrue 报告, after #997)
 	if relay && from != provider.Anthropic && p.OnMessages(model) && slices.Contains(s.usable(p, model), provider.Anthropic) {
 		relay = false
 	}
@@ -3738,7 +3738,7 @@ func (s *Server) attempt(w http.ResponseWriter, r *http.Request, from provider.P
 	// off: DashScope turns the request away with "parameter.enable_thinking
 	// must be set to false for non-streaming calls". One asked for whole is
 	// asked streamed on Chat and given back whole, its thinking as the
-	// model would have done it (ZekeXiao on X: a group's classifier on the
+	// model would have done it (ZekeXiao 报告: a group's classifier on the
 	// Qwen Token Plan, which magpie asks for one body)
 	if relay && from == provider.Chat && !streamOf(body) && dashScope(p) {
 		relay, ownAPI = false, true
@@ -4085,7 +4085,7 @@ func (s *Server) forwardOnce(ctx context.Context, p provider.Provider, to provid
 	sent := len(body)
 	if p.Account != nil && p.Account.Agent == "codex" {
 		// a turn goes zstd-compressed, as Codex's own client sends it;
-		// sent plain, ChatGPT answered a 1.1 MB one 503 (ylorn on X)
+		// sent plain, ChatGPT answered a 1.1 MB one 503 (ylorn 报告)
 		sent = provider.CodexCompressed(req, body)
 	}
 	res, err := p.Do(s.client, req)
@@ -4094,14 +4094,14 @@ func (s *Server) forwardOnce(ctx context.Context, p provider.Provider, to provid
 	}
 	if err == nil && to == provider.Anthropic {
 		// a vendor that takes the key in x-api-key or Authorization
-		// alone, refusing both (Aloha on Discord): asked again with one
+		// alone, refusing both (Aloha 报告): asked again with one
 		res, err = provider.RetryOneAuth(p, req, res, func(r *http.Request) (*http.Response, error) { return p.Do(s.client, r) })
 	}
 	if err == nil && to == provider.Chat {
 		// a GLM Coding Plan's key at Zhipu's or Z.ai's pay-as-you-go
 		// endpoint, refused there for want of a balance (1113): asked at
 		// the plan's endpoint, and the provider moved there when it serves
-		// it; else the refusal says what to change (@cleverpigo on X)
+		// it; else the refusal says what to change (@cleverpigo 报告)
 		res, err = provider.RetryZhipuCoding(p, req, res, func(r *http.Request) (*http.Response, error) { return p.Do(s.client, r) })
 	}
 	if err != nil {
@@ -4111,7 +4111,7 @@ func (s *Server) forwardOnce(ctx context.Context, p provider.Provider, to provid
 	// nothing at all, served 200, is the 502 it stands for (#1012)
 	// Zhipu's and Z.ai's Responses API refuses a key 200 in the platform's
 	// envelope: the 401 (or 429 …) it stands for, so the next key or
-	// member is asked and the agent told why (@xanahopper on X)
+	// member is asked and the agent told why (@xanahopper 报告)
 	res = notAnAPIReply(clineUnwrapped(p, provider.ZhipuEnveloped(req, res)), "")
 	if p.Account != nil && p.Account.Agent == "codex" {
 		// a large request ChatGPT closed the connection on: asked again,
@@ -5035,7 +5035,7 @@ func (s *Server) forwardTranslated(ctx context.Context, p provider.Provider, to 
 	}
 	if provider.Reasonless(p.ID, model) {
 		// the user said it takes no reasoning ask: built with none, not
-		// even reasoning turned off (yuexian7 on Discord)
+		// even reasoning turned off (yuexian7 报告)
 		r := *req
 		r.Effort, r.ThinkOff, r.Thinking, req = "", false, false, &r
 	}
@@ -5142,7 +5142,7 @@ func (s *Server) forwardTranslated(ctx context.Context, p provider.Provider, to 
 			// fast mode in Claude's words (speed "fast", a fast pick from
 			// an agent on its API) is the priority tier, or ultrafast for
 			// a pick sent Ultrafast, on a plugin that says the model is
-			// served at it (Lovest on Discord)
+			// served at it (Lovest 报告)
 			tier := req.Tier
 			if tier == "" && req.Fast {
 				tier = "priority"
@@ -6503,7 +6503,7 @@ func conversationID(in http.Header, body []byte) string {
 	_ = decodeJSON(body, &m)
 	// The turns are the body's own bytes, not a copy of each: this runs on
 	// every request, and a 1.5 MB conversation's copy was ~2.8 MB of each
-	// request's allocations (yg6888 on X).
+	// request's allocations (yg6888 报告).
 	items, contents := elementsOf(m.Messages), elementsOf(m.Contents)
 	geminiContents := len(items) == 0 && len(contents) > 0
 	if geminiContents {
@@ -6931,7 +6931,7 @@ func writeErrorSaid(w http.ResponseWriter, proto provider.Protocol, status int, 
 	case status == 413:
 		// Anthropic's own type, in every shape: pi (overflow.ts) compacts
 		// and tries once more on it, and an OpenAI-shaped api_error left
-		// it stopped (@wilsonxuuuu on X)
+		// it stopped (@wilsonxuuuu 报告)
 		typ = "request_too_large"
 	case status == 429:
 		typ = "rate_limit_error"

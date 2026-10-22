@@ -45,7 +45,7 @@ func TestCollapseAntigravityModels(t *testing.T) {
 		"gemini-3.5-flash-lite|Gemini 3.5 Flash Lite|",
 		"gemini-3.7-flash|Gemini 3.7 Flash|low,medium,high",
 		// Antigravity names no -tiered id: it is named for its model, and
-		// thinks at its model's levels (PapainTea on X)
+		// thinks at its model's levels (PapainTea 报告)
 		"gemini-3.7-flash-tiered|Gemini 3.7 Flash (Tiered)|low,medium,high",
 		"gemini-pro-agent|Gemini 3.1 Pro (High)|",
 		"gpt-oss-120b-medium|GPT-OSS 120B (Medium)|",

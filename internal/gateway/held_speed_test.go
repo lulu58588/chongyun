@@ -14,7 +14,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/usage"
 )
 
-// John on Discord, again after v0.1.1119: Kimi Code (api.kimi.ai, Chat,
+// John 报告, again after v0.1.1119: Kimi Code (api.kimi.ai, Chat,
 // k3-256k) answering OpenCode read 2,237 tok/s for 550 tokens, 22 of them
 // reasoning, in 16 s with its first content at 5.2 s, and 2,012 tok/s for
 // 395 tokens in 19 s. The burst those replies came in was let go over a

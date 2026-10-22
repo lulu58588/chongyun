@@ -32,6 +32,64 @@ func sessionAuth(t *testing.T, dir, account, user, email string) {
 	if err := os.WriteFile(filepath.Join(dir, "auth.json"), auth, 0600); err != nil {
 		t.Fatal(err)
 	}
+	// chongyun tells what a session's account was by the accounts it holds
+	// itself, never by reading the agent's own file: the account the agent
+	// is signed in to is kept in chongyun's own logins.json, marked as the
+	// one it is on.
+	sessionLogin(t, account, email, auth)
+}
+
+// sessionLogin keeps a ChatGPT account in chongyun's own logins.json, the
+// account the agent is on: the mark is taken off the others of that agent,
+// as it is when chongyun signs an agent in to another account.
+func sessionLogin(t *testing.T, account, email string, auth []byte) {
+	t.Helper()
+	path := filepath.Join(filepath.Dir(provider.Path()), "logins.json")
+	ls := []map[string]any{}
+	if b, err := os.ReadFile(path); err == nil {
+		if err := json.Unmarshal(b, &ls); err != nil {
+			t.Fatal(err)
+		}
+	}
+	entry := map[string]any{"agent": "codex", "user": email, "active": true, "seen": time.Now(), "auth": json.RawMessage(auth)}
+	out := ls[:0]
+	for _, l := range ls {
+		if l["agent"] != "codex" {
+			out = append(out, l)
+			continue
+		}
+		if sessionAccountOf(l["auth"]) == account {
+			continue // signed in to it again: this is the account it is on now
+		}
+		delete(l, "active") // the agent is on one account only
+		out = append(out, l)
+	}
+	out = append(out, entry)
+	b, _ := json.Marshal(out)
+	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, b, 0600); err != nil {
+		t.Fatal(err)
+	}
+	provider.ForgetAccounts()
+}
+
+// sessionAccountOf is the ChatGPT account an auth blob names.
+func sessionAccountOf(auth any) string {
+	b, err := json.Marshal(auth)
+	if err != nil {
+		return ""
+	}
+	var a struct {
+		Tokens struct {
+			AccountID string `json:"account_id"`
+		} `json:"tokens"`
+	}
+	if json.Unmarshal(b, &a) != nil {
+		return ""
+	}
+	return a.Tokens.AccountID
 }
 
 func TestNamedProviderHistoryDoesNotFollowCurrentConfig(t *testing.T) {

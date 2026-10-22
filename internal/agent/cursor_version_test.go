@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// Cursor CLI's row had no version where Pi's said 1.2.0 (@G_Z_Y on X):
+// Cursor CLI's row had no version where Pi's said 1.2.0 (@G_Z_Y 报告):
 // magpie never asked cursor-agent. Its installer's link into
 // ~/.local/share/cursor-agent/versions/<v>/ is read with --version, and
 // nothing is offered to update it: it updates itself, and magpie knows no

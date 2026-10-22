@@ -14,7 +14,7 @@ import (
 // The ChatGPT backend is spoken to over HTTP/1.1, as Codex and Pi speak
 // to it, while every other vendor offering HTTP/2 still gets it: on one
 // HTTP/2 connection every Codex stream was reset now and then mid-reply
-// (jasonz3g on X, "stream ID 21; INTERNAL_ERROR; received from peer").
+// (jasonz3g 报告, "stream ID 21; INTERNAL_ERROR; received from peer").
 func TestCodexBackendOverHTTP1(t *testing.T) {
 	fresh(t)
 	proto := func(w http.ResponseWriter, r *http.Request) { io.WriteString(w, r.Proto) }

@@ -10,7 +10,7 @@ import (
 
 // An agent magpie set to a found group by its old id, group/auto-<slug>,
 // is moved onto the group's auto/<model> on the next catalog sync, its
-// other settings kept (ZeroClover on X); one whose field the user set
+// other settings kept (ZeroClover 报告); one whose field the user set
 // themselves, or changed since magpie set it, keeps their value.
 func TestFoundGroupRenamedOnlyWhereMagpieSetIt(t *testing.T) {
 	syncHome(t)

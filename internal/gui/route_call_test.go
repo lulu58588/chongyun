@@ -15,7 +15,7 @@ import (
 )
 
 // A request on the Routing page opens to its own request and response
-// (Fate on Discord): /api/gateway/call?route= finds the recent call by the
+// (Fate 报告): /api/gateway/call?route= finds the recent call by the
 // route's id, each its own, and none for a route the ring doesn't have.
 func TestRoutingRequestOpensItsBodies(t *testing.T) {
 	sandboxHome(t)

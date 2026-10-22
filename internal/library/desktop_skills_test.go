@@ -265,7 +265,7 @@ func TestClaudeDesktopSkills(t *testing.T) {
 	}
 }
 
-// Kilig on Discord: an MSIX Claude Desktop (Windows 10 LTSC) has its
+// Kilig 报告: an MSIX Claude Desktop (Windows 10 LTSC) has its
 // claude_desktop_config.json and Cowork's skills in the package's
 // LocalCache\Roaming\Claude, and doesn't see a file written into
 // %APPDATA%\Claude: the library's MCP servers and skills go there.
@@ -294,7 +294,7 @@ func TestClaudeDesktopMSIXLibrary(t *testing.T) {
 	}
 }
 
-// bg5eau on X: Claude Desktop 2.31226.1, packaged, reads its 3p mode's
+// bg5eau 报告: Claude Desktop 2.31226.1, packaged, reads its 3p mode's
 // file in the real %LOCALAPPDATA%\Claude-3p, an older one in the package's:
 // a server the library gives Desktop goes into each that is there.
 func TestClaudeDesktopMSIXBoth3p(t *testing.T) {

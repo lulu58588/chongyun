@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// PAMI on Discord: a routing group could not be switched off as a whole,
+// PAMI 报告: a routing group could not be switched off as a whole,
 // and a group was made one model at a time, not seeing which groups a
 // model was in already.
 // - A group of the user's has a switch on its card: off, it posts

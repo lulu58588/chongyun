@@ -187,7 +187,7 @@ func grokIn(at place) *Agent {
 						// a model without the chosen effort starts at its
 						// nearest one (a tie goes up), not at Grok's default:
 						// switching to a group of low/medium/high from xhigh
-						// keeps high (Creat.wu on Discord)
+						// keeps high (Creat.wu 报告)
 						if es := efforts(v); es != nil && !contains(es, e) {
 							if n := catalog.NearestEffort(e, es); contains(es, n) {
 								if err := edit.SetTOMLKey(path, "models", "default_reasoning_effort", n); err != nil {
@@ -206,7 +206,7 @@ func grokIn(at place) *Agent {
 				Options: func(cur map[string]string) []Option {
 					// magpie's rows for the account Grok Build is signed in
 					// to are its own models a second time: they fold into
-					// one row (Fate on Discord: grokbuild 在登录态下会加载重复的模型)
+					// one row (Fate 报告: grokbuild 在登录态下会加载重复的模型)
 					opts := viaMagpie("grok", magpieID+"/")
 					for i := range opts {
 						opts[i].Same = opts[i].own

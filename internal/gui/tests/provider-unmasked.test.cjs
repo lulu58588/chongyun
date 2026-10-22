@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A model on this computer or the local network (lc on Discord): the
+// A model on this computer or the local network (lc 报告): the
 // provider editor's Redaction row, "Send requests unmasked", is there while
 // every address of the provider is local (localhost, a private IP), opens as
 // it was saved, and Save posts it. A relay at a vendor's address has no such

@@ -15,7 +15,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/usage"
 )
 
-// akic404 on Discord: a magpie on a server that other magpies reach as a
+// akic404 报告: a magpie on a server that other magpies reach as a
 // remote magpie records their agents' conversations, and the Sessions page
 // shows them, but its download of one as Markdown was a 400: the agent ran
 // on the other machine, so there is no file of the session here, and the

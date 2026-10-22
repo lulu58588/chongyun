@@ -198,7 +198,7 @@ var rtkSpecs = map[string]rtkSpec{
 	// else %LOCALAPPDATA%\hermes on Windows and ~/.hermes elsewhere. rtk
 	// (0.51, src/hooks/init/hermes.rs) knows only $HERMES_HOME and
 	// ~/.hermes, so it is told the folder: on Windows it otherwise writes
-	// its plugin where Hermes doesn't look (新v学员 on Discord).
+	// its plugin where Hermes doesn't look (新v学员 报告).
 	"hermes": {
 		flags: []string{"--agent", "hermes"}, patch: true,
 		has: func(a *agent.Agent) bool { return exists(filepath.Join(hermesPlugin(a), "plugin.yaml")) },

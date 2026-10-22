@@ -28,9 +28,6 @@ var savedTokenMu = filelock.Mutex{Path: func() string { return loginsPath() + ".
 // SetLoginOn puts a saved account in use beside the agent's own, or takes
 // it out. The account the agent is signed in to is always in use.
 func SetLoginOn(agent, user string, on bool) error {
-	if discoveryOff() {
-		return errAccountDiscoveryOff
-	}
 	if pp, ok := pluginOfAgent(agent); ok {
 		return setPluginLoginOn(pp, user, on)
 	}
@@ -45,9 +42,9 @@ func SetLoginOn(agent, user string, on bool) error {
 	loginsMu.Lock()
 	defer loginsMu.Unlock()
 	ls := readLogins()
-	live, ok := liveLogin(agent)
+	live, ok := ownActive(agent)
 	if !ok && agent == "claude" {
-		// Claude Code signed out, the account served in its place is as its own
+		// the account served in the place of Claude Code's own, as its own
 		if u := claudeStandIn(ls); u != "" {
 			live, ok = savedLogin{Agent: agent, User: u}, true
 		}
@@ -103,7 +100,7 @@ func pausedOwn(ls []savedLogin, agent, user string) bool {
 // is signed in to, paused while another of its accounts is on (#263): the
 // gateway passes over it, the agent staying signed in to it.
 func (p Provider) OwnPaused() bool {
-	if p.Account == nil || p.Account.token != nil && !p.Account.standIn || !slices.Contains(loginAgents, p.Account.Agent) {
+	if p.Account == nil || p.Account.beside() || !slices.Contains(loginAgents, p.Account.Agent) {
 		return false
 	}
 	loginsMu.Lock()
@@ -141,7 +138,7 @@ func (p Provider) alsoOn() []Provider {
 	if p.Account != nil && (p.Account.Agent == "gemini" || p.Account.Agent == "antigravity") {
 		return googleAlsoOn(p.Account.Agent)
 	}
-	if p.Account == nil || p.Account.token != nil && !p.Account.standIn || (p.Account.Agent != "claude" && p.Account.Agent != "codex") {
+	if p.Account == nil || p.Account.beside() || (p.Account.Agent != "claude" && p.Account.Agent != "codex") {
 		return nil
 	}
 	var out []Provider
@@ -151,7 +148,7 @@ func (p Provider) alsoOn() []Provider {
 		}
 		agent, user := l.Agent, l.User
 		a := *p.Account
-		a.User, a.Plan, a.standIn = user, l.Plan, false
+		a.User, a.Plan, a.standIn, a.primary = user, l.Plan, false, false
 		a.token = func(ctx context.Context) (string, error) {
 			tok, _, err := savedLoginToken(ctx, agent, user)
 			return tok, err
@@ -181,11 +178,6 @@ func (a *Account) Token(ctx context.Context) (tok string, ok bool, err error) {
 		return "", false, nil
 	}
 	if a.token == nil {
-		if a.Agent == "claude" {
-			if why := claudeOwnRefused(a.User); why != "" {
-				return "", false, errors.New(why)
-			}
-		}
 		return "", false, nil
 	}
 	tok, err = a.token(ctx)

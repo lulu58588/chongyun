@@ -8,7 +8,7 @@ import (
 )
 
 // An agent left on a group magpie found, or a session begun on one, keeps
-// working once the user turns found groups off (蓝猫 on Discord): its
+// working once the user turns found groups off (蓝猫 报告): its
 // request goes to the model from the first provider that serves it, as a
 // model of one provider — not refused as a model magpie doesn't know.
 func TestFoundGroupOff(t *testing.T) {

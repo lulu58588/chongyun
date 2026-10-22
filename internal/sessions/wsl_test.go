@@ -305,7 +305,7 @@ func TestWSLStoppedDistroKept(t *testing.T) {
 }
 
 // A distro the user stops after the last listing (wsl --shutdown, to repair
-// WSL: TJHHHH on Discord, magpie kept starting it) isn't opened, though
+// WSL: TJHHHH 报告, magpie kept starting it) isn't opened, though
 // WSLHomes, as old as internal/agent's last look, still says it runs: the
 // next listing and every read ask WSLRunning first. Once it runs again its
 // files are read as before.

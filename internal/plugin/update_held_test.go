@@ -88,7 +88,7 @@ func heldRegistry(t *testing.T, pkg string, published map[string]time.Time, newe
 }
 
 // An update bun won't install says why, and nothing says it was made
-// (sweanng424 on Discord: Factory stayed at 0.1.18 with 0.1.21 out, through
+// (sweanng424 报告: Factory stayed at 0.1.18 with 0.1.21 out, through
 // restarts and the hourly updates). A minimumReleaseAge in the user's
 // bunfig made bun take the newest version older than it for "latest", and
 // exit 0: magpie's Update, Update all, the hourly update and the moved
@@ -170,7 +170,7 @@ func TestAgeText(t *testing.T) {
 // version to npm's newest, unpinned, as its row's Update does: the page
 // counts it among the updates, and before, Update all installed the pinned
 // version again, said "Plugins updated", and the row still said the newer
-// one was out (ARNO on Discord: 非官方插件…更新到最新版，magpie依然提示有更新).
+// one was out (ARNO 报告: 非官方插件…更新到最新版，magpie依然提示有更新).
 // A pinned one already at npm's newest stays pinned.
 func TestUpdateAllUpdatesAPinnedPlugin(t *testing.T) {
 	sandbox(t)

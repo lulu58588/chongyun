@@ -13,7 +13,7 @@ import (
 // Cline's free models (cline-free/…) answer 403 "only available via Cline
 // product surfaces" unless the request says it is Cline's: requests to the
 // Cline API carry its desktop app's headers, with the user's key, and those
-// to anyone else don't (lml and ARNO on Discord).
+// to anyone else don't (lml and ARNO 报告).
 func TestClineClientHeaders(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())

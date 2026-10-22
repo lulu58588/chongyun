@@ -18,7 +18,7 @@ type barWin struct{ Windows }
 
 // Settings' Bar icon tells the app whether magpie's icon is in Omarchy's
 // bar, so the tray's own item leaves the bar's tray while the widget is
-// there and comes back once it is taken out (Alex on Discord: with Bar icon
+// there and comes back once it is taken out (Alex 报告: with Bar icon
 // on, Omarchy's bar showed two magpies).
 func TestBarIconTellsTheTray(t *testing.T) {
 	if runtime.GOOS == "windows" {

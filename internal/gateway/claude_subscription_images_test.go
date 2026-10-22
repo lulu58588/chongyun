@@ -14,7 +14,7 @@ import (
 // An image a tool returned reaches the Claude Code a subscription runs as
 // MCP image content, which it hands its model as an image block: in an
 // Anthropic tool_result, and beside a Chat tool message, where a client
-// sends it in a user message after (smart-lty on Discord: Read on a PNG, a
+// sends it in a user message after (smart-lty 报告: Read on a PNG, a
 // browser screenshot, reached the model as text only).
 func TestSubscriptionToolResultImages(t *testing.T) {
 	// a 1x1 PNG

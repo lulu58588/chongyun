@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// lc on Discord ("只可列出？不可删除？"): Claude Code sessions seen only through
+// lc 报告 ("只可列出？不可删除？"): Claude Code sessions seen only through
 // magpie's gateway, their own files on another computer, were listed under
 // "No folder" at "0 B" with a note that magpie can't delete them. Now they
 // sit under "Seen through the gateway", say why they can't be resumed,

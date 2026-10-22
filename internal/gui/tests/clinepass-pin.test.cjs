@@ -1,8 +1,8 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // ClinePass's DeepSeek models pinned to DeepSeek's own API (White Immortal
-// on Discord), and its GLM models to Z.ai's (sdytman): the editor of a Cline provider has the tick, as saved; Save
+// 报告), and its GLM models to Z.ai's (sdytman): the editor of a Cline provider has the tick, as saved; Save
 // posts pinUpstream as ticked. The Cline plugin's provider, an account's
-// editor, has it too (ARNO on Discord). Another provider's editor has no
+// editor, has it too (ARNO 报告). Another provider's editor has no
 // such tick. In English and Chinese.
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
@@ -17,7 +17,7 @@ const cline = {
   models: [{ id: "cline-pass/deepseek-v4-pro", name: "DeepSeek V4 Pro", on: true }], agents: [], fallback: [], headers: {},
   key: { set: true, masked: "clp_…one" }, keyList: [], balanceToken: { takes: false, set: false }, proxy: "", maxConcurrency: null,
 };
-// the Cline plugin's provider (ARNO on Discord): an account's editor, pinned
+// the Cline plugin's provider (ARNO 报告): an account's editor, pinned
 // as saved
 const plugin = {
   id: "cline-plugin", name: "Cline", icon: "cline", cline: true, pinUpstream: true,

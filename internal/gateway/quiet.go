@@ -53,7 +53,7 @@ func withoutReasoningAsk(proto provider.Protocol, body []byte) []byte {
 // enable_thinking), and the sealed reasoning Responses' include asks
 // for, which OpenAI refuses of a model that doesn't reason. It is what a
 // model the user said takes no reasoning ask is sent
-// (provider.SetModelReasonless; yuexian7 on Discord: the vendor answers
+// (provider.SetModelReasonless; yuexian7 报告: the vendor answers
 // reasoning_effort with 422, and the request without it works).
 func withoutAnyReasoning(proto provider.Protocol, body []byte) []byte {
 	return withoutReasoningFields(proto, body, true)

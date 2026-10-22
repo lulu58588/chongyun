@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// magpie's own skill (magpie-quota, ttmouse on X) is first in the market's
+// magpie's own skill (magpie-quota, ttmouse 报告) is first in the market's
 // skills: until skills.sh lists it there is no count of installs to show and
 // no skills.sh page to link, so its card and sheet show neither, where a
 // skills.sh skill keeps both. Every language, a narrow window, both engines.

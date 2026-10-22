@@ -357,7 +357,7 @@ func models(args []string) error {
 		explainHidden(agentID, hidden)
 	}
 	// the models a provider's list has that it doesn't expose, which a
-	// group naming one finds "not served" (MOMO on Discord: 35 of 37)
+	// group naming one finds "not served" (MOMO 报告: 35 of 37)
 	for _, p := range provider.All() {
 		if !p.On() || p.Unlisted || p.ServesNone() {
 			continue
@@ -1639,7 +1639,7 @@ func queueCmd(rest []string) error {
 }
 
 // rpmCmd shows, or sets, how many requests each of a provider's accounts
-// or keys sends the vendor in any minute (coeo91 on Discord: OpenRouter's
+// or keys sends the vendor in any minute (coeo91 报告: OpenRouter's
 // free models take 20).
 func rpmCmd(rest []string) error {
 	if len(rest) < 1 || len(rest) > 2 {
@@ -1813,7 +1813,7 @@ func printMoved(moved []agent.Move) {
 // editPicks works out a provider's picks from `chongyun provider models <id>
 // args…`: plain ids replace them, all (or -) gives the default back, and
 // +id / -id add one to or take one out of the models exposed now, so a
-// user adding a model keeps the rest (MOMO on Discord: 35 exposed → 8).
+// user adding a model keeps the rest (MOMO 报告: 35 exposed → 8).
 func editPicks(p provider.Provider, args []string) ([]string, error) {
 	if len(args) == 1 && (args[0] == "-" || args[0] == "all") {
 		return nil, nil

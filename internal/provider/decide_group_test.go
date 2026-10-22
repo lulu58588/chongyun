@@ -7,7 +7,7 @@ import (
 
 // A group of decision models alone saves, answers System One and stays out
 // of the agents' catalog; one beside chat models, or inside a chat group,
-// or with what shapes a conversation, is refused (ARNO on Discord).
+// or with what shapes a conversation, is refused (ARNO 报告).
 func TestDecisionGroup(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
 	t.Setenv("USERPROFILE", t.TempDir())

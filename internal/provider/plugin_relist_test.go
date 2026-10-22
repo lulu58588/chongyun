@@ -26,7 +26,7 @@ func zenFree(fellBack bool, ids ...string) []plugin.Provider {
 // A magpie left running asks the plugins for their lists again, by
 // itself: a free model Zen dropped leaves the list and the user's picks,
 // a new one is listed, a pick typed in by hand stays, and a list that
-// couldn't be read changes nothing (Jeremy.Zhou on Discord).
+// couldn't be read changes nothing (Jeremy.Zhou 报告).
 func TestPluginsListedAgainWhileRunning(t *testing.T) {
 	claudeHome(t)
 	t.Setenv("MAGPIE_BUN", "")

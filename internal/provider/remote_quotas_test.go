@@ -97,7 +97,7 @@ func remoteQuotaHome(t *testing.T, peer http.Handler) {
 	t.Cleanup(ForgetRemoteCardsForTest)
 }
 
-// 莫 on Discord: a computer whose providers are another's magpie showed
+// 莫 报告: a computer whose providers are another's magpie showed
 // no quota at all. It now shows the other magpie's cards, named with it
 // and kept apart from its own by id, in their kinds; what a card's
 // buttons would do to this computer's accounts is left off, and a card

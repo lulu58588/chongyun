@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The Sessions page (TJHHHH on Discord: manage sessions as CC Switch does,
+// The Sessions page (TJHHHH 报告: manage sessions as CC Switch does,
 // above all delete them, in the GUI): an agent's sessions by the folder they
 // ran in, each with its resume command; picked ones are deleted after
 // magpie's own dialog (never confirm()), which posts sessions/delete with

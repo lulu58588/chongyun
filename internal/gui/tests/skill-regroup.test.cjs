@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Group again (White Immortal on Discord: of mattpocock/skills added a while
+// Group again (White Immortal 报告: of mattpocock/skills added a while
 // ago only 20 were grouped, the rest under On this computer, and nothing
 // to group them again by). The Skills head has Group again, which asks
 // magpie to trace the skills to their repositories once more and draws

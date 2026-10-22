@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// 新v学员 on Discord: an MCP server signed in to with OAuth showed "Signed
+// 新v学员 报告: an MCP server signed in to with OAuth showed "Signed
 // in" and "needs sign-in" at once. A server no agent has, checked by a
 // click before its sign-in, kept that check's "needs sign-in" after it; it
 // is checked again once its sign-in changed. And a check that found

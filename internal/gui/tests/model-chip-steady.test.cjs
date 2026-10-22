@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// frankdeng on Discord: "点击某个模型，还会因为选中状态导致排版有变化，位置
+// frankdeng 报告: "点击某个模型，还会因为选中状态导致排版有变化，位置
 // 发生偏移". A pick drew a tick before the name and set it bolder, so the
 // chip grew, and every chip after it on the row, and the rows under it,
 // moved under the pointer. A chip that a click picks and unpicks now keeps

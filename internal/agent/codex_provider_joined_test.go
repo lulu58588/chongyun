@@ -14,6 +14,9 @@ import (
 // provider, and true again once it is back beside the sign-in.
 func TestCodexProviderIsNotJoined(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, `model = "gpt-5.5"`+"\n")
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "beside")
 	cx := codex(home)
 	if ok, err := cx.Join(); err != nil || !ok || !cx.Joined() {
 		t.Fatalf("join: %v %v, joined %v", ok, err, cx.Joined())

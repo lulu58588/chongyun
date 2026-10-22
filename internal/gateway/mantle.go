@@ -12,7 +12,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// Amazon Bedrock's Mantle endpoint (@marktoown on X) serves its OpenAI APIs
+// Amazon Bedrock's Mantle endpoint (@marktoown 报告) serves its OpenAI APIs
 // under two prefixes, each model at one: most at /v1, OpenAI's closed GPT
 // models and xAI's Grok at /openai/v1, as each model's card says. A model
 // asked at the other is turned away with "model `x` isn't supported on

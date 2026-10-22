@@ -10,7 +10,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// Gateway mode (Player on Discord): `chongyun web` on a server that is only
+// Gateway mode (Player 报告): `chongyun web` on a server that is only
 // the gateway for other machines' agents shows what such a gateway needs —
 // Providers, Gateway, Routing, Usage, Sessions, Plugins and Settings — and leaves out
 // what is this machine's agents' (Agents, Library, the settings

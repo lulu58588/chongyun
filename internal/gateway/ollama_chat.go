@@ -16,7 +16,7 @@ import (
 
 // Ollama's own chat routes, POST /api/chat and POST /api/generate, for a
 // client that chats only through them (Zed's Ollama provider,
-// super_lalalalala on Discord; the ollama CLI). Each request is written
+// super_lalalalala 报告; the ollama CLI). Each request is written
 // as a Chat Completions one and served by the very handler
 // /v1/chat/completions is (s.handle(provider.Chat)), on the request that
 // came in, so lanGuard, corsGuard, the caller's key and the models it may

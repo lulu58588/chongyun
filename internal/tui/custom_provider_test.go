@@ -13,7 +13,7 @@ import (
 
 // A provider of the user's own, at its address on the API it speaks, is
 // added from the TUI as the app's custom provider editor and magpie provider
-// add <name> url=… add it (hezz1891 on Discord: on a server, the TUI had
+// add <name> url=… add it (hezz1891 报告: on a server, the TUI had
 // vendors magpie knows alone).
 func TestTUIAddsACustomProvider(t *testing.T) {
 	home(t)
@@ -109,7 +109,7 @@ func TestTUIAddsACustomProvider(t *testing.T) {
 
 // w on a provider of the user's own asks each base URL it has, the one
 // now typed in, as magpie provider set <id> url=… changes it
-// (luluxiu_1_4392 on Discord: on Linux, the TUI had no way to): enter
+// (luluxiu_1_4392 报告: on Linux, the TUI had no way to): enter
 // alone keeps one, a URL that isn't one is refused, and the others stay.
 func TestTUIEditsACustomProvidersBaseURL(t *testing.T) {
 	home(t)

@@ -10,7 +10,7 @@ import (
 )
 
 // Antigravity answers every level of gemini-3.8-flash with modelVersion
-// gemini-3.8-flash-n (dumplings on Discord; seen on a real account for
+// gemini-3.8-flash-n (dumplings 报告; seen on a real account for
 // gemini-3.8-flash-low, -medium and -high, with and without a thinking
 // level): Google's name for the deployment serving that model, not another
 // model. Another vendor's swap, another Gemini model and another vendor's

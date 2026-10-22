@@ -80,7 +80,7 @@ func TestContextOfALeanAgent(t *testing.T) {
 // Claude Code's auto mode asks its classifier about each action under the
 // conversation's own session id: a security monitor's system prompt and
 // the transcript, no tools, 34–48K. Interleaved with turns of 60–116K, as
-// Player's glm-5.3 session on Discord was, those drops are no compaction,
+// Player's glm-5.3 session 报告 was, those drops are no compaction,
 // nor are its title, quota check or a subagent's turns; the
 // conversation's line, latest request and peak are its own turns', and a
 // real compaction of them still counts.
@@ -240,7 +240,7 @@ func TestContextSessionTitles(t *testing.T) {
 	}
 }
 
-// masaka on Discord: a part of the context window card opens to its text.
+// masaka 报告: a part of the context window card opens to its text.
 // /api/context/text lists the part's items, and gives one item's text when
 // asked for it; a request whose body is no longer kept is 404.
 func TestContextTextAPI(t *testing.T) {

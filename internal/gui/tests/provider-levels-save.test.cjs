@@ -2,7 +2,7 @@
 // editor's Names & levels, are staged and made with the editor's Save, as
 // the rest of the editor is; Cancel drops them. They used to be posted, and
 // the agents' files rewritten, at each tick, so picking levels lagged (ARNO
-// on Discord).
+// 报告).
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");

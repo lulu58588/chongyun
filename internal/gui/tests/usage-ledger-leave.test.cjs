@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // What a click filtered the Requests by goes when the reader leaves them
-// (TJHHHH on Discord): a click on Codex in the ranking split by agent, a
+// (TJHHHH 报告): a click on Codex in the ranking split by agent, a
 // click on a chart's day, a filter brought from elsewhere (the URL, a
 // route from Routing) is for that visit. Off to another page or another
 // Usage tab and back, the Requests are of all agents again. An agent picked

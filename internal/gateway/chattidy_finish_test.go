@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// 喜欢一个人 on Discord: a relay in front of deepseek-v4.1-flash made the
+// 喜欢一个人 报告: a relay in front of deepseek-v4.1-flash made the
 // calls and ended the reply "stop", and a Chat client that reads
 // finish_reason ended its turn with them not run. A relayed Chat reply
 // that made calls ends "tool_calls", streamed and whole; one that made

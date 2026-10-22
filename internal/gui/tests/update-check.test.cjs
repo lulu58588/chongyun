@@ -227,7 +227,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         assert.deepEqual(errors, []);
       });
 
-      // freecss on Discord: "0.1.628 已下载 · couldn't move
+      // freecss 报告: "0.1.628 已下载 · couldn't move
       // magpie-windows-amd64.exe aside to put the new version in: rename C:\Us…"
       // — the reason was cut off. It is read in full, and the release page is
       // a click away.

@@ -1,8 +1,9 @@
-/magpie
-/magpie.exe
-/magpie.app/
+/chongyun
+/chongyun.exe
+/chongyun.app/
 /dist/
-/magpie-dev
+/chongyun-dev
 /rsrc_windows_*.syso
-/magpie-dev-backend
-/magpie-dev.new
+/chongyun-dev-backend
+/chongyun-dev.new
+.DS_Store

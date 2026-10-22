@@ -17,7 +17,7 @@ import (
 // model's endpoint is masked as the settings say: an agent's search MCP
 // call carries it as the agent's model wrote it, the values put back, and
 // it went to the search API, a Kimi Code plan's or WorkBuddy's search as
-// it was (lc on Discord: "mcp 搜索出去的脱敏了吗？"). The agent gets its own
+// it was (lc 报告: "mcp 搜索出去的脱敏了吗？"). The agent gets its own
 // values back in what the search found.
 func TestSearchQueryMasked(t *testing.T) {
 	const phone = "13812345678"

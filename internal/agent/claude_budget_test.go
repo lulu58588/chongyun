@@ -55,7 +55,7 @@ func TestClaudePlan(t *testing.T) {
 		t.Fatalf("nothing known: %d %v", top, entries)
 	}
 	// a [1m] one is told by its own 1M too, not the next one's (dumplings
-	// on Discord), so it runs to it should Claude Code stop taking it for
+	// 报告), so it runs to it should Claude Code stop taking it for
 	// 1M; the smaller one is held to its own
 	top, entries = claudePlan([]claudeBudget{{id: "x[1m]", window: 1000000, long: true, compact: -1}, {id: "g", window: 272000, compact: -1}}, 0, nil)
 	if top != 1000000 || !reflect.DeepEqual(entries, map[string]int{"g": 272000}) {

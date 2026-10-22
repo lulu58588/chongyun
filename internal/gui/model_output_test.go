@@ -9,7 +9,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// ARNO on Discord: a model's output limit wasn't in the Gateway's model
+// ARNO 报告: a model's output limit wasn't in the Gateway's model
 // tooltip, though agents were told one when it was written to their
 // config. The page's models carried no output at all, so the tooltip had
 // a line only for routing groups. Each model now says the reply limit

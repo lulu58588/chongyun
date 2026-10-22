@@ -51,7 +51,7 @@ func TestClaudeStandIn(t *testing.T) {
 }
 
 // Codex on magpie as its provider asks for its auto-review by OpenAI's
-// name, codex-auto-review (shihao H on X: 404 magpie knows no model
+// name, codex-auto-review (shihao H 报告: 404 magpie knows no model
 // "codex-auto-review"); it goes to the model Codex is set to. Signed in
 // (routed by openai_base_url) or not routed, nothing stands in.
 func TestCodexStandIn(t *testing.T) {

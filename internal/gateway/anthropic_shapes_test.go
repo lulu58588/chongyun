@@ -58,7 +58,7 @@ func (v *strictRelay) all() []map[string]any {
 	return slices.Clone(v.bodies)
 }
 
-// Keenc on Discord: Claude Code 2.1.288 through magpie to a relay got
+// Keenc 报告: Claude Code 2.1.288 through magpie to a relay got
 // "thinking.adaptive.display: Input should be 'summarized', 'omitted'" (its
 // display "updates") and "messages.1.output_config: Extra inputs are not
 // permitted" (a turn's effort on a system message). magpie asks the relay

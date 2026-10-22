@@ -163,11 +163,10 @@ func openChamber(home, cfg string) *Agent {
 	s := ocStore{openChamberDir(home)}
 	oc := opencode(home, cfg)
 	ocPath := oc.Path
-	auth := filepath.Join(home, ".local", "share", "opencode", "auth.json")
 	provider := openCodeKept(ocPath, func() any { return magpieProviderJSONFor("opencode", "opencode") })
 	opts := func(key string) func(map[string]string) []Option {
 		return func(cur map[string]string) []Option {
-			return append(ownOptions(auth, cur[key]), viaMagpie("opencode", magpieID+"/")...)
+			return append(ownOptions(cur[key]), viaMagpie("opencode", magpieID+"/")...)
 		}
 	}
 	// stepped off magpie: its provider goes too, when nothing else in the

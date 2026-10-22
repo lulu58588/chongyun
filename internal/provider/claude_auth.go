@@ -106,21 +106,3 @@ func NoteClaudeSignInFailure(user, version, message string) {
 	}
 }
 
-// claudeOwnRefused is why the account Claude Code itself is signed in to,
-// user, can't be used: Anthropic refused the credential Claude Code holds
-// for it now; "" when it didn't.
-func claudeOwnRefused(user string) string {
-	c, _, ok := claudeCredential()
-	if !ok {
-		return ""
-	}
-	v := c.version()
-	loginsMu.Lock()
-	defer loginsMu.Unlock()
-	for _, l := range readLogins() {
-		if l.Agent == "claude" && strings.EqualFold(l.User, user) && l.Refused == v && l.Lapsed != "" {
-			return l.Lapsed
-		}
-	}
-	return ""
-}

@@ -139,7 +139,7 @@ const fitWorkers = 4
 // once, across fitWorkers of them. fitWorkers alone bounds nothing: four
 // images made side by side, each up to what one image may hold, is 4
 // times codexImageMaxBytes, and a request that asks for that much is a
-// process the system kills (yg6888 on Discord: a few agents at once put
+// process the system kills (yg6888 报告: a few agents at once put
 // the heap past 300 MB with 1.5 MB bodies). A request's images are made in
 // batches that fit here together, so the second batch waits for the first.
 const fitBudget = 512 << 20

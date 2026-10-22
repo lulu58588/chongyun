@@ -300,7 +300,7 @@ type Change struct {
 	// Quotas is what "quotas-key" sets (#2216).
 	Quotas bool `json:"quotas,omitempty"`
 	// Secret is the value "add-key" gives the new key, one its clients
-	// already send (love1sbug on X: keys handed out from another gateway);
+	// already send (love1sbug 报告: keys handed out from another gateway);
 	// "" for one magpie makes.
 	Secret string `json:"secret,omitempty"`
 }

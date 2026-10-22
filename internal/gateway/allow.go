@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// The allow list (lc on Discord, magpie in Docker on a public host): the
+// The allow list (lc 报告, magpie in Docker on a public host): the
 // addresses other computers may reach magpie from at all, as IPs and CIDR
 // ranges. A request from any other address is refused 403 before its key
 // is looked at, so a gateway key that leaks is of no use from elsewhere.

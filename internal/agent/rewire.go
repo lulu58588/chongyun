@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// The gateway's port is set in Settings (Magic_zero on Discord): every
+// The gateway's port is set in Settings (Magic_zero 报告): every
 // agent magpie connected has the gateway's URL written into its config, so
 // moving the gateway moves them too. Before the port changes, OnGateway
 // notes which agents reach the gateway where it is; once it has moved,

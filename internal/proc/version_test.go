@@ -81,7 +81,7 @@ func TestVersionRunsOnce(t *testing.T) {
 // npm on Windows installs cline as a cline.cmd shim beside node_modules,
 // not a link into it. Its version is read from the package the shim names,
 // so Cline isn't started, and so never gets to schedule its own npm install
-// -g cline@latest (新v学员 on Discord).
+// -g cline@latest (新v学员 报告).
 func TestVersionReadsAnNpmShim(t *testing.T) {
 	old := runVersion
 	t.Cleanup(func() { runVersion = old })

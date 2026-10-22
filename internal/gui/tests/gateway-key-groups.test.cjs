@@ -1,4 +1,4 @@
-// A gateway key can be held to routing groups (Magic_zero on Discord):
+// A gateway key can be held to routing groups (Magic_zero 报告):
 // the key's models menu lists the groups, first, with "Every routing
 // group", and a group picked is sent as "group/<id>".
 const assert = require("node:assert/strict");

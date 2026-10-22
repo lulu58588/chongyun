@@ -2,7 +2,7 @@
 // Codex's subagents square is [agents] default_subagent_model, only the
 // model a subagent starts on when its lead names none in spawn_agent. Unset
 // it said "same as model", and a GPT-6.1-Sol lead spawned GPT-6-Astra all
-// the same (willz on Discord). So unset it says the lead picks, else the
+// the same (willz 报告). So unset it says the lead picks, else the
 // model; its title points at the subagent model, which holds every
 // subagent to one; its picker opens on "Lead's pick" with the model in the
 // note. Codex in WSL says the same. Claude Code's and omp's subagents still

@@ -21,7 +21,7 @@ import (
 // x-openai-actor-authorization, as magpie's does, on a model whose catalog
 // entry says use_responses_lite, as a ChatGPT account's do in magpie
 // (codexcat copies Codex's own entry). Unanswered, the 404 ended the turn:
-// Codex takes any failure of web.run as fatal (anton on Discord).
+// Codex takes any failure of web.run as fatal (anton 报告).
 const AlphaSearchPath = "/alpha/search"
 
 // alphaSearchRequest is the part of Codex's SearchRequest magpie reads; the

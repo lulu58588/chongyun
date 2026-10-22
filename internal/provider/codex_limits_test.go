@@ -35,7 +35,6 @@ func resetUsed(t *testing.T) {
 // reading up to two minutes old (#1295).
 func TestAllowancesCountFromTheReading(t *testing.T) {
 	signIn(t)
-	rememberLogins(true) // this home's account, not the last test's
 	resetUsed(t)
 	read := time.Now().Add(-50 * time.Second)
 	five := time.Now().Add(2 * time.Hour)

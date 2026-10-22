@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Lemon on Discord: can a plugin give its provider its own icon, and say
+// Lemon 报告: can a plugin give its provider its own icon, and say
 // what its API key is asked as? The auth hook's icon, else package.json's
 // magpie.icon, is passed on when it is an https URL or a data:image URI;
 // an "api" method's placeholder is its key's hint, and its label the

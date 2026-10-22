@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Settings' search (sgfvdsg86265 on X: "配置界面太多了，找不到了"): a box
+// Settings' search (sgfvdsg86265 报告: "配置界面太多了，找不到了"): a box
 // at the end of the Settings tabs. Words typed in it show every part's rows
 // that say them — in the language shown or in English — each part under its
 // name, the tabs set aside; a part's name or a section's heading brings all

@@ -170,7 +170,7 @@ func (m model) updateProviders(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 		if pr == nil && p.Account == nil && len(customURLs(p)) > 0 {
 			// a provider of the user's own: its base URLs, one by one
-			// (luluxiu_1_4392 on Discord: on Linux, the TUI had no way to
+			// (luluxiu_1_4392 报告: on Linux, the TUI had no way to
 			// change one)
 			m.openAsk(customURLsAsk(p, customURLs(p), nil))
 			return m, nil
@@ -440,7 +440,7 @@ func (m *model) openProviderModels(id string) {
 
 // kindNote is what a preset is, beside its name in the add list: another
 // computer's magpie is said to be one, not filed under the relays (Avalon
-// on Discord didn't find it there).
+// 报告 didn't find it there).
 func kindNote(k provider.Kind) string {
 	if k == provider.KindRemote {
 		return "another computer's chongyun, shared on its network"
@@ -521,7 +521,7 @@ type customAPI struct {
 }
 
 // customAPIs are what a custom provider is added as from the TUI, which
-// had vendors magpie knows alone (hezz1891 on Discord: a server's TUI had
+// had vendors magpie knows alone (hezz1891 报告: a server's TUI had
 // no way to add one's own relay).
 var customAPIs = []customAPI{
 	{"custom-openai", "OpenAI compatible (Chat Completions)", "https://api.example.com/v1", func(p *provider.Provider, u string) { p.Chat = u }},
@@ -787,7 +787,7 @@ func (m model) viewProviders() string {
 		}
 		r.note = strings.Join(notes, " · ")
 		// a plugin's account showing its defaults alone says why, as the
-		// app's editor does (gnayiab on X: Cursor in WSL's TUI had Auto
+		// app's editor does (gnayiab 报告: Cursor in WSL's TUI had Auto
 		// alone and nothing said)
 		if e := listError(p); e != "" {
 			r.warn = "couldn't list its models: " + e
@@ -866,7 +866,7 @@ var (
 // checkinCmd presses WorkBuddy's daily check-in (签到) now for every
 // WorkBuddy (China) account signed in here not in yet today, all at once,
 // as the app's Usage card's "Check in now" and magpie accounts checkin do:
-// the built-in's or the plugin's (akic404 on Discord: the TUI had no way
+// the built-in's or the plugin's (akic404 报告: the TUI had no way
 // to); and Trae CN's (每日签到) for each Trae CN account (#694), and
 // MiniMax Code's for each MiniMax Code account (#811), and Qoder's daily
 // credits for each Qoder account, and each plugin's own check-in
@@ -1178,7 +1178,7 @@ func (m model) viewUsage() string {
 		m.usageBlock(&b, s, room, names)
 	}
 	// the calls the agents made on their own, as the app's Requests tab
-	// counts them beside the gateway's (Kumo31 on Discord)
+	// counts them beside the gateway's (Kumo31 报告)
 	if d.Calls > 0 {
 		b.WriteString(pad + "  " + sFaint.Render("not through chongyun · the agents' own requests, read from their session files") + "\n")
 		m.usageBlock(&b, d, room, names)

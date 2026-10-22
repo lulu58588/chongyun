@@ -14,7 +14,7 @@ import (
 )
 
 // Sharing the gateway on the local network is this computer's own (Lullaby
-// on Discord: turned on at home, it came on at work too). Two computers in
+// 报告: turned on at home, it came on at work too). Two computers in
 // one folder, sharing on at one and off at the other, each keep their own
 // through syncs both ways, a join and a Restore; flipping it is no change
 // to push; the default key still follows the folder, so the other computer

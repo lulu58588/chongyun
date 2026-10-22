@@ -51,7 +51,7 @@ func TestRestCapOr(t *testing.T) {
 	}
 }
 
-// Kismet Alan on Discord: a relay or account pool whose unknown errors
+// Kismet Alan 报告: a relay or account pool whose unknown errors
 // come now and then, the next request often going through, is set never
 // to rest after one (`chongyun provider rest-cap <id> off`). Its 5xx and its
 // dropped connection rest it no more, nor count toward a backoff; what

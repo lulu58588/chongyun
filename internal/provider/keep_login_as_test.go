@@ -15,12 +15,9 @@ import (
 // back, a drag or Make first changes the order and not the sign-in, and let
 // go of it, Codex is signed in to the first again.
 func TestKeepLoginAsChosen(t *testing.T) {
-	home := signIn(t) // me@example.com
-	rememberLogins(true)
-	codexSignIn(t, home, "spare@example.com", "r-spare")
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	_ = signIn(t) // me@example.com
+	codexSignIn(t, "spare@example.com", "r-spare")
+	codexSignIn(t, "work@example.com", "r-work")
 	for _, u := range []string{"spare@example.com", "me@example.com"} {
 		if err := SetLoginOn("codex", u, true); err != nil {
 			t.Fatal(err)

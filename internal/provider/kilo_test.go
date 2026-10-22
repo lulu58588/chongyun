@@ -33,7 +33,7 @@ const kiloList = `{"data":[
 // clients list them from its /models, asked as the Kilo CLI: with no key
 // the provider lists the free ones alone, asked with no Authorization;
 // with a key every model, the free ones marked Free and priced at nothing
-// (lml on Discord: the community plugin's free models from KiloCode).
+// (lml 报告: the community plugin's free models from KiloCode).
 func TestKiloModels(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())

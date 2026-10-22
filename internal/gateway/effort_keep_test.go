@@ -55,6 +55,9 @@ func TestAutoEffortGoesAsUpdate(t *testing.T) {
 	t.Setenv("MAGPIE_EFFORT_UPDATES", "on")
 	f := &fake{t: t, ctype: "none", reply: effortReply}
 	effortCodexAccount(t, f)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the agent's own file is never read to find out.
+	codexLoginSavedFromFile(t, "me@example.com")
 	j := &jevUp{choice: noIntent, sure: 0.9}
 	srv := httptest.NewServer(j)
 	t.Cleanup(srv.Close)

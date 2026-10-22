@@ -61,7 +61,7 @@ type CLI struct {
 	// Node, bun, Homebrew, ...) that a terminal opened now doesn't have,
 	// so that `which` there doesn't find it. A row of an agent the user
 	// believed uninstalled, with a version and nothing to say where it
-	// came from, read as magpie making it up (悠悠哥 on Discord: Codex
+	// came from, read as magpie making it up (悠悠哥 报告: Codex
 	// 0.162.1 listed with no codex on PATH and no ~/.codex). False when
 	// the terminal's PATH can't be told.
 	OffPath bool `json:"offPath,omitempty"`
@@ -145,7 +145,7 @@ var cliSpecs = map[string]cliSpec{
 	// into ~\.grok\bin itself, as grok update does again. grok is also
 	// Homebrew's regular-expression tool, hence at; its own cask, grok-build,
 	// links $HOMEBREW_PREFIX/bin/grok to Caskroom/grok-build/<v>/grok-<v>-<platform>
-	// (Will on Discord), which brew upgrade replaces (see cliBin).
+	// (Will 报告), which brew upgrade replaces (see cliBin).
 	"grok": {at: ".grok/bin/grok", latest: grokLatest, brew: []string{"grok-build"},
 		self: func(bin, real string) []string {
 			if l := strings.ToLower(real); strings.Contains(l, "/.grok/bin/") || strings.Contains(l, "/.grok/downloads/") {
@@ -175,7 +175,7 @@ var cliSpecs = map[string]cliSpec{
 	// ~/.local/bin/cursor-agent to ~/.local/share/cursor-agent/versions/<v>/
 	// cursor-agent, and `cursor-agent --version` says the version
 	// ("2026.10.01-e373342"). Not on npm nor Homebrew, and it updates
-	// itself, so magpie shows its version only (@G_Z_Y on X saw none).
+	// itself, so magpie shows its version only (@G_Z_Y 报告 saw none).
 	"cursor": {},
 	// AtomCode's installer chooses /usr/local/bin or ~/.local/bin by
 	// writability (`.local\bin\atomcode.exe` on Windows); `atomcode upgrade`
@@ -385,7 +385,7 @@ func fromNodeModules(pkg, bin, real string) *updater {
 			return nil // the system's (/usr/lib): npm would want sudo
 		}
 		// Node.js's own folder, C:\Program Files\nodejs, where npm's
-		// prefix was left there (新v学员 on Discord)
+		// prefix was left there (新v学员 报告)
 		u.admin = true
 	}
 	if isFile(npm) {
@@ -758,7 +758,7 @@ func offPath(bin string, dirs []string) bool {
 // `chongyun serve` or a service started with a PATH that lacks ~/.bun/bin, an
 // npm prefix or an nvm Node other than the default never found omp there,
 // so its version stayed unknown and its models offered xhigh in place of
-// max (whqtian on Discord: fixed on Windows and in WSL, still xhigh on
+// max (whqtian 报告: fixed on Windows and in WSL, still xhigh on
 // Ubuntu).
 func (a *Agent) cliBin() (string, cliSpec) {
 	spec, ok := cliSpecs[a.ID]

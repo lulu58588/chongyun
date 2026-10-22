@@ -28,6 +28,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/lulu58588/chongyun/internal/appdir"
 	"github.com/lulu58588/chongyun/internal/proc"
 )
 
@@ -61,7 +62,7 @@ var processCodexHome = func(pid int) (home string, ok bool) {
 }
 
 // codexHome is the Codex home magpie signs Codex in through.
-func codexHome() string { return filepath.Dir(codexAuthPath()) }
+func codexHome() string { return appdir.CodexHome() }
 
 // isManagedDaemon reports whether a command line is Codex's managed
 // app-server: `codex [-c k=v…] app-server --managed-daemon …`. Its helpers

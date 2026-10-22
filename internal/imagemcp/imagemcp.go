@@ -217,7 +217,7 @@ func ToolTimeout() time.Duration { return videoWait + time.Minute }
 // what it drew for as long again (gateway.FetchImage): a call is cut only
 // past both. The gateway ends it at the user's own timeout; this server
 // may run where the settings aren't (an agent in WSL), so it never cuts a
-// drawing the setting allows (neighbads on X).
+// drawing the setting allows (neighbads 报告).
 func callLongest() time.Duration {
 	return max(ToolTimeout(), 2*settings.ImageTimeoutMost*time.Minute+time.Minute)
 }

@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A subscription with several accounts shows one of them in full on the
 // Usage page — the one that answered last, else the first — and the others
-// in brief, their bars without when they reset (whqtian on Discord: 只显示
+// in brief, their bars without when they reset (whqtian 报告: 只显示
 // 一个账号即可，其他的可以点击展开; ARNO: 以前每个账号所占的空间很小，基本
 // 能一页看到所有账号… 关了magpie后又得一个个展开); the tray panel leaves the
 // ones in brief out, behind "Show N more accounts". Each account opens or

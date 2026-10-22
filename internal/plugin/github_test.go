@@ -146,7 +146,7 @@ func fakeGitHub(t *testing.T, up *atomic.Bool, asked *atomic.Int32) {
 // in GitHub's order; forks, archived ones and magpie-community's left out.
 // Asked once in six hours; with GitHub down, what it said last.
 // Every page of the search is read: with a page short of what is tagged,
-// the list is the same as from one page, in GitHub's order (HoGee_xxl on X:
+// the list is the same as from one page, in GitHub's order (HoGee_xxl 报告:
 // 59 tagged, and the 9 past GitHub's first page of 50 never showed).
 func taggedList(ctx context.Context) []Tagged {
 	l, _ := TaggedRepos(ctx)
@@ -290,7 +290,7 @@ func TestTaggedRepos(t *testing.T) {
 	}
 
 	// nothing ever kept, GitHub down: none, and an error, never none
-	// passed off as GitHub's answer (till on Discord: the section just
+	// passed off as GitHub's answer (till 报告: the section just
 	// wasn't there)
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())
 	taggedMu.Lock()
@@ -325,7 +325,7 @@ func TestTaggedRepos(t *testing.T) {
 }
 
 // A repository whose package.json comes after the page stops waiting (a
-// slow proxy: larchsis on X) is as the list had it last, not left out; the
+// slow proxy: larchsis 报告) is as the list had it last, not left out; the
 // list is asked again soon, not in ten minutes; and the read, finished
 // meanwhile, is what the next ask has.
 func TestTaggedReposSlowRead(t *testing.T) {
@@ -488,14 +488,14 @@ func TestPkgEntry(t *testing.T) {
 // GitHub's search answers but raw.githubusercontent.com doesn't (blocked
 // on the reader's line, as it is in places where api.github.com isn't),
 // and nothing was kept: the list is empty, and the error says how many
-// couldn't be read and why, not that none are tagged (till on Discord:
+// couldn't be read and why, not that none are tagged (till 报告:
 // on their desktop the section wasn't there, on their server it had many).
 // One read before is kept and isn't counted.
 // staleToken is a token fakeGitHub answers 401, as GitHub does an
 // expired one.
 const staleToken = "stale-till"
 
-// till on Discord: a stale GITHUB_TOKEN in the environment, which GitHub
+// till 报告: a stale GITHUB_TOKEN in the environment, which GitHub
 // refuses, left the Plugins page's GitHub section saying "GitHub refused
 // GITHUB_TOKEN" while GitHub answered fine without it. The search is
 // asked again without the token, and the list is GitHub's.

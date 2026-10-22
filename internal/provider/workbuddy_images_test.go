@@ -10,7 +10,7 @@ import (
 // WorkBuddy AI's GLM models take no images, though its config says every
 // model does: on 2026-10-13 a real account's image sent to glm-5.3-flash,
 // glm-5.3 and glm-5.2 came back as "[System reminder: the current model
-// does not support images. Content filtered. ...]" (Yirasumi on Discord).
+// does not support images. Content filtered. ...]" (Yirasumi 报告).
 // A list saved with WorkBuddy AI's GLM taking images reads text-only, and
 // WorkBuddy (China)'s GLM, which reads them, is left as it is.
 func TestWorkBuddyAISavedGLMIsTextOnly(t *testing.T) {

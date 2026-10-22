@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// A routing group shared as text (laincatx on X): one group's routing,
+// A routing group shared as text (laincatx 报告): one group's routing,
 // rules and members, copied from one magpie and pasted into another. It
 // says what it is (ShareMark) and in which format (ShareVersion), so a
 // magpie can tell it from any other text and one made by a newer magpie

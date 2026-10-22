@@ -12,7 +12,7 @@ import (
 
 // routerUp is a router key whose vendor lists a small model that sees,
 // anthropic/claude-haiku-5.5, which the user left unpicked: only "text",
-// which can't see, is enabled (JonahFu on X: OpenRouter turned the unpicked
+// which can't see, is enabled (JonahFu 报告: OpenRouter turned the unpicked
 // Haiku away for their region, and they had never enabled it).
 func routerUp(t *testing.T, picks ...string) (*Server, *eyeUp) {
 	t.Helper()

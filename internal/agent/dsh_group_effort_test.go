@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// ARNO on Discord: routing group 在接入 harness 的时候，没有设置
+// ARNO 报告: routing group 在接入 harness 的时候，没有设置
 // reasoning_efforts. A group of deepseek-v4.1-flash from a provider that
 // lists its levels and from one whose list says it thinks but gives no
 // levels (a Volcengine endpoint's) was written into dsh's route without

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A group's models are put in order by dragging (PAMI on Discord: only Up,
+// A group's models are put in order by dragging (PAMI 报告: only Up,
 // one step a click). In the editor a named member's number is its handle,
 // with a grip beside it drawn only while the row is under the pointer;
 // dragging it moves the model, Alt+↑/↓ moves it from the keyboard, which

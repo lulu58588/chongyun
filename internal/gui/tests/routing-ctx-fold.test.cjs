@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Routing: the context window's card folds to its head (0xBCD18E on X: it
+// Routing: the context window's card folds to its head (0xBCD18E 报告: it
 // took most of the height, so the request list under it showed three
 // rows, even on a portrait screen). Folded, it is one line with how full
 // the window is beside the title, the list under it moves up, and it stays

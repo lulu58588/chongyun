@@ -56,7 +56,7 @@ func same(a, b []string) bool {
 	return true
 }
 
-// Which profile is in use (superhtoooth on X: nothing in magpie said). A
+// Which profile is in use (superhtoooth 报告: nothing in magpie said). A
 // profile is in use while applying it would change nothing: the agents'
 // fields, their model lists and the library's setup are as it has them.
 // Saved, it is in use at once; another applied, that one is; a setting

@@ -13,7 +13,7 @@ import (
 
 // A Command Code key's plan and balance, read once, still show when
 // billing/credits answers 503 for a while ("Couldn't verify your credit
-// balance just now") — chalice on Discord: the key's card said only
+// balance just now") — chalice 报告: the key's card said only
 // 暂时无法获取用量 — as a subscription's card does; a key that never
 // answered has no plan card and its balance says why.
 func TestKeyQuotasKeepLast(t *testing.T) {

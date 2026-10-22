@@ -220,7 +220,7 @@ func TestGrokExecutableFinds(t *testing.T) {
 // A function whose parameters are an anyOf (or oneOf) at the root, as
 // Codex's codex_app automation_update, goes to Grok as an object: Grok's
 // backend turns the request away otherwise ("[invalid_client_tool_schema]
-// ... tool parameter root must be an object type", Fate on Discord). The
+// ... tool parameter root must be an object type", Fate 报告). The
 // object branches' properties are merged, $refs to $defs read, a field all
 // of them require stays required, the non-object branches go. One that is
 // an object already is left as it is.

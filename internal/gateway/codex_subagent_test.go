@@ -79,7 +79,7 @@ func codexAsks(s *Server, model, kind, input string) *httptest.ResponseRecorder 
 	return rec
 }
 
-// willz on Discord: Codex's lead puts each subagent on a model of its own
+// willz 报告: Codex's lead puts each subagent on a model of its own
 // pick in spawn_agent, and Codex's config can't overrule it. With a model
 // set for Codex's subagents, a subagent's sealed task on one of Codex's
 // own models goes to a ChatGPT account on that model instead, and the

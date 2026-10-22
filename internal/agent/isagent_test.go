@@ -7,7 +7,7 @@ import (
 )
 
 // The gateway takes a client that is no agent magpie knows, with the plain
-// token, for a script Claude Code started (tbxark on X); every agent's own
+// token, for a script Claude Code started (tbxark 报告); every agent's own
 // User-Agent must still read as an agent, and a script's must not.
 func TestIsAgentByUserAgent(t *testing.T) {
 	for _, a := range Clients() {

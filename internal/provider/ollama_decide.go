@@ -12,7 +12,7 @@ import (
 // Ollama (0.35.0 and later, 0.40.5 for its cloud models) serves decision
 // models (Nimble, Clef, Tev …) at POST /v1/systemone, System One's
 // questions and answers, on the local server and at ollama.com with an API
-// key alike (docs.ollama.com/api/systemone; Nanka on Discord). Its
+// key alike (docs.ollama.com/api/systemone; Nanka 报告). Its
 // /v1/models lists them among its chat models with nothing to tell them
 // apart; its /api/tags, asked with the same key, gives each model its
 // capabilities, "decision" for these (and "vision" for one that reads

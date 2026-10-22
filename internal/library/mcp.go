@@ -44,7 +44,7 @@ type Server struct {
 	DisabledTools []string `json:"disabledTools,omitempty"`
 	// OAuth is an OAuth app of the user's own that magpie signs in to the
 	// server as, for one whose sign-in doesn't let magpie register itself
-	// (GitHub's, 新v学员 on Discord). It is magpie's alone: the agents are
+	// (GitHub's, 新v学员 报告). It is magpie's alone: the agents are
 	// given the server as before.
 	OAuth *OAuthApp `json:"oauth,omitempty"`
 }

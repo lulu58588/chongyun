@@ -13,7 +13,7 @@ import (
 )
 
 // Anthropic-shaped relays in front of other vendors' models (Grok's, as
-// 蓝猫 on Discord had it) end their streams in ways Anthropic's own API
+// 蓝猫 报告 had it) end their streams in ways Anthropic's own API
 // doesn't: a reply of tool calls whose stop_reason says end_turn, or
 // OpenAI's "tool_calls"; a tool_use block whose content_block_start
 // carries the whole input and no input_json_delta after it; a stream that

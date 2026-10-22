@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// PapainTea on X: where GitHub is slow to magpie, the update took ages to
+// PapainTea 报告: where GitHub is slow to magpie, the update took ages to
 // download in the app. While an update is out, downloading, or failed to
 // download, Settings › About › Version offers the release page, opened in
 // the browser, where it can be fetched through the user's own proxy or

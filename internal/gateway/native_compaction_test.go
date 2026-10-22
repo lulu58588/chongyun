@@ -571,8 +571,12 @@ func TestNativeCompactionRouteNamesItsWriter(t *testing.T) {
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("pro@example.com", "acct-pro")), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
 		{"agent": "codex", "user": "biz@example.com", "on": true, "seen": time.Now(), "auth": auth("biz@example.com", "acct-biz")},
+		{"agent": "codex", "user": "pro@example.com", "active": true, "seen": time.Now(), "auth": auth("pro@example.com", "acct-pro")},
 	}), 0o600)
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)

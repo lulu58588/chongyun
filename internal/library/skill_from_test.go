@@ -24,7 +24,7 @@ func repoIn(t *testing.T) map[string]string {
 	return out
 }
 
-// npx skills add with $XDG_STATE_HOME set (@_yukirock on X): the skills
+// npx skills add with $XDG_STATE_HOME set (@_yukirock 报告): the skills
 // CLI keeps its lock at $XDG_STATE_HOME/skills/.skill-lock.json and the
 // skills in ~/.agents/skills, and each is grouped by the repository that
 // lock names. One the older ~/.agents lock alone names is grouped too.
@@ -53,7 +53,7 @@ func TestSkillRepoFromXDGLock(t *testing.T) {
 }
 
 // A skill not installed from GitHub is grouped with the repository it
-// came from all the same (White Immortal on Discord): the skills CLI's
+// came from all the same (White Immortal 报告): the skills CLI's
 // lock names it, or the git checkout it's in, whatever the remote's form,
 // and never with a user or token the remote had. A skill in ~/.claude kept
 // in git (the user's dotfiles) is not from that repository.
@@ -297,7 +297,7 @@ func mustLoad(t *testing.T) *Library {
 }
 
 // A pack added a while ago is mostly older copies of its skills (White
-// Immortal on Discord: 20 of mattpocock/skills' 38 grouped, the rest
+// Immortal 报告: 20 of mattpocock/skills' 38 grouped, the rest
 // edited there since). Group again fetches each repository the library
 // has skills from, and the skills it has by name that are traced to
 // nowhere join the rest of it; one of the user's own it doesn't have, and
@@ -391,7 +391,7 @@ func TestRegroupOlderCopies(t *testing.T) {
 
 // A copy in the library's own folder that is a repository's skill to the
 // file is bound to it when that repository is pasted again, and updates
-// from there as one installed from it does (RockyShowlle on X: installed
+// from there as one installed from it does (RockyShowlle 报告: installed
 // by hand before, now to sync with upstream). One with a file of the
 // user's own beside it, and one linked to the skills CLI's folder, are
 // grouped only: the user's file is never written over, and the skills CLI

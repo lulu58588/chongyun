@@ -4,7 +4,7 @@
 // setting. By default Codex's own (ChatGPT); the app's menu (no native
 // select) offers magpie's models; a pick posts settings/codex-descriptions
 // on its own, the titles' setting untouched, its button shows the choice
-// under a name with no line of its own (as the titles' row, 1ooogle on X),
+// under a name with no line of its own (as the titles' row, 1ooogle 报告),
 // and no click scrolls the Agents page, where Codex's row holds it.
 // English and Chinese, Chromium and WebKit; no backend, the API is faked here.
 const assert = require("node:assert/strict");
@@ -101,7 +101,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       assert.equal((await row.locator(".name").textContent()).trim(), want[lang].name);
       assert.equal((await pick.textContent()).trim(), want[lang].own, "Codex's own by default");
       assert.equal(await row.locator(".sub").count(), 0, "the row says its name alone, its button the choice (1ooogle on X)");
-      // the chip's icon is the chip's size, not the row's 18–22px (duanckham on X)
+      // the chip's icon is the chip's size, not the row's 18–22px (duanckham 报告)
       assert.deepEqual(await pick.locator(".ic").evaluate((e) => [e.offsetWidth, e.offsetHeight]), [14, 14]);
 
       // scrolled by a wheel till the row is mid-view, so a click that

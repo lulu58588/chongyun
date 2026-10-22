@@ -11,7 +11,7 @@ import (
 
 // A Codex conversation magpie compacted can't go on once Codex talks to
 // OpenAI itself, unless its rollout is written portable
-// (sessions.PortCodexRollouts, LukeMa on X): done while magpie runs, for
+// (sessions.PortCodexRollouts, LukeMa 报告): done while magpie runs, for
 // the threads no Codex has open, and again as magpie lets Codex go (quit,
 // Disconnect), for those it has just let go.
 

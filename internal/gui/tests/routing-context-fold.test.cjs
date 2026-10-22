@@ -3,7 +3,7 @@
 // tests the fold itself) is one line of a fixed height with a thin bar of
 // what fills the window, a part each, beside how full it is (PILIPALA on
 // X: on a wide window the card took the screen, and the requests and the
-// magpies flying were out of sight under it; Jeremy.Zhou on Discord: the
+// magpies flying were out of sight under it; Jeremy.Zhou 报告: the
 // page is too crowded). Folded, the stage and the request list are in view
 // without scrolling at 1440x900 and 1920x1080; at a narrow 440px the head
 // is all the card takes (the stage and the story stacked above it are what

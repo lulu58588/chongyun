@@ -12,7 +12,7 @@ import (
 )
 
 // A group tells agents the longest reply a member of it gives, and each
-// member is asked for no more than its own (ARNO on Discord: a group's
+// member is asked for no more than its own (ARNO 报告: a group's
 // maxTokens was its smallest member's, and replies were truncated).
 func TestGroupOutputPerMember(t *testing.T) {
 	fresh(t)

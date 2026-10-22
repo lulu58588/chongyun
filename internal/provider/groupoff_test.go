@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// A member switched off (#feedback on Discord: testing routing rules meant
+// A member switched off (#feedback 报告: testing routing rules meant
 // taking models out and adding them back, losing their order) keeps its
 // place and its rules but is sent nothing until switched on again.
 func TestGroupMemberOff(t *testing.T) {

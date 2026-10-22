@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Routing, live: a session's next request changes only what it changes
-// (Zhenzhen on Discord, omarchy: each new request flashed the whole
+// (Zhenzhen 报告, omarchy: each new request flashed the whole
 // context window and the request list under it, and the window's grid of
 // cells grew and shrank so everything under it jumped). A request comes in
 // (first without its prompt, as the gateway reads that beside it, then
@@ -120,7 +120,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         }
         // under way, the card waits for the prompt in its place, then tells
         // of it, its cache the last request's till read (no "—" flash,
-        // dumplings on Discord: routing-ctx-still); done, what the vendor read
+        // dumplings 报告: routing-ctx-still); done, what the vendor read
         assert.deepEqual(said, [
           "97% Codex › 019a-session › #103", "97% Codex › 019a-session › #104", "97% Codex › 019a-session › #104",
           "97% Codex › 019a-session › #104", "97% Codex › 019a-session › #105", "97% Codex › 019a-session › #105",

@@ -248,7 +248,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         const bad = page.locator(".led tr.bad td").last();
         assert.equal((await bad.textContent()).trim(), "429");
         assert.equal(await bad.getAttribute("title"), w.bad);
-        // its agent is on another computer, whose magpie passed it on (Jorben on Discord)
+        // its agent is on another computer, whose magpie passed it on (Jorben 报告)
         assert.equal(await page.locator(".led tr.bad td").nth(1).textContent(), w.via);
         const [dotBad, dotOk] = await page.evaluate(() => [
           getComputedStyle(document.querySelector(".led tr.bad .st .dot")).backgroundColor,

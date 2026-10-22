@@ -233,7 +233,7 @@ process.stdout.write = (chunk, enc, cb) => process.stderr.write(chunk, enc, cb)
 // had magpie's (netproxy.Env): the host has its *_PROXY only as
 // MAGPIE_*_PROXY (see below), so `grok login`, which the Grok plugin runs,
 // went out with none and, where x.ai is reached only through one, printed
-// no link to open (𝕏 on Discord). One the plugin set itself is kept.
+// no link to open (𝕏 报告). One the plugin set itself is kept.
 // Node's fetch goes past *_PROXY unless NODE_USE_ENV_PROXY=1 says to take
 // them, so a plugin downloading in a Node program it starts went out with
 // none and failed where the vendor is reached only through one (larchsis
@@ -2068,7 +2068,7 @@ async function authorize({ provider, method, inputs, account, proxy }) {
   sessions.set(session, { provider, key, a, inputs, proxy: proxy ?? "" })
   // opened (not OpenCode's) is a page the plugin's own CLI opened already:
   // Grok Build's `grok login` opens it on macOS and Windows, and magpie's
-  // opening it too showed it twice (andyfmyth on X)
+  // opening it too showed it twice (andyfmyth 报告)
   return { session, url: a.url ?? "", instructions: a.instructions ?? "", method: a.method, opened: a.opened === true }
 }
 
@@ -2316,7 +2316,7 @@ async function usageOf(provider, account) {
 
 // checkin presses the vendor's daily check-in (签到) for the account at key,
 // as the plugin's auth.checkin does it (magpie's own hook, which OpenCode
-// ignores; Lemon on Discord: 签到 belongs in the plugins):
+// ignores; Lemon 报告: 签到 belongs in the plugins):
 //   auth.checkin(getAuth, provider) → {
 //     outcome: "claimed" (checked in now) | "done" (in already today) |
 //       "ineligible" (the account can't take part) | "inactive" (no

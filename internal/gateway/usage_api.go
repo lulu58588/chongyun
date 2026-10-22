@@ -9,7 +9,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/usageapi"
 )
 
-// The usage log, as the Usage page reads it (HoGee_xxl on X: an app of
+// The usage log, as the Usage page reads it (HoGee_xxl 报告: an app of
 // their own reading magpie's usage over its gateway, as they can't over
 // the GUI's /api/usage): GET /v1/magpie/usage is the page's summary of a
 // ?period=, the same JSON as /api/usage, and GET /v1/magpie/usage/requests

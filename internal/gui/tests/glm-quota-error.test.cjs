@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A GLM Coding Plan key Zhipu or Z.ai refuses says so on its card, in every
 // language, naming the vendor and what to do, rather than "Allowance
-// unavailable" (@xanahopper on X; zhipuRefused, planquota.go).
+// unavailable" (@xanahopper 报告; zhipuRefused, planquota.go).
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");

@@ -23,6 +23,9 @@ func TestCodexOwnModelsFollowPicks(t *testing.T) {
 		{"slug":"gpt-b","display_name":"B","priority":2},
 		{"slug":"gpt-c","display_name":"C","priority":3}]}`), 0o644)
 	os.WriteFile(filepath.Join(dir, "auth.json"), []byte(`{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the agent's own file is never read to find out.
+	codexLoginSaved(t, "me@example.com", map[string]any{"tokens": map[string]any{"access_token": "x", "id_token": "x.e30.x"}})
 
 	own := func() []string {
 		var out []string
@@ -64,6 +67,9 @@ func TestCodexOwnModelsNotNarrowedWhileOff(t *testing.T) {
 		{"slug":"gpt-a","display_name":"A","priority":1},
 		{"slug":"gpt-b","display_name":"B","priority":2}]}`), 0o644)
 	os.WriteFile(filepath.Join(dir, "auth.json"), []byte(`{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the agent's own file is never read to find out.
+	codexLoginSaved(t, "me@example.com", map[string]any{"tokens": map[string]any{"access_token": "x", "id_token": "x.e30.x"}})
 
 	own := func() []string {
 		var out []string

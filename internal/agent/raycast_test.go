@@ -91,7 +91,7 @@ func raycastOf(f raycastFile, id string) *raycastEntry {
 }
 
 // Raycast AI reads Custom Providers from ~/.config/raycast/ai/providers.yaml
-// (lx_78654 on Discord). magpie adds itself as the entry "magpie" at the
+// (lx_78654 报告). magpie adds itself as the entry "magpie" at the
 // gateway's /v1, with its models and their abilities, and leaves the user's
 // providers, tools and comments as they are; a sync keeps what the user
 // added to magpie's entry and writes nothing when nothing changed; off, it

@@ -6,7 +6,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// 0xAncientTwo on X: the Claude subscription was signed out again and again.
+// 0xAncientTwo 报告: the Claude subscription was signed out again and again.
 // A saved account switched in to Claude Code itself has its directory
 // removed; the runs waiting there for their next turn hold its refresh
 // token, now Claude Code's, and are let go, so none refreshes it under

@@ -300,7 +300,7 @@ func TestAutoModeReviewOnlyForClaude(t *testing.T) {
 
 // TestAutoModeReviewedRoutes: the models whose requests can carry auto
 // mode's review to Anthropic, the rule Claude Code's wiring turns the
-// review off by while none of them is behind magpie (1EFLOPS on X): the
+// review off by while none of them is behind magpie (1EFLOPS 报告): the
 // Claude subscription, a Claude model under any vendor's spelling of it,
 // and Anthropic's own API. Codex, DeepSeek's Anthropic API and an
 // OpenAI-compatible relay's GPT are not.
@@ -716,7 +716,7 @@ func TestClaudeBridgeSafeguardWSLEnv(t *testing.T) {
 // A context update and its tool-result handoff own the run together, through
 // the reply's end. Another caller cannot update it or abort its owner: it is
 // a conversation of its own from there (a fork sub-agent of the same lead),
-// and gets a run of its own, not a 409 (ylorn on Discord).
+// and gets a run of its own, not a 409 (ylorn 报告).
 func TestClaudeBridgeSafeguardConcurrentHandoff(t *testing.T) {
 	s := New()
 	b := s.subscription

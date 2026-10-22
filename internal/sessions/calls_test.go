@@ -559,7 +559,7 @@ func TestCallsCodexTook(t *testing.T) {
 // (shape from a real 2026-09-06 rollout, content stripped). Each call of a
 // turn of several is timed from what the model had last been given before
 // its first output item to its last, never from its own tool's output, which
-// read as 1 ms windows (Fallmonkey on Discord). A tool call over the read
+// read as 1 ms windows (Fallmonkey 报告). A tool call over the read
 // buffer (a large patch) is read by its head.
 func TestCallsCodexTimedFromTheAsk(t *testing.T) {
 	d := setupCalls(t)
@@ -729,7 +729,7 @@ func bare(c Call) Call {
 
 // The agents of a Claude Code workflow (ultracode) write their transcripts
 // a folder deeper, in <session>/subagents/workflows/<run>/, beside the run's
-// journal.jsonl; their calls are the session's (ksinverse on X: Claude's
+// journal.jsonl; their calls are the session's (ksinverse 报告: Claude's
 // usage read low with ultracode on, Codex's right).
 func TestCallsWorkflowAgents(t *testing.T) {
 	d := setupCalls(t)
@@ -756,7 +756,7 @@ func TestCallsWorkflowAgents(t *testing.T) {
 	}
 }
 
-// Kilig on Discord: an MSIX Claude Desktop (Windows 10 LTSC) keeps Cowork's
+// Kilig 报告: an MSIX Claude Desktop (Windows 10 LTSC) keeps Cowork's
 // sessions in its package's LocalCache\Roaming\Claude, nothing in
 // %APPDATA%\Claude; their calls are read from there.
 func TestCallsCoworkMSIX(t *testing.T) {

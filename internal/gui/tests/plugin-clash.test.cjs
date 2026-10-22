@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Two installed plugins that sign in to one provider (neiko on Discord: a
+// Two installed plugins that sign in to one provider (neiko 报告: a
 // third-party plugin and their own folder plugin both name it). Both rows
 // stay, each says which one serves the provider, and the other one offers
 // "Use for …", which tells magpie to run the provider on it. Neither row

@@ -67,7 +67,7 @@ func TestOpenCodeZenJevDecides(t *testing.T) {
 
 // A preset's model (OpenCode Go's deepseek-v4.1-flash, which answers on
 // Responses as well as chat) and a subscription's can be asked on one API
-// the user picks, as a custom provider's can (01huadalang on Discord); Auto
+// the user picks, as a custom provider's can (01huadalang 报告); Auto
 // is what the vendor's list says.
 func TestPresetAndSubscriptionModelAPI(t *testing.T) {
 	detectHome(t)

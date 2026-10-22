@@ -23,8 +23,13 @@ import (
 // whatever models.dev says, and one Devin doesn't name is left to it.
 func TestDevinImagesFromModelConfigs(t *testing.T) {
 	home := claudeHome(t)
-	t.Setenv("XDG_DATA_HOME", filepath.Join(home, "data"))
-	creds := DevinCredentialsPath()
+	// the account chongyun signed in has a home of its own, its sign-in in
+	// it: the Devin CLI's own sign-in isn't read
+	acc, err := newDevinHome()
+	if err != nil {
+		t.Fatal(err)
+	}
+	creds := devinCredentialsAt(acc)
 	os.MkdirAll(filepath.Dir(creds), 0o700)
 	os.WriteFile(creds, []byte("windsurf_api_key = \"devin-session-token$k\"\n"), 0o600)
 
@@ -71,7 +76,7 @@ X
 `)
 	fakeDevin(t, exe)
 
-	families, err := askDevinFamiliesAt(context.Background(), "")
+	families, err := askDevinFamiliesAt(context.Background(), acc)
 	if err != nil {
 		t.Fatal(err)
 	}

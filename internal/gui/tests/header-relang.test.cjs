@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// kiwiflysky on X: with a wide interface font, the macOS window's header fit
+// kiwiflysky 报告: with a wide interface font, the macOS window's header fit
 // in Chinese, but switched to English, Japanese or German its tabs ran left
 // under the magpie and the traffic lights, and in German into the refresh
 // button and the gear. fitTop draws the header in when it doesn't fit, but
@@ -92,7 +92,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     for (const [id, label] of LANGS) {
       await t.test(id, async () => {
         await page.setViewportSize({ width: 830, height: 600 });
-        // Settings' language is one menu (1ooogle on X): opened, then the name picked
+        // Settings' language is one menu (1ooogle 报告): opened, then the name picked
         await page.locator("#langPick").click();
         await page.locator(".proto-menu .pm-item", { hasText: new RegExp("^" + label + "$") }).first().click();
         await page.waitForFunction((id) => locale === id, id);

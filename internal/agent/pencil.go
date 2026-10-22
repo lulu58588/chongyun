@@ -2,7 +2,7 @@ package agent
 
 // Pencil (pen.dev, the design canvas whose agent runs models) takes a
 // custom provider of one's own in ~/.pencil/models.json, in Pi's format
-// (徐小小 on Discord):
+// (徐小小 报告):
 //
 //	{"providers":{"<id>":{"name":…,"baseUrl":…,"api":"openai-responses",
 //	  "models":[{"id":…,"name":…,"reasoning":true,"input":["text","image"],

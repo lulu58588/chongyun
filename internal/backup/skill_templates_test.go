@@ -10,7 +10,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/library"
 )
 
-// Crispin on Discord: a skill's PowerPoint template didn't come with a
+// Crispin 报告: a skill's PowerPoint template didn't come with a
 // backup or a sync. It comes now, bytes and all; and however big the
 // skills' files are, the backup stays one a sync reads whole: davsync
 // reads at most 64 MiB of it (readAll, dav.go's get).

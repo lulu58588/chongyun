@@ -15,7 +15,7 @@ import (
 // models made 34 entries). With DesktopLongest on, such a model is listed
 // by its "[1m]" id alone, so Desktop's menu has one entry per model, told
 // as the 1M one by the "1M context window" Desktop gives its own (a lone
-// "[1m]" row was shown as the plain model: 杰多夫 on Discord); one
+// "[1m]" row was shown as the plain model: 杰多夫 报告); one
 // under 1M (872K) keeps its own id and window, and a request on the plain id
 // a session was saved with is still served.
 func TestClaudeDesktopLongestOnly(t *testing.T) {

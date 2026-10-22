@@ -29,7 +29,7 @@ func outputLimit(p provider.Provider, model string) int {
 // asks claude-* models for their full 128000 and isn't told magpie's
 // figure for them (claudeOutput), so a key whose quota is held per request
 // as max_tokens times the price turned every turn away, and the field the
-// editor says caps max_tokens did nothing (YaCo on Discord).
+// editor says caps max_tokens did nothing (YaCo 报告).
 func userOutput(p provider.Provider, model string) int {
 	for _, e := range provider.Served() {
 		if e.Group == "" && e.Provider.ID == p.ID && (e.Model == model || e.ID == model) && e.OutputSet && e.Output > 0 {

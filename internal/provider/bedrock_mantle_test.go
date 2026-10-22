@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// Amazon Bedrock's Mantle endpoint (@marktoown on X): its own preset, its
+// Amazon Bedrock's Mantle endpoint (@marktoown 报告): its own preset, its
 // own regions, its models listed, and a provider added at a Mantle address
 // taken for Bedrock's too.
 func TestBedrockMantlePreset(t *testing.T) {

@@ -14,12 +14,9 @@ import (
 // the first (KeepLogin), it stays however used up that is, and moves on
 // again once that is off (#524).
 func TestCodexLoginOrderedAndKept(t *testing.T) {
-	home := signIn(t) // me@example.com, acct-1
-	rememberLogins(true)
-	codexSignIn(t, home, "spare@example.com", "r-spare")
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	_ = signIn(t) // me@example.com, acct-1
+	codexSignIn(t, "spare@example.com", "r-spare")
+	codexSignIn(t, "work@example.com", "r-work")
 	if err := SetLoginOn("codex", "spare@example.com", true); err != nil {
 		t.Fatal(err)
 	}

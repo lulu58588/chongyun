@@ -8,7 +8,7 @@ import (
 )
 
 // Codex's lead picks the model of each subagent it spawns by itself, in
-// spawn_agent's model argument (willz on Discord: gpt-6-astra), and its
+// spawn_agent's model argument (willz 报告: gpt-6-astra), and its
 // own config can't overrule that pick: [agents] default_subagent_model is
 // only the default for a spawn that names none. settings.CodexSubagentModel
 // is the model magpie puts Codex's subagents on, whatever the lead asked

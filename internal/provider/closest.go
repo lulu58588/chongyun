@@ -1,7 +1,7 @@
 package provider
 
 // Closest is what a request for a model magpie doesn't know is told to ask
-// instead (MOMO on Discord: "Zen-Space-Bunny", the model's name as a
+// instead (MOMO 报告: "Zen-Space-Bunny", the model's name as a
 // picker shows it, got a 404 that named no id; the one meant was
 // opencode-zen-free/space-bunny-free, "Space Bunny Free").
 

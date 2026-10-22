@@ -60,7 +60,7 @@ func (g *glmKeys) took() []string {
 }
 
 // A GLM Coding Plan's key on the zhipu or zai preset left at its first
-// plan, Pay as you go (@cleverpigo on X: "glm coding plan放在codex里显示余额不足"):
+// plan, Pay as you go (@cleverpigo 报告: "glm coding plan放在codex里显示余额不足"):
 // Claude Code works, its Anthropic endpoint being the plan's too, and
 // Codex was refused 429 1113 at /api/paas/v4. Its request is asked again
 // at /api/coding/paas/v4 and answered, and the provider moves to the

@@ -43,7 +43,7 @@ func groupHeldFixture(t *testing.T) {
 // Resolve's Catalog, and Served for the members' images, the reply's
 // length and the window — and each built every group's entry again, from
 // every member of every group: the burst of CPU at once that a request to
-// a group cost with many providers (colmugx and Yayoi_no_yume on X). While
+// a group cost with many providers (colmugx and Yayoi_no_yume 报告). While
 // a request holds the catalog they are built once.
 func TestGroupEntriesBuiltOnceWhileHeld(t *testing.T) {
 	groupHeldFixture(t)

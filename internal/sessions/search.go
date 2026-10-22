@@ -2,7 +2,7 @@ package sessions
 
 // Searching what was said: the Sessions page's filter finds a session by a
 // word of its conversation, not only by its title, folder, id or model
-// (YOU on Discord: gateway sessions are named ses_…, and what was said is
+// (YOU 报告: gateway sessions are named ses_…, and what was said is
 // how they are remembered). Each session's own file is read only as far as
 // its first match; a file that doesn't hold the words at all, as bytes, is
 // left after one pass without decoding a line of it.

@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A custom provider with a Gemini URL beside its chat and Anthropic ones
-// (Kayphoon on Discord: 供应商为自定义的时候已经兼容 gemini 格式了，但是在下方
+// (Kayphoon 报告: 供应商为自定义的时候已经兼容 gemini 格式了，但是在下方
 // 模型的详细配置里还是只能限定 chat 和 anthropic): a model can be asked on
 // Gemini alone, from its chip's right-click and from Names & levels' API
 // row alike, and the Save sends it as modelPrefs. Responses, which it has

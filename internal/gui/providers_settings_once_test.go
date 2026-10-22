@@ -12,7 +12,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// lml on Discord (Windows, about ten providers): the Providers page took
+// lml 报告 (Windows, about ten providers): the Providers page took
 // seconds to come up. Each model's row read the settings three times over
 // (its image answer twice, its reply limit once), parsing settings.json
 // again each time even while the request held it: with the owner's 23

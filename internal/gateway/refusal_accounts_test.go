@@ -216,11 +216,12 @@ func TestClaudeRefusalMovesToNextKey(t *testing.T) {
 }
 
 // claudeSubscriptionRefusing signs in two Claude subscription accounts,
-// served through a claude CLI whose run on the first (its own sign-in)
-// ends in stop_reason "refusal" with nothing said, category cyber in its
-// stop_details (then Claude Code's own "unable to respond" result), and
-// whose run on the spare answers "pong". It returns the file each run
-// writes its token to: "own" for the first, tok-spare for the spare.
+// served through a claude CLI whose run on the first (the account chongyun
+// signed the agent in to) ends in stop_reason "refusal" with nothing said,
+// category cyber in its stop_details (then Claude Code's own "unable to
+// respond" result), and whose run on the spare answers "pong". It returns
+// the file each run writes its token to: tok-primary for the first (the
+// sign-in chongyun holds), tok-spare for the spare.
 func claudeSubscriptionRefusing(t *testing.T) string {
 	t.Helper()
 	if runtime.GOOS == "windows" {
@@ -243,9 +244,14 @@ func claudeSubscriptionRefusing(t *testing.T) string {
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "me@example.com", "accountUuid": "u-me"}}), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	seen := time.Now()
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
-		{"agent": "claude", "user": "me@example.com", "plan": "max", "on": true, "seen": time.Now(), "auth": oauth("tok-me")},
-		{"agent": "claude", "user": "spare@example.com", "plan": "max", "on": true, "seen": time.Now(), "auth": oauth("tok-spare")},
+		{"agent": "claude", "user": "me@example.com", "plan": "max", "active": true, "on": true, "seen": seen, "auth": oauth("tok-primary"),
+			"profile": map[string]any{"emailAddress": "me@example.com", "accountUuid": "u-me"}},
+		{"agent": "claude", "user": "spare@example.com", "plan": "max", "on": true, "seen": seen.Add(-time.Minute), "auth": oauth("tok-spare")},
 	}), 0o600)
 	dir := t.TempDir()
 	log := filepath.Join(dir, "log")
@@ -254,7 +260,7 @@ if [ "$1" = auth ]; then echo '{"loggedIn":true,"authMethod":"oauth_token","apiP
 TOK=; [ -n "$CLAUDE_CONFIG_DIR" ] && TOK=$(sed -n 's/.*"accessToken": *"\([^"]*\)".*/\1/p' "$CLAUDE_CONFIG_DIR/.credentials.json")
 echo "${TOK:-own}" >> ` + log + `
 while read -r line; do
-  if [ -z "$TOK" ] || [ "$TOK" = tok-me ]; then
+  if [ -z "$TOK" ] || [ "$TOK" = tok-primary ]; then
     echo '{"type":"stream_event","event":{"type":"message_start","message":{"id":"m","model":"claude-sonnet-5","usage":{"input_tokens":1}}}}'
     echo '{"type":"stream_event","event":{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}}'
     echo '{"type":"stream_event","event":{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":""}}}'
@@ -293,7 +299,7 @@ func TestClaudeSubscriptionRefusalMovesToNextAccount(t *testing.T) {
 		os.Remove(log)
 		code, body := sendTo(s, ask.path, ask.body)
 		b, _ := os.ReadFile(log)
-		if code != 200 || !strings.Contains(body, "pong") || strings.Join(strings.Fields(string(b)), ",") != "own,tok-spare" {
+		if code != 200 || !strings.Contains(body, "pong") || strings.Join(strings.Fields(string(b)), ",") != "tok-primary,tok-spare" {
 			t.Fatalf("%s: status %d: %s (runs %q)", ask.path, code, body, b)
 		}
 		r := lastRoute(s)

@@ -3,7 +3,7 @@ package provider
 // A plugin's models are listed by its models hook when magpie starts, a
 // sign-in or the plugins change, or Refresh is pressed. A magpie left
 // running listed them no more, so a free model OpenCode Zen dropped stayed
-// listed and a new one never came (Jeremy.Zhou on Discord, about
+// listed and a new one never came (Jeremy.Zhou 报告, about
 // opencode-zen-free). The magpie serving the gateway now asks again every
 // hour, and a model a provider's list had and its new one doesn't leaves
 // the user's picks too, as Refetch does for a built-in's. A list that
@@ -13,7 +13,7 @@ package provider
 // A pick that leaves is set aside (Delisted), not forgotten, and comes back
 // when a list has it again: Our Free Model's list is short for a while
 // after its service starts and while a free pool is down, and each magpie
-// update left its user to pick every model again (多喝热水 on Discord).
+// update left its user to pick every model again (多喝热水 报告).
 
 import (
 	"context"

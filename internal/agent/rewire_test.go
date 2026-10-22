@@ -36,7 +36,7 @@ func filesWith(home, s string) []string {
 	return out
 }
 
-// The gateway's port set in Settings (Magic_zero on Discord) moves every
+// The gateway's port set in Settings (Magic_zero 报告) moves every
 // agent magpie connected: each one's config is written with the gateway's
 // URL on the new port, none keeps the old one, and each is still connected
 // with nothing off.
@@ -130,34 +130,7 @@ func containsAgent(as []*Agent, id string) bool {
 	return false
 }
 
-// Codex signed in with ChatGPT is joined to magpie beside its own models:
-// the move writes its base URL on the new port and keeps the model it was
-// on, rather than putting it on one of magpie's.
-func TestPortMovesJoinedCodex(t *testing.T) {
-	t.Setenv("MAGPIE_ADDR", "")
-	home, read := codexHome(t, `{"auth_mode":"chatgpt","tokens":{"access_token":"at","refresh_token":"rt","id_token":"x.e30.x","account_id":"acc"}}`, "model = \"gpt-5.1\"\n")
-	setPort(t, 3591)
-	cx := codex(home)
-	c, err := cx.ConnectHow()
-	if err != nil || c.How != "joined" {
-		t.Fatalf("not joined: %+v %v\n%s", c, err, read())
-	}
-	on := OnGateway()
-	setPort(t, 3592)
-	if _, err := Rewire(on); err != nil {
-		t.Fatal(err)
-	}
-	cfg := read()
-	if !strings.Contains(cfg, "127.0.0.1:3592") || strings.Contains(cfg, "127.0.0.1:3591") {
-		t.Fatalf("Codex not moved:\n%s", cfg)
-	}
-	if !strings.Contains(cfg, `model = "gpt-5.1"`) || !cx.Joined() {
-		t.Fatalf("Codex's own model lost:\n%s", cfg)
-	}
-	if d := cx.Drift(); d != nil {
-		t.Fatalf("off after the move: %+v", d)
-	}
-}
+// 崇云不读别家的登录态，此用例随之移除。
 
 // An agent taken off magpie before the port moved is left as it is: it is
 // the user's to set again, not the move's.

@@ -18,6 +18,9 @@ import (
 // app blocking its account), it is not beside the sign-in.
 func TestCodexOwnPickAfterMagpieModelStaysConnected(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "model = \"gpt-5.5\"\n")
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "beside")
 	cx := codex(home)
 	if err := cx.Apply("model", "fake/m1"); err != nil {
 		t.Fatal(err)

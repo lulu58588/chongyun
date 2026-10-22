@@ -306,7 +306,7 @@ func (a *Account) Tiers(model string) (tiers []string, ok bool) {
 
 // codexPoolModels is ms — the list of the account Codex is signed in to —
 // with what the other accounts on add to it. A model only another account's
-// plan has joins it (Raven on Discord: Codex signed in to a Free account
+// plan has joins it (Raven 报告: Codex signed in to a Free account
 // beside a Pro 5x one, and the codex provider listed only the Free plan's
 // three), right after the model before it in that account's list, as
 // Antigravity's pool does (mergeAntigravityModels). And each model takes
@@ -594,7 +594,7 @@ func CodexNativeWindow(restore bool) func(slug string) (n, most int, ok bool) {
 // for any), else magpie's Codex subscription's, else Codex CLI's
 // models_cache.json's; 0 when none says. models.dev's input limit for the
 // same id is OpenAI's API's (gpt-5.5's 922K), not the window Codex holds
-// a conversation to (272K): netube on Discord saw Routing say 922K for a
+// a conversation to (272K): netube 报告 saw Routing say 922K for a
 // Codex Plus account.
 func CodexWindow(user, slug string) int {
 	p, _ := find(All(), "codex")
@@ -663,7 +663,7 @@ func codexListed(shown []Entry, members func(id string) []Member, own bool) []ca
 // magpie writes for a Codex CLI that names magpie its provider (#1530).
 func CodexTiers(m *catalog.Model, e Entry, members func(id string) []Member) {
 	// a provider the user added by its address is sent the tier Codex
-	// asks for as it is (hsiangron on X)
+	// asks for as it is (hsiangron 报告)
 	m.OwnTier = e.Group == "" && e.Provider.Preset == "" && e.Provider.Account == nil && e.Provider.ID != ""
 	// another magpie offers the tiers its own Codex is offered on the
 	// model, and is sent the one Codex asks for as it is (#1234); a

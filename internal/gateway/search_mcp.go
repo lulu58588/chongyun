@@ -16,7 +16,7 @@ import (
 
 // magpie's web search, the one a model that can't search is given
 // (webSearch: the searcher's model, a Kimi Code plan's service, the
-// search APIs), is also an MCP server of its own (Kayphoon on Discord),
+// search APIs), is also an MCP server of its own (Kayphoon 报告),
 // so Cursor, Claude Desktop and any other agent can mount it as a
 // web_search tool: Streamable HTTP at SearchMCPPath, JSON answered to each
 // POST. It is a gateway route like the others: this computer calls it with

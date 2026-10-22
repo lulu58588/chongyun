@@ -180,7 +180,7 @@ func TestArgv(t *testing.T) {
 }
 
 // A distro the user stops after Find found the command there (wsl
-// --shutdown, to repair WSL: TJHHHH on Discord) isn't run again, which
+// --shutdown, to repair WSL: TJHHHH 报告) isn't run again, which
 // would start it: Find, its answer still fresh, asks which run and looks
 // only in those. Nothing is ever run with -d in a stopped distro.
 func TestFindStoppedSince(t *testing.T) {

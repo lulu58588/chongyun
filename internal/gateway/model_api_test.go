@@ -15,7 +15,7 @@ import (
 
 // A relay whose one key serves a model only on Anthropic's messages, while
 // its chat completions take the others and answer that one with no channel
-// (01huadalang on Discord): with Anthropic picked for the model in its
+// (01huadalang 报告): with Anthropic picked for the model in its
 // provider's editor, an agent's chat request for it goes to /v1/messages,
 // translated, and chat completions is never tried; another model still
 // goes to chat.
@@ -173,7 +173,7 @@ data: {"type":"response.completed","response":{"id":"r","object":"response","sta
 }
 
 // A custom provider with a Gemini URL beside its chat and Anthropic ones
-// (Kayphoon on Discord: 供应商为自定义的时候已经兼容 gemini 格式了，但模型的
+// (Kayphoon 报告: 供应商为自定义的时候已经兼容 gemini 格式了，但模型的
 // 详细配置里还是只能限定 chat 和 anthropic): with Gemini picked for a model,
 // a chat, a Messages and a Gemini client's request for it each go to
 // models/{model}:streamGenerateContent under the Gemini URL, with the key

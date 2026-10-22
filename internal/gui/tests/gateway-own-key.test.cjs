@@ -1,5 +1,5 @@
 // A gateway key can be created with a value of the user's own, one their
-// clients already send from another gateway (love1sbug on X).
+// clients already send from another gateway (love1sbug 报告).
 const assert = require("node:assert/strict");
 const { test } = require("node:test");
 const { chromium, webkit } = require("playwright");

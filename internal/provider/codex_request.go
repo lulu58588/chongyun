@@ -580,7 +580,7 @@ func declareSearch(m map[string]any, lite bool) bool {
 // search on, it offers the function and leaves web_search out. The ChatGPT
 // backend refuses a request that carries both ("a single request can't
 // contain both a client-declared function web.run and the hosted tool
-// web_search", Savin on Discord, Codex 0.163.0-alpha), so a conversation
+// web_search", Savin 报告, Codex 0.163.0-alpha), so a conversation
 // that replays an earlier web_search_call under web.run is sent as Codex
 // sent it, with no hosted tool added: web.run is the search the backend
 // serves it, through /alpha/search.

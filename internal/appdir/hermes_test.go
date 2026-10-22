@@ -10,7 +10,7 @@ import (
 // Windows, AppData\Local\hermes under the home folder without LOCALAPPDATA,
 // and ~/.hermes everywhere else (hermes_constants.
 // _get_platform_default_hermes_home). magpie looked in ~/.hermes on Windows
-// too, where Hermes and rtk's hook weren't (新v学员 on Discord).
+// too, where Hermes and rtk's hook weren't (新v学员 报告).
 func TestHermesDefault(t *testing.T) {
 	home := filepath.Join("C:", "Users", "admin")
 	local := filepath.Join(home, "AppData", "Local")

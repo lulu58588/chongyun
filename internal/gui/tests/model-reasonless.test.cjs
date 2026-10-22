@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// yuexian7 on Discord: models.dev lists their model as reasoning, and the
+// yuexian7 报告: models.dev lists their model as reasoning, and the
 // vendor answers any reasoning parameter with 422 while the request
 // without it works. In the provider editor's Names & levels, a model's
 // levels can all be unticked: magpie then sends it no reasoning field, said

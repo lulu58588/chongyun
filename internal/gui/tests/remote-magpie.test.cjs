@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Another computer's magpie has a heading of its own in the add sheet,
-// after On this machine, not among the Relays (Avalon on Discord: "供应商添加
+// after On this machine, not among the Relays (Avalon 报告: "供应商添加
 // 中没有Remote magpie 的选项"), and searching for remote, magpie or 远程
 // finds it there, at a narrow width with no sideways scroll. It is added
 // with its address and key alone: the Remote magpie editor asks for the address above the key,

@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // An average first-token time on the Usage page's Requests tab is whole
 // milliseconds under a second and a second with one decimal above it (John
-// on Discord: the speed trend's tooltip read "258 token/秒 · 首字
+// 报告: the speed trend's tooltip read "258 token/秒 · 首字
 // 761.9796610169492 毫秒"). The trend's tooltip, the ranking and the period's
 // KPI, in English and Chinese; no backend, the API is faked.
 const assert = require("node:assert/strict");

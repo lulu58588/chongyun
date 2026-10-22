@@ -112,6 +112,9 @@ func TestCopilotTakesAnotherVendorsItemIDs(t *testing.T) {
 	os.WriteFile(filepath.Join(cfg, "github-copilot", "apps.json"), mustJSON(map[string]any{
 		"github.com:Iv1.x": map[string]any{"user": "echo", "oauth_token": "gho_echo"},
 	}), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the editor's own file is never read to find out.
+	copilotLoginSaved(t, "echo", "gho_echo")
 	up := &idChecker{check: true}
 	api := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {

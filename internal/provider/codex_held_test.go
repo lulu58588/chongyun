@@ -118,7 +118,6 @@ func TestCodexUsedUpIsWhatTheAppHolds(t *testing.T) {
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			signIn(t) // me@example.com, acct-1, the account Codex is on
-			rememberLogins(true)
 			fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				json.NewEncoder(w).Encode(c.body)
 			}))
@@ -204,7 +203,6 @@ func heldUsage(t *testing.T) map[string]any {
 func servedUsage(t *testing.T, body map[string]any) (read func() bool, down *atomic.Bool) {
 	t.Helper()
 	signIn(t)
-	rememberLogins(true)
 	lastQuotas.Lock()
 	lastQuotas.m, lastQuotas.loaded = nil, false
 	lastQuotas.Unlock()

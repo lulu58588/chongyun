@@ -65,7 +65,7 @@ var workbuddyOnMac = func() bool { return runtime.GOOS == "darwin" }
 // WorkBuddy.app to the Trash leaves ~/.workbuddy behind, and magpie writes
 // there itself (models.json when wired, mcp.json and skills/ from the
 // library), so the folder alone kept an uninstalled WorkBuddy on every
-// library row for good (@jiahao_jayden on X: 没安装的 WorkBuddy 也在技能
+// library row for good (@jiahao_jayden 报告: 没安装的 WorkBuddy 也在技能
 // 那一排). Elsewhere, where magpie doesn't know its install folder, the
 // folder still counts, as before.
 func workbuddyHere(dir, path string, app desktopApp) bool {

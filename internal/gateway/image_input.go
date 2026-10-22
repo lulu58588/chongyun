@@ -81,7 +81,7 @@ func walkImages(proto provider.Protocol, body []byte, swap func(imageAt) (json.R
 	if raw := request[turnsKey]; len(raw) > 0 && raw[0] == '[' && !anyImageBlock(proto, raw, contentKey) {
 		// Most requests have no image, and this walk runs several times
 		// on each: decoding every turn and block cost ~2.6 MB for each
-		// 1.5 MB conversation (yg6888 on X).
+		// 1.5 MB conversation (yg6888 报告).
 		return body, nil
 	}
 	var turns []json.RawMessage

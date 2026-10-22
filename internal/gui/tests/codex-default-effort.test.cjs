@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Codex's effort left at Default reads as Default, with the level Codex
-// then takes for the model beside it (lgtm on Discord: Default turned into
+// then takes for the model beside it (lgtm 报告: Default turned into
 // 中 on Codex · WSL Ubuntu). Its row and slider say "default (medium)", a
 // level picked shows the level, and Default picked again posts "" and
 // reads as Default again, not as medium.

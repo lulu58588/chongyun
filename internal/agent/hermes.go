@@ -11,14 +11,14 @@ package agent
 // put back when magpie steps out. A model of the user's own picked after
 // that, in Hermes or on the Agents page, leaves magpie's provider in
 // providers: Hermes stays connected, its session model picker still offers
-// magpie's models beside its own (lijiho96940561 on X: Hermes went to Not
+// magpie's models beside its own (lijiho96940561 报告: Hermes went to Not
 // connected and magpie's models left its picker), and only Disconnect
 // takes the provider out.
 //
 // Each of Hermes's bots is a profile with its own config.yaml (see
 // hermesProfiles), which doesn't read the main one's: magpie's provider goes
 // into every profile's too, so magpie is offered in every bot's picker, not
-// the main one's alone (lijiho96940561 on X). A profile's own model and
+// the main one's alone (lijiho96940561 报告). A profile's own model and
 // provider are left as its user set them, and Disconnect takes the provider
 // out of each.
 
@@ -123,7 +123,7 @@ func hermesIn(at place) *Agent {
 					return v, ok
 				}
 				// a reference to a variable: the key it names, as Hermes
-				// reads it (PaulT on Discord: "${MAGPIE_API_KEY}" with the
+				// reads it (PaulT 报告: "${MAGPIE_API_KEY}" with the
 				// key in Hermes's .env was said not to reach magpie). One
 				// magpie can't see (a variable of the shell's alone) is
 				// unknown, never drift.
@@ -178,7 +178,7 @@ func hermesIn(at place) *Agent {
 				return edit.SetYAML(path, edit.KV{Path: "model.default", Value: v})
 			},
 			Options: func(cur map[string]string) []Option {
-				return append(ownOptions("", cur["model"]), viaMagpie("hermes", magpieID+"/")...)
+				return append(ownOptions(cur["model"]), viaMagpie("hermes", magpieID+"/")...)
 			},
 		}, {
 			// agent.reasoning_effort, which Hermes's /reasoning saves; none

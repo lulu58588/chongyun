@@ -80,7 +80,7 @@ func arked(t *testing.T) (*Server, *arkImages) {
 
 // Ark watermarks every image unless told not to, takes no n, and takes a
 // ratio only in the prompt: magpie sends watermark false, asks once per
-// image, and sends a ratio as the doc's size for it (JL on Discord).
+// image, and sends a ratio as the doc's size for it (JL 报告).
 func TestArkDrawsWithoutWatermarkOncePerImage(t *testing.T) {
 	s, a := arked(t)
 	code, ans, raw := postImages(t, s, "/v1/images/generations", "application/json", `{"model":"ark/doubao-seedream-4-5-251128","prompt":"一只喜鹊","size":"16:9","quality":"high","n":2}`)

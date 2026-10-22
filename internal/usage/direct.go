@@ -12,7 +12,7 @@ import (
 // Desktop…), summed up as Summarize sums the gateway's, by agent, model and
 // account. The Usage page's Requests tab and the tray panel count them
 // beside the gateway's; magpie usage and the TUI show them in a part of
-// their own (Kumo31 on Discord: Codex used outside magpie was on the
+// their own (Kumo31 报告: Codex used outside magpie was on the
 // window's Usage tab but not in magpie usage).
 func Direct(p Period) Summary {
 	now := Clock()

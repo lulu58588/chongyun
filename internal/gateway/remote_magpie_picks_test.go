@@ -14,7 +14,7 @@ import (
 )
 
 // A magpie added as a Remote magpie lists here what its user picked there,
-// and no more (GokoShiki on Discord: 24 picked on the remote, 51 here, the
+// and no more (GokoShiki 报告: 24 picked on the remote, 51 here, the
 // extra ones OpenRouter's). The remote's list for another magpie carried
 // every OpenRouter decision model, picked or not, so each one came here as
 // a model of its own. A model a plugin serves there (the Grok

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The page `magpie web` serves to a browser (Jorben on Discord: the remote
+// The page `magpie web` serves to a browser (Jorben 报告: the remote
 // web UI had no request archive switch and no usage chart icons, and
 // /wails/runtime.js was a 404 in DevTools). In a browser there is no Wails
 // runtime, so the page never asks for /wails/runtime.js; the app's window

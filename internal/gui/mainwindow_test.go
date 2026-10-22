@@ -10,7 +10,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// StringKe on Discord: magpie restarted for an update while another app was
+// StringKe 报告: magpie restarted for an update while another app was
 // full screen, and from then on its window opened only on that app's Space.
 // The window moves to the Space the user is on when shown, and can still go
 // full screen; it doesn't join every Space.
@@ -31,7 +31,7 @@ func TestMainWindowFollowsActiveSpace(t *testing.T) {
 	}
 }
 
-// StringKe on Discord: a full-screen window closed left a black Space
+// StringKe 报告: a full-screen window closed left a black Space
 // behind. On the Mac it leaves full screen before it is hidden.
 func TestCloseStepLeavesFullscreen(t *testing.T) {
 	cases := []struct {

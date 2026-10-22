@@ -11,7 +11,7 @@ import (
 )
 
 // A search API's saved key comes back whole for its row's Show and Copy
-// (OnurBen on Discord), while the settings still list it masked; one not
+// (OnurBen 报告), while the settings still list it masked; one not
 // added is an error.
 func TestSearchKeyShown(t *testing.T) {
 	h := t.TempDir()

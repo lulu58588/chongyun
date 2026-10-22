@@ -8,7 +8,7 @@
 // writes deploymentMode into %LOCALAPPDATA%\Claude as CC Switch does.
 //
 // Desktop installed from the setup.exe that installs an MSIX package (as on
-// Windows 10 LTSC, Kilig on Discord) runs packaged, and Windows keeps what
+// Windows 10 LTSC, Kilig 报告) runs packaged, and Windows keeps what
 // it writes under %APPDATA% and %LOCALAPPDATA% in the package's own
 // folders instead:
 //
@@ -27,7 +27,7 @@
 // Desktop's 3p mode reads the real %LOCALAPPDATA%\Claude-3p (its Ou() is
 // path.join(LOCALAPPDATA, "Claude-3p"), the same as before, now outside
 // the package's LocalCache), and a gateway written only into the
-// package's Claude-3p is never seen (bg5eau on X). Which build is
+// package's Claude-3p is never seen (bg5eau 报告). Which build is
 // installed can't be told from its folders, so Sets gives both: what
 // Desktop must find goes into each.
 package desktopdir

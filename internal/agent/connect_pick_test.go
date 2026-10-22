@@ -3,7 +3,6 @@ package agent
 import (
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/lulu58588/chongyun/internal/edit"
@@ -118,47 +117,7 @@ func TestConnectPrefersTheSubscription(t *testing.T) {
 	}
 }
 
-// Codex signed in with ChatGPT keeps its own last pick when connected (the
-// owner: 让 Codex 记住上次的选择): magpie's models join its list by the base
-// URL and its model stays; a model picked beside them keeps it connected,
-// and Disconnect leaves Codex on that pick, magpie taken out.
-func TestCodexConnectKeepsItsPick(t *testing.T) {
-	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`,
-		"model = \"gpt-5.5\"\nmodel_reasoning_effort = \"xhigh\"\n")
-	cx := codex(home)
-	if err := cx.Connect(); err != nil {
-		t.Fatal(err)
-	}
-	cfg := read()
-	if !cx.Wired() || !strings.Contains(cfg, `model = "gpt-5.5"`) || !strings.Contains(cfg, `openai_base_url = "`+codexGatewayURL()+`"`) ||
-		!strings.Contains(cfg, "[model_providers.magpie]") || strings.Contains(cfg, "model_provider =") {
-		t.Fatalf("connected (wired %v):\n%s", cx.Wired(), cfg)
-	}
-	if d := cx.Drift(); d != nil {
-		t.Fatalf("drift: %+v", d)
-	}
-	// Sync, the failover's turn included, leaves it connected
-	if err := cx.Sync(); err != nil || !cx.Wired() {
-		t.Fatalf("after Sync (%v):\n%s", err, read())
-	}
-	// picked in Codex's /model, as Codex writes it
-	if err := edit.SetTOMLTop(filepath.Join(home, ".codex", "config.toml"), edit.KV{Path: "model", Value: "gpt-5.4"}); err != nil {
-		t.Fatal(err)
-	}
-	if !cx.Wired() {
-		t.Fatalf("a pick of its own disconnected it:\n%s", read())
-	}
-	if err := cx.Disconnect(); err != nil {
-		t.Fatal(err)
-	}
-	if cfg = read(); cx.Wired() || !strings.Contains(cfg, `model = "gpt-5.4"`) || strings.Contains(cfg, "openai_base_url") {
-		t.Fatalf("disconnected:\n%s", cfg)
-	}
-	// connected again, on that pick still
-	if err := cx.Connect(); err != nil || !cx.Wired() || !strings.Contains(read(), `model = "gpt-5.4"`) {
-		t.Fatalf("again (%v):\n%s", err, read())
-	}
-}
+// 崇云不读别家的登录态，此用例随之移除。
 
 // The 「接入」 switch off and on again leaves the agent on the models it was
 // on (the owner: an agent remembers its last pick): Claude Code on a second

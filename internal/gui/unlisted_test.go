@@ -11,7 +11,7 @@ import (
 
 // A provider set to "Only through routing groups" keeps its models out of
 // the pickers; one in no group was gone from every picker without a word
-// (悠悠哥 on Discord: hy4 vanished). The page is told which models are kept
+// (悠悠哥 报告: hy4 vanished). The page is told which models are kept
 // so and the groups each is used through, none for hy4, for the picker and
 // the provider's editor to say so; the tray panel can open the window on a
 // new group of it.

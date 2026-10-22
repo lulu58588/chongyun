@@ -16,7 +16,7 @@ import (
 )
 
 // A Remote magpie searches the web for the models it serves, and its list
-// says how (Player on Discord: Claude Code's WebSearch on remoteMagpie's
+// says how (Player 报告: Claude Code's WebSearch on remoteMagpie's
 // glm-5.3 went to this magpie's searcher, another model, and Settings'
 // Searcher didn't offer the remote's models). Claude Code's web search
 // goes on to it as it was offered; the models it searches natively for

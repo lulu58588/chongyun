@@ -24,7 +24,7 @@ toolsets:
   - hermes-cli
 `
 
-// EUPH on Discord: the Library's MCP servers couldn't be given to Hermes.
+// EUPH 报告: the Library's MCP servers couldn't be given to Hermes.
 // Hermes reads mcp_servers from $HERMES_HOME/config.yaml (tools/mcp_tool.py):
 // command/args/env, url/headers, transport: sse for SSE; each is written
 // there beside the user's settings, comments and servers, read back, and

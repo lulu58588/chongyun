@@ -47,7 +47,7 @@ func newModelHome(t *testing.T) {
 }
 
 // A model models.dev has just added, listed as thinking but without its
-// levels yet, offers its family's (NextCommit on Discord: a relay's
+// levels yet, offers its family's (NextCommit 报告: a relay's
 // gpt-6.1-sol had no effort picker in Codex, gpt-6-astra had one), and so
 // does one newer than the catalog on this machine. A family that takes a
 // thinking switch alone still offers none (#214), and a model that doesn't

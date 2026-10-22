@@ -6,7 +6,7 @@
 // Names & levels has the three choices and says what the agents' lists will
 // show ("My Sol · Relay"). For the routing groups it is one setting for them
 // all, so it sits over the groups on Routing, not in one group's editor (PAMI
-// on Discord: in there it read as that group's alone); the editor only says
+// 报告: in there it read as that group's alone); the editor only says
 // what its group will be called ("Fast · routing group") and where that is
 // set. A pick posts settings/plain-names once, an open editor's line follows
 // it (its unsaved name kept), and the click doesn't scroll the page. English

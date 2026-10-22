@@ -90,17 +90,6 @@ func TestBedrockPreset(t *testing.T) {
 	if (Provider{Anthropic: "https://api.anthropic.com"}).IsBedrock() {
 		t.Error("Anthropic taken for Bedrock")
 	}
-
-	// an entry imported from another app at the preset's endpoints is the
-	// preset; at another region's it keeps its URL, and is Bedrock by host
-	im, _ := imported("Bedrock", "k", endpoints{anthropic: "https://bedrock-runtime.us-east-1.amazonaws.com/anthropic"}, nil)
-	if im.Preset != "bedrock" {
-		t.Fatalf("imported: %+v", im)
-	}
-	im, _ = imported("Bedrock SG", "k", endpoints{anthropic: "https://bedrock-runtime.ap-southeast-1.amazonaws.com/anthropic"}, nil)
-	if im.Anthropic != "https://bedrock-runtime.ap-southeast-1.amazonaws.com/anthropic" || !im.IsBedrock() || im.Native("apac.anthropic.claude-opus-5-5") != Anthropic {
-		t.Fatalf("imported at Singapore: %+v", im)
-	}
 }
 
 // A Bedrock key signs the Anthropic endpoint with x-api-key alone, since

@@ -137,7 +137,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         await page.locator("#modal .lib-editor").waitFor({ state: "detached" });
         assert.equal(await row("neon").locator(".lib-tag").count(), 0, "signed out: no tag");
 
-        // lc on Discord: Exa signs in at ?login, and Sign in before Save
+        // lc 报告: Exa signs in at ?login, and Sign in before Save
         // signed in to the saved URL, which asks for none. Unchanged, it's
         // said to work as it is (in the reader's language), nothing saved
         await row("exa").click();
@@ -146,7 +146,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         await exa.locator(".lib-signin-err", { hasText: w.noSignIn }).waitFor();
         assert.deepEqual(calls.slice(2), ["start exa"]);
         // the URL changed to ?login: Sign in saves it, and says so (新v学员
-        // on Discord), the dialog stays, and the sign-in is to it
+        // 报告), the dialog stays, and the sign-in is to it
         const urlField = page.locator("#modal .lib-editor input.mono").first();
         await urlField.fill("https://mcp.exa.ai/mcp?login");
         await exa.getByRole("button", { name: w.saveSignIn, exact: true }).click();

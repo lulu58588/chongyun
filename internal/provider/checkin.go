@@ -52,9 +52,6 @@ func (c checkiner) clock() time.Time { return c.now() }
 // out wbCheckinRetry. It says how every account stands, those it didn't
 // ask as last kept.
 func (c checkiner) checkinNow(ctx context.Context, soon bool) []WorkBuddyCheckin {
-	if discoveryOff() {
-		return nil
-	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	now := c.now()

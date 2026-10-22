@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// 耍赖天都爱 on Discord (模型测试的时候有的必须是codex 客户端或者claude 客户端):
+// 耍赖天都爱 报告 (模型测试的时候有的必须是codex 客户端或者claude 客户端):
 // a relay that serves only Codex or Claude Code turns magpie's own test
 // request away, while the agent's requests through magpie are served. A
 // model chip's right-click offers "Test as Codex" and "Test as Claude

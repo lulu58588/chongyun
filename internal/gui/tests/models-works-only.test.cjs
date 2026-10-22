@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // After Test models, the picks that didn't answer are unpicked at one click
-// (H20 on Discord: 测试完很多不可用，只能一个个取消，希望有"只选可用").
+// (H20 报告: 测试完很多不可用，只能一个个取消，希望有"只选可用").
 // Working only isn't in the row until a test has answered. Then it sits by
 // Select all and Select none, looking as they do; a click unpicks every
 // pick whose last test failed and keeps those that answered and those not

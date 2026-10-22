@@ -14,7 +14,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/proc"
 )
 
-// The `chongyun` command in a terminal (PAMI on Discord: a way in the app to
+// The `chongyun` command in a terminal (PAMI 报告: a way in the app to
 // put it there, and to see whether it is). install.sh links it, Homebrew
 // links it, but the app downloaded from the site — and every Windows one —
 // leaves a terminal without it. Settings' Command line says, for each shell

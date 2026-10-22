@@ -501,7 +501,7 @@ func almaImage(s map[string]any) string {
 }
 
 // almaSetImage makes the model magpie draws with Alma's image generation
-// model (Sorghum on Discord), on magpie's provider pid, when Alma has one
+// model (Sorghum 报告), on magpie's provider pid, when Alma has one
 // of magpie's that magpie no longer offers it (the drawer it was given
 // before, almaModels) or, with fill, none picked (Auto): fill is the user
 // choosing one of magpie's models for Alma, not Sync, which leaves an Auto
@@ -654,7 +654,7 @@ func almaOwn() []Option {
 // in ALMA_DATA_DIR, else $XDG_DATA_HOME/alma (~/.local/share/alma), and
 // answers on the same port: with only the desktop's folder looked for it
 // was never found, so its magpie provider never got Alma's key and its
-// requests read as the AI SDK's (Lutra.x on Discord). The desktop's folder
+// requests read as the AI SDK's (Lutra.x 报告). The desktop's folder
 // comes first; "" when neither is there.
 func almaDir(goos string) string {
 	var dirs []string

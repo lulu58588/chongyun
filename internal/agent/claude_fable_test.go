@@ -13,7 +13,7 @@ import (
 // unset rather than following the main model: Claude Code takes the model
 // ANTHROPIC_DEFAULT_FABLE_MODEL names for a Fable model, so Opus written
 // there was Fable to it, and a Claude Pro sign-in without Fable asked for
-// usage credits and fell back to Haiku (Zhenzhen on Discord, magpie claude
+// usage credits and fell back to Haiku (Zhenzhen 报告, magpie claude
 // claude/claude-opus-5-5). So it is on another vendor's model (#2090). On a
 // Fable it follows as before; a value of the user's own stays theirs.
 func TestClaudeFableTierOnClaude(t *testing.T) {

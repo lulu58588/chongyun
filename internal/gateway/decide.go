@@ -39,7 +39,7 @@ const jevSure = 0.4
 // the probability it gave each option where it gave two or more, else the
 // confidence it said. A decision model's own confidence field is
 // calibrated its own way: Cloudflare's clef-flash says 0.2866 of a
-// 提醒我明天下午三点给 Dora 打电话 it put at about 0.68 (@VersunPan on X),
+// 提醒我明天下午三点给 Dora 打电话 it put at about 0.68 (@VersunPan 报告),
 // where the same model run in MLX-Serve says its top probability, and Jev
 // says the top over an even spread. Its probabilities say the same thing on
 // every one, and an even spread of them is still 0.
@@ -173,7 +173,7 @@ func jevBody(model string, intents []string, work map[string]string, prev before
 // jevState is what Jev is told of the turn: the message, what it said of
 // the turn before, and what was said in it (turnBefore), each only when
 // there is one. A short follow-up (继续, fix that) said alone came out
-// the hardest kind (@HirotaNagai on X).
+// the hardest kind (@HirotaNagai 报告).
 func jevState(prev before, effort bool, text string) map[string]string {
 	st := map[string]string{"message": text}
 	if prev.Intent != "" {
@@ -486,7 +486,7 @@ func (s *Server) postDecide(ctx context.Context, p provider.Provider, model stri
 // maxSystemOneBody is the most a System One request may be; larger is 413
 // rather than a truncated body parsed as not a System One request. A
 // Clef's request may carry up to four embedded images, 13 MiB in all
-// (ARNO on Discord: clef模型是支持图像输入的).
+// (ARNO 报告: clef模型是支持图像输入的).
 const maxSystemOneBody = 16 << 20
 
 // serveSystemOne is magpie's own System One API. The model's prefix names
@@ -543,7 +543,7 @@ func (s *Server) serveSystemOne(w http.ResponseWriter, r *http.Request) {
 	}
 	// its keys or accounts in its routing's order, each asked until one
 	// answers (decideKeys): one out of quota rests, and the next takes the
-	// request (fflake33 on Discord). One the user set not to serve the
+	// request (fflake33 报告). One the user set not to serve the
 	// model is never asked; with every one so, the request is refused
 	cs, pl := s.decideKeys(p, model)
 	barred := len(cs) == 0 && len(pl.left) > 0 && !slices.ContainsFunc(pl.left, func(w Weighed) bool { return !w.Barred })

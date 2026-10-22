@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A decision model on the Gateway list (ARNO on Discord: decision模型也是需要
+// A decision model on the Gateway list (ARNO 报告: decision模型也是需要
 // 拉取正确的上下文长度以及是否支持视觉功能的): its row says its context and
 // whether it takes images, as any model's does, and its tooltip says it is a
 // decision model routing groups ask, rather than "Reasoning levels: none known".

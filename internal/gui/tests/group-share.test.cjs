@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// laincatx on X: a routing group is shared as text. Its row's menu has
+// laincatx 报告: a routing group is shared as text. Its row's menu has
 // Copy to share, which asks groups/share for the group's text and copies
 // it; Import by New group opens a box the text is pasted into, which posts
 // groups/import and says what was added, what of it the user has none of,

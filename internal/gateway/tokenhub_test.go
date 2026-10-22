@@ -70,7 +70,7 @@ func (q *tokenhub) last() tokenhubCall {
 	return q.calls[len(q.calls)-1]
 }
 
-// TokenHub pay as you go (Jorben on Discord) at a fake TokenHub, China's
+// TokenHub pay as you go (Jorben 报告) at a fake TokenHub, China's
 // preset and the global one alike: each client's API reaches TokenHub's own
 // path for it, never translated away, with the key as a Bearer on the
 // OpenAI APIs and as x-api-key on Anthropic's, which TokenHub's docs ask.

@@ -10,7 +10,7 @@ import (
 // With CODEX_HOME set, a model picked for Codex goes to
 // $CODEX_HOME/config.toml, the file Codex reads, and its catalog beside it;
 // nothing is written under ~/.codex, and what magpie shows as applied is
-// read back from there (Wakkana on Discord, Codex 0.162.1: the pick went to
+// read back from there (Wakkana 报告, Codex 0.162.1: the pick went to
 // ~/.codex/config.toml, Codex never saw it, and magpie showed it applied).
 func TestCodexHomeEnvTakesThePick(t *testing.T) {
 	home, _ := codexHome(t, "", "")

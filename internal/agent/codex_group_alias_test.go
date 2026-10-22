@@ -18,6 +18,11 @@ import (
 func TestCodexGroupByItsModelName(t *testing.T) {
 	for _, auth := range []string{`{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, ""} {
 		home, read := codexHome(t, auth, "")
+		if auth != "" {
+			// chongyun never reads the agent's own sign-in: a Codex signed
+			// in to ChatGPT is one chongyun wired beside that sign-in.
+			codexBeside(t, home, "beside")
+		}
 		for _, p := range []provider.Provider{
 			{ID: "ra", Name: "RA", Chat: "https://ra.example/v1", Key: "k", Models: []string{"gpt-6.1-sol", "gpt-6.1"}},
 			{ID: "rb", Name: "RB", Chat: "https://rb.example/v1", Key: "k", Models: []string{"gpt-6.1-sol", "gpt-6.1"}},

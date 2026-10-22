@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
-// Two installed plugins that sign in to one provider (neiko on Discord:
+// Two installed plugins that sign in to one provider (neiko 报告:
 // a third-party plugin beside their own folder plugin): each row of
 // /api/plugins carries the clash, naming the plugin that serves it and
 // the provider as it is listed, and prefer hands it to the other one.

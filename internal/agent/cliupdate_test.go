@@ -496,7 +496,7 @@ func TestUpdateWithBunBridgesSOCKS(t *testing.T) {
 	}
 }
 
-// Grok Build from xAI's installer (xiaoxiaofeixz on Discord: Grok at
+// Grok Build from xAI's installer (xiaoxiaofeixz 报告: Grok at
 // C:\Users\<user>\.grok\bin\grok.exe showed no newest version and no
 // update): install.sh's ~/.grok/bin/grok links to
 // ../downloads/grok-<platform>, which grok update replaces with
@@ -602,7 +602,7 @@ func TestGrokInstalled(t *testing.T) {
 	}
 }
 
-// Grok Build from Homebrew's grok-build cask (Will on Discord): grok on PATH
+// Grok Build from Homebrew's grok-build cask (Will 报告): grok on PATH
 // leads into Caskroom/grok-build, with no ~/.grok/bin/grok. It is found,
 // detected before grok first runs, and updated with brew; Homebrew's grok
 // formula, a regular-expression tool, never is.

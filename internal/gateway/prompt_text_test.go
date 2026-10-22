@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// masaka on Discord: clicking a part of the context window card shows the
+// masaka 报告: clicking a part of the context window card shows the
 // text the request sent there — the system prompt, each tool's definition,
 // each turn — masked as the vendor got it, even where the request went to
 // a model the user let have it unmasked. The route, which goes in the

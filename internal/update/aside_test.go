@@ -81,7 +81,7 @@ func TestMoveAsideSaysWhy(t *testing.T) {
 }
 
 // An antivirus checking a new program can hold a file longer than the
-// short pauses (白菜 on Discord: every restart failed the same way): a
+// short pauses (白菜 报告: every restart failed the same way): a
 // file held open is waited for on, up to heldFor, rather than given up on
 // after three seconds.
 func TestMoveAsideWaitsOutALongHold(t *testing.T) {

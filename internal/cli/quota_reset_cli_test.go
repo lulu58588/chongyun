@@ -76,7 +76,7 @@ func TestRestCapCmd(t *testing.T) {
 	if err := restCapCmd([]string{"xk", "default"}); err != nil || cap() != 0 {
 		t.Fatalf("default: %v %d", err, cap())
 	}
-	// Kismet Alan on Discord: a relay whose unknown errors pass is set
+	// Kismet Alan 报告: a relay whose unknown errors pass is set
 	// never to rest after one, saved and read back so; a minute is the
 	// shortest cap, and under it is turned away, not read as default
 	if err := restCapCmd([]string{"xk", "off"}); err != nil || cap() != provider.RestCapOff {

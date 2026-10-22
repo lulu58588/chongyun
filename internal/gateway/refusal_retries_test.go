@@ -2,10 +2,12 @@ package gateway
 
 import (
 	"cmp"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -15,7 +17,7 @@ import (
 
 // Claude's refusal with what its classifier said of it, streamed and
 // whole, as Anthropic ends a turn its safety filter stopped before
-// anything was said (DD on Discord).
+// anything was said (DD 报告).
 var (
 	anthropicRefusalDetailed = strings.Replace(anthropicRefusal, `"stop_reason":"refusal","stop_sequence":null}`,
 		`"stop_reason":"refusal","stop_sequence":null,"stop_details":{"type":"refusal","category":"cyber","explanation":"flagged"}}`, 1)
@@ -75,7 +77,7 @@ const messagesAsk = `{"model":"a/m","max_tokens":10,"stream":true,"messages":[{"
 
 // With RefusalRetries 0, a keyed Anthropic provider's refusal goes to
 // Claude Code as Anthropic said it, streamed or whole, with its other keys
-// never asked and the key that refused not set aside (DD on Discord: magpie
+// never asked and the key that refused not set aside (DD 报告: magpie
 // moved on through the accounts and answered 400, so Claude Code never
 // switched to its fallback model as it does on Anthropic's own API).
 func TestRefusalRetriesNoneHandsClaudeCodeTheRefusal(t *testing.T) {
@@ -172,11 +174,44 @@ func TestRefusalRetriesGroup(t *testing.T) {
 	}
 }
 
+// claudeOwnToken is the access token of the Claude account chongyun keeps
+// in its own logins.json: the sign-in of the account it signed the agent
+// in to, which a run is on, in that account's own config directory.
+func claudeOwnToken(t *testing.T, user string) string {
+	t.Helper()
+	b, err := os.ReadFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var saved []struct {
+		Agent, User string
+		Auth       struct {
+			OAuth struct {
+				AccessToken string `json:"accessToken"`
+			} `json:"claudeAiOauth"`
+		} `json:"auth"`
+	}
+	if err := json.Unmarshal(b, &saved); err != nil {
+		t.Fatal(err)
+	}
+	for _, l := range saved {
+		if l.Agent == "claude" && l.User == user {
+			return l.Auth.OAuth.AccessToken
+		}
+	}
+	t.Fatalf("no saved claude account %q", user)
+	return ""
+}
+
 // A Claude subscription served through the claude CLI: at RefusalRetries 0
 // the spare account isn't asked, and Claude Code has the refusal with its
 // classifier's category, streamed and whole.
 func TestRefusalRetriesClaudeSubscription(t *testing.T) {
 	log := claudeSubscriptionRefusing(t)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the agent's own file is never read to find out.
+	activateLogin(t, "claude", "me@example.com")
+	want := claudeOwnToken(t, "me@example.com")
 	refusalRetries(t, 0)
 	s := New()
 	for _, ask := range []string{
@@ -186,8 +221,10 @@ func TestRefusalRetriesClaudeSubscription(t *testing.T) {
 		os.Remove(log)
 		code, body := sendTo(s, "/v1/messages", ask)
 		b, _ := os.ReadFile(log)
-		if !handedBack(code, body) || strings.Join(strings.Fields(string(b)), ",") != "own" {
-			t.Fatalf("%s: status %d: %s (runs %q)", ask, code, body, b)
+		// the run is on the account chongyun signed the agent in to, in its
+		// own config directory: the spare account's is never run on
+		if !handedBack(code, body) || strings.Join(strings.Fields(string(b)), ",") != want {
+			t.Fatalf("%s: status %d: %s (runs %q, want %q)", ask, code, body, b, want)
 		}
 		r := lastRoute(s)
 		if len(r.Tries) != 1 || r.Tries[0].Fail != failRefused || r.Tries[0].Rest != nil {

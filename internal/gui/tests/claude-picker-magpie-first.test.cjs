@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// abledo on Discord: "为什么claudecode的magpie模型选不了？其他的agent可以选".
+// abledo 报告: "为什么claudecode的magpie模型选不了？其他的agent可以选".
 // Claude Code not yet connected, with a relay of the user's own as its
 // ANTHROPIC_BASE_URL: its picker opened on a long list of Claude models it
 // asks the relay for itself, under "Claude Code · <host>", and every magpie

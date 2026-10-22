@@ -457,7 +457,7 @@ func targetOf(a *agent.Agent) *Target {
 		// %APPDATA%\Zed or $MAGPIE_ZED_CONFIG_DIR: agent.zed), and reloads
 		// the file as it changes (crates/settings_content/src/project.rs
 		// ProjectSettingsContent.context_servers, zed-industries/zed
-		// 2c99f547; lc on Discord)
+		// 2c99f547; lc 报告)
 		t.MCP = &mcpFile{Path: a.Path, Format: fmtZed}
 	case "claude-desktop":
 		// Claude Desktop reads only commands from its file: a remote server
@@ -731,7 +731,7 @@ func targets(gone bool) []*Target {
 // their CLI — that the library still gives something, or that hold a skill,
 // server or hook magpie put there: each is listed on the rows of what it
 // has, for that to be unticked and taken out of it, and on no other row
-// (@jiahao_jayden on X: an agent that isn't installed was on every row). A
+// (@jiahao_jayden 报告: an agent that isn't installed was on every row). A
 // sync gives them nothing new (Gone).
 func (l *Library) held(have []*Target) []*Target {
 	in := map[string]bool{}
@@ -860,7 +860,7 @@ func Takes(q, kind string) (string, error) {
 }
 
 // noPlace says why an agent can't be given kind, and where it gets it
-// instead when another agent's files are what it reads (MOMO on Discord).
+// instead when another agent's files are what it reads (MOMO 报告).
 func noPlace(a *agent.Agent, kind, what string) string {
 	switch {
 	case a.ID == "openchamber":

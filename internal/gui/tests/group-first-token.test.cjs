@@ -1,8 +1,8 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A routing group may let a member go that is slow to begin its answer
-// (Chen on X: every answer waits on a slow vendor). The group editor's
+// (Chen 报告: every answer waits on a slow vendor). The group editor's
 // "Slow to start" row picks Wait, 30 s, 1 min or 2 min, or Custom and as
-// many minutes as are typed (Kismet Alan on Discord), its hint saying what
+// many minutes as are typed (Kismet Alan 报告), its hint saying what
 // each does; saved, the group is sent with firstToken in seconds and its
 // card says "Next after 60 s without a first token". Wait sends 0 and the
 // card says nothing. In five languages, Chromium and WebKit, at 1100 and 420.

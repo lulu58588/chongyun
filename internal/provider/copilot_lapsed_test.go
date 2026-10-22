@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -19,7 +17,6 @@ import (
 func lapsedCopilot(t *testing.T) *atomic.Int32 {
 	t.Helper()
 	signIn(t)
-	os.RemoveAll(copilotCLIHome()) // no CLI sign-in
 	var status atomic.Int32
 	status.Store(200)
 	exchange := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -84,7 +81,7 @@ func copilotTrade(t *testing.T, user string) error {
 	return nil
 }
 
-// echo_ts on Discord: GitHub revoked a Copilot account's token, and the
+// echo_ts 报告: GitHub revoked a Copilot account's token, and the
 // account still read as signed in while every request failed. Refused
 // with 401 (or 403), it is signed out on its own row; signed in again in
 // place it is in use as it was, its mark gone.
@@ -196,57 +193,7 @@ func TestCopilotServedAgainClearsTheMark(t *testing.T) {
 	}
 }
 
-// The editors' token refused while the Copilot CLI's sign-in of the same
-// account stands in for it (#1238): served, so not signed out.
-func TestCopilotStandInIsNotSignedOut(t *testing.T) {
-	staleEditor(t, "octocat")
-	t.Cleanup(resetCopilotState)
-	copilotLapsedMu.Lock()
-	copilotLapsedSeen = map[string]bool{}
-	copilotLapsedMu.Unlock()
-	p, ok := find(All(), "copilot")
-	if !ok {
-		t.Fatal("no copilot")
-	}
-	req, _ := http.NewRequest("POST", p.Chat+"/chat/completions", nil)
-	if err := p.Sign(context.Background(), req, Chat, []byte(`{}`)); err != nil {
-		t.Fatal(err)
-	}
-	if l := copilotLapsedOf(t, "octocat"); l != "" {
-		t.Fatalf("served by the CLI's sign-in, the account reads %q", l)
-	}
-}
 
-// The editors' token refused with the CLI signed in to another account:
-// nothing stands in, so the editors' own account is signed out, and
-// signed in again from magpie it is kept and in use.
-func TestCopilotEditorRefusedSignsOut(t *testing.T) {
-	staleEditor(t, "hubot")
-	t.Cleanup(resetCopilotState)
-	copilotLapsedMu.Lock()
-	copilotLapsedSeen = map[string]bool{}
-	copilotLapsedMu.Unlock()
-	p, ok := find(All(), "copilot")
-	if !ok {
-		t.Fatal("no copilot")
-	}
-	if _, err := p.Fetch(context.Background()); err == nil {
-		t.Fatal("no error")
-	}
-	if l := copilotLapsedOf(t, "octocat"); l != copilotLapsedText {
-		t.Fatalf("refused, the editors' account reads %q", l)
-	}
-	if err := addCopilotLogin("octocat", "Business", "gho_magpie", ""); err != nil {
-		t.Fatal(err)
-	}
-	if l := copilotLapsedOf(t, "octocat"); l != "" {
-		t.Fatalf("signed in again, the account reads %q", l)
-	}
-	p, _ = find(All(), "copilot")
-	if _, err := p.Fetch(context.Background()); err != nil {
-		t.Fatalf("with chongyun's sign-in: %v", err)
-	}
-}
 
 // The account's allowance read is GitHub's answer too: 401 there, nothing
 // in its place, signs it out and says so on its row; a 503 doesn't; read
@@ -292,68 +239,3 @@ func TestCopilotUsageRefusedSignsOut(t *testing.T) {
 	}
 }
 
-// The Copilot CLI's own sign-in revoked (401 from GitHub): its account is
-// signed out, and signed in again from magpie the new token is kept and
-// used in its place, the account listed once.
-func TestCopilotCLIRefusedSignsOut(t *testing.T) {
-	home := signIn(t)
-	os.Remove(filepath.Join(home, ".config", "github-copilot", "apps.json"))
-	cli := filepath.Join(home, "copilot-home")
-	t.Setenv("COPILOT_HOME", cli)
-	os.MkdirAll(cli, 0o700)
-	os.WriteFile(filepath.Join(cli, "config.json"), []byte(`{"lastLoggedInUser":{"host":"https://github.com","login":"octocat"},"copilotTokens":{"https://github.com:octocat":"gho_cli"}}`), 0o600)
-	var refused atomic.Bool
-	user := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Authorization") == "token gho_cli" && refused.Load() {
-			w.WriteHeader(401)
-			w.Write([]byte(`{"message":"Bad credentials"}`))
-			return
-		}
-		json.NewEncoder(w).Encode(map[string]any{"endpoints": map[string]string{"api": "https://api.githubcopilot.com"}})
-	}))
-	defer user.Close()
-	exchange := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(map[string]any{"token": "tid", "expires_at": time.Now().Add(time.Hour).Unix()})
-	}))
-	defer exchange.Close()
-	oldUser, oldToken := CopilotUserURL, CopilotTokenURL
-	CopilotUserURL, CopilotTokenURL = user.URL, exchange.URL
-	defer func() { CopilotUserURL, CopilotTokenURL = oldUser, oldToken }()
-	resetCopilotState()
-	t.Cleanup(resetCopilotState)
-
-	if err := copilotTrade(t, "octocat"); err != nil {
-		t.Fatal(err)
-	}
-	refused.Store(true)
-	if err := copilotTrade(t, "octocat"); err == nil {
-		t.Fatal("refused: no error")
-	}
-	if l := copilotLapsedOf(t, "octocat"); l != copilotLapsedText {
-		t.Fatalf("refused, the CLI's account reads %q", l)
-	}
-	// a restart forgets the refusal; the sign-in asks GitHub again
-	resetCopilotState()
-	copilotProbeEditor(context.Background(), "octocat", "")
-	if err := addCopilotLogin("octocat", "Pro", "gho_magpie", ""); err != nil {
-		t.Fatal(err)
-	}
-	if l := copilotLapsedOf(t, "octocat"); l != "" {
-		t.Fatalf("signed in again, the account reads %q", l)
-	}
-	n := 0
-	for _, c := range copilotLogins(copilotConfigDir()) {
-		if strings.EqualFold(c.User, "octocat") {
-			n++
-			if c.app.Token != "gho_magpie" {
-				t.Fatalf("signed in again, the account sends %q", c.app.Token)
-			}
-		}
-	}
-	if n != 1 {
-		t.Fatalf("octocat listed %d times", n)
-	}
-	if err := copilotTrade(t, "octocat"); err != nil {
-		t.Fatalf("the new sign-in: %v", err)
-	}
-}

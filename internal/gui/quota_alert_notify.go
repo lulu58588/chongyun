@@ -166,7 +166,7 @@ func (h *host) watchAlerts() {
 		if s := settings.Load(); s.UsageAlert > 0 || s.BalanceAlert > 0 || s.ResetReminder > 0 || s.TurnDoneAlert > 0 {
 			go n.allowed()
 		}
-		// an agent's turn done, past the length set (itieniu on X)
+		// an agent's turn done, past the length set (itieniu 报告)
 		gateway.TurnDone = func(t gateway.TurnEnd) {
 			title, body := turnDoneText(trayLang(settings.Load().Lang, systemLang), agentName(t.Agent), t)
 			n.sendAs(turnNotice, title, body)

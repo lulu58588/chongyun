@@ -15,7 +15,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/usage"
 )
 
-// Sorghum on Discord: a magpie with another computer's magpie as its
+// Sorghum 报告: a magpie with another computer's magpie as its
 // provider counts the calls it makes there at what that magpie counts
 // them at — the price its user set for the model by hand — so the two
 // Usage pages give one cost. A price this magpie's user set for the model

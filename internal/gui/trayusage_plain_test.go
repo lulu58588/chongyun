@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// Settings can turn the menu bar's logos off (Jevin on Discord: the small
+// Settings can turn the menu bar's logos off (Jevin 报告: the small
 // logos make it look worse): each cell is then its windows alone, with no
 // logo nor letter to draw, the rows as they were.
 func TestTrayPlain(t *testing.T) {

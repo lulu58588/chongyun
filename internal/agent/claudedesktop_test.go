@@ -466,7 +466,7 @@ func TestClaudeDesktopTiers(t *testing.T) {
 	}
 }
 
-// Kilig on Discord: Claude Desktop from its setup.exe on Windows 10 LTSC
+// Kilig 报告: Claude Desktop from its setup.exe on Windows 10 LTSC
 // runs as an MSIX package, its data in
 // %LOCALAPPDATA%\Packages\Claude_<publisher>\LocalCache\Roaming\Claude and
 // nothing in %APPDATA%\Claude. It is detected, and magpie's switch writes
@@ -587,7 +587,7 @@ func TestClaudeDesktopMSIXStashBefore(t *testing.T) {
 	}
 }
 
-// dumplings on Discord: Desktop 2.31226.0 from its MSIX on Windows runs in
+// dumplings 报告: Desktop 2.31226.0 from its MSIX on Windows runs in
 // the real %LOCALAPPDATA%\Claude-3p (its "Local State" there is the newest),
 // and the package's LocalCache copy, which magpie wrote too, is emptied.
 // Desktop is on magpie and the card doesn't say it was changed; the copy
@@ -660,7 +660,7 @@ func TestClaudeDesktopMSIXChecksTheFoldersDesktopRuns(t *testing.T) {
 
 // Claude-3p is a userData of its own, so Desktop on magpie started in the
 // system's language, not the one picked signed in with Anthropic (memory
-// and Osal on Discord: Chinese gone). The language is carried into
+// and Osal 报告: Chinese gone). The language is carried into
 // Claude-3p's config.json, nothing else of Claude's is, and off takes the
 // file magpie made for it away again.
 func TestClaudeDesktopCarriesTheLanguage(t *testing.T) {

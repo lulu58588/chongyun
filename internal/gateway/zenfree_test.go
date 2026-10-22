@@ -210,7 +210,7 @@ func TestZenFreeOnlyFreeModels(t *testing.T) {
 }
 
 // Zen's free models whose ids don't end in -free are asked as OpenCode
-// asks too (361 on Discord: big-pickle answered 403 FreeTierError): one
+// asks too (361 报告: big-pickle answered 403 FreeTierError): one
 // known without the catalog, and one models.dev's opencode prices at
 // nothing; one it prices is not.
 func TestZenFreeZeroCostModels(t *testing.T) {

@@ -24,7 +24,7 @@ func TestCleanOrigins(t *testing.T) {
 }
 
 // A browser extension's page is listed by its origin, as the browser
-// sends it (#1051, SkyAerope on Discord: chrome-extension://<id> couldn't
+// sends it (#1051, SkyAerope 报告: chrome-extension://<id> couldn't
 // be added): Chromium's id of 32 letters a–p, Firefox's and Safari's
 // UUID, however the user cased it or with a trailing "/". A bare scheme,
 // a wildcard, an id that browser never gives, a path or a port is refused.

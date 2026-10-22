@@ -19,7 +19,7 @@ import (
 // magpie's image recognition, the model that describes images to a model
 // that can't see them (seer: Settings › Models › Image recognition, else
 // AutoVision's), is also an MCP server of its own beside the web search's
-// (JonahFu on X), so an agent on a model that can't see, or any agent at
+// (JonahFu 报告), so an agent on a model that can't see, or any agent at
 // all, can mount it as an analyze_image tool: Streamable HTTP at
 // VisionMCPPath, served and guarded as SearchMCPPath is (serveMCP), a
 // gateway key's limit holding each look (reserveFor).

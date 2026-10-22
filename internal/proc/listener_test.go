@@ -65,23 +65,23 @@ func evalPath(p string) string {
 // every name it can take while it still runs is magpie's.
 func TestIsMagpie(t *testing.T) {
 	for path, want := range map[string]bool{
-		"/Applications/Chongyun.app/Contents/MacOS/magpie": true,
-		"/usr/local/bin/magpie":                          true,
-		`C:\Users\u\AppData\Local\chongyun\magpie.exe`:     true,
-		`C:\Users\u\AppData\Local\chongyun\magpie.exe.old`: true,
+		"/Applications/Chongyun.app/Contents/MacOS/chongyun": true,
+		"/usr/local/bin/chongyun":                          true,
+		`C:\Users\u\AppData\Local\chongyun\chongyun.exe`:     true,
+		`C:\Users\u\AppData\Local\chongyun\chongyun.exe.old`: true,
 		// an update that finds .old still held leaves the running exe at
 		// .old-2, the name it holds the gateway port under
-		`C:\Users\u\AppData\Local\chongyun\magpie.exe.old-2`: true,
-		`C:\Users\u\AppData\Local\chongyun\magpie.exe.old-3`: true,
-		"/home/u/magpie.old-2":                             true,
+		`C:\Users\u\AppData\Local\chongyun\chongyun.exe.old-2`: true,
+		`C:\Users\u\AppData\Local\chongyun\chongyun.exe.old-3`: true,
+		"/home/u/chongyun.old-2":                             true,
 		"/home/u/dial.old-4":                               true,
 		// the numbered suffix is an update's, not another program's
 		`C:\Users\u\other-server.old-2`:   false,
-		`C:\Users\u\magpie.old-backup`:    false,
+		`C:\Users\u\chongyun.old-backup`:    false,
 		"/home/u/.local/bin/dial":         true,
-		"/opt/magpie-dev":                 true,
+		"/opt/chongyun-dev":                 true,
 		"/usr/bin/python3":                false,
-		"/usr/bin/magpies":                false,
+		"/usr/bin/chongyuns":                false,
 		"/tmp/other-server":               false,
 		`C:\Windows\System32\svchost.exe`: false,
 		"":                                false,
@@ -103,7 +103,7 @@ func TestIsForwarder(t *testing.T) {
 		`C:\Windows\System32\wslrelay.exe`:                                true,
 		"/opt/homebrew/bin/limactl":                                       true,
 		"/usr/libexec/podman/gvproxy":                                     true,
-		"/Applications/Chongyun.app/Contents/MacOS/magpie":                  false,
+		"/Applications/Chongyun.app/Contents/MacOS/chongyun":                  false,
 		"/usr/bin/python3":                                                false,
 		"/tmp/other-server":                                               false,
 		"":                                                                false,

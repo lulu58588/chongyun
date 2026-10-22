@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A masking rule is edited in place (nf1qaz2w on Discord: 自定义脱敏规则现在
+// A masking rule is edited in place (nf1qaz2w 报告: 自定义脱敏规则现在
 // 只有移除，能否增加一个编辑功能): each rule's row has Edit beside Remove.
 // Edit opens the rule in its own row, where it stands, with its name, prefix
 // or regex and what it matches filled in, the fields on a line under its

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A routing group made from a model is added (悠悠哥 on Discord: in a small
+// A routing group made from a model is added (悠悠哥 报告: in a small
 // window, the new group "Hy4 preview" of its one model, Hy4 preview from
 // WorkBuddy, did nothing on Add). A group opened from a model — by the
 // picker's or the provider editor's "Make a routing group of it", or the

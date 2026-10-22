@@ -49,7 +49,7 @@ func TestProviderSaveLocalPresetAtItsURLs(t *testing.T) {
 			t.Fatalf("%s at %q %q %q", c.id, moved.Chat, moved.Responses, moved.Anthropic)
 		}
 		// oMLX's and Ollama's decision API is the same server's, so it moves
-		// too (#1641; Nanka on Discord)
+		// too (#1641; Nanka 报告)
 		if moved.Decide != c.decide {
 			t.Fatalf("%s decides at %q, want %q", c.id, moved.Decide, c.decide)
 		}

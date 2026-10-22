@@ -27,7 +27,7 @@ func claudeCloudHome(t *testing.T, settings string) (home, path string, parse fu
 }
 
 // claudeClouded is each settings.json of a Claude Code on a cloud, as jw1dev
-// on X had Bedrock: the switch on beside the cloud's own variables, and an
+// 报告 had Bedrock: the switch on beside the cloud's own variables, and an
 // endpoint and Bedrock main model of the user's own for magpie to give back.
 var claudeClouded = []struct {
 	name, settings, key, raw string
@@ -45,7 +45,7 @@ var claudeClouded = []struct {
 		"CLAUDE_CODE_USE_FOUNDRY", `"yes"`, []string{"ANTHROPIC_FOUNDRY_RESOURCE", "ANTHROPIC_FOUNDRY_API_KEY"}},
 }
 
-// jw1dev on X: magpie wired Claude Code (ANTHROPIC_BASE_URL and its model)
+// jw1dev 报告: magpie wired Claude Code (ANTHROPIC_BASE_URL and its model)
 // while CLAUDE_CODE_USE_BEDROCK=1 stayed in the same env, so Claude Code
 // went on to Bedrock, which refused magpie's model, and magpie showed
 // nothing wrong. Routed through magpie, the switch is out and the cloud's

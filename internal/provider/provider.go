@@ -21,7 +21,6 @@ import (
 	"regexp"
 	"slices"
 	"strings"
-	"sync"
 	"sync/atomic"
 
 	"github.com/lulu58588/chongyun/internal/appdir"
@@ -167,7 +166,7 @@ type Provider struct {
 	// as it takes.
 	QueueWait int `json:"queueWait,omitempty"`
 	// MaxRPM is how many requests a minute each of its keys or accounts
-	// sends the vendor, over a rolling 60 seconds (coeo91 on Discord:
+	// sends the vendor, over a rolling 60 seconds (coeo91 报告:
 	// OpenRouter's free models take 20 a minute, which a limit at once
 	// can't keep to); one more waits for room (see RPMLimit). 0 is no
 	// limit.
@@ -260,8 +259,8 @@ type Provider struct {
 	PassUserAgent bool `json:"passUserAgent,omitempty"`
 
 	// PinUpstream, on the Cline API, has its DeepSeek models answered only
-	// by DeepSeek's own API (White Immortal on Discord) and its GLM models
-	// only by Z.ai's (sdytman on Discord): Cline routes a model through an
+	// by DeepSeek's own API (White Immortal 报告) and its GLM models
+	// only by Z.ai's (sdytman 报告): Cline routes a model through an
 	// AI gateway that may serve it from any host, and the maker's own
 	// keeps its prompt cache. See ClinePin.
 	PinUpstream bool `json:"pinUpstream,omitempty"`
@@ -269,7 +268,7 @@ type Provider struct {
 	// AuthHeader is which header the key goes in on a third-party
 	// Anthropic API, which is sent both x-api-key and Authorization:
 	// Bearer by default (AuthBoth). A vendor that refuses the two together
-	// (Aloha on Discord: "x-api-key 和 Authorization 不可以同时存在") is
+	// (Aloha 报告: "x-api-key 和 Authorization 不可以同时存在") is
 	// sent one, AuthXAPIKey or AuthBearer: picked in the editor, or
 	// learned from that refusal (RetryOneAuth). Anthropic's, Bedrock's and
 	// Azure's own APIs, which take x-api-key alone, ignore it.
@@ -278,7 +277,7 @@ type Provider struct {
 	// Unredacted has requests to a provider on this machine or the local
 	// network (Ollama, LM Studio, a vLLM box) go as the agent wrote them,
 	// unmasked by Settings' redaction, which keeps secrets from vendors
-	// (lc on Discord). It is the user's word, not the address's: a relay
+	// (lc 报告). It is the user's word, not the address's: a relay
 	// run locally, or Ollama's cloud models, pass a request on to a vendor.
 	// See SkipsRedaction.
 	Unredacted bool `json:"unredacted,omitempty"`
@@ -314,7 +313,7 @@ type Provider struct {
 	AccountCaps map[string]int `json:"accountCaps,omitempty"`
 	// AccountWindowCaps is, for a subscription, the share of each usage
 	// window an account is used to at most where the user set one for that
-	// window apart (willz on Discord), by the account's name in lower case
+	// window apart (willz 报告), by the account's name in lower case
 	// and then the window's WindowCapID: 1–99, or 100 for none on it. A
 	// window not in it takes the account's AccountCaps.
 	AccountWindowCaps map[string]map[string]int `json:"accountWindowCaps,omitempty"`
@@ -372,7 +371,7 @@ type Provider struct {
 	// Delisted are picks the provider's list stopped listing (dropGonePicks):
 	// out of Models, so not served, until a list has them again, when they
 	// go back among the picks (relistPicks). A plugin's list shrinks for a
-	// while and comes back (多喝热水 on Discord: Our Free Model lists its
+	// while and comes back (多喝热水 报告: Our Free Model lists its
 	// account channels' models only once its service has read them after a
 	// restart, and a free pool it finds down leaves its list until it is
 	// up), and the user's picks came back with it no more. Every save keeps
@@ -583,15 +582,7 @@ func store(f file) error {
 func All() []Provider {
 	held := heldOf("all", allProviders)
 	out := make([]Provider, 0, len(held))
-	// asked once, from the settings a held look has read already: asked for
-	// each account, settings.json was parsed for every account of every
-	// model's price (agent.magpieModels, the GUI's drift every 15s and dsh's
-	// round every 30s), most of an idle magpie's CPU (xsw on Discord)
-	off := sync.OnceValue(func() bool { return settings.AccountDiscoveryOffIn(heldSettings()) })
 	for _, p := range held {
-		if p.Account != nil && off() {
-			continue
-		}
 		out = append(out, p.clone()) // callers change theirs, Keys[i] and Headers included
 	}
 	return out
@@ -749,7 +740,7 @@ func findIn(all []Provider, id string) (*Provider, error) {
 
 // readElsewhere says, for a provider not found, that this magpie reads its
 // files from another folder than the app's when XDG_CONFIG_HOME moves them
-// and the app's has some (蒙面人 on Discord: a terminal's magpie had no
+// and the app's has some (蒙面人 报告: a terminal's magpie had no
 // Antigravity, which the window showed signed in).
 func readElsewhere() string {
 	def := appdir.Redirected()
@@ -781,7 +772,7 @@ func Save(p Provider) error {
 	// an id stored already is the provider's, whatever it is: one put in
 	// providers.json by hand ("b.ai") was refused on every Save, so the
 	// editor could neither change it nor rename it to one that is right
-	// (01huadalang on Discord: 我不管改成什么都显示不能用 b.ai)
+	// (01huadalang 报告: 我不管改成什么都显示不能用 b.ai)
 	if p.ID == "" || p.ID != Slug(p.ID) && !stored(p.ID) {
 		return fmt.Errorf("provider id must be lowercase letters, digits and dashes, not %q", p.ID)
 	}
@@ -1285,7 +1276,7 @@ func normalize(p Provider) Provider {
 		}
 	}
 	// an oMLX, MLX-Serve or Ollama provider saved before its preset had
-	// System One (#1641; Nanka on Discord) asks it where its chat
+	// System One (#1641; Nanka 报告) asks it where its chat
 	// completions are, at whatever address it was given
 	if (p.Preset == OMLXPreset || p.Preset == MLXServePreset || p.Preset == "ollama" || p.Preset == "ollama-cloud") && p.Decide == "" && p.Chat != "" {
 		p.Decide = p.Chat
@@ -1522,7 +1513,7 @@ func (p Provider) ResponsesTellsCache() bool {
 // MessagesFirst: a Claude model where the provider has Anthropic's Messages
 // API, which is best asked there though its Chat or Responses API serves
 // it too — a relay that serves both drops cache_control on Chat, so every
-// turn was billed uncached (#997; ReturnTrue on Discord: 0% cache hits
+// turn was billed uncached (#997; ReturnTrue 报告: 0% cache hits
 // until the relay's OpenAI URL was left empty), and thinking with it.
 func (p Provider) MessagesFirst(model string) bool {
 	return p.Anthropic != "" && claudeModel(model)
@@ -1651,7 +1642,7 @@ func (p Provider) IsBedrock() bool {
 }
 
 // IsBedrockMantle reports whether the provider is Amazon Bedrock's Mantle
-// endpoint (@marktoown on X): made from its preset, or added by its
+// endpoint (@marktoown 报告): made from its preset, or added by its
 // address at bedrock-mantle.{region}.api.aws.
 func (p Provider) IsBedrockMantle() bool {
 	return p.Preset == "bedrock-mantle" || mantleHost(p.Host())

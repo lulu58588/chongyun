@@ -235,7 +235,7 @@ func TestSync(t *testing.T) {
 		t.Fatalf("b's settings: %+v", s)
 	}
 	// nor does a's menu bar: what shows beside the icon is b's own (yoooo
-	// on Discord)
+	// 报告)
 	if s := settings.Load(); len(s.TrayUsages) != 0 || s.TrayUsage != "" || s.TrayUsageEvery == 5 || s.TrayNoLogos || s.TrayNoBird || s.TrayPace || s.TrayNoCost {
 		t.Fatalf("b's menu bar: %+v", s)
 	}
@@ -376,7 +376,7 @@ func TestSyncNutstore(t *testing.T) {
 }
 
 // The order the providers were put in on the Providers tab (#499) goes
-// with them (ARNO on Discord: 发现webdav同步的时候没有同步provider的顺序):
+// with them (ARNO 报告: 发现webdav同步的时候没有同步provider的顺序):
 // b joins and lists them as a does; b arranges them again and a follows;
 // a moving one alone is a change that syncs.
 func TestSyncProviderOrder(t *testing.T) {
@@ -639,7 +639,7 @@ func TestConfigurePassword(t *testing.T) {
 
 // Sync brings the plugins from npm to the other computer, which installs
 // them, and its status names the subscriptions it brought the settings of
-// with no account there (yapechan on Discord: after a WebDAV sync no
+// with no account there (yapechan 报告: after a WebDAV sync no
 // providers showed, and nothing said why). A plugin taken off one computer
 // stays on the others.
 func TestSyncPluginsAndSignIn(t *testing.T) {

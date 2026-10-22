@@ -54,7 +54,7 @@ func TestClaudeCompactWindow(t *testing.T) {
 		t.Fatalf("back to the working window: %q", compact())
 	}
 	// a Claude model runs to its whole window, as Anthropic runs a [1m]
-	// one (Max on Discord: a [1m] model stopped at 272K), and another
+	// one (Max 报告: a [1m] model stopped at 272K), and another
 	// vendor's is capped again after it
 	must(a.Field("model").Set("v/claude-opus-5-5[1m]"))
 	if compact() != "" {
@@ -273,7 +273,7 @@ func TestClaudeGroupCompactWindow(t *testing.T) {
 // A Claude model runs to its whole window whatever name its provider gives
 // it: Amazon Bedrock names Claude Opus us.anthropic.claude-…, which
 // magpie's [1m] Claude Opus there was not taken for, so Claude Code was
-// held to 272K on a 1M Claude model (划船不靠桨 on Discord), while a group
+// held to 272K on a 1M Claude model (划船不靠桨 报告), while a group
 // of the same model ran to 1M (provider.ClaudeGroup). Another vendor's 1M
 // model on the same provider is still compacted at the working window.
 func TestClaudeCompactWindowBedrockClaude(t *testing.T) {

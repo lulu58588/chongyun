@@ -98,7 +98,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       await page.locator(".rt-groups > .rt-group").nth(2).waitFor();
       assert.deepEqual(await listed(page), ["one", "two", "auto-m"]);
       // a stack of logos is held whole in its handle, in its card, clear of
-      // the name (ARNO on Discord: past the card's left edge, over the name)
+      // the name (ARNO 报告: past the card's left edge, over the name)
       const fit = await page.locator('.rt-group[data-id="auto-m"]').evaluate((r) => {
         const b = (e) => e.getBoundingClientRect(), row = b(r), h = b(r.querySelector(".rt-ghandle")), st = b(r.querySelector(".ic-stack")), m = b(r.querySelector(".main"));
         return { stackIn: st.left >= h.left - 0.5 && st.right <= h.right + 0.5, inRow: h.left >= row.left, clear: h.right <= m.left };

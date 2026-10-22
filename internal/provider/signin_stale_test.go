@@ -13,7 +13,7 @@ func TestClaudeSignInOverStaleCredentials(t *testing.T) {
 	shellFakes(t)
 	home := claudeHome(t)
 	noAnthropic(t)
-	cred := claudeSignIn(t, home, time.Now().Add(time.Hour))
+	cred := claudeCodeSignIn(t, home, time.Now().Add(time.Hour))
 	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{
 		"emailAddress": "old@example.com", "organizationUuid": "o-old"}})
 	// Claude Code is signed out until the new account's credentials are there
@@ -21,7 +21,6 @@ func TestClaudeSignInOverStaleCredentials(t *testing.T) {
 		"if grep -q sk-ant-ort01-new "+cred+"; then\n"+
 			`echo '{"loggedIn": true, "email": "new@example.com", "subscriptionType": "max"}'`+"\nelse\n"+
 			`echo '{"loggedIn": false, "authMethod": "none"}'`+"\nfi\nexit 0", true)
-	forgetClaudeStatus()
 	if _, ok := find(All(), "claude"); ok {
 		t.Fatal("signed-out account listed")
 	}

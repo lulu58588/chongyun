@@ -12,7 +12,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// Aloha on Discord: a relay answering 401 "鉴权 header， x-api-key 和
+// Aloha 报告: a relay answering 401 "鉴权 header， x-api-key 和
 // Authorization 不可以同时存在" to the two key headers magpie sends a
 // third-party Anthropic API. The agent's turn goes through: asked again with
 // x-api-key alone, the same body, and the provider keeps x-api-key, so the

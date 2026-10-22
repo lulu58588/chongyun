@@ -28,7 +28,7 @@ import (
 // two of its providers' models of one name are told apart here too.
 // Provider in model names Off here names each by its name there alone
 // (display_name, catalog.Model's Plain), whatever that magpie's own
-// setting put after it (ARNO on Discord).
+// setting put after it (ARNO 报告).
 
 // Its video models come the same way (VideomakersHeader), marked "kind":
 // "video", and go on to its videos API (#545).
@@ -36,7 +36,7 @@ import (
 // Its list also tells what each model costs there (PricesHeader): the
 // price the other magpie counts its usage at — what its user set for the
 // model by hand, else its provider's list price, at that provider's price
-// rate — so its calls cost the same here (Sorghum on Discord). It is this
+// rate — so its calls cost the same here (Sorghum 报告). It is this
 // provider's list price for the model: a price set here for it still comes
 // first, as one set for any provider's list price does. A magpie tells it
 // only to its own computer and to one sharing it with a gateway key, and

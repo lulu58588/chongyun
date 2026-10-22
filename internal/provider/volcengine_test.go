@@ -73,11 +73,6 @@ func TestVolcengineArkPlans(t *testing.T) {
 	if got := p.planModels(nil); len(got) != 0 {
 		t.Fatalf("pay as you go preset models: %+v", got)
 	}
-	// an entry imported from another app at an Ark endpoint is known as Ark
-	im, _ := imported("Ark", "k", endpoints{chat: "https://ark.cn-beijing.volces.com/api/plan/v3"}, nil)
-	if im.Icon != "volcengine-color" || im.Chat != "https://ark.cn-beijing.volces.com/api/plan/v3" {
-		t.Fatalf("imported: %+v", im)
-	}
 }
 
 func TestVolcengineModelLists(t *testing.T) {

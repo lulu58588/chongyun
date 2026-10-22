@@ -8,7 +8,7 @@ import (
 
 func near(a, b float64) bool { return math.Abs(a-b) < 1e-9 }
 
-// PAMI on Discord: OpenAI bills gpt-6-astra over 272K input at 2× input and
+// PAMI 报告: OpenAI bills gpt-6-astra over 272K input at 2× input and
 // cache, 1.5× output, the whole request; models.dev lists it as a tier of
 // type "context". The tier is read, the whole call billed at it once its
 // input with the cached tokens in it is over the size, and not at it
@@ -57,7 +57,7 @@ func TestPriceTiers(t *testing.T) {
 
 // Anthropic bills a 1-hour cache write at 2× input and a 5-minute one at
 // 1.25×: a call's 1-hour writes at theirs, the price's own else the
-// 5-minute one (PAMI on Discord: not 2× input for a model with no 1-hour
+// 5-minute one (PAMI 报告: not 2× input for a model with no 1-hour
 // writes at all), and a call from before the split was kept (none for 1
 // hour) as before. A Claude model's price is given 2× input.
 func TestCostSplit(t *testing.T) {

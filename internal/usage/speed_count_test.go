@@ -8,7 +8,7 @@ import (
 )
 
 // A group's speed says how many replies it is of, and a group none of whose
-// replies was measured says the least they wrote at (Fallmonkey on Discord:
+// replies was measured says the least they wrote at (Fallmonkey 报告:
 // gpt-6.1-sol showed a tok/s from the one reply of 260 that called no tool,
 // beside "260 requests", while Claude Code, with dozens of floors on the
 // Requests tab, showed none). Breakdown and the sums count the measured
@@ -77,7 +77,7 @@ func TestGroupSpeedSaysHowManyRepliesItIsOf(t *testing.T) {
 	}
 }
 
-// Codex rows tell a floor too (Fallmonkey on Discord): a call in a turn of
+// Codex rows tell a floor too (Fallmonkey 报告): a call in a turn of
 // several, timed from what asked for it, by the same rule as Claude Code's;
 // a turn of one call that reasoned, whose first text isn't in the file, by
 // its answer over the time after its first token, never its whole output
@@ -122,7 +122,7 @@ func TestCodexRowsTellAFloor(t *testing.T) {
 	}
 }
 
-// Fallmonkey on Discord: an 11-token astra answer over 2.75 s, its window
+// Fallmonkey 报告: an 11-token astra answer over 2.75 s, its window
 // after the first token too short, read ≥4 tok/s over the whole turn, while
 // an 815-token Claude Code reply, the same formula, told nothing. A Codex
 // whole-turn floor has the same 1,000-token gate.
@@ -145,7 +145,7 @@ func TestCodexWholeTurnFloorNeedsAThousandTokens(t *testing.T) {
 	}
 }
 
-// Fallmonkey on Discord: a Codex turn of one call whose first token came at
+// Fallmonkey 报告: a Codex turn of one call whose first token came at
 // 6.8 s, the model working, and its 380 tokens 0.2 s later in one push read
 // 1,900 tok/s. A Codex turn of one call from its session file is measured
 // only when the window after its first token is a second or more and its

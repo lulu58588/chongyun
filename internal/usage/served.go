@@ -119,7 +119,7 @@ var grokBuild = regexp.MustCompile(`^grok-[0-9][0-9.]*(-build)(?:-|$)`)
 // with "-n" after it. Antigravity answers every level of gemini-3.8-flash
 // (-low, -medium, -high) with modelVersion gemini-3.8-flash-n, an id no
 // request can ask for (404) and fetchAvailableModels never lists, so it is
-// that model, not another one swapped in (dumplings on Discord). It holds
+// that model, not another one swapped in (dumplings 报告). It holds
 // for Gemini models only: gpt-5 answered as gpt-5-n is still a swap, as is
 // gemini-3.8-flash answered as gemini-3.8-flash-lite or gemini-3.7-flash-n.
 func GeminiServing(sent, served string) bool {
@@ -130,7 +130,7 @@ func GeminiServing(sent, served string) bool {
 
 // squash is a bare name without its separators, so a vendor that writes
 // the dots of a version as hyphens (Volcengine Ark: deepseek-v4.1-flash
-// answered as deepseek-v4-1-flash, vincentzhang on Discord) or underscores
+// answered as deepseek-v4-1-flash, vincentzhang 报告) or underscores
 // names the same model.
 var squash = strings.NewReplacer(".", "", "-", "", "_", "", " ", "").Replace
 
@@ -146,7 +146,7 @@ func SameSpelled(sent, served string) bool {
 // (a remote magpie's "group/<id>", the one name only a magpie answers
 // to) and served the model its reply named: the member the group routed
 // the request to, which is the group doing its job, not the vendor
-// serving another model than asked (莫 on Discord: group/auto-… answered
+// serving another model than asked (莫 报告: group/auto-… answered
 // by deepseek/deepseek-v4.1-flash, marked a swap).
 func GroupRouted(sent, served string) bool {
 	return strings.TrimSpace(served) != "" && remoteGroup(strings.TrimSpace(sent))

@@ -8,7 +8,7 @@ import (
 // A Google sign-in (Antigravity, Gemini CLI) speaks Code Assist alone, an
 // API the gateway builds every request for in the account's envelope, so
 // a test had no request of its own to send: Test models was off and said
-// to ask the model from an agent (lc on Discord: Antigravity's test button
+// to ask the model from an agent (lc 报告: Antigravity's test button
 // was unusable while every other provider's worked). Its test is asked as
 // an agent's request is, by the gateway's own translator (TranslatedProbe),
 // the smallest "hi" in that envelope, read to the model's first word.

@@ -499,7 +499,7 @@ function renderUsage() {
       box.append(r);
     }
   };
-  // a client hidden from the Agents list (ikunbots on X: curl,
+  // a client hidden from the Agents list (ikunbots 报告: curl,
   // Go-http-client, python-httpx beside the agents in use) is left out of
   // it, and only of it: the totals, the chart and every share above still
   // count its calls. One line under the list says how many, and opens them.
@@ -636,7 +636,7 @@ try {
 // ("a click lists only theirs"), or a way in from elsewhere (the tray
 // panel's Open Usage, a route Routing sent here). They last while the
 // Requests are looked at, and go when the reader leaves them, for another
-// tab or page (TJHHHH on Discord: a click on Codex in the ranking had
+// tab or page (TJHHHH 报告: a click on Codex in the ranking had
 // every later visit list only Codex's requests). A filter picked in its
 // menu stays, as one picked in a Mac app's does.
 const ledLent = new Set();
@@ -885,7 +885,7 @@ function ledDetail(r, cols) {
   const protos = ledProtos(r);
   if (protos) add("Protocol", protos.from !== protos.to ? protos.from + " → " + protos.to : protos.to);
   // why the upstream said its reply ended, in its own words: a reply that
-  // ended too soon is told apart by it (蓝猫 on Discord)
+  // ended too soon is told apart by it (蓝猫 报告)
   add("Upstream stop reason", r.stop);
   // the provider an aggregator (OpenRouter …) said answered behind it
   add("Upstream provider", r.upstream);
@@ -1011,7 +1011,7 @@ function ledContentBox(c) {
 // the window's chart can also say how fast the replies came (#860)
 const LED_TREND = [...LED_METRICS, ["speed", "Speed"]];
 // "modelAt" is a model at the provider it went to, so one model's speed at
-// each provider is ranked side by side (inaction on Discord); "callerKey"
+// each provider is ranked side by side (inaction 报告); "callerKey"
 // the gateway key that made it, "none" for calls with none, offered while
 // the period has a key's calls (#2521)
 const LED_SPLITS = [["model", "Model"], ["modelAt", "Model · provider"], ["provider", "Provider"], ["agent", "Agent"], ["callerKey", "Gateway key"]];
@@ -1088,7 +1088,7 @@ function renderLedgerDash(l) {
   block("Tokens", fmtN(total), tokParts, "", ledNum(total));
   // a request is counted once, by how it ended: one a later try answered
   // is not a failure, and is counted beside them as answered on a retry
-  // (小一 on Discord). Each count is a button for its requests in the list.
+  // (小一 报告). Each count is a button for its requests in the list.
   const jump = (text, to, title) => {
     const b = el("button", "led-jump" + (to === "failed" ? " bad" : "") + (ledStatusOf() === to ? " on" : ""), text);
     b.type = "button";
@@ -1111,7 +1111,7 @@ function renderLedgerDash(l) {
   // how fast the streamed replies wrote, and how long they took to begin (#860):
   // the figure of more replies, its count beside it; the other under it; the
   // wait for the first token on a line of its own, with how many it is of
-  // (Fallmonkey on Discord)
+  // (Fallmonkey 报告)
   const gs = ledGroupSpeed(l);
   const ttft = ledTTFT(l) ? t("first token in {ms} on average", { ms: ledTook(ledTTFT(l)) }) + " · " + t(l.timed === 1 ? "{k} timed reply" : "{k} timed replies", { k: ledNum(l.timed) }) : t("no streamed replies timed");
   const speedCard = block("Output speed", gs ? gs.mainParts : "—", gs?.other ? line(gs.other) : null,
@@ -1393,7 +1393,7 @@ const LED_COLS = [
 // the tokens a reply was seen to write and the ms it took, as
 // usage.DecodeOf and routing/client.js's decodeOf tell them: one that reasoned
 // counts its answer from its first text, its reasoning written before
-// the stream showed any (tony on Discord); null when it tells no speed.
+// the stream showed any (tony 报告); null when it tells no speed.
 // A reply held back and let go in a burst at its end tells none (John on
 // Discord): its content came in under a quarter of its window (flow_ms),
 // or its answer at over 20 times the pace its reasoning came before it
@@ -1410,7 +1410,7 @@ const ledDecode = (r) => {
 };
 // a Codex turn of one call read from its session file, its first token
 // known: its window after the first token can be one network push, not the
-// writing (Fallmonkey on Discord: a first token at 6.8 s, the rest 0.2 s
+// writing (Fallmonkey 报告: a first token at 6.8 s, the rest 0.2 s
 // later), so it tells a speed only over a second or more and 100 tokens or
 // more (usage.CodexWindowMs, CodexBodyTokens); else ledFloor_ tells the
 // least it wrote at over the whole turn
@@ -1431,13 +1431,13 @@ const ledRowSpeed = (r) => { const d = ledDecode(r); return d ? d.n / (d.w / 100
 // a call's time is from what asked for it, never from inside it. OpenCode's
 // isn't checked against real sessions, and tells none.
 // A Codex turn of one call that reasoned has its first token but not its
-// first text (Fallmonkey on Discord): its answer, its output less the
+// first text (Fallmonkey 报告): its answer, its output less the
 // reasoning, all came after the first token, so the answer over the time
 // after it is a floor of the answer's speed, when that time is a second or
 // more and the answer 100 tokens or more, as a measured one is. A Codex turn
 // of one call that tells neither tells its output over the whole turn, the
 // wait in it, by the same 1,000-token rule as any whole-time floor (Fallmonkey
-// on Discord: 11 tokens in 2.75 s read ≥4 tok/s). ledFloor_ says the tokens,
+// 报告: 11 tokens in 2.75 s read ≥4 tok/s). ledFloor_ says the tokens,
 // the ms, and which it is (answer, turn).
 const LED_FLOOR_AGENTS = new Set(["claude", "claude-desktop", "codex"]);
 const ledFloor_ = (r) => {
@@ -2633,7 +2633,7 @@ function renderSessChart(chart, st, used, ov, acts) {
 // by, and as wide as one may grow to take what is left over
 const SESS_WEEK = 20, SESS_WEEK_MAX = 24;
 
-// sessCalFit lays the calendar across its card (John on Discord: 这个活跃度怎么
+// sessCalFit lays the calendar across its card (John 报告: 这个活跃度怎么
 // 没有铺满全部宽度呢？): a range of a few months took a few hundred pixels of a
 // wide card and left the rest empty. The weeks before the range come in as
 // empty cells, GitHub's way, up to a year in all, and the cells grow a little

@@ -60,7 +60,7 @@ func (d *deepseekWindow) took() []int64 {
 // 706,784 tokens is refused by DeepSeek as too long, since its 1M window
 // counts the reply asked for: since #2355 passed max_completion_tokens on
 // as max_tokens, every such turn at the official DeepSeek member of a
-// group failed as "too long for its model" (molvqingtai on Discord). It
+// group failed as "too long for its model" (molvqingtai 报告). It
 // is asked again for the reply the window has left, and answers. Room
 // too small to be worth a reply still reaches the agent as the overflow.
 func TestDeepSeekReplyFitsTheWindowLeft(t *testing.T) {
@@ -141,7 +141,7 @@ func TestReplyLeft(t *testing.T) {
 // the model's, #1792). Told a 1M window, they compact only near it, and
 // a turn whose prompt and reply together pass it was refused, so Codex
 // stopped with "ran out of room in the model's context window" (da34,
-// Jeremy.Zhou on Discord). Each is asked again for what the window left.
+// Jeremy.Zhou 报告). Each is asked again for what the window left.
 func TestAnthropicReplyFitsTheWindowLeft(t *testing.T) {
 	fresh(t)
 	const window, prompt = 1000000, 970000

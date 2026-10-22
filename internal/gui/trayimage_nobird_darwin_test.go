@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-// Without the bird (settings.TrayNoBird, KevinXC on Discord: the icon takes
+// Without the bird (settings.TrayNoBird, KevinXC 报告: the icon takes
 // room in the menu bar) the cells are drawn alone: the image is the bird
 // and its gap narrower, and what is left is the cells as they were, from
 // the image's left edge.

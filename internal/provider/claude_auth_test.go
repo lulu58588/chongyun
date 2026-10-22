@@ -15,23 +15,26 @@ import (
 
 func claudeAuthFixture(t *testing.T, lapse string) (Provider, savedLogin) {
 	t.Helper()
-	testHome := claudeHome(t)
+	claudeHome(t)
 	noAnthropic(t)
 	t.Setenv("CLAUDE_CONFIG_DIR", "")
-	claudeSignIn(t, testHome, time.Now().Add(time.Hour))
-	writeFile(t, filepath.Join(testHome, ".claude.json"), map[string]any{
-		"oauthAccount": map[string]any{"emailAddress": "own@example.com"},
-	})
+	// Claude Code's own sign-in is not read any more: the accounts are the
+	// ones chongyun keeps, each of them in logins.json.
+	main := savedLogin{Agent: "claude", User: "main@example.com", On: true, Plan: "max", Seen: time.Now(),
+		Auth: mustJSONRaw(t, map[string]any{"claudeAiOauth": map[string]any{
+			"accessToken": "own-access", "refreshToken": "own-refresh",
+			"expiresAt": time.Now().Add(time.Hour).UnixMilli(), "subscriptionType": "max",
+		}})}
 	side := savedLogin{Agent: "claude", User: "side@example.com", On: true, Plan: "max", Seen: time.Now().Add(-time.Hour), Lapsed: lapse,
 		Auth: mustJSONRaw(t, map[string]any{"claudeAiOauth": map[string]any{
 			"accessToken": "old-access", "refreshToken": "old-refresh",
 			"expiresAt": time.Now().Add(time.Hour).UnixMilli(), "subscriptionType": "max",
 		}})}
-	writeFile(t, loginsPath(), []savedLogin{side})
+	writeFile(t, loginsPath(), []savedLogin{main, side})
 	forgetAccountCaches()
 	p, ok := find(All(), "claude")
 	if !ok {
-		t.Fatal("own Claude account missing")
+		t.Fatal("Claude account missing")
 	}
 	return p, side
 }
@@ -147,47 +150,27 @@ func TestClaudeClearedKeychainDoesNotFallBackToStaleFile(t *testing.T) {
 	}
 }
 
-// The account Claude Code itself is signed in to: read again with the same
-// sign-in after a moment it couldn't be read, it is not taken for gone;
-// refused, it stays so until Claude Code holds another credential.
-func TestClaudeOwnLoginLapsesOnlyForWhatHappened(t *testing.T) {
-	p, _ := claudeAuthFixture(t, "")
+// Claude Code's own sign-in is not read: the accounts chongyun serves are
+// the ones it keeps, whatever Claude Code happens to be signed in to.
+func TestClaudeCodeOwnSignInIsNotRead(t *testing.T) {
+	p, side := claudeAuthFixture(t, "")
+	users := map[string]bool{}
+	for _, l := range Logins("claude") {
+		users[l.User] = true
+	}
+	if !users["main@example.com"] || !users[side.User] {
+		t.Fatalf("the accounts chongyun keeps: %v", users)
+	}
+	// Claude Code's own sign-in is none of them, and its going away changes
+	// nothing: the accounts are chongyun's own
 	cred := filepath.Join(os.Getenv("HOME"), ".claude", ".credentials.json")
-	saved, err := os.ReadFile(cred)
-	if err != nil {
-		t.Fatal(err)
-	}
-	look := func() {
-		forgetClaudeCredential()
-		loginsMu.Lock()
-		loginsSeenAt.Store(0)
-		loginsMu.Unlock()
-		rememberLogins(true)
-	}
-	look()
 	os.Remove(cred)
-	look()
-	if err := os.WriteFile(cred, saved, 0o600); err != nil {
-		t.Fatal(err)
+	forgetAccountCaches()
+	if _, _, err := p.Account.Token(context.Background()); err != nil {
+		t.Fatalf("Claude Code's own sign-in is needed: %v", err)
 	}
-	look()
-	if got := claudeLapseOf("own@example.com"); got != "" {
-		t.Fatalf("read again unchanged, still lapsed: %q", got)
-	}
-
-	NoteClaudeSignInFailure("own@example.com", ClaudeLoginVersion("own@example.com"),
-		"Failed to authenticate: OAuth session expired and could not be refreshed")
-	look()
-	if _, _, err := p.Account.Token(context.Background()); err == nil || claudeLapseOf("own@example.com") == "" {
-		t.Fatalf("refused own login still run: %v", err)
-	}
-	writeFile(t, cred, map[string]any{"claudeAiOauth": map[string]any{
-		"accessToken": "signed-in-again", "refreshToken": "signed-in-again-refresh",
-		"expiresAt": time.Now().Add(time.Hour).UnixMilli(), "subscriptionType": "max",
-	}})
-	look()
-	if _, _, err := p.Account.Token(context.Background()); err != nil || claudeLapseOf("own@example.com") != "" {
-		t.Fatalf("signed in again, still refused: %v", err)
+	if p.Account.User != "main@example.com" {
+		t.Fatalf("the account served: %q", p.Account.User)
 	}
 }
 

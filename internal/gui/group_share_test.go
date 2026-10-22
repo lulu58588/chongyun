@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// laincatx on X: the Routing view's Copy to share answers the group as
+// laincatx 报告: the Routing view's Copy to share answers the group as
 // text with no key in it, and Import a group adds it back as a group of
 // the user's, saying what it left out; text that is no shared group is
 // refused in words.

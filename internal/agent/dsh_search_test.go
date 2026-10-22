@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// Packing1 on Discord: dsh through magpie alone, every web search failed
+// Packing1 报告: dsh through magpie alone, every web search failed
 // asking for DEEPSEEK_API_KEY — dsh's web-search-deepseek plugin signs its
 // own requests to DeepSeek. While dsh starts on a model of magpie's, the row
 // points at the gateway with magpie's key and that model; it goes again with
@@ -113,7 +113,7 @@ func TestDshSearchThroughGateway(t *testing.T) {
 	}
 }
 
-// 我只会玩单机 on Discord: with a searcher named under Settings › Web search
+// 我只会玩单机 报告: with a searcher named under Settings › Web search
 // (GPT-6 Luna), dsh's search row still asked the model dsh starts on, which
 // can't search by itself and asked the searcher in turn: two requests a
 // search, and a model that takes one call at a time timed out. The row

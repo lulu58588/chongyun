@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Settings › Models › Images (neighbads on X: a slow image endpoint needs
+// Settings › Models › Images (neighbads 报告: a slow image endpoint needs
 // longer than the 5 minutes drawing was given): Image generation timeout
 // is 5 min at first, 30 min saves imageTimeout 30 with the rest of the
 // settings kept and the page not moved by the click, and 5 min saves 5. A

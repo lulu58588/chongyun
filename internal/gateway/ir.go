@@ -184,7 +184,7 @@ type Request struct {
 	// Tier is the service_tier the client sent, as it sent it. It goes on
 	// as it is to a provider the user added by its address (OwnTier):
 	// a relay of theirs may serve Fast and Ultrafast where magpie can't
-	// tell (hsiangron on X: both were left out)
+	// tell (hsiangron 报告: both were left out)
 	Tier string
 	// OwnTier is set for such a provider (gateway.go, as each attempt is
 	// built); one that turns the field away is asked again without it
@@ -622,7 +622,7 @@ func (c *collector) finish() Result {
 	c.flush()
 	c.closeTool()
 	// a reply of tool calls ended "stop" (a relay's end_turn beside its
-	// tool_use blocks, 蓝猫 on Discord) is the client's to run the calls
+	// tool_use blocks, 蓝猫 报告) is the client's to run the calls
 	// of: told it stopped, an agent ends its turn there
 	if c.res.Stop == "" || c.res.Stop == "stop" {
 		c.res.Stop = "stop"

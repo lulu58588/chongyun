@@ -1823,7 +1823,7 @@ func priceOf(s settings.Settings, model string) (catalog.Price, bool) {
 	}
 	// Grok Build's fast variant (grok-4.7-build-fast), which only the Grok
 	// CLI names, at twice its model's price, as a Grok account's call on it
-	// is (TradingLife on Discord)
+	// is (TradingLife 报告)
 	if base, ok := provider.GrokBuildFast(bare); ok {
 		if pr, ok := catalog.PricedBy(makers(base), base); ok {
 			return pr.Times(provider.GrokFastTimes), true

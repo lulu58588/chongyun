@@ -23,7 +23,7 @@ func dashScopeRefuse(body []byte) (int, string) {
 }
 
 // A group's classifier asks its model for one JSON body; on the Qwen
-// Token Plan a model that thinks turns that away (ZekeXiao on X), so it is
+// Token Plan a model that thinks turns that away (ZekeXiao 报告), so it is
 // asked streamed and its answer given back whole.
 func TestDashScopeWholeAskedStreamed(t *testing.T) {
 	f := &fake{t: t, refuse: dashScopeRefuse, reply: sse(

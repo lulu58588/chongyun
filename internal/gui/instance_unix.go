@@ -22,7 +22,7 @@ var heldInstance *os.File
 // whose path has its version in it — shares one: the Mac reopening the
 // copy the user ran after a shutdown while Open at login starts the one
 // it was turned on for, or a copy run translocated from Downloads, put
-// two birds in the menu bar (inaction on Discord).
+// two birds in the menu bar (inaction 报告).
 func instanceLock(dir, exe string) string {
 	if r, err := filepath.EvalSymlinks(exe); err == nil {
 		exe = r
@@ -44,7 +44,7 @@ func installedCopy(exe string) bool {
 // holdInstance takes the lock at path for this process, or reports that
 // another magpie holds it. It is a flock, which the system lets go when
 // its holder ends however it ends, so a Mac shut down with magpie running
-// leaves nothing behind that looks held (Crispin on Discord).
+// leaves nothing behind that looks held (Crispin 报告).
 func holdInstance(path string) (bool, error) {
 	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 		return false, err

@@ -42,7 +42,7 @@ func claudeCodeOut(t *testing.T, args ...string) (string, error) {
 }
 
 // `chongyun claude-code install --yes` on a machine with no Claude Code (a
-// container, Jorben on Discord) downloads the release's build, says from
+// container, Jorben 报告) downloads the release's build, says from
 // where and to where, and the subscription then runs it.
 func TestClaudeCodeInstallDownloadsTheRelease(t *testing.T) {
 	platform, err := claudecode.Platform(runtime.GOOS, runtime.GOARCH, false)

@@ -33,7 +33,6 @@ import (
 	"github.com/lulu58588/chongyun/internal/lastgood"
 	"github.com/lulu58588/chongyun/internal/netproxy"
 	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
 	"github.com/lulu58588/chongyun/internal/steady"
 )
 
@@ -81,6 +80,12 @@ type savedLogin struct {
 	// On puts the account in use beside the one the agent is signed in to:
 	// requests go to it when that one is out of quota (see logins_on.go).
 	On bool `json:"on,omitempty"`
+	// Active is the account chongyun signed the agent in to: the one the
+	// agent runs on, and the one the gateway goes to first. It is kept here,
+	// in chongyun's own logins.json, rather than read from the agent's own
+	// store, which chongyun never reads: another tool's sign-in is not
+	// chongyun's to take over.
+	Active bool `json:"active,omitempty"`
 	// Auth is the agent's credential blob as the agent stores it: Codex's
 	// auth.json, Claude Code's keychain item / .credentials.json.
 	Auth json.RawMessage `json:"auth"`
@@ -131,18 +136,11 @@ var (
 		Path:   func() string { return loginsPath() + ".lock" },
 		Locked: func() { filememo.Look(loginsPath()) },
 	}
-	// loginsSeenAt is when rememberLogins last looked at the agents'
-	// sign-ins (UnixNano), 0 for not since this magpie started or since
-	// a change made the next look due at once. It is read without
-	// loginsMu, so a look not yet due takes no lock (#1665).
+	// loginsSeenAt is when the accounts were last changed (UnixNano), 0 for
+	// not since this magpie started. It is read without loginsMu, so a look
+	// not yet due takes no lock (#1665).
 	loginsSeenAt atomic.Int64
 )
-
-// loginsLookDue says the 30 seconds since the last look are up.
-func loginsLookDue() bool {
-	at := loginsSeenAt.Load()
-	return at == 0 || time.Since(time.Unix(0, at)) >= 30*time.Second
-}
 
 // switchable agents: those whose sign-in magpie can save and put back.
 var loginAgents = []string{"claude", "codex"}
@@ -205,9 +203,6 @@ func validLogins(b []byte) bool {
 }
 
 func readLogins() []savedLogin {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
 	// parsed once until the file changes: a state of the page asks for it
 	// dozens of times (every agent's drift and models), and with the
 	// accounts' credentials in it the file is large — a Save of a profile
@@ -245,9 +240,6 @@ func unreadBytes(path string) []byte {
 }
 
 func writeLogins(ls []savedLogin) error {
-	if settings.AccountDiscoveryOff() {
-		return errAccountDiscoveryOff
-	}
 	// every account gets its stable id before it is written (#905): the
 	// one it has, or the stand-in made of its name, there to stay
 	for i := range ls {
@@ -429,7 +421,7 @@ func codexWho(auth json.RawMessage) (email, workspace string) {
 // Every account is told by its name (switched to, refreshed, removed), and
 // two by one name were taken as one: removing the one not in use signed
 // Codex out of the other, as the last account, and a refresh of one was
-// written over the other's credentials (vincentzhang on Discord).
+// written over the other's credentials (vincentzhang 报告).
 func codexName(ls []savedLogin, l savedLogin) string {
 	if l.Agent != "codex" {
 		return l.User
@@ -530,294 +522,11 @@ func claudeUser(email, plan string, acct map[string]any) string {
 	return email + " · " + org
 }
 
-// codexAuthPath is Codex's sign-in, under its home (appdir.CodexHome).
-func codexAuthPath() string { return filepath.Join(appdir.CodexHome(), "auth.json") }
-
-// CodexAPIKeySignedIn says Codex itself is signed in with an OpenAI
-// API key rather than a ChatGPT account (auth.json's auth_mode): its
-// sign-in is a key's, and spends no account a gateway key's list
-// governs.
-func CodexAPIKeySignedIn() bool {
-	b, _, err := readCodexLogin(codexHome(), false)
-	if err != nil {
-		return false
-	}
-	var a codexAuth
-	return json.Unmarshal(b, &a) == nil && a.AuthMode == "apikey"
-}
-
-// claudeProfilePath is Claude Code's global state file, which holds the
-// signed-in account's identity next to much else.
-func claudeProfilePath() string {
-	if dir := appdir.Getenv("CLAUDE_CONFIG_DIR"); dir != "" {
-		return filepath.Join(dir, ".claude.json")
-	}
-	home, _ := os.UserHomeDir()
-	return filepath.Join(home, ".claude.json")
-}
-
-func readClaudeProfile() (map[string]any, error) {
-	b, err := readAccountFile(claudeProfilePath())
-	if err != nil {
-		return nil, err
-	}
-	d := json.NewDecoder(bytes.NewReader(b))
-	d.UseNumber() // numbers go back exactly as they came
-	var m map[string]any
-	if err := d.Decode(&m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-// claudeProfileAccount is the account ~/.claude.json says Claude Code is
-// signed in to, read again only when the file changes: it is large, and a
-// page asks for it for every provider it lists. It must not be changed.
-func claudeProfileAccount() (map[string]any, bool) {
-	if settings.AccountDiscoveryOff() {
-		return nil, false
-	}
-	acct, err := filememo.Read("claude account", claudeProfilePath(), func(b []byte) (map[string]any, error) {
-		var m struct {
-			OAuthAccount map[string]any `json:"oauthAccount"`
-		}
-		d := json.NewDecoder(bytes.NewReader(b))
-		d.UseNumber()
-		err := d.Decode(&m)
-		return m.OAuthAccount, err
-	})
-	return acct, err == nil && acct != nil
-}
-
-// claudeSignedInUser names the account Claude Code is signed in to, by the
-// one name both the account (claudeAccount) and its saved login (liveLogin)
-// go by: ~/.claude.json's, or status, what `claude auth status` said, when
-// that has none. plan is the credentials', or else the CLI's; acct is the
-// profile it was named from.
-func claudeSignedInUser(plan, statusPlan, status string) (user string, acct map[string]any) {
-	if plan == "" {
-		plan = statusPlan
-	}
-	if acct, ok := claudeProfileAccount(); ok {
-		if email, _ := acct["emailAddress"].(string); strings.TrimSpace(email) != "" {
-			return claudeUser(strings.TrimSpace(email), plan, acct), acct
-		}
-	}
-	return status, nil
-}
-
-// savedButSignedOut is, for each agent with accounts saved in magpie that
-// isn't signed in where magpie looks, why none of them is offered: they
-// are served beside the account the agent is signed in to, and there is
-// none.
-func savedButSignedOut() []Exclusion {
-	saved := map[string]int{}
-	users := map[string][]string{}
-	for _, l := range readLogins() {
-		saved[l.Agent]++
-		users[l.Agent] = append(users[l.Agent], l.User)
-	}
-	var out []Exclusion
-	for _, a := range loginAgents {
-		// Claude Code signed out, its saved accounts are served all the
-		// same (claudeStandIn)
-		if saved[a] == 0 || a == "claude" {
-			continue
-		}
-		if _, ok := liveLogin(a); ok {
-			continue
-		}
-		n := "1 account is"
-		if saved[a] > 1 {
-			n = fmt.Sprintf("%d accounts are", saved[a])
-		}
-		_, _, err := readCodexLogin(codexHome(), false)
-		out = append(out, Exclusion{Agent: a, SignedOut: true, Users: users[a], Retry: codexKeychainUnread(err),
-			Why: fmt.Sprintf("%s saved in chongyun, and they are only offered beside the account Codex is signed in to. %s", n, codexSignedOutWhy())})
-	}
-	return out
-}
-
-// codexSignedOutWhy says why magpie sees no Codex sign-in: none where
-// Codex's config.toml keeps it, or one kept where magpie couldn't read it
-// (#2312, #2367, Dony2050), and what to do.
-func codexSignedOutWhy() string {
-	_, _, err := readCodexLogin(codexHome(), false)
-	var se *codexStoreError
-	if !errors.As(err, &se) {
-		where := codexAuthPath()
-		if s, serr := readCodexStoreSetting(codexHome()); serr == nil && s.keychainItem() {
-			where = fmt.Sprintf("the keychain item %q for %s", codexKeychainService, codexHome())
-			if s.Mode == "auto" {
-				where += " nor " + codexAuthPath()
-			}
-		}
-		return fmt.Sprintf("Codex isn't signed in here (nothing in %s). Sign in (codex login) with this HOME.", where)
-	}
-	switch {
-	case se.Setting.Mode == "ephemeral":
-		return se.Error() + ". Set cli_auth_credentials_store = \"file\" there and sign in again (codex login)."
-	case se.Cause != nil:
-		return se.Error() + ". Allow chongyun when macOS asks for the keychain (\"Always Allow\" lets /usr/bin/security read that item from then on, so macOS stops asking each time Codex changes it), or set cli_auth_credentials_store = \"file\" there and sign in again (codex login)."
-	}
-	return se.Error() + fmt.Sprintf(": here it reads only %s. Set cli_auth_credentials_store = \"file\" there and sign in again (codex login).", codexAuthPath())
-}
-
-// liveLogin reads the account an agent is signed in to now.
-func liveLogin(agent string) (savedLogin, bool) {
-	if settings.AccountDiscoveryOff() {
-		return savedLogin{}, false
-	}
-	switch agent {
-	case "codex":
-		b, _, err := readCodexLogin(codexHome(), false)
-		if err != nil {
-			return savedLogin{}, false
-		}
-		var a codexAuth
-		if json.Unmarshal(b, &a) != nil || a.Tokens.AccessToken == "" || a.AuthMode == "apikey" {
-			return savedLogin{}, false
-		}
-		id := jwtClaims(a.Tokens.IDToken)
-		user := codexUser(id)
-		if user == "" {
-			user = a.Tokens.AccountID
-		}
-		if user == "" {
-			return savedLogin{}, false
-		}
-		l := savedLogin{Agent: agent, User: user, Plan: claimString(id, "https://api.openai.com/auth", "chatgpt_plan_type"),
-			Auth: json.RawMessage(bytes.TrimSpace(b))}
-		l.User = codexLiveName(user, l.Auth)
-		return l, true
-	case "claude":
-		c, _, ok := claudeCredential()
-		if !ok {
-			return savedLogin{}, false
-		}
-		b, err := c.marshal()
-		if err != nil {
-			return savedLogin{}, false
-		}
-		// credentials a logout left behind are not a sign-in: Claude Code
-		// says so, and the account is not a provider either (claudeAccount)
-		user, plan, signedOut := claudeIdentity()
-		if signedOut {
-			return savedLogin{}, false
-		}
-		l := savedLogin{Agent: agent, Plan: c.OAuth.SubscriptionType, Auth: b}
-		var acct map[string]any
-		if l.User, acct = claudeSignedInUser(l.Plan, plan, user); acct != nil {
-			l.Profile, _ = json.Marshal(acct)
-		}
-		if l.User == "" {
-			return savedLogin{}, false
-		}
-		return claudeSignInOwner(readLogins(), l), true
-	}
-	return savedLogin{}, false
-}
-
-// rememberLogins saves the accounts the agents are signed in to now. The
-// copy of an active account is only a bookmark: the agent keeps refreshing
-// its own, and a switch saves that fresher one first.
-// accountRemoved: the user removed the agent's account from magpie, which
-// then neither saves its sign-ins nor keeps them renewed.
-func accountRemoved(agent string) bool {
-	return slices.ContainsFunc(load().Providers, func(p Provider) bool { return p.ID == agent && p.Hidden })
-}
-
-func rememberLogins(force bool) {
-	if settings.AccountDiscoveryOff() {
-		return
-	}
-	// the time first, and the lock only for a look that is due: taken
-	// first, every ask (each list of accounts, each page's read) made and
-	// locked logins.json.lock, ~370 times in a start's first 25s on
-	// Windows, where an antivirus' filter driver works on each (#1665)
-	if !force && !loginsLookDue() {
-		return
-	}
-	loginsMu.Lock()
-	defer loginsMu.Unlock()
-	// another ask may have looked while this one waited for the lock
-	if !force && !loginsLookDue() {
-		return
-	}
-	loginsSeenAt.Store(time.Now().UnixNano())
-	was := readLogins()
-	ls := slices.Clone(was)
-	now := time.Now().UTC().Truncate(time.Second)
-	changed := false
-	for _, agent := range loginAgents {
-		if accountRemoved(agent) {
-			continue
-		}
-		l, ok := liveLogin(agent)
-		if !ok {
-			if agent == "claude" && claudeLoggedOut(ls) {
-				changed = true
-			}
-			continue
-		}
-		l.Seen = now
-		if agent == "claude" {
-			for i := range ls {
-				ls[i].Held = false
-			}
-			l.Held = true
-		}
-		ls = upsertLogin(ls, l)
-		changed = true
-	}
-	// every magpie run from a terminal is a new process, which the 30
-	// seconds above don't hold for: one that would only move Seen on, and
-	// that recently, writes nothing (#1674)
-	if changed && !onlySeenMoved(was, ls, now) {
-		_ = writeLogins(ls)
-	}
-}
-
-// seenEvery is how often an account still signed in has the time it was
-// last seen written, when nothing else of it changed.
-const seenEvery = 10 * time.Minute
-
-// onlySeenMoved says next is was with nothing changed but the times
-// accounts were last seen, each of them less than seenEvery before now.
-func onlySeenMoved(was, next []savedLogin, now time.Time) bool {
-	if len(was) != len(next) {
-		return false
-	}
-	norm := func(ls []savedLogin) []savedLogin {
-		out := slices.Clone(ls)
-		for i := range out {
-			out[i].ID = loginID(out[i])
-		}
-		sortLogins(out)
-		return out
-	}
-	a, b := norm(was), norm(next)
-	for i := range b {
-		if a[i].ID != b[i].ID {
-			return false
-		}
-		if !b[i].Seen.Equal(a[i].Seen) {
-			if a[i].Seen.IsZero() || now.Sub(a[i].Seen) >= seenEvery || b[i].Seen.Before(a[i].Seen) {
-				return false
-			}
-			b[i].Seen = a[i].Seen
-		}
-	}
-	ja, err1 := json.Marshal(a)
-	jb, err2 := json.Marshal(b)
-	return err1 == nil && err2 == nil && bytes.Equal(ja, jb)
-}
-
 // SignedOut says that p is a signed-in account whose every account in use
 // (on, or the one the agent is signed in to) has had its sign-in refused:
 // listed, so it can be signed in again, but not "signed in". It is what
 // the app's Providers row says as "{user} is signed out", for magpie
-// providers and the TUI to say the same (LeeHom on Discord: Claude Code
+// providers and the TUI to say the same (LeeHom 报告: Claude Code
 // listed on two lapsed accounts).
 func (p Provider) SignedOut() bool {
 	if p.Account == nil {
@@ -843,9 +552,7 @@ func (p Provider) SignedOut() bool {
 // Logins lists the remembered accounts of an agent ("" for every one),
 // the active one flagged.
 func Logins(agent string) []Login {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
+	rememberAccounts(false)
 	if pp, ok := pluginOfAgent(agent); ok {
 		return pluginLoginList(pp)
 	}
@@ -895,12 +602,11 @@ func Logins(agent string) []Login {
 			delete(byPlugin, pp.ID)
 		}
 	}
-	rememberLogins(false)
 	loginsMu.Lock()
 	defer loginsMu.Unlock()
 	active := map[string]string{}
 	for _, a := range loginAgents {
-		if l, ok := liveLogin(a); ok {
+		if l, ok := ownActive(a); ok {
 			active[a] = l.User
 		}
 	}
@@ -1054,9 +760,6 @@ func loginRoom(agent string) func(user string) (known, spent bool) {
 // they restart; so does Codex's background app-server, which new Codex
 // sessions attach to (CodexDaemonStale says when it is).
 func SwitchLogin(agent, user string) error {
-	if settings.AccountDiscoveryOff() {
-		return errAccountDiscoveryOff
-	}
 	// the user's own choice: magpie doesn't sign the agent back in to the
 	// account it moved it off
 	if slices.Contains(loginAgents, agent) {
@@ -1139,23 +842,16 @@ func switchSavedLogin(agent, user string) (from string, _ error) {
 		}
 	}
 	want := *target
-	if agent == "claude" {
-		// the credentials as Claude Code has them this moment, not as last
-		// looked at: one it refreshed since has a new refresh token and the
-		// old one is dead (0xAncientTwo on X: signed out again and again)
-		forgetClaudeCredential()
+	live, wasActive := ownActive(agent)
+	if wasActive && strings.EqualFold(live.User, want.User) {
+		// already the one in use
+		return "", nil
 	}
-	if agent == "codex" {
-		// so for Codex's keychain item, which Codex may have refreshed
-		forgetCodexKeychain()
-	}
-	if live, ok := liveLogin(agent); ok {
-		if strings.EqualFold(live.User, want.User) {
-			return "", nil
-		}
+	if wasActive {
+		// the account moved off from: it keeps the mark of the one
+		// taking over, so the pool of accounts in use beside the one in
+		// use is the one the user arranged
 		from = live.User
-		// the credentials being replaced, as fresh as the agent has them;
-		// in use still if the one taking over was: it is next in line now
 		live.Seen = time.Now().UTC().Truncate(time.Second)
 		ls = upsertLogin(ls, live)
 		for i := range ls {
@@ -1163,9 +859,11 @@ func switchSavedLogin(agent, user string) (from string, _ error) {
 				ls[i].On, ls[i].Paused = want.On, false
 			}
 		}
-		if err := writeLogins(ls); err != nil {
-			return "", err
-		}
+	}
+	// the account switched to is the one the agent is signed in to now
+	ls = setOwnActive(ls, agent, want.User)
+	if err := writeLogins(ls); err != nil {
+		return from, err
 	}
 	var err error
 	switch agent {
@@ -1190,41 +888,61 @@ func switchSavedLogin(agent, user string) (from string, _ error) {
 	return from, nil
 }
 
+// putClaudeLogin puts a saved Claude sign-in where Claude Code keeps its
+// own: the keychain on a Mac, the file elsewhere. Claude Code's own
+// sign-in is not read to find the place, so the conventional ones are used.
+// claudeProfilePath is where Claude Code keeps the account it is signed in
+// to, beside the sign-in it keeps for it.
+func claudeProfilePath() string {
+	if dir := appdir.Getenv("CLAUDE_CONFIG_DIR"); dir != "" {
+		return filepath.Join(dir, ".claude.json")
+	}
+	home, _ := os.UserHomeDir()
+	return filepath.Join(home, ".claude.json")
+}
+
+// putClaudeLogin gives Claude Code the sign-in chongyun made for it, and
+// says whose it is: the credential where Claude Code keeps it, and the
+// profile beside it, which says the account it belongs to.
 func putClaudeLogin(l savedLogin) error {
 	c, ok := parseClaudeCredentials(l.Auth)
 	if !ok {
 		return errors.New("the saved Claude Code sign-in is unreadable")
 	}
-	_, loc, found := readClaudeCredential()
-	if !found {
-		// signed out: put it where Claude Code keeps it on this system
-		dir := appdir.ClaudeDir()
-		loc = claudeCredentialLocation{path: filepath.Join(dir, ".credentials.json")}
-		if claudeKeychain {
-			loc = claudeCredentialLocation{keychain: true, account: claudeKeychainAccount()}
-		} else if err := os.MkdirAll(dir, 0o700); err != nil {
-			// Claude Code never run here yet
-			return err
-		}
+	dir := appdir.ClaudeDir()
+	loc := claudeCredentialLocation{path: filepath.Join(dir, ".credentials.json")}
+	if claudeKeychain {
+		loc = claudeCredentialLocation{keychain: true, account: claudeKeychainAccount()}
+	} else if err := os.MkdirAll(dir, 0o700); err != nil {
+		// Claude Code never run here yet
+		return err
 	}
 	if err := saveClaudeCredential(loc, c); err != nil {
 		return err
 	}
-	if len(l.Profile) == 0 {
+	return putClaudeProfile(l.Profile)
+}
+
+// putClaudeProfile writes the account a sign-in is for into the profile
+// Claude Code keeps beside it. The account is chongyun's to write; the rest
+// of the file is the user's, and is kept as it is.
+func putClaudeProfile(profile json.RawMessage) error {
+	if len(profile) == 0 {
 		return nil
 	}
-	m, err := readClaudeProfile()
-	if err != nil {
-		if !os.IsNotExist(err) {
-			return err
-		}
-		m = map[string]any{}
-	}
-	d := json.NewDecoder(bytes.NewReader(l.Profile))
-	d.UseNumber()
 	var acct map[string]any
+	d := json.NewDecoder(bytes.NewReader(profile))
+	d.UseNumber() // numbers go back exactly as they came
 	if err := d.Decode(&acct); err != nil {
 		return err
+	}
+	m := map[string]any{}
+	if b, err := os.ReadFile(claudeProfilePath()); err == nil {
+		d := json.NewDecoder(bytes.NewReader(b))
+		d.UseNumber()
+		if err := d.Decode(&m); err != nil {
+			m = map[string]any{}
+		}
 	}
 	m["oauthAccount"] = acct
 	b, err := json.MarshalIndent(m, "", "  ")
@@ -1238,12 +956,9 @@ func putClaudeLogin(l savedLogin) error {
 // now can't be forgotten while it has another to be signed in to; it would
 // only be remembered again (SignedInError). Codex is signed in to another
 // of its accounts first (nextOnForget), and its last one is signed out
-// instead, as `codex logout` does (mamba on Discord: a single Codex account
+// instead, as `codex logout` does (mamba 报告: a single Codex account
 // couldn't be removed at all).
 func ForgetLogin(agent, user string) error {
-	if settings.AccountDiscoveryOff() {
-		return errAccountDiscoveryOff
-	}
 	if pp, ok := pluginOfAgent(agent); ok {
 		return forgetPluginLogin(pp, user)
 	}
@@ -1259,7 +974,7 @@ func ForgetLogin(agent, user string) error {
 		// the account Codex is signed in to, with another saved: Codex is
 		// signed in to that one first, as its Use would, and this one is
 		// forgotten then, rather than Codex left signed out or the removal
-		// refused (vincentzhang1_55530 on Discord: a Team account removed
+		// refused (vincentzhang1_55530 报告: a Team account removed
 		// beside a Plus one, and Codex was at its sign-in screen)
 		if next := nextOnForget(agent, user); next != "" {
 			if err := SwitchLogin(agent, next); err != nil {
@@ -1302,18 +1017,6 @@ func forgetLogin(agent, user string) (signedOut bool, err error) {
 	loginsMu.Lock()
 	defer loginsMu.Unlock()
 	ls := readLogins()
-	if live, ok := liveLogin(agent); ok && strings.EqualFold(live.User, user) {
-		other := slices.ContainsFunc(ls, func(l savedLogin) bool { return l.Agent == agent && !strings.EqualFold(l.User, user) })
-		if agent != "codex" || other {
-			return false, &SignedInError{Agent: agent, User: user}
-		}
-		// as `codex logout` does: the sign-in goes, all of it, from the
-		// keychain item and auth.json both (#2367)
-		if err := deleteCodexLogin(codexHome()); err != nil {
-			return false, err
-		}
-		signedOut = true
-	}
 	out := ls[:0]
 	found := false
 	for _, l := range ls {
@@ -1324,9 +1027,6 @@ func forgetLogin(agent, user string) (signedOut bool, err error) {
 		out = append(out, l)
 	}
 	if !found {
-		if signedOut {
-			return true, nil // signed in, not saved yet
-		}
 		return false, fmt.Errorf("no saved %s account %q", agent, user)
 	}
 	if agent == "claude" {
@@ -1368,8 +1068,6 @@ func ForgetAccounts() {
 	clear(newFetches.m)
 	newFetches.Unlock()
 	forgetAccountCaches()
-	// Codex's keychain item is asked again (#2367)
-	forgetCodexKeychain()
 	// the revoked sign-ins known are read from logins.json again
 	resetRevoked()
 }
@@ -1377,9 +1075,6 @@ func ForgetAccounts() {
 // forgetAccountCaches makes the next look at the accounts read them afresh.
 func forgetAccountCaches() {
 	Changed() // the providers a request holds (All)
-	forgetClaudeCredential()
-	forgetClaudeStatus()
-	forgetCursorStatus()
 	subscriptionUsageCache.Lock()
 	subscriptionUsageCache.at = time.Time{}
 	subscriptionUsageCache.data = nil
@@ -1392,7 +1087,7 @@ func forgetAccountCaches() {
 // Claude Code (keeping it signed in to one account) and a Claude Code
 // started on the account before writes that one's profile after. Saved,
 // it put the one account's sign-in and plan under the other's name, whose
-// runs and Usage card then were the first's (netfishx on X). The account
+// runs and Usage card then were the first's (netfishx 报告). The account
 // the profile names holding the sign-in already, it is that one's.
 func claudeSignInOfAnother(ls []savedLogin, l savedLogin) bool {
 	same, others := claudeHolders(ls, l)

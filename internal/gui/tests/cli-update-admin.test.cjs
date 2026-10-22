@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // On Windows npm's global folder may be Node.js's own under Program Files,
-// which only an administrator can change (新v学员 on Discord). An update
+// which only an administrator can change (新v学员 报告). An update
 // there says Windows asks for an administrator first; one whose prompt was
 // declined, or couldn't be shown, says the folder and what to do, in the
 // reader's language; and Install another agent's npm commands say a

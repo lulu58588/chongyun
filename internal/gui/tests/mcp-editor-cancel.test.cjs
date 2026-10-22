@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// 新v学员 on Discord: GitHub's MCP server, brought in from CC Switch with its
+// 新v学员 报告: GitHub's MCP server, brought in from CC Switch with its
 // token as an Authorization header. They removed the header, picked Sign
 // in, then Cancel without saving, and the header was gone all the same:
 // Sign in had saved the whole form first. Cancel leaves the server as

@@ -302,7 +302,7 @@ func wbCheckin(ctx context.Context, a wbAccount) WorkBuddyCheckin {
 // wbCheckinUnauthorized is wbCheckinRefused, told apart on a 401: WorkBuddy's
 // gateway answers a token it refuses with a bare 401 (an HTML page, so the
 // card said only "Unauthorized" and "chongyun tries again later", every 30
-// minutes, all day; モモコ on Discord, a Free account, signing in again
+// minutes, all day; モモコ 报告, a Free account, signing in again
 // didn't help). The account's credits are read with the same headers at
 // once: when they read, the sign-in is good and it is the check-in alone
 // that refuses magpie — WorkBuddy's own app sends its check-in, and only

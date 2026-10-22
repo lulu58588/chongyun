@@ -9,7 +9,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// Lumens on Discord (v0.1.1233): connecting WorkBuddy said it was
+// Lumens 报告 (v0.1.1233): connecting WorkBuddy said it was
 // connected, then its switch went back off and WorkBuddy had none of
 // magpie's models. WorkBuddy's one field puts magpie in its own picker, so
 // Connect set it without asking whether any model was left for it: with

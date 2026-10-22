@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// JasonLeeForOnly on Discord: WebDAV sync said "not a magpie backup" for
+// JasonLeeForOnly 报告: WebDAV sync said "not a magpie backup" for
 // versions, and nothing on the page got past it. When the server holds an
 // empty, cut-short or other app's file where the backup should be, the
 // status says so in the reader's language and an Upload row offers this

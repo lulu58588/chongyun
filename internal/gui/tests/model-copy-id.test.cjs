@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A model's id copied from its chip (ARNO on Discord: 希望provider的模型右击菜单
+// A model's id copied from its chip (ARNO 报告: 希望provider的模型右击菜单
 // 除了测试模型外，还能添加拷贝模型id的功能): in a provider's editor a model
 // chip's right-click menu has "Copy model ID" under "Test this model", which
 // puts that model's id — a prefixed one and one picked by hand alike — on the

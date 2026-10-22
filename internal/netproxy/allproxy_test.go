@@ -7,7 +7,7 @@ import (
 
 // ALL_PROXY, which curl reads and Go doesn't, is magpie's too when neither
 // HTTPS_PROXY nor HTTP_PROXY is set: a shell with only
-// ALL_PROXY=socks5://… gets magpie update through it (akic404 on Discord),
+// ALL_PROXY=socks5://… gets magpie update through it (akic404 报告),
 // and NO_PROXY still keeps hosts off it.
 func TestAllProxyFromTheEnvironment(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())

@@ -701,7 +701,7 @@ func runCLISignIn(s *signInFlow, what string, env []string, using bool, failed f
 // failedLine is a line saying the login failed, whose URL is the endpoint
 // it couldn't reach, not a page to open: grok 1.0.46 behind a proxy it
 // can't get through prints "Error: error sending request for url
-// (https://auth.x.ai/oauth2/device/code): …" (𝕏 on Discord).
+// (https://auth.x.ai/oauth2/device/code): …" (𝕏 报告).
 var failedLine = regexp.MustCompile(`(?i)\berror\b`)
 
 // linkWait is how long a login command has to print its link.

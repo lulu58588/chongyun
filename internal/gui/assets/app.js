@@ -18,7 +18,7 @@ const web = !!window.bootPrefs?.web;
 // General turns it off, and they are back.
 let gatewayMode = web && !!window.bootPrefs?.gateway;
 const GATEWAY_HIDES = ["agents", "library"];
-// Plugins › Built-in (builtins.go; Lxxyx on X: too much to look through):
+// Plugins › Built-in (builtins.go; Lxxyx 报告: too much to look through):
 // the optional parts of the window switched off, by id. Whatever is marked
 // data-feature="<id>" leaves the page while its feature is off — by a
 // style, so what a page draws later goes too — a page's tab leaves the nav
@@ -27,7 +27,7 @@ const GATEWAY_HIDES = ["agents", "library"];
 // each read of the settings after (applyFeatures). The gateway is the
 // same either way. Whatever is marked data-feature-off="<id>" is the
 // other way round, there only while its feature is off: where a page
-// says what went and turns it back on (bigbenniu on X: with routing
+// says what went and turns it back on (bigbenniu 报告: with routing
 // groups off, the Routing page offered no new group and said nothing of
 // why).
 let featuresOff = new Set(window.bootPrefs?.featuresOff || []);
@@ -53,7 +53,7 @@ const providersPage = (v) => magpie.page(v)?.loads === "providers";
 // (--wails-draggable), so the tabs and buttons in it stay plain clicks.
 // Outside the app — a browser on the gateway's page, or on `Chongyun web` —
 // there is no runtime, and it isn't asked for (a 404 in the browser's
-// console, Jorben on Discord).
+// console, Jorben 报告).
 // The panel also needs runtime readiness to drain Go's queued ExecJS calls.
 const winRuntime = !web ? import("/wails/runtime.js").catch(() => null) : Promise.resolve(null);
 // theme.js already applied the theme and text size before the first paint.
@@ -80,11 +80,6 @@ let adding = false; // the preset sheet is open
 // however often it is drawn (countPartner)
 let partnersCounted = null;
 let importing = null; // a magpie://import link waiting for a yes: { provider, error, replaces }
-let importingApps = null; // the Import from other apps dialog: { sources, picks }
-let providerDiscovery = []; // only opaque fingerprints and app names, never credentials
-let discoveryAt = 0, discoveryRun = 0, discoveryPending = false;
-let discoveryIgnored = new Set();
-try { discoveryIgnored = new Set(JSON.parse(localStorage.getItem("magpie.discoveryIgnored") || "[]")); } catch {}
 // a streamed reply's body is read as its reply, its events or as it came;
 // the pick is one for every call and kept, the events drawn per call
 let sseView = "events";
@@ -144,7 +139,7 @@ async function api(path, body, heads, signal) {
       err.code = data.code;
       err.message = t("{agent} is signed in to {user} now: sign it in to another of its accounts first (Use on that account), then remove this one", { agent: { codex: "Codex", claude: "Claude Code" }[data.agent] || data.agent, user: data.user });
     }
-    // a text Import can't add as a routing group (laincatx on X)
+    // a text Import can't add as a routing group (laincatx 报告)
     if (data?.code === "share") {
       err.code = data.code;
       err.message = {
@@ -156,7 +151,7 @@ async function api(path, body, heads, signal) {
     }
     // an agent's npm update whose global folder (Program Files) needs an
     // administrator, or RTK's winget for every user, the prompt declined or
-    // not to be had (新v学员 on Discord): what to do, in the reader's language
+    // not to be had (新v学员 报告): what to do, in the reader's language
     if (data?.code === "needs_admin") {
       err.code = data.code;
       const v = { agent: data.agent, prefix: data.prefix, cmd: data.command, why: data.reason || "" };
@@ -659,7 +654,7 @@ function renderAgents() {
     inner.inert = !showAllAgents;
     fold.style.setProperty("--n", folded.length);
     // the ones nothing is set on, then, last and least, the ones hidden by
-    // hand (0xZaTe on Discord: listed first, right under the agents in use,
+    // hand (0xZaTe 报告: listed first, right under the agents in use,
     // hidden read as pinned, 反而更显眼了). Under the others the hidden ones
     // are a disclosure of their own, shut until it is opened, as a Finder
     // sidebar section is; with nothing else folded, the fold is theirs.
@@ -785,7 +780,7 @@ function renderProfiles() {
   $(".profiles").classList.remove("naming", "detailed");
   $("#save").textContent = t("＋ Save current");
   // the panel's button names the profile in use, as a pop-up button shows
-  // what is picked, else how many there are (superhtoooth on X: it read
+  // what is picked, else how many there are (superhtoooth 报告: it read
   // 方案 1, 方案 2, a count taken for the name the profile was saved under,
   // and nothing said which one was in use)
   const cur = state.profiles.find((p) => p.inUse);
@@ -996,7 +991,7 @@ function profileDetail(p, footed) {
 // has nothing to set again: its pill says what has to listen there, unless
 // WSL now reaches Windows at another address, which it moves the config to.
 // Likewise one whose requests for Chongyun go through a proxy that doesn't
-// pass them on (proxied: Codex, Muma102kMichael on X).
+// pass them on (proxied: Codex, Muma102kMichael 报告).
 function driftFix(a, label = "Apply again") {
   const d = a.drift, f = a.fields.find((x) => x.key === d.field);
   const want = (f && optionFor(f, d.want)?.label) || d.want;
@@ -1156,7 +1151,7 @@ function connectSwitch(a) {
 // way back.
 
 // agents with no way onto Chongyun: no switch, the reason instead, and that
-// it is why (@G_Z_Y on X read "Only Cursor's own models" beside "Can't
+// it is why (@G_Z_Y 报告 read "Only Cursor's own models" beside "Can't
 // connect" as two things, and looked for Cursor CLI elsewhere)
 const NATIVE_ONLY = {
   cursor: "Uses only Cursor's own models, so Chongyun can't connect it",
@@ -1539,7 +1534,7 @@ function agentsLead(list) {
   }
 }
 
-// ---------- Get started (wangye1644294 on X) ----------
+// ---------- Get started (wangye1644294 报告) ----------
 // A new user is shown three steps above the agents: add a model source,
 // connect an agent (those Chongyun found here listed, each connected in a
 // click), and, optionally, a routing group made of their own models in a
@@ -2202,7 +2197,7 @@ function cliTag(a) {
     // found in a folder Chongyun adds to its own PATH that a terminal's
     // doesn't have (an npm install under a Node nvm no longer uses):
     // listed though `which` finds nothing, so it says where it is
-    // (悠悠哥 on Discord: Codex 0.162.1 with no codex on PATH); where the
+    // (悠悠哥 报告: Codex 0.162.1 with no codex on PATH); where the
     // row is too tight for the note, the version's tip says it
     if (c.offPath && c.path) {
       const o = el("span", "ag-missing ag-offpath", t("Not on your terminal's PATH"));
@@ -2266,7 +2261,7 @@ async function loadCLIs(again = 0) {
 
 // updateCLI updates one agent's CLI; "" when it went well, else why not.
 // Quiet (Update all) leaves the saying to the caller. Each version it went
-// from and to is said once (37FlowAI on X: "Pi 从 v1.0x 更新到 v1.10").
+// from and to is said once (37FlowAI 报告: "Pi 从 v1.0x 更新到 v1.10").
 async function updateCLI(a, btn, quiet = false) {
   if (cliBusy.has(a.id)) return t("{agent} is already being updated", { agent: a.name });
   const from = cliInfo[a.id]?.version;
@@ -3202,7 +3197,7 @@ async function openAgentModels(a, anchor, ev) {
   const shut = new Set(groups.filter((g) => groups.length > 1 && g.models.length > 8 && !g.models.some((m) => m.inUse)).map((g) => g.name));
   // with a few providers, a rail of them down the left: one picked shows
   // its models alone, so a long list is one click away rather than a
-  // scroll down past the others (蓝猫 on Discord); a search looks in all
+  // scroll down past the others (蓝猫 报告); a search looks in all
   const railed = groups.length > 2 && innerWidth >= 600;
   let pick = "";
   const rail = el("div", "am-rail");
@@ -3586,7 +3581,7 @@ function openAgentMenu(anchor, a, inFold) {
         // for a config rewritten in a way Chongyun can't see: set it again anyway
         ...(reapply ? [{ name: "Apply again", icon: REAPPLY, sep: true, run: () => reapplyAgent(a) }] : []),
         ...(a.drift?.kind === "replaced" ? [{ name: "Keep current settings", icon: CHECK, run: () => keepAgent(a) }] : []),
-        // everything Chongyun wrote comes out, what the user had goes back (Fate on Discord)
+        // everything Chongyun wrote comes out, what the user had goes back (Fate 报告)
         ...(a.wired ? [{ name: "Disconnect from Chongyun", icon: UNPLUG, sep: !reapply, tip: t(DISCONNECT_TIP, { agent: a.name }), run: () => askDisconnect(a) }] : []),
         { name: "Hide", icon: EYE_OFF, sep: true, run: () => setAgentHidden(a, true) },
         ...magpie.actions?.("agent", { agent: { id: a.id, name: a.name } }) || [],
@@ -3682,11 +3677,11 @@ const PICKS_ITSELF = ["pi", "omo", "prime-agent"];
 // than a third picker, which a row has no room for: it wrapped onto a line
 // of its own. So is Codex's sign-in, ChatGPT or Chongyun as its provider,
 // and the effort its subagents start at (#469), and the model Codex writes
-// its memories with (Yc on Discord).
+// its memories with (Yc 报告).
 const SUB_EFFORT = "subagent effort";
 const MEMORIES = "memories";
 // the model Chongyun puts every Codex subagent on, whatever its lead asked
-// for (willz on Discord): any model Chongyun serves (#1633); a subagent
+// for (willz 报告): any model Chongyun serves (#1633); a subagent
 // whose task a ChatGPT-backed lead sealed stays on its own unless the one
 // set is a ChatGPT account's, the Routing page saying why. Claude
 // Desktop's subagent model is the same square: the gateway puts each of
@@ -3696,7 +3691,7 @@ const SUB_MODEL = "subagent model";
 // subagent starts on only when its lead names none in spawn_agent
 // (codex-rs core/src/agent/child_config.rs). Unset, a subagent isn't held to
 // the model: the lead may name another, and GPT-6.1-Sol's spawned GPT-6-Astra
-// (willz on Discord). So it says the lead picks, and points at the subagent
+// (willz 报告). So it says the lead picks, and points at the subagent
 // model square, which holds every subagent to one.
 // Claude Code's auto mode square: the model its client-side auto mode
 // classifier runs on (CLAUDE_CODE_AUTO_MODE_MODEL); unset, Claude Code's own
@@ -3932,7 +3927,7 @@ function fit(extra = 0, glide) {
 
 // again: the window came back (focused, or shown again), which only reads
 // what is on the page anew. It must not put a page's skeleton up over what
-// it shows: under focus-follows-mouse (Hyprland; Zhenzhen on Discord) the
+// it shows: under focus-follows-mouse (Hyprland; Zhenzhen 报告) the
 // pointer crossing into the window blanked the Usage chart each time.
 async function load(again) {
   again = again === true;
@@ -4049,7 +4044,7 @@ function updateBusyText(b) {
 
 // updatePath asks for the update's state or the release notes in the
 // page's language: the notes follow Settings' language, Chinese where a
-// release has it (freecss on Discord).
+// release has it (freecss 报告).
 function updatePath(p) {
   return p + (p.includes("?") ? "&" : "?") + "lang=" + encodeURIComponent(locale);
 }
@@ -4150,7 +4145,7 @@ async function renderUpdateBadge() {
 // downloadingText is the pill's word while an update downloads: its
 // percent once there is one. The answer leaves done out while it is 0, and
 // total too while the size isn't known yet, so the first reads have none —
-// they said "NaN%" (inaction on Discord).
+// they said "NaN%" (inaction 报告).
 function downloadingText(u) {
   const p = u?.total > 0 ? Math.floor(((u.done || 0) / u.total) * 100) : NaN;
   return Number.isFinite(p) ? t("Downloading… {p}%", { p: Math.min(100, Math.max(0, p)) }) : t("Downloading…");
@@ -4575,7 +4570,7 @@ function openPicker(agent, field, anchor, ev, only) {
   // routing groups come first, then each provider's, then the models the
   // agent asks for itself, not through Chongyun: Claude Code's own list of
   // Claude models above them hid every Chongyun model below the fold (abledo
-  // on Discord: "claudecode的Chongyun模型选不了"). Only the picker's own
+  // 报告: "claudecode的Chongyun模型选不了"). Only the picker's own
   // choices (Automatic, Off) above them all
   const rest = options.filter((o) => !o.reset && o.group !== ROUTING_GROUPS);
   options = [...options.filter((o) => o.reset), ...options.filter((o) => !o.reset && o.group === ROUTING_GROUPS), ...rest.filter((o) => !o.direct), ...rest.filter((o) => o.direct)];
@@ -4945,7 +4940,7 @@ function switchPickerGroup(id) {
 
 // a rail icon's name, beside it on the right: the browser's own tooltip
 // came up under the pointer, over the icon below — Devin's name on ZCode's
-// Z, as if that were ZCode's (Elan on X). Hovering from one icon to the
+// Z, as if that were ZCode's (Elan 报告). Hovering from one icon to the
 // next moves it at once; the first waits a moment, as a tooltip does.
 let railTip = null, railTipTimer = 0, railTipShownAt = 0;
 function showRailTip(b, now) {
@@ -5036,7 +5031,7 @@ function rateTag(rate = 0, was = 0) {
 }
 
 // modelTells: what tells apart the models of one list that would show the
-// same label (sunset on Discord: the Our Free Model plugin's several
+// same label (sunset 报告: the Our Free Model plugin's several
 // "DeepSeek-V4.1-Flash · x0.1", told apart only by the buddy/… of their
 // ids, in the tooltip). items are the list's entries, label(x) what each
 // shows, id(x) its id, and key(x) the part of the list it is shown in (a
@@ -5319,7 +5314,7 @@ async function commit(value) {
   const { agent, field, anchor } = pick;
   const opt = pick.options.find((o) => o.value === value);
   if (field.multi && !opt?.run) {
-    // a picker that takes several (a group's models, PAMI on Discord)
+    // a picker that takes several (a group's models, PAMI 报告)
     // stays open: each pick adds one, or takes it out again, and is ticked
     field.onPick(value, opt);
     if (opt) renderList();
@@ -5516,7 +5511,7 @@ document.addEventListener("mousedown", (e) => {
 });
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape" || pick) return;
-  if (editing !== null || importingApps) cancelEdit();
+  if (editing !== null) cancelEdit();
   else if (adding && !$("#view-providers").hidden && providers.providers.length) closeAddSheet();
   else if (profileEscape()) e.preventDefault();
   else if (mode === "panel") api("window/hide", {});
@@ -5697,7 +5692,6 @@ async function loadProvidersNow() {
   renderArchive();
   providersWhileFetching();
   if (view === "providers") loadUpstream();
-  discoverLocalProviders();
 }
 
 // Accounts' lists still on their way from their vendors (#541: the page no
@@ -5814,7 +5808,7 @@ function renderProvidersLoading() {
 
 // Providers switched off are kept apart, below the ones on, under a
 // "Turned off (N)" fold that starts folded: among the rest they took the
-// room of the ones in use (01huadalang on Discord). The fold is
+// room of the ones in use (01huadalang 报告). The fold is
 // remembered, per viewer.
 let offFolded = true;
 try { offFolded = localStorage.getItem("magpie.offProvidersOpen") !== "1"; } catch {}
@@ -5930,10 +5924,8 @@ function renderProviders() {
   renderExcluded();
   renderFileError();
   renderMovable();
-  renderProviderDiscovery();
   dialog = renderAdd() || dialog;
   if (importing) dialog = renderImport(importing);
-  if (importingApps) dialog = renderImportApps(importingApps);
   keptIcons = null;
   markUpstream();
   view.scrollTop = top; // first: a closing dialog folds into its row where it is
@@ -6656,7 +6648,7 @@ function highlight(code, lang) {
   return out;
 }
 
-// What agents are told of a model on the Gateway list (ARNO on Discord:
+// What agents are told of a model on the Gateway list (ARNO 报告:
 // 支持显示模型或者模型组更多的信息): its reasoning levels, whether it takes
 // images and the context it holds, as small chips at the row's end, and in
 // full in their tooltip; a group's are what its members all have, and the
@@ -7034,7 +7026,7 @@ function callBodyPanel(label, raw, truncated, id, key = id) {
 // The request archive: with it on, each call's headers and bodies, secrets
 // taken out, go to the S3 bucket sync keeps its backup in, and a request's
 // row on the Usage page reads its own back from there (gateway/archive.go).
-// Its switch sits over that list, at its right (Jorben on Discord); what it
+// Its switch sits over that list, at its right (Jorben 报告); what it
 // keeps, and where, or what it needs first, is its tooltip, and a failed
 // upload says so beside it. The switch is the same element across redraws,
 // changed in place, so one being pressed or focused is never swapped out.
@@ -7242,10 +7234,6 @@ function renderAdd() {
   };
   q.oninput = () => { presetQuery = q.value; drawTiles(); };
   head.append(q);
-  const imp = el("button", "text", t("Import…"));
-  imp.title = t("Bring over providers set up in other apps");
-  imp.onclick = openImportApps;
-  head.append(imp);
   if (providers.providers.length) {
     const x = el("button", "text", t("Close"));
     x.onclick = closeAddSheet;
@@ -7271,7 +7259,7 @@ function renderAdd() {
     let any = false;
     // one moved onto its plugin stays where it was, signing in through it;
     // a deprecated one whose plugin is installed is that plugin's row alone
-    // (ARNO on Discord: Qoder CN twice), and one with no account isn't
+    // (ARNO 报告: Qoder CN twice), and one with no account isn't
     // offered at all: it is the Plugins page's, installed from there
     // (上游：对于新用户来说，这里应该只显示内置的 provider), unless it is
     // signing in now. A search naming one finds it there.
@@ -7337,7 +7325,7 @@ function renderAdd() {
       }
     }
     // another computer's Chongyun is no relay: a heading of its own, after
-    // this machine's (Avalon on Discord didn't find it among the relays)
+    // this machine's (Avalon 报告 didn't find it among the relays)
     for (const [kind, title, hint] of [["vendor", "Vendors", "the makers' own APIs"], ["relay", "Relays", "one key, many vendors"], ["local", "On this machine", ""], ["remote", "Another computer's Chongyun", "shared on its network"]]) {
       // a vendor's China endpoint is a preset of its own: one row with the global one
       const rows = providers.presets.filter((p) => p.kind === kind && !globalOf(p))
@@ -7620,7 +7608,7 @@ function input(value, placeholder, type = "text") {
   i.onkeydown = (e) => {
     e.stopPropagation();
     if (e.key === "Escape") {
-      if (editing !== null || importing || importingApps) cancelEdit();
+      if (editing !== null || importing) cancelEdit();
     }
   };
   return i;
@@ -7705,13 +7693,13 @@ function confirmDiscard() {
   return confirmAction(t("Discard"), t("Discard unsaved changes? Your changes will be lost."), t("Discard"));
 }
 async function cancelEdit(keep) {
-  if ((providerDirty() || ((importing || importingApps) && modalFormDirty())) && !(await confirmDiscard())) return false;
+  if ((providerDirty() || (importing && modalFormDirty())) && !(await confirmDiscard())) return false;
   if (keep !== true) dropSigningIn(editing);
-  editing = null; draft = null; importing = null; importingApps = null; renderProviders();
+  editing = null; draft = null; importing = null; renderProviders();
   return true;
 }
 window.addEventListener("beforeunload", (e) => {
-  if (providerDirty() || magpie.call("routing", "dirty") || ((view === "library" || importing || importingApps) && modalFormDirty())) {
+  if (providerDirty() || magpie.call("routing", "dirty") || ((view === "library" || importing) && modalFormDirty())) {
     e.preventDefault();
     e.returnValue = "";
   }
@@ -7790,7 +7778,7 @@ function concurrencyField(p) {
   const wait = input(draft.queueWait ?? "", t("As long as it takes"), "number");
   wait.classList.add("queue-wait");
   // how many requests each key or account sends the vendor in any minute
-  // (coeo91 on Discord: OpenRouter's free models take 20); one more waits
+  // (coeo91 报告: OpenRouter's free models take 20); one more waits
   // for room in the minute
   const rpm = input(draft.maxRPM ?? "", t("No limit"), "number");
   rpm.classList.add("rpm");
@@ -8007,7 +7995,7 @@ function proxyDraft(p) {
 // tried, and nothing is saved by it. Outside the editor, nothing.
 function asTyped() {
   if (!draft) return {};
-  // many keys pasted (361 on Discord) are asked about by the first
+  // many keys pasted (361 报告) are asked about by the first
   const keys = splitKeys(draft.key || "");
   const body = { typed: true, key: keys.length > 1 ? keys[0] : (draft.key || "").trim(), chat: (draft.chat || "").trim(), responses: (draft.responses || "").trim(), anthropic: (draft.anthropic || "").trim(), gemini: (draft.gemini || "").trim(), modelsURL: (draft.modelsURL || "").trim() };
   Object.assign(body, movedURLs(draft));
@@ -8049,7 +8037,7 @@ function accountProxyPicker(a) {
   return proxyLines(ls.map((l) => ({ k: l.user.toLowerCase(), name: l.user, user: l.user })), ACCOUNT_PROXY_HINT);
 }
 // keyProxyPicker is accountProxyPicker for a provider's keys (Beyfish_Wang
-// on X: 不同 key 走不同的代理), each by its fingerprint, named as the
+// 报告: 不同 key 走不同的代理), each by its fingerprint, named as the
 // Accounts list names it. null for a provider with one key.
 const KEY_PROXY_HINT = "Each key can go through a proxy of its own; Provider's proxy is the one above";
 function keyProxyPicker(p) {
@@ -8059,7 +8047,7 @@ function keyProxyPicker(p) {
 // its Accounts list folds them (keyFold): past KEYS_FOLD, the first
 // KEYS_FIRST and those with a proxy of their own, or, opened, those the
 // filter matches, KEYS_PAGE at most. A line for each of a thousand keys
-// took the editor a minute to open, five thousand three (@NetRozee on X).
+// took the editor a minute to open, five thousand three (@NetRozee 报告).
 // A key not drawn keeps the proxy it has: only a line picked in changes it.
 function proxyLines(items, hint, foldKeys) {
   if (items.length < 2) return null;
@@ -8333,7 +8321,7 @@ const FAN = [dot(2.9, 8), dot(13.1, 3.4), dot(13.1, 8), dot(13.1, 12.6),
   "M4.3 8h7.4", "M4.3 8c2.6 0 3.2-4.6 5.8-4.6h1.6", "M4.3 8c2.6 0 3.2 4.6 5.8 4.6h1.6"].join(" ");
 
 // Icons no preset uses, there to be picked for a provider of one's own
-// (Tom on X: Built-in icons 太少了): vendors' and platforms' marks from
+// (Tom 报告: Built-in icons 太少了): vendors' and platforms' marks from
 // lobehub/icons, as the presets' are.
 const MORE_ICONS = [
   "ai21", "ai360-color", "alibaba-color", "alibabacloud-color", "anyscale-color", "aws",
@@ -8919,9 +8907,9 @@ const decideOnly = (p) => !!p?.decide && !(p.chat || p.responses || p.anthropic 
 const decidesModel = (p, id) => !!p.decide && (decideOnly(p) || (p.deciders ? p.deciders.includes(id) : id.split("/").some((s) => /^jev(?:-|$)/i.test(s))));
 // modelAPIs: the APIs one of p's models can be asked on alone, those it has
 // a URL for when it has more than one — a custom provider's, a preset's or
-// a subscription's alike (01huadalang on Discord: 一个 api 里有很多模型但是不同协议;
+// a subscription's alike (01huadalang 报告: 一个 api 里有很多模型但是不同协议;
 // OpenCode Go's DeepSeek answers on Responses too), its Gemini URL's
-// among them (Kayphoon on Discord: 自定义供应商兼容 gemini 格式了，模型的
+// among them (Kayphoon 报告: 自定义供应商兼容 gemini 格式了，模型的
 // 配置里还是只能选 chat 和 anthropic)
 const modelAPIs = (p) => {
   const urls = ["chat", "responses", "anthropic", "gemini"].filter((k) => ((draft?.id === p.id ? draft[k] : undefined) ?? p[k] ?? "").trim());
@@ -9075,7 +9063,7 @@ function drawEditor(p, presetID) {
   }
   // an added preset's name is the user's, as a custom provider's is: two
   // of a vendor's sites (Kimi and Kimi (China)) named as they tell them
-  // apart, in the list and every picker (yapechan on Discord). Left empty,
+  // apart, in the list and every picker (yapechan 报告). Left empty,
   // it is the preset's again
   if (p && pr && !p.account) {
     name = input(draft.name === pr.name ? "" : draft.name, pr.name);
@@ -9209,9 +9197,9 @@ function drawEditor(p, presetID) {
 
   // the Cline API serves a model from whichever host its AI gateway picks;
   // pinned, its DeepSeek models are served by DeepSeek's own API alone and
-  // its GLM models by Z.ai's (sdytman on Discord), which keeps their prompt
-  // cache (White Immortal on Discord). One tick for both makers. ClinePass,
-  // or the Cline plugin's provider (ARNO on Discord)
+  // its GLM models by Z.ai's (sdytman 报告), which keeps their prompt
+  // cache (White Immortal 报告). One tick for both makers. ClinePass,
+  // or the Cline plugin's provider (ARNO 报告)
   const upstreamField = () => {
     const [ptk, pcb] = tick(t("DeepSeek and GLM models only from their makers' own APIs"), !!draft.pinUpstream);
     ptk.classList.add("pin-upstream");
@@ -9360,7 +9348,7 @@ function drawEditor(p, presetID) {
   // key opened no editor, its row just toggling)
   const copied = (!p && draft.copyOf && providers.providers.find((x) => x.id === draft.copyOf)) || null;
   const key = input(draft.key || "", p?.key.set ? t("{masked} · paste a new key to replace it", { masked: p.key.masked }) : copied?.key.set ? t("{masked} · {name}'s key, or paste another", { masked: copied.key.masked, name: copied.name }) : t(pr?.keyHint || (pr?.noKey || p?.key.optional ? "optional for local servers" : "paste an API key")), "password");
-  // many keys pasted at once (361 on Discord): one a line, or separated by
+  // many keys pasted at once (361 报告): one a line, or separated by
   // commas or spaces, are kept as one list; saved, the first is the key
   // and the others are added to its accounts, as Paste several does
   const keyCount = el("span", "hint key-count");
@@ -9371,7 +9359,7 @@ function drawEditor(p, presetID) {
   };
   key.oninput = () => { draft.key = key.value; countKeys(); };
   // a curl command from a vendor's docs pasted into the key or the Base URL
-  // fills the form (@mark_li21 on X), saying what it took; a key it only
+  // fills the form (@mark_li21 报告), saying what it took; a key it only
   // stands for is left out, and the key's box is where to paste one
   const fromCurl = (e) => {
     const c = curlOf(e.clipboardData?.getData("text") || "");
@@ -9500,7 +9488,7 @@ function drawEditor(p, presetID) {
 
   // which header the key goes in on a third-party Anthropic API: both by
   // default, one alone for a service that refuses the two together (Aloha
-  // on Discord: "x-api-key 和 Authorization 不可以同时存在"), which Chongyun
+  // 报告: "x-api-key 和 Authorization 不可以同时存在"), which Chongyun
   // also learns from that refusal. Anthropic's, Bedrock's (its runtime and
   // its Mantle endpoint) and Azure's own APIs take x-api-key alone already
   const twoKeyHeaders = () => {
@@ -10042,7 +10030,7 @@ function contextPicks(p, cx) {
 
 // outputField is the editor's Max output: the most a reply of its models
 // may hold, over what the vendor or models.dev says, one for all of them
-// and model=size for one, as the context window is set (ARNO on Discord: a
+// and model=size for one, as the context window is set (ARNO 报告: a
 // model's maxTokens was wrong, and only its window could be set here).
 // The usual sizes sit under it, one click each, as under the window (#875).
 function outputField() {
@@ -10151,295 +10139,6 @@ function fetchImportIcon(p, head, ed) {
   }).catch(() => note.remove());
 }
 
-// Scan off the page's loading path, at most once a minute as it is opened
-// or refreshed. A completed import forces a fresh scan; an older response
-// cannot put the pre-import hint back. Ignored configurations stay quiet
-// across launches; new or changed ones can still be offered.
-async function discoverLocalProviders(force = false) {
-  if (mode !== "window" || view !== "providers" || providers?.fileError) return;
-  if (!force && (discoveryPending || Date.now() - discoveryAt < 60000)) return;
-  const run = ++discoveryRun;
-  discoveryPending = true;
-  try {
-    const result = await api("importapps/discovery");
-    if (run !== discoveryRun) return;
-    providerDiscovery = Array.isArray(result) ? result : [];
-  } catch {
-    if (run !== discoveryRun) return;
-    providerDiscovery = []; // optional discovery must not block adding by hand
-  } finally {
-    if (run === discoveryRun) {
-      discoveryPending = false;
-      discoveryAt = Date.now();
-      renderProviderDiscovery();
-    }
-  }
-}
-
-function renderProviderDiscovery() {
-  const hint = $("#providerDiscovery");
-  const fresh = providerDiscovery.filter((c) => !discoveryIgnored.has(c.fingerprint));
-  const count = fresh.length, compact = !!providers?.providers.length;
-  hint.hidden = !count || !!providers?.fileError;
-  if (hint.hidden) return;
-  hint.classList.toggle("compact", compact);
-  const parent = compact ? $("#addProvider").parentElement : $("#view-providers");
-  if (hint.parentElement !== parent) parent.insertBefore(hint, compact ? null : $("#providers"));
-  $("#providerDiscoveryCount").textContent = t(count === 1 ? "Found 1 local provider configuration" : "Found {n} local provider configurations", { n: count });
-  const sources = [...new Set(fresh.map((c) => c.source))].join(" · ");
-  $("#providerDiscoverySources").textContent = sources;
-  const review = $("#reviewProviderDiscovery");
-  review.textContent = compact ? t("Import local configurations ({n})…", { n: count }) : t("Review and import…");
-  review.classList.toggle("primary", !compact);
-  review.title = sources;
-}
-$("#reviewProviderDiscovery").onclick = () => openImportApps(new Set(providerDiscovery.filter((c) => !discoveryIgnored.has(c.fingerprint)).map((c) => c.fingerprint)));
-$("#dismissProviderDiscovery").onclick = () => {
-  // Merge other windows' choices before saving, without forgetting candidates
-  // that happen to be unavailable or already imported during this scan.
-  try { for (const id of JSON.parse(localStorage.getItem("magpie.discoveryIgnored") || "[]")) discoveryIgnored.add(id); } catch {}
-  for (const c of providerDiscovery) discoveryIgnored.add(c.fingerprint);
-  try { localStorage.setItem("magpie.discoveryIgnored", JSON.stringify([...discoveryIgnored])); } catch {}
-  renderProviderDiscovery();
-};
-window.addEventListener("storage", (e) => {
-  if (e.key !== "magpie.discoveryIgnored" && e.key !== null) return;
-  try { discoveryIgnored = new Set(JSON.parse(e.newValue || "[]")); } catch { return; }
-  renderProviderDiscovery();
-});
-
-// Providers other apps have set up, for the user to pick from. Chongyun only
-// reads those apps; the keys stay on the server side and the dialog sees them masked.
-async function openImportApps(discovered) {
-  importingApps = { loading: true, sources: [], picks: {} };
-  renderProviders();
-  try {
-    const sources = await api("importapps");
-    const picks = {};
-    for (const s of sources) for (const it of s.items) {
-      if (it.skip || it.status === "same") continue;
-      const offered = !(discovered instanceof Set) || discovered.has(it.fingerprint);
-      // one named as a subscription (claude, workbuddy) comes in beside
-      // it, so it is picked like a new one (#1487)
-      picks[s.id + "\n" + it.ref] = { on: offered && !it.off && (it.status !== "taken" || !!it.keyOf || !!it.reserved), mode: it.keyOf ? "key" : "add" };
-    }
-    if (!importingApps) return;
-    const tab = sources.find((s) => s.items.some((it) => picks[s.id + "\n" + it.ref]?.on))?.id;
-    importingApps = { sources, picks, tab };
-  } catch (e) {
-    if (!importingApps) return;
-    importingApps = { error: e.message, sources: [], picks: {} };
-  }
-  renderProviders();
-}
-
-// appIcon is an import source's logo; Claude Code, Codex and OpenCode have
-// their marks among the vendor icons rather than an app tile of their own.
-const appIcon = (id) => id === "claude-code" ? "icons/claudecode-color.svg" : id === "codex" ? "icons/codex-color.svg" : id === "opencode" ? "icons/opencode.svg" : `icons/app-${id}.png`;
-
-function renderImportApps(ia) {
-  const ed = el("div", "editor new importapps");
-  ed.onclick = (e) => e.stopPropagation();
-  const h = el("div", "ehead");
-  h.append(el("b", "", t("Import from other apps")));
-  ed.append(h);
-  const bar = el("div", "bar");
-  const count = el("span", "note grow");
-  const cancel = el("button", "text", t("Cancel"));
-  cancel.onclick = cancelEdit;
-  const go = el("button", "text primary", t("Import"));
-  const recount = () => {
-    const n = Object.values(ia.picks).filter((x) => x.on).length;
-    count.textContent = n ? t("{n} selected", { n }) : "";
-    go.disabled = !n;
-  };
-  bar.append(count, cancel, go);
-  if (ia.loading) {
-    ed.append(el("div", "appnote", t("Reading other apps…")), bar);
-    go.disabled = true;
-    return ed;
-  }
-  if (ia.error) {
-    ed.append(el("div", "warnbox", ia.error), bar);
-    go.disabled = true;
-    return ed;
-  }
-  ed.append(el("div", "appnote", t("Chongyun reads these apps' settings and changes nothing in them. Pick the providers to bring over.")));
-  // one tab per app Chongyun can import from, so which ones it can is plain
-  // at a glance; each shows how many providers it has to bring over
-  const tabs = el("div", "apptabs");
-  tabs.setAttribute("role", "tablist");
-  const list = el("div", "applist");
-  const secs = {};
-  const pickable = (s) => s.items.some((it) => ia.picks[s.id + "\n" + it.ref]);
-  if (!ia.sources.some((s) => s.id === ia.tab)) {
-    ia.tab = (ia.sources.find(pickable) || ia.sources.find((s) => s.found) || ia.sources[0])?.id;
-  }
-  const showTab = (id) => {
-    ia.tab = id;
-    for (const [sid, [tab, sec]] of Object.entries(secs)) {
-      tab.classList.toggle("on", sid === id);
-      tab.setAttribute("aria-selected", String(sid === id));
-      sec.hidden = sid !== id;
-    }
-    list.scrollTop = 0;
-  };
-  for (const s of ia.sources) {
-    const sec = el("div", "appsrc");
-    const tab = el("button", "apptab" + (s.found && !s.error ? "" : " missing"));
-    tab.setAttribute("role", "tab");
-    const tlogo = el("img", "applogo");
-    tlogo.src = appIcon(s.id);
-    tlogo.alt = "";
-    tlogo.draggable = false;
-    const n = s.items.filter((it) => ia.picks[s.id + "\n" + it.ref]).length;
-    tab.append(tlogo, el("span", "", s.name), el("span", "count", s.found && !s.error ? String(n) : "–"));
-    tab.title = s.found ? (s.error || t(n === 1 ? "1 provider to bring over" : "{n} providers to bring over", { n })) : t("Not found on this computer");
-    tab.onclick = () => showTab(s.id);
-    tabs.append(tab);
-    secs[s.id] = [tab, sec];
-    const sh = el("div", "apphead");
-    const logo = el("img", "applogo");
-    logo.src = appIcon(s.id);
-    logo.alt = "";
-    logo.draggable = false;
-    sh.append(logo, el("b", "", s.name), el("code", "", s.path.replace(/^\/Users\/[^/]+|^\/home\/[^/]+/, "~")));
-    sec.append(sh);
-    if (!s.found) sec.append(el("div", "appempty", t("Not found on this computer")));
-    else if (s.error) sec.append(el("div", "appempty", s.error));
-    else if (!s.items.length) sec.append(el("div", "appempty", t("No providers in it")));
-    // everything this app has that can come over, on or off at once
-    const mine = s.items.map((it) => ia.picks[s.id + "\n" + it.ref]).filter(Boolean);
-    const boxes = [];
-    const all = el("input");
-    all.type = "checkbox";
-    const allState = () => {
-      const n = mine.filter((x) => x.on).length;
-      all.checked = n > 0 && n === mine.length;
-      all.indeterminate = n > 0 && n < mine.length;
-    };
-    const tick = () => { allState(); recount(); };
-    for (const it of s.items) sec.append(importAppRow(ia, s, it, tick, boxes));
-    if (mine.length) {
-      const lab = el("label", "appall");
-      all.onchange = () => {
-        for (const x of mine) x.on = all.checked;
-        for (const b of boxes) b.checked = all.checked;
-        tick();
-      };
-      lab.append(all, el("span", "", t("Select all")));
-      sh.append(lab);
-      allState();
-    }
-    list.append(sec);
-  }
-  ed.append(tabs, list);
-  showTab(ia.tab);
-  go.onclick = async () => {
-    const picks = [];
-    for (const [k, v] of Object.entries(ia.picks)) {
-      if (!v.on) continue;
-      const [source, ref] = k.split("\n");
-      picks.push({ source, ref, mode: v.mode, ...(v.name?.trim() ? { name: v.name.trim() } : {}) });
-    }
-    go.classList.add("busy");
-    try {
-      const r = await api("importapps", { picks });
-      providers = r.state;
-      importingApps = null;
-      adding = false;
-      editing = null;
-      draft = null;
-      providerDiscovery = [];
-      discoveryAt = 0;
-      discoveryRun++;
-      discoveryPending = false;
-      renderProviders();
-      discoverLocalProviders(true);
-      state = await api("state");
-      renderAgents();
-      status(t("Imported {n}: {names}", { n: r.added.length, names: r.added.join(", ") }), "ok");
-    } catch (e) {
-      go.classList.remove("busy");
-      if (!editorError(e.message, "err")) status(e.message, "err");
-    }
-  };
-  ed.append(bar);
-  recount();
-  return ed;
-}
-
-function importAppRow(ia, s, it, recount, boxes) {
-  const p = it.provider;
-  const pick = ia.picks[s.id + "\n" + it.ref];
-  const row = el("label", "approw" + (pick ? "" : " dim"));
-  const box = el("input");
-  box.type = "checkbox";
-  box.checked = !!pick?.on;
-  box.disabled = !pick;
-  box.onchange = () => { pick.on = box.checked; recount(); };
-  if (pick) boxes.push(box);
-  const who = el("div", "appwho");
-  const name = el("div", "name");
-  name.append(el("span", "", p.name || it.ref));
-  if (it.from) name.append(el("span", "from", it.from));
-  who.append(name);
-  const bits = [];
-  const host = hostOf(p.anthropic || p.chat || p.responses || "");
-  if (it.skip) bits.push(t(it.skip));
-  else {
-    if (host) bits.push(host);
-    if (p.key) bits.push(p.key);
-    if (p.models?.length) bits.push(t(p.models.length === 1 ? "1 model" : "{n} models", { n: p.models.length }));
-  }
-  who.append(el("div", "sub", bits.join(" · ")));
-  if (pick && it.off) who.append(el("div", "sub", t(it.off)));
-  if (pick && (it.keyOf || it.status === "taken")) {
-    const renamed = () => !!pick.name?.trim() && pick.name.trim() !== p.name;
-    const choices = () => {
-      const opts = [];
-      if (it.keyOf) opts.push(["key", t("Add as another key")]);
-      opts.push(["add", t(it.status === "taken" && !it.reserved && !renamed() ? "Keep both" : "Add as a new provider")]);
-      // a subscription is never replaced by a provider of keys, nor is
-      // anything by one the user gave a name of its own (#1487)
-      if (it.status === "taken" && !it.reserved && !renamed()) opts.push(["replace", t("Replace it")]);
-      // one way in alone needs no choice
-      if (opts.length === 1) { pick.mode = opts[0][0]; const none = el("span"); none.hidden = true; return none; }
-      const sg = segs(opts, pick.mode, (m) => { pick.mode = m; if (!pick.on) { pick.on = box.checked = true; recount(); } });
-      sg.onclick = (e) => e.preventDefault(); // a click on a choice is not a click on the checkbox
-      return sg;
-    };
-    who.append(el("div", "sub", t(it.reserved ? "{name} is a subscription in Chongyun; this one comes in beside it as a provider of its own" : "Chongyun has {name} already", { name: it.existing })));
-    let sg = choices();
-    if (it.status === "taken") {
-      // a name that collides can be changed right here (#1487)
-      const nm = input(pick.name ?? p.name, t("e.g. My Relay"));
-      nm.className = "appname";
-      nm.setAttribute("aria-label", t("Name"));
-      nm.onclick = (e) => e.preventDefault(); // typing in it never ticks the row
-      nm.oninput = () => {
-        pick.name = nm.value;
-        if (renamed() && pick.mode === "replace") pick.mode = "add";
-        const next = choices();
-        sg.replaceWith(next);
-        sg = next;
-        if (renamed() && !pick.on) { pick.on = box.checked = true; recount(); }
-      };
-      who.append(nm);
-    }
-    who.append(sg);
-  }
-  let tag = null;
-  // which provider holds it, so the user can find it (#1486)
-  if (it.status === "same" && it.existing) who.append(el("div", "sub", t("Chongyun has {name} already", { name: it.existing })));
-  if (it.status === "same") tag = el("span", "apptag", t("Already added"));
-  else if (it.skip) tag = el("span", "apptag", t("Can't import"));
-  else if (it.status === "taken") tag = el("span", "apptag", t("Name in use"));
-  else if (it.keyOf) tag = el("span", "apptag", t("Same vendor"));
-  row.append(box, icon(p.icon || "generic"), who);
-  if (tag) row.append(tag);
-  return row;
-}
 
 // renderImport: what a magpie://import link would add, for the user to
 // check. Nothing is saved until they press Add; the key stays hidden unless
@@ -10565,7 +10264,7 @@ function showRest(n, open) {
 }
 
 // detectAPIs: which of the APIs Chongyun speaks to a vendor answer at the base
-// URL typed (01huadalang on Discord: 一键检测支持什么协议) — Detect sends
+// URL typed (01huadalang 报告: 一键检测支持什么协议) — Detect sends
 // each the smallest request there, with the key typed (or the saved one)
 // and a model typed or picked from the vendor's list, and shows what each
 // answered; "Use these" takes those that answered for the provider. With
@@ -10955,7 +10654,7 @@ function renderModels(p) {
       const acts = [noTest ? { name: "Test this model", icon: "M5.5 3.75v8.5L12.25 8z", off: true, why: noTest, run() {} }
         : { name: "Test this model", icon: "M5.5 3.75v8.5L12.25 8z", run: () => testOne(id) }];
       // asked as Codex or Claude Code asks, for a relay that serves only
-      // them (耍赖天都爱 on Discord); Claude Code's once it has come
+      // them (耍赖天都爱 报告); Claude Code's once it has come
       // through Chongyun, its headers being the ones it came with
       if (!noTest && !decidesModel(p, id)) {
         for (const [as, agent, name] of [["codex", "Codex", "Test as Codex"], ["claude-code", "Claude Code", "Test as Claude Code"]]) {
@@ -11134,7 +10833,7 @@ function renderModels(p) {
   // they see images: staged in draft.modelPrefs and made with the editor's
   // Save, as the rest of it is, Cancel dropping them. Each tick used to be
   // saved on its own, every one rewriting the agents' files, so picking a
-  // model's levels lagged a click behind (ARNO on Discord).
+  // model's levels lagged a click behind (ARNO 报告).
   const drawNames = () => {
     // drawn again, the list stays where it was scrolled to, and as tall
     // while its rows go back in: a row measured on the way (its API's
@@ -11174,7 +10873,7 @@ function renderModels(p) {
       const base = name || first.default || first.name || first.id;
       let label = suffixed(base, p.name || p.id, !!name, mode);
       // a remote Chongyun's model, named there with its provider after it,
-      // is that name alone when none is put after it here (ARNO on Discord)
+      // is that name alone when none is put after it here (ARNO 报告)
       if (!name && first.plain && label === base) label = first.plain;
       sfxSaid.textContent = t("Agents’ lists show “{label}”", { label });
     };
@@ -11183,7 +10882,7 @@ function renderModels(p) {
     sfx.append(noNamesLine("span", "said"));
     names.append(sfx);
     // the APIs a model can be asked on alone: those of a key's provider
-    // it has a URL for, when it has more than one (01huadalang on Discord:
+    // it has a URL for, when it has more than one (01huadalang 报告:
     // 一个 api 里有很多模型但是不同协议)
     const apis = modelAPIs(p);
     for (const id of ids) {
@@ -11196,7 +10895,7 @@ function renderModels(p) {
       const savedKept = m.kept?.length || m.given ? m.kept || [] : levels;
       const nameNow = () => prefs[id]?.name ?? savedName;
       // none of its levels kept: it is sent no reasoning field at all
-      // (yuexian7 on Discord: a model models.dev says reasons answered
+      // (yuexian7 报告: a model models.dev says reasons answered
       // reasoning_effort with 422, and worked without it)
       const noneNow = () => prefs[id]?.reasonless ?? !!m.reasonless;
       const keptNow = () => noneNow() ? [] : prefs[id]?.efforts ? (prefs[id].efforts.length || m.given ? prefs[id].efforts : levels) : savedKept;
@@ -11237,7 +10936,7 @@ function renderModels(p) {
       // empty is the list's, and every part empty is its list price again
       // the 1-hour cache write, empty, is 2× input as Anthropic bills it,
       // and only a Claude model (or one priced with one) has the box: no
-      // other vendor has 1-hour writes (PAMI on Discord);
+      // other vendor has 1-hour writes (PAMI 报告);
       // a long-context price (OpenAI's over 272K) is what the whole request
       // costs when its input is over its size, empty parts its list's
       const parts = [["input", "Input"], ["output", "Output"], ["cache_read", "Cache read"], ["cache_write", "Cache write"], ["cache_write_1h", "Cache write 1h"]];
@@ -11329,7 +11028,7 @@ function renderModels(p) {
           const n = v[i] === "" ? m.list?.[k] ?? (k.startsWith("cache") ? 0 : NaN) : decimalOf(v[i]);
           // a model with no list price is given its input and output one
           // box at a time: what is typed stays, waiting for the other, and
-          // the Save asks for it (PAMI on Discord: each box typed was
+          // the Save asks for it (PAMI 报告: each box typed was
           // emptied again, so a price could never be set)
           if (Number.isNaN(n) && v[i] === "" && v.every((s) => s === "" || decimalOf(s) >= 0)) {
             (draft.priceTyped = draft.priceTyped || {})[id] = [...v, ...tv];
@@ -11531,7 +11230,7 @@ function renderModels(p) {
     };
     bulk.append(freeOn);
   }
-  // the picks that answered Test models (H20 on Discord: 测试完很多不可用，
+  // the picks that answered Test models (H20 报告: 测试完很多不可用，
   // 只能一个个取消): those whose last test failed are unpicked, the rest
   // stay, an untested one too, as nothing says it doesn't work. Offered
   // once a test has answered; with none picked, the served list it tested
@@ -11566,7 +11265,7 @@ function renderModels(p) {
   }
   box.append(chips, fold, names);
   const foot = el("div", "mfoot");
-  // a model the vendor's list leaves out is added by its id (Tom on X asked
+  // a model the vendor's list leaves out is added by its id (Tom 报告 asked
   // for this, not seeing the box alone was for it): typed, then Enter or Add
   const add = input(draft.typed || "", t("add a model id…"));
   const addOne = el("button", "text action", t("Add model"));
@@ -11581,7 +11280,7 @@ function renderModels(p) {
     else if (e.key === "Escape") cancelEdit();
   };
   // named as the add form's Fetch models is, the button there before the
-  // Save (耍赖天都爱 on Discord: 模型拉取一次就没有这个按钮了 — a key moved
+  // Save (耍赖天都爱 报告: 模型拉取一次就没有这个按钮了 — a key moved
   // to another group on a relay serves another list), and "again" once a
   // list was fetched. It asks with the key typed (asTyped), and merges as
   // Refetch does: picks the new list lacks go, ids added by hand stay
@@ -11691,7 +11390,7 @@ function renderDrawers(p) {
 // one that answered it. Both are staged in the editor's draft (routing,
 // affinity) and made with its Save, as the rest of the editor is: a click
 // shows the option and what it does, nothing is sent or redrawn, and
-// Cancel drops it (01huadalang on Discord: each click saved and redrew,
+// Cancel drops it (01huadalang 报告: each click saved and redrew,
 // so looking through what each says lagged).
 const ROUTINGS = [
   ["", "Smart", "The first takes requests while it has quota to spare; when it runs low, the one with the most left takes over. One out of credit sits out half an hour, one out of quota until it resets, one rate limited as long as the vendor asks, and one that fails a minute, longer each time it fails again."],
@@ -11923,7 +11622,7 @@ const SUBS = [
   { agent: "workbuddy-ai", get name() { return t("WorkBuddy AI (international)"); }, icon: "workbuddy-color", plans: "Free · Pro", own: true },
   // a commandcode.ai plan, signed in as its CLI does; the CLI's own key is read too
   // a Go plan is asked at the CLI's private /alpha/generate, which Command Code
-  // said on X may get an account banned when used from other tools
+  // said 报告 may get an account banned when used from other tools
   { agent: "commandcode-plan", name: "Command Code", icon: "commandcode", plans: "Go · Pro · GOAT · Max · Ultra", own: true, risk: true,
     riskNote: "A Go plan account is used through Command Code's private interface, which Command Code may treat as a breach of its terms and ban the account for. Pro, Max and the other plans use its Provider API. Use a Go account you can afford to lose." },
   // Qoder's two sites: qoder.com, and Qoder CN (qoder.cn), where accounts made
@@ -12874,7 +12573,7 @@ function renderAccounts(a, p) {
   // else it is (in use, the agent's own), it keeps a way to sign in again
   // and its Remove, and the reason never stands in their place.
   // A built-in Copilot account whose GitHub token GitHub refused (echo_ts
-  // on Discord: a revoked token) is the same, marked lapsed by Chongyun, and
+  // 报告: a revoked token) is the same, marked lapsed by Chongyun, and
   // signed in again in place. So is any other built-in account whose
   // sign-in its vendor revoked (#1793: ChatGPT's 401 token_revoked) or
   // refused to refresh: the gateway passes over it till then.
@@ -12928,11 +12627,11 @@ function renderAccounts(a, p) {
     const cap = accountCapOf(p, l.user);
     // Claude Code or Codex signed in to it asks its vendor itself, not
     // through Chongyun: with no other account to sign it in to, the cap
-    // holds back only what goes through Chongyun (𝕏 on Discord: a 90% cap
+    // holds back only what goes through Chongyun (𝕏 报告: a 90% cap
     // and the five hours run to 100%)
     const direct = l.active && !several && (a.agent === "claude" || a.agent === "codex") ? a.agentName : "";
     if (p) row.append(accountCapPill(p, l.user, cap, direct));
-    // and each window's own, set on its meter (willz on Discord)
+    // and each window's own, set on its meter (willz 报告)
     const capFor = (w) => windowCapOf(p, l.user, w);
     // how many requests it has out at once, and waiting (#892)
     if (p) row.append(laneLimitPill(p, l.user, p.id + "@" + String(l.user).toLowerCase(), l.user));
@@ -13319,7 +13018,7 @@ function quotaError(err, q) {
   if (/^this key has no OpenCode Go subscription/.test(err)) return t("No OpenCode Go on this key — use a key made by the member who subscribed, in that workspace");
   if (/^OpenCode didn't take this key/.test(err)) return t("OpenCode didn't take this key — paste a current one in the provider's settings");
   // a GLM key Zhipu or Z.ai refused (zhipuRefused, planquota.go): the key
-  // is what to change, not a reading that failed (@xanahopper on X)
+  // is what to change, not a reading that failed (@xanahopper 报告)
   const glm = /^(Zhipu|Z\.ai) didn't take this key/.exec(err);
   if (glm) return t("{vendor} didn't take this key — it expired, was deleted or is mistyped; paste a current one in the provider's settings", { vendor: glm[1] });
   if (/^OpenCode Go's reply has no rolling/.test(err)) return t("OpenCode Go answered in a form Chongyun doesn't read — hover for what it sent");
@@ -13581,7 +13280,7 @@ function accountNameButton(p, user) {
   return wrap;
 }
 function accountCapOf(p, user) { return p?.accountCaps?.[String(user).toLowerCase()] || 0; }
-// A window's own cap (provider.AccountWindowCaps, willz on Discord): a
+// A window's own cap (provider.AccountWindowCaps, willz 报告): a
 // friend's account stops at 50% of its five hours while its week may go to
 // 40%. Kept by the account and the window's capId, 1–99, or 100 for no cap
 // on that window; a window with none of its own takes the account's cap.
@@ -13884,7 +13583,7 @@ function quotaText(w) {
   return count ? count + " · " + pct : pct;
 }
 // quotaPace: how far a window is from an even pace through it, as a
-// number (fflake33 on Discord): the figure the meter shows less what an
+// number (fflake33 报告): the figure the meter shows less what an
 // even pace would show by now, in points of the window, rounded — used
 // 60% halfway through is +10, and left it is −10; null where the window's
 // start or reset isn't known (startsAt is the gateway's,
@@ -13925,7 +13624,7 @@ function quotaCount(w) {
 // familyWindows: an account's per-model windows as one a model family.
 // Antigravity reports each level of each model (Gemini 3.1 Pro (High), (Low),
 // Gemini 3.7 Flash (Low), (Medium), (High)…), which over several accounts
-// reads as a wall of meters (01huadalang on Discord); Gemini and Claude
+// reads as a wall of meters (01huadalang 报告); Gemini and Claude
 // first, then any other. A family's figure is its tightest window, the most
 // used, the soonest to start again of those; its windows go along as tiers
 // for its tooltip and for "Every model". Windows that name no family, or an
@@ -13954,7 +13653,7 @@ function familyWindows(ws) {
 // poolWindows: an account's windows one row a pool, where models share one
 // allowance (Antigravity's Gemini, Claude & GPT): the pool's 5-hour window
 // then its weekly one, each named with its pool, its models along as
-// members for its tooltip (a user on Discord: the three models read the
+// members for its tooltip (a user 报告: the three models read the
 // same, show the 5 hours and the week left a group). The models' windows
 // in no pool go on as families.
 const isPool = (w) => w.pool && !w.family;
@@ -14184,7 +13883,7 @@ function renderKeyAccounts(p) {
   // the weights of those on, for each one's share (#841)
   const weightOf = (k) => Math.max(k.weight || 0, 1);
   const weights = p.keyList.filter((k) => k.on).reduce((n, k) => n + weightOf(k), 0);
-  // a long list (361 on Discord: hundreds of keys) is folded: the first
+  // a long list (361 报告: hundreds of keys) is folded: the first
   // few, then All N keys, which opens on a filter and a page of rows
   const fold = keyFold(p);
   const folds = fold.folded ? keyFoldRows(p, fold) : { before: [], after: [] };
@@ -14309,7 +14008,7 @@ function renderKeyAccounts(p) {
   }
   list.append(...folds.after);
   if (addingKey?.id === p.id && addingKey.bulk) {
-    // many keys at once (361 on Discord): pasted one a line, or separated
+    // many keys at once (361 报告): pasted one a line, or separated
     // by commas or spaces; those the provider has are passed over
     const box = el("div", "acc adding bulk");
     const keys = el("textarea", "bulk-keys");
@@ -14773,7 +14472,7 @@ function respellURL(u, api) {
 }
 
 // curlOf reads a curl command pasted whole, as a vendor's docs show it
-// (@mark_li21 on X: 能支持通过curl例子直接导入provider不？), into what a
+// (@mark_li21 报告: 能支持通过curl例子直接导入provider不？), into what a
 // provider's editor takes: the API its URL's endpoint names (…/chat/
 // completions OpenAI's chat, …/messages Anthropic's, …/responses OpenAI's
 // Responses) and the base URL that API is asked at (respellURL), the key
@@ -14982,7 +14681,7 @@ async function providerAction(action, body, okMsg, base = "provider/") {
 }
 
 // saving shows a button's save under way, a spinner and what it is doing in
-// place of its label (zola_xynb on X: Save asks the provider for its model
+// place of its label (zola_xynb 报告: Save asks the provider for its model
 // list, which can take seconds, and a button only faded looked as if the
 // click had done nothing); doneSaving puts the label back.
 function saving(b, text) {
@@ -15482,7 +15181,7 @@ function renderQuotas(lazy) {
       s.title = t("The {n} keys' balances added up", { n: subs.length });
       head.append(s);
     }
-    // many accounts (Linx on X: twenty-odd on one plugin, 顶成擎天柱):
+    // many accounts (Linx 报告: twenty-odd on one plugin, 顶成擎天柱):
     // the same, each still a row of its own
     const accts = !keys && several && subs.length > ACCTS_FOLD;
     const folded = keys ? keysFolded(subs) : accts ? acctsFolded(subs) : new Set();
@@ -15572,7 +15271,7 @@ function renderQuotas(lazy) {
 
 // A subscription with several accounts shows each of them, one in full —
 // the one that answered last, else the first — and the others in brief,
-// their bars alone, a click opening one (whqtian on Discord: 只显示一个账号
+// their bars alone, a click opening one (whqtian 报告: 只显示一个账号
 // 即可，其他的可以点击展开; ARNO, 17 subscriptions and 29 accounts: 以前每个
 // 账号所占的空间很小，基本能一页看到所有账号… 关了Chongyun后又得一个个展开).
 // The tray panel, with less room, leaves the ones in brief out. Each
@@ -15761,7 +15460,7 @@ function keyCards(list) {
 // neighbour, the page following it). The last card in each column reaches
 // down to where the tallest column ends, so the bottoms line up: a row of
 // cards side by side is as tall as its tallest, and a short card stacked
-// under another ends with the tall one beside them (ikunbots on X: 卡片可以
+// under another ends with the tall one beside them (ikunbots 报告: 卡片可以
 // 对齐吗). Each card is measured as tall as itself before that.
 const USAGE_MIN = 260, USAGE_GAP = 7;
 let usagePacked = null, usagePackFrame = 0;
@@ -16227,7 +15926,7 @@ function drawQuotaPlot(g, lines, x0, x1, w, h, now, thin) {
   // stray mark under the curve (#1601); the large curve keeps it
   if (!thin && now >= x0 && now <= x1) g.append(sv("line", { x1: X(now), x2: X(now), y1: 0, y2: h, class: "qc-now" }));
 }
-// what the dashes are isn't plain from the plot (John on Discord asked);
+// what the dashes are isn't plain from the plot (John 报告 asked);
 // colorblind mode dashes the windows and dots the even paces. applyPrefs
 // sets it again on every drawn curve when the mode changes.
 function quotaCurveTitle() {
@@ -16321,7 +16020,7 @@ function quotaCurve(sub) {
   return box;
 }
 // curveZoom: a curve made larger on a click, or Enter, and back on the
-// next (TJHHHH on Discord); the page stays where it is
+// next (TJHHHH 报告); the page stays where it is
 function curveZoom(box, g) {
   g.setAttribute("tabindex", "0");
   g.setAttribute("aria-expanded", "false");
@@ -16345,7 +16044,7 @@ function balanceAmount(sub, v) {
   return m ? m[1] + n + m[2] : n;
 }
 // balanceCurve: a key's balance over time, as Chongyun read it, under its
-// figure on the Usage page (TJHHHH on Discord): the line, the least-squares
+// figure on the Usage page (TJHHHH 报告): the line, the least-squares
 // line through it since the last top-up dashed on to where it meets zero
 // when that is near, and when it runs out at that pace in the head. The
 // range the allowances' curves have ("2 days", or all it has: two weeks);
@@ -17042,7 +16741,7 @@ function panelBalances(bals) {
   return g;
 }
 
-// The Allowances tab's arranging (H20 on Discord): a row a subscription,
+// The Allowances tab's arranging (H20 报告): a row a subscription,
 // in the order the Usage page's cards have, its logo the handle to move it
 // (drag, or Alt+arrows) and a pill to hide it from this tab or show it
 // again. Hiding is the panel's alone; routing and the rest still use it.
@@ -17403,7 +17102,7 @@ function autoResetRow(q, cls) {
 // resetsUsedLine: the last of the account's resets Chongyun used, when and
 // why, on a line of its own under the say; every one kept in its title.
 // A reset gone from the card otherwise read the same whether Chongyun used
-// it, the user did, or it ran out (foobra12 on Discord: 我发现刚才好像不小心
+// it, the user did, or it ran out (foobra12 报告: 我发现刚才好像不小心
 // 自动给我使用了一张). Nothing when Chongyun used none.
 function resetsUsedLine(q) {
   const used = q.resetsUsed || [];
@@ -17568,7 +17267,7 @@ const CHECKINS = {
   },
 };
 // pluginCheckin is the check-in of a plugin that presses it itself
-// (auth.checkin; Lemon on Discord), by its provider: its switch is its own.
+// (auth.checkin; Lemon 报告), by its provider: its switch is its own.
 function pluginCheckin(id, name) {
   return {
     plugin: id, api: "plugin-checkin",
@@ -18130,7 +17829,7 @@ function quotaWindows(sub) {
       quota.title = sub.history ? t("Last reading {when}", { when: quotaCycleDate(w.recordedAt) }) : resetText(at, at.toLocaleString(intlLang()));
     }
     // how far it is from an even pace through the window, as a number
-    // (fflake33 on Discord), on the reset's line
+    // (fflake33 报告), on the reset's line
     const pace = !sub.history && r ? paceLine(w) : null;
     if (pace) {
       r.lastChild.textContent += " ·";
@@ -18255,7 +17954,7 @@ const ledSpeed = (x) => x?.decode_ms > 0 ? (1000 * x.decode_out) / x.decode_ms :
 // (usage.Totals.Floor, ledFloorSpeed's for each): 0 for none
 const ledFloor = (x) => x?.floor_ms > 0 ? (1000 * x.floor_out) / x.floor_ms : 0;
 // a group's speed as every ranking and the Output speed card say it, by one
-// rule (Fallmonkey on Discord): with replies whose speed was measured, their
+// rule (Fallmonkey 报告): with replies whose speed was measured, their
 // speed and how many they are, "125 tok/s · 1 timed reply", not beside "260
 // requests" alone; with replies read from a session file that tell the least
 // they wrote at, that floor and how many, "≥100 tok/s · 30 replies"; with
@@ -18877,7 +18576,7 @@ function renderFonts(s) {
     const note = row.querySelector(".font-note");
     note.textContent = fontListError ? t("Couldn't read installed fonts") : fontFlight ? t("Loading…")
       : missing ? t("Font unavailable; using system default") : fontList?.length === 0 ? t("No installed fonts found") : "";
-    // a line only when something is wrong or still coming (1ooogle on X)
+    // a line only when something is wrong or still coming (1ooogle 报告)
     note.hidden = !note.textContent;
     note.classList.toggle("err", fontListError || !!missing);
     const pill = row.querySelector(".font-family"), style = row.querySelector(".font-style");
@@ -19046,7 +18745,6 @@ async function writingPrefs(p) {
 const prefsSettled = (since) => !prefsBusy && since === prefsWrites;
 
 const GITHUB_SVG = '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>';
-const DISCORD_SVG = '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>';
 
 // The Settings page's warm-ups and check-in are one section whose heading
 // is a tab per service (Codex, Claude Code, WorkBuddy), the card under it
@@ -19161,7 +18859,7 @@ function setSetTab(tab, remember) {
   setSetTab(setTab);
 }
 
-// Settings' search (sgfvdsg86265 on X: "配置界面太多了，找不到了"): the
+// Settings' search (sgfvdsg86265 报告: "配置界面太多了，找不到了"): the
 // words typed show every part's rows that say them, in the language shown
 // or in English, each part under its name, and the tabs step aside. A row
 // matches on its own text, its section's heading and its part's name, so
@@ -19246,7 +18944,7 @@ function searchSettings(q) {
   }).observe($("#view-settings"), { childList: true, subtree: true });
 }
 
-// Settings' Command line (PAMI on Discord): whether `Chongyun` in a terminal
+// Settings' Command line (PAMI 报告): whether `Chongyun` in a terminal
 // opened now runs this app, in each shell, and a button that puts it there
 // — a link in a folder already on PATH, on Windows the app's folder first
 // in the user's PATH. A shell's profile is written only from that shell's
@@ -19568,18 +19266,14 @@ function renderSettings() {
   row(t("Gateway URL"), t("the address every agent is pointed at"), s.gateway, copyBtn(s.gateway, t("Gateway URL")));
   // MAGPIE_PUBLIC_URL, where other machines reach it (#1551)
   if (s.publicURL) row(t("Public address"), t("MAGPIE_PUBLIC_URL: where other computers reach the gateway, with a gateway key"), s.publicURL, copyBtn(s.publicURL, t("Public address"))).id = "publicURLRow";
-  const join = el("button", "discord");
-  join.innerHTML = DISCORD_SVG;
-  join.append(el("span", "", t("Join Discord")));
-  join.title = "discord.gg/vGSnD3ZKQF";
-  join.onclick = () => api("open", { url: "https://discord.gg/vGSnD3ZKQF" }).catch(() => {});
-  // issues and the code are on GitHub, for those who'd rather not use Discord
+  // Chongyun has no Discord community of its own: issues and the code are on
+  // GitHub, and that is where questions and feedback go.
   const repo = el("button", "github");
   repo.innerHTML = GITHUB_SVG;
   repo.append(el("span", "", "GitHub"));
   repo.title = "github.com/lulu58588/chongyun";
   repo.onclick = () => api("open", { url: "https://github.com/lulu58588/chongyun" }).catch(() => {});
-  row(t("Community"), t("questions, ideas and feedback, on Discord or GitHub"), "", join, repo);
+  row(t("Community"), t("questions, ideas and feedback, on GitHub"), "", repo);
   // gateway mode leaves out what is written into this computer's agents'
   // files, and the alerts its desktop would show
   for (const r of [$("#plainNamesSegs").parentElement, $("#usageAlertRow"), $("#balanceAlertRow"), $("#resetReminderRow"), $("#turnDoneRow")]) r.hidden = gatewayMode;
@@ -19607,7 +19301,7 @@ function renderGatewayMode(s) {
 }
 
 // renderLangPick: Settings' language, one menu button showing the language
-// picked (1ooogle on X), the app's own menu rather than six segments.
+// picked (1ooogle 报告), the app's own menu rather than six segments.
 function renderLangPick(s, keep) {
   const b = $("#langPick");
   const chosen = LOCALES.some(([id]) => id === s.lang) ? s.lang : "system";
@@ -19732,7 +19426,7 @@ async function renderSync(v) {
   // subscriptions whose settings sync brought with no account here: sync
   // carries no sign-in, and they are listed once signed in to here. It says
   // the synced settings are why they are named, and that one not used here
-  // needs nothing (悠悠哥 on Discord asked why sync said ChatGPT wasn't
+  // needs nothing (悠悠哥 报告 asked why sync said ChatGPT wasn't
   // signed in)
   if (v.on && v.signIn?.length) sub.after(el("div", "sub wraps sync-sign-in", t("Your synced settings use {names}, which isn't signed in on this computer. Sync carries settings, not sign-ins: to use it here, sign in in Providers → Add a provider; if you don't, nothing needs doing.", { names: subNames(v.signIn) })));
   // the server's file isn't a backup a sync can read, and is a file: this
@@ -20131,7 +19825,7 @@ const IN_USE = "|*";
 // agents are told. Offered on Settings and where names are given, the
 // provider's Names & levels and over Routing's groups (#868: an agent's
 // narrow menu cut "· routing group" short, and the setting wasn't found;
-// in one group's editor it read as that group's, PAMI on Discord);
+// in one group's editor it read as that group's, PAMI 报告);
 // drawn(mode) redraws the place it was picked in.
 // The mode is read from the state's settings, which startup reads before
 // any page is drawn, not from Settings' own read, which only opening
@@ -20151,7 +19845,7 @@ function suffixSegs(drawn) {
 // noNamesSaid: what Provider in model names can't change, said under it:
 // the connected agents whose own lists don't name Chongyun's models as it
 // says (agent.NoNames: handed ids alone, or the gateway's names alone).
-// love1sbug on X found the setting seemed to do nothing; "" when none is.
+// love1sbug 报告 found the setting seemed to do nothing; "" when none is.
 function noNamesSaid() {
   const names = (state.agents || []).filter((a) => a.wired && a.noNames).map((a) => a.name);
   return names.length ? t("Changes nothing in {agents}: Chongyun’s names don’t reach their model lists", { agents: names.join(", ") }) : "";
@@ -20173,7 +19867,7 @@ function redrawNoNames() {
   }
   if ($("#plainNamesSegs")) sayNoNamesInSettings();
 }
-// the Settings row's name says enough on its own (1ooogle on X): a line
+// the Settings row's name says enough on its own (1ooogle 报告): a line
 // under it only for an agent it changes nothing in
 function sayNoNamesInSettings() {
   const who = $("#plainNamesSegs").parentElement.querySelector(".who"), said = noNamesSaid();
@@ -20609,7 +20303,7 @@ function renderWarmAt(box, sub, ats, onReset, via, save) {
 // renderAutoResetOwn lists each ChatGPT account under Settings › Usage's
 // "Codex: auto-use resets", with its switch, the same say as on the
 // account's card (settings' codexAutoReset, the CLI's quota auto-reset).
-// Avalon on Discord, after foobra12 asked where it was: it was only on the
+// Avalon 报告, after foobra12 asked where it was: it was only on the
 // accounts' cards, and they found it from the menu bar's panel alone,
 // nothing for it in the window's Settings. The row shows while a Codex
 // account is signed in, or one is still on.
@@ -20759,7 +20453,7 @@ function renderAlerts(s, keep) {
   const opts = [["0", t("Off")], ...hours.map((h) => [String(h), t("{n} h before", { n: h })])];
   if (r && !hours.includes(r)) opts.push([String(r), t("{n} h before", { n: r })]);
   $("#resetReminderSegs").replaceChildren(segs(opts, String(r), (v) => savePrefs({ ...keep, resetReminder: Number(v) })));
-  // a long task done (itieniu on X): Off, or how long a turn ran, in seconds
+  // a long task done (itieniu 报告): Off, or how long a turn ran, in seconds
   sub("#turnDoneSub", t("A notification when Claude Code, Codex, OpenCode or another agent going through Chongyun finishes a task that ran at least this long"));
   const mins = [1, 3, 10];
   const d = s.turnDoneAlert || 0;
@@ -21090,7 +20784,7 @@ function renderImages(s, keep) {
   box.append(r);
   renderImageGen(s, keep, box);
   // the same image recognition as an MCP server of the gateway's (JonahFu
-  // on X), for an agent to mount as its analyze_image tool
+  // 报告), for an agent to mount as its analyze_image tool
   const mcpURL = mcpAddress(s, "/mcp/magpie/vision");
   const mcp = el("div", "row pref");
   const mwho = el("div", "who");
@@ -21184,7 +20878,7 @@ function renderImageGen(s, keep, box) {
   r.append(who, val);
   box.append(r);
   // how long a vendor is given to draw an image and send it: 5 minutes
-  // unless set, as a slow image endpoint needs more (neighbads on X)
+  // unless set, as a slow image endpoint needs more (neighbads 报告)
   const w = el("div", "row pref");
   w.id = "imageTimeoutRow";
   const wwho = el("div", "who");
@@ -21310,7 +21004,7 @@ function renderSearch(s, keep) {
     const tools = [x];
     if (a.key) {
       // its saved key shown in its row and hidden again, as a provider's
-      // editor does (OnurBen on Discord)
+      // editor does (OnurBen 报告)
       const eye = el("button", "text search-eye", t("Show"));
       eye.onclick = async () => {
         const sub = r.querySelector(".sub");
@@ -21513,7 +21207,7 @@ function renderSearcher(s, keep, box) {
     sub.append(" · ", el("span", "warn searcher-unused", t("{who} isn't used: {why}, so Chongyun picks one", { who: named(v), why })));
   }
   // the one named didn't search last time, and no other provider searched
-  // in its place (Gearclickist on Discord: Grok picked answered without
+  // in its place (Gearclickist 报告: Grok picked answered without
   // searching, and Codex's pricier model searched instead, unasked). First,
   // so the one-line help's ellipsis doesn't hide it.
   const failed = s.searchFailed;
@@ -21551,7 +21245,7 @@ function renderSearcher(s, keep, box) {
       options.push({ value: c.id, label: t("its web search"), note: c.name, icon: c.icon, group: c.name });
       continue;
     }
-    // its small model is offered once (Player on Discord): the model of the
+    // its small model is offered once (Player 报告): the model of the
     // same name below it searched just the same, "<provider>/<small>" being
     // that model named rather than Chongyun's pick, so a pick saved so is
     // ticked here. No "via Chongyun": no agent asks for these
@@ -21570,7 +21264,7 @@ function renderSearcher(s, keep, box) {
 }
 
 // sideEffortChip: beside a model Chongyun asks on its own (Image
-// recognition's, the searcher's), how hard it thinks (MOMO on Discord,
+// recognition's, the searcher's), how hard it thinks (MOMO 报告,
 // "外置模型能不能提供思考深度选项"): only the levels that model has, and
 // Default, which leaves it as Chongyun asks it (dflt says how). Nothing is
 // shown for a model whose levels aren't known.
@@ -21622,7 +21316,7 @@ function renderReplies(s, keep) {
   // how many more accounts or members a request the vendor's safety filter
   // refused is asked of (#248): every one left unless set. Never hands the
   // refusal back, which Claude Code answers with its own fallback model (DD
-  // on Discord)
+  // 报告)
   const f = el("div", "row pref");
   f.id = "refusalRetriesRow";
   const fwho = el("div", "who");
@@ -22986,12 +22680,12 @@ function editRedactRule(r, n, row) {
   if (d.err) head.querySelector(".sub").classList.add("err");
 }
 
-// renderPort: the gateway's address on this computer (Magic_zero on Discord:
+// renderPort: the gateway's address on this computer (Magic_zero 报告:
 // 3425 taken by another program, or one easier to tell apart). Only its
 // port, 1024 up, is typed here; Chongyun moves its gateway there and every
 // agent it connected with it, or says why it can't (another program has
 // it). MAGPIE_ADDR, a whole host:port, comes first and the field shows it,
-// off (Chicring on Discord: the row was titled a port while it showed one).
+// off (Chicring 报告: the row was titled a port while it showed one).
 let portDraft = { value: null, err: "" };
 // portSays is the gateway's word on a port it couldn't take, in the page's
 // language: it says the port, so it is matched rather than looked up
@@ -23051,7 +22745,7 @@ function renderPort(s) {
 }
 
 // renderBareIds: Model ids without the provider (settings.bareModelIDs,
-// love1sbug on X, moving from CLIProxyAPI): the gateway's /v1/models
+// love1sbug 报告, moving from CLIProxyAPI): the gateway's /v1/models
 // lists each model by its own id as well, gpt-5.6-sol beside
 // codex/gpt-5.6-sol. Posted on its own; off by default.
 function renderBareIds(s) {
@@ -23115,13 +22809,13 @@ function renderCORS(s) {
 }
 
 // renderAllow: the addresses other computers may reach Chongyun from at
-// all (lc on Discord: Chongyun in Docker on a public host), as IPs and CIDR
+// all (lc 报告: Chongyun in Docker on a public host), as IPs and CIDR
 // ranges, under Share on local network — a row to add one, and one row
 // each to take it away. None listed lets every address in, with a gateway
 // key, as before; this computer is always let in. MAGPIE_ALLOW_IPS, where
 // set, is the list, shown and not edited here.
 // A list that would shut out the page saving it names the address Chongyun
-// sees the page from (Mathresearcher on Discord: which address?), and
+// sees the page from (Mathresearcher 报告: which address?), and
 // offers to add it to the list that was refused; behind Docker or a proxy
 // that is the proxy's, not the user's computer's (gateway.peerAddr).
 let allowDraft = { value: "", err: "", addr: "", tried: null };
@@ -23298,7 +22992,7 @@ async function renderUpdate(r, u) {
   for (const b of val.querySelectorAll("button")) if (b !== kept) b.remove();
   let pageShown = false;
   // where GitHub is slow to Chongyun, the update can be fetched in the
-  // browser instead, through its own proxy or accelerator (PapainTea on X)
+  // browser instead, through its own proxy or accelerator (PapainTea 报告)
   const page = () => {
     if (!u.url) return;
     const b = kept || el("button", "text update-page");
@@ -23702,7 +23396,7 @@ addEventListener("touchmove", (e) => {
 // A flick goes on scrolling after the finger is lifted, with no touch event
 // to say so: each of its scrolls keeps the next one the reader's, till it
 // comes to rest. Put back, a phone's page jerked to and fro under the
-// finger's flick (jiakun_zhao on X: 滚动会抽搐).
+// finger's flick (jiakun_zhao 报告: 滚动会抽搐).
 let flingUntil = 0;
 const flings = () => { flingUntil = performance.now() + 250; readerScrolls(250); };
 addEventListener("touchend", flings, { capture: true, passive: true });
@@ -23987,7 +23681,7 @@ async function show(v) {
   if (featureHides($(`#nav button[data-view="${v}"]`))) v = gatewayMode ? "providers" : "agents";
   if (v !== view) {
     if (v === "plugins" && pluginUpdates) window.pluginTabTo?.("installed");
-    if (view === "providers" && (editing !== null || importing || importingApps)) {
+    if (view === "providers" && (editing !== null || importing)) {
       if (!await cancelEdit(true)) return false;
     } else if (!$("#modal").hidden && !$("#modal").classList.contains("out")) {
       if (view === "library" && modalFormDirty() && !(await confirmDiscard())) return false;
@@ -24522,7 +24216,7 @@ function toggleSideNav() {
 // who asked for less motion, has the new at once. So does the Linux app:
 // WebKitGTK with compositing off (webkit_linux.go turns it off under
 // Wayland) crashes in a view transition, the click on the sidebar's button
-// taking the window down (depravity_wings on X). Anywhere else, a transition
+// taking the window down (depravity_wings 报告). Anywhere else, a transition
 // still going well past its half second is cut short, so a webview that
 // never ends one can't leave the window on the old layout's picture
 var MORPH_MAX = 1500;
@@ -24997,7 +24691,7 @@ window.noteAccounts = noteAccounts;
   let masked = false, chosen = null;
   try { chosen = localStorage.getItem("magpie.maskEmails"); masked = chosen === "1"; } catch {}
   // where it hides: the whole window, every page, its model pickers, menus
-  // and dialogs, which sit outside a page (PaulT on Discord: a Codex
+  // and dialogs, which sit outside a page (PaulT 报告: a Codex
   // account's address in the tray's picker stayed in sight; Zhenbao TONG:
   // the window's Providers page showed every account while the tray hid
   // them). Routing and Usage each have a button for it; the tray panel

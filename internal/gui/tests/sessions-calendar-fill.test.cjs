@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The Sessions tab's activity calendar fills its card (John on Discord: 这个活跃度
+// The Sessions tab's activity calendar fills its card (John 报告: 这个活跃度
 // 怎么没有铺满全部宽度呢？): 118 days are 17 weeks, and their cells took the left
 // part of a wide card and left the rest empty. The weeks before the range now
 // come in as empty cells, GitHub's way, without tooltips; the range's own days

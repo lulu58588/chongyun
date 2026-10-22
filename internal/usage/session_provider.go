@@ -35,7 +35,7 @@ func newSessionResolver(logs []sessions.Call) *sessionResolver {
 	if len(logs) == 0 {
 		return r
 	}
-	r.identities = provider.SessionIdentities(sessions.CodexDir())
+	r.identities = provider.SessionIdentities()
 	r.desktop = map[string]desktopSessionIdentity{}
 	r.bySession = map[string][]desktopSessionIdentity{}
 	r.emails = map[string]string{}

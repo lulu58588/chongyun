@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Settings' kinds of personal data (lc on Discord): under Mask personal data,
+// Settings' kinds of personal data (lc 报告): under Mask personal data,
 // while it is on, a row for each kind with Off/On, showing the user's choice
 // or the kind's default; a click saves that kind alone with the rest of the
 // settings as they were, and moves nothing. Their words are shown in full and

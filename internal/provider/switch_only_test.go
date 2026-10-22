@@ -9,7 +9,18 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
+
+// codexSwitchSignIn keeps a ChatGPT account in logins.json with the
+// account id given: the same email under two account ids is two accounts,
+// and the one the agent is on would be the other.
+func codexSwitchSignIn(t *testing.T, email, refresh, accountID string) {
+	t.Helper()
+	auth := codexAuthBlob(email, "plus", accountID, time.Now().Add(time.Hour))
+	auth["tokens"].(map[string]any)["refresh_token"] = refresh
+	codexOwnLogin(t, email, "plus", auth)
+}
 
 // #1907 (foobra): Codex Desktop and the CLI on their own ChatGPT
 // subscription, two accounts, no gateway in between. Switch-only is kept on
@@ -21,12 +32,12 @@ import (
 // gateway, magpie's own idea, isn't taken up on it.
 func TestCodexSwitchOnlyStillSwitchesTheSignIn(t *testing.T) {
 	home := signIn(t) // me@example.com, acct-1
-	rememberLogins(true)
-	codexSignIn(t, home, "spare@example.com", "r-spare")
-	rememberLogins(true)
-	codexSignIn(t, home, "me@example.com", "r-1")
-	rememberLogins(true)
-	used := map[string]float64{"acct-me@example.com": 100, "acct-spare@example.com": 20}
+	codexSignIn(t, "spare@example.com", "r-spare")
+	// the same account again, with the sign-in it is on now: chongyun keeps
+	// the accounts it signed in to in logins.json, so signing in to it once
+	// more is what makes it the one the agent is on
+	codexSwitchSignIn(t, "me@example.com", "r-1", "acct-1")
+	used := map[string]float64{"acct-1": 100, "acct-spare@example.com": 20}
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]any{"plan_type": "plus", "rate_limit": map[string]any{
 			"primary_window": map[string]any{"used_percent": used[r.Header.Get("chatgpt-account-id")], "limit_window_seconds": 18000}}})
@@ -78,7 +89,7 @@ func TestCodexSwitchOnlyStillSwitchesTheSignIn(t *testing.T) {
 		t.Fatalf("switched to %q, Codex signed in with %q", to, signedIn())
 	}
 	// the first has room again: back to it
-	used["acct-me@example.com"] = 10
+	used["acct-1"] = 10
 	if to := switched(); !strings.HasPrefix(to, "me@example.com") || signedIn() != "r-1" {
 		t.Fatalf("back to %q, Codex signed in with %q", to, signedIn())
 	}

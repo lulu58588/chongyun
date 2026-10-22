@@ -65,7 +65,7 @@ func CanFast(p Provider, model string) bool {
 		}
 		// a model the plugin says its vendor serves at the priority tier
 		// (serviceTiers, #2514), on its Chat or Responses API, which the
-		// gateway sends service_tier "priority" there (Lovest on Discord:
+		// gateway sends service_tier "priority" there (Lovest 报告:
 		// only Cursor's plugin could be picked fast)
 		m, listed := pluginModel(pp, model)
 		if listed && pluginTierOn(pp.ID, m, "priority") {

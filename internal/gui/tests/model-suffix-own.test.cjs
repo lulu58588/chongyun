@@ -82,7 +82,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const segs = page.locator("#plainNamesSegs .opt");
       await segs.first().waitFor();
       const row = page.locator(".row.pref", { has: page.locator("#plainNamesSegs") });
-      // the name says enough: no line under it (1ooogle on X)
+      // the name says enough: no line under it (1ooogle 报告)
       assert.equal(await row.locator(".sub").count(), 0);
       assert.deepEqual((await segs.allTextContents()).map((s) => s.trim()), want[lang].labels);
       const own = segs.nth(1);

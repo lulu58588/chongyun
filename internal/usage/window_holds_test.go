@@ -30,7 +30,7 @@ func holdsHome(t *testing.T) {
 
 func near(a, b float64) bool { return math.Abs(a-b) <= 1e-9*max(1, math.Abs(b)) }
 
-// Chiao on Discord: each window's whole, reckoned from the calls magpie
+// Chiao 报告: each window's whole, reckoned from the calls magpie
 // routed through the account in it over the share used, at API prices —
 // for Claude's 5 hours, its week and its Opus-only week, Codex's 5 hours,
 // and a moved plugin's window told in seconds to its reset; and nothing

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// @G_Z_Y on X installed cursor-agent and didn't find it on the Agents page:
+// @G_Z_Y 报告 installed cursor-agent and didn't find it on the Agents page:
 // its row was "Cursor", with no version, and "Only Cursor's own models"
 // beside "Can't connect". The row is Cursor CLI, with what cursor-agent
 // --version says, and its line says why magpie can't connect it, whole,

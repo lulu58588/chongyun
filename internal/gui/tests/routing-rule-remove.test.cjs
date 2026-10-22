@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A routing group's rule can be found and taken out (ppBruce on Discord,
+// A routing group's rule can be found and taken out (ppBruce 报告,
 // v0.1.1290: "once a rule is added there is no delete button, and a rule
 // with empty conditions can't be saved"). The rule's ⋯, which holds Remove
 // rule, is drawn whether or not the pointer is over the rule, and works by

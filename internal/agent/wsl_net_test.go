@@ -14,7 +14,7 @@ import (
 
 // A .wslconfig Notepad saved as "Unicode" (UTF-16LE with a BOM), as
 // "Unicode big endian", or UTF-16LE with no BOM, is read as WSL reads it
-// (lgtm on Discord: mirrored all along, and told it wasn't).
+// (lgtm 报告: mirrored all along, and told it wasn't).
 func TestWSLConfigUTF16(t *testing.T) {
 	cfg := "[wsl2] # networking\r\nmemory=8GB\r\nnetworkingMode=mirrored\r\n"
 	be := []byte{0xfe, 0xff}

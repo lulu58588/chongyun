@@ -355,7 +355,7 @@ func TestPiMCPWholeMoveKeepsABackup(t *testing.T) {
 	}
 }
 
-// sydney on Discord, heliar-k on #1097: Pi 1.0 with a pi-mcp-adapter left
+// sydney 报告, heliar-k on #1097: Pi 1.0 with a pi-mcp-adapter left
 // in npm/node_modules that settings.json doesn't list, so Pi doesn't load
 // it (core/package-manager.js resolve). Pi's own MCP reads mcp.json, and
 // the Library's servers go there, not to mcp-adapter.json; the user's

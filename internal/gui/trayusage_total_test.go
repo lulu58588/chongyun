@@ -110,7 +110,7 @@ func TestTrayCount(t *testing.T) {
 // tab show, which a click opens: the calls an agent's own session file
 // records count, and so do the cache's tokens. Summed as the Overview
 // sums, it left the former out and the latter aside, and its number was
-// neither the page's input nor its total (NextCommit on Discord).
+// neither the page's input nor its total (NextCommit 报告).
 func TestTrayTotalIsTheLedgers(t *testing.T) {
 	sandboxHome(t)
 	now := holdUsageClock(t, time.Date(2026, 9, 30, 12, 0, 0, 0, time.Local))

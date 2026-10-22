@@ -46,7 +46,7 @@ func TestLightweightKeptAndOwn(t *testing.T) {
 	}
 }
 
-// Keep awake (xiao_wang24004 on X) is off by default, saved, and this
+// Keep awake (xiao_wang24004 报告) is off by default, saved, and this
 // computer's own.
 func TestKeepAwakeKeptAndOwn(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())

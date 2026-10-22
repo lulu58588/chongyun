@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -13,21 +12,44 @@ import (
 	"time"
 )
 
-func TestSubscriptionsOnAtOnce(t *testing.T) {
-	home := signIn(t)
-	// a saved account whose access token has run out: it's refreshed in
-	// logins.json when it's used, never put back into the agent's store
-	writeFile(t, filepath.Join(home, ".codex", "auth.json"), map[string]any{
+// loginsOnCodexLogin keeps a ChatGPT account in logins.json, as chongyun's
+// own sign-in does: the account it signed in to is kept there, with the
+// sign-in it has.
+func loginsOnCodexLogin(t *testing.T, email, accountID, refresh string, expired bool) {
+	t.Helper()
+	exp := time.Now().Add(time.Hour).Unix()
+	if expired {
+		exp = time.Now().Add(-time.Hour).Unix()
+	}
+	auth := map[string]any{
 		"auth_mode": "chatgpt",
 		"tokens": map[string]any{
-			"id_token":      fakeJWT(map[string]any{"email": "old@example.com", "https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": "plus"}}),
-			"access_token":  fakeJWT(map[string]any{"exp": float64(time.Now().Add(-time.Hour).Unix())}),
-			"refresh_token": "r-old", "account_id": "acct-old",
+			"id_token":      fakeJWT(map[string]any{"email": email, "https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": "plus"}}),
+			"access_token":  fakeJWT(map[string]any{"exp": float64(exp)}),
+			"refresh_token": refresh, "account_id": accountID,
 		},
-	})
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	}
+	codexOwnLogin(t, email, "plus", auth)
+}
+
+// loginsOnSaved is the account chongyun keeps for the codex user.
+func loginsOnSaved(t *testing.T, user string) savedLogin {
+	t.Helper()
+	for _, l := range readLogins() {
+		if l.Agent == "codex" && l.User == user {
+			return l
+		}
+	}
+	t.Fatalf("no saved codex account %q", user)
+	return savedLogin{}
+}
+
+func TestSubscriptionsOnAtOnce(t *testing.T) {
+	signIn(t)
+	// a saved account whose access token has run out: it's refreshed in
+	// logins.json when it's used, never put back into the agent's store
+	loginsOnCodexLogin(t, "old@example.com", "acct-old", "r-old", true)
+	codexSignIn(t, "work@example.com", "r-work")
 
 	var refreshed string
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -76,10 +98,10 @@ func TestSubscriptionsOnAtOnce(t *testing.T) {
 			t.Fatalf("the refresh wasn't kept: %s", l.Auth)
 		}
 	}
-	var live codexAuth
-	readJSON(filepath.Join(home, ".codex", "auth.json"), &live)
-	if live.Tokens.RefreshToken != "r-work" {
-		t.Fatalf("the agent's own sign-in changed: %+v", live.Tokens)
+	// the account the agent is on keeps the sign-in chongyun has for it:
+	// the other account's refresh did not touch it
+	if got := loginsOnSaved(t, "work@example.com"); !strings.Contains(string(got.Auth), "r-work") {
+		t.Fatalf("the agent's own sign-in changed: %s", got.Auth)
 	}
 	if _, ok, _ := p.Account.Token(context.Background()); ok {
 		t.Fatal("the agent's own account has a token of chongyun's")
@@ -103,10 +125,8 @@ func TestSubscriptionsOnAtOnce(t *testing.T) {
 }
 
 func TestLoginUsageEachAccount(t *testing.T) {
-	home := signIn(t)
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
 	loginUsageCache.Lock()
 	loginUsageCache.m = nil
 	loginUsageCache.Unlock()
@@ -136,10 +156,8 @@ func TestLoginUsageEachAccount(t *testing.T) {
 // An uncached account is fetched in a goroutine while the next account
 // comes from the cache. Both results must be added to the same map safely.
 func TestLoginUsageMixedCache(t *testing.T) {
-	home := signIn(t)
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
 	ls := Logins("codex")
 	if len(ls) != 2 {
 		t.Fatalf("logins: %+v", ls)
@@ -198,10 +216,8 @@ func TestLoginUsageMixedCache(t *testing.T) {
 // With several accounts, the usage page has a card for each, the one the
 // agent is signed in to first.
 func TestSubscriptionUsageEachAccount(t *testing.T) {
-	home := signIn(t)
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
 	used := map[string]float64{"acct-1": 12, "acct-work@example.com": 97}
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/backend-api/wham/usage" {
@@ -243,10 +259,8 @@ func codexCards() map[string]SubscriptionQuota {
 // whichever is read first, the other is told it within the minute, and
 // the vendor is asked once — not twice, a moment apart, two numbers.
 func TestLoginUsageSharedWithUsagePage(t *testing.T) {
-	home := signIn(t)
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
 	var mu sync.Mutex
 	asked := map[string]int{}
 	var n atomic.Int32
@@ -305,10 +319,8 @@ func TestLoginUsageSharedWithUsagePage(t *testing.T) {
 // the Usage page asking meanwhile have the one request's answer, which the
 // caller that started it giving up doesn't cut short.
 func TestLoginUsageReadOnceAtATime(t *testing.T) {
-	home := signIn(t)
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
 	var hits atomic.Int32
 	hold := make(chan struct{})
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

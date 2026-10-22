@@ -86,7 +86,7 @@ func stubQoder(t *testing.T, rs []provider.WorkBuddyCheckin) *int {
 // c on the Usage page presses WorkBuddy's daily check-in (签到) for every
 // WorkBuddy (China) account signed in here at once, as the app's "Check in now" and magpie accounts
 // checkin do, and says how each stands: the credits and streak, in already,
-// or why not (akic404 on Discord: the TUI had no way to check in).
+// or why not (akic404 报告: the TUI had no way to check in).
 func TestTUIChecksWorkBuddyIn(t *testing.T) {
 	home(t)
 	usagePage := model{w: 200, h: 40, page: pageUsage}
@@ -189,7 +189,7 @@ func TestCheckinOnTheUsageLine(t *testing.T) {
 }
 
 // c checks in the accounts of a plugin that checks in itself (auth.checkin;
-// Lemon on Discord) with the built-ins', named by the plugin's vendor; a
+// Lemon 报告) with the built-ins', named by the plugin's vendor; a
 // captcha is said as such, not as a failure.
 func TestTUIChecksPluginsIn(t *testing.T) {
 	home(t)

@@ -3,7 +3,7 @@ package provider
 import "time"
 
 // Pace is how far w's use, read at readAt, is from an even pace through
-// the window at now, in points of the window (fflake33 on Discord): what
+// the window at now, in points of the window (fflake33 报告): what
 // is used less the share of the window gone by. +12 is twelve points more
 // used than an even pace would have used by now, so at this rate the
 // window runs out before it resets; -8 is eight points to spare. ok is

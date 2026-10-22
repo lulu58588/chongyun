@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A provider's decision address field (Outvi V on Discord): only Jev's own
+// A provider's decision address field (Outvi V 报告): only Jev's own
 // presets (TypeSafe, Vercel, Cloudflare) call it Jev's endpoint and give
 // Cloudflare's …/accounts/<account id>/ai/run as the example. A provider
 // that also serves conversations and asks its own decision models on

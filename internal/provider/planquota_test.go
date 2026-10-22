@@ -28,7 +28,7 @@ func TestPlanQuotaSource(t *testing.T) {
 		{Provider{Anthropic: "https://opencode.ai/zen/go"}, "https://opencode.ai/zen/go/v1/usage", true, true},
 		{Provider{Chat: "https://opencode.ai/zen/v1"}, "", false, false}, // Zen is pay as you go
 		// Go at the inference API, as models.dev and Go's docs give it
-		// since October 2026 (ttmrmx on X: no card)
+		// since October 2026 (ttmrmx 报告: no card)
 		{Provider{Chat: "https://opencode.ai/inference/go/openai/v1"}, "https://opencode.ai/zen/go/v1/usage", true, true},
 		{Provider{Chat: "https://opencode.ai/inference/go/v1", Anthropic: "https://opencode.ai/inference/go"}, "https://opencode.ai/zen/go/v1/usage", true, true},
 		{Provider{Anthropic: "https://opencode.ai/inference/go/anthropic"}, "https://opencode.ai/zen/go/v1/usage", true, true},
@@ -343,7 +343,7 @@ func TestPlanQuotas(t *testing.T) {
 			Keys: []KeyAccount{{Key: "glm-a"}, {Key: "glm-b", Name: "home"}, {Key: "glm-off", Off: true}}},
 		{ID: "glm-api", Name: "GLM API", Chat: "https://open.bigmodel.cn/api/paas/v4", Key: "glm-payg"},
 		{ID: "go", Name: "OpenCode Go", Chat: "https://opencode.ai/zen/go/v1", Key: "go-k"},
-		// Go at models.dev's URL for it: the same card (ttmrmx on X)
+		// Go at models.dev's URL for it: the same card (ttmrmx 报告)
 		{ID: "go-inference", Name: "OpenCode Go", Chat: "https://opencode.ai/inference/go/openai/v1", Key: "go-k"},
 		{ID: "zen", Name: "Zen", Chat: "https://opencode.ai/zen/v1", Key: "zen-k"},
 		{ID: "minimax-cn", Name: "MiniMax (China)", Chat: "https://api.minimaxi.com/v1", Anthropic: "https://api.minimaxi.com/anthropic", Key: "sk-cp-k"},
@@ -432,7 +432,7 @@ func TestReadKimiCode(t *testing.T) {
 }
 
 // An OpenCode Go key whose windows can't be read says why, with the way
-// out (sakulalalalalal on X: three Go keys, each "Allowance unavailable"
+// out (sakulalalalalal 报告: three Go keys, each "Allowance unavailable"
 // and nothing more). The bodies are OpenCode's own, as zen/go/v1/usage
 // answered on 2026-10-10: a key whose member has no Go, and a key it
 // doesn't know.

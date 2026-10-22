@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// MOMO on Discord asked for "Zen-Space-Bunny", the name a picker showed,
+// MOMO 报告 asked for "Zen-Space-Bunny", the name a picker showed,
 // and got a 404 that named neither the id meant nor how to name one.
 func TestUnknownModelSaysWhatToAsk(t *testing.T) {
 	fresh(t)

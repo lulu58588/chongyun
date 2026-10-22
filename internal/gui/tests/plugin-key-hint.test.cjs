@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A plugin's "api" way to sign in titles its key's field with its label,
 // as OpenCode's dialog does, and hints at the key with its placeholder
-// (Lemon on Discord); a way labelled only "API key" keeps "<name> API
+// (Lemon 报告); a way labelled only "API key" keeps "<name> API
 // key". The provider's own icon (a picture magpie kept) shows on its row.
 // English and Chinese; the API is faked here.
 const assert = require("node:assert/strict");

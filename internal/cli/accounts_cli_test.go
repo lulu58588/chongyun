@@ -57,6 +57,16 @@ func TestAccountsCachedReading(t *testing.T) {
 				"subscriptionType": "max", "scopes": []string{"user:inference", "user:profile"},
 			}})
 			write(filepath.Join(home, ".claude", ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "a@example.com"}})
+			// chongyun keeps the account it signed the agent in to in its own
+			// logins.json, marked as the one the agent is on: it never reads
+			// the agent's own file to find out which account that is.
+			write(filepath.Join(config, "logins.json"), []map[string]any{{"agent": "claude", "user": "a@example.com",
+				"plan": "max", "active": true, "seen": time.Now(),
+				"auth": map[string]any{"claudeAiOauth": map[string]any{
+					"accessToken": "sk-ant-oat01-test", "refreshToken": "sk-ant-ort01-test", "expiresAt": time.Now().Add(time.Hour).UnixMilli(),
+					"subscriptionType": "max", "scopes": []string{"user:inference", "user:profile"},
+				}},
+				"profile": map[string]any{"emailAddress": "a@example.com"}}})
 			write(filepath.Join(config, "quotas.json"), map[string]any{"claude/a@example.com": map[string]any{
 				"at": at, "quota": provider.SubscriptionQuota{Provider: "claude", User: "a@example.com", Windows: []provider.QuotaWindow{{Name: "5 hours", Used: 100, ResetsAt: &reset}}},
 			}})

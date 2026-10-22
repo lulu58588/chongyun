@@ -521,7 +521,7 @@ magpie.plugin("library", (ctx) => {
   // agent written that isn't one of them had it taken out (#332).
   function report(res, done, given) {
     if (!res) return;
-    // skills installed together (lc on Discord): those the library had
+    // skills installed together (lc 报告): those the library had
     // already, and those left out because another by that name is in the
     // way, are named, beside how many were installed
     const had = res.had || [], skipped = res.skipped || [];
@@ -765,7 +765,7 @@ magpie.plugin("library", (ctx) => {
     if (lib) more.title = tilde(lib.dir);
     else more.disabled = true;
     // magpie's backups beside it, on every tab: at the foot of a long
-    // page they were hard to find (Dade on Discord: 备份在最底部)
+    // page they were hard to find (Dade 报告: 备份在最底部)
     const back = button("", "lib-backups", () => lib && reveal(lib.backups));
     back.append(glyph(GLYPH.backup, "lib-mini"), el("span", "", t("Backups")));
     back.setAttribute("aria-label", t("Backups"));
@@ -966,7 +966,7 @@ magpie.plugin("library", (ctx) => {
     body.append(list);
   }
   // Why RTK has no hook for an agent: each agent's own reason and its own
-  // rtk-ai/rtk issue, never another agent's (新v学员 on Discord: Grok Build's
+  // rtk-ai/rtk issue, never another agent's (新v学员 报告: Grok Build's
   // said DeepSeek Harness's hooks can't rewrite and linked dsh's issue).
   // Keyed as rtkNoHook in rtk.go; TestRTKNoHookIssuesAreEachAgents holds the
   // two together. An agent with no entry gets no reason and no link.
@@ -1319,7 +1319,7 @@ magpie.plugin("library", (ctx) => {
     nm.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") create(); else if (e.key === "Escape") cancel(); };
     queueMicrotask(() => nm.focus());
     // a set can be kept in a file of the user's own instead, one that other
-    // tools keep or read too: ~/.agents/AGENTS.md (新v学员 on Discord)
+    // tools keep or read too: ~/.agents/AGENTS.md (新v学员 报告)
     let file = null;
     const link = button(t("Keep in a file…"), "action lib-setlink", () => {
       file = input("~/.agents/AGENTS.md", t("Full path of a Markdown file"));
@@ -1475,7 +1475,7 @@ magpie.plugin("library", (ctx) => {
       // that no agent and no project has is started for nobody, so it is
       // checked only when the reader clicks its status (#1597, xiaozhu1337),
       // and again once it changed after that: a sign-in since isn't left
-      // beside "needs sign-in" (新v学员 on Discord)
+      // beside "needs sign-in" (新v学员 报告)
       const unchecked = lib.servers.filter((s) => (inUse(s) || health.has(s.name)) && health.get(s.name)?.key !== healthKey(s));
       queueMicrotask(() => checkHealth(unchecked));
     }
@@ -1577,7 +1577,7 @@ magpie.plugin("library", (ctx) => {
   // (or reached) and asked for its tools. Its row shows it as a dot and a
   // few words, the whole reason in its tooltip; a click checks it again.
   // A server that listed its tools shows them instead, by name and what
-  // each says it does (nf1qaz2w on Discord), with Check again under them.
+  // each says it does (nf1qaz2w 报告), with Check again under them.
   const health = new Map(); // name → { key: the server as checked, h: what was found, null while checking }
   const toolsOpen = new Set(); // the servers whose tools are shown
   const healthKey = (s) => JSON.stringify([s.transport, s.command, s.args, s.env, s.url, s.headers, s.signIn]);
@@ -1652,7 +1652,7 @@ magpie.plugin("library", (ctx) => {
     parts.push(foot);
     box.replaceChildren(...parts);
   }
-  // Each tool has a switch (nf1qaz2w on Discord): one turned off is left
+  // Each tool has a switch (nf1qaz2w 报告): one turned off is left
   // out by the agents given the server that can leave out a single tool.
   // A click flips its own switch at once and nothing else on the page, so
   // the list doesn't move under it; quick clicks are sent as one.
@@ -1714,7 +1714,7 @@ magpie.plugin("library", (ctx) => {
       const h = got[name] || (failed ? { state: "error", why: "request", detail: failed } : null);
       // the check found magpie's sign-in run out (the server refused even
       // a renewed token): the row's tag says so, not "Signed in" beside
-      // "needs sign-in" (新v学员 on Discord)
+      // "needs sign-in" (新v学员 报告)
       const s = lib.servers.find((x) => x.name === name);
       if (h?.signIn && s && (!!h.signIn.signedIn !== !!s.signIn?.signedIn || !!h.signIn.dead !== !!s.signIn?.dead)) {
         s.signIn = h.signIn;
@@ -2054,7 +2054,7 @@ magpie.plugin("library", (ctx) => {
     // the saved one; see ready
     ready.saves = () => !s || d.name !== s.name || d.transport !== s.transport || d.url !== (s.url || "") || appOf(d) !== appOf(s);
     // a server whose sign-in doesn't let magpie register itself (GitHub's,
-    // 新v学员 on Discord): the fields for the user's own app open
+    // 新v学员 报告): the fields for the user's own app open
     ready.failed = (msg) => {
       if (!msg.startsWith(NO_REGISTRATION) || !appBox) return;
       appOpen = true;
@@ -2171,7 +2171,7 @@ magpie.plugin("library", (ctx) => {
     // the sign-in is to another server than the saved one (a new one, a
     // name or URL changed). It never saves the rest of the form on its
     // own: a header removed, then Sign in, then Cancel left the header
-    // removed (新v学员 on Discord). A save says so on the button ("Save and
+    // removed (新v学员 报告). A save says so on the button ("Save and
     // sign in"), and what it saved is what Cancel then keeps
     async function ready() {
       if (!ready.saves()) return s.name;
@@ -2659,7 +2659,7 @@ magpie.plugin("library", (ctx) => {
       if (lib.skills.length > 1) rh.append(sortBy("libSkills", SKILL_SORTS(), () => { if (box.isConnected) drawSkills(box, all); }));
       if (lib.skills.length > 1) rh.append(foldAllButton(box, all));
       // the groups traced again: a pack added a while ago is mostly older
-      // copies its repository has edited since (White Immortal on Discord)
+      // copies its repository has edited since (White Immortal 报告)
       if (lib.skills.length > 1 && lib.skills.some((s) => skillRepo(s))) {
         const g = button(regrouping ? t("Grouping…") : t("Group again"), "lib-regroup", () => regroupSkills());
         g.title = t("Fetch the repositories your skills came from, and group the skills they have with them");
@@ -2834,7 +2834,7 @@ magpie.plugin("library", (ctx) => {
   const picked = new Set();    // the names picked
   const pickErrs = new Map();  // name → why Remove left it, as the bar's Remove said (#1852)
   // the skills "In your agents" have a Select of their own, to take several
-  // out of the agents at once (wongxy on Discord): never with the library's
+  // out of the agents at once (wongxy 报告): never with the library's
   let pickFound = false;
   const foundPicked = new Set();
   const foundErrs = new Map();
@@ -2851,7 +2851,7 @@ magpie.plugin("library", (ctx) => {
   // the repository a skill came from, however it came in: magpie traces
   // one not installed from GitHub too (the skills CLI's lock, the git
   // checkout it's in), so a repository's skills are one group (White
-  // Immortal on Discord). owner/repo on GitHub, host/path elsewhere.
+  // Immortal 报告). owner/repo on GitHub, host/path elsewhere.
   const skillRepo = (s) => s.repo || (s.kind === "github" ? repoOf(s.source) : s.origin ? repoOf(s.origin) : "");
   // a host's (with a path, or a site's kit of skills alone, #1862) or GitHub's
   const repoURL = (r) => (/^[^/]+\.[^/]+(\/|$)/.test(r) ? "https://" + r : "https://github.com/" + r);

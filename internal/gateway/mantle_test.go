@@ -12,7 +12,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// mantle plays Bedrock's Mantle endpoint (@marktoown on X): Anthropic's
+// mantle plays Bedrock's Mantle endpoint (@marktoown 报告): Anthropic's
 // Messages under /anthropic, and its OpenAI APIs under two prefixes, each
 // model at one of them: those in openai at /openai/v1, the rest at /v1. A
 // model asked at the other prefix, or one it serves at neither (none), is

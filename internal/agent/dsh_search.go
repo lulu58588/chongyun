@@ -5,7 +5,7 @@ package agent
 // tool to <baseURL>/messages, DeepSeek's by default, signed with the key
 // its apiKeyEnv names (DEEPSEEK_API_KEY). A dsh that reaches its models
 // through magpie alone has no such key, and every search failed asking for
-// one (Packing1 on Discord). While dsh starts on a model of magpie's, magpie
+// one (Packing1 报告). While dsh starts on a model of magpie's, magpie
 // points the row at the gateway, with its own key and that model, or the
 // searcher Settings › Web search names when the user named one
 // (dshSearchModel): the gateway answers the server tool as Anthropic does,
@@ -35,7 +35,7 @@ const (
 // start sent every search to the model dsh works on, which, unable to
 // search by itself, asked the named searcher in turn: two requests a
 // search, and a model that takes one call at a time timed out (我只会玩单机
-// on Discord).
+// 报告).
 func dshSearchModel(start string) string {
 	if m := gateway.NamedSearchModel(); m != "" {
 		return m

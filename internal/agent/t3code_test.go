@@ -115,7 +115,7 @@ func t3Format(t *testing.T, raw []byte) t3Envelope {
 	return e
 }
 
-// T3 Code (KevinXC on Discord) gets magpie as a provider of its own: a
+// T3 Code (KevinXC 报告) gets magpie as a provider of its own: a
 // claudeAgent instance on the gateway with every magpie model as a custom
 // model, the user's instances, their Claude's binary path and T3's keys
 // kept; off takes only magpie's out, and the catalog sync leaves it off.
@@ -266,7 +266,7 @@ func TestT3CodeHomeAndInstance(t *testing.T) {
 
 // Each magpie model in T3 Code has a Reasoning pick of the levels it takes
 // that Claude Code can send, medium chosen first, else the lowest (KevinXC
-// on Discord: every model ran at medium with no way to change it), and a
+// 报告: every model ran at medium with no way to change it), and a
 // model that thinks at some level a Thinking switch, on at first, as T3's
 // own Claude Haiku has; neither for a model with no such level.
 func TestT3CodeEfforts(t *testing.T) {

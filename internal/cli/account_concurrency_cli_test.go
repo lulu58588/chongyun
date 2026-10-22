@@ -85,7 +85,7 @@ func TestAccountConcurrencyCmd(t *testing.T) {
 }
 
 // magpie provider rpm sets how many requests each key sends in a minute
-// (coeo91 on Discord), off for none; a number out of range is an error.
+// (coeo91 报告), off for none; a number out of range is an error.
 func TestRPMCmd(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)

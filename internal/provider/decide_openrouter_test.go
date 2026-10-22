@@ -67,7 +67,7 @@ func fakeOpenRouter(t *testing.T) (asked func() []string, lists func() int) {
 		}
 }
 
-// OpenRouter's decision models (ARNO on Discord: the OpenRouter
+// OpenRouter's decision models (ARNO 报告: the OpenRouter
 // provider's list didn't have them): they are listed apart from its chat
 // models, so the built-in OpenRouter fetches that list too and offers them
 // to routing groups, each with its window and input, asked at /systemone
@@ -202,7 +202,7 @@ func TestOpenRouterDecisionListRefreshed(t *testing.T) {
 }
 
 // A routing group's pickers offer an OpenRouter provider's decision models
-// as its picks say (coeo91 on Discord: two free models picked, and a new
+// as its picks say (coeo91 报告: two free models picked, and a new
 // group's picker listed OpenRouter's decision models after them, which the
 // provider's editor showed unpicked). With none picked every one is
 // offered; one a group names already is offered whatever the picks; and

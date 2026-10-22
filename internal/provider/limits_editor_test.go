@@ -9,7 +9,7 @@ import (
 )
 
 // A provider's editor sets its reply limits as a whole, as it sets its
-// windows (ARNO on Discord: a model's maxTokens was wrong and only the
+// windows (ARNO 报告: a model's maxTokens was wrong and only the
 // window could be set there): those it leaves out come off, another
 // provider's stay, a model it doesn't serve is refused with nothing kept,
 // and a save that changes nothing tells the agents nothing.

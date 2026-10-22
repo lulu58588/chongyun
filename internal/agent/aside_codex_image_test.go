@@ -27,6 +27,12 @@ func TestAsideCodexOneGPTImage(t *testing.T) {
 		"access_token":  claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}),
 		"refresh_token": "r", "account_id": "acct-1"}})
 	writeFile(t, filepath.Join(os.Getenv("HOME"), ".codex", "auth.json"), string(auth))
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the agent's own file is never read to find out.
+	codexLoginSaved(t, "me@example.com", map[string]any{"auth_mode": "chatgpt", "tokens": map[string]any{
+		"id_token":      claims(map[string]any{"email": "me@example.com"}),
+		"access_token":  claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}),
+		"refresh_token": "r", "account_id": "acct-1"}})
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)
 	var codex []string

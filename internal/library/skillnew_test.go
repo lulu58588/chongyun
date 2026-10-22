@@ -323,7 +323,7 @@ func TestMarketInstallsASkillKeptInClaudesFolder(t *testing.T) {
 	}
 }
 
-// 碳碳双键's report on Discord: tw93/waza keeps its eight skills in skills/
+// 碳碳双键's report 报告: tw93/waza keeps its eight skills in skills/
 // and again in plugins/waza/skills/ (some copies behind the top ones), and
 // typing "tw93/waza" listed 16 skills, each twice. The paths are the
 // repository's own.

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The Sessions page with a history of thousands (ChildhoodAndy on X: switching
+// The Sessions page with a history of thousands (ChildhoodAndy 报告: switching
 // to it, or to another agent, and scrolling it stuttered). An open folder draws
 // its latest 100 sessions and a "Show 100 more" that adds the next page under
 // them, leaving what is drawn, and where the reader is, as it was; a filter and

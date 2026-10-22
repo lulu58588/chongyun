@@ -100,10 +100,16 @@ func TestClaudeAllowanceHeadersThroughTheGateway(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
 	os.MkdirAll(filepath.Join(home, ".claude"), 0o755)
-	os.WriteFile(filepath.Join(home, ".claude", ".credentials.json"), mustJSON(map[string]any{"claudeAiOauth": map[string]any{
-		"accessToken": "tok-me", "refreshToken": "r-me", "expiresAt": time.Now().Add(24 * time.Hour).UnixMilli(), "subscriptionType": "pro"}}), 0o600)
+	creds := map[string]any{"claudeAiOauth": map[string]any{
+		"accessToken": "tok-me", "refreshToken": "r-me", "expiresAt": time.Now().Add(24 * time.Hour).UnixMilli(), "subscriptionType": "pro"}}
+	os.WriteFile(filepath.Join(home, ".claude", ".credentials.json"), mustJSON(creds), 0o600)
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "hud@example.com", "accountUuid": "u-hud"}}), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	chongyunLogins(t, map[string]any{"agent": "claude", "user": "hud@example.com", "plan": "pro", "active": true, "on": true,
+		"seen": time.Now(), "auth": creds, "profile": map[string]any{"emailAddress": "hud@example.com", "accountUuid": "u-hud"}})
 	five := strconv.FormatInt(time.Now().Add(2*time.Hour).Unix(), 10)
 	week := strconv.FormatInt(time.Now().Add(5*24*time.Hour).Unix(), 10)
 	dir := t.TempDir()

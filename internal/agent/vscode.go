@@ -368,7 +368,7 @@ func vscodeCodeBinary(bin string) bool {
 // profiles made in VS Code besides its default (whose are in dir): a window
 // opened on one reads that profile's own, so a group only in the default's
 // is in the Agents window (which uses the default's) and not in the Chat of
-// a window on another profile (TJHHHH on Discord). VS Code lists them in
+// a window on another profile (TJHHHH 报告). VS Code lists them in
 // globalStorage/storage.json's userDataProfiles, each location a folder
 // under dir/profiles; a profile set to use the default's settings or
 // models (useDefaultFlags) has none of that kind, and one whose folder is

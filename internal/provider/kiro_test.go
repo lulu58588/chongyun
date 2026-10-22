@@ -69,83 +69,60 @@ func writeKiroCLI(t *testing.T, rows map[string]any) {
 	}
 }
 
-func readKiroRow(t *testing.T, key string) map[string]any {
-	t.Helper()
-	db, err := sql.Open("sqlite", kiroCLIDB())
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer db.Close()
-	var v string
-	if err := db.QueryRow(`SELECT value FROM auth_kv WHERE key = ?`, key).Scan(&v); err != nil {
-		t.Fatal(err)
-	}
-	var m map[string]any
-	json.Unmarshal([]byte(v), &m)
-	return m
-}
-
-func TestKiroReadsKiroCLIsSignIn(t *testing.T) {
+// Kiro CLI's own sign-in is not read: only the accounts chongyun signed in
+// itself, each in a home of its own, and the key saved on the provider.
+func TestKiroDoesNotReadKiroCLIsSignIn(t *testing.T) {
 	kiroSandbox(t)
-	if _, ok := readKiroAt("", ""); ok {
-		t.Fatal("signed in with nothing there")
-	}
 	exp := time.Now().Add(time.Hour).UTC().Format(time.RFC3339Nano)
 	// the shape kiro-cli 2.24 keeps a Google sign-in in
 	writeKiroCLI(t, map[string]any{"kirocli:social:token": map[string]any{"access_token": "at", "refresh_token": "rt",
 		"expires_at": exp, "provider": "google", "profile_arn": "arn:aws:codewhisperer:us-east-1:1:profile/P"}})
-	c, ok := readKiroAt("", "")
-	if !ok || c.method != "social" || c.access != "at" || c.refresh != "rt" || c.region != "us-east-1" || !c.fresh() || c.dbKey != "kirocli:social:token" {
-		t.Fatalf("social = %+v %v", c, ok)
+	if c, ok := readKiroAt("", ""); ok {
+		t.Fatalf("Kiro CLI's sign-in was read: %+v", c)
 	}
-	a, err := KiroAuthOf(context.Background(), "", "", false)
-	if err != nil || a.Token != "at" || a.Profile != "arn:aws:codewhisperer:us-east-1:1:profile/P" || a.Region != "us-east-1" || a.TokenType != "" {
-		t.Fatalf("auth = %+v %v", a, err)
+	if _, err := KiroAuthOf(context.Background(), "", "", false); err == nil {
+		t.Fatal("Kiro CLI's sign-in served a call")
 	}
 	// a key saved on the provider comes before any sign-in
-	c, _ = readKiroAt("ksk_x", "")
+	c, _ := readKiroAt("ksk_x", "")
 	if c.method != "apikey" || c.access != "ksk_x" {
 		t.Fatalf("key = %+v", c)
 	}
 }
 
-func TestKiroReadsAnAWSSignInAndItsClient(t *testing.T) {
+// The AWS sign-in kiro-cli keeps is not read either: its client and its
+// token are the CLI's own.
+func TestKiroDoesNotReadKiroCLIsAWSClient(t *testing.T) {
 	kiroSandbox(t)
 	writeKiroCLI(t, map[string]any{
 		"kirocli:odic:token":               map[string]any{"access_token": "at", "refresh_token": "rt", "expires_at": "2020-01-01T00:00:00Z", "region": "eu-west-1"},
 		"kirocli:odic:device-registration": map[string]any{"client_id": "cid", "client_secret": "sec"},
 	})
-	c, ok := readKiroAt("", "")
-	if !ok || c.method != "idc" || c.clientID != "cid" || c.clientSecret != "sec" || c.region != "eu-west-1" || c.fresh() {
-		t.Fatalf("idc = %+v", c)
-	}
-	if r := kiroRegion("", c.region); r != "eu-central-1" {
-		t.Fatalf("region = %q", r)
+	if c, ok := readKiroAt("", ""); ok {
+		t.Fatalf("Kiro CLI's sign-in was read: %+v", c)
 	}
 }
 
-func TestKiroReadsTheIDEsSignIn(t *testing.T) {
+// The Kiro IDE's own sign-in is not read either.
+func TestKiroDoesNotReadTheIDEsSignIn(t *testing.T) {
 	kiroSandbox(t)
 	dir := kiroIDEDir()
 	os.MkdirAll(dir, 0o755)
 	os.WriteFile(filepath.Join(dir, "kiro-auth-token.json"), []byte(`{"accessToken":"at","refreshToken":"rt","expiresAt":"2099-01-01T00:00:00Z","clientIdHash":"h","region":"us-east-1"}`), 0o600)
 	os.WriteFile(filepath.Join(dir, "h.json"), []byte(`{"clientId":"cid","clientSecret":"sec"}`), 0o600)
-	c, ok := readKiroAt("", "")
-	if !ok || c.method != "idc" || c.clientID != "cid" || c.idePath == "" {
-		t.Fatalf("ide = %+v", c)
-	}
-	os.WriteFile(filepath.Join(dir, "kiro-auth-token.json"), []byte(`{"accessToken":"at","refreshToken":"rt","expiresAt":"2099-01-01T00:00:00Z","authMethod":"social","provider":"Github"}`), 0o600)
-	if c, _ := readKiroAt("", ""); c.method != "social" {
-		t.Fatalf("ide social = %+v", c)
+	if c, ok := readKiroAt("", ""); ok {
+		t.Fatalf("the IDE's sign-in was read: %+v", c)
 	}
 }
 
-// An expired Google sign-in is refreshed and the new token written back
-// into kiro-cli's database, so the CLI goes on with it.
+// An expired sign-in of an account chongyun signed in is refreshed, and the
+// new token written back into the home it keeps it in.
 func TestKiroRefreshesAndWritesBack(t *testing.T) {
 	kiroSandbox(t)
-	writeKiroCLI(t, map[string]any{"kirocli:social:token": map[string]any{"access_token": "old", "refresh_token": "rt",
-		"expires_at": "2020-01-01T00:00:00Z", "provider": "google", "profile_arn": "arn:aws:codewhisperer:us-east-1:1:profile/P"}})
+	home := filepath.Join(t.TempDir(), "kiro-account")
+	os.MkdirAll(home, 0o700)
+	path := filepath.Join(home, kiroTokenFile)
+	os.WriteFile(path, []byte(`{"accessToken":"old","refreshToken":"rt","expiresAt":"2020-01-01T00:00:00Z","authMethod":"social","provider":"google","profileArn":"arn:aws:codewhisperer:us-east-1:1:profile/P"}`), 0o600)
 	var got map[string]string
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&got)
@@ -156,31 +133,40 @@ func TestKiroRefreshesAndWritesBack(t *testing.T) {
 	kiroRefreshURL = func(string) string { return srv.URL }
 	defer func() { kiroRefreshURL = was }()
 
-	a, err := KiroAuthOf(context.Background(), "", "", false)
+	a, err := KiroAuthOf(context.Background(), "", home, false)
 	if err != nil || a.Token != "new" {
 		t.Fatalf("auth = %+v %v", a, err)
 	}
 	if got["refreshToken"] != "rt" {
 		t.Fatalf("refreshed with %v", got)
 	}
-	row := readKiroRow(t, "kirocli:social:token")
-	if row["access_token"] != "new" || row["refresh_token"] != "rt2" || row["provider"] != "google" {
-		t.Fatalf("row = %v", row)
+	b, _ := os.ReadFile(path)
+	var saved kiroSaved
+	if json.Unmarshal(b, &saved) != nil {
+		t.Fatalf("saved = %s", b)
 	}
-	if exp, _ := time.Parse(time.RFC3339Nano, row["expires_at"].(string)); time.Until(exp) < 50*time.Minute {
-		t.Fatalf("expires_at = %v", row["expires_at"])
+	if saved.AccessToken != "new" || saved.RefreshToken != "rt2" || saved.Provider != "google" {
+		t.Fatalf("saved = %+v", saved)
+	}
+	if exp, _ := time.Parse(time.RFC3339Nano, saved.ExpiresAt); time.Until(exp) < 50*time.Minute {
+		t.Fatalf("expiresAt = %v", saved.ExpiresAt)
 	}
 	// turned down later, it is refreshed again even though it hasn't expired
-	a, err = KiroAuthOf(context.Background(), "", "", true)
+	a, err = KiroAuthOf(context.Background(), "", home, true)
 	if err != nil || a.Token != "new" || got["refreshToken"] != "rt2" {
 		t.Fatalf("stale = %+v %v %v", a, err, got)
 	}
 }
 
+// A sign-in of an account chongyun signed in that can't be refreshed says
+// to add the account again here.
 func TestKiroExpiredWithNoWayToRefresh(t *testing.T) {
 	kiroSandbox(t)
-	writeKiroCLI(t, map[string]any{"kirocli:social:token": map[string]any{"access_token": "old", "expires_at": "2020-01-01T00:00:00Z"}})
-	if _, err := KiroAuthOf(context.Background(), "", "", false); err == nil || !strings.Contains(err.Error(), "kiro-cli login") {
+	home := filepath.Join(t.TempDir(), "kiro-account")
+	os.MkdirAll(home, 0o700)
+	os.WriteFile(filepath.Join(home, kiroTokenFile),
+		[]byte(`{"accessToken":"old","expiresAt":"2020-01-01T00:00:00Z","authMethod":"social","provider":"google"}`), 0o600)
+	if _, err := KiroAuthOf(context.Background(), "", home, false); err == nil || !strings.Contains(err.Error(), "add the account again in chongyun") {
 		t.Fatalf("err = %v", err)
 	}
 }

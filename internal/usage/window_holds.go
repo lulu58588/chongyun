@@ -1,6 +1,6 @@
 package usage
 
-// What a whole subscription window holds (Chiao on Discord): the Usage
+// What a whole subscription window holds (Chiao 报告): the Usage
 // page's account cards show each window's share used, as the vendor reads
 // it; magpie knows what it routed through the account since the window
 // began, so the whole is about that over the share. It is told only where

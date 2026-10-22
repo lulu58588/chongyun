@@ -55,7 +55,7 @@ func TestKnownTextOnlyModelRejectsImagesBeforeUpstream(t *testing.T) {
 			t.Errorf("%s: %d %s", tc.path, rec.Code, rec.Body.String())
 		}
 		// it says why magpie takes it for text-only, and where that is
-		// changed (KimYx0207 on X)
+		// changed (KimYx0207 报告)
 		if b := rec.Body.String(); !strings.Contains(b, "Probe's model list marks it as not taking images") || !strings.Contains(b, "Providers → Probe → Names & levels") {
 			t.Errorf("%s: doesn't say why or where: %s", tc.path, b)
 		}
@@ -492,7 +492,7 @@ func TestGeminiNonImageFileTranslation(t *testing.T) {
 
 // A model the user marked text-only themselves is turned away saying so,
 // and a group with no member that takes images says that, each with where
-// it is changed (KimYx0207 on X).
+// it is changed (KimYx0207 报告).
 func TestTextOnlyRefusalSaysWhyAndWhere(t *testing.T) {
 	fresh(t)
 	noVision(t)
@@ -535,7 +535,7 @@ func TestTextOnlyRefusalSaysWhyAndWhere(t *testing.T) {
 // textOnlyBody, the vision checks), and its conversation's id hashed:
 // without an image, the turns are read where they are, not decoded turn by
 // turn and block by block. A 1.5 MB conversation cost ~2.6 MB a walk and
-// ~2.8 MB an id (yg6888 on X). An image is still found where it hides:
+// ~2.8 MB an id (yg6888 报告). An image is still found where it hides:
 // last, in a tool's output, under an escaped key, under a key given twice.
 func TestImageWalkReadsTextOnlyTurnsInPlace(t *testing.T) {
 	var turns []string

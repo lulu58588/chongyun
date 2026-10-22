@@ -255,7 +255,7 @@ func leadingInt(s string) (int, string) {
 // though the same schema written inline passes. Codex sends such targets:
 // its MCP and Codex App tools come as zod's $defs (__schema0, __schema1 …),
 // and it types a def with properties or an enum but leaves a oneOf or an
-// allOf one as it was (chaosy on Discord, Codex on k3). The type is the
+// allOf one as it was (chaosy 报告, Codex on k3). The type is the
 // one the target's keywords or branches say, a type array when they differ,
 // and every type when nothing does, which Kimi takes as "any". A target
 // that is {}, an anyOf (Kimi refuses a type beside one: "type should be

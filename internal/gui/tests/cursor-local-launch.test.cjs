@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Cursor Private Inference (#299) is connected as other agents are, with no
-// command to run (mamba on Discord: a launch command of its own was out of
+// command to run (mamba 报告: a launch command of its own was out of
 // keeping with the rest): its row has the switch, which asks magpie to set
 // the build's CURSOR_LOCAL_AGENT_* variables for the user, and says to open
 // it again; the command that starts it from a shell stays, as the square

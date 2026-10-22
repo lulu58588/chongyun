@@ -15,7 +15,7 @@ import (
 )
 
 // A search API given several keys (#1477) spreads its searches over them
-// (SlouchyQuill on Discord, after dsh-tavily-pool): each search starts
+// (SlouchyQuill 报告, after dsh-tavily-pool): each search starts
 // from the next key, or from the first when the API is set to use them in
 // order (provider.SearchPickOrder). A key the API refused lately, or one a
 // quota read found used up, rests: it is asked only after every key that

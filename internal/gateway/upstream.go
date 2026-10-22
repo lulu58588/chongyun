@@ -68,7 +68,7 @@ func upstreamOf(b []byte) string {
 // Chat finish_reason, a Responses reply's status and the reason it was
 // incomplete. Kept with the request, so a reply that ended too soon shows
 // what the upstream said of it — a relay's "end_turn" after a few words,
-// or nothing at all (蓝猫 on Discord). "" when this one says none.
+// or nothing at all (蓝猫 报告). "" when this one says none.
 func upstreamStop(b []byte) string {
 	if !bytes.Contains(b, []byte(`stop_reason"`)) && !bytes.Contains(b, []byte(`finish_reason"`)) && !bytes.Contains(b, []byte(`"response.`)) {
 		return ""

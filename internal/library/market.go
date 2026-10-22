@@ -155,7 +155,7 @@ var featured = []MarketServer{
 // magpieCommand stands for this magpie's own binary in a featured server's
 // command, which InstallServer puts in when it is added, and in a library
 // carried to another computer, which reads it as its own (self_here.go).
-const magpieCommand = "magpie"
+const magpieCommand = "chongyun"
 
 // selfServerName is the name magpie's own image generation server is written
 // under, in every agent's config.
@@ -784,7 +784,7 @@ type MarketSkill struct {
 }
 
 // featuredSkills are magpie's own skills, first in the market: in
-// magpie-community/plugins, beside its plugins (ttmouse on X: an official
+// magpie-community/plugins, beside its plugins (ttmouse 报告: an official
 // skill for an agent to read what magpie quota tells).
 var featuredSkills = []MarketSkill{{
 	Source: "magpie-community/plugins", SkillID: "magpie-quota", Name: "magpie-quota", Official: true, Featured: true,

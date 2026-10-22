@@ -165,7 +165,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       assert.ok(p.anims.includes("::view-transition-group(page)"), "the page moves over");
       // off from rest and settling, in a third of a second, as a Mac's
       // sidebar: a curve leaving at speed made a frame the webview drops at
-      // the start a visible jerk (wangye1644294 on X), and every piece, the
+      // the start a visible jerk (wangye1644294 报告), and every piece, the
       // sidebar's own slide too, keeps to the one timing
       const timing = await page.evaluate(() => document.getAnimations()
         .filter((a) => /^::view-transition-(group\((page|nav-usage)\)|old\(side\))$/.test(a.effect?.pseudoElement || ""))
@@ -192,7 +192,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     });
 
     // WebKitGTK with compositing off crashes in a view transition, the click
-    // taking the window down (depravity_wings on X): the Linux app has none,
+    // taking the window down (depravity_wings 报告): the Linux app has none,
     // the new layout at once
     await t.test("Linux: at once, no transition", async () => {
       const context = await browser.newContext({ viewport: { width: 1280, height: 760 } });

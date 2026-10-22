@@ -90,8 +90,6 @@ const usage = `chongyun — 崇云科技的统一 AI 模型网关 / one place to
   chongyun accounts [agent] [--json]  every subscription chongyun knows, with each one's allowance used and when it resets
   chongyun accounts add <agent>     sign in to one more Claude, ChatGPT or Google (Gemini CLI, Antigravity) subscription
   chongyun accounts add copilot [--host <name>.ghe.com]   one more Copilot account, on github.com or an enterprise's GHE.com
-  chongyun accounts discovery [on|off]   read agents' sign-ins (default off; MAGPIE_NO_ACCOUNTS=1 disables too)
-  chongyun accounts import <codex|claude|antigravity|factory> <file>... [--yes]   bring in accounts from other tools' files (Codex's auth.json, Cockpit Tools, CLIProxyAPI, Sub2API); the tool a ChatGPT or Claude file came from is signed out of it
   chongyun accounts switch <agent> <email>   sign the agent in to another of them
   chongyun accounts refresh         renew the saved ChatGPT sign-ins now (the gateway does it daily)
   chongyun accounts checkin         WorkBuddy's daily check-in (签到) for each WorkBuddy account, now (Settings can do it daily)
@@ -236,9 +234,6 @@ func run(args []string) error {
 		// home, for the Agents page to show what disconnecting changes
 		// (agent.DisconnectPreview)
 		return agent.DryRun(args[1])
-	}
-	if len(args) > 1 && (args[0] == "accounts" || args[0] == "account") && args[1] == "discovery" {
-		return accountsDiscoveryCmd(args[2:])
 	}
 	// started by an update, the magpie it replaces goes first: the moves
 	// below write the files it may still be writing
@@ -566,7 +561,7 @@ func showField(a *agent.Agent, f *agent.Field) error {
 // disconnect is `chongyun <agent> default` on an agent magpie is wired into:
 // the Agents page's Disconnect, which puts back what the user had before
 // magpie — Claude Code's own model, its endpoint — where a field's default
-// leaves the agent as installed (__jingling on X: magpie claude default
+// leaves the agent as installed (__jingling 报告: magpie claude default
 // took the model they had set away with magpie's)
 func disconnect(a *agent.Agent) error {
 	before := a.Values()
@@ -713,7 +708,7 @@ func profiles(args []string) error {
 		}
 		detected := agent.Detected()
 		for _, n := range profile.Names(ps) {
-			// ✓ the one the setup is now (superhtoooth on X)
+			// ✓ the one the setup is now (superhtoooth 报告)
 			mark := " "
 			if profile.InUse(ps[n], detected, nil) {
 				mark = green.Render("✓")

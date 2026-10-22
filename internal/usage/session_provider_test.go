@@ -112,6 +112,10 @@ func TestLedgerResolvesOAuthIdentityAndExportsIt(t *testing.T) {
 	jwt := "h." + base64.RawURLEncoding.EncodeToString([]byte(claims)) + ".sig"
 	auth, _ := json.Marshal(map[string]any{"auth_mode": "chatgpt", "tokens": map[string]string{"account_id": "a", "id_token": jwt}})
 	os.WriteFile(filepath.Join(sessions.CodexDir(), "auth.json"), auth, 0600)
+	// chongyun tells the account by the one it keeps in its own logins.json,
+	// the account it signed the agent in to: it never reads the agent's own
+	// file to find out which account that is.
+	sessionLogin(t, "a", "matched@example.com", auth)
 	os.WriteFile(filepath.Join(sessions.CodexDir(), "config.toml"), []byte("[model_providers.custom]\nrequires_openai_auth = true\n"), 0600)
 	call := sessions.Call{Time: time.Now(), Agent: "codex", Model: "gpt-6-sol", Upstream: "custom", AccountID: "a", UserID: "u", Tokens: sessions.Tokens{Input: 10, Output: 2}}
 	rows, sum, _, providers := ledgerWith(time.Time{}, Filter{}, nil, []sessions.Call{call})
@@ -237,6 +241,9 @@ func TestLedgerKeepsLocalAccountsSeparateFromGatewayProviders(t *testing.T) {
 	jwt := "h." + base64.RawURLEncoding.EncodeToString([]byte(claims)) + ".sig"
 	auth, _ := json.Marshal(map[string]any{"auth_mode": "chatgpt", "tokens": map[string]string{"account_id": "a", "id_token": jwt, "access_token": jwt, "refresh_token": "r"}})
 	os.WriteFile(filepath.Join(sessions.CodexDir(), "auth.json"), auth, 0600)
+	// the account is chongyun's own: it keeps what it signed the agent in to
+	// in its own logins.json, and never reads the agent's own file.
+	sessionLogin(t, "a", "mine@example.com", auth)
 	os.WriteFile(filepath.Join(sessions.CodexDir(), "config.toml"), []byte("model_provider = \"custom\"\n[model_providers.custom]\nname = \"OpenAI\"\nrequires_openai_auth = true\n"), 0600)
 	at := time.Now()
 	gateway := []Record{{Time: at.Add(-time.Minute), Agent: "opencode", Provider: "codex", Host: "mine@example.com", Model: "gpt-6-sol", Input: 5, Output: 1, Status: 200}}

@@ -40,7 +40,7 @@ func autoRefHome(t *testing.T) {
 }
 
 // A group magpie found is listed as auto/<model>, the model's id as a
-// vendor spells it (ZeroClover on X), so a client looking the part after
+// vendor spells it (ZeroClover 报告), so a client looking the part after
 // the slash up on models.dev finds the model; its old group/auto-<slug> is
 // the same group, and a group the user made stays group/<id>.
 func TestFoundGroupListedByItsModelsID(t *testing.T) {

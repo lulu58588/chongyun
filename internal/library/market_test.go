@@ -222,7 +222,7 @@ func TestSkillsShPages(t *testing.T) {
 }
 
 // magpie's own skills come first, marked official, and only where a
-// search names them (ttmouse on X).
+// search names them (ttmouse 报告).
 func TestFeaturedSkills(t *testing.T) {
 	sandbox(t)
 	t.Setenv("LOCALAPPDATA", t.TempDir())

@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/settings"
 	"golang.org/x/text/unicode/norm"
 )
 
@@ -47,9 +46,6 @@ func claudeDirService(dir string) string {
 // readClaudeDir is the sign-in Claude Code keeps in config directory dir,
 // where it looks first: the keychain on a Mac, then the file.
 func readClaudeDir(dir string) (claudeCredentials, bool) {
-	if settings.AccountDiscoveryOff() {
-		return claudeCredentials{}, false
-	}
 	if claudeKeychain {
 		out, err := proc.Command("security", "find-generic-password", "-s", claudeDirService(dir), "-a", claudeKeychainAccount(), "-w").Output()
 		if err == nil {
@@ -61,7 +57,7 @@ func readClaudeDir(dir string) (claudeCredentials, bool) {
 			}
 		}
 	}
-	b, err := readAccountFile(filepath.Join(dir, ".credentials.json"))
+	b, err := os.ReadFile(filepath.Join(dir, ".credentials.json"))
 	if err != nil {
 		return claudeCredentials{}, false
 	}
@@ -71,9 +67,6 @@ func readClaudeDir(dir string) (claudeCredentials, bool) {
 // clearClaudeDir takes the sign-in out of config directory dir, so the one
 // it was moved to is its only holder.
 func clearClaudeDir(dir string) {
-	if discoveryOff() {
-		return
-	}
 	if claudeKeychain {
 		_ = proc.Command("security", "delete-generic-password", "-s", claudeDirService(dir), "-a", claudeKeychainAccount()).Run()
 	}
@@ -86,7 +79,7 @@ func clearClaudeDir(dir string) {
 // Code still running there (the gateway's, waiting for its conversation's
 // next turn) holds the refresh token that is Claude Code's own now, and a
 // refresh of it there would leave Claude Code's copy refused, the account
-// signed out (0xAncientTwo on X). The gateway sets it.
+// signed out (0xAncientTwo 报告). The gateway sets it.
 var ClaudeHandedOver func(user string)
 
 func claudeHandedOver(user string) {
@@ -307,7 +300,7 @@ func claudeStandIn(ls []savedLogin) string {
 // while Claude Code is signed out: the stand-in, else, with every account's
 // sign-in gone, the one seen last, signed out. Listed without one, Claude
 // Code left the Providers list with every account on it, which read as a
-// ban (LeeHom on Discord: two Claude Pro accounts vanished); listed on a
+// ban (LeeHom 报告: two Claude Pro accounts vanished); listed on a
 // signed-out one, it says to sign in again, and its token says why it
 // can't be used (claudeSavedDir). Never one still Held: Claude Code's own
 // sign-in, which it may have left on disk after a logout, and which would
@@ -408,31 +401,16 @@ func (a *Account) AgentsOwn() bool { return a != nil && a.token == nil }
 
 // ClaudeCodeMovedOff says Claude Code itself is signed in to another
 // account than user now: what a Claude Code run in its own home says of
-// the account it is on is no longer user's. false when it can't be told.
-// Named from its profile, the account is told by its whole name: a Team
-// seat and a personal plan of one email ("me@x.com · Acme", "me@x.com")
-// are two accounts, and one's usage isn't the other's (netfishx on X).
+// the account it is on is no longer user's. false when it can't be told —
+// and it can't be told from Claude Code's own sign-in, which is not read:
+// it is told from the account chongyun signed Claude Code in to, which is
+// the one it is on.
 func ClaudeCodeMovedOff(user string) bool {
-	on, named := claudeCodeOn()
-	if on == "" {
+	l, ok := ownActive("claude")
+	if !ok {
 		return false
 	}
-	if named {
-		return !strings.EqualFold(strings.TrimSpace(on), strings.TrimSpace(user))
-	}
-	return !sameClaudeUser(on, user)
-}
-
-// claudeCodeOn is the account Claude Code itself is signed in to now, as
-// magpie names it; "" when signed out or unknown. named: the name is from
-// its profile (~/.claude.json), whole, not the email alone `claude auth
-// status` gives.
-func claudeCodeOn() (user string, named bool) {
-	l, ok := liveLogin("claude")
-	if !ok {
-		return "", false
-	}
-	return l.User, len(l.Profile) > 0
+	return !sameClaudeUser(l.User, user)
 }
 
 // sameClaudeUser: a and b name one account, the one as magpie names a Team

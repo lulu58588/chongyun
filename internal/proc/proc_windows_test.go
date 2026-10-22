@@ -38,7 +38,7 @@ func TestHideWithoutConsole(t *testing.T) {
 // A .cmd in a folder with a space, given an argument with a space, hands
 // the program it runs the arguments as given: npm.cmd under nvm-windows'
 // C:\Program Files\nodejs, installing into that same folder, had cmd.exe
-// run "C:\Program" instead (wztlink1013 on Discord). The script passes %*
+// run "C:\Program" instead (wztlink1013 报告). The script passes %*
 // on, as npm.cmd does to node, to this test binary, which prints what it
 // was given. A " in an argument isn't among them: it comes back doubled to
 // Go's parser, which reads "" the way C runtimes did before 2008.

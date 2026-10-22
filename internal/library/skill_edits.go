@@ -4,7 +4,7 @@ package library
 // agent itself edits the skill, or the user does in that agent's folder.
 // The copy then differs from the library's skill, as it does when the
 // library's has changed, and a sync made it again from the library's,
-// which undid the edit at the next start of magpie (Joren on Discord). So
+// which undid the edit at the next start of magpie (Joren 报告). So
 // a sync first tells the two apart by magpie's mark, written as the copy
 // was made: a copy with anything in it newer than its mark was edited since,
 // and the library takes the newest such edit, which the sync then gives to

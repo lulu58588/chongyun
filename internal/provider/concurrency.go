@@ -326,7 +326,7 @@ func SetQuotaResetAt(id, at string) error {
 // a key or account of the provider that fails without saying why — a
 // relay's or an account pool's 5xx, a dropped connection — doesn't rest at
 // all, and is asked again by the next request as if it hadn't failed
-// (Kismet Alan on Discord: an aggregator's unknown errors fail now and
+// (Kismet Alan 报告: an aggregator's unknown errors fail now and
 // then, and the next request often goes through). What the vendor said
 // plainly still rests it as ever: out of quota or credit, rate limited,
 // its key refused (401, 403), its model not served, its window full.

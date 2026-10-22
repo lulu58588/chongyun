@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Allowed addresses (lc on Discord: magpie in Docker on a public host):
+// Allowed addresses (lc 报告: magpie in Docker on a public host):
 // Settings › Network, under Share on local network, lists the IPs and CIDR
 // ranges other computers may reach magpie from at all. Shown while magpie
 // is shared or listens on the network, not otherwise. One is added from a
@@ -244,7 +244,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       }
       await box.locator(".allow-ip-row").filter({ hasText: "203.0.113.50" }).locator("button").click();
       // the refusal names the address magpie sees the page from
-      // (Mathresearcher on Discord: which one?), in the page's language
+      // (Mathresearcher 报告: which one?), in the page's language
       const says = await page.evaluate((s) => t(s, { addr: "203.0.113.50" }), en.shutOut);
       assert.match(says, /203\.0\.113\.50/);
       await page.waitForFunction((s) => document.querySelector("#allowList .rule-row .sub.err")?.textContent.trim() === s, says);

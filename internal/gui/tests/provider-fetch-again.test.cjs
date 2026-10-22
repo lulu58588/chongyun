@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A saved provider's editor fetches its models again under the name the add
-// form gave the button (耍赖天都爱 on Discord: 模型拉取一次就没有这个按钮了 —
+// form gave the button (耍赖天都爱 报告: 模型拉取一次就没有这个按钮了 —
 // the add form's Fetch models was "Refresh" once saved, so after one fetch
 // the button seemed gone, while a key moved to another group on a relay
 // serves another list). A provider never fetched says Fetch models, one

@@ -1,16 +1,21 @@
 package agent
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/lulu58588/chongyun/internal/access"
 	"github.com/lulu58588/chongyun/internal/edit"
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
+// codexHome sets a Codex home up: the agent's own auth.json and
+// config.toml, and a provider table of its own.
 func codexHome(t *testing.T, auth, config string) (home string, read func() string) {
 	t.Helper()
 	home = t.TempDir()
@@ -40,6 +45,12 @@ func codexHome(t *testing.T, auth, config string) (home string, read func() stri
 	os.MkdirAll(dir, 0o755)
 	if auth != "" {
 		os.WriteFile(filepath.Join(dir, "auth.json"), []byte(auth), 0o600)
+		// chongyun keeps the account it signed the agent in to in its own
+		// logins.json, marked as the one the agent is on: it never reads
+		// the agent's own file to find out which account that is.
+		if blob := codexAuthBlob(auth); blob != nil {
+			codexLoginSaved(t, codexAuthUser(blob), blob)
+		}
 	}
 	os.WriteFile(filepath.Join(dir, "config.toml"), []byte(config), 0o644)
 	if err := provider.Save(provider.Provider{ID: "fake", Name: "Fake", Key: "k", Chat: "http://127.0.0.1:1/v1", Models: []string{"m1"}}); err != nil {
@@ -51,6 +62,107 @@ func codexHome(t *testing.T, auth, config string) (home string, read func() stri
 	}
 }
 
+// codexBeside says Codex is signed in to ChatGPT, the way chongyun knows
+// it: chongyun never reads the agent's own sign-in, so a test says it by
+// the base URL chongyun wrote and the mark it left beside that sign-in —
+// "beside" for a model of chongyun's picked beside it, "joined" for a
+// connection by Join, which the sign-in state of its own keeps.
+func codexBeside(t *testing.T, home, mark string) {
+	t.Helper()
+	path := filepath.Join(home, ".codex", "config.toml")
+	if err := edit.SetTOMLTop(path, edit.KV{Path: "openai_base_url", Value: codexGatewayURL()}); err != nil {
+		t.Fatal(err)
+	}
+	stash(map[string]string{"codex." + mark: "1"})
+}
+
+// codexAuthBlob is a Codex auth.json read as the sign-in it holds, nil
+// when it holds none (an API key, or nothing).
+func codexAuthBlob(auth string) map[string]any {
+	var blob map[string]any
+	if json.Unmarshal([]byte(auth), &blob) != nil {
+		return nil
+	}
+	toks, _ := blob["tokens"].(map[string]any)
+	if toks == nil || toks["access_token"] == "" {
+		return nil
+	}
+	return blob
+}
+
+// codexAuthUser names the ChatGPT account a Codex sign-in holds: its email
+// as the id token says it, as chongyun's own logins.json keeps the
+// account.
+func codexAuthUser(auth map[string]any) string {
+	toks, _ := auth["tokens"].(map[string]any)
+	id, _ := toks["id_token"].(string)
+	parts := strings.Split(id, ".")
+	if len(parts) > 1 {
+		if b, err := base64.RawURLEncoding.DecodeString(parts[1]); err == nil {
+			var claims map[string]any
+			if json.Unmarshal(b, &claims) == nil {
+				if email, _ := claims["email"].(string); email != "" {
+					return email
+				}
+			}
+		}
+	}
+	return "me@example.com"
+}
+
+// codexLoginSaved puts a Codex account into chongyun's own logins.json and
+// marks it the one the agent is on: the account the agent's own auth.json
+// holds, which chongyun never reads to find out.
+func codexLoginSaved(t *testing.T, user string, auth map[string]any) {
+	t.Helper()
+	saveLogin(t, map[string]any{"agent": "codex", "user": user, "active": true,
+		"seen": time.Now(), "auth": auth})
+}
+
+// saveLogin adds an account to chongyun's own logins.json, and makes the
+// accounts be read afresh. An account already there is kept as it is, and
+// only the fields named here are set.
+func saveLogin(t *testing.T, entry map[string]any) {
+	t.Helper()
+	path := filepath.Join(filepath.Dir(provider.Path()), "logins.json")
+	os.MkdirAll(filepath.Dir(path), 0o755)
+	var saved []map[string]any
+	if b, err := os.ReadFile(path); err == nil {
+		if err := json.Unmarshal(b, &saved); err != nil {
+			t.Fatalf("logins.json: %v", err)
+		}
+	}
+	agent, _ := entry["agent"].(string)
+	user, _ := entry["user"].(string)
+	found := false
+	for i, l := range saved {
+		if l["agent"] != agent || l["user"] != user {
+			continue
+		}
+		for k, v := range entry {
+			l[k] = v
+		}
+		saved[i] = l
+		found = true
+		break
+	}
+	if !found {
+		if _, ok := entry["seen"]; !ok {
+			entry["seen"] = time.Now()
+		}
+		saved = append(saved, entry)
+	}
+	b, err := json.Marshal(saved)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, b, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
+}
+
 // Signed in, a magpie model points Codex's built-in OpenAI provider at
 // magpie and leaves the provider as it is; one of Codex's own models takes
 // the base URL away again and brings back what was there. magpie's provider
@@ -58,6 +170,9 @@ func codexHome(t *testing.T, auth, config string) (home string, read func() stri
 func TestCodexSignedInRoutesByBaseURL(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`,
 		"model = \"gpt-5.5\"\nmodel_reasoning_effort = \"xhigh\"\n\n[projects.\"/x\"]\ntrust_level = \"trusted\"\n")
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "beside")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
@@ -87,6 +202,9 @@ func TestCodexSignedInRoutesByBaseURL(t *testing.T) {
 func TestCodexSignedInLeavesProviderTable(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`,
 		"model = \"fake/m1\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = \"/x/chongyun-models.json\"\n\n[model_providers.magpie]\nname = \"magpie\"\nbase_url = \"http://127.0.0.1:3425/v1\"\nwire_api = \"responses\"\n")
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "beside")
 	if err := codex(home).Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
@@ -367,6 +485,9 @@ func TestCodexLoginAPI(t *testing.T) {
 		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, "model_catalog_json") {
 		t.Fatalf("api:\n%s", cfg)
 	}
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "beside")
 	if err := login.Set(""); err != nil {
 		t.Fatal(err)
 	}
@@ -401,6 +522,9 @@ func TestCodexLoginAPI(t *testing.T) {
 func TestCodexSyncPutsProviderTableBack(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`,
 		"model = \"fake/m1\"\nopenai_base_url = \""+codexGatewayURL()+"\"\n")
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "beside")
 	if err := codex(home).Sync(); err != nil {
 		t.Fatal(err)
 	}

@@ -13,6 +13,9 @@ import (
 // or one for a Codex not signed in to ChatGPT stays.
 func TestCodexRunsOutAfterPick(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "")
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "joined")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
@@ -64,6 +67,9 @@ func TestCodexRunsOutAfterPick(t *testing.T) {
 // beside it at once.
 func TestCodexKeptOnChatGPT(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "")
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "joined")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)

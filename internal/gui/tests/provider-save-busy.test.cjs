@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A provider's Save says it is under way (zola_xynb on X: Save asks the
+// A provider's Save says it is under way (zola_xynb 报告: Save asks the
 // provider for its model list, which can take seconds, and the button only
 // faded, as if the click had done nothing). While the save is out the
 // button shows a spinner and "Saving…"; a save that fails puts "Save" back,

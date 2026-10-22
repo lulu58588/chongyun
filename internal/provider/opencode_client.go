@@ -74,7 +74,7 @@ func openCodeHost(h string) bool {
 // OpenCodeSession names a session on a request to OpenCode's gateway that
 // names none yet: since September 2026 it answers every request without
 // x-opencode-session 400 "Request is missing x-opencode-session and
-// cannot be routed efficiently" (luci on Discord). A call that is no
+// cannot be routed efficiently" (luci 报告). A call that is no
 // conversation's turn — a model list, a System One decision, a key check —
 // gets a session of its own, as OpenCode gives its own stateless calls
 // one (packages/core/src/generate.ts: "Gateways require session
@@ -98,7 +98,7 @@ func OpenCodeSession(h http.Header, u string) {
 // gateway asks them so whoever the client is (gateway/zenfree.go), and the
 // Test button's probe so (zenFreeProbe). A free model is one whose id ends
 // in -free, or one models.dev's opencode prices at nothing, as big-pickle,
-// whose id doesn't say so (361 on Discord: it answered 403 "OpenCode's
+// whose id doesn't say so (361 报告: it answered 403 "OpenCode's
 // free tier can only be used from within OpenCode"); openCodeFreeIDs are
 // such ones known without the catalog.
 func (p Provider) OpenCodeFree(model string) bool {
@@ -233,7 +233,7 @@ func openCodeNewID(prefix string, descending bool, now time.Time) string {
 // openCodeRealSession says whether id is a session id OpenCode could have
 // made: of its shape, with a small count in its low 12 bits (inverted).
 // Zen's free tier answers 403 FreeTierError to one that isn't, a hash cut
-// to the same shape among them (c9cu on Discord).
+// to the same shape among them (c9cu 报告).
 func openCodeRealSession(id string) bool {
 	if !strings.HasPrefix(id, "ses_") || !openCodeIDRe.MatchString(id) {
 		return false

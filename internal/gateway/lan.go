@@ -498,7 +498,7 @@ func callerKey(r *http.Request) string {
 // Authorization (ANTHROPIC_AUTH_TOKEN left at magpie), the key in x-api-key
 // — is let in by whichever is an enabled gateway key. Loopback takes any
 // token, so this mattered only from another computer, which was refused
-// what this one was answered (悠悠哥 on Discord: a client's model list from
+// what this one was answered (悠悠哥 报告: a client's model list from
 // magpie shared on a NAS failed, from magpie on 127.0.0.1 it came).
 func callerKeys(r *http.Request) []string {
 	var out []string

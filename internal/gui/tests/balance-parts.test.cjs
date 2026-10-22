@@ -8,7 +8,7 @@
 // bar panel's Balances show the same amounts and the "As of". A balance of
 // one amount reads as it did. One the reply hadn't is "—" and says why on
 // hover (#1993). What a vendor says a balance is made of (DeepSeek's
-// granted credit and the money topped up, wwcraft_ on Discord) shows the
+// granted credit and the money topped up, wwcraft_ 报告) shows the
 // same way, its labels in the user's language. No left-border accent. English and Chinese,
 // Chromium and WebKit; no backend, the API is faked here.
 const assert = require("node:assert/strict");

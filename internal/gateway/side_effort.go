@@ -7,7 +7,7 @@ import (
 
 // The reasoning level picked in Settings for a model magpie asks on its
 // own, beside the model in use: Image recognition's and the searcher's
-// (MOMO on Discord, "外置模型能不能提供思考深度选项"). Only those calls
+// (MOMO 报告, "外置模型能不能提供思考深度选项"). Only those calls
 // are asked so; every other request goes as it did.
 
 // ModelEfforts are the reasoning levels model ("<provider>/<model>") has,

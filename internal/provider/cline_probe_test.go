@@ -13,7 +13,7 @@ import (
 )
 
 // A ClinePass free model's test is answered as an agent's request to it is
-// (ARNO on Discord: 右击检测 cline-free/… 没有响应: 500 · empty response
+// (ARNO 报告: 右击检测 cline-free/… 没有响应: 500 · empty response
 // content, while agents were answered). The fake Cline API does what the
 // real one did: a free model that thinks first, asked for 16 tokens without
 // a stream, has nothing to say and is answered 500; asked as Cline's

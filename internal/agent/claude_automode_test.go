@@ -34,7 +34,7 @@ func claudeAutoModeHome(t *testing.T, before string) (*Agent, string, func(strin
 }
 
 // Claude Code's auto mode classifier can have a model of its own
-// (CLAUDE_CODE_AUTO_MODE_MODEL, 2.1.302; Linka on Discord): only while
+// (CLAUDE_CODE_AUTO_MODE_MODEL, 2.1.302; Linka 报告): only while
 // magpie routes Claude Code, only one of magpie's models, never one Claude
 // Code refuses to run its classifier on, and gone again with magpie.
 func TestClaudeAutoModeModel(t *testing.T) {

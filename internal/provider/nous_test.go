@@ -20,9 +20,4 @@ func TestNousPortalPreset(t *testing.T) {
 	if pr.Kind != KindVendor || !pr.Hosts || pr.NoKey {
 		t.Fatalf("kind %q hosts %v noKey %v", pr.Kind, pr.Hosts, pr.NoKey)
 	}
-	// an entry another app has at the Portal (Hermes Agent's base_url) is the preset
-	im, why := imported("Nous", "k", endpoints{chat: "https://inference-api.nousresearch.com/v1/"}, nil)
-	if why != "" || im.Preset != "nous" || im.Icon != "nousresearch" || im.Anthropic != "" {
-		t.Fatalf("imported: %q %+v", why, im)
-	}
 }

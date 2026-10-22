@@ -190,7 +190,7 @@ type Agent struct {
 	// EndFailover takes out what account failover wrote, for magpie
 	// quitting: left there, the agent would be pointed at a gateway that
 	// no longer answers, and retry till magpie is open again (Leon920717
-	// on X). The next start's Sync writes it again.
+	// 报告). The next start's Sync writes it again.
 	EndFailover func() error
 	// Follow, for an agent whose own picker moves its main model where
 	// magpie keeps other settings following it (Claude Code's /model and

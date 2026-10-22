@@ -148,7 +148,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         assert.equal(await view.locator('.pm-card[data-pkg="@magpie-community/opencode-qoder-auth"] .pm-act').innerText(), w.soon);
         assert.ok(await view.locator('.pm-card[data-pkg="@magpie-community/opencode-qoder-auth"] .pm-act').isDisabled());
         // a plugin that takes a deprecated built-in's place says so, not
-        // that magpie still has it too (molvqingtai on Discord: a new
+        // that magpie still has it too (molvqingtai 报告: a new
         // user can't add the built-in at all)
         const replaces = view.locator('.pm-card[data-pkg="@magpie-community/opencode-zed-auth"] .pm-chip.soft');
         assert.equal((await replaces.innerText()).trim(), w.replaces);

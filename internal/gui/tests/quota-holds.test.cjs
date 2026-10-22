@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Chiao on Discord: an account card's window says what the whole window
+// Chiao 报告: an account card's window says what the whole window
 // holds, reckoned from what magpie routed through the account in it over
 // the share used — "≈ N tokens · ≈ $X" under its reset, in every language,
 // at a phone's width too, and in its tooltip how it was reckoned and that

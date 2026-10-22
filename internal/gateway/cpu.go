@@ -2,7 +2,7 @@ package gateway
 
 // GET /v1/magpie/cpu: a Go CPU profile of the process serving the gateway,
 // recorded for some seconds while the user goes on using magpie, for a
-// report of magpie using too much CPU (@LeiCheng42 on X: the most CPU of
+// report of magpie using too much CPU (@LeiCheng42 报告: the most CPU of
 // anything while Codex runs). A macOS `sample` or Activity Monitor names
 // none of Go's frames, so this is the one way to see where the Go side
 // spends it; `chongyun cpu` asks for it and writes the file the user sends.

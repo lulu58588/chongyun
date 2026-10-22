@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// 1ooogle on X redrew Settings → General the way macOS System Settings reads:
+// 1ooogle 报告 redrew Settings → General the way macOS System Settings reads:
 // a row says its name alone where the name says enough, a line under it only
 // where it tells something the name can't, and Language is one menu button
 // showing the language picked, not six segments. In every language, at

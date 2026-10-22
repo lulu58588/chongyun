@@ -13,7 +13,7 @@ func notOnMac(t *testing.T) {
 	t.Cleanup(func() { workbuddyOnMac = was })
 }
 
-// @jiahao_jayden on X: an uninstalled WorkBuddy was on every row of the
+// @jiahao_jayden 报告: an uninstalled WorkBuddy was on every row of the
 // library. On a Mac WorkBuddy is there by its app: ~/.workbuddy stays
 // behind when WorkBuddy.app is dragged to the Trash, and magpie writes
 // there itself (models.json, mcp.json, skills/), so the folder, whatever

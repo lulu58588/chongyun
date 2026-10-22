@@ -347,7 +347,7 @@ func TestQwenHomeOverride(t *testing.T) {
 	}
 }
 
-// love1sbug on X: Names in agents' lists changed nothing in Qwen Code's
+// love1sbug 报告: Names in agents' lists changed nothing in Qwen Code's
 // /model, which shows an entry's name (the id beside it), as magpie named
 // every entry magpie/<id>. The name follows the setting now, written again
 // as it changes.

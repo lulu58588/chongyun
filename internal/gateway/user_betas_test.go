@@ -49,7 +49,7 @@ func (b *betaRelay) last() []string {
 	return b.seen[len(b.seen)-1]
 }
 
-// PAMI on Discord: a provider's header.anthropic-beta replaced the betas
+// PAMI 报告: a provider's header.anthropic-beta replaced the betas
 // the agent asked (Claude Code's own, 1M context's) rather than adding to
 // them. They are now one list, the agent's first and then the user's, each
 // once; the user's are left out only when the provider refuses them, and

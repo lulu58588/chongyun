@@ -17,7 +17,7 @@ const stampedFor = time.Minute
 // AutoVision (every agent's model list asks it, provider.Described) built
 // every provider's list again, twice, and a probe of the gateway (info)
 // the whole catalog to count it: 5.3 GB and 5.4 GB of a day's 36 GB of
-// allocations (yg6888 on X, ~1 GB held). Two callers building one key at
+// allocations (yg6888 报告, ~1 GB held). Two callers building one key at
 // once each build it; none waits on another.
 type stamped[K comparable, V any] struct {
 	mu    sync.Mutex

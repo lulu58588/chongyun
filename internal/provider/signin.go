@@ -242,9 +242,6 @@ func StartSignInAt(agent, site string) (SignInState, error) {
 // the proxy it goes through.
 func StartSignInWith(agent string, o SignInOptions) (SignInState, error) {
 	site := o.Site
-	if settings.AccountDiscoveryOff() {
-		return SignInState{}, errAccountDiscoveryOff
-	}
 	// one moved onto its plugin signs in there: an account signed in to
 	// here would be the built-in's, which nothing serves now
 	if PluginServes(agent) {
@@ -733,10 +730,8 @@ func (s *signInFlow) googleDone(ctx context.Context, w http.ResponseWriter, app 
 		signInPage(w, false, "Sign-in didn't finish", err.Error())
 		return
 	}
-	using := false
-	if own, ok := geminiOwnLogin(); ok && app.agent == "gemini" && strings.EqualFold(own.user, g.user) {
-		using = true
-	}
+	// the account just signed in is the one chongyun serves first now
+	using := true
 	s.finish(SignInState{State: "done", User: g.user, Plan: plan, Using: using})
 	signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to chongyun. You can close this tab.", g.user))
 }
@@ -876,32 +871,36 @@ func addLogin(l savedLogin) (using bool, err error) {
 	}()
 	loginsMu.Lock()
 	defer loginsMu.Unlock()
-	l.Seen = time.Now().UTC().Truncate(time.Second)
-	live, signedIn := liveLogin(l.Agent)
+	// seen to the nanosecond: the account signed in to now is the one
+	// chongyun serves first, and a second's resolution can't tell it from
+	// one signed in to in the same second
+	l.Seen = time.Now().UTC()
+	// the account the agent is on: the one chongyun signed it in to, which
+	// it keeps in its own logins.json rather than reading the agent's store
+	// to find out
+	live, signedIn := ownActive(l.Agent)
 	ls := readLogins()
 	l.User = codexName(ls, l)
+	// the agent is signed in to the new account when it had none, or had
+	// this one: the new tokens replace the old, so one refresh token stays
+	// in one place
 	using = !signedIn || sameLogin(live, l)
-	if first := claudeStandIn(ls); !signedIn && l.Agent == "claude" && first != "" {
-		// logged out of Claude Code with accounts in magpie: it stays so,
-		// as the user left it (a claude.ai sign-in beside magpie's token
-		// has Claude Code warn), and the account is magpie's alone. The
-		// one served first till now, seen last, stays on behind it.
-		using = false
-		for i := range ls {
-			if ls[i].Agent == "claude" && strings.EqualFold(ls[i].User, first) && !ls[i].Paused && !sameLogin(ls[i], l) {
-				ls[i].On = true
-			}
-		}
-	}
 	if signedIn && !using {
-		// the current account, as fresh as the agent has it
+		// the current account, as fresh as it is
 		live.Seen = l.Seen
 		ls = upsertLogin(ls, live)
 	}
 	// a second account is in use beside the first straight away, as a
 	// second key is: it takes over when the first runs out
 	l.On = !using
-	if err := writeLogins(upsertLogin(ls, l)); err != nil {
+	// the account the agent is on, when this is it
+	l.Active = using
+	ls = setOwnActive(upsertLogin(ls, l), l.Agent, l.User)
+	if !using {
+		// the account the agent is on keeps the mark
+		ls = setOwnActive(ls, l.Agent, live.User)
+	}
+	if err := writeLogins(ls); err != nil {
 		return false, err
 	}
 	if using {

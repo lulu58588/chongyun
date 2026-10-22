@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// love1sbug on X: switching Names in agents' lists between Off, Not on
+// love1sbug 报告: switching Names in agents' lists between Off, Not on
 // names I set and On changed nothing in Claude Code's /model, as its
 // modelPicker labelled every model by its name alone. Each row is now
 // labelled as every agent's list names the model (provider.Labels), and
@@ -104,6 +104,11 @@ func TestClaudePickerSubscriptionSaysItsProvider(t *testing.T) {
 		"refresh_token": "r-1", "account_id": "acct-1"}})
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), auth, 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the agent's own file is never read to find out.
+	var blob map[string]any
+	json.Unmarshal(auth, &blob)
+	codexLoginSaved(t, "me@example.com", blob)
 	os.WriteFile(filepath.Join(home, ".codex", "models_cache.json"), []byte(`{"models":[{"slug":"gpt-5.5","display_name":"GPT-5.5","priority":1}]}`), 0o644)
 	if err := provider.Save(provider.Provider{ID: "relay", Name: "Relay", Key: "k", Chat: "http://127.0.0.1:1/v1", Models: []string{"glm-4.6"}}); err != nil {
 		t.Fatal(err)

@@ -1,10 +1,10 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Plugins from a git repository (Lemon on Discord: can a plugin be installed
+// Plugins from a git repository (Lemon 报告: can a plugin be installed
 // straight from GitHub?): the market's field says it takes a GitHub repo,
 // and what is typed (github:owner/repo) is what Install sends. Installed
 // names the plugin by the package its repository holds, not the spec, with
 // the commit installed. It has no npm version to compare, so it is out of
-// date only when its repository is at another commit (ARNO on Discord:
+// date only when its repository is at another commit (ARNO 报告:
 // github:yuweihao17/codearts showed Update all the time, and still did
 // right after updating it): at the same commit there is no Update, nor
 // Update all; once the repository moves on, Check for updates shows New

@@ -29,15 +29,15 @@ RUN apt-get update \
     && useradd -u 65532 -g nonroot -d /config/home -s /bin/bash nonroot
 
 COPY --from=build /out/chongyun /chongyun
-# magpie on PATH, so `magpie accounts add …` works in that terminal
+# chongyun on PATH, so `chongyun accounts add …` works in that terminal
 RUN ln -s /chongyun /usr/local/bin/chongyun
 USER nonroot
 COPY --from=build --chown=65532:65532 /config /config
 
-# Everything magpie and the sign-ins it manages write goes into the volume:
+# Everything Chongyun and the sign-ins it manages write goes into the volume:
 # its own files (/config/magpie), sign-ins kept where an agent keeps them
 # (~/.codex, ~/.claude…, under HOME), and the cache holding Bun and the
-# model catalog. magpie makes the folders a volume from an older image
+# model catalog. Chongyun makes the folders a volume from an older image
 # lacks.
 ENV HOME=/config/home \
     XDG_CONFIG_HOME=/config \

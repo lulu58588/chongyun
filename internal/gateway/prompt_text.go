@@ -1,6 +1,6 @@
 package gateway
 
-// The text behind the context window card (masaka on Discord): click a
+// The text behind the context window card (masaka 报告): click a
 // part of the prompt, and see what the request sent there — the agent's
 // system prompt, each tool's definition, an instruction file, a turn.
 //

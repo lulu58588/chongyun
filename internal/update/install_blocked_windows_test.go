@@ -152,7 +152,7 @@ func TestStartCheckedPutsBackForReal(t *testing.T) {
 	}
 }
 
-// 白菜 on Discord: a download an antivirus holds longer than the short
+// 白菜 报告: a download an antivirus holds longer than the short
 // pauses after the trial start goes in once it is let go, and a restart
 // that failed anyway, tried again, doesn't start the same download again
 // (which had the antivirus hold it again) but does a new one.

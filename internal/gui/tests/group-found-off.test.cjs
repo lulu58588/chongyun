@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // The groups magpie finds on its own (auto-<model>) can be turned off all
-// at once (蓝猫 on Discord: "路由分组会自动创建，可以关闭掉吗"), not only
+// at once (蓝猫 报告: "路由分组会自动创建，可以关闭掉吗"), not only
 // removed one by one. A switch by the routing groups' list, with what it
 // does in words, says whether they are found; clicked off, it posts
 // groups/found {on:false}, the found groups leave the list and the user's

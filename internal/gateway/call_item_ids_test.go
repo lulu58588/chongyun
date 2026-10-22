@@ -94,7 +94,7 @@ var sentToChatGPT = []string{`"tsc_18da5b9a10256a3e00000011"`, `"ctc_18da5b9a102
 	`"call_id":"s1"`, `"call_id":"p1"`, `"call_id":"p2"`, "fix it"}
 
 // The same conversation going on through a magpie model or a routing group
-// to OpenAI's API on a key (Lullaby on Discord: "Invalid 'input[155].id':
+// to OpenAI's API on a key (Lullaby 报告: "Invalid 'input[155].id':
 // 'fc_18da5b9a10256a3e00000011'. Expected an ID that begins with 'tsc'",
 // and 'ctc' after it, Codex's auto-compaction, a compaction_trigger turn
 // there, failing with them) goes with those ids. A ChatGPT account's

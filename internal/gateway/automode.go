@@ -25,7 +25,7 @@ import (
 // turns the review off in Claude Code's settings instead
 // (CLAUDE_CODE_AUTO_MODE_SERVER=0, as Anthropic's page on the notice says to
 // for a gateway that can't run the checks), so it classifies locally from
-// the start and says nothing about the gateway (1EFLOPS on X). Where one
+// the start and says nothing about the gateway (1EFLOPS 报告). Where one
 // is, it is left on: /model can take the same session to that model,
 // which reviews it.
 //

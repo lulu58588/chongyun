@@ -203,7 +203,7 @@ type Group struct {
 	// Context is how long a request the user says the group takes, in
 	// tokens: agents are told it rather than its largest member's.
 	// ContextSmallest tells them its smallest member's, whichever that is
-	// as the members change (Mikan on Discord), so the agent compacts
+	// as the members change (Mikan 报告), so the agent compacts
 	// before any member would turn the conversation away.
 	Context int `json:"context,omitempty"`
 	// Levels are the reasoning levels agents are offered for the group,
@@ -243,7 +243,7 @@ type Group struct {
 	Spelled string `json:"-"`
 	// Hidden is stored for a found group the user removed.
 	Hidden bool `json:"hidden,omitempty"`
-	// Disabled is a group of the user's switched off (PAMI on Discord):
+	// Disabled is a group of the user's switched off (PAMI 报告):
 	// kept on the Routing page as it is, but not offered to agents, a
 	// request to it turned away with a word of why, and skipped where
 	// another group has it in it, until switched on again (SwitchGroup).
@@ -513,7 +513,7 @@ func (g Group) own() Group {
 func AutoGroupsOn() bool { return !load().NoAutoGroups }
 
 // SetAutoGroups turns the groups magpie finds on its own on or off, all of
-// them at once (蓝猫 on Discord: they could only be removed one by one).
+// them at once (蓝猫 报告: they could only be removed one by one).
 // Off, none is listed or served; the groups the user made or changed, one
 // found included, stay, and so do the records of those removed, so that
 // on again brings back the found groups as they were. A found group one
@@ -698,7 +698,7 @@ func autoGroups(entries []Entry, same map[string]string) []Group {
 // writes it ("claude-opus-5.5" is claude-opus-5-5, and so is Fireworks'
 // "p" for the dot, "deepseek-v4p1"), a run of spaces, "_" and "-" as one
 // "-" (a relay that lists its display name as the id, "GPT-6 Sol", is
-// gpt-6-sol: Chill on Discord), and without the snapshot
+// gpt-6-sol: Chill 报告), and without the snapshot
 // date some add: "claude-opus-5-5-20260801", Vertex's "…@20260801", and
 // Volcengine Ark's six digits ("deepseek-v4-1-flash-260910" is
 // deepseek-v4-1-flash, #583). Anything else stays: a variant after ":"
@@ -786,7 +786,7 @@ func groupForIn(all []Group, id string) (string, bool) {
 
 // groupNamed is the group whose name, not its id, the request gave: a
 // client the user typed the group's name into (ZCode's own model field)
-// asks for it so, and a group renamed keeps its id (MOMO on Discord: "DS
+// asks for it so, and a group renamed keeps its id (MOMO 报告: "DS
 // Flash" was 404 once group set name= gave it that name). The name is
 // matched as the id is, by its slug; only one group may have it, and a
 // model a provider serves by that id is the provider's, not the group's.
@@ -992,7 +992,7 @@ func buildGroupEntries(entries []Entry) []Entry {
 			// the reply agents are told is the longest a member gives: the
 			// gateway asks each member for no more than its own
 			// (withMaxOutput), so the members that write long replies aren't
-			// cut at the shortest one's (ARNO on Discord: a group's
+			// cut at the shortest one's (ARNO 报告: a group's
 			// maxTokens was its smallest member's, and agents' replies were
 			// "truncated before completion")
 			if output > e.Output {
@@ -1012,7 +1012,7 @@ func buildGroupEntries(entries []Entry) []Entry {
 			// for the one free model among them that holds 200k (#712).
 			// It is one the user typed when they typed that member's, as
 			// smallestWindow says it for a group following its smallest
-			// (Osal on Discord: an Ultra group of a ChatGPT account's
+			// (Osal 报告: an Ultra group of a ChatGPT account's
 			// GPT-6 Astra, set to its 872K on the codex provider, was
 			// handed to Codex as magpie's default 272K, ~258K at 95%)
 			if ctx > e.Context {
@@ -1032,7 +1032,7 @@ func buildGroupEntries(entries []Entry) []Entry {
 			} else if reasonless {
 				// the user said it takes no reasoning ask: the gateway sends
 				// it none, whatever the agent asks, so it doesn't take the
-				// others' levels away (yuexian7 on Discord: a group of
+				// others' levels away (yuexian7 报告: a group of
 				// Opus and a model that answers reasoning_effort with 422)
 				continue
 			} else if m.Effort != "" {
@@ -1467,7 +1467,7 @@ func DeleteGroup(id string) error {
 }
 
 // DeleteGroups removes several groups at once, as DeleteGroup does each
-// (lc on Discord: they could only be removed one at a time). It is all or
+// (lc 报告: they could only be removed one at a time). It is all or
 // none: refused, before any is removed, when one isn't there or a group
 // left holds one as a member or classifier; one held only by another of
 // them goes after it.

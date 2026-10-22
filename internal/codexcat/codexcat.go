@@ -242,7 +242,7 @@ func entriesAt(ms []catalog.Model, after int, effort string) []any {
 		} else if !strings.HasPrefix(m.ID, "group/") && !strings.HasPrefix(m.ID, "auto/") { // a routing group, a found one as auto/<model>
 			// Codex turns a pasted image away itself, saying only that the
 			// model doesn't take images; /model says where that is changed
-			// (KimYx0207 on X). The description still ends " via chongyun",
+			// (KimYx0207 报告). The description still ends " via chongyun",
 			// which is how its entry is told from Codex's own
 			// (catalog.MagpieAdded)
 			e.Description = m.Name + " (text only: Accepts images is in its provider's Names & levels in chongyun) via chongyun"

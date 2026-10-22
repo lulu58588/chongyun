@@ -16,7 +16,7 @@ import (
 
 // `chongyun web` sent its page's ~4 MB of scripts and styles, and the API's
 // JSON, as they are: over a 3 Mbps link to a server every load waited for
-// all of it (akic404 on Discord). A browser that takes gzip gets them
+// all of it (akic404 报告). A browser that takes gzip gets them
 // gzipped, a client that doesn't gets the bytes as they are, pictures
 // already compressed are left alone, and a file asked for again by its
 // ETag is still a 304.

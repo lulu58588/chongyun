@@ -40,10 +40,14 @@ Modifications made by 崇云科技 include, among others:
   * Official infrastructure: the update feed, the partners list, the icon
     proxy, the website and the CORS allow-list for the upstream site's
     pages were removed or made configurable by this build.
-  * Subscription accounts: reading the sign-ins of other agents
-    (Claude Code, Codex, the Keychain) is now off unless the user turns it
-    on with `chongyun accounts discovery on`.
+  * Subscription accounts: the whole layer that read the sign-ins of other
+    agents (Claude Code, Codex, the Keychain) or imported another app's
+    login files was removed. This build reads no other agent's sign-in.
+    Accounts signed into through 崇云科技 itself (the Codex PKCE flow, the
+    Copilot device code, Google OAuth) are unaffected.
   * The upstream project's website (site/) was removed.
+  * The developer documentation under docs/ was translated into Chinese;
+    the cross-references between its pages were kept working.
 
 The MIT License grants the right to use, copy, modify, merge, publish,
 distribute, sublicense and sell this software. This software is provided

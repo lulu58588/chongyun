@@ -42,7 +42,7 @@ const streamRetries = 2
 // group of its next member — and as often as a cut reply once the client
 // has the stream, when nobody asks again after it. A held try whose
 // reasoning went through as it came (Gemini's on the last candidate,
-// LuckymanJC on Discord) is past the request's asking again, so it is
+// LuckymanJC 报告) is past the request's asking again, so it is
 // asked once more here in its place.
 func emptyRetries(w http.ResponseWriter, ctx context.Context) int {
 	h, ok := w.(*holdWriter)
@@ -560,7 +560,7 @@ func (s *Server) streamTranslated(w http.ResponseWriter, r *http.Request, p prov
 					// an Anthropic stream that just stopped — no
 					// stop_reason, no message_stop — or a Responses one
 					// with no response.completed is a reply cut short,
-					// not a finished one: a relay's (蓝猫 on Discord)
+					// not a finished one: a relay's (蓝猫 报告)
 					// read as whole ended the agent's turn a few words
 					// in, with nothing to say why, and a Responses reply
 					// whole would say completed it never said. A Gemini

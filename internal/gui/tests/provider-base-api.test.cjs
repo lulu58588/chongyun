@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A custom provider's Base URL opens on the API it was saved as
-// (01huadalang on Discord: 我选 response 保存了然后再打开一会就变成 openai
+// (01huadalang 报告: 我选 response 保存了然后再打开一会就变成 openai
 // 兼容了). A provider with a chat URL beside its Responses one, saved as
 // OpenAI Responses, opens on OpenAI Responses, its chat URL under More
 // endpoints; one saved before the pick was kept opens on the first API with

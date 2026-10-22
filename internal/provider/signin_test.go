@@ -63,8 +63,11 @@ func TestClaudeSignInAddsAnAccount(t *testing.T) {
 	fakeClaudeLogin(t, fakeClaudeAccount{email: "new@example.com", name: "New", plan: "max", refresh: "sk-ant-ort01-new"}, "", true)
 
 	// signed in already, to someone else: the new account is added beside it
-	cred := claudeSignIn(t, home, time.Now().Add(time.Hour))
+	cred := claudeCodeSignIn(t, home, time.Now().Add(time.Hour))
 	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "old@example.com"}})
+	// the account Claude Code is on, as chongyun keeps it: it does not
+	// read Claude Code's own files to find out which account that is
+	claudeRemember(t, home)
 
 	st, err := StartSignIn("claude")
 	if err != nil {

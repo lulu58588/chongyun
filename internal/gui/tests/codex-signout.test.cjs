@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// mamba on Discord: Codex's only account couldn't be removed ("codex is
+// mamba 报告: Codex's only account couldn't be removed ("codex is
 // signed in to … now; switch to another account first"). Its row now has
 // Sign out, asked in the app's own dialog: Cancel and Escape send nothing
 // and go back to the editor,
@@ -112,7 +112,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       assert.deepEqual(errors, []);
     });
 
-    // vincentzhang1_55530 on Discord: the one in use is removed as the
+    // vincentzhang1_55530 报告: the one in use is removed as the
     // others are, and Codex is signed in to another first (ForgetLogin)
     test(`${engine} ${lang}: with another account saved, the one in use has Remove, not Sign out`, async (t) => {
       const { page, errors, posts } = await open(t, two);

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// 新v学员 on Discord: GitHub's remote MCP server signs in with GitHub's own
+// 新v学员 报告: GitHub's remote MCP server signs in with GitHub's own
 // OAuth, which doesn't let an app register itself, so magpie couldn't sign
 // in to it. The server's editor takes an OAuth app of the user's own (a
 // client ID, its secret, a callback port: Claude Code's --client-id,

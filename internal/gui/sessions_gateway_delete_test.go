@@ -16,7 +16,7 @@ import (
 )
 
 // A Claude Code session seen only through the gateway, its files on another
-// computer, was listed with no delete (lc on Discord: "只可列出？不可删除？").
+// computer, was listed with no delete (lc 报告: "只可列出？不可删除？").
 // Delete now moves what magpie keeps of it, its row and its recorded text,
 // to magpie's trash; Restore brings both back; a later request lists it
 // again; one still going on is left; and clearing the recorded

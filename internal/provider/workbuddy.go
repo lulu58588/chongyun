@@ -374,7 +374,7 @@ func wbCallVia(ctx context.Context, do func(*http.Request) (*http.Response, erro
 
 // textOnly marks the models of ms whose images w drops as taking none,
 // whatever WorkBuddy's config says: WorkBuddy AI's GLM models. On
-// 2026-10-13, with a real WorkBuddy AI account (Yirasumi on Discord),
+// 2026-10-13, with a real WorkBuddy AI account (Yirasumi 报告),
 // www.workbuddy.ai's /v3/config marked every model supportsImages: true,
 // but a chat to glm-5.3-flash, glm-5.3 or glm-5.2 came back saying
 // "[System reminder: the current model does not support images. Content

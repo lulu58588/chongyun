@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/usage"
 )
 
-// YOU on Discord: a session the gateway recorded is listed as ses_…, and the
+// YOU 报告: a session the gateway recorded is listed as ses_…, and the
 // Sessions page's filter matched only titles, folders, ids and models, so
 // one couldn't be found by what was said in it. It is titled by what it was
 // first asked, and /api/sessions/search finds it by any words of it.

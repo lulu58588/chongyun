@@ -2,7 +2,7 @@ package provider
 
 // A rule's folders (Rule.Folders): the request's working folder, as the
 // agent states it in the request (gateway/workdir.go), is one of them or
-// under one (Cario0x on X: routing by the project being worked on).
+// under one (Cario0x 报告: routing by the project being worked on).
 
 import (
 	"fmt"

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// akic404 on Discord: with "Record gateway conversations" on, OpenCode's
+// akic404 报告: with "Record gateway conversations" on, OpenCode's
 // turns were kept and Pi's and omp's weren't. The gateway records a turn
 // only under the session the agent names, and Pi (1.1.0) names it on Chat
 // and Anthropic's Messages API only when its provider's compat says

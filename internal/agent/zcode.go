@@ -542,7 +542,7 @@ func zcodeRules(path string, on, keep bool) error {
 // provider is sent: on another API format ZCode fails the search. magpie's
 // gateway runs that tool for any of its models, so it turns native web
 // search on for each model it lists while the format is Anthropic Messages
-// (Gearclickist on Discord: every magpie model had to be ticked by hand).
+// (Gearclickist 报告: every magpie model had to be ticked by hand).
 //
 // ZCode writes a change to a model with its recommended config into the
 // model's rule, magpie's, and leaves a value equal to ZCode's default out of

@@ -35,6 +35,17 @@ func TestAccountsAlias(t *testing.T) {
 	if err := os.WriteFile(authPath, auth, 0o600); err != nil {
 		t.Fatal(err)
 	}
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	logins, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "me@example.com", "active": true,
+		"seen": time.Now(), "auth": json.RawMessage(auth)}})
+	if err := os.MkdirAll(filepath.Dir(provider.Path()), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), logins, 0o600); err != nil {
+		t.Fatal(err)
+	}
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)
 

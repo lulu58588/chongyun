@@ -27,7 +27,7 @@ func remoteOnly(cs []provider.SubscriptionQuota) []provider.SubscriptionQuota {
 	return out
 }
 
-// A remote magpie's quotas (莫 on Discord), between a gateway and a
+// A remote magpie's quotas (莫 报告), between a gateway and a
 // magpie that has it as its provider: the cards it is shown are the
 // gateway's as last read, and asking for them asks no vendor, however
 // often; a card's refresh reads it there once, and again no sooner than
@@ -148,6 +148,9 @@ func TestRemoteMagpieShowsBackgroundReadings(t *testing.T) {
 		"id_token":      jwt(map[string]any{"email": "jorben-1313@example.com", "https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": "pro", "chatgpt_account_id": "acct-1313"}}),
 		"access_token":  jwt(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}),
 		"refresh_token": "r", "account_id": "acct-1313"}}), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the agent's own file is never read to find out.
+	codexLoginSavedFromFile(t, "jorben-1313@example.com")
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)
 	var asked atomic.Int32

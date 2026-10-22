@@ -169,6 +169,9 @@ func TestImageToolKeptForChatGPT(t *testing.T) {
 				"https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": "plus"}}),
 			"access_token":  claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}),
 			"refresh_token": "r", "account_id": "acct-1"}}), 0o600)
+		// chongyun keeps the account it signed the agent in to in its own
+		// logins.json: the agent's own file is never read to find out.
+		codexLoginSavedFromFile(t, "me@example.com")
 
 		var mu sync.Mutex
 		var got []string

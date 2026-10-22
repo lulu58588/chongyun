@@ -222,7 +222,7 @@ func TestResolveSharedFolder(t *testing.T) {
 	}
 }
 
-// tangle778 on X: magpie.exe run from Downloads beside a data folder the
+// tangle778 报告: magpie.exe run from Downloads beside a data folder the
 // user's archiver empties wrote its providers there and lost them. A data
 // folder in Downloads holding none of magpie's files isn't its portable
 // data; one that does is, and .portable always makes it portable.

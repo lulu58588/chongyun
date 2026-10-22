@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// love1sbug on X (v0.1.1220): Names in agents' lists (Agent 列表里的名称)
+// love1sbug 报告 (v0.1.1220): Names in agents' lists (Agent 列表里的名称)
 // changed nothing in the agent's model list. Claude Code's and Qwen Code's
 // lists follow it now; an agent whose list magpie hands the models' ids
 // alone, or that reads the gateway's names itself (agent.NoNames), can't,

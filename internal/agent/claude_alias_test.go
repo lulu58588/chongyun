@@ -9,7 +9,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/edit"
 )
 
-// TestClaudeAliasShown (StringKe on Discord): a settings.json saying
+// TestClaudeAliasShown (StringKe 报告): a settings.json saying
 // "model": "sonnet", one of Claude Code's own aliases, showed as a bare
 // "sonnet" with no logo and matched none of the models offered. The alias
 // is now offered, first, as the model Claude Code takes it for — the

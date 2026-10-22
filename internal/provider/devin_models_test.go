@@ -91,7 +91,7 @@ func TestDevinVariantIn(t *testing.T) {
 		{"claude-sonnet-5-5", "max", "MODEL_CLAUDE_SONNET_5_5_HIGH"},
 		{"claude-sonnet-5-5", "low", "MODEL_CLAUDE_SONNET_5_5_MEDIUM"},
 		{"glm-5.2", "high", "glm-5-2"},
-		// the id the user picked is the effort it runs at (蓝猫 on Discord)
+		// the id the user picked is the effort it runs at (蓝猫 报告)
 		{"swe-2-medium", "max", "swe-2-medium"},
 		{"MODEL_CLAUDE_SONNET_5_5_MEDIUM", "max", "MODEL_CLAUDE_SONNET_5_5_MEDIUM"},
 		{"claude-sonnet-5-5-high-fast", "low", "claude-sonnet-5-5-high-fast"},

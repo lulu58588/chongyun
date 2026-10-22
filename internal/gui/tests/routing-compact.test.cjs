@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A routing group's rule may be for the agent compacting its conversation
-// (MR.Guo on X: a model of its own for context compression, cheaper and
+// (MR.Guo 报告: a model of its own for context compression, cheaper and
 // faster than the one the conversation is on). A group's rule for it reads
 // "compacting"; in the editor it is a condition of its own, toggled with
 // nothing moved, a rule with only it isn't refused as having none, and it

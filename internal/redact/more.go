@@ -8,7 +8,7 @@ import (
 )
 
 // More kinds of personal data, each a category the user turns on or off
-// under Mask personal data (lc on Discord): numbers that check themselves
+// under Mask personal data (lc 报告): numbers that check themselves
 // (an SSN's ranges, an IBAN's mod 97), numbers that are only one by the
 // words before them (a passport's, a serial number, a birthday), and what
 // names the user's machine and storage: the user name in a home folder,

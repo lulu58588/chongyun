@@ -15,7 +15,7 @@ import (
 )
 
 // A check keeps each tool's name and what it says it does, for the
-// Library page to list (nf1qaz2w on Discord: "只能看到有几个工具，看不到具体
+// Library page to list (nf1qaz2w 报告: "只能看到有几个工具，看不到具体
 // 的工具名和描述"). The reply is the one @modelcontextprotocol/server-filesystem
 // gave to tools/list, byte for byte.
 func TestCheckKeepsToolNames(t *testing.T) {

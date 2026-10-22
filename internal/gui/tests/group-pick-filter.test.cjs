@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // #907 (Moody-Sin): in a group's Add a model picker, a model in the group
 // with its reasoning fixed (a/two:max) was neither ticked nor taken out by
-// a click: it was added a second time. PAMI on Discord: with many groups,
+// a click: it was added a second time. PAMI 报告: with many groups,
 // one was hard to find.
 // - The picker ticks a model in the group as itself or with an effort, and
 //   a click takes that member out (its effort with it), not adds it twice;

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The Gateway page's model list (ARNO on Discord): a search box finds models
+// The Gateway page's model list (ARNO 报告): a search box finds models
 // by id, name, provider and a group's models, and each row ends with what
 // agents are told of the model — its reasoning levels, whether it takes
 // images, its context, its reply limit — the full detail in the chips' tooltip; a routing

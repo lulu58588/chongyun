@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Which profile is in use (superhtoooth on X, macOS: 保存方案设置了方案名字，
+// Which profile is in use (superhtoooth 报告, macOS: 保存方案设置了方案名字，
 // 但是应用方案没有用这个名字。menu 里面变成了方案 1，方案 2。而且在应用里面
 // 没有显示当前使用的方案). The tray panel's Profiles button read
 // "方案 1", "方案 2": the number of profiles, read as the name the profile

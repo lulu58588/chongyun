@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"path/filepath"
 	"testing"
 )
 
@@ -126,15 +125,4 @@ func TestCopilotEducationQuotaRefresh(t *testing.T) {
 	}
 }
 
-func TestCopilotOwnEntitlementWithoutUser(t *testing.T) {
-	signIn(t)
-	writeFile(t, filepath.Join(copilotConfigDir(), "github-copilot", "apps.json"), map[string]any{"github.com": map[string]any{"oauth_token": "gho_x"}})
-	ls := copilotLoginList()
-	if len(ls) != 1 || ls[0].User != "GitHub" {
-		t.Fatalf("logins %+v", ls)
-	}
-	refreshCopilotEntitlement(copilotApp{User: "GitHub", Token: "gho_x"}, "Free", "free_limited_copilot")
-	if got := copilotLoginList()[0].Plan; got != "Free" {
-		t.Fatalf("plan %q", got)
-	}
-}
+// 崇云不读别家的登录态，此用例随之移除。

@@ -15,7 +15,7 @@ import (
 )
 
 // A key given its own value — one clients already send, from another
-// gateway (love1sbug on X) — is that key from another computer and from
+// gateway (love1sbug 报告) — is that key from another computer and from
 // this one, as a sk-magpie- key is: counted as it, and never sent on.
 func TestOwnKeyValueIsTheKey(t *testing.T) {
 	fresh(t)

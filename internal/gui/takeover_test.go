@@ -65,7 +65,7 @@ func TestGatewayTakenOver(t *testing.T) {
 // A magpie that holds the gateway's port but doesn't answer in time (the
 // service busy on a small server, or starting) still has it: magpie web
 // beside it doesn't listen a second time, which only failed with "bind:
-// address already in use" (K.Liu on Discord), and leaves the port to it.
+// address already in use" (K.Liu 报告), and leaves the port to it.
 func TestGatewayNotServedBesideASlowOne(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
 	t.Setenv("USERPROFILE", os.Getenv("HOME"))

@@ -12,7 +12,7 @@ import (
 )
 
 // Claude Code (2.1.288) asks Anthropic's API for what its newest models
-// take and a relay may not know yet (Keenc on Discord: CHCP and a Vertex
+// take and a relay may not know yet (Keenc 报告: CHCP and a Vertex
 // relay answered 400 for each):
 //
 //   - thinking.display "updates" (and "highlights"), where a relay that

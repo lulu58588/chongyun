@@ -1,10 +1,10 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A provider saved with no key — a local Ollama, from its preset or added as
-// a custom provider — opens its editor on a click (willz on Discord: the row
+// a custom provider — opens its editor on a click (willz 报告: the row
 // only toggled and WebKit said "undefined is not an object (evaluating
 // 'copied?.key.set')"). The key box says one is optional, and nothing throws.
 // The providers are what /api/providers gives for them. A plugin's provider,
-// its base plugin://<id>, has no website link in its head (Lemon on Discord:
+// its base plugin://<id>, has no website link in its head (Lemon 报告:
 // CodeArts's said "codearts ↗" and opened https://codearts), while a local
 // server's keeps its address. In English and Chinese.
 const assert = require("node:assert/strict");

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// fflake33 on Discord: a window's Pace as a number, "Pace +20%" on its
+// fflake33 报告: a window's Pace as a number, "Pace +20%" on its
 // reset's line, against an even pace through the window (the gateway gives
 // its start, provider.WithWindowStarts): amber when more is used than an
 // even pace would have, its sign turned with the meter when it shows what

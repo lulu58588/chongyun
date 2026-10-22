@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -53,63 +52,6 @@ func dueCodexAuth(t *testing.T) (path string, was []byte) {
 	return path, was
 }
 
-// #2239: the rotated tokens a Codex refresh writes into the user's own
-// auth.json go into a file beside it, flushed to the disk, before it is
-// renamed over the old one. The old file is never truncated in place: a
-// machine going down mid-write, or a flush that fails, leaves the sign-in
-// as it was rather than an empty or zeroed file (#1505).
-func TestCodexRefreshFlushesAuthJSONBeforeReplacingIt(t *testing.T) {
-	isolate(t)
-	fakeCodexRefresh(t)
-	defer func() { steady.Sync = (*os.File).Sync }()
-
-	// a flush that fails leaves auth.json whole, and the request served
-	path, was := dueCodexAuth(t)
-	steady.Sync = func(*os.File) error { return errors.New("the disk went away") }
-	if tok, _, err := codexToken(context.Background(), filepath.Dir(path)); err != nil || tok == "" {
-		t.Fatalf("codexToken: %q, %v", tok, err)
-	}
-	if b, err := os.ReadFile(path); err != nil || string(b) != string(was) {
-		t.Fatalf("a flush that failed left auth.json %q (%v), want the sign-in as it was", b, err)
-	}
-	if left, _ := filepath.Glob(filepath.Join(filepath.Dir(path), ".auth.json.*")); len(left) != 0 {
-		t.Fatalf("temp files left beside auth.json: %v", left)
-	}
-
-	// a flush that works: flushed while auth.json still holds the old
-	// sign-in whole, then renamed in, every other field kept
-	path, was = dueCodexAuth(t)
-	flushed := false
-	dir, _ := filepath.EvalSymlinks(filepath.Dir(path)) // /var is /private/var on macOS
-	steady.Sync = func(f *os.File) error {
-		if filepath.Dir(f.Name()) != dir || filepath.Base(f.Name()) == "auth.json" {
-			t.Errorf("flushed %s, not a file beside %s", f.Name(), path)
-		}
-		if b, _ := os.ReadFile(path); string(b) != string(was) {
-			t.Errorf("auth.json was changed before the new sign-in was flushed: %q", b)
-		}
-		flushed = true
-		return f.Sync()
-	}
-	if _, _, err := codexToken(context.Background(), filepath.Dir(path)); err != nil {
-		t.Fatal(err)
-	}
-	if !flushed {
-		t.Fatal("auth.json was written without the new sign-in being flushed to the disk first")
-	}
-	var got map[string]any
-	b, _ := os.ReadFile(path)
-	if json.Unmarshal(b, &got) != nil {
-		t.Fatalf("auth.json after the refresh: %q", b)
-	}
-	toks, _ := got["tokens"].(map[string]any)
-	if toks["refresh_token"] != "r-work-2" || toks["account_id"] != "acct-1" || got["last_refresh"] == nil {
-		t.Fatalf("auth.json after the refresh: %s", b)
-	}
-	if fi, err := os.Stat(path); err != nil || (os.PathSeparator == '/' && fi.Mode().Perm() != 0o600) {
-		t.Fatalf("auth.json's mode: %v, %v", fi, err)
-	}
-}
 
 // The same for Claude Code's own .credentials.json, written when magpie
 // switches the sign-in Claude Code is on: a write whose flush failed is

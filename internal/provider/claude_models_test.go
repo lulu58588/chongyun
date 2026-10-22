@@ -39,11 +39,11 @@ func writeAnthropicCatalog(t *testing.T, rows ...string) {
 
 // A Claude model models.dev lists after the Claude account's list was
 // last fetched is served at once, as the catalog has it: the copy a fetch
-// keeps doesn't hold it out until the next Refresh (wakaka on Discord:
+// keeps doesn't hold it out until the next Refresh (wakaka 报告:
 // Haiku 5.5 in Claude Code on the same account, not in magpie).
 func TestClaudeAccountServesModelsListedSinceItsFetch(t *testing.T) {
-	home := claudeHome(t)
-	claudeSignIn(t, home, time.Now().Add(time.Hour))
+	claudeHome(t)
+	claudeAccountSignIn(t, "a@example.com", "max", time.Now().Add(time.Hour))
 	t.Cleanup(catalog.Reset)
 
 	writeAnthropicCatalog(t, mdOpus55)
@@ -112,12 +112,12 @@ func claudeExposed(t *testing.T) []string {
 }
 
 // A model models.dev lists after the user picked every model the Claude
-// account listed is served beside those picks (wakaka on Discord: Haiku
+// account listed is served beside those picks (wakaka 报告: Haiku
 // 5.5 still missing after 9b51428e, whose list had it, as the picks held
 // it out); one listed then and left unpicked stays out.
 func TestClaudePicksOfEveryModelTakeOnesListedSince(t *testing.T) {
-	home := claudeHome(t)
-	claudeSignIn(t, home, time.Now().Add(time.Hour))
+	claudeHome(t)
+	claudeAccountSignIn(t, "a@example.com", "max", time.Now().Add(time.Hour))
 	t.Cleanup(catalog.Reset)
 	writeAnthropicCatalog(t, mdOpus55, mdHaiku55)
 

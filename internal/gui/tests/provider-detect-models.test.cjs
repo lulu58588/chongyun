@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Which API serves which model, found at a click (01huadalang on Discord:
+// Which API serves which model, found at a click (01huadalang 报告:
 // 检测协议的结果看不出对应的模型支持协议情况…有的仅支持 response 有的双协议):
 // Detect APIs' "Each picked model" posts provider/detect with every model
 // picked (detectModels) and shows model by API, ✓ or ✗ with why. Its

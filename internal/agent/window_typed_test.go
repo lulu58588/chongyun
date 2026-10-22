@@ -160,7 +160,7 @@ func TestSmallestMemberTypedWindow(t *testing.T) {
 	}
 }
 
-// Osal on Discord: a routing group that names no size of its own is told
+// Osal 报告: a routing group that names no size of its own is told
 // its largest member's window, and when the user typed that one (872K on
 // the provider for GPT-6 Astra, its most) Codex and Claude run to it
 // whole, as for a group following its smallest member (#2224), not to

@@ -14,7 +14,7 @@ import (
 )
 
 // An agent in a WSL distro under NAT reaches the gateway at Windows'
-// address, where gateway.Token is turned away (whqtian on Discord: OpenCode
+// address, where gateway.Token is turned away (whqtian 报告: OpenCode
 // in WSL was written "apiKey": "magpie" and refused). Every agent's config
 // carries the LAN sharing key there while sharing is on, and gateway.Token on
 // loopback, or while nothing is shared.

@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"github.com/lulu58588/chongyun/internal/appdir"
 	"context"
 	"errors"
 	"os"
@@ -206,7 +207,7 @@ func TestRestartCodexDaemon(t *testing.T) {
 	}
 	// the daemon of the CODEX_HOME magpie writes auth.json in, which is the
 	// user's own CODEX_HOME when that is set
-	if got, want := read(".home"), "/somewhere/else"; got != want || filepath.Clean(got) != filepath.Dir(codexAuthPath()) {
+	if got, want := read(".home"), "/somewhere/else"; got != want || filepath.Clean(got) != appdir.CodexHome() {
 		t.Errorf("CODEX_HOME %q, want %q (where chongyun writes auth.json)", got, want)
 	}
 	if got := read(".stdin"); got != "other" {
@@ -242,10 +243,8 @@ func TestRestartCodexDaemonFails(t *testing.T) {
 // switch to the account Codex is on already changes nothing.
 func TestSwitchLoginNotesCodexDaemon(t *testing.T) {
 	pid := fakeDaemon(t)
-	home := signIn(t)
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
 	*pid = 50
 	if err := SwitchLogin("codex", "work@example.com"); err != nil {
 		t.Fatal(err)
@@ -453,7 +452,7 @@ func TestFindCodexApp(t *testing.T) {
 
 // The Codex app reads the sign-in once, as it opens: switched while it
 // runs, it stays on the account before, shows that account's limits and,
-// once they are spent, sends in no thread (CavillZhang on X). magpie says
+// once they are spent, sends in no thread (CavillZhang 报告). magpie says
 // so until the app is opened again.
 func TestCodexAppStale(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())

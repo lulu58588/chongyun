@@ -30,7 +30,7 @@ const row = (i, model, out, ttft) => ({
 const ROWS = [row(0, "glm-fast", 135, 600), row(1, "kimi-slow", 20, 600), row(2, "glm-fast", 135, 600)];
 ROWS.push({ ...row(3, "glm-fast", 135, 0), ttft_ms: undefined, ms: 3000 });
 for (let i = 4; i < 30; i++) ROWS.push(row(i, "glm-fast", 135, 600));
-// one whose content came in a burst (flow_ms, John on Discord: a Kimi Code
+// one whose content came in a burst (flow_ms, John 报告: a Kimi Code
 // reply read 1,367 tok/s): its tokens over the wait tell no speed
 ROWS[4].flow_ms = 2;
 // and John's after that fix (Kimi Code: 2,237 tok/s): 550 tokens, 22 of

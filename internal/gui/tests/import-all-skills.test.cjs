@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// JasonLeeForOnly on Discord: the skills found in the agents (~/.agents/skills
+// JasonLeeForOnly 报告: the skills found in the agents (~/.agents/skills
 // and the agents' own) were brought into the Library one click at a time.
 // "Bring in all" beside "In your agents" posts every found skill's name at
 // once, the rows go, and the toast says how many are in the library now, or

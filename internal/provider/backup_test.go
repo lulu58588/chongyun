@@ -82,7 +82,7 @@ func TestBackupBalanceToken(t *testing.T) {
 
 // A backup or a sync carries the plugins added from npm or git, and the
 // computer it comes to installs the ones it hasn't: the providers they
-// serve come with them (yapechan on Discord: after a WebDAV sync, no
+// serve come with them (yapechan 报告: after a WebDAV sync, no
 // providers showed until each was added again by hand). A plugin from a
 // folder stays on its own computer, one already here is left as the user
 // has it, and a key in an option goes only with the keys.
@@ -173,7 +173,7 @@ func TestPluginsCarried(t *testing.T) {
 
 // The subscriptions a backup or a sync brings the settings of, with no
 // account here, are named: they show once signed in, and nothing else says
-// so (yapechan on Discord).
+// so (yapechan 报告).
 func TestNotSignedIn(t *testing.T) {
 	isolate(t)
 	h := t.TempDir()

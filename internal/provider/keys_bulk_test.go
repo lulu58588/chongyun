@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// Many keys pasted at once (361 on Discord: a provider with many keys was
+// Many keys pasted at once (361 报告: a provider with many keys was
 // tedious to fill one by one): split one a line, or by commas or spaces,
 // trimmed of quotes, each once.
 func TestSplitKeys(t *testing.T) {

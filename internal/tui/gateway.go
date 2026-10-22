@@ -12,7 +12,7 @@ import (
 // The terminal serves the gateway while it is open, as the app does, when
 // no magpie has it: in WSL with only magpie tui, the agents it connected to
 // magpie asked an address nothing listened at, and Claude Code said
-// ECONNREFUSED (gnayiab on X). Another magpie that has it (the app, magpie
+// ECONNREFUSED (gnayiab 报告). Another magpie that has it (the app, magpie
 // web, magpie serve) keeps it, and this one takes it up once that one is
 // gone.
 

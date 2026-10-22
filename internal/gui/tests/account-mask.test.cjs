@@ -123,7 +123,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const pq = await panel.evaluate(() => [...document.querySelectorAll("#panelQuota .pq-card")].map((c) => ({ text: c.querySelector(".pq-user").textContent, title: c.title })));
       for (const c of pq) assert.ok(!/李雷|138\*|dev\.one|Lee\b/.test(c.text + c.title), JSON.stringify(c));
       // and its model picker, which sits outside the panel's view: a Codex
-      // account's address beside its model (PaulT on Discord)
+      // account's address beside its model (PaulT 报告)
       await panel.evaluate(() => {
         const li = document.createElement("li");
         li.id = "pickRow";

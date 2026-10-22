@@ -42,8 +42,14 @@ func claudeMadeFirst(t *testing.T, bRefuses bool) {
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "a@example.com", "accountUuid": "u-a"}}), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	seen := time.Now()
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
-		{"agent": "claude", "user": "b@example.com", "plan": "max", "on": true, "seen": time.Now(), "auth": oauth("tok-b"),
+		{"agent": "claude", "user": "a@example.com", "plan": "max", "active": true, "on": true, "seen": seen, "auth": oauth("tok-a"),
+			"profile": map[string]any{"emailAddress": "a@example.com", "accountUuid": "u-a"}},
+		{"agent": "claude", "user": "b@example.com", "plan": "max", "on": true, "seen": seen.Add(-time.Minute), "auth": oauth("tok-b"),
 			"profile": map[string]any{"emailAddress": "b@example.com", "accountUuid": "u-b"}},
 	}), 0o600)
 
@@ -85,6 +91,31 @@ while read -r line; do
 done
 `
 	testenv.Program(t, filepath.Join(bin, "claude"), script)
+	// chongyun puts the sign-in it holds in the keychain, where Claude
+	// Code keeps its own on a Mac: the keychain stands in for the file the
+	// fake Claude Code reads.
+	testenv.Program(t, filepath.Join(bin, "security"), `#!/bin/sh
+cmd="$1"
+svc=""
+json=""
+prev=""
+for a in "$@"; do
+  case "$prev" in
+    -s) svc="$a";;
+    -w) json="$a";;
+  esac
+  prev="$a"
+done
+home="$HOME/.claude/.credentials.json"
+if [ "$svc" = "Claude Code-credentials" ]; then
+  case "$cmd" in
+  add-generic-password) mkdir -p "$HOME/.claude"; printf '%s\n' "$json" > "$home";;
+  find-generic-password) [ -f "$home" ] && cat "$home";;
+  delete-generic-password) rm -f "$home";;
+  esac
+fi
+exit 0
+`)
 	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)

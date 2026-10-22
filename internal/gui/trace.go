@@ -139,7 +139,7 @@ func publicRefs() func(string) string {
 // publicRoute is r as the Routing page names it: a group magpie found by
 // the id agents pick it by, auto/<model>, wherever r names one — the
 // model asked for, the request a search or an image was for, a subagent's
-// pick, the group and the groups in it (未寒 on Discord: the live view
+// pick, the group and the groups in it (未寒 报告: the live view
 // still said group/auto-<model>). The gateway keeps group/auto-<slug> in
 // the trace and its history (provider.CanonicalRef); r's own pointers are
 // the trace's, so what changes is copied first.

@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Usage › Requests with Today picked keeps its head still across a refresh
-// (@LingYi_Stu on X, v0.1.1233, macOS, Chinese: the refresh button, "5 秒" and
+// (@LingYi_Stu 报告, v0.1.1233, macOS, Chinese: the refresh button, "5 秒" and
 // the cost kept shaking left and right). The year heatmap's cells are square,
 // so between its narrowest and widest the page grows taller as it grows wider;
 // with the window about as tall as the page, WebKit laid it out at the full

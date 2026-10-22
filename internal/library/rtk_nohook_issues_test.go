@@ -30,7 +30,7 @@ func rtkIssues(s string) []string {
 }
 
 // The RTK tab's no-hook tag says each agent's own reason and cites its
-// own issues (新v学员 on Discord: Grok Build's tag said DeepSeek Harness's
+// own issues (新v学员 报告: Grok Build's tag said DeepSeek Harness's
 // hooks can't rewrite a command and linked dsh's rtk-ai/rtk#3847, since
 // every agent got dsh's text). The page's reasons (rtkNoHookWhy in
 // plugins/library/client.js) cover every agent in rtkNoHook and cite the

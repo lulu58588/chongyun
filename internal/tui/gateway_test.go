@@ -31,7 +31,7 @@ func waitFor(t *testing.T, what string, ok func() bool) {
 }
 
 // With no magpie serving, the terminal serves the gateway while it is open
-// and lets go as it quits (gnayiab on X: ECONNREFUSED in WSL with only
+// and lets go as it quits (gnayiab 报告: ECONNREFUSED in WSL with only
 // magpie tui).
 func TestTUIServesTheGatewayWhenNoneDoes(t *testing.T) {
 	t.Setenv("MAGPIE_ADDR", freeAddr(t))

@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A plugin's sign-in page opens once. Grok Build's `grok login` opens its
 // page in the browser itself on macOS and Windows, and the window opened it
-// again: two pages every time (andyfmyth on X). A sign-in that says its page
+// again: two pages every time (andyfmyth 报告). A sign-in that says its page
 // is open already (opened) has the window ask for no /api/open, right away
 // or once the CLI it needed is installed; one that doesn't still gets one.
 // In every language, Chromium and WebKit; the API is faked here.

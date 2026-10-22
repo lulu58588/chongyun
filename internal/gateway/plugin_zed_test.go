@@ -55,7 +55,7 @@ func zedParses(q map[string]any) string {
 // cloud reads it: the developer messages Codex sends at the start and
 // mid-conversation (a model switched) as system ones where they stand,
 // reasoning with a null content without it, a web search an OpenAI model
-// ran left out, and the namespaced tools flat (nico on Discord: "failed to
+// ran left out, and the namespaced tools flat (nico 报告: "failed to
 // parse OpenAI Responses API request: unknown variant `developer`").
 func TestZedPluginGetsNoDeveloperRole(t *testing.T) {
 	var mu sync.Mutex

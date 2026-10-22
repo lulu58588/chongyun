@@ -8,7 +8,7 @@ package provider
 // model list fetched. What was last known of it is still shown. Each of
 // those ran every minute or so for a Claude switched off, and a request
 // made just as a proxy came back up after a restart went out on the
-// machine's own address (Riko on Discord).
+// machine's own address (Riko 报告).
 
 // leftAlone says whether magpie leaves provider id alone in the
 // background: switched off, or its account removed from magpie.

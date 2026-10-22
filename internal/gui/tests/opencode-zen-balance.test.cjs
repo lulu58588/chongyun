@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// ttmrmx on X: OpenCode Zen's balance card wasn't shown at all. OpenCode
+// ttmrmx 报告: OpenCode Zen's balance card wasn't shown at all. OpenCode
 // tells no API key its balance (Zen's credits are on the console only),
 // so the card now says that, in the user's language, with the reason in
 // its tooltip and a button that opens the console (seeAt). The editor's

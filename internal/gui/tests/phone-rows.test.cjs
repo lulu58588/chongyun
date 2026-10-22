@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A row on a phone (zaidu259434 on X: 移动端适配真的希望优化下). At 360px a
+// A row on a phone (zaidu259434 报告: 移动端适配真的希望优化下). At 360px a
 // provider's row squeezed its name to a letter or two beside its key pill
 // and agent icons, and pushed its switch past the card; a gateway key's row
 // cut its name and its buttons; a model's badges, a call's model and path,

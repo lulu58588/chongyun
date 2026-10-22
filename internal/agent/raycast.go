@@ -1,7 +1,7 @@
 package agent
 
 // Raycast AI takes models of one's own as Custom Providers (Raycast Pro, on
-// Mac and Windows; lx_78654 on Discord), from ~/.config/raycast/ai/
+// Mac and Windows; lx_78654 报告), from ~/.config/raycast/ai/
 // providers.yaml in the user's folder on both (manual.raycast.com/ai/
 // custom-providers):
 //

@@ -206,7 +206,7 @@ const sizedReadFirst = 1 << 20
 // readSized reads r to its end into a slice the size the client declared,
 // when it declared one (declared > 0): io.ReadAll reads into chunks and
 // copies them into a slice of their sum, two copies of every body, and an
-// agent sends its whole conversation, ~1 MB, on every turn (yg6888 on X:
+// agent sends its whole conversation, ~1 MB, on every turn (yg6888 报告:
 // ~1 GB). Content-Length is not trusted for the allocation: room grows by
 // doubling, from sizedReadFirst, up to what was declared, so an honest body
 // of 1 MB or less is read into one slice of its own size, a larger one into

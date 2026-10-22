@@ -63,13 +63,13 @@ func errPortTaken(p int) error {
 }
 
 // setPort moves the gateway to port p (0 for the default) — the port in
-// Settings' Gateway address (Magic_zero on Discord: 3425 was taken, and a port of one's
+// Settings' Gateway address (Magic_zero 报告: 3425 was taken, and a port of one's
 // own is easier to tell apart): it checks nothing listens there, saves it,
 // moves the gateway this magpie serves (or starts it, when the port it was
 // on was taken), and then every agent connected to magpie, whose configs
 // have the gateway's URL in them. A magpie of this computer's serving the
 // gateway has it moved there; one out of this one's reach — in a container
-// (leslie_luo on Discord: an old magpie in OrbStack held 3425, so the port
+// (leslie_luo 报告: an old magpie in OrbStack held 3425, so the port
 // could be changed neither there nor here), another user's — is left on
 // its port, and this one serves on the new one.
 func setPort(p int) (portJSON, error) {

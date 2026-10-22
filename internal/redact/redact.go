@@ -746,7 +746,7 @@ var placeholderBody = regexp.MustCompile(`[A-Za-z][A-Za-z0-9_]*_[A-Za-z2-7]{8}`)
 // writes {{ PHONE_b5puzbfv }} as a template has it, drops a brace, or the
 // braces, or changes the case. Any of those is put back too when what is
 // left names a placeholder this magpie made: its kind and the 8 of its
-// hash, which no other text has by chance (shensmart on Discord).
+// hash, which no other text has by chance (shensmart 报告).
 func Restore(s string, escaped bool) string {
 	if !strings.Contains(s, "_") {
 		return s

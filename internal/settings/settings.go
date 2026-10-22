@@ -106,7 +106,7 @@ type Settings struct {
 	RedactAllow   []string          `json:"redactAllow,omitempty"`
 	// LAN shares the gateway on the local network; remote callers must use
 	// named caller keys. LANKey is retained for older Magpie versions.
-	// LAN is this computer's own (KeepOwn; Lullaby on Discord: sharing
+	// LAN is this computer's own (KeepOwn; Lullaby 报告: sharing
 	// turned on at home came on at work too). LANKey and LANKeyID name the
 	// default key, which rides the synced gateway-key store, so they follow
 	// the folder: turned on on another computer, sharing there takes up the
@@ -122,7 +122,7 @@ type Settings struct {
 	// gets no CORS headers, as before.
 	CORSOrigins []string `json:"corsOrigins,omitempty"`
 	// AllowIPs are the addresses (IPs and CIDR ranges) other computers may
-	// reach the gateway from at all (lc on Discord); any other is refused
+	// reach the gateway from at all (lc 报告); any other is refused
 	// 403 even with a gateway key. None: every address, as before. This
 	// computer is always let in. MAGPIE_ALLOW_IPS, where set, is used in
 	// its place (gateway.AllowIPs). This computer's own (KeepOwn), as LAN
@@ -264,20 +264,8 @@ type Settings struct {
 	// routing group member (#248), unset for every one left. 0 hands the
 	// refusal straight back: to an agent on Anthropic's Messages API as
 	// the vendor's own reply, stop_reason "refusal", which Claude Code
-	// answers by switching to its fallback model itself (DD on Discord).
+	// answers by switching to its fallback model itself (DD 报告).
 	RefusalRetries *int `json:"refusalRetries,omitempty"`
-	// NoAccountDiscovery leaves every agent's sign-in unread (#1535,
-	// MaxHaiCom): no credential file, Keychain item or agent CLI is asked
-	// who is signed in, and no subscription is offered; API-key providers
-	// work as before (see AccountDiscoveryOff, provider/discovery.go). Off,
-	// as by default, subscriptions are found as ever. This computer's own
-	// (KeepOwn), set only by its own switch or `chongyun accounts discovery`.
-	NoAccountDiscovery bool `json:"noAccountDiscovery,omitempty"`
-	// AccountDiscovery turns reading the agents' own sign-ins on. It is
-	// off unless the user says so: this build never reads another agent's
-	// credentials (the Keychain, ~/.claude, ~/.codex) unless asked, and
-	// serves no subscription account by default.
-	AccountDiscovery bool `json:"accountDiscovery,omitempty"`
 	// NoUpdatePill keeps the header's Update pill away when a newer magpie
 	// is out; UpdateSkip is the one version it was hidden for, and a newer
 	// one brings it back. Either way magpie still downloads the version and
@@ -315,7 +303,7 @@ type Settings struct {
 	// image away, or empty for one magpie picks (see gateway.seer).
 	Vision string `json:"vision,omitempty"`
 	// VisionEffort is how hard the Image recognition model thinks as it
-	// reads an image (MOMO on Discord): a level of catalog.EffortRank,
+	// reads an image (MOMO 报告): a level of catalog.EffortRank,
 	// fitted to the model's own levels when it is asked, or empty for
 	// magpie's choice, the least the model has (gateway.visionEffort).
 	VisionEffort string `json:"visionEffort,omitempty"`
@@ -326,7 +314,7 @@ type Settings struct {
 	// (gateway.videomaker).
 	ImageGen string `json:"imageGen,omitempty"`
 	// ImageTimeout is how long, in minutes, a vendor is given to draw an
-	// image and send it (neighbads on X: a slow image endpoint needs more
+	// image and send it (neighbads 报告: a slow image endpoint needs more
 	// than 5): from 1 to ImageTimeoutMost, 0 for ImageTimeoutDefault.
 	// ImageWait reads it.
 	ImageTimeout int `json:"imageTimeout,omitempty"`
@@ -337,7 +325,7 @@ type Settings struct {
 	// One that is gone, off or can't search gives way to magpie's pick.
 	Searcher string `json:"searcher,omitempty"`
 	// SearcherEffort is how hard the searcher's model thinks as it searches
-	// (MOMO on Discord): a level of catalog.EffortRank, fitted to the
+	// (MOMO 报告): a level of catalog.EffortRank, fitted to the
 	// model's own levels when it is asked, or empty to send none, the
 	// model's own default (gateway.searchEffort).
 	SearcherEffort string `json:"searcherEffort,omitempty"`
@@ -362,16 +350,16 @@ type Settings struct {
 	// next.
 	TrayNoLogos bool `json:"trayNoLogos,omitempty"`
 	// TrayNoBird leaves magpie's bird out of the Mac menu bar while the
-	// cards are there, the cards alone (KevinXC on Discord); a click on one
+	// cards are there, the cards alone (KevinXC 报告); a click on one
 	// still opens the panel, and with no cards the bird is shown.
 	TrayNoBird bool `json:"trayNoBird,omitempty"`
 	// TrayPace puts each window's Pace number beside its figure in the
 	// menu bar ("42% +12%"), as the Usage page's cards have it (fflake33
-	// on Discord); off by default, as it widens every card.
+	// 报告); off by default, as it widens every card.
 	TrayPace bool `json:"trayPace,omitempty"`
 	// TrayNoCost leaves money out of magpie's own totals in the menu bar:
 	// the today and last-7-days cards, their tooltips and the tooltip with
-	// no cards say the tokens alone (BussanQ on Discord); off by default,
+	// no cards say the tokens alone (BussanQ 报告); off by default,
 	// the cost shown.
 	TrayNoCost bool `json:"trayNoCost,omitempty"`
 	// Lightweight lets the webview of a window closed — the tray panel or
@@ -383,7 +371,7 @@ type Settings struct {
 	Lightweight *bool `json:"lightweight,omitempty"`
 	// KeepAwake keeps this computer from going to sleep by itself while
 	// agents work through the gateway and for a while after (xiao_wang24004
-	// on X; internal/awake). This computer's own (KeepOwn).
+	// 报告; internal/awake). This computer's own (KeepOwn).
 	KeepAwake bool `json:"keepAwake,omitempty"`
 	// NoWSLAgents stops magpie looking in WSL on its own, on Windows
 	// (#1264): no distro is listed or probed for agents, their sessions or
@@ -394,7 +382,7 @@ type Settings struct {
 	// its work found it locked). This computer's own (KeepOwn).
 	KeepAwakeDisplay bool `json:"keepAwakeDisplay,omitempty"`
 	// GatewayMode is whether `chongyun web` shows only what a gateway serving
-	// other machines needs (Player on Discord): "on", "off", or "" to
+	// other machines needs (Player 报告): "on", "off", or "" to
 	// decide by itself — on for `chongyun web --gateway`, or with no agents
 	// on this machine. This computer's own (KeepOwn).
 	GatewayMode string `json:"gatewayMode,omitempty"`
@@ -427,7 +415,7 @@ type Settings struct {
 	ResetReminder int `json:"resetReminder,omitempty"`
 	// TurnDoneAlert is how many seconds an agent's turn runs, from the
 	// user's prompt to its last reply, before magpie says it is done with a
-	// notification (itieniu on X): a long task set going while the user
+	// notification (itieniu 报告): a long task set going while the user
 	// works elsewhere. Only turns the app's own gateway serves; 0 is off.
 	TurnDoneAlert int `json:"turnDoneAlert,omitempty"`
 	// PlainNames has the model lists magpie gives agents name each model
@@ -443,7 +431,7 @@ type Settings struct {
 	// BareModelIDs has the gateway's /v1/models list each model by its id
 	// without the provider as well ("gpt-5.6-sol" beside
 	// "codex/gpt-5.6-sol"), for clients moved from another proxy that ask
-	// for bare ids (love1sbug on X; provider.BareEntries). Off by default.
+	// for bare ids (love1sbug 报告; provider.BareEntries). Off by default.
 	BareModelIDs bool `json:"bareModelIDs,omitempty"`
 	// CodexAgentsV1 has the OpenAI models magpie hands Codex — the ChatGPT
 	// account's own, their codex/ ids and the groups one is in — say
@@ -487,7 +475,7 @@ type Settings struct {
 	// Codex spawns on (a request x-openai-subagent names collab_spawn),
 	// whatever model its lead asked for in spawn_agent: a model a ChatGPT
 	// account in magpie serves (provider/model), since a subagent's task
-	// is sealed for one (willz on Discord). "" leaves each on the model its
+	// is sealed for one (willz 报告). "" leaves each on the model its
 	// lead asked for.
 	CodexSubagentModel string `json:"codexSubagentModel,omitempty"`
 	// DesktopSubagentModel is the model the gateway puts Claude Desktop's
@@ -513,7 +501,7 @@ type Settings struct {
 	// both, the plain one compacting at Claude Code's 200K.
 	DesktopLongest bool `json:"desktopLongest,omitempty"`
 	// GuideHidden: the user put away the Agents page's Get started card
-	// (wangye1644294 on X) before finishing it. Kept here, not in the
+	// (wangye1644294 报告) before finishing it. Kept here, not in the
 	// page's storage, so the panel, the window and a reload agree.
 	GuideHidden bool `json:"guideHidden,omitempty"`
 	// CompactAt is the window told for a longer one when FullContext is
@@ -523,7 +511,7 @@ type Settings struct {
 	// CodexAsyncCompact has Codex (0.163 on) compact a long conversation
 	// in the background, while its turn goes on, once it is past
 	// CodexAsyncCompactPercent of the model's window (#2490, lantern2077
-	// on Discord): [features.async_compaction] enabled in the config Codex
+	// 报告): [features.async_compaction] enabled in the config Codex
 	// is routed through, and capabilities.remote_compaction = "v2" on
 	// magpie's provider table, without which Codex never starts one on a
 	// provider other than OpenAI's. A value the user set there is theirs
@@ -558,13 +546,13 @@ type Settings struct {
 	// Providers page's.
 	UsageOrder []string `json:"usageOrder,omitempty"`
 	// PanelUsageHidden are the subscriptions, by provider id, that the tray
-	// panel's Allowances tab leaves out (H20 on Discord). It is what the
+	// panel's Allowances tab leaves out (H20 报告). It is what the
 	// panel shows, nothing more: routing, caps, the Usage page and the menu
 	// bar's cells still have them. The panel's order is UsageOrder.
 	PanelUsageHidden []string `json:"panelUsageHidden,omitempty"`
 	// UsageAgentsHidden are the clients, by the id the ledger records them
 	// under ("curl", "Go-http-client", an agent's id), that the Usage page's
-	// Agents list leaves out (ikunbots on X). It is that list's only: the
+	// Agents list leaves out (ikunbots 报告). It is that list's only: the
 	// ledger keeps their calls, and the totals and the chart count them.
 	UsageAgentsHidden []string `json:"usageAgentsHidden,omitempty"`
 	// ClientAgents counts a client magpie doesn't know as one of the agents
@@ -641,7 +629,7 @@ type Settings struct {
 	// ModelReasonless are the models the user said take no reasoning ask,
 	// by "<provider id>/<model id>": magpie offers them no levels and
 	// sends them no reasoning field, on any API, though their list says
-	// they think (see provider.SetModelReasonless; yuexian7 on Discord: a
+	// they think (see provider.SetModelReasonless; yuexian7 报告: a
 	// model models.dev lists with reasoning answered reasoning_effort
 	// with 422).
 	ModelReasonless map[string]bool `json:"modelReasonless,omitempty"`
@@ -682,7 +670,7 @@ type Settings struct {
 	// ModelAPIs is the one API a model is asked on at its provider, by
 	// "<provider id>/<model id>": chat, responses or anthropic, for a relay
 	// whose one key serves some models on one and others on another
-	// (01huadalang on Discord). Absent leaves it to the vendor's list and
+	// (01huadalang 报告). Absent leaves it to the vendor's list and
 	// to each URL the provider has (see provider.SetModelAPI).
 	ModelAPIs map[string]string `json:"modelAPIs,omitempty"`
 	// ModelSameAs is the model another vendor sells under another name
@@ -723,7 +711,7 @@ type ModelPrice struct {
 	// else at the 5-minute price (catalog.OneHourFor).
 	CacheWrite1h *float64 `json:"cache_write_1h,omitempty"`
 	// Tiers are the prices of a request whose input is over a size, each
-	// whole: "chongyun model price … --tier 272k …" (PAMI on Discord).
+	// whole: "chongyun model price … --tier 272k …" (PAMI 报告).
 	Tiers []catalog.Tier `json:"tiers,omitempty"`
 }
 
@@ -1024,8 +1012,6 @@ func (s *Settings) KeepOwn(cur Settings) {
 	s.GatewayMode = cur.GatewayMode
 	s.NoWSLAgents = cur.NoWSLAgents
 	s.QuotaReads = cur.QuotaReads
-	s.NoAccountDiscovery = cur.NoAccountDiscovery
-	s.AccountDiscovery = cur.AccountDiscovery
 	s.LAN, s.AllowIPs = cur.LAN, cur.AllowIPs
 	s.FetchPrivate = cur.FetchPrivate
 	s.SessionTerminal = cur.SessionTerminal
@@ -1263,7 +1249,7 @@ func CheckPort(p int) error {
 }
 
 // GatewayAddr is where the gateway listens: MAGPIE_ADDR when it is set,
-// else the port Settings has, on loopback (Magic_zero on Discord: 3425 was
+// else the port Settings has, on loopback (Magic_zero 报告: 3425 was
 // taken, and a port of one's own is easier to tell apart).
 func GatewayAddr() string {
 	if a := os.Getenv("MAGPIE_ADDR"); a != "" {

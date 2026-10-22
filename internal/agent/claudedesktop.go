@@ -193,7 +193,7 @@ func claudeDesktop(home string) *Agent {
 // build: 2.31226's MSIX keeps Claude-3p out of the package
 // (ExcludedDirectory), so the package's copy is one Desktop no longer
 // reads, and one gone from there (emptied by an update) isn't Desktop off
-// magpie (dumplings on Discord: "配置已变更" while Desktop ran on magpie).
+// magpie (dumplings 报告: "配置已变更" while Desktop ran on magpie).
 func desktopRead(ps []desktopPaths) []desktopPaths {
 	var newest time.Time
 	var at []desktopPaths
@@ -527,7 +527,7 @@ func desktopLocaleFrom(ps []desktopPaths) string {
 // signed in with Anthropic. Claude-3p is a userData of its own, so its
 // config.json starts with no "locale" and Desktop falls back to the
 // system's languages: the user's Chinese was gone once magpie turned 3p
-// on (memory and Osal on Discord). Only "locale" is written, only into a
+// on (memory and Osal 报告). Only "locale" is written, only into a
 // config.json that is missing or a JSON object without one: a language
 // set in 3p mode, by Desktop or by hand, is the user's and stays. What
 // can't be read is left alone. The value written is stashed, so switching

@@ -9,7 +9,7 @@ import (
 
 // magpie model compact off runs Codex's and Claude Code's conversations to
 // the model's whole window, on compacts them at the working window again
-// (Max on Discord found no way to it but the app's Settings); anything else
+// (Max 报告 found no way to it but the app's Settings); anything else
 // is refused.
 func TestModelCompactCmd(t *testing.T) {
 	groupsHome(t)

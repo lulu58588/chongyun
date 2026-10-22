@@ -90,7 +90,7 @@ func TestGooseDetectSkipsGoGoose(t *testing.T) {
 
 // Goose is offered magpie's models, and picking one makes magpie a custom
 // provider of Goose's that hands it each model's window and says which
-// models Goose can send a thinking level (wani on Discord: Goose's GUI
+// models Goose can send a thinking level (wani 报告: Goose's GUI
 // offered no thinking level and had the context wrong). A model Goose sends
 // no level for (GLM, on an OpenAI-compatible provider) is not said to think.
 func TestGooseRunsOnMagpie(t *testing.T) {

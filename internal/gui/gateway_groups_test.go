@@ -11,7 +11,7 @@ import (
 // The Gateway view's routing groups say what agents are told of them, as
 // its models do — their reasoning levels, images, context and output — and
 // name the models they send to, for the model list's tooltip and search
-// (ARNO on Discord).
+// (ARNO 报告).
 func TestGatewayGroupsSayWhatTheyTake(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
 	t.Setenv("USERPROFILE", os.Getenv("HOME"))

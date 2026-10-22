@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Settings' Image generation timeout (neighbads on X: a slow image
+// Settings' Image generation timeout (neighbads 报告: a slow image
 // endpoint needs more than 5 minutes) is kept from 1 to 60 minutes, and
 // 0, which is what a settings.json without it reads as, is the 5 drawing
 // was always given.

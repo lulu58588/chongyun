@@ -15,7 +15,7 @@ import (
 // single instance on the Mac, and magpie can be started twice there: by
 // its own open at login (a LaunchAgent that runs the binary) and by a
 // Login Item the user added, or by the Mac reopening it after a shutdown
-// it wasn't quit for (Crispin on Discord: two magpies after each boot).
+// it wasn't quit for (Crispin 报告: two magpies after each boot).
 // A start at login just ends; one for the window has the running magpie
 // show its window (the Dock's reopen), and a chongyun:// link is opened,
 // which the Mac hands to the running one.

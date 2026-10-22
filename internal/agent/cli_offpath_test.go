@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// 悠悠哥 on Discord (macOS): the Agents page listed "Codex 0.162.1" under
+// 悠悠哥 报告 (macOS): the Agents page listed "Codex 0.162.1" under
 // Not set up while `which -a codex` found nothing and ~/.codex wasn't
 // there. magpie adds the folders users' tools go in to its own PATH
 // (proc.UserPath: nvm's newest Node among them), so a codex installed with

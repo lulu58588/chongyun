@@ -12,7 +12,7 @@ import (
 )
 
 // A provider's Save carries what its editor's Names & levels changed
-// (modelPrefs), and makes it with the rest (ARNO on Discord: each level
+// (modelPrefs), and makes it with the rest (ARNO 报告: each level
 // ticked was applied on its own, before the Save).
 func TestProviderSaveModelPrefs(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())

@@ -22,7 +22,7 @@ import (
 // is) the first time a window or magpie web's page asks, and shown once.
 // Offline, nothing is shown. Settings can open them again. The notes are
 // in the page's language, Chinese or English, where a release has them in
-// it (freecss on Discord: they should follow Settings' language).
+// it (freecss 报告: they should follow Settings' language).
 //
 // The dialog comes up by itself only on the first start of a version the
 // user didn't ask for from inside magpie (#525: releases come many a day,

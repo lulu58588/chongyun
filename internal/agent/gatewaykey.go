@@ -12,7 +12,7 @@ import (
 // from this computer only; from another machine — a WSL distro under NAT,
 // which asks Windows' address — the gateway turns a request without a
 // named key away, so it is the LAN sharing key, while sharing is on
-// (whqtian on Discord: omp, then OpenCode, in WSL were refused).
+// (whqtian 报告: omp, then OpenCode, in WSL were refused).
 func keyAt(gw string) string {
 	if onAnotherMachine(gw) {
 		if k := access.LANSecret(); k != "" {
@@ -76,7 +76,7 @@ func gatewayKey(want string) bool {
 // keyHolds says the value v an agent's config has where magpie wrote want
 // still reaches magpie: want itself, or, where want is magpie's key for its
 // gateway, a key of the gateway's own the user put there instead (Gateway
-// keys), which the gateway takes just the same (PaulT on Discord: Hermes
+// keys), which the gateway takes just the same (PaulT 报告: Hermes
 // with a key of his own was said not to go through magpie).
 func keyHolds(v, want string) bool {
 	return v == want || v != "" && gatewayKey(want) && gatewayTakes(v)

@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Every page of the window keeps to one width, centred, on a large screen:
 // Routing, Usage and Sessions too, not stretched edge to edge while Agents,
-// Providers and Settings sit in the middle (面条 on Discord, after #860). A
+// Providers and Settings sit in the middle (面条 报告, after #860). A
 // narrow window keeps every page's 16px gutter.
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");

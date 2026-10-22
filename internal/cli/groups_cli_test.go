@@ -307,7 +307,7 @@ func TestGroupSetID(t *testing.T) {
 }
 
 // magpie group set <id> name=… says the id stays, and what agents ask for,
-// so a renamed group isn't taken for one with a new id (MOMO on Discord).
+// so a renamed group isn't taken for one with a new id (MOMO 报告).
 func TestGroupRenameSaysTheIDStays(t *testing.T) {
 	groupsHome(t)
 	if err := provider.SaveGroup(provider.Group{ID: "fast", Name: "Fast", Members: []string{"a/m"}}); err != nil {

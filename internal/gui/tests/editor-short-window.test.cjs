@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A provider's editor in a short window (悠悠哥 on Discord: a small window's
+// A provider's editor in a short window (悠悠哥 报告: a small window's
 // WorkBuddy editor showed part of its models, and the wheel took it no
 // further until the window was maximized). The dialog fits the window, its
 // head and Save stay in sight, and the wheel held over the model chips runs

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Show on a hidden agent nothing is set on (Fate on Discord: the Agents
+// Show on a hidden agent nothing is set on (Fate 报告: the Agents
 // panel's hide and show "isn't intuitive"): it moves from Hidden to Not set
 // up, still folded, and said "Idle shown" while it stayed out of sight. It
 // now says it stays under Not set up until a model is picked for it; one

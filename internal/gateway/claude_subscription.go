@@ -591,7 +591,7 @@ const claudeMCPPath = "/_magpie/claude-mcp/"
 // new Claude Code is told the whole conversation: Claude Code that can't
 // load a session ("No conversation found with session ID") exits before it
 // reads its input, and the turn was answered 502 "Claude Code ended"
-// (FrierenF on Discord).
+// (FrierenF 报告).
 func (b *subscriptionBridge) start(ctx context.Context, req *Request, model, configDir, owner string, from *savedSession) (*subscriptionRun, <-chan Event, error) {
 	run, events, err := b.startRun(ctx, req, model, configDir, owner, from)
 	var full *claudeFull
@@ -4122,7 +4122,7 @@ func (s *Server) serveSubscription(w http.ResponseWriter, r *http.Request, from 
 	// results only, and is not waiting for this request's once it is past
 	// the turn they were for: this request is its own conversation from
 	// here and gets a run of its own, told it whole. A 409 isn't retried,
-	// and the fork died with it (ylorn on Discord).
+	// and the fork died with it (ylorn 报告).
 	if run != nil && run.clientMarks != (req.clientCache != nil) {
 		run, how = nil, "cache mode changed"
 	}

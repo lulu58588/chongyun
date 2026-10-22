@@ -60,10 +60,8 @@ func TestBackgroundLoginReadNotesQuotaHistory(t *testing.T) {
 // write, not one read/parse/rewrite of the file per account (#1318
 // review).
 func TestBackgroundReadsNoteHistoryOnce(t *testing.T) {
-	home := signIn(t) // me@example.com, acct-1
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	_ = signIn(t) // me@example.com, acct-1
+	codexSignIn(t, "work@example.com", "r-work")
 	var calls atomic.Int32
 	var batch atomic.Int32
 	oldWrite := noteHistoryWrite

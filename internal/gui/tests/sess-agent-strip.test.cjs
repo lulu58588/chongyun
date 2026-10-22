@@ -14,7 +14,7 @@ const { chromium, webkit } = require("playwright");
 const assets = path.resolve(__dirname, "../assets");
 const at = (min) => new Date(Date.now() - min * 60e3).toISOString();
 // names long enough that eleven agents make a strip wider than an 866px window,
-// and short enough to fit a wide one, whose pages keep to 1200px (面条 on Discord),
+// and short enough to fit a wide one, whose pages keep to 1200px (面条 报告),
 // with room to spare: a strip that fits by a fraction of a pixel fails on a
 // glyph's rounding
 const NAMES = ["Trae CN Agent", "Kilo Code Agent", "Pi", "WorkBuddy",

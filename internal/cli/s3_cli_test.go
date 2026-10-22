@@ -168,7 +168,7 @@ func TestS3Cmd(t *testing.T) {
 		t.Fatalf("to WebDAV: %+v", c)
 	}
 	// and back, with nothing typed: the bucket, key and secret kept when
-	// sync moved from them (ARNO on Discord: S3 wiped the WebDAV setup)
+	// sync moved from them (ARNO 报告: S3 wiped the WebDAV setup)
 	if err := s3Cmd([]string{"on"}); err != nil {
 		t.Fatal(err)
 	}

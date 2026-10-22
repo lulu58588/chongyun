@@ -66,7 +66,7 @@ func relayOfEvery(t *testing.T) (*httptest.Server, func() (paths []string, bodie
 // request on Messages goes on as it is, cache_control and all, and one on
 // an API the relay doesn't serve is translated to Messages, not Chat, where
 // cache_control is lost and every turn is billed uncached (#997;
-// ReturnTrue on Discord: 0% cache hits until the OpenAI URL was left
+// ReturnTrue 报告: 0% cache hits until the OpenAI URL was left
 // empty). One on Chat or Responses goes to Messages too, though the relay
 // serves those (TestClaudeFromChatIsAskedOnMessages). The two-endpoint relay (an OpenAI URL and an Anthropic one) and the
 // one-endpoint relay that speaks all three are both covered.

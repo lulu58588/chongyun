@@ -35,7 +35,7 @@ func listedIDs(t *testing.T, r *http.Request) []string {
 	return ids
 }
 
-// love1sbug on X, moving from CLIProxyAPI: the old clients ask for
+// love1sbug 报告, moving from CLIProxyAPI: the old clients ask for
 // gpt-5.6-sol and pick from /v1/models, and magpie listed only
 // codex/gpt-5.6-sol, whatever Names in agents' lists said. With Model ids
 // without the provider on, the list has gpt-5.6-sol too, after the

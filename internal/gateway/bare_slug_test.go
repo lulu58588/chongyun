@@ -20,7 +20,7 @@ func bareGLM(t *testing.T, s *Server, say string) (code int, from, body string) 
 	return rec.Code, rec.Header().Get(providerHeader), rec.Body.String()
 }
 
-// A bare model id two providers serve (MOMO on Discord: glm-5.3 under
+// A bare model id two providers serve (MOMO 报告: glm-5.3 under
 // opencode-go and a6api) goes where the Providers order says, every
 // time, and the reply says which provider it was. With found groups on
 // (the default) the group magpie found for it is what's routed, so the

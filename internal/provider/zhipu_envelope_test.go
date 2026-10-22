@@ -88,7 +88,7 @@ func zhipuCodingPlan(t *testing.T, key string) Provider {
 	return p
 }
 
-// @xanahopper on X: the editor's Test on a GLM Coding Plan showed OpenAI and
+// @xanahopper 报告: the editor's Test on a GLM Coding Plan showed OpenAI and
 // Anthropic "401 · 令牌已过期或验证不正确" beside a green Responses "25 ms".
 // Zhipu's /api/v1 answers a refused key 200 in its envelope; that is the
 // refusal it is, on every path that tests an endpoint, and a key Zhipu

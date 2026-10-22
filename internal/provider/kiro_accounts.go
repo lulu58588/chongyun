@@ -143,7 +143,7 @@ type kiroSaved struct {
 
 // readKiroFile reads a sign-in made in magpie.
 func readKiroFile(path string) (kiroCred, bool) {
-	b, err := readAccountFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		return kiroCred{}, false
 	}

@@ -9,7 +9,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// Tystem on Discord: Codex wouldn't load its config ("Model provider
+// Tystem 报告: Codex wouldn't load its config ("Model provider
 // `chongyun` not found") with model_provider = "magpie" and model =
 // "deepseek-flash" left in config.toml and no [model_providers.magpie],
 // and magpie showed Codex as not connected. Codex refuses the whole config

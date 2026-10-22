@@ -17,7 +17,7 @@ import (
 )
 
 // A file unchanged on the server costs a request, not a download (Crispin
-// on Discord, 坚果云 limiting what is read each month): the read is sent
+// 报告, 坚果云 limiting what is read each month): the read is sent
 // with the version last seen and answered 304. A file changed on the
 // server is read in full and merged, as before; one changed only here is
 // merged with the copy kept of the server's, not read again. A server

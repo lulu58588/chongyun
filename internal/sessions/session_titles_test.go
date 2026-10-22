@@ -8,7 +8,7 @@ import (
 
 // A session goes by the name its agent shows for it: Codex's thread name,
 // the one a Claude Code session was renamed to, else the title the agent
-// made, and the first prompt only when there is none (TJHHHH on Discord).
+// made, and the first prompt only when there is none (TJHHHH 报告).
 func TestSessionTitles(t *testing.T) {
 	claude, codex := setup(t)
 	index := `{"id":"01a0bdc9-b5fd-7e63-9658-68bc8dce5ecd","thread_name":"Codex 起的名字","updated_at":"2026-09-23T00:27:30Z"}` + "\n"

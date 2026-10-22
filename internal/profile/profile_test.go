@@ -173,7 +173,7 @@ func TestProfileCarriesLibrary(t *testing.T) {
 
 // A profile can name agents this computer doesn't have: profiles sync
 // between computers. Applying one leaves those agents alone, so it never
-// writes a config that makes an agent look installed here (qtwaiter on X).
+// writes a config that makes an agent look installed here (qtwaiter 报告).
 func TestApplySkipsUndetectedAgents(t *testing.T) {
 	sandbox(t)
 	if err := provider.Save(provider.Provider{ID: "relay", Name: "Relay", Chat: "https://relay.example.com/v1",

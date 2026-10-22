@@ -8,7 +8,7 @@ import (
 )
 
 // A deprecated built-in whose plugin the user installed is handed to it
-// (ARNO on Discord: Qoder CN listed twice, the built-in and the plugin's,
+// (ARNO 报告: Qoder CN listed twice, the built-in and the plugin's,
 // once the Qoder plugin served it): one with no accounts at once, one with
 // accounts only when asked to move them, through Move. One the plugin is
 // signed in to under its own id already stays as it is; one moved whose

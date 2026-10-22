@@ -45,7 +45,7 @@ func TestToolSearchCallHasTscID(t *testing.T) {
 }
 
 // A conversation that searched on another vendor's model before (Lullaby
-// on Discord: "Invalid 'input[98].id': 'fc_18da0e90a0fc07ee0000005f'.
+// 报告: "Invalid 'input[98].id': 'fc_18da0e90a0fc07ee0000005f'.
 // Expected an ID that begins with 'tsc'", Codex's compaction failing with
 // it) goes on to OpenAI with that search's id a tsc_ one, on a turn and on
 // a compaction; OpenAI's own ids and everything else go as they came.

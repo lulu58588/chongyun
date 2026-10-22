@@ -7,7 +7,7 @@ import (
 )
 
 // A decision group is a routing group of decision models (Jev and the
-// like) and nothing else (ARNO on Discord: 给decision模型也加上group功能):
+// like) and nothing else (ARNO 报告: 给decision模型也加上group功能):
 // a System One request naming it (/v1/systemone, "group/<id>" or the
 // group's id or name) goes to its models as a conversation goes to a
 // chat group's, the next asked when one fails. It holds no conversation,

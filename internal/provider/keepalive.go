@@ -19,7 +19,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // keepAliveEvery is how long a saved sign-in goes before it is renewed.
@@ -40,14 +39,11 @@ type Renewal struct {
 // agent's hands that have gone every or longer without it; every 0 renews
 // all of them.
 func RenewLogins(ctx context.Context, every time.Duration) []Renewal {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
-	rememberLogins(false)
+	rememberAccounts(false)
 	loginsMu.Lock()
 	active := map[string]string{}
 	for _, a := range loginAgents {
-		if l, ok := liveLogin(a); ok {
+		if l, ok := ownActive(a); ok {
 			active[a] = l.User
 		}
 	}

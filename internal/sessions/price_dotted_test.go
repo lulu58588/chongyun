@@ -13,7 +13,7 @@ import (
 // A session's model is priced at its maker's list price when its id spells
 // the version with a dot (Copilot's claude-opus-4.6) and models.dev's maker
 // entry with a dash; one models.dev no longer prices takes the price the user
-// gave it from any provider, and is otherwise unpriced (tony on Discord: old
+// gave it from any provider, and is otherwise unpriced (tony 报告: old
 // sessions' copilot/claude models had no known price).
 func TestPriceOfDottedAndAnyProvider(t *testing.T) {
 	home := t.TempDir()

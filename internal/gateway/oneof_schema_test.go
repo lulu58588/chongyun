@@ -12,7 +12,7 @@ import (
 
 // A tool schema's oneOf goes to Cline, Kilo and OpenRouter as anyOf: the
 // grammar compiler some of their models are served behind refuses oneOf
-// (ModelRun, 400 "unsupported schema keyword: oneOf", H20 on Discord with
+// (ModelRun, 400 "unsupported schema keyword: oneOf", H20 报告 with
 // Codex's automation_update tool) and takes anyOf. A property called oneOf,
 // a description that says it, and the rest of the body are left as they
 // were; anyone else is sent oneOf.

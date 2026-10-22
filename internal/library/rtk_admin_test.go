@@ -45,7 +45,7 @@ func hasEnv(env []string, kv string) bool {
 	return false
 }
 
-// 新v学员 on Discord: "RTK and other actions that need elevation all
+// 新v学员 报告: "RTK and other actions that need elevation all
 // fail". RTK winget installed for every user of the computer (under
 // Program Files) can only be upgraded by an administrator, and magpie runs
 // as the user, so Upgrade failed. Upgrade now runs winget through Windows'

@@ -324,6 +324,9 @@ func TestAwayPath(t *testing.T) {
 // address's host isn't the one isCodexGatewayOn is asked about.
 func TestCodexSignedInBehindReverseProxy(t *testing.T) {
 	home, _ := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "")
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "beside")
 	cx := codex(home)
 	if err := cx.Apply("model", "fake/m1"); err != nil {
 		t.Fatal(err)

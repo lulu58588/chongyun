@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A key's balance over time (TJHHHH on Discord): under a balance's figure on
+// A key's balance over time (TJHHHH 报告): under a balance's figure on
 // the Usage page, its readings as a line, the least-squares line since the
 // last top-up dashed on to zero when that is within what is shown, and
 // "Runs out in 3d at this pace" in the curve's head, with what is spent a

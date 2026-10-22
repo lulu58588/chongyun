@@ -90,21 +90,18 @@ type devinLogin struct {
 	Home string
 }
 
-// devinLogins lists the Devin accounts that are signed in, the first in
-// use first, then the rest as they were added.
+// devinLogins lists the Devin accounts chongyun signed in itself, the
+// first in use first, then the rest as they were added. The CLI's own
+// sign-in is not read, so it is not among them.
 func devinLogins() []devinLogin {
-	own, plan, ok := devinIdentity()
-	if !ok {
-		own = ""
-	}
 	var out []devinLogin
-	for _, l := range sideLogins("devin", own, func(l savedLogin) bool {
-		_, _, err := DevinAuthAt(l.Home)
-		return l.Home != "" && err == nil
-	}) {
-		if l.saved.own() && l.Plan == "" {
-			l.Plan = plan // the CLI's own, by the tier `devin auth status` says, as the plugin names it
+	for _, l := range sideLogins("devin", "", func(l savedLogin) bool {
+		if l.Home == "" {
+			return false
 		}
+		_, _, err := DevinAuthAt(l.Home)
+		return err == nil
+	}) {
 		out = append(out, devinLogin{l.Login, l.saved.Home})
 	}
 	return out

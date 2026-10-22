@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A provider with many keys, each its balance (KeyBalances), shows the first
 // three on the Usage page and the rest behind "Show N more keys" at the
-// card's foot, with the keys' sum in the card's head (361 on Discord: an
+// card's foot, with the keys' sum in the card's head (361 报告: an
 // OpenRouter card listed every key's balance, a very long card). The button
 // opens them in place, the page not moving, and folds them again; it is
 // remembered across a reload. Every provider with keys folds the same way

@@ -194,7 +194,7 @@ func ListedDrawer(ref string) string {
 // (a ChatGPT account's GPT Image, a Grok subscription's Grok Imagine, a
 // WorkBuddy plan's those its config lists), apart from its chat models:
 // an account's own list of models (#474), picked in the editor from the
-// chat models, can't name them, so it never bars one (heyiwei5 on X).
+// chat models, can't name them, so it never bars one (heyiwei5 报告).
 func listsCantName(p provider.Provider) bool {
 	return drawsCodex(p) || drawsGrok(p) || drawsWorkBuddy(p)
 }

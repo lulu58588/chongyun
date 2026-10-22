@@ -396,7 +396,7 @@ func TestZCodeKeepsRemoteAddress(t *testing.T) {
 
 // The API format the user picks for magpie's provider in ZCode's settings
 // stays theirs: magpie answers all three, and a sync put Anthropic Messages
-// back on every start (杰多夫 on Discord). A change made in either file is
+// back on every start (杰多夫 报告). A change made in either file is
 // carried to the other; a provider magpie adds new starts on Anthropic.
 func TestZCodeKeepsUserFormat(t *testing.T) {
 	home := t.TempDir()
@@ -623,7 +623,7 @@ func TestZCodeKeepsTheUsersSettings(t *testing.T) {
 // the user set HOME (for Git Bash, MSYS2, Emacs) its providers, settings
 // and moved data folder are under %HOME%\.zcode, not %USERPROFILE%\.zcode,
 // Go's home. magpie wrote its provider under USERPROFILE: connected, no
-// error, and no magpie in ZCode (Gearclickist on Discord).
+// error, and no magpie in ZCode (Gearclickist 报告).
 func TestZCodeOnWindowsUsesTheHomeZCodeReads(t *testing.T) {
 	profile := syncHome(t)
 	old := zcodeOS

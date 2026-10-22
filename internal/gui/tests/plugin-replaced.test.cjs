@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// ARNO's (on Discord): a deprecated built-in subscription whose plugin is
+// ARNO's 报告： a deprecated built-in subscription whose plugin is
 // installed is the plugin's row alone in the add sheet (Qoder CN was listed
 // twice), its signed-in accounts still listed as providers. English and
 // Chinese; the API is faked here.

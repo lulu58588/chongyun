@@ -49,7 +49,7 @@ import (
 //
 // And a choice that made calls and ended "stop" ends "tool_calls": told
 // it stopped, a client that reads finish_reason ends its turn there with
-// the calls not run (喜欢一个人 on Discord, a relay in front of
+// the calls not run (喜欢一个人 报告, a relay in front of
 // deepseek-v4.1-flash), as the translations' collector already has it.
 //
 // Lines pass whole, as they came, unless one has any of them.
@@ -487,7 +487,7 @@ func silentAssistantsOut(body []byte) []byte {
 // silentAssistantsOut runs on every attempt of every Chat request relayed
 // as sent, and almost none has such a turn: decoding every message to
 // look made it the gateway's largest allocation after the body itself
-// (~4 MB a request for a 1.5 MB conversation, yg6888 on X).
+// (~4 MB a request for a 1.5 MB conversation, yg6888 报告).
 func anySilentAssistant(msgs json.RawMessage) bool {
 	if len(msgs) == 0 || msgs[0] != '[' { // valid: decodeJSON checked the body it is in
 		return false

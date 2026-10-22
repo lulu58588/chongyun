@@ -1,7 +1,7 @@
 package provider
 
 // What magpie spent of a Codex account's rate-limit resets, kept so the
-// user can see it afterwards (foobra12 on Discord: "magpie会自动使用codex
+// user can see it afterwards (foobra12 报告: "magpie会自动使用codex
 // 重置卡吗 我发现刚才好像不小心自动给我使用了一张"). Auto-use spends one
 // in the background — its week used up, or one about to run out — and
 // before this only the gateway's log said so; a reset gone from the card

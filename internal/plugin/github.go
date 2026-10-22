@@ -52,7 +52,7 @@ var (
 )
 
 // taggedTTL is how long what GitHub said stands: short, so a repository
-// tagged a moment ago shows within minutes (lee04052822 on X tagged theirs
+// tagged a moment ago shows within minutes (lee04052822 报告 tagged theirs
 // and, asked six hours apart, didn't see it). A search is one request of
 // the ten a minute; what each repository's package.json and npm said is
 // kept while its last push stays the same, so asking again costs no more.
@@ -63,7 +63,7 @@ const taggedTTL = 10 * time.Minute
 // that wait and are kept for the next ask; taggedAtOnce repositories are
 // read at once; and a list that left a repository out for want of an
 // answer is asked again after taggedRetry. Through a proxy far away each
-// read takes a few hundred milliseconds (larchsis on X: a list cut short
+// read takes a few hundred milliseconds (larchsis 报告: a list cut short
 // at the wait was kept ten minutes).
 var (
 	taggedWait   = 8 * time.Second
@@ -128,7 +128,7 @@ func (e *TaggedMissing) Unwrap() error { return e.Why }
 // failed (the list is what GitHub said before, empty when it never
 // answered), or, a *TaggedMissing, repositories it named couldn't be read.
 // An empty list is never a failed read passed off as there being none
-// (till on Discord: GitHub unreachable from their desktop, and the
+// (till 报告: GitHub unreachable from their desktop, and the
 // section just wasn't there).
 func TaggedRepos(ctx context.Context) ([]Tagged, error) {
 	taggedMu.Lock()

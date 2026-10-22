@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Codex resets used by themselves (foobra12 on Discord: 自动给我使用了一张, 这个
+// Codex resets used by themselves (foobra12 报告: 自动给我使用了一张, 这个
 //设置在哪儿找呢; Avalon: only the tray's quota showed the switch). Settings ›
 // Usage lists each signed-in Codex account under "Codex: auto-use resets"
 // with an Off/On for each of the two times it uses one, its week used up

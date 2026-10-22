@@ -18,11 +18,11 @@ const subscriptionNotice = "You are currently using your subscription to power y
 func claudeUsageCards(t *testing.T, text string, snapshot *lastQuota) (*atomic.Value, func() SubscriptionQuota) {
 	t.Helper()
 	home := claudeHome(t)
-	claudeSignIn(t, home, time.Now().Add(time.Hour))
+	claudeCodeSignIn(t, home, time.Now().Add(time.Hour))
 	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "a@example.com"},
 	})
-	rememberLogins(true)
+	claudeRemember(t, home)
 	var out atomic.Value
 	out.Store(text)
 	fakeClaudeUsage(t, &out, nil)
@@ -220,9 +220,7 @@ func TestClaudeUsageUnavailableAfterAccountSwitch(t *testing.T) {
 	})
 	writeFile(t, filepath.Join(home, ".claude", ".credentials.json"), map[string]any{"claudeAiOauth": map[string]any{
 		"accessToken": "tok-b", "refreshToken": "r-b", "expiresAt": time.Now().Add(time.Hour).UnixMilli(), "subscriptionType": "max"}})
-	forgetClaudeCredential()
-	forgetClaudeStatus()
-	rememberLogins(true)
+	claudeRemember(t, home)
 	out.Store(subscriptionNotice)
 	AskClaudeUsage()
 	q, ok := LoginUsage(context.Background(), "claude")["b@example.com"]

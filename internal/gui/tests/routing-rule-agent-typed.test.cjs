@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A rule's agents may be one magpie doesn't know (raikyou on Discord:
+// A rule's agents may be one magpie doesn't know (raikyou 报告:
 // SillyTavern, one's own app with its own User-Agent). The gateway names
 // such a client by its User-Agent's product name (usage.AgentOf), and a
 // rule matches it in lower case. In the editor the agent picker offers the

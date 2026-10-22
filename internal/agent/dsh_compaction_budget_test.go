@@ -23,7 +23,7 @@ func dshCompactsAt(window, out int) int {
 // TestDshOutputLeavesCompactionRoom: dsh reserves the maxTokens magpie lists
 // a model with, and 65536 more, out of its window before it compacts. A
 // vendor's reply limit near the window had dsh compact at 41248 of a 500000
-// group (#2823) or fail outright on 524288/524288 (LoKi on Discord) and
+// group (#2823) or fail outright on 524288/524288 (LoKi 报告) and
 // 131072/65536; it is held to a quarter of the window on every route and in
 // the older llm-deepseek entry, while a Max output the user set stays.
 func TestDshOutputLeavesCompactionRoom(t *testing.T) {

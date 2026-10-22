@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A third-party Anthropic API's Key header (Aloha on Discord: a service
+// A third-party Anthropic API's Key header (Aloha 报告: a service
 // answering 401 "x-api-key 和 Authorization 不可以同时存在"): the editor has a
 // Key header row, Both, x-api-key or Authorization: Bearer, opening as it
 // was saved or learned; Save posts the pick. A relay with only a Chat

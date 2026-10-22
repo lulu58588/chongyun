@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// ARNO on Discord: 我安装了 "opencode-codearts-auth": "github:yuweihao17/codearts"，
+// ARNO 报告: 我安装了 "opencode-codearts-auth": "github:yuweihao17/codearts"，
 // 插件页面一直有更新按钮，我点击更新更新到最新版了，还是一直提示有更新. A plugin
 // from a git repository is out of date only when its repository is at
 // another commit than the one bun installed: right after it is added, and

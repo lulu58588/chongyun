@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The Routing page stays light while requests fly (yg6888 on X: "打开页面很
+// The Routing page stays light while requests fly (yg6888 报告: "打开页面很
 // 卡", three agents sending at once through a group). Every frame poses
 // every flight, and each pose measured every path it flies along and the
 // wire ends it meets anew — getTotalLength and getPointAtLength took ~10 s

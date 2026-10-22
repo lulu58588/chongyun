@@ -2,7 +2,7 @@
 // A short window's sidebar (app.js sideBars): its pages run longer than the
 // window, and no bar stands beside them at rest. A thin one is laid over
 // their edge while they scroll and fades once they stop, as a Mac's overlay
-// scroll bar does, and it can be dragged (xybio on Discord).
+// scroll bar does, and it can be dragged (xybio 报告).
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");

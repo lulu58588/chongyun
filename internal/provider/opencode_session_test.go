@@ -12,7 +12,7 @@ import (
 // openCodeAsked stands in for OpenCode's gateway on http.DefaultClient,
 // where model lists and the Test button's probe go: it answers 400
 // "Request is missing x-opencode-session" to a request naming no session,
-// as the gateway does since September 2026 (luci on Discord), and keeps
+// as the gateway does since September 2026 (luci 报告), and keeps
 // the session each request named, with its path.
 func openCodeAsked(t *testing.T) func() [][2]string {
 	t.Helper()

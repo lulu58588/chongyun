@@ -93,9 +93,9 @@ func AutoResetWords(user string) string {
 	return ""
 }
 
-// CodexSignedIn is the ChatGPT account Codex is signed in to now.
+// CodexSignedIn is the ChatGPT account chongyun serves first now.
 func CodexSignedIn() (string, bool) {
-	l, ok := liveLogin("codex")
+	l, ok := ownActive("codex")
 	return l.User, ok
 }
 
@@ -175,7 +175,7 @@ func (a *autoResets) where() string { return filepath.Join(settings.Dir(), a.fil
 // only on "reset".
 func AutoUseCodexReset(ctx context.Context, user string) (ResetOutcome, error) {
 	if user == "" {
-		live, ok := liveLogin("codex")
+		live, ok := ownActive("codex")
 		if !ok {
 			return ResetOutcome{}, nil
 		}

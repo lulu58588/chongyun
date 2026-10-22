@@ -343,7 +343,7 @@ func TestClaudeLimits(t *testing.T) {
 	}
 }
 
-// A conversation switched to another model and back (KevinXC on Discord)
+// A conversation switched to another model and back (KevinXC 报告)
 // has a new run carry it on: the one left waiting before the switch is
 // let go then, not kept idleLongest for a turn that can't come back to it —
 // a Claude Code process more with every switch.

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// Several groups are removed at once (lc on Discord: they could only be
+// Several groups are removed at once (lc 报告: they could only be
 // removed one at a time): the user's go, the found ones are kept removed,
 // a group held by another being removed with it goes after that one, and
 // the whole is refused, with none removed, when one isn't there or a group

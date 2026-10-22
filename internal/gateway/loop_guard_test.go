@@ -540,7 +540,7 @@ func TestLoopEndsWorkBuddysReply(t *testing.T) {
 
 // A reply whose reasoning loops before it says anything is asked again
 // once: the agent keeps the reasoning it has, the next try's follows it,
-// and the reply ends whole, the loop no error (cdredfox on X: WorkBuddy's
+// and the reply ends whole, the loop no error (cdredfox 报告: WorkBuddy's
 // DeepSeek v4 flash now and then looping in a long turn, the agent's turn
 // ended). Translated to the agent's protocol, it is asked again in place;
 // a Chat stream passed through as it comes is let go at the end of the

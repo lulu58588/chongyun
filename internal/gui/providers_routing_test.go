@@ -11,7 +11,7 @@ import (
 )
 
 // A provider's Routing and Stays are picked in its editor and made with its
-// Save (01huadalang on Discord: each click saved at once); a Save that
+// Save (01huadalang 报告: each click saved at once); a Save that
 // doesn't carry them keeps them, where the Stays set on the Routing page
 // used to be lost at the editor's next Save, which never sent it.
 func TestProviderSaveRouting(t *testing.T) {
@@ -107,7 +107,7 @@ func TestProviderSaveSink(t *testing.T) {
 // A decision-only preset's provider (TypeSafe Jev) has no chat URL, so its
 // editor's Save is rebuilt from the preset: what the editor picks beside
 // the key — Routing, Stays, Rate limited, Unlisted, each key's proxy — is
-// kept, not put back to Smart (fflake33 on Discord: In order saved, and
+// kept, not put back to Smart (fflake33 报告: In order saved, and
 // reopened as Smart). The body is the editor's, as app.js sends it; its
 // decision API is a closed local port, so the list fetched after a new key
 // reaches no network.

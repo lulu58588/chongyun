@@ -75,7 +75,7 @@ var claudeOwnEnv = append([]string{
 
 // claudeAutoModeEnv is the model Claude Code's client-side auto mode
 // classifier runs on, the one that judges each action before it runs
-// (2.1.302; Linka on Discord). Unset, Claude Code picks its own (the
+// (2.1.302; Linka 报告). Unset, Claude Code picks its own (the
 // sonnet tier's model, else Sonnet). It doesn't move server-side auto
 // mode, and a classifier model Anthropic configures for the account
 // comes before it.
@@ -92,7 +92,7 @@ var claudeNoClassifier = []string{"claude-sonnet-5-5", "claude-opus-5-5", "claud
 // 2.1.300 names them. Each has an endpoint variable of its own
 // (ANTHROPIC_BEDROCK_BASE_URL, …), and ANTHROPIC_BASE_URL is passed over,
 // so a Claude Code with one on never reaches magpie: Bedrock refused
-// magpie's model ids (jw1dev on X).
+// magpie's model ids (jw1dev 报告).
 var claudeClouds = map[string]string{
 	"CLAUDE_CODE_USE_BEDROCK":                "Amazon Bedrock",
 	"CLAUDE_CODE_USE_VERTEX":                 "Google Vertex AI",
@@ -279,7 +279,7 @@ const claudeCompactEnv = "CLAUDE_CODE_AUTO_COMPACT_WINDOW"
 // (claudeUnknownOutput), whatever the model can write, so a model that
 // writes more — a reasoning one, whose thinking counts toward the reply —
 // stopped at "Claude's response exceeded the 32000 output token maximum"
-// (H20 on Discord, DeepSeek through WorkBuddy). Claude Code caps the value
+// (H20 报告, DeepSeek through WorkBuddy). Claude Code caps the value
 // at 128000 for such a model, and at its own maximum for a Claude model.
 const claudeOutputEnv = "CLAUDE_CODE_MAX_OUTPUT_TOKENS"
 
@@ -295,14 +295,14 @@ const claudeUnknownOutput = 32000
 // so "ultracode": true, which needs xhigh, did nothing (#430). Each magpie
 // model is said to have only the levels magpie knows it has, and xhigh
 // with max: the gateway runs xhigh at max for one without it, and without
-// xhigh_effort Claude Code turns Ultracode down (leesunrise2364 on Discord).
+// xhigh_effort Claude Code turns Ultracode down (leesunrise2364 报告).
 const claudeCapsEnv = "CLAUDE_CODE_MODEL_CAPABILITIES"
 
 // claudeReviewEnv is whether Claude Code's auto mode asks the API to review
 // its actions (the dangerous-tool-use beta and `safeguards`), "0" for no.
 // Behind a gateway whose model doesn't answer, it classifies locally anyway
 // and names the gateway in a notice, "this session isn't eligible because
-// your requests go through 127.0.0.1:3425…" (1EFLOPS on X, Claude Code on
+// your requests go through 127.0.0.1:3425…" (1EFLOPS 报告, Claude Code on
 // Codex). Anthropic's page on it says to set it to 0 for a gateway that
 // can't run the checks: magpie does while none of the models Claude Code
 // can reach through it is reviewed (claudeReviewed), and leaves it unset
@@ -459,7 +459,7 @@ func claudeCapabilities(first []string, own, desktop bool) string {
 // names for a Fable model (2.1.293: a model id equal to it is Fable), so the
 // main model written there made it a Fable model to Claude Code, and on a
 // Claude Pro sign-in without Fable it asked for usage credits before the
-// first turn: Claude Opus fell back to Haiku (Zhenzhen on Discord), and
+// first turn: Claude Opus fell back to Haiku (Zhenzhen 报告), and
 // another vendor's model, GPT-6.1 Sol through Codex, didn't run at all
 // (#2090). Claude Code's own /model fable, asked of the gateway, still runs
 // on the main model (claudeStandInAt).
@@ -892,7 +892,7 @@ func claudeIn(at place) *Agent {
 	// writeCompact has Claude Code compact at the working window
 	// (settings.WorkingWindow) on magpie, unless settings.FullContext or the
 	// main model is one of Anthropic's Claude models: Anthropic runs a [1m]
-	// one to its whole 1M, so it gets its own window (Max on Discord: a
+	// one to its whole 1M, so it gets its own window (Max 报告: a
 	// [1m] model stopped at 272K), or a routing group made only of
 	// them (provider.ClaudeGroup, #1741)
 	writeCompact := func() error {
@@ -971,7 +971,7 @@ func claudeIn(at place) *Agent {
 		// each row's label is the model's name as every agent's list calls
 		// it, by the Provider in model names setting (provider.Labels): the
 		// picker took the name alone, so none of the setting's three ways
-		// changed /model (love1sbug on X). A description that would say the
+		// changed /model (love1sbug 报告). A description that would say the
 		// provider the label already says is left "via chongyun".
 		labels := listLabels("claude")
 		rows := []any{}
@@ -1181,7 +1181,7 @@ func claudeIn(at place) *Agent {
 	// largest of theirs and each model below it gets its own
 	// (desktopPlan), and so while the main model is a [1m] one beside a
 	// tier that isn't: the main's own window, with each tier below it held
-	// to the tier's (多喝热水 on Discord: the least tier's 246K beside a
+	// to the tier's (多喝热水 报告: the least tier's 246K beside a
 	// [1m] DeepSeek read as the main's window under Full window, and was
 	// the one it fell back to whenever Claude Code stopped taking it for
 	// 1M). With a
@@ -1296,7 +1296,7 @@ func claudeIn(at place) *Agent {
 	// that cloud, past ANTHROPIC_BASE_URL, so routing it through magpie
 	// takes the switch out, its value kept in the stash as the user wrote
 	// it (a string or JSON's true), and magpie stepping out puts it back
-	// (jw1dev on X: CLAUDE_CODE_USE_BEDROCK=1 beside magpie's wiring, and
+	// (jw1dev 报告: CLAUDE_CODE_USE_BEDROCK=1 beside magpie's wiring, and
 	// Bedrock refused magpie's model). The cloud's own variables (AWS_*,
 	// ANTHROPIC_VERTEX_PROJECT_ID, …) stay: without the switch Claude Code
 	// doesn't read them. One that is off stays as it is.
@@ -1402,7 +1402,7 @@ func claudeIn(at place) *Agent {
 		if v == "" {
 			// Claude Code's own model, on the endpoint the user had before
 			// magpie: magpie steps out, putting back their endpoint and
-			// token, which stay theirs (__jingling on X: magpie claude
+			// token, which stay theirs (__jingling 报告: magpie claude
 			// model default took their ANTHROPIC_BASE_URL and token away
 			// for good)
 			if _, err := unroute(); err != nil {
@@ -1724,7 +1724,7 @@ func claudeIn(at place) *Agent {
 			// the top one too for a model that reads only its own: a model
 			// picked in Claude Code later (a routing group, another
 			// vendor's) reads the top one, and starts at the chosen level
-			// rather than its default (Creat.wu on Discord)
+			// rather than its default (Creat.wu 报告)
 			kvs := []edit.KV{{Path: "effortLevel", Value: v}}
 			if n != "" {
 				kvs = append(kvs, edit.KV{Path: "modelSettings." + n + ".effortLevel", Value: v})
@@ -2394,7 +2394,7 @@ func claude1MFor(agent string) func(ref string) string {
 // Bedrock's us.anthropic.claude-opus-… too, which Claude Code knows by the
 // same "opus-…" it looks for, and which a group of was already taken for
 // Claude's (provider.ClaudeGroup) while the model alone was held to the
-// working window (划船不靠桨 on Discord).
+// working window (划船不靠桨 报告).
 func claudeModel(ref string) bool {
 	return provider.ClaudeModel(strings.TrimSuffix(ref, "[1m]"))
 }

@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // An added preset's name is the user's to change, as a custom provider's is
-// (yapechan on Discord: Kimi and Kimi (China) side by side, hard to tell
+// (yapechan 报告: Kimi and Kimi (China) side by side, hard to tell
 // apart). The editor has a Name box holding the preset's name as its
 // placeholder, a name typed there is what Save sends, and a box left empty
 // sends the preset's name back. A custom provider keeps its one Name box, and

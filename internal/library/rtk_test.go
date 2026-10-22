@@ -540,7 +540,7 @@ echo "Hermes will now rewrite terminal commands through rtk. Restart Hermes."
 echo "Test with: git status"
 `
 
-// TestRTKHermesHome (新v学员 on Discord, native Windows): Hermes's folder is
+// TestRTKHermesHome (新v学员 报告, native Windows): Hermes's folder is
 // %LOCALAPPDATA%\hermes there, and rtk's installer wrote its plugin into it,
 // while magpie looked for the plugin in ~/.hermes: "rtk's installer didn't
 // add its hook to Hermes Agent". The plugin is looked for, and taken out,

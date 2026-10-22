@@ -12,7 +12,7 @@ import (
 )
 
 // The API a custom provider's Base URL was given as in its editor is kept
-// (01huadalang on Discord: 我选 response 保存了然后再打开一会就变成 openai
+// (01huadalang 报告: 我选 response 保存了然后再打开一会就变成 openai
 // 兼容了). A provider saved as OpenAI compatible, then given its URL as
 // OpenAI Responses, has both URLs: the editor showed the first, chat, and
 // so OpenAI compatible. The pick is saved, sent back to the editor, kept by

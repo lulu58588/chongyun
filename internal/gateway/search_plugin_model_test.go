@@ -16,7 +16,7 @@ import (
 // model alone, is the searcher magpie picks when nothing better is on, and
 // searches when asked in plain words. Every plugin's provider was left out
 // of the picker whatever its models did, so Trae's search model couldn't
-// be picked (01huadalang on Discord, 10-20).
+// be picked (01huadalang 报告, 10-20).
 func TestPluginSearchModelIsASearcher(t *testing.T) {
 	t.Setenv("FAKE_SEARCHER", "1")
 	var mu sync.Mutex

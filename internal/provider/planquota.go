@@ -548,7 +548,7 @@ type zhipuKeyRefusal struct{ said string }
 func (e zhipuKeyRefusal) Error() string { return e.said }
 
 // zhipuRefused says a refused key's card in words that name the key and
-// what to do (@xanahopper on X: a GLM Coding Plan key Zhipu refused showed
+// what to do (@xanahopper 报告: a GLM Coding Plan key Zhipu refused showed
 // only "Allowance unavailable"), keeping the vendor's own words.
 func zhipuRefused(quotaURL string, r zhipuKeyRefusal) error {
 	vendor, keys := "Zhipu", "https://open.bigmodel.cn/usercenter/proj-mgmt/apikeys"

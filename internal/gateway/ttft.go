@@ -133,7 +133,7 @@ func flowContent(ev []byte) bool {
 // start from (its first content, or first text, as ms): the time its middle
 // 80% of content bytes took, scaled to the whole, so a reply that came
 // evenly gets its whole window, and one that came in a burst — the vendor
-// wrote it all at once after its first content (John on Discord: 1,367
+// wrote it all at once after its first content (John 报告: 1,367
 // tok/s from Kimi Code) — gets next to none, and tells no speed
 // (usage.DecodeOf). At least 1 when told; 0 when it can't be: no content
 // after from, or a stream read too far to keep (flowMost, firstMost).

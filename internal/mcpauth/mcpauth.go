@@ -84,7 +84,7 @@ var ErrNoSignIn = errors.New("this server already works without signing in, so t
 var ErrClientRefused = errors.New("this server's sign-in admits only the apps it lists and turned chongyun away, so chongyun can't sign in for the agents. The agents given it still have the server's own address: sign in from each agent itself (in Claude Code, run /mcp and pick the server)")
 
 // ErrNoRegistration is a server whose sign-in doesn't let an app register
-// itself (GitHub's, 新v学员 on Discord): magpie signs in to it only as an
+// itself (GitHub's, 新v学员 报告): magpie signs in to it only as an
 // OAuth app of the user's own, made with the server's vendor, as Claude
 // Code does with --client-id. The page opens the server's fields for one
 // on it.
@@ -356,7 +356,7 @@ func dead(code string) bool {
 // Rejected says the server refused access, a token magpie had just
 // renewed: renewing it again won't help, so the sign-in has run out, and
 // the page says so instead of calling it signed in beside the server's
-// refusal (新v学员 on Discord). A sign-in renewed or redone meanwhile is
+// refusal (新v学员 报告). A sign-in renewed or redone meanwhile is
 // left as it is.
 func Rejected(name, access string) { markDead(name, access) }
 

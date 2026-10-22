@@ -13,7 +13,7 @@ import (
 // encrypted parts cut short). Relayed to Codex, each item keeps the one
 // id it was added with, in its events, its done and response.completed,
 // so Codex shows the commentary once and ends the search it started
-// (echo_ts on Discord).
+// (echo_ts 报告).
 func TestCopilotItemKeepsItsID(t *testing.T) {
 	reply, err := os.ReadFile("testdata/copilot_rotating_ids.sse")
 	if err != nil {

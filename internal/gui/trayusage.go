@@ -223,12 +223,12 @@ func trayTotalPeriod(id string) (usage.Period, bool) {
 // panel's Usage tab have it, the pages a click on it opens: the gateway's
 // requests and the calls the agents' session files record beside them,
 // from the ledger's cached index; a var for tests. The Overview's summary,
-// summed before, left those calls out (NextCommit on Discord).
+// summed before, left those calls out (NextCommit 报告).
 var trayTotalSum = func(p usage.Period) usage.Totals { return usage.QueryPage(p, usage.Filter{}, 0, 1).Sum }
 
 // trayTotalCard is a total as a card: its rows are every token, the
 // cache's too, as the Requests tab's and the panel's Tokens count them,
-// marked Σ so it doesn't read as the input alone (NextCommit on Discord),
+// marked Σ so it doesn't read as the input alone (NextCommit 报告),
 // over the cost, in the currency Settings says, "+" when some calls had no
 // known price; nothing beneath the tokens when none had one. Its name is
 // the tooltip, which spells out the input, output and cache.
@@ -256,7 +256,7 @@ func trayTotalCard(id string, t usage.Totals, currency string, rate float64) pro
 
 // trayMoney is a total as the menu bar says it: with its cost, or with no
 // cost and no count of calls with no known price when Settings › Menu bar
-// cost is off (settings.TrayNoCost, BussanQ on Discord), the tokens alone.
+// cost is off (settings.TrayNoCost, BussanQ 报告), the tokens alone.
 func trayMoney(t usage.Totals, noCost bool) usage.Totals {
 	if noCost {
 		t.Cost, t.Unpriced = 0, 0
@@ -286,9 +286,9 @@ func trayTokens(t usage.Totals) string {
 
 // trayIdleTip is the tooltip while the menu bar shows no cards: magpie's
 // name over what went through it today, as the panel's Usage tab counts it
-// (ylorn on Discord: a Linux bar's tooltip said only "magpie"): every
+// (ylorn 报告: a Linux bar's tooltip said only "magpie"): every
 // token, split into input, output and cache as the usage:today card's
-// tooltip does (NextCommit on Discord), then the cost and the requests.
+// tooltip does (NextCommit 报告), then the cost and the requests.
 func trayIdleTip(t usage.Totals, currency string, rate float64) string {
 	if t.Calls == 0 {
 		return "chongyun\nToday: no requests yet"

@@ -10,7 +10,7 @@ package provider
 // to it are signed in to another (NextLogin).
 //
 // One share for every window by default, and a share of its own for any
-// window the user sets one on (willz on Discord: a friend's account stops
+// window the user sets one on (willz 报告: a friend's account stops
 // at 50% of its five hours while its week may go to 40%). A window is known
 // by its name as the vendor's reading gives it, in lower case
 // (WindowCapID): "5 hours", "weekly", "7 days · opus", a pool's "gemini ·

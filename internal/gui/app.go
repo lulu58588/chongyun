@@ -364,7 +364,7 @@ func Run(version string, showMain bool, link string) error {
 		// exits), so the CLIs still being asked something end here.
 		// Account failover magpie wrote into Codex goes with the gateway
 		// this process serves: Codex left pointed at it would retry till
-		// magpie is open again (Leon920717 on X). The next start writes it
+		// magpie is open again (Leon920717 报告). The next start writes it
 		// again (Sync).
 		OnShutdown: func() {
 			proc.EndProbes()
@@ -375,7 +375,7 @@ func Run(version string, showMain bool, link string) error {
 			}
 			// the compactions magpie made in Codex's threads written as
 			// Codex's own, for the threads no Codex has open: with magpie
-			// gone they still go on (LukeMa on X)
+			// gone they still go on (LukeMa 报告)
 			agent.PortCodexRollouts(3 * time.Second)
 			updates.install(false)
 		},

@@ -29,7 +29,7 @@ func junction(t *testing.T, target, path string) {
 // Codex's install.ps1 puts %LOCALAPPDATA%\Programs\OpenAI\Codex\bin on PATH,
 // a junction to ~\.codex\packages\standalone\current\bin, and current is a
 // junction to releases\<version>-<target>, retargeted by each update
-// (xiaoxiaofeixz on Discord: the Agents page kept the old Codex version). It
+// (xiaoxiaofeixz 报告: the Agents page kept the old Codex version). It
 // is Codex's own install, updated by codex update, and each update is a new
 // binary to ask, though npm's archive gives every version's codex.exe the
 // same time.

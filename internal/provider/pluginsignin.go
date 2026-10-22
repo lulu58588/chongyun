@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // StartPluginSignIn begins signing in to a plugin's provider (OpenCode's
@@ -26,9 +25,6 @@ func StartPluginSignIn(id string, method int, inputs map[string]string) (SignInS
 // StartPluginSignInWith is StartPluginSignIn through the proxy o picks,
 // else the one the provider's requests go through (#1663).
 func StartPluginSignInWith(id string, method int, inputs map[string]string, o SignInOptions) (SignInState, error) {
-	if settings.AccountDiscoveryOff() {
-		return SignInState{}, errAccountDiscoveryOff
-	}
 	s := &signInFlow{done: make(chan struct{})}
 	if err := s.pickProxy(PluginID(id), o); err != nil {
 		return SignInState{}, err

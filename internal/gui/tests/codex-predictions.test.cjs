@@ -6,7 +6,7 @@
 // select) offers magpie's models; a pick posts settings/codex-predictions
 // on its own, the titles' and descriptions' settings untouched, its button
 // shows the choice under a name with no line of its own (as its siblings,
-// 1ooogle on X), and no click scrolls the Agents page, where Codex's row holds it.
+// 1ooogle 报告), and no click scrolls the Agents page, where Codex's row holds it.
 // Five languages, 1100 and 420 wide, Chromium and WebKit; no backend, the
 // API is faked here.
 const assert = require("node:assert/strict");

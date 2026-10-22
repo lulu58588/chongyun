@@ -25,6 +25,15 @@ func copilotFake(t *testing.T, gh string, api http.HandlerFunc) {
 	os.WriteFile(filepath.Join(cfg, "github-copilot", "apps.json"), mustJSON(map[string]any{
 		"github.com:Iv1.x": map[string]any{"user": "student", "oauth_token": gh},
 	}), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// editor's own file to find out which account that is.
+	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
+	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
+		{"agent": "copilot", "user": "student", "active": true, "seen": time.Now(), "auth": map[string]any{"oauth_token": gh}},
+	}), 0o600)
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
 	up := httptest.NewServer(api)
 	t.Cleanup(up.Close)
 	hub := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

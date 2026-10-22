@@ -184,7 +184,7 @@ func Read[T any](kind, path string, parse func([]byte) (T, error)) (T, error) {
 // statFile is os.Stat of path, waiting out a moment of it not there
 // (another process replacing it, on Windows) unless it wasn't there last
 // time either: taken for gone, a file of accounts read as no accounts, and
-// the next write left them all out (Packing1 on Discord, Windows 11:
+// the next write left them all out (Packing1 报告, Windows 11:
 // Antigravity's account gone after an update).
 func statFile(path string) (os.FileInfo, error) {
 	mu.Lock()

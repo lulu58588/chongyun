@@ -131,7 +131,7 @@ func tuneOf(cs []sessions.Call, days int, home string) tuneState {
 // conversations (provider.CompactFor, as codexcat writes it). One whose
 // window magpie doesn't know caps nothing (window 0): the largest prompt
 // it had been sent was taken for its window, and a 1M model set to
-// compact at 750K was offered no more than 412K (zhemu on Discord).
+// compact at 750K was offered no more than 412K (zhemu 报告).
 // Codex's own models, outside magpie's catalog, run to 272K or the
 // largest prompt seen, as before.
 func codexWindow(calls []tune.Call, st settings.Settings, entries []provider.Entry, find func(string) (provider.Group, []provider.Member, bool)) (window, told int) {

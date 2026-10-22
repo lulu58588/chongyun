@@ -1,46 +1,45 @@
-# Subsystem design references
+# 子系统设计参考
 
-These pages describe current responsibilities, runtime paths, state, and contracts. Start with the subsystem relevant to your task, then follow its source links to verify the implementation you change.
+这些页面描述各子系统当前的职责、运行路径、状态与契约。先从与你手头任务相关的子系统看起，再顺着文中的源码链接核对你要改动的实现。
 
-| Subsystem | Reference |
+| 子系统 | 参考文档 |
 | --- | --- |
-| Built-in subscriptions moving to plugins | [Provider and plugin ownership](provider-plugins.md) |
-| Built-in plugins: registry, lifecycle, plugins.yml, presets, settings schemas, the window's kernel (slots, error boundary, kit) | [Plugin runtime](plugin-runtime.md) |
-| Plugins that run on the gateway's requests and replies | [Gateway middleware](gateway-middleware.md) |
-| Tools that plugins give, offered to every agent as an MCP server | [Plugin tools](plugin-tools.md) |
-| Plugins that await context recall and observe completed replies | [Asynchronous gateway request hooks](gateway-request-hooks.md) |
-| Claude subscription turns across Claude Code runs | [Claude subscription bridge](claude-subscription-bridge.md) |
-| How the gateway picks a provider, key or account, and falls back | [Gateway routing and fallback](gateway-routing.md) |
-| Gateway Session Aggregation | [Gateway Session Aggregation](gateway-sessions.md) |
-| Connecting an agent's config to the gateway, drift, disconnect, WSL twins | [Agent wiring](agent-wiring.md) |
-| Providers, keys, subscription accounts, refresh and allowance | [Providers and accounts](providers-accounts.md) |
-| Instructions, MCP servers, skills and RTK written into agents | [Library](library.md) |
-| Tray, panel, window, `magpie web` and the page's JSON API | [GUI app shell](gui-shell.md) |
-| Encrypted backups and setup synchronization over WebDAV, S3 or GitHub | [Sync and backup](sync-backup.md) |
+| 内置订阅向插件迁移 | [供应商与插件归属](provider-plugins.md) |
+| 内置插件：注册表、生命周期、plugins.yml、预设、设置 schema、窗口内核（slots、错误边界、kit） | [插件运行时](plugin-runtime.md) |
+| 作用在网关请求与应答上的插件 | [网关中间件](gateway-middleware.md) |
+| 插件提供的工具，以 MCP server 形式提供给所有 Agent | [插件工具](plugin-tools.md) |
+| 等待上下文召回、并观察应答完成的插件 | [异步网关请求钩子](gateway-request-hooks.md) |
+| 网关如何挑选供应商、密钥或账号，以及如何回退 | [网关路由与回退](gateway-routing.md) |
+| 网关会话聚合 | [网关会话聚合](gateway-sessions.md) |
+| 把 Agent 的配置接到网关上、配置漂移、断开、WSL 双胞胎 | [Agent 接线](agent-wiring.md) |
+| 供应商、密钥、订阅账号、刷新与额度 | [供应商与账号](providers-accounts.md) |
+| 写入 Agent 的指令、MCP server、skills 与 RTK | [库](library.md) |
+| 托盘、面板、窗口、`chongyun web` 以及页面 JSON API | [GUI 应用外壳](gui-shell.md) |
+| 加密备份，以及通过 WebDAV、S3 或 GitHub 的配置同步 | [同步与备份](sync-backup.md) |
 
-A subsystem can span several packages or repositories. Its reference describes the behavior those parts provide together; it does not need to list every function.
+一个子系统可能横跨多个包甚至多个仓库。它的参考文档描述这些部分合在一起提供的行为，不要求逐个函数罗列。
 
-## Maintain a reference
+## 维护参考文档
 
-Update the owning reference in the same PR when a change alters a documented responsibility, interface, state transition, runtime path, compatibility rule, or failure behavior. An internal refactor that preserves these contracts does not require a prose change.
+当一次改动影响了文档中记载的职责、接口、状态流转、运行路径、兼容性规则或失败行为时，请在同一个 PR 里更新对应的参考文档。若只是内部重构且这些契约保持不变，则无需改动文字。
 
-Keep each fact in one reference and link to it from agent instructions or other pages. Link to source files and named symbols rather than copying implementation details that change frequently. Explain field meanings and constraints that signatures alone do not express.
+同一事实只在一份参考文档里写清楚，然后从 Agent 指令或其他页面链接过去。应链接到源码文件与具名符号，而不是复制容易频繁变化的实现细节。要解释签名本身表达不了的字段含义与约束。
 
-For a new reference, include the responsibilities and boundaries, source of truth, main runtime paths, state transitions, important constraints, and existing verification commands. Include failure and compatibility behavior where relevant. Document current behavior separately from proposed changes; the proposal belongs in its issue or PR.
+新增一份参考文档时，应包含：职责与边界、事实来源、主要运行路径、状态流转、重要约束，以及现有的验证命令。相关处要写清失败与兼容行为。当前的实际行为与拟议改动要分开写；提议部分属于它的 issue 或 PR。
 
-## Describe a PR's semantic changes
+## 描述一次 PR 的语义变化
 
-For each affected subsystem, explain the observable change with its trigger and before/after behavior. Include changes to interfaces, state, compatibility, and failure behavior when relevant. Link the affected reference, implementation, and verification evidence. State when a refactor preserves the documented behavior.
+对每个受影响的子系统，说明可观察到的变化，包含触发条件以及变化前后的行为。相关处要说明接口、状态、兼容性与失败行为的改动。链接到受影响的参考文档、实现与验证证据。若某次重构保持了文档所描述的行为，要明确说明。
 
-For example, a change to plugin adoption should explain which migration state and account condition trigger it, which implementation handles requests before and after adoption, and which test exercises that transition.
+例如，一处插件接入的改动，应当说明是哪些迁移状态与账号条件触发了它，改动前后分别由哪个实现处理请求，以及哪个测试覆盖了这次状态迁移。
 
-This is an author-provided explanation that a reviewer verifies against the diff and surrounding code. It is not an automatically proven compatibility verdict.
+这是作者给出的说明，由评审者对照 diff 与周边代码来核实，它不是自动生成的兼容性结论。
 
-## Review a change
+## 评审一次改动
 
-1. Identify the affected subsystem and the actual runtime path, including plugin or built-in ownership.
-2. Compare the claimed before/after behavior with the base and head implementation. Trace relevant callers and state transitions beyond the changed lines.
-3. Check that changed contracts appear in the owning reference and that source links still resolve.
-4. Check that the cited tests or runtime evidence exercise the claimed behavior. Report checks that were not run.
+1. 找出受影响的子系统与真实的运行路径，包含插件或内置实现的归属。
+2. 把声称的变化前后行为与基线实现和改动后实现对照比较。超出改动行的调用方与状态流转也要一并追踪。
+3. 检查改动涉及的契约是否已写进对应的参考文档，以及源码链接是否仍然有效。
+4. 检查引用的测试或运行时证据是否真的覆盖了所声称的行为。未执行的检查要如实说明。
 
-A documentation update alone does not prove the implementation. Existing tests and runtime evidence remain necessary for behavior changes.
+只更新文档并不能证明实现正确。行为改动仍然需要既有测试与运行时证据来支撑。

@@ -772,7 +772,7 @@ func TestDrawGoesWhereTheVendorPointsIt(t *testing.T) {
 // An account's own list of models (#474) is picked from the chat models
 // its editor shows, which a ChatGPT account's GPT Image is never among: a
 // list kept for some chat models doesn't turn its drawing away as "set
-// not to be served by any account" (heyiwei5 on X). Each account draws
+// not to be served by any account" (heyiwei5 报告). Each account draws
 // as it did with no list.
 func TestCodexDrawsPastAccountModelLists(t *testing.T) {
 	codexSignedIn(t, "plus@example.com")

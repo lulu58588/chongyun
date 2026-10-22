@@ -21,7 +21,6 @@ import (
 	"github.com/lulu58588/chongyun/internal/proc"
 	"github.com/lulu58588/chongyun/internal/provider"
 	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/settings"
 	"github.com/lulu58588/chongyun/internal/usage"
 )
 
@@ -38,8 +37,6 @@ func init() {
 	sessions.WSLHomes = wslHomes
 	sessions.WSLRunning = WSLRunning
 	sessions.WSLOff = func() bool { return !wslLooks() }
-	// a Copilot CLI signed in inside a running distro (#723)
-	provider.CopilotWSLHomes = copilotWSLHomes
 }
 
 // others are clients that reach the gateway without being agents magpie
@@ -283,29 +280,21 @@ func static(vals ...string) []Option {
 
 // ownOptions lists provider/model pairs an agent reaches on its own: the
 // providers in its auth file, plus whatever the current value already uses.
-func ownOptions(authFile string, cur string, extra ...string) []Option {
-	return ownOptionsFrom(nil, authFile, cur, extra...)
+func ownOptions(cur string, extra ...string) []Option {
+	return ownOptionsFrom(nil, cur, extra...)
 }
 
 // ownOptionsFrom is ownOptions for an agent with a model registry of its
 // own (Pi, omp: nativemodels.go): a provider's models are the registry's
 // when it has them, else models.dev's, and for openai-codex, which
 // models.dev doesn't list, Codex CLI's (#709).
-func ownOptionsFrom(native func(p string) []catalog.Model, authFile string, cur string, extra ...string) []Option {
+func ownOptionsFrom(native func(p string) []catalog.Model, cur string, extra ...string) []Option {
 	set := map[string]bool{}
 	for _, p := range extra {
 		set[p] = true
 	}
 	if p, _, ok := strings.Cut(cur, "/"); ok && p != magpieID {
 		set[p] = true
-	}
-	if b, err := readOwnAuth(authFile); err == nil {
-		var m map[string]json.RawMessage
-		if json.Unmarshal(b, &m) == nil {
-			for k := range m {
-				set[k] = true
-			}
-		}
 	}
 	providers := make([]string, 0, len(set))
 	for p := range set {
@@ -422,7 +411,7 @@ func magpieProviderJSONAt(shape, catalog, gw string) any {
 		// (x-session-affinity). On Responses it sends session_id anyway.
 		// Without it a turn of Pi's on Chat or Messages reached the gateway
 		// with no session: its usage had none and "Record gateway
-		// conversations" kept none of it (akic404 on Discord).
+		// conversations" kept none of it (akic404 报告).
 		return map[string]any{"name": "崇云科技", "baseUrl": gw + "/v1", "api": "openai-completions", "apiKey": keyAt(gw),
 			"compat": map[string]any{"sendSessionAffinityHeaders": true}, "models": ms}
 	}
@@ -769,7 +758,7 @@ func openCodeLike(at place, id, name, icon, bin, dir, auth string, ua []string, 
 	provider := openCodeKept(path, func() any { return magpieProviderJSONAt("opencode", id, at.gw()) })
 	opts := func(key string) func(map[string]string) []Option {
 		return func(cur map[string]string) []Option {
-			return append(ownOptions(auth, cur[key]), viaMagpie(id, magpieID+"/")...)
+			return append(ownOptions(cur[key]), viaMagpie(id, magpieID+"/")...)
 		}
 	}
 	get := func(k string) string { v, _ := edit.GetJSON(path, k); return v }
@@ -1102,7 +1091,6 @@ func piLike(at place, id, name, dir string) *Agent {
 func piLikeKeyed(at place, id, name, dir string, key func() string) *Agent {
 	path := filepath.Join(dir, "settings.json")
 	modelsPath := filepath.Join(dir, "models.json")
-	auth := filepath.Join(dir, "auth.json")
 	get := func(k string) (string, bool) { return edit.GetJSON(path, k) }
 	set := func(kvs ...edit.KV) error { return edit.SetJSON(path, kvs...) }
 	pair := pairSet(set, "defaultProvider", "defaultModel")
@@ -1183,7 +1171,7 @@ func piLikeKeyed(at place, id, name, dir string, key func() string) *Agent {
 					return piScopeWith(path, v)
 				},
 				Options: func(cur map[string]string) []Option {
-					return append(ownOptionsFrom(piRegistry(id), auth, cur["model"]), viaMagpie(id, magpieID+"/")...)
+					return append(ownOptionsFrom(piRegistry(id), cur["model"]), viaMagpie(id, magpieID+"/")...)
 				},
 			},
 			{
@@ -1302,7 +1290,7 @@ func gooseIn(at place, cfg string) *Agent {
 				// only the native providers this goose is set up with (#987:
 				// every one of four was listed, OpenRouter's hundreds of
 				// models on a goose that had only magpie)
-				return append(ownOptions("", cur["model"], gooseConfigured(path, keyEnv)...), viaMagpie("goose", gooseProviderID+"/")...)
+				return append(ownOptions(cur["model"], gooseConfigured(path, keyEnv)...), viaMagpie("goose", gooseProviderID+"/")...)
 			},
 		}, {
 			// GOOSE_THINKING_EFFORT, the effort goose asks of a model that
@@ -1326,7 +1314,7 @@ func cursor(home string) *Agent {
 	path := filepath.Join(home, ".cursor", "cli-config.json")
 	return &Agent{
 		// Cursor CLI, not Cursor: the row is cursor-agent, and the Cursor
-		// editor is not on it (@G_Z_Y on X looked for Cursor CLI on the
+		// editor is not on it (@G_Z_Y 报告 looked for Cursor CLI on the
 		// Agents page and took "Cursor" for the editor)
 		ID: "cursor", Name: "Cursor CLI", Icon: "cursor", Aliases: []string{"cursor-agent"},
 		UA:  []string{"cursor"},
@@ -1337,7 +1325,7 @@ func cursor(home string) *Agent {
 		// the Cursor editor makes ~/.cursor (argv.json, extensions, mcp.json,
 		// projects) with no cursor-agent anywhere, so the folder says nothing
 		// of the CLI: cli-config.json or the cursor-agent command does
-		// (@G_Z_Y on X saw a Cursor row that wasn't the CLI)
+		// (@G_Z_Y 报告 saw a Cursor row that wasn't the CLI)
 		dirShared: true,
 		Fields: []Field{{
 			Key: "model", Label: "model",
@@ -1481,7 +1469,7 @@ func crushAt(at place, path, data string) *Agent {
 					}
 				}
 			}
-			return append(ownOptions("", cur[key], extra...), viaMagpie("crush", magpieID+"/")...)
+			return append(ownOptions(cur[key], extra...), viaMagpie("crush", magpieID+"/")...)
 		}
 	}
 	// replacePick puts v in place of the whole models.<type> object in the
@@ -1572,11 +1560,3 @@ var (
 	noticeGoose = newNotice("Goose loads its providers at start-up — quit and reopen Goose (and open goose sessions) to use chongyun's models.")
 )
 
-// readOwnAuth is os.ReadFile for an agent's own sign-ins (OpenCode's
-// auth.json and its kin), left unread with account discovery off (#1535).
-func readOwnAuth(path string) ([]byte, error) {
-	if settings.AccountDiscoveryOff() {
-		return nil, os.ErrNotExist
-	}
-	return os.ReadFile(path)
-}

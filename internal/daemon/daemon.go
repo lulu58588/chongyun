@@ -206,7 +206,7 @@ func webOf(text string) (addr, key string) {
 // when it is opened from the Dock. The shell install is run from can lack
 // them (nvm loaded lazily, a script, ssh without a login shell), and the
 // service has only what is written: plugins and the MCP servers and agent
-// CLIs they start need node, which wasn't found (bookyue on Discord). A
+// CLIs they start need node, which wasn't found (bookyue 报告). A
 // var for the tests.
 var widenPath = func() {
 	proc.UserPath()

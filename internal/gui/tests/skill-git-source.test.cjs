@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// sunset on Discord: skills from GitLab, and from a company's own GitLab.
+// sunset 报告: skills from GitLab, and from a company's own GitLab.
 // The add box says any git repository's address works. A skill from one
 // (kind "git") shows where it came from (a link for an https address, the
 // address as text for an SSH one), has its own Update naming the

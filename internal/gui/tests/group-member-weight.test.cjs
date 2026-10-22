@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A group may route By weight (#1910, DD on Discord): each model takes its
+// A group may route By weight (#1910, DD 报告): each model takes its
 // share of the requests by the weight set beside it. In the group editor
 // the routing's segments offer By weight; picked, every member shows its
 // weight and its share of the requests among those on ("Weight 3 · 60%"),

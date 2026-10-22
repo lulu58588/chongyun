@@ -18,7 +18,6 @@ import (
 	"time"
 
 	"github.com/lulu58588/chongyun/internal/qoder"
-	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // qoderMu keeps a Qoder account's saved pairs still while the move reads
@@ -49,9 +48,6 @@ func qoderSaved(l savedLogin) (qoder.Credential, bool) {
 // With nothing to move it takes no lock, so listing accounts doesn't wait
 // behind a refresh.
 func migrateQoder() error {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
 	path := filepath.Join(filepath.Dir(Path()), "qoder.json")
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return nil

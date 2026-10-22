@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Command Code's subscription (Discord: Command Code said on X that its
+// Command Code's subscription (Discord: Command Code said 报告 that its
 // private protocol used from other tools may get an account banned): starting
 // its sign-in first says so, as Antigravity's and Zed's do — a Go plan goes
 // through Command Code's private interface, Pro/Max through its Provider API —

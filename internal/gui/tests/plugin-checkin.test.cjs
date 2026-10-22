@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Lemon on Discord: "provider 每日签到的方法能放到插件里面去做吗". A plugin
+// Lemon 报告: "provider 每日签到的方法能放到插件里面去做吗". A plugin
 // whose auth hook has checkin presses its vendor's daily check-in itself, and
 // magpie shows it as it shows its own: the account's Usage card has the row
 // (checkinBy "plugin:<provider>"), with Auto check-in posting

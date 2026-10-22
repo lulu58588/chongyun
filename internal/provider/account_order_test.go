@@ -146,11 +146,8 @@ func TestAccountOrderSideLoginsAllRoutingModes(t *testing.T) {
 
 func TestAccountOrderCodexSurvivesRememberAndSwitch(t *testing.T) {
 	home := signIn(t)
-	rememberLogins(true)
-	codexSignIn(t, home, "second@example.test", "r-second")
-	rememberLogins(true)
-	codexSignIn(t, home, "third@example.test", "r-third")
-	rememberLogins(true)
+	codexSignIn(t, "second@example.test", "r-second")
+	codexSignIn(t, "third@example.test", "r-third")
 	for _, user := range []string{"me@example.com", "second@example.test"} {
 		if err := SetLoginOn("codex", user, true); err != nil {
 			t.Fatal(err)
@@ -160,7 +157,6 @@ func TestAccountOrderCodexSurvivesRememberAndSwitch(t *testing.T) {
 	if err := SetAccountOrder("codex", order); err != nil {
 		t.Fatal(err)
 	}
-	rememberLogins(true) // must retain ranks when it replaces the credential snapshot
 	p, err := Find("codex")
 	if err != nil {
 		t.Fatal(err)

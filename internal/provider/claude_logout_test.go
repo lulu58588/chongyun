@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"os"
-	"path/filepath"
 	"testing"
 	"time"
 )
@@ -12,13 +11,12 @@ import (
 // out of Claude Code (it says to, over magpie's ANTHROPIC_AUTH_TOKEN), and
 // the accounts saved in magpie are still served — the one it was signed in
 // to first, in a config directory of its own, the others on behind it — and
-// none of them is dropped from the list (StringKe on Discord: all six went).
+// none of them is dropped from the list (StringKe 报告: all six went).
 func TestClaudeAccountsOutliveLogout(t *testing.T) {
 	home := claudeHome(t)
 	t.Setenv("CLAUDE_CONFIG_DIR", "")
 	noAnthropic(t)
-	cred := claudeSignIn(t, home, time.Now().Add(time.Hour))
-	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "own@example.com"}})
+	cred := claudeCodeSignIn(t, home, time.Now().Add(time.Hour))
 	far := time.Now().Add(24 * time.Hour).UnixMilli()
 	oauth := func(tok string) map[string]any {
 		return map[string]any{"claudeAiOauth": map[string]any{"accessToken": tok, "refreshToken": "r-" + tok, "expiresAt": far, "subscriptionType": "max"}}
@@ -32,22 +30,17 @@ func TestClaudeAccountsOutliveLogout(t *testing.T) {
 	loginsMu.Lock()
 	loginsSeenAt.Store(0)
 	loginsMu.Unlock()
-	if p, ok := find(All(), "claude"); !ok || p.Account.User != "own@example.com" {
+	if p, ok := find(All(), "claude"); !ok || p.Account.User != "on@example.com" {
 		t.Fatalf("signed in: %v %+v", ok, p.Account)
 	}
 
-	// /logout: Claude Code's sign-in is gone
+	// /logout: Claude Code's sign-in is gone. chongyun doesn't read it, so
+	// none of its accounts changes: they are sign-ins of its own.
 	os.Remove(cred)
-	os.Remove(filepath.Join(home, ".claude.json"))
-	forgetClaudeCredential()
 	loginsMu.Lock()
 	loginsSeenAt.Store(0)
 	loginsMu.Unlock()
 
-	// the one Claude Code held went with its /logout, which revokes the
-	// refresh token it holds — magpie's copy of it too (StringKe on
-	// Discord: all six had to be signed in again). The others are sign-ins
-	// of their own: one on stands in, never the revoked one.
 	p, ok := find(All(), "claude")
 	if !ok || p.Account == nil || p.Account.User != "on@example.com" {
 		t.Fatalf("logged out: %v %+v", ok, p.Account)
@@ -59,9 +52,6 @@ func TestClaudeAccountsOutliveLogout(t *testing.T) {
 	if c, ok := readClaudeDir(dir); !ok || c.OAuth.RefreshToken != "r-tok-on" {
 		t.Fatalf("dir credentials %+v", c.OAuth)
 	}
-	if _, err := os.Stat(claudeAccountDir("own@example.com")); !os.IsNotExist(err) {
-		t.Fatalf("the revoked sign-in was put to use: %v", err)
-	}
 	var also []string
 	for _, q := range p.AlsoOn() {
 		also = append(also, q.Account.User)
@@ -70,26 +60,20 @@ func TestClaudeAccountsOutliveLogout(t *testing.T) {
 		t.Fatalf("also on: %v", also)
 	}
 	ls := Logins("claude")
-	if len(ls) != 4 {
+	if len(ls) != 3 {
 		t.Fatalf("logins: %+v", ls)
 	}
 	for _, l := range ls {
-		revoked := l.User == "own@example.com"
-		if l.Active || l.On != (l.User == "on@example.com" || l.User == "two@example.com") ||
-			(l.Lapsed == claudeLogoutLapse) != revoked {
+		if l.Active != (l.User == "on@example.com") ||
+			l.On != (l.User == "on@example.com" || l.User == "two@example.com") || l.Lapsed != "" {
 			t.Fatalf("login %+v", l)
 		}
 	}
 	if u := InUseLogin("claude"); u != "on@example.com" {
 		t.Fatalf("in use %q", u)
 	}
-	for _, x := range savedButSignedOut() {
-		if x.Agent == "claude" {
-			t.Fatalf("excluded: %+v", x)
-		}
-	}
 
-	// the stand-in can be paused behind another on, as Claude Code's own could
+	// the account in use can be paused behind another on
 	if err := SetLoginOn("claude", "on@example.com", false); err != nil {
 		t.Fatal(err)
 	}
@@ -99,36 +83,26 @@ func TestClaudeAccountsOutliveLogout(t *testing.T) {
 	if u := InUseLogin("claude"); u != "two@example.com" {
 		t.Fatalf("in use %q", u)
 	}
-
-	// /login again in Claude Code, to the same account: a sign-in anew,
-	// no longer lapsed
-	writeFile(t, cred, oauth("tok-again"))
-	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "own@example.com"}})
-	ForgetAccounts()
-	for _, l := range Logins("claude") {
-		if l.User == "own@example.com" && (!l.Active || l.Lapsed != "") {
-			t.Fatalf("signed in again: %+v", l)
-		}
-	}
 }
 
 // A switch in magpie takes Claude Code off one account and puts it on
 // another, saving the first's sign-in as it was: nothing revoked it, and it
 // isn't taken for logged out.
 func TestClaudeSwitchIsNoLogout(t *testing.T) {
-	home := claudeHome(t)
+	claudeHome(t)
 	t.Setenv("CLAUDE_CONFIG_DIR", "")
 	noAnthropic(t)
-	claudeSignIn(t, home, time.Now().Add(time.Hour))
-	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "own@example.com"}})
 	far := time.Now().Add(24 * time.Hour).UnixMilli()
 	writeFile(t, loginsPath(), []map[string]any{
+		{"agent": "claude", "user": "first@example.com", "plan": "max", "on": true, "seen": time.Now().UTC(),
+			"profile": map[string]any{"emailAddress": "first@example.com"},
+			"auth":    map[string]any{"claudeAiOauth": map[string]any{"accessToken": "tok-first", "refreshToken": "r-first", "expiresAt": far}}},
 		{"agent": "claude", "user": "other@example.com", "plan": "max", "seen": time.Now().Add(-time.Hour).UTC(),
 			"profile": map[string]any{"emailAddress": "other@example.com"},
 			"auth":    map[string]any{"claudeAiOauth": map[string]any{"accessToken": "tok-other", "refreshToken": "r-other", "expiresAt": far}}},
 	})
 	ForgetAccounts()
-	if u := InUseLogin("claude"); u != "own@example.com" {
+	if u := InUseLogin("claude"); u != "first@example.com" {
 		t.Fatalf("in use %q", u)
 	}
 	if err := SwitchLogin("claude", "other@example.com"); err != nil {
@@ -142,83 +116,42 @@ func TestClaudeSwitchIsNoLogout(t *testing.T) {
 	}
 }
 
-// Logged out of Claude Code with accounts in magpie, an account signed in
-// in magpie stays magpie's: Claude Code isn't signed in to it again, which
-// would only bring back its warning over magpie's token.
-func TestClaudeSignInWhileLoggedOut(t *testing.T) {
-	home := claudeHome(t)
-	t.Setenv("CLAUDE_CONFIG_DIR", "")
-	noAnthropic(t)
-	far := time.Now().Add(24 * time.Hour).UnixMilli()
-	writeFile(t, loginsPath(), []map[string]any{
-		{"agent": "claude", "user": "old@example.com", "plan": "max", "seen": time.Now().Add(-time.Hour).UTC(),
-			"auth": map[string]any{"claudeAiOauth": map[string]any{"accessToken": "tok-old", "refreshToken": "r-old", "expiresAt": far}}},
-	})
-	fakeClaudeLogin(t, fakeClaudeAccount{email: "new@example.com", plan: "pro", refresh: "sk-ant-ort01-new"}, "", true)
-
-	st, err := StartSignIn("claude")
-	if err != nil {
-		t.Fatal(err)
-	}
-	finishInBrowser(t, st, "the-code")
-	if st = waitDone(t, st.ID); st.State != "done" || st.Using {
-		t.Fatalf("state %+v", st)
-	}
-	if _, err := os.Stat(filepath.Join(home, ".claude", ".credentials.json")); !os.IsNotExist(err) {
-		t.Fatalf("Claude Code signed in: %v", err)
-	}
-	forgetClaudeCredential()
-	var users []string
-	for _, l := range Logins("claude") {
-		if l.On {
-			users = append(users, l.User)
-		}
-	}
-	if len(users) != 2 {
-		t.Fatalf("on: %v", users)
-	}
-}
+// 崇云不读别家的登录态，此用例随之移除。
+//
+// The case asserted that an account signed in to in chongyun while Claude
+// Code is logged out stays chongyun's: Claude Code isn't signed in to it
+// again, which would only bring back its warning over chongyun's token.
+// What told it that Claude Code is logged out was Claude Code's own
+// credentials, which chongyun no longer reads; and the account chongyun
+// signs in to is the one the agent is on (addLogin is always using), so
+// Claude Code is signed in to it as well.
 
 // Every saved Claude account's sign-in gone while Claude Code is signed out
-// (LeeHom on Discord: two Claude Pro accounts vanished from Providers, and
+// (LeeHom 报告: two Claude Pro accounts vanished from Providers, and
 // were taken for a ban): the one Claude Code held went with its sign-in,
 // and the other had gone the same way before. Claude Code stays on the
 // Providers list, signed out, each account on it saying to sign in again,
 // and its token says so too; none is served as if it could be used.
 func TestClaudeAllSignedOutStaysListed(t *testing.T) {
-	home := claudeHome(t)
+	claudeHome(t)
 	t.Setenv("CLAUDE_CONFIG_DIR", "")
 	noAnthropic(t)
-	cred := claudeSignIn(t, home, time.Now().Add(time.Hour))
-	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "own@example.com"}})
 	far := time.Now().Add(24 * time.Hour).UnixMilli()
 	seen := time.Now().Add(-time.Hour).UTC().Truncate(time.Second)
 	writeFile(t, loginsPath(), []map[string]any{
-		{"agent": "claude", "user": "two@example.com", "plan": "pro", "on": true, "seen": seen, "lapsed": claudeLogoutLapse,
+		{"agent": "claude", "user": "one@example.com", "plan": "max", "on": true, "seen": seen, "lapsed": claudeLogoutLapse,
+			"auth": map[string]any{"claudeAiOauth": map[string]any{"accessToken": "tok-one", "refreshToken": "r-one", "expiresAt": far, "subscriptionType": "max"}}},
+		{"agent": "claude", "user": "two@example.com", "plan": "pro", "on": true, "seen": seen.Add(-time.Hour), "lapsed": claudeLogoutLapse,
 			"auth": map[string]any{"claudeAiOauth": map[string]any{"accessToken": "tok-two", "refreshToken": "r-two", "expiresAt": far, "subscriptionType": "pro"}}},
 	})
 	loginsMu.Lock()
 	loginsSeenAt.Store(0)
 	loginsMu.Unlock()
-	if p, ok := find(All(), "claude"); !ok || p.Account.User != "own@example.com" {
-		t.Fatalf("signed in: %v %+v", ok, p.Account)
-	} else if p.SignedOut() {
-		t.Fatal("a signed-in Claude Code reads as signed out")
-	}
-
-	// Claude Code lets go of its sign-in: Anthropic refused it, or /logout
-	os.Remove(cred)
-	os.Remove(filepath.Join(home, ".claude.json"))
-	forgetClaudeCredential()
-	loginsMu.Lock()
-	loginsSeenAt.Store(0)
-	loginsMu.Unlock()
-
 	p, ok := find(All(), "claude")
 	if !ok || p.Account == nil {
-		t.Fatalf("Claude Code left the Providers list with every account signed out: %v", ok)
+		t.Fatalf("Claude left the Providers list with every account signed out: %v", ok)
 	}
-	if p.Account.User != "own@example.com" {
+	if p.Account.User != "one@example.com" {
 		t.Fatalf("listed as %q; want the one seen last", p.Account.User)
 	}
 	if _, _, err := p.Account.Token(context.Background()); err == nil || err.Error() != claudeLogoutLapse {
@@ -233,13 +166,13 @@ func TestClaudeAllSignedOutStaysListed(t *testing.T) {
 		if l.Lapsed != claudeLogoutLapse {
 			t.Fatalf("not signed out: %+v", l)
 		}
-		listedOn = listedOn || l.On && l.User == "own@example.com"
+		listedOn = listedOn || l.On && l.User == "one@example.com"
 	}
 	// the row reads as signed out: the account it names is the one on
 	if !listedOn {
 		t.Fatalf("the listed account isn't on: %+v", ls)
 	}
-	if u := InUseLogin("claude"); u != "own@example.com" && u != "" {
+	if u := InUseLogin("claude"); u != "one@example.com" && u != "" {
 		t.Fatalf("in use %q", u)
 	}
 	// what magpie providers, the TUI and the app's row say of it

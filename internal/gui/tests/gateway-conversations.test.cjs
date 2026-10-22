@@ -8,7 +8,7 @@ const assets = path.resolve(__dirname, "../assets");
 
 // assertRecordCard: the recording setting is one card in the list's column,
 // below the toolbar and as wide as the list, with a switch, its name and what
-// it keeps where, and a delete that names what it deletes (lee on Discord: a
+// it keeps where, and a delete that names what it deletes (lee 报告: a
 // bare checkbox and a lone trash icon under the tabs read as stray).
 async function assertRecordCard(page) {
   const got = await page.evaluate(() => {
@@ -159,7 +159,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
   }
 }
 
-// lee on Discord: on this computer's Sessions page (not gateway mode), the
+// lee 报告: on this computer's Sessions page (not gateway mode), the
 // recording setting shows only on an agent with gateway sessions, as a card
 // over its list, never on one without them, nor in the Trash.
 for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium", "webkit"])) {

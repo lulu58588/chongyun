@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -19,6 +20,48 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 	"github.com/lulu58588/chongyun/internal/testenv"
 )
+
+// chongyunLogins writes chongyun's own logins.json: the accounts it holds,
+// each of them marked as the one its agent is on. chongyun signs the agents
+// in itself and keeps what it signed in to there; it never reads another
+// tool's own file to find out which account that is, so a test that means
+// "the agent is signed in to this account" writes it here. An account
+// written here again replaces the one it was for, as a sign-in anew does;
+// the others are kept.
+func chongyunLogins(t *testing.T, entries ...map[string]any) {
+	t.Helper()
+	path := filepath.Join(filepath.Dir(provider.Path()), "logins.json")
+	ls := []map[string]any{}
+	if b, err := os.ReadFile(path); err == nil {
+		if err := json.Unmarshal(b, &ls); err != nil {
+			t.Fatal(err)
+		}
+	}
+	out := ls[:0]
+	for _, l := range ls {
+		if slices.ContainsFunc(entries, func(e map[string]any) bool {
+			return e["agent"] == l["agent"] && e["user"] == l["user"]
+		}) {
+			continue
+		}
+		out = append(out, l)
+	}
+	out = append(out, entries...)
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, mustJSON(out), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
+}
+
+// chongyunCodexLogin is a ChatGPT account in chongyun's own logins.json: the
+// account the agent is on.
+func chongyunCodexLogin(user string, auth any) map[string]any {
+	return map[string]any{"agent": "codex", "user": user, "active": true, "seen": time.Now(), "auth": auth}
+}
 
 // twoProviders: "plan" (the one agents pick) falls back to "spare".
 func twoProviders(t *testing.T, plan, spare *fake) {
@@ -325,10 +368,13 @@ func TestSubscriptionAccountsTakeOver(t *testing.T) {
 	}
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("me@example.com", "acct-1")), 0o600)
-	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
-	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
-		{"agent": "codex", "user": "spare@example.com", "on": true, "seen": time.Now(), "auth": auth("spare@example.com", "acct-2")},
-	}), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	chongyunLogins(t,
+		chongyunCodexLogin("me@example.com", auth("me@example.com", "acct-1")),
+		map[string]any{"agent": "codex", "user": "spare@example.com", "on": true, "seen": time.Now(), "auth": auth("spare@example.com", "acct-2")},
+	)
 
 	var tried []string
 	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -386,11 +432,15 @@ func TestClaudeAccountsTakeOver(t *testing.T) {
 	os.WriteFile(filepath.Join(home, ".claude", ".credentials.json"), mustJSON(oauth("tok-primary")), 0o600)
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "me@example.com", "accountUuid": "u-me"}}), 0o600)
-	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
-	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
-		{"agent": "claude", "user": "me@example.com", "plan": "max", "on": true, "seen": time.Now(), "auth": oauth("tok-me")},
-		{"agent": "claude", "user": "spare@example.com", "plan": "max", "on": true, "seen": time.Now(), "auth": oauth("tok-spare")},
-	}), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	chongyunLogins(t,
+		map[string]any{"agent": "claude", "user": "me@example.com", "plan": "max", "active": true, "on": true, "seen": time.Now(),
+			"auth": oauth("tok-me"), "profile": map[string]any{"emailAddress": "me@example.com", "accountUuid": "u-me"}},
+		map[string]any{"agent": "claude", "user": "spare@example.com", "plan": "max", "on": true, "seen": time.Now().Add(-time.Minute),
+			"auth": oauth("tok-spare"), "profile": map[string]any{"emailAddress": "spare@example.com", "accountUuid": "u-spare"}},
+	)
 	dir := t.TempDir()
 	log := filepath.Join(dir, "log")
 	// out of quota, the CLI says so in a result and waits on its next input
@@ -438,9 +488,10 @@ done
 		if code != 200 || !strings.Contains(body, "pong") {
 			t.Fatalf("stream=%s: status %d: %s (runs %q)", stream, code, body, b)
 		}
-		// the signed-in account once, then the spare: never it again under
-		// its saved name
-		if runs := strings.Fields(string(b)); strings.Join(runs, ",") != "own,tok-spare" && strings.Join(runs, ",") != "tok-spare" {
+		// the account the agent is on once, then the spare: chongyun runs
+		// Claude Code in a config directory of its own, with the sign-in it
+		// keeps for the account, so the account it serves is named by it
+		if runs := strings.Fields(string(b)); strings.Join(runs, ",") != "tok-me,tok-spare" && strings.Join(runs, ",") != "tok-spare" {
 			t.Fatalf("stream=%s: runs %v", stream, runs)
 		}
 	}

@@ -4,7 +4,7 @@ package gui
 
 import "testing"
 
-// NextCommit on Discord: hovering the Mac's menu bar item showed no
+// NextCommit 报告: hovering the Mac's menu bar item showed no
 // tooltip at all, so neither today's tokens split into input, output and
 // cache nor the quotas were ever seen there. Wails' SetTooltip does nothing
 // on macOS; the tooltip is set on the item's button, its lines kept, and a

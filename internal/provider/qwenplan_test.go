@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-// Alibaba Cloud's Token Plan (Jeremy on Discord): its own host, apart from
+// Alibaba Cloud's Token Plan (Jeremy 报告): its own host, apart from
 // DashScope's pay as you go, with chat completions and Anthropic messages.
 func TestQwenTokenPlan(t *testing.T) {
 	p, err := FromPreset("qwen-token-plan")
@@ -23,10 +23,6 @@ func TestQwenTokenPlan(t *testing.T) {
 	}
 	if got := p.planModels(nil); len(got) != len(Preset("qwen-token-plan").Models) || got[1].ID != "qwen3.8-max" {
 		t.Fatalf("plan's: %+v", got)
-	}
-	im, _ := imported("Qwen", "sk-sp-x", endpoints{chat: "https://token-plan.maas.qianwenaiapi.com/compatible-mode/v1"}, nil)
-	if im.Preset != "qwen-token-plan" {
-		t.Fatalf("imported: %+v", im)
 	}
 }
 
@@ -60,10 +56,6 @@ func TestBailianTokenPlan(t *testing.T) {
 	}
 	if got := p.planModels(nil); len(got) != len(alibabaPlanModels) || got[1].ID != "qwen3.8-max" {
 		t.Fatalf("plan's: %+v", got)
-	}
-	im, _ := imported("Bailian", "sk-sp-x", endpoints{chat: root + "/compatible-mode/v1"}, nil)
-	if im.Preset != "bailian-token-plan" {
-		t.Fatalf("imported: %+v", im)
 	}
 
 	asked := 0

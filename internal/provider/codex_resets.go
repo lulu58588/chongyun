@@ -243,15 +243,9 @@ func useCodexReset(ctx context.Context, user, why string) (ResetOutcome, error) 
 	return out, nil
 }
 
-// codexUserToken signs in as the Codex account user: the one Codex itself
-// is signed in to, or one magpie keeps — and says which it was.
+// codexUserToken signs in as the Codex account user: one chongyun keeps —
+// and says which it was.
 func codexUserToken(ctx context.Context, user string) (who, tok, accountID string, err error) {
-	// the one signed in now, read from Codex's own file: the list of those
-	// kept may not have caught up with it yet
-	if live, ok := liveLogin("codex"); user == "" || ok && strings.EqualFold(live.User, user) {
-		tok, accountID, err = codexToken(ctx, codexHome())
-		return live.User, tok, accountID, err
-	}
 	for _, l := range Logins("codex") {
 		if strings.EqualFold(l.User, user) {
 			tok, accountID, err = savedLoginToken(ctx, "codex", l.User)

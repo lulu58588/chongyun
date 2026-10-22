@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// xiao_wang24004 on X: 能不能在里面加一个保持电脑任务常亮的选项呢？电脑在做任务
+// xiao_wang24004 报告: 能不能在里面加一个保持电脑任务常亮的选项呢？电脑在做任务
 // 的过程中经常自动关闭了. Settings → General has a "Prevent sleep" row
-// (named so by 1ooogle on X), off by default: On and Off are saved as keepAwake true and
+// (named so by 1ooogle 报告), off by default: On and Off are saved as keepAwake true and
 // false, the click moving nothing; another setting saved keeps it; a
 // browser's page (magpie web, the gateway's own computer) shows it too.
 // #975 (Hu9956: an agent recording the screen found it locked): a third

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// Two plugins that sign in to one provider id (neiko on Discord: a
+// Two plugins that sign in to one provider id (neiko 报告: a
 // third-party plugin and their own one, added by its folder). The host
 // runs one of them for it; each says it signs in to the id, the other
 // one says who serves it, the provider is listed once, and Prefer hands

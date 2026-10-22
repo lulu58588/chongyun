@@ -16,7 +16,7 @@ func holdApp(t *testing.T, h, name, id string) {
 		`<?xml version="1.0" encoding="UTF-8"?><plist version="1.0"><dict><key>CFBundleIdentifier</key><string>`+id+`</string></dict></plist>`)
 }
 
-// @jiahao_jayden on X: the library's rows listed agents that aren't
+// @jiahao_jayden 报告: the library's rows listed agents that aren't
 // installed. One gone from here (uninstalled: its CLI gone, its folder
 // left, #2177) is listed only while it still has what magpie gave it, on
 // the rows of what it has, so that can be unticked and taken out of its

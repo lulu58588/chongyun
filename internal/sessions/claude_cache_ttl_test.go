@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// PAMI on Discord: Claude Code's transcript says which cache writes were
+// PAMI 报告: Claude Code's transcript says which cache writes were
 // kept for an hour (cache_creation's ephemeral_1h_input_tokens), which
 // Anthropic bills at 2× input, not 1.25×. Both readers keep them apart; a
 // line without the split reads as before.

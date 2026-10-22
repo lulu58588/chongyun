@@ -7,7 +7,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
-// cdredfox on X: WorkBuddy's credits come in packages that each end on
+// cdredfox 报告: WorkBuddy's credits come in packages that each end on
 // their own day, and the Credits window has no reset. The plugin (0.1.14)
 // says when the soonest credits left run out (runsOutAt), and Smart
 // routing takes it for the window's renewal, so the account whose credits

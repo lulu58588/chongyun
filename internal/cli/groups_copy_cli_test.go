@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// magpie group copy <id> [name] duplicates a group (lc on Discord): its
+// magpie group copy <id> [name] duplicates a group (lc 报告): its
 // models and routing under "<name> copy", or the name given, and says what
 // agents pick it as. A found group copies too, as one of the user's; a
 // removed one is brought back first.

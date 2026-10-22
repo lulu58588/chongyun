@@ -764,7 +764,7 @@ var FloorAgents = map[string]bool{"claude": true, "claude-desktop": true, "codex
 
 // A Codex turn of one call read from its session file is timed by the
 // turn's time_to_first_token_ms and its end, and that window can be one
-// network push, not the writing: Fallmonkey on Discord had a reply whose
+// network push, not the writing: Fallmonkey 报告 had a reply whose
 // first token came at 6.8 s, the model working, and the rest 0.2 s later
 // in one go, read as thousands of tok/s. Such a row's window after the first
 // token tells a speed only when it is CodexWindowMs or more and its tokens
@@ -802,7 +802,7 @@ func (r Row) Decode() (tokens int, w int64) {
 // Code's own stream a floor read 2-5% under for 1,400 tokens or more, 11-33%
 // for a shorter one) and no faster than MaxDecodeSpeed. A count of tokens
 // is what bounds the share the wait can be, not a duration: a 5 s reply can
-// be 4 s of wait (Fallmonkey on Discord asked for 5 s instead).
+// be 4 s of wait (Fallmonkey 报告 asked for 5 s instead).
 //
 // A Codex turn of one call that reasoned has its first token from the turn's
 // end, but not its first text, so DecodeOf tells no speed. Its answer, its
@@ -821,7 +821,7 @@ func (r Row) Decode() (tokens int, w int64) {
 // turn, the wait for the first token in it, by the same rule as any other
 // such floor: 1,000 tokens or more over a second or more. It is the same
 // formula, so it has the same gate: under 1,000 tokens the wait is too much
-// of the time to tell anything (Fallmonkey on Discord: 11 tokens in 2.75 s
+// of the time to tell anything (Fallmonkey 报告: 11 tokens in 2.75 s
 // read ≥4 tok/s while an 815-token Claude Code reply told nothing).
 func (r Row) Floor() (tokens int, ms int64) {
 	if r.Source != "log" || !FloorAgents[r.Agent] || r.Failed() {
@@ -846,7 +846,7 @@ func (r Row) Floor() (tokens int, ms int64) {
 // Dimensions are what calls are told apart by: the provider they went to,
 // the agent that made them, the model, the model at the provider it
 // went to ("modelAt"), so one model's speed at each provider can be compared
-// (inaction on Discord), and the gateway key that made them ("callerKey"),
+// (inaction 报告), and the gateway key that made them ("callerKey"),
 // so the clients a shared gateway serves can be compared (#2521).
 var Dimensions = []string{"provider", "agent", "model", "modelAt", "callerKey"}
 

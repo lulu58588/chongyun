@@ -49,7 +49,7 @@ func offIn(t *testing.T, tg *Target, name string) ([]string, map[string]any) {
 	return got, es[name]
 }
 
-// nf1qaz2w on Discord: each of a server's tools has a switch, and a tool
+// nf1qaz2w 报告: each of a server's tools has a switch, and a tool
 // turned off is written into each agent that has its own list of them in
 // a server's entry — Codex's disabled_tools, Gemini CLI's excludeTools,
 // Crush's disabled_tools, Hermes' tools.exclude — beside the names the

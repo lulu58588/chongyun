@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // The model picker's rail names an icon beside it, on the right, never over
 // the icon below: the browser's own tooltip came up under the pointer, and
-// Devin's name sat on ZCode's Z as if it were ZCode's (Elan on X). Hovering
+// Devin's name sat on ZCode's Z as if it were ZCode's (Elan 报告). Hovering
 // from one icon to the next moves the name with it; leaving, a click, Esc
 // and closing the picker take it away. Keyboard focus shows it too. The
 // picker is the one in a connected agent's opened row. In Chromium and

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Claude Code on its own sign-in (StringKe on Discord): with "model":
+// Claude Code on its own sign-in (StringKe 报告): with "model":
 // "sonnet" in its settings.json the row showed a bare "sonnet", and with a
 // Claude model picked magpie writes no ANTHROPIC_BASE_URL, so the file read
 // as if magpie had failed to set it up. The alias now shows as the model it

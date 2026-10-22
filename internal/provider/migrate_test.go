@@ -465,7 +465,7 @@ func TestInstallPluginKeepsTheUsersPin(t *testing.T) {
 
 	// one the user didn't pin still goes to npm's newest through Upgrade,
 	// not bun's latest, which a minimumReleaseAge holds back without a
-	// word (sweanng424 on Discord)
+	// word (sweanng424 报告)
 	writeList(`{"plugins":[{"spec":"fake@latest"}]}`)
 	asked = nil
 	_ = installPlugin(context.Background(), "fake", "0.2.0")

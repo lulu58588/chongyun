@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-// After Bring in all (StringKe, JasonLeeForOnly on Discord): "Claude Code
+// After Bring in all (StringKe, JasonLeeForOnly 报告): "Claude Code
 // already has a skill of its own called impeccable", and nothing to do
 // about it. An agent's folder by the library skill's name that holds the
 // very same files — a copy CC Switch made into each agent, or one put back

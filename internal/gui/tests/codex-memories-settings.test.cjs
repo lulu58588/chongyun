@@ -3,7 +3,7 @@
 // memories with was only the notebook square on Codex's card, beside the
 // subagent squares, and wasn't found), in its settings on its opened row
 // (Settings had them till the owner, 10-20). The row sits under "Codex auto-review
-// model" with its name alone (1ooogle on X); unset it is
+// model" with its name alone (1ooogle 报告); unset it is
 // Codex's own pick. It opens the app's model picker (no native select), and
 // a pick posts Codex's memories field as the card's square does: the square
 // lights with it, and Default picked on the square puts the row back. No

@@ -46,7 +46,6 @@ import (
 	"github.com/lulu58588/chongyun/internal/filememo"
 	"github.com/lulu58588/chongyun/internal/lastgood"
 	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
 	"github.com/lulu58588/chongyun/internal/update"
 )
 
@@ -327,9 +326,6 @@ type MoveCandidate struct {
 // MoveCandidates are the built-ins not on their plugins that have accounts
 // to move, by name.
 func MoveCandidates() []MoveCandidate {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
 	out := []MoveCandidate{}
 	for id, mv := range movers {
 		if Moved(id) {
@@ -521,7 +517,7 @@ var (
 		if older {
 			// npm's newest, which bun says why it won't install (a
 			// minimumReleaseAge), where bun's own latest is an older
-			// version without a word (sweanng424 on Discord)
+			// version without a word (sweanng424 报告)
 			err = upgradePlugin(ctx, pkg)
 		} else {
 			_, err = addPlugin(ctx, found)
@@ -546,9 +542,6 @@ var (
 // Move puts the built-in id's accounts onto its plugin (see above). An
 // error leaves the built-in as it was.
 func Move(ctx context.Context, id string) error {
-	if settings.AccountDiscoveryOff() {
-		return errAccountDiscoveryOff
-	}
 	mv := movers[id]
 	if mv == nil {
 		return fmt.Errorf("%s has no plugin to move to", id)
@@ -581,9 +574,6 @@ func Move(ctx context.Context, id string) error {
 // it from now on, as a moved one does. One with accounts is moved instead,
 // and one whose plugin the user removed is the plugin's again.
 func Adopt(ctx context.Context, id string) error {
-	if settings.AccountDiscoveryOff() {
-		return errAccountDiscoveryOff
-	}
 	mv := movers[id]
 	if mv == nil {
 		return fmt.Errorf("%s has no plugin to move to", id)
@@ -971,9 +961,6 @@ func handBack(ctx context.Context, id string, mv *mover, accts []movedAccount, k
 // moved back is moved again: there is no way back, as the built-in is
 // going. One whose plugin the user removed waits for them to install it.
 func MoveRetiring(ctx context.Context) map[string]error {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
 	out := map[string]error{}
 	for _, id := range retiring() {
 		m, ok := MigrationOf(id)
@@ -997,7 +984,7 @@ func MoveRetiring(ctx context.Context) map[string]error {
 // HandOver gives each deprecated built-in whose plugin the user has
 // installed, at the version its move needs, and which that plugin serves,
 // its id, so one subscription is never listed twice: the built-in, and the
-// plugin's under "<id>-plugin" (ARNO on Discord: Qoder CN twice once the
+// plugin's under "<id>-plugin" (ARNO 报告: Qoder CN twice once the
 // Qoder plugin's 0.2.0 served it, as nothing gave it the id). One with no
 // accounts is the plugin's at once, as Adopt makes it; with accounts too,
 // one that has some is moved (Move: each tried through the plugin, all put
@@ -1009,9 +996,6 @@ func MoveRetiring(ctx context.Context) map[string]error {
 // its accounts still with the plugin, and a failed move waits retryWait. No
 // plugin is installed for it: the user's own install is what says to.
 func HandOver(ctx context.Context, accounts bool) map[string]error {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
 	out := map[string]error{}
 	var pps []plugin.Provider
 	asked := false
@@ -1096,10 +1080,6 @@ func KeepRetiringMoved(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case <-t.C:
-		}
-		if settings.AccountDiscoveryOff() {
-			t.Reset(time.Hour)
-			continue
 		}
 		keepMovedCurrent(ctx)
 		moves := MoveRetiring(ctx)

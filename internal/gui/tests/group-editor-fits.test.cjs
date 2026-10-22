@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A group's editor fits its column (碳碳双键 on Discord, zh, a ~770px
+// A group's editor fits its column (碳碳双键 报告, zh, a ~770px
 // window): members with long names, their chips, own reasoning and fast
 // mode pushed the Models rows past the editor's edge, where they were cut
 // off, and the Patterns box below no longer lined up with them. Now each

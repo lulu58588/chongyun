@@ -19,7 +19,7 @@ import (
 // The Routing page names a group magpie found as agents pick it,
 // auto/<model>, wherever a route names one: the model the agent asked
 // for, the group and the groups in it, the request a search was for and a
-// subagent's pick (未寒 on Discord: the live view still said
+// subagent's pick (未寒 报告: the live view still said
 // group/auto-<model> after the rename). The gateway's trace and history
 // keep group/auto-<slug>; a group the user made stays group/<id>.
 func TestRoutesNameFoundGroupsByTheirPublicID(t *testing.T) {

@@ -121,13 +121,11 @@ func TestRevokedSignInLeavesOthersMarks(t *testing.T) {
 // on a 401: a refresh that goes through is a new sign-in. A refresh refused
 // marks it, and the account's row says so.
 func TestRevokedCodexRefreshedFirst(t *testing.T) {
-	home := signIn(t)
+	signIn(t)
 	resetRevoked()
 	t.Cleanup(resetRevoked)
-	codexSignIn(t, home, "old@example.com", "r-old")
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	codexSignIn(t, "old@example.com", "r-old")
+	codexSignIn(t, "work@example.com", "r-work")
 	refuse := false
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if refuse {

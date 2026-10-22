@@ -58,7 +58,7 @@ func TestContextSetByUser(t *testing.T) {
 	if got := of(); got != 100000 {
 		t.Errorf("set lower: %d", got)
 	}
-	// Mikan on Discord: told the smallest member's, kept as smallest when
+	// Mikan 报告: told the smallest member's, kept as smallest when
 	// the members change
 	if err := SaveGroup(Group{ID: "g", Name: "g", Members: []string{"a/m1", "b/m2"}, Context: ContextSmallest}); err != nil {
 		t.Fatal(err)

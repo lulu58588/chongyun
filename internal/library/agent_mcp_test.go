@@ -10,7 +10,7 @@ import (
 	toml "github.com/pelletier/go-toml/v2"
 )
 
-// EUPH on Discord: MCP servers couldn't be given to agents that have a
+// EUPH 报告: MCP servers couldn't be given to agents that have a
 // user-wide MCP file of their own. Each is written as the agent's own
 // `mcp add` writes it (or its loader reads it), read back, found when the
 // user put it there, and taken out again leaving the user's servers and

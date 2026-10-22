@@ -193,7 +193,7 @@ func antigravityFamilies(raw []catalog.Model) []*antigravityFamily {
 // named for the model it is a tier of, "Gemini 3.7 Flash (Tiered)", and
 // any other model Antigravity leaves unnamed by its id. It thinks at the
 // levels that model has, and says so: with none, Pi, Codex and the rest
-// offered no effort for it (PapainTea on X), while sent low, medium or
+// offered no effort for it (PapainTea 报告), while sent low, medium or
 // high it thinks ~650, ~3800 or ~10000 tokens on one question.
 func collapseAntigravityModels(raw []catalog.Model) []catalog.Model {
 	var out []catalog.Model

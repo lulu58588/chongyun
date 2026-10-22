@@ -10,7 +10,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/routes"
 )
 
-// A group routed by weight (#1910, DD on Discord): members weighing 3, 1
+// A group routed by weight (#1910, DD 报告): members weighing 3, 1
 // and 4 take three, one and four of every eight requests, each tried
 // whole — a member's keys in its provider's order, a group in it in its
 // own — the next one the fallback. A member resting leaves the round,

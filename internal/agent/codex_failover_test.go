@@ -35,10 +35,17 @@ func TestCodexOwnModelThroughMagpieWhileAccountsOn(t *testing.T) {
 	home, read := codexHome(t, string(me), "model = \"gpt-5.5\"\n")
 	cx := codex(home)
 	logins := func(on bool) {
-		b, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "spare@example.com", "on": on,
-			"seen": time.Now(), "auth": auth("spare@example.com", "acct-2")}})
+		// chongyun keeps the account it signed the agent in to in its own
+		// logins.json, marked as the one the agent is on: it never reads
+		// the agent's own file to find out which account that is.
+		b, _ := json.Marshal([]map[string]any{
+			{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(), "auth": auth("me@example.com", "acct-1")},
+			{"agent": "codex", "user": "spare@example.com", "on": on, "seen": time.Now(), "auth": auth("spare@example.com", "acct-2")},
+		})
 		os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 		os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), b, 0o600)
+		provider.ForgetAccounts()
+		t.Cleanup(provider.ForgetAccounts)
 	}
 	logins(false)
 	if err := cx.Fields[0].Set("gpt-5.4"); err != nil {
@@ -108,6 +115,11 @@ func TestCodexFailoverOnlyKeepsOwnModels(t *testing.T) {
 	me, _ := json.Marshal(auth("me@example.com", "acct-1"))
 	home, read := codexHome(t, string(me), "model = \"gpt-5.5\"\n")
 	var saved []map[string]any
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	saved = append(saved, map[string]any{"agent": "codex", "user": "me@example.com", "active": true,
+		"seen": time.Now(), "auth": auth("me@example.com", "acct-1")})
 	for i, u := range []string{"spare1@example.com", "spare2@example.com"} {
 		saved = append(saved, map[string]any{"agent": "codex", "user": u, "on": true,
 			"seen": time.Now(), "auth": auth(u, "acct-"+string(rune('2'+i)))})
@@ -115,6 +127,8 @@ func TestCodexFailoverOnlyKeepsOwnModels(t *testing.T) {
 	b, _ := json.Marshal(saved)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), b, 0o600)
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
 	// Codex fetched magpie's whole list before
 	cache := filepath.Join(home, ".codex", "models_cache.json")
 	now := time.Now().UTC().Format(time.RFC3339)
@@ -164,6 +178,9 @@ func TestCodexFailoverOnlyKeepsOwnModels(t *testing.T) {
 	}
 
 	// connected, magpie's models are in its list and the row says connected
+	// chongyun never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one chongyun wired beside that sign-in.
+	codexBeside(t, home, "joined")
 	if ok, err := cx.Join(); !ok || err != nil {
 		t.Fatalf("join %v %v", ok, err)
 	}

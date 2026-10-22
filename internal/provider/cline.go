@@ -193,7 +193,7 @@ var clineMakers = []struct {
 }{
 	{name: "glm-5.3-flash", exact: true, upstream: "z-ai", openRouter: true},
 	{name: "deepseek", upstream: "deepseek"},
-	{name: "glm", upstream: "zai"}, // sdytman on Discord: GLM only through Z.ai
+	{name: "glm", upstream: "zai"}, // sdytman 报告: GLM only through Z.ai
 }
 
 // ClinePin is the upstream a request for model is pinned to on p

@@ -69,7 +69,7 @@ type Model struct {
 	// Plain, on a model of another magpie's list, is its name there alone
 	// (display_name), when Name is its label there, with that magpie's
 	// provider after it (magpie_label): the name Provider in model names
-	// Off has here (ARNO on Discord).
+	// Off has here (ARNO 报告).
 	Plain string `json:",omitempty"`
 	// Fast is set on a model Codex may ask for priority processing (its
 	// Fast mode): one a ChatGPT account serves.
@@ -220,7 +220,7 @@ func (p *Price) UnmarshalJSON(b []byte) error {
 // out: 2× input, as Anthropic bills it for every model, wherever the model
 // has a (5-minute) cache write price at all. Any other model's stays
 // unset, its writes all at the 5-minute price: only Anthropic has a 1-hour
-// one (PAMI on Discord: gpt-6-astra was shown a $20 one that isn't).
+// one (PAMI 报告: gpt-6-astra was shown a $20 one that isn't).
 func OneHourFor(id string, p *Price) {
 	if p == nil || p.CacheWrite <= 0 || p.CacheWrite1h > 0 || !strings.Contains(strings.ToLower(id), "claude") {
 		return
@@ -364,7 +364,7 @@ func (m mdModel) efforts(providerID string) []string {
 
 // levels are the reasoning levels p gives m: its own, else, for one it
 // says thinks but lists without levels — a model just added, as OpenAI's
-// gpt-6.1-sol was (NextCommit on Discord) — those of the newest of p's
+// gpt-6.1-sol was (NextCommit 报告) — those of the newest of p's
 // thinking models of its family released by then (gpt-6-sol's). A family
 // whose models all take a thinking switch alone (Xiaomi's mimo) gives
 // none, as before (#214).
@@ -415,7 +415,7 @@ func (m mdModel) window() int {
 
 // LeastWindow is the smallest context window a list is taken at its word
 // for. Less can't hold an agent's system prompt, let alone a turn, and an
-// agent told it compacts at once or won't send at all (H20 on Discord: hy3
+// agent told it compacts at once or won't send at all (H20 报告: hy3
 // and Cline's free models listed at 512, which Claude Code and Codex took
 // as the model's window). The smallest real chat models' windows are
 // about 4096 (gpt-3.5-turbo-instruct's 4095, mythomax's 4096): those stand.

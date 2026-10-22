@@ -105,7 +105,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         assert.equal((await row.locator(".name").innerText()).trim(), w.row);
         await row.locator(".sub", { hasText: w.viaGitHub }).waitFor();
         assert.equal((await row.locator("code").innerText()).trim(), "GitHub");
-        // the tooltip's second half reads as a sentence (AlwaySleepyZzz on Discord)
+        // the tooltip's second half reads as a sentence (AlwaySleepyZzz 报告)
         assert.ok((await row.locator(".sub").getAttribute("title")).includes(w.tip), "the tooltip says a mismatched mirror file is not installed");
         assert.equal(await page.locator("#about select").count(), 0, "no native select");
         const widths = await row.evaluate((e) => [e, ...e.querySelectorAll("*")].map((x) => parseFloat(getComputedStyle(x).borderLeftWidth) || 0));

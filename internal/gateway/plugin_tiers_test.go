@@ -47,7 +47,7 @@ func (u *tierUp) last(t *testing.T) any {
 
 // A provider plugin says which service tiers its vendor serves a model at
 // (serviceTiers), and the model list Codex reads offers them: priority as
-// Fast, ultrafast by its id (Lovest on Discord, #2514). A model that says
+// Fast, ultrafast by its id (Lovest 报告, #2514). A model that says
 // none is offered none.
 func TestPluginModelServiceTiersListed(t *testing.T) {
 	t.Setenv("FAKE_TIERS", "1")

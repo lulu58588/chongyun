@@ -5,7 +5,7 @@
 magpie.start();
 navHides(); // the pages built-in plugins switched off have, from boot.js
 // The window opens on the page the reader last left, as a Mac app comes back
-// as it was (molvqingtai, lc on Discord): a page asked for (?view=, a link
+// as it was (molvqingtai, lc 报告): a page asked for (?view=, a link
 // from the tray or a reload) first, then the one kept; a page gateway mode
 // leaves out, or one there is no longer, gives way to the first page.
 // the pages the window can open on besides the first (Agents)

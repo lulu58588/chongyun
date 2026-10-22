@@ -1,9 +1,7 @@
 package provider
 
 import (
-	"bytes"
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -117,93 +115,20 @@ func resetGoogleState() {
 	antigravityVer.Unlock()
 }
 
-func writeGeminiLogin(t *testing.T, env string) {
-	t.Helper()
-	dir := geminiDir()
-	os.MkdirAll(dir, 0o700)
-	creds := `{"access_token":"old","refresh_token":"rt-own","expiry_date":1}`
-	os.WriteFile(filepath.Join(dir, "oauth_creds.json"), []byte(creds), 0o600)
-	os.WriteFile(filepath.Join(dir, "google_accounts.json"), []byte(`{"active":"me@example.com","old":[]}`), 0o600)
-	if env != "" {
-		os.WriteFile(filepath.Join(dir, ".env"), []byte(env), 0o600)
-	}
-}
-
-// Gemini CLI's own sign-in is found, and its expired token is refreshed in
-// memory: the file Gemini CLI keeps is left as it was.
-func TestGeminiOwnLoginRefreshesInMemory(t *testing.T) {
-	f := &fakeGoogle{}
-	googleSandbox(t, f)
-	writeGeminiLogin(t, "")
-	before, _ := os.ReadFile(filepath.Join(geminiDir(), "oauth_creds.json"))
-	g, ok := geminiOwnLogin()
-	if !ok || g.user != "me@example.com" || !g.own {
-		t.Fatalf("own login = %+v, %v", g, ok)
-	}
-	for i := 0; i < 2; i++ {
-		tok, err := g.token(context.Background())
-		if err != nil || tok != "fresh-token" {
-			t.Fatalf("token = %q, %v", tok, err)
-		}
-	}
-	if f.refreshes != 1 {
-		t.Errorf("refreshed %d times, want once", f.refreshes)
-	}
-	after, _ := os.ReadFile(filepath.Join(geminiDir(), "oauth_creds.json"))
-	if !bytes.Equal(before, after) {
-		t.Error("Gemini CLI's oauth_creds.json was written")
-	}
-}
-
-// Only a sign-in Gemini CLI's own OAuth client minted is Gemini CLI's: one
-// minted for another client (Antigravity's) can't be refreshed as Gemini
-// CLI's and isn't listed; one without an ID token is taken as Gemini CLI's.
-func TestGeminiOwnLoginOnlyGeminiCLIsClient(t *testing.T) {
-	idToken := func(claims map[string]any) string {
-		b, _ := json.Marshal(claims)
-		return "e30." + base64.RawURLEncoding.EncodeToString(b) + ".sig"
-	}
-	for _, c := range []struct {
-		name, idToken string
-		want          bool
-	}{
-		{"no id token", "", true},
-		{"gemini cli", idToken(map[string]any{"aud": geminiApp.clientID, "azp": geminiApp.clientID}), true},
-		{"antigravity", idToken(map[string]any{"aud": antigravityApp.clientID, "azp": antigravityApp.clientID}), false},
-		{"antigravity aud only", idToken(map[string]any{"aud": antigravityApp.clientID}), false},
-	} {
-		t.Run(c.name, func(t *testing.T) {
-			googleSandbox(t, &fakeGoogle{})
-			dir := geminiDir()
-			os.MkdirAll(dir, 0o700)
-			creds, _ := json.Marshal(map[string]any{"access_token": "old", "refresh_token": "rt-own", "expiry_date": 1, "id_token": c.idToken})
-			os.WriteFile(filepath.Join(dir, "oauth_creds.json"), creds, 0o600)
-			os.WriteFile(filepath.Join(dir, "google_accounts.json"), []byte(`{"active":"me@example.com","old":[]}`), 0o600)
-			_, ok := geminiOwnLogin()
-			if ok != c.want {
-				t.Fatalf("own login found = %v, want %v", ok, c.want)
-			}
-			if n := len(googleLoginList("gemini")); n != map[bool]int{true: 1, false: 0}[c.want] {
-				t.Errorf("gemini lists %d accounts", n)
-			}
-			if n := len(googleLoginList("antigravity")); n != 0 {
-				t.Errorf("antigravity lists %d accounts", n)
-			}
-		})
-	}
-}
-
 // Google turns individuals away from Gemini CLI's sign-in; the account
-// then needs a project, and magpie says how to name one.
+// then needs a project, and chongyun says how to name one.
 func TestGeminiNeedsAProject(t *testing.T) {
 	f := &fakeGoogle{load: `{"allowedTiers":[{"id":"standard-tier","name":"Gemini Code Assist","userDefinedCloudaicompanionProject":true,"isDefault":true}],
 		"ineligibleTiers":[{"reasonCode":"UNSUPPORTED_CLIENT","reasonMessage":"This client is no longer supported","tierId":"free-tier"}]}`}
 	googleSandbox(t, f)
-	writeGeminiLogin(t, "")
-	g, _ := geminiOwnLogin()
+	if err := addGoogleLogin("gemini", "me@example.com", "", googleAuth{AccessToken: "a",
+		RefreshToken: "rt-1", Expiry: time.Now().Add(time.Hour).UnixMilli()}); err != nil {
+		t.Fatal(err)
+	}
+	g := googleLogins("gemini")[0].acct
 	_, err := g.project(context.Background())
 	if err == nil || !strings.Contains(err.Error(), "chongyun accounts project gemini me@example.com") ||
-		!strings.Contains(err.Error(), "no longer supported") || !strings.Contains(err.Error(), "~/.gemini/.env") ||
+		!strings.Contains(err.Error(), "no longer supported") ||
 		!strings.Contains(err.Error(), "add it under Antigravity in chongyun") {
 		t.Fatalf("err = %v", err)
 	}
@@ -212,17 +137,22 @@ func TestGeminiNeedsAProject(t *testing.T) {
 	}
 }
 
-// With GOOGLE_CLOUD_PROJECT in Gemini CLI's .env the account is onboarded
-// to it, as Gemini CLI does.
-func TestGeminiProjectFromEnv(t *testing.T) {
+// An account chongyun signed in is onboarded to the project named for it,
+// as Gemini CLI does.
+func TestGeminiProjectFromAccount(t *testing.T) {
 	f := &fakeGoogle{
 		load:    `{"allowedTiers":[{"id":"standard-tier","name":"Gemini Code Assist","userDefinedCloudaicompanionProject":true,"isDefault":true}]}`,
 		onboard: `{"done":true,"response":{"cloudaicompanionProject":{"id":"my-proj","name":"x"}}}`,
 	}
 	googleSandbox(t, f)
-	writeGeminiLogin(t, "# comment\nGOOGLE_CLOUD_PROJECT=\"my-proj\"\n")
-	g, _ := geminiOwnLogin()
-	p, err := g.project(context.Background())
+	if err := addGoogleLogin("gemini", "me@example.com", "", googleAuth{AccessToken: "a",
+		RefreshToken: "rt-1", Expiry: time.Now().Add(time.Hour).UnixMilli()}); err != nil {
+		t.Fatal(err)
+	}
+	if err := SetGoogleProject("gemini", "me@example.com", "my-proj"); err != nil {
+		t.Fatal(err)
+	}
+	p, err := googleLogins("gemini")[0].acct.project(context.Background())
 	if err != nil || p.id != "my-proj" || p.plan != "Gemini Code Assist" {
 		t.Fatalf("project = %+v, %v", p, err)
 	}
@@ -403,7 +333,7 @@ func TestAntigravityProjectAndEnvelope(t *testing.T) {
 }
 
 // An Antigravity account's windows are one a model, each naming its family
-// (01huadalang on Discord: several accounts, every level of every model,
+// (01huadalang 报告: several accounts, every level of every model,
 // read as bloat), so the GUI can show one figure a family; the windows
 // themselves, and the model each counts for routing, stay as they were.
 func TestAntigravityQuotaFamilies(t *testing.T) {
@@ -454,7 +384,7 @@ func TestAntigravityQuotaFamilies(t *testing.T) {
 }
 
 // An Antigravity account's models draw on a quota a group, each with a
-// 5-hour and a weekly window (a user on Discord: 这3个模型都是一样的，没必
+// 5-hour and a weekly window (a user 报告: 这3个模型都是一样的，没必
 // 要分开…多加个7day 条就好); fetchAvailableModels tells only the 5-hour one,
 // model by model. The groups' windows, from retrieveUserQuotaSummary, come
 // after the models', each model naming its group, and a page of text shows
@@ -599,7 +529,7 @@ func TestPooledWindowsPartialAggregateKeepsModelFallback(t *testing.T) {
 	}
 }
 
-// Antigravity's list is taken as Antigravity gives it (0000FF on Discord:
+// Antigravity's list is taken as Antigravity gives it (0000FF 报告:
 // Claude Opus 5.5 and Sonnet 5.5 in Antigravity, not in magpie): in its
 // picker's order, so a model it adds comes where it puts it, not after
 // older ones by id; with the context, output and images it says, so a

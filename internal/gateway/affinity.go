@@ -14,7 +14,7 @@ package gateway
 // the vendor said it read from its cache the last time, or wrote to it, is
 // worth keeping and not yet gone cold. Written counts as read: a first
 // turn reads nothing and writes the whole prompt, which the next turn
-// reads if it stays (vilicvane on Discord: the second turn moved, and the
+// reads if it stays (vilicvane 报告: the second turn moved, and the
 // cache just built was thrown away). A vendor that keeps a prompt cached
 // without reporting it — OpenAI's automatic prefix cache, Gemini — says
 // neither of a turn that read nothing, and what its cache holds then is
@@ -24,7 +24,7 @@ package gateway
 // Who answered is kept on disk as well (affinity.json, next to the
 // providers), so a restart — an update's included — doesn't hand a
 // conversation to whoever routing puts first while the vendor still has
-// it cached at the one before (vincentzhang on Discord).
+// it cached at the one before (vincentzhang 报告).
 
 import (
 	"crypto/sha256"

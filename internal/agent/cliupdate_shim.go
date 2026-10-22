@@ -5,7 +5,7 @@ package agent
 // itself says nothing of how that program was installed: on a Mac or Linux
 // mise's is a link to the mise binary, on Windows a copy of mise-shim.exe,
 // a hard or symbolic link to mise.exe, or a .cmd running `mise x --`; none
-// leads into node_modules or names it (flp on Discord: an npm -g agent under
+// leads into node_modules or names it (flp 报告: an npm -g agent under
 // mise on Windows read "can't tell how it was installed"). The program is
 // asked of the manager, `mise which <cmd>` / `asdf which <cmd>`, and how it
 // was installed read from that: npm's own, of that Node version, with its

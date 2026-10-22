@@ -283,7 +283,7 @@ func ruleFor(key string, g provider.Group, ms []provider.Member, req *Request, a
 		}
 		text := userText(req)
 		// what was said before it, for a follow-up that says little of
-		// its own (@HirotaNagai on X): from the same parsed, masked request
+		// its own (@HirotaNagai 报告): from the same parsed, masked request
 		prev.User, prev.Reply = turnBefore(req)
 		switch {
 		case g.Classifier == "":

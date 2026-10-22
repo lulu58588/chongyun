@@ -63,7 +63,7 @@ func freeOnChatGPT(model string) bool {
 // config magpie doesn't read as its own — on magpie through another
 // provider table or a profile, under a CODEX_HOME of its own, or on
 // another computer — was answered 404 "magpie knows no model
-// \"codex-auto-review\"" (Adam on Discord). "" for any other call, a model
+// \"codex-auto-review\"" (Adam 报告). "" for any other call, a model
 // magpie serves, or a Codex that has had no turn answered here.
 func (s *Server) codexMemoryStandIn(r *http.Request, who, agent, kind, asked string) string {
 	if agent != "codex" || !isMemoryKind(kind) && !isReviewCall(kind, asked) {

@@ -20,7 +20,7 @@ type bodyFacts struct {
 // readers parsed the whole conversation, every message and tool output
 // decoded into strings of its own, one just after the other: a 2 MB
 // conversation was decoded twice over on every request for a number and
-// a folder (yg6888 on X: ~1 GB).
+// a folder (yg6888 报告: ~1 GB).
 //
 // For a body being served (holdBody), the facts are kept while the body
 // is held, so it is parsed for them once: they are a few words, kept

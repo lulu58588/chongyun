@@ -1,6 +1,6 @@
 // Package claudecode finds the Claude Code magpie's Claude subscription
 // runs, and downloads Anthropic's own build of it when the user asks, for a
-// machine with none: a server or a container (Jorben on Discord).
+// machine with none: a server or a container (Jorben 报告).
 //
 // The build comes from where Anthropic's installer (claude.ai/install.sh)
 // takes it: the release's manifest.json names each platform's SHA-256 and

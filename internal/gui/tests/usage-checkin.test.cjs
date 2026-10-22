@@ -13,7 +13,7 @@
 // (POST /api/settings/trae-checkin) and press (POST /api/usage/trae-checkin),
 // the WorkBuddy one left as it was; so has a MiniMax Code account's (#811,
 // POST /api/settings/minimax-checkin and /api/usage/minimax-checkin), and
-// a Qoder account's, its daily credits (ARNO on Discord,
+// a Qoder account's, its daily credits (ARNO 报告,
 // POST /api/settings/qoder-checkin and /api/usage/qoder-checkin).
 // English and Chinese; the API is faked here.
 const assert = require("node:assert/strict");

@@ -37,7 +37,7 @@ func agentFiles(t *testing.T, home string) map[string]string {
 
 // A disconnect the user chose stays through magpie's start-up sync, which
 // runs at every start and after every update (SyncCatalog): no agent is
-// wired again, and none of its files changes (paynezhuang on Discord: Codex
+// wired again, and none of its files changes (paynezhuang 报告: Codex
 // had magpie's base URL back after each update). So does it through what a
 // running gateway keeps up (dsh's routes).
 func TestDisconnectStaysThroughSync(t *testing.T) {
@@ -101,7 +101,7 @@ func codexChatGPTAuth(email, acct string) map[string]any {
 		"refresh_token": "r-" + acct, "account_id": acct}}
 }
 
-// paynezhuang on Discord: Codex signed in to ChatGPT, with another of the
+// paynezhuang 报告: Codex signed in to ChatGPT, with another of the
 // user's ChatGPT accounts on in magpie. magpie's first start pointed Codex
 // at the gateway for failover; the user switched Codex on, then chose
 // "Disconnect from chongyun", and after each update and restart Codex had
@@ -114,10 +114,17 @@ func TestCodexDisconnectStaysWithAccountsOn(t *testing.T) {
 			me, _ := json.Marshal(codexChatGPTAuth("me@example.com", "acct-1"))
 			const own = "model = \"gpt-5.5\"\nmodel_reasoning_effort = \"high\"\n\n[projects.\"/Users/me/code\"]\ntrust_level = \"trusted\"\n"
 			home, read := codexHome(t, string(me), own)
-			b, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "spare@example.com", "on": true,
-				"seen": time.Now(), "auth": codexChatGPTAuth("spare@example.com", "acct-2")}})
+			// chongyun keeps the account it signed the agent in to in its own
+			// logins.json, marked as the one the agent is on: it never reads
+			// the agent's own file to find out which account that is.
+			b, _ := json.Marshal([]map[string]any{
+				{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(), "auth": codexChatGPTAuth("me@example.com", "acct-1")},
+				{"agent": "codex", "user": "spare@example.com", "on": true, "seen": time.Now(), "auth": codexChatGPTAuth("spare@example.com", "acct-2")},
+			})
 			os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 			os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), b, 0o600)
+			provider.ForgetAccounts()
+			t.Cleanup(provider.ForgetAccounts)
 			cx := codex(home)
 			// magpie's first start: failover points Codex at the gateway
 			SyncCatalog()

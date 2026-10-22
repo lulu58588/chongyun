@@ -2,7 +2,7 @@
 // The refresh icon stops where a turn ends, on the compositor's clock: it
 // used to wait for animationiteration and then drop its spin, so a page busy
 // drawing the reply when the turn came round let the icon run on and then
-// jump back (the twitch reported on X).
+// jump back (the twitch reported 报告).
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");

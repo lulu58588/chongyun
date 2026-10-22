@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// masaka on Discord: a part of the context window card clicked opens what
+// masaka 报告: a part of the context window card clicked opens what
 // the request sent there. A part of the legend opens its items, each
 // opened to its text; a row or a cell opens its item alone, the part's
 // other items a click away; a long text comes a stretch at a time; a

@@ -9,7 +9,7 @@ import (
 
 // A refusal for a model counted by a pool of some models only is that
 // model's, not the account's: Cursor's Other Models used up leaves Auto in
-// Cursor Models (Xiaopodev on X), Opus's own week leaves Sonnet; one of
+// Cursor Models (Xiaopodev 报告), Opus's own week leaves Sonnet; one of
 // the whole account's windows used up is the account's.
 func TestAllowancePooled(t *testing.T) {
 	now := time.Now()
@@ -49,7 +49,7 @@ func TestAllowancePooled(t *testing.T) {
 	}
 }
 
-// Will on Discord: Cursor's plugin lists Grok 4.7 at its context sizes
+// Will 报告: Cursor's plugin lists Grok 4.7 at its context sizes
 // alone (grok-4.7@256k, grok-4.7@500k), and a routing group still asks for
 // bare cursor/grok-4.7, which the plugin runs at its default size. That is
 // the Cursor Models pool's (84% left), not Other Models' (used up); the

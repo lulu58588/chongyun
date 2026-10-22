@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Codex connected to magpie while its requests for 127.0.0.1 go through a
-// proxy that doesn't pass them on (Muma102kMichael on X: every project and
+// proxy that doesn't pass them on (Muma102kMichael 报告: every project and
 // every new chat 502) is not shown connected. Its row says a proxy is in the
 // way; its pill says how to fix it, in a dialog, and the dialog has
 // Disconnect from magpie, which asks to put Codex's config back. The window

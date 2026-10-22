@@ -124,7 +124,7 @@ type Record struct {
 	// is counted (DecodeOf): from a tenth of its content to nine tenths,
 	// spread over the whole. A reply a vendor held and let go in one burst
 	// has a flow of next to none, however long its end came after its
-	// first content, and so tells no speed (John on Discord: a Kimi Code
+	// first content, and so tells no speed (John 报告: a Kimi Code
 	// reply read 1,367 tok/s). 0 where it isn't known.
 	Flow   int64 `json:"flow_ms,omitempty"`
 	Status int   `json:"status"`
@@ -142,7 +142,7 @@ type Record struct {
 	// Stop is why the upstream said its reply ended, in its own words
 	// (stop_reason, finish_reason …): "" when it said none, a stream that
 	// just stopped. Told apart by it, a reply that ended too soon is the
-	// upstream's own end_turn or a cut (蓝猫 on Discord).
+	// upstream's own end_turn or a cut (蓝猫 报告).
 	Stop string `json:"stop,omitempty"`
 	// Session is the conversation the call was part of, as its agent names
 	// it (X-Magpie-Session, or the session header Claude Code, Codex or
@@ -413,7 +413,7 @@ type Totals struct {
 	DecodeOut int   `json:"decode_out,omitempty"`
 	// DecodeN is how many replies DecodeMs and DecodeOut are of: the ones
 	// whose speed was measured, which a speed is shown with, so a group of
-	// 260 calls whose speed is one reply's says so (Fallmonkey on Discord)
+	// 260 calls whose speed is one reply's says so (Fallmonkey 报告)
 	DecodeN int `json:"decode_n,omitempty"`
 	// FloorOut tokens over FloorMs are the least FloorN replies read from a
 	// session file wrote at, those whose speed wasn't measured (Row.Floor):
@@ -483,7 +483,7 @@ func DecodeWindow(out int, ms, ttft int64) int64 {
 }
 
 // DecodeOf is what a reply's speed is told by: the tokens it was seen to
-// write and the ms it took (tony on Discord: gpt-6.1-sol read 163 tok/s,
+// write and the ms it took (tony 报告: gpt-6.1-sol read 163 tok/s,
 // with a 14 s first token). A reply that reasoned counts only its answer —
 // its output less the reasoning, from its first text — as most vendors
 // keep the reasoning out of the stream (OpenAI's is encrypted, its summary
@@ -497,7 +497,7 @@ func DecodeWindow(out int, ms, ttft int64) int64 {
 // window is DecodeWindow's: 0 for a reply that tells none.
 //
 // A reply its vendor held back and let go in a burst at its end tells
-// none either (John on Discord: Kimi Code answering OpenCode read 1,367,
+// none either (John 报告: Kimi Code answering OpenCode read 1,367,
 // then 2,237 and 2,012 tok/s). The burst is told two ways, as the reply's
 // text came before it or with it:
 //

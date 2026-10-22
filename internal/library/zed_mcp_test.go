@@ -11,7 +11,7 @@ import (
 	"github.com/tidwall/jsonc"
 )
 
-// lc on Discord: Zed wasn't among the agents an MCP server could be given
+// lc 报告: Zed wasn't among the agents an MCP server could be given
 // to. Zed reads them from context_servers in its settings.json (JSONC),
 // the file magpie sets its model in: a command as command/args/env, a url
 // as url/headers, which it speaks streamable HTTP to (zed-industries/zed

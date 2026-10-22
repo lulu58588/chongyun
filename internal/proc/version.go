@@ -70,7 +70,7 @@ var runVersion = func(bin string) (string, error) {
 	cmd.Stdin = nil // /dev/null: one that would ask something gets nothing
 	// Cline checks for an update on every start, --version too, and at exit
 	// spawns a detached npm install -g cline@latest the user never asked
-	// for (新v学员 on Discord); asking its version mustn't update it.
+	// for (新v学员 报告); asking its version mustn't update it.
 	cmd.Env = append(os.Environ(), "NO_COLOR=1", "CLINE_NO_AUTO_UPDATE=1")
 	out, err := cmd.CombinedOutput()
 	if ctx.Err() != nil {

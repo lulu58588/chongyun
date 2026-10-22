@@ -9,7 +9,7 @@ import (
 // auth.json, the model catalog magpie writes, sessions, AGENTS.md and
 // skills. It is $CODEX_HOME when that is set, as codex-rs's find_codex_home
 // reads it, else ~/.codex. Every place magpie reads or writes Codex's files
-// goes through here (Wakkana on Discord: with CODEX_HOME set, a model picked
+// goes through here (Wakkana 报告: with CODEX_HOME set, a model picked
 // in magpie went to ~/.codex/config.toml, which Codex never read).
 // CODEX_HOME is read through LookupEnv, so the value a login shell lends the
 // desktop app (proc.UserPath) counts, and a relative one, which Codex would

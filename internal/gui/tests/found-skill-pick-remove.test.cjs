@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// wongxy on Discord (资源库技能支持批量删除): the skills the agents have of
+// wongxy 报告 (资源库技能支持批量删除): the skills the agents have of
 // their own ("In your agents") went one row's trash at a time. That list has
 // a Select of its own now: each row becomes its box (its Bring in and trash
 // give way), and the bar's Remove… asks first, naming how many and where

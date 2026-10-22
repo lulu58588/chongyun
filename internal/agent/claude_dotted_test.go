@@ -27,7 +27,7 @@ func claudeDottedHome(t *testing.T, p provider.Provider, settings string) (strin
 	return home, path
 }
 
-// misteer_ti. on Discord: Claude Code 2.1.296 reads a relay's
+// misteer_ti. 报告: Claude Code 2.1.296 reads a relay's
 // relay/claude-opus-4.6-us as Claude Opus 4 (retired, budget thinking,
 // 32000 output, no effort), and reads relay/claude-opus-4-6-us as Opus 4.6.
 // So every model magpie writes into Claude Code's settings (the main model,

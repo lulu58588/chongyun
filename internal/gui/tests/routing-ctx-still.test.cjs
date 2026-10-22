@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Routing, live: nothing in the context window moves or flashes as a
-// session's requests stream in (dumplings on Discord: each new request made
+// session's requests stream in (dumplings 报告: each new request made
 // the card jitter and flash, and the prompt cache read "—命中", the dash
 // against the word, over an empty bar). Three causes, each held here on
 // every frame while requests come in (under way without their prompt, with

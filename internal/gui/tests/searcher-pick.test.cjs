@@ -1,11 +1,11 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Settings' Web search section: which provider searches for a model that
-// can't (01huadalang on Discord). The row shows magpie's own pick while none
+// can't (01huadalang 报告). The row shows magpie's own pick while none
 // is named; the picker offers Automatic, Off, each provider that can search by
 // its small model, and each of its models, including a relay said to search;
 // a pick is saved as searcher ("<provider>" or "<provider>/<model>") and shown;
 // a provider's small model is offered once, not again among its models, and
-// one saved by name is ticked as it (Player on Discord); no "via magpie" tag,
+// one saved by name is ticked as it (Player 报告); no "via magpie" tag,
 // as no agent asks for these;
 // one named that magpie can't use (turned off) is said in the row, magpie's pick shown instead;
 // relays said to search are manual-only, including during fallback; a Kimi Code plan, which
@@ -101,7 +101,7 @@ function serve(lang, posted, st) {
 
 // The searcher picked that didn't search last time is said first in the
 // row, ahead of the one-line help's ellipsis: no other provider searched in
-// its place (Gearclickist on Discord: Grok picked answered without
+// its place (Gearclickist 报告: Grok picked answered without
 // searching, and Codex's gpt-6-astra searched instead, unasked).
 const failedWords = {
   en: { notSearched: /^GPT Five Five · OpenAI didn't search .+: it answered without searching the web, so its account or plan may not offer web search\. No other provider searched in its place; pick Automatic or another provider, or add a Search API\.$/,

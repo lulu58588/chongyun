@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // A plugin's provider is signed in to as many times as the user likes, as
@@ -84,10 +83,6 @@ func pluginOwn(id string, auth map[string]any) bool {
 // was, so the name follows a switch made in the agent.
 var pluginOwnUser = func(id string) string {
 	switch id {
-	case "devin":
-		if u, _, ok := devinIdentity(); ok {
-			return u
-		}
 	case "grok":
 		if c, ok := readGrokCredential(GrokHome()); ok {
 			return c.Email
@@ -95,12 +90,6 @@ var pluginOwnUser = func(id string) string {
 	case CommandCodePlanID:
 		if u, _, ok := cmdOwn(); ok {
 			return u
-		}
-	case "cursor":
-		if CursorExecutable() != "" && !cursorSignedOut() {
-			if u, _, ok := cursorIdentity(); ok {
-				return u
-			}
 		}
 	case "kiro":
 		return kiroOwnUser()
@@ -121,9 +110,6 @@ var pluginOwnUser = func(id string) string {
 // own account is named as the agent is signed in now; removed in magpie,
 // it is only hidden, and shows again once the agent signs in anew.
 func pluginLogins(pp plugin.Provider) []pluginLogin {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
 	agent := pluginAgent(pp)
 	labels := pluginLabels(pp)
 	byKey := map[string]plugin.Account{}

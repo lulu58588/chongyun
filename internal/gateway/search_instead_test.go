@@ -67,7 +67,7 @@ func searchForGLM(t *testing.T, s *Server) {
 }
 
 // The searcher picked in Settings that fails, or answers without
-// searching, gives way to no other provider: Gearclickist on Discord
+// searching, gives way to no other provider: Gearclickist 报告
 // picked Grok, whose grok-4.7 answered without searching, and every search
 // went on to Codex's gpt-6-astra, a pricier model never picked. The model
 // is told the search failed, Settings says why (SearcherFailed), and only

@@ -204,7 +204,7 @@ func TestInContainer(t *testing.T) {
 // Another computer lists the models with the key it was given whatever
 // else its client sends beside it: an empty or placeholder Authorization
 // with the key in x-api-key, a stale token there, "bearer" in lower case
-// (悠悠哥 on Discord: a client's model list from magpie shared on a NAS
+// (悠悠哥 报告: a client's model list from magpie shared on a NAS
 // failed, while from magpie on 127.0.0.1, which takes any token, it came).
 // The request comes as it would from the network: another address, the
 // NAS's address as its Host.
@@ -266,7 +266,7 @@ func TestLANModelsWithKeyBesideAnotherToken(t *testing.T) {
 }
 
 // ZCode's custom provider asks no model list; its models are typed one a
-// line (悠悠哥 on Discord: from magpie on a NAS nothing filled it, while a
+// line (悠悠哥 报告: from magpie on a NAS nothing filled it, while a
 // magpie on this computer writes its models into ZCode's own config).
 // /v1/models?format=text gives the ids one a line to paste there, opened
 // in a browser on another computer with the key as ?key=; without a key it

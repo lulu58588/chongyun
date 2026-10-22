@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A plugin's account whose model list failed has only the plugin's
-// defaults (Cursor's Auto alone, gnayiab on X running magpie in WSL): its
+// defaults (Cursor's Auto alone, gnayiab 报告 running magpie in WSL): its
 // editor says why under the models, in the user's language, with no left
 // border; an account whose list came in says nothing.
 const assert = require("node:assert/strict");

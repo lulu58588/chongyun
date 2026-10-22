@@ -9,7 +9,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// ARNO on Discord (v0.1.815): the window set on a provider's model looked
+// ARNO 报告 (v0.1.815): the window set on a provider's model looked
 // not to work, and a model whose id has its vendor's prefix
 // (zai/glm-5.3-flash, Cline's cline-free/mimo-v2.6-flash) had none. Agents
 // were told both — the catalog's entries take models.dev's window for a

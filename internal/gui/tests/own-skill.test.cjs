@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// StringKe and JasonLeeForOnly on Discord: after Bring in all, "Claude Code
+// StringKe and JasonLeeForOnly 报告: after Bring in all, "Claude Code
 // already has a skill of its own called impeccable" stood in the Library's
 // warning with nothing to do about it. The warning row now says it in the
 // reader's language and settles it in place: "Use the library's" posts

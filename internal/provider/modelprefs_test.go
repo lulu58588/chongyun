@@ -362,9 +362,9 @@ func TestSetUpstreamNameRefusesAModelNotServed(t *testing.T) {
 // these and still takes a name.
 func TestSetUpstreamNameRefusesAnAccountBackend(t *testing.T) {
 	prefsHome(t)
-	// a Claude account is one magpie reaches through Claude's own backend
-	claudeSignIn(t, os.Getenv("HOME"), time.Now().Add(time.Hour))
-	forgetClaudeCredential()
+	// a Claude account is one chongyun reaches through Claude's own backend.
+	// It is chongyun's own account, kept in logins.json.
+	claudeAccountSignIn(t, "max@example.com", "max", time.Now().Add(time.Hour))
 	p, err := Find("claude")
 	if err != nil {
 		t.Fatal(err)

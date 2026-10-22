@@ -11,7 +11,7 @@ import (
 )
 
 // Every model magpie lists in ZCode has native web search (原生联网搜索) on,
-// so ZCode offers it its WebSearch tool (Gearclickist on Discord: each model
+// so ZCode offers it its WebSearch tool (Gearclickist 报告: each model
 // had to be ticked by hand). A model the user unticked in ZCode, which
 // takes the key out of magpie's rule, stays unticked through syncs; a value
 // in the rule stays; a manual rule is the user's; and on a format other

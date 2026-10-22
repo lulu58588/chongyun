@@ -3,7 +3,7 @@
 // failed one): the backend's answer leaves done out while it is 0, and
 // total while the size isn't known, so the first reads have no percent. The
 // pill says 0% then, "Downloading…" with no size, never "NaN%" (inaction
-// on Discord), and the percent once there is one. The click doesn't move the page, nothing
+// 报告), and the percent once there is one. The click doesn't move the page, nothing
 // has a left border. English and Chinese; no backend, the API is faked.
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");

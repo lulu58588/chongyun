@@ -6,7 +6,7 @@ package plugin
 // repository is asked which commit its branch or tag is at now: GitHub's
 // API for a repository there (bun fetches those as GitHub's tarballs, so
 // no git is needed), git ls-remote for any other. An update is offered
-// only when the two differ (ARNO on Discord: a plugin added as
+// only when the two differ (ARNO 报告: a plugin added as
 // github:yuweihao17/codearts showed Update all the time, and still did
 // right after updating it).
 

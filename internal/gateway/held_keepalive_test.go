@@ -123,7 +123,7 @@ func TestHeldThinkingKeepsTheAgentAlive(t *testing.T) {
 
 	// refused with nobody left: nothing was held for it, as nobody else
 	// could answer, so the thinking came as it came and the refusal after
-	// it as Claude's own (iTianbao on X)
+	// it as Claude's own (iTianbao 报告)
 	fresh(t)
 	heard = make(chan struct{})
 	thinkingOn(t, "a", anthropicThoughtThenRefused, heard)

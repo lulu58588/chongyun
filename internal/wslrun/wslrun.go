@@ -149,7 +149,7 @@ func running() (names []string, ok bool) {
 
 // Up is whether distro runs now. Anything magpie does in a distro on its
 // own (not the user's asking) asks first: wsl.exe -d, or opening its files
-// through \\wsl.localhost, starts a stopped one (TJHHHH on Discord: WSL
+// through \\wsl.localhost, starts a stopped one (TJHHHH 报告: WSL
 // kept starting while they repaired it). False off Windows, without WSL,
 // or when wsl.exe can't say.
 func Up(distro string) bool {

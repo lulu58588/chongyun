@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// eirc on Discord: Qoder and other agents could be given skills and MCP
+// eirc 报告: Qoder and other agents could be given skills and MCP
 // servers only user-wide. Each now gets a project's in the folder or file
 // it reads them from there.
 func TestProjectSkillsMoreAgents(t *testing.T) {

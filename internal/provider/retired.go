@@ -1,7 +1,7 @@
 package provider
 
 // A model its vendor has retired, though the vendor's own list still names
-// it (MOMO on Discord: OpenCode Zen's /v1/models still lists exo-free,
+// it (MOMO 报告: OpenCode Zen's /v1/models still lists exo-free,
 // and a request for it gets 410 {"type":"error","error":{"type":
 // "ModelDeprecated","message":"Model exo-free has been deprecated."}}).
 // The gateway tells Retire when a provider answers so; the model is then

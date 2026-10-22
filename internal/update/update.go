@@ -513,7 +513,7 @@ var asideWaits = []time.Duration{100 * time.Millisecond, 200 * time.Millisecond,
 // checks a new program as it starts may hold a 50 MB download longer than
 // asideWaits' three seconds, and a restart that gave up then would fail
 // the same way on every click, each click's trial start having it checked
-// again (白菜 on Discord). The user clicked restart and sees "Restarting…"
+// again (白菜 报告). The user clicked restart and sees "Restarting…"
 // meanwhile. A var for tests.
 var heldFor = 30 * time.Second
 

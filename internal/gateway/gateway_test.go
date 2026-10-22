@@ -1088,6 +1088,96 @@ func TestGeminiClientChatUpstream(t *testing.T) {
 
 func mustJSON(v any) []byte { b, _ := json.Marshal(v); return b }
 
+// saveLogin adds an account to chongyun's own logins.json, and makes the
+// accounts be read afresh.
+//
+// chongyun keeps what it signed the agent in to in its own logins.json,
+// marking there the account the agent is on: it never reads the agent's
+// own file to find out which account that is. So a test that writes an
+// agent's own file has to say the same account here as well.
+//
+// An account already there is kept as it is, and only the fields named
+// here are set: a test that says an account is the one the agent is on
+// doesn't say the rest of it again.
+func saveLogin(t *testing.T, entry map[string]any) {
+	t.Helper()
+	path := filepath.Join(filepath.Dir(provider.Path()), "logins.json")
+	os.MkdirAll(filepath.Dir(path), 0o755)
+	var saved []map[string]any
+	if b, err := os.ReadFile(path); err == nil {
+		if err := json.Unmarshal(b, &saved); err != nil {
+			t.Fatalf("logins.json: %v", err)
+		}
+	}
+	agent, _ := entry["agent"].(string)
+	user, _ := entry["user"].(string)
+	found := false
+	for i, l := range saved {
+		if l["agent"] != agent || l["user"] != user {
+			continue
+		}
+		for k, v := range entry {
+			l[k] = v
+		}
+		saved[i] = l
+		found = true
+		break
+	}
+	if !found {
+		if _, ok := entry["seen"]; !ok {
+			entry["seen"] = time.Now()
+		}
+		saved = append(saved, entry)
+	}
+	if err := os.WriteFile(path, mustJSON(saved), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
+}
+
+// activateLogin marks an account chongyun's own logins.json already holds
+// as the one the agent is on: the account chongyun signed the agent in to,
+// which it keeps there, never read from the agent's own file.
+func activateLogin(t *testing.T, agent, user string) {
+	t.Helper()
+	saveLogin(t, map[string]any{"agent": agent, "user": user, "active": true})
+}
+
+// codexLoginSaved puts a Codex account into chongyun's own logins.json and
+// marks it the one the agent is on: the account the agent's own auth.json
+// holds, which chongyun never reads to find out.
+func codexLoginSaved(t *testing.T, user string, auth map[string]any) {
+	t.Helper()
+	saveLogin(t, map[string]any{"agent": "codex", "user": user, "active": true,
+		"seen": time.Now(), "auth": auth})
+}
+
+// codexLoginSavedFromFile puts the account the agent's own auth.json holds
+// into chongyun's own logins.json, under the name it is known by, marked
+// as the one the agent is on.
+func codexLoginSavedFromFile(t *testing.T, user string) {
+	t.Helper()
+	b, err := os.ReadFile(filepath.Join(os.Getenv("HOME"), ".codex", "auth.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var blob map[string]any
+	if err := json.Unmarshal(b, &blob); err != nil {
+		t.Fatal(err)
+	}
+	codexLoginSaved(t, user, blob)
+}
+
+// copilotLoginSaved puts a Copilot account into chongyun's own logins.json
+// and marks it the one the agent is on: the account the editor's own
+// apps.json holds, which chongyun never reads to find out.
+func copilotLoginSaved(t *testing.T, user, token string) {
+	t.Helper()
+	saveLogin(t, map[string]any{"agent": "copilot", "user": user, "active": true,
+		"seen": time.Now(), "auth": map[string]any{"oauth_token": token}})
+}
+
 // A signed-in Codex account: the ChatGPT backend only streams and rejects
 // the sampling knobs, so a plain non-streaming Responses call is
 // translated, signed with the account's tokens, and answered as JSON.
@@ -1105,6 +1195,11 @@ func TestCodexAccountUpstream(t *testing.T) {
 	auth := fmt.Sprintf(`{"auth_mode":"chatgpt","tokens":{"id_token":%q,"access_token":%q,"refresh_token":"r","account_id":"acct-1"}}`,
 		claims(map[string]any{"email": "me@example.com"}), claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}))
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), []byte(auth), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the agent's own file is never read to find out.
+	var blob map[string]any
+	json.Unmarshal([]byte(auth), &blob)
+	codexLoginSaved(t, "me@example.com", blob)
 
 	f := &fake{t: t, ctype: "none", reply: sse(
 		`data: {"type":"response.created","response":{"id":"r1","model":"gpt-5.5"}}`,

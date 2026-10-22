@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
-// netube on Discord: a Codex Plus account's gpt-5.5 said 922K, models.dev's
+// netube 报告: a Codex Plus account's gpt-5.5 said 922K, models.dev's
 // input limit for the id (OpenAI's API's), where Codex holds it to the 272K
 // its ChatGPT list gives. Before the subscription's own list is fetched,
 // its models are Codex CLI's models_cache.json's, and their window is that
@@ -32,7 +32,7 @@ func TestCodexModelsTakeCodexWindow(t *testing.T) {
 	ForgetAccounts()
 	t.Cleanup(ForgetAccounts)
 
-	p, ok := codexAccount(home)
+	p, ok := codexAccount()
 	if !ok {
 		t.Fatal("no Codex sign-in")
 	}

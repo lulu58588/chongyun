@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// PAMI on Discord: a price box took no decimals as typed (a number box
+// PAMI 报告: a price box took no decimals as typed (a number box
 // drops what its locale doesn't take, "0,25" became 25), OpenAI bills
 // gpt-6-astra over 272K input at another price, and Anthropic a 1-hour cache
 // write at 2× input. The boxes are text ones that take "0.25" and "0,25"; a
@@ -82,7 +82,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       // the 1-hour box shows the list's, else 2× its input
       assert.deepEqual(await base("claude-opus-5-5").evaluateAll((is) => is.map((i) => i.placeholder)), ["5", "25", "0.5", "6.25", "10"]);
       // only a Claude model has a 1-hour box: gpt-6-astra has no such write
-      // to price, so no 2× input one is shown for it (PAMI on Discord)
+      // to price, so no 2× input one is shown for it (PAMI 报告)
       assert(await row("claude-opus-5-5").getByRole("textbox", { name: L.oneHour, exact: true }).isVisible());
       assert(!(await row("gpt-6-astra").getByRole("textbox", { name: L.oneHour, exact: true }).isVisible()));
       assert(!(await row("plain-1").getByRole("textbox", { name: L.oneHour, exact: true }).isVisible()));

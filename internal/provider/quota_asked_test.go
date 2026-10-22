@@ -63,7 +63,6 @@ func setQuotaReads(t *testing.T, v string) {
 // away for its quota (StaleAllowance).
 func TestAllowancesReadOnlyWhenAsked(t *testing.T) {
 	signIn(t) // Codex on me@example.com, and a Copilot account
-	rememberLogins(true)
 	var asked atomic.Int32
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/backend-api/wham/usage" {
@@ -160,7 +159,6 @@ func TestAllowancesReadOnlyWhenAsked(t *testing.T) {
 // Automatic, as before: magpie reads by itself.
 func TestAllowancesReadByThemselvesByDefault(t *testing.T) {
 	signIn(t)
-	rememberLogins(true)
 	var asked atomic.Int32
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		asked.Add(1)

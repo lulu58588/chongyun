@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A repository's skills are one group however each came in (White Immortal
-// on Discord: the skills of github.com/mattpocock/skills together). One
+// 报告: the skills of github.com/mattpocock/skills together). One
 // installed from GitHub, one the skills CLI installed and one linked from a
 // clone, each with the repository magpie traced (repo), are one group, its
 // name's case aside; one from a git host other than GitHub is a group

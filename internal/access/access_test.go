@@ -304,7 +304,7 @@ func TestLANRotationKeepsOlderMagpieWorking(t *testing.T) {
 }
 
 // A key can be given a value of the user's own, one their clients already
-// send (love1sbug on X), checked as a header can carry it and unlike any
+// send (love1sbug 报告), checked as a header can carry it and unlike any
 // other key's.
 func TestOwnKeyValue(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())

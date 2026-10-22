@@ -14,7 +14,7 @@ import (
 // gets providerOptions.gateway.only, which that gateway reads to serve the
 // model from that host alone, as ClinePass + ProviderPin set it
 // (linux.do/t/topic/2918145); one it sends through OpenRouter gets
-// provider.only, OpenRouter's own field (sdytman on Discord). A body
+// provider.only, OpenRouter's own field (sdytman 报告). A body
 // naming provider or providerOptions itself is left as the client sent
 // it. The field goes at the end, so the prefix a cache keys on doesn't
 // change.

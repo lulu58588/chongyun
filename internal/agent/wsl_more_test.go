@@ -34,7 +34,7 @@ var wslMore = []struct {
 	{"muse", ".config/muse/settings.json", "/v1"},
 	{"qoder", ".qoder/settings.json", "/v1"},
 	{"qoder-cn", ".qoder-cn/settings.json", "/v1"},
-	// lgtm on Discord: a CodeBuddy Code in WSL wasn't found, nor were the
+	// lgtm 报告: a CodeBuddy Code in WSL wasn't found, nor were the
 	// other CLIs magpie set up only on this machine
 	{"codebuddy", ".codebuddy/models.json", "/v1/chat/completions"},
 	{"cline", ".cline/data/settings/providers.json", "/v1"},
@@ -313,7 +313,7 @@ func TestWSLStoppedPickFindsItsFiles(t *testing.T) {
 	}
 }
 
-// lgtm on Discord: wsl中安装的dsh，目前magpie还是扫描不到. A dsh of today's
+// lgtm 报告: wsl中安装的dsh，目前magpie还是扫描不到. A dsh of today's
 // in a distro keeps its profiles' patch lists in the distro's ~/.dsh: a pick
 // puts magpie's route in them naming the gateway as the distro reaches it,
 // and neither a sync nor this machine's 30-second round puts it back at

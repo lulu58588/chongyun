@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// Bringing in every skill the agents have (JasonLeeForOnly on Discord: one
+// Bringing in every skill the agents have (JasonLeeForOnly 报告: one
 // click per skill found in ~/.agents): the ones found are brought in
 // together, the shared folder's linked to and an agent's own moved in, and
 // one that isn't there any more is said while the others go in all the same.

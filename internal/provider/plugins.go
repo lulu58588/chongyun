@@ -213,7 +213,7 @@ func pluginCatalog(pp plugin.Provider) []catalog.Model {
 			// the tiers it says its vendor serves the model at (#2514)
 			Tiers: m.ServiceTiers,
 		}
-		// a limit under catalog.LeastWindow (512, H20 on Discord) is none:
+		// a limit under catalog.LeastWindow (512, H20 报告) is none:
 		// the other one, or models.dev, answers (ListedWindow)
 		if window := catalog.Window(m.Context); c.Context == 0 {
 			c.Context = window
@@ -369,7 +369,7 @@ func pluginProvider(pp plugin.Provider, l pluginLogin) Provider {
 		for _, cur := range ps {
 			if cur.ID == pp.ID {
 				// a Refresh that got the plugin's short defaults back says
-				// why, rather than "1 models" (gnayiab on X: Cursor in WSL
+				// why, rather than "1 models" (gnayiab 报告: Cursor in WSL
 				// listing Auto alone)
 				if e := PluginListError(cur, acct.Key); e != "" {
 					return nil, fmt.Errorf("%s couldn't list its models: %s", name, e)

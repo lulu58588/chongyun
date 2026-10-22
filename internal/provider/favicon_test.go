@@ -127,7 +127,7 @@ func TestFavicon(t *testing.T) {
 	}
 
 	// a new-api panel: its logo is in /api/status, not on its page, whose
-	// icon is the panel's own (wiixdede on X)
+	// icon is the panel's own (wiixdede 报告)
 	newapi := `<head><link rel="icon" href="/logo.png"></head>`
 	pages["brand.test"+port] = newapi
 	status["brand.test"+port] = `{"success":true,"data":{"system_name":"Foo","logo":"/logo.svg"}}`

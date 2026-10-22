@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// A model listed with a 512-token window (H20 on Discord: hy3 and Cline's
+// A model listed with a 512-token window (H20 报告: hy3 and Cline's
 // free models) isn't told to agents at 512: Claude Code and Codex took it as
 // the window and compacted at once. models.dev's window for the model
 // answers, else none (the agent's default). A small window that is real

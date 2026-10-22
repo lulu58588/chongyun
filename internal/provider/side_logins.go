@@ -218,7 +218,7 @@ func setSideLoginOn(agent, user string, on bool, ls []sideLogin) error {
 // are, and it shows again once the agent signs in anew (ownMark). Either
 // one, removed while first, puts the next account first; the only one
 // leaves the subscription with no account (#874: a removed subscription's
-// Sign out… could never take its one account; 歧路亡羊 on Discord: one of
+// Sign out… could never take its one account; 歧路亡羊 报告: one of
 // magpie's that was first was refused, "put another account first", even
 // by the subscription's Sign out…, which takes every account).
 func forgetSideLogin(agent, user string, ls []sideLogin, gone func(savedLogin)) error {
@@ -332,6 +332,8 @@ func addSideLogin(l savedLogin, ownUser string, dup func(savedLogin)) (err error
 			return writeLogins(ls)
 		}
 	}
+	// a second account is in use beside the first straight away, as a
+	// second key is: it takes over when the first runs out
 	l.On = true
 	return writeLogins(append(ls, l))
 }

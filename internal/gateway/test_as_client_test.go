@@ -16,7 +16,7 @@ import (
 // clientOnlyRelay is a relay that serves only the agents its plan is sold
 // for, telling them by their User-Agent as sub2api's codex_cli_only and
 // packy's Claude Code-only plans do: 403 to anyone else, magpie's own test
-// request among them (耍赖天都爱 on Discord).
+// request among them (耍赖天都爱 报告).
 type clientOnlyRelay struct {
 	mu   sync.Mutex
 	head http.Header

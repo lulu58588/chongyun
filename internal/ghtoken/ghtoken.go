@@ -12,7 +12,7 @@
 //
 // A token from the environment that GitHub refuses (401) is one the user
 // may not know is there, often stale: the request is asked again without
-// it, and the token isn't sent again while magpie runs (till on Discord).
+// it, and the token isn't sent again while magpie runs (till 报告).
 // The token set in Settings is the user's own choice, so a refusal of it
 // is said (Refused).
 package ghtoken

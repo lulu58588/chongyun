@@ -302,7 +302,7 @@ func (l *lastSaid) get() string { l.mu.Lock(); defer l.mu.Unlock(); return l.lin
 // claudeNoLink is the error of a `claude auth login` that gave no link in
 // linkWait: what it last printed, or, when it printed nothing at all, the
 // program that was run, which may be a script that never starts Claude
-// Code (deluxe on Discord: a mise wrapper running itself), and how to see
+// Code (deluxe 报告: a mise wrapper running itself), and how to see
 // what it does.
 func claudeNoLink(cli claudeCLI, last string) error {
 	if last != "" {

@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // The tray panel's Routing tab switches a Manual routing group's model
-// (#2489, Jerell.OvO on Discord): each Manual group of two or more members
+// (#2489, Jerell.OvO 报告): each Manual group of two or more members
 // that is on is a row under today's totals, its picked member a button. A
 // click opens the members as the app's menu (no native select), and a pick
 // saves through /api/groups/pick, the group's id and the member alone, and

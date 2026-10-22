@@ -8,7 +8,7 @@ import (
 
 // The Cursor editor makes ~/.cursor (argv.json, extensions/, mcp.json,
 // projects/, skills-cursor/) on a machine with no cursor-agent, and the
-// Agents page showed a Cursor row there that wasn't the CLI (@G_Z_Y on X).
+// Agents page showed a Cursor row there that wasn't the CLI (@G_Z_Y 报告).
 // That folder is no sign of Cursor CLI; its cli-config.json or its command
 // is. The folder is still SharedHere, for what the editor reads in it.
 func TestCursorFolderFromTheEditorIsNotTheCLI(t *testing.T) {

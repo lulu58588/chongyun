@@ -106,7 +106,7 @@ func LoginPath() []string {
 // environment as it opens), while magpie opened from the Dock doesn't: a
 // NO_PROXY=127.0.0.1 in .zshrc keeps Codex's requests for magpie off a
 // proxy that magpie, reading its own environment, thought they went
-// through (liu_dyj on X). They are only read (LoginEnv), never set in
+// through (liu_dyj 报告). They are only read (LoginEnv), never set in
 // magpie's environment: magpie's own requests take their proxy from
 // netproxy.
 var ProxyVars = []string{"HTTP_PROXY", "http_proxy", "HTTPS_PROXY", "https_proxy", "ALL_PROXY", "all_proxy", "NO_PROXY", "no_proxy"}
@@ -205,7 +205,7 @@ func npmPrefix(home string) string {
 // but aren't the login shell: they aren't POSIX shells, so many keep zsh or
 // bash as the login shell and have the terminal open fish instead (its
 // profile setting, or exec fish from .zshrc). An agent installed in a folder
-// only config.fish adds wasn't found (John on Discord: 二进制文件没有从用户环境变量
+// only config.fish adds wasn't found (John 报告: 二进制文件没有从用户环境变量
 // 找到，我终端环境使用的fish). Their PATH comes after the login shell's, and
 // a variable the login shell leaves empty is taken from them.
 func shellEnv() (string, map[string]string) {
@@ -336,7 +336,7 @@ func mergeShellEnv(paths []string, vars []map[string]string) (string, map[string
 // was in the background there: Ctrl-C no longer reached `chongyun web`, and
 // anything in that group touching the terminal (the bash asked beside it,
 // whose profile runs in magpie's group, an agent's CLI) had the kernel stop
-// the whole group, magpie with it (DD on Discord: magpie web → zsh:
+// the whole group, magpie with it (DD 报告: magpie web → zsh:
 // suspended (tty input)). A timeout also killed only the shell, leaving
 // what its profile started holding the terminal; a probe's whole group goes.
 //
@@ -345,7 +345,7 @@ func mergeShellEnv(paths []string, vars []map[string]string) (string, map[string
 // profile that hands an interactive shell over to something else — `exec
 // tmux` or zellij's auto-start, common in config.fish — or takes longer
 // than shellAsk to come up never runs the probe, and magpie got no PATH at
-// all (John on Discord, fish set with chsh: an agent fish's PATH has
+// all (John 报告, fish set with chsh: an agent fish's PATH has
 // wasn't found). Without an answer it is asked again as a login shell
 // only, which still reads config.fish, .zprofile and .bash_profile.
 // MAGPIE_SHELL_PROBE=1 is in its environment both times, for a profile to

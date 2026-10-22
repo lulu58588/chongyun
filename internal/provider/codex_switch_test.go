@@ -16,11 +16,8 @@ import (
 // next account that is on and has room; while none has, it stays.
 func TestCodexSwitchedWhenUsedUp(t *testing.T) {
 	home := signIn(t) // me@example.com, acct-1
-	rememberLogins(true)
-	codexSignIn(t, home, "spare@example.com", "r-spare")
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	codexSignIn(t, "spare@example.com", "r-spare")
+	codexSignIn(t, "work@example.com", "r-work")
 	used := map[string]float64{"acct-work@example.com": 100, "acct-1": 100, "acct-spare@example.com": 20}
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]any{"plan_type": "plus", "rate_limit": map[string]any{
@@ -87,16 +84,15 @@ func TestCodexSwitchedWhenUsedUp(t *testing.T) {
 }
 
 // Claude Code signed in to an account Smart counts spent (98%) is signed
-// in to the next account that is on and has room — its credentials and
-// .claude.json's account both — and not before (#208, #209). What it
-// goes by is what Claude Code told as it answered: Anthropic's usage
-// endpoint isn't read for it.
+// in to the next account that is on and has room — its credentials too —
+// and not before (#208, #209). What it goes by is what Claude Code told
+// as it answered: Anthropic's usage endpoint isn't read for it.
 func TestClaudeSwitchedWhenSpent(t *testing.T) {
 	home := claudeHome(t)
-	cred := claudeSignIn(t, home, time.Now().Add(time.Hour)) // sk-ant-oat01-old
+	cred := claudeCodeSignIn(t, home, time.Now().Add(time.Hour)) // sk-ant-oat01-old
 	profile := filepath.Join(home, ".claude.json")
 	writeFile(t, profile, map[string]any{"oauthAccount": map[string]any{"emailAddress": "a@example.com", "accountUuid": "u-a"}})
-	rememberLogins(true)
+	claudeRemember(t, home)
 	loginsMu.Lock()
 	ls := upsertLogin(readLogins(), savedLogin{Agent: "claude", User: "b@example.com", Plan: "max", On: true, Seen: time.Now().UTC(),
 		Auth: mustJSONRaw(t, map[string]any{"claudeAiOauth": map[string]any{"accessToken": "sk-ant-oat01-b", "refreshToken": "sk-ant-ort01-b",
@@ -145,6 +141,9 @@ func TestClaudeSwitchedWhenSpent(t *testing.T) {
 		t.Fatalf("Claude Code is signed in with %v", o)
 	}
 	b, _ := os.ReadFile(profile)
+	// chongyun puts the sign-in where Claude Code keeps it (the credentials
+	// file above) and says whose it is in the profile beside it, so Claude
+	// Code is signed in to the account it switched to.
 	if !strings.Contains(string(b), "b@example.com") {
 		t.Fatalf(".claude.json: %s", b)
 	}
@@ -176,14 +175,11 @@ func mustJSONRaw(t *testing.T, v any) json.RawMessage {
 // Business seat at its workspace owner's limit reads 40% and isn't
 // allowed, and the app says "You're out of Codex usage" and sends nothing
 // for it. Codex on it is signed in to the next account with room, and
-// never to another the app holds (CavillZhang on X: "有的切换不了").
+// never to another the app holds (CavillZhang 报告: "有的切换不了").
 func TestCodexHeldAccountSwitchedUnderTheShare(t *testing.T) {
-	home := signIn(t) // me@example.com, acct-1
-	rememberLogins(true)
-	codexSignIn(t, home, "spare@example.com", "r-spare")
-	rememberLogins(true)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	_ = signIn(t) // me@example.com, acct-1
+	codexSignIn(t, "spare@example.com", "r-spare")
+	codexSignIn(t, "work@example.com", "r-work")
 	held := map[string]bool{"acct-1": true, "acct-spare@example.com": true, "acct-work@example.com": true}
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		allowed := !held[r.Header.Get("chatgpt-account-id")]

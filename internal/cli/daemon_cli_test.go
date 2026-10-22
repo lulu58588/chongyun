@@ -47,7 +47,7 @@ func TestDaemonCmd(t *testing.T) {
 }
 
 // magpie daemon's words for the page the service serves beside the
-// gateway (HuanCheng on Discord): --web on loopback by default, --lan on
+// gateway (HuanCheng 报告): --web on loopback by default, --lan on
 // every interface, --addr where told; a command that says nothing of it
 // leaves it as it is, and one that contradicts itself is refused.
 func TestParseDaemon(t *testing.T) {

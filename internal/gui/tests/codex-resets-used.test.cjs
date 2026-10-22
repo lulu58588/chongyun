@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// The resets magpie used (foobra12 on Discord: "magpie会自动使用codex重置卡吗
+// The resets magpie used (foobra12 报告: "magpie会自动使用codex重置卡吗
 // 我发现刚才好像不小心自动给我使用了一张"): a reset gone from a Codex
 // account's card read the same whether magpie used it by itself, the user
 // did, or it ran out. The card's auto-use row now says the last one magpie

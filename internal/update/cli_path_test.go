@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
-// Settings' Command line (PAMI on Discord): which magpie each shell runs,
+// Settings' Command line (PAMI 报告): which magpie each shell runs,
 // and this app's put there — a link in the folder on PATH, over another
 // copy that ran first, or in ~/.local/bin with the one shell's profile the
 // user picked given that folder. Everything is in a temporary home; no

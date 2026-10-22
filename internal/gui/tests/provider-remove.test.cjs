@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Remove, in a provider's editor (StringKe on Discord: the dialog stayed
+// Remove, in a provider's editor (StringKe 报告: the dialog stayed
 // open, a second Remove said there was no such provider, and the list
 // wasn't refreshed). A Remove that fails once the provider is already gone
 // closes the editor, drops its row and says what failed; a second one isn't

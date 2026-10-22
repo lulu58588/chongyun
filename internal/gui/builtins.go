@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/pluginrt"
 )
 
-// Plugins › Built-in (Lxxyx on X: "功能太多了"): magpie's built-in plugins
+// Plugins › Built-in (Lxxyx 报告: "功能太多了"): magpie's built-in plugins
 // (internal/pluginrt, plugins/), each with a switch kept in plugins.yml.
 // Off, a plugin's parts leave the window: its page leaves the sidebar and
 // the header's tabs, its sections leave the pages they are on, its rows

@@ -27,7 +27,7 @@ const (
 )
 
 // tcRegions are Tencent Cloud's three, as the three presets they were
-// before (Jorben on Discord) gave them: the old id, the region it is now,
+// before (Jorben 报告) gave them: the old id, the region it is now,
 // and what a provider there is made with.
 var tcRegions = []struct {
 	old, region                string
@@ -39,7 +39,7 @@ var tcRegions = []struct {
 	{"tencent-tokenhub", "intl", tcIntlHost + "/v1", tcIntlHost + "/v1", tcIntlHost, "tencent-tokenhub", tcIntlKeys, tcIntlDocs},
 }
 
-// Tencent Cloud is one preset (Jorben on Discord), its Token Plan and
+// Tencent Cloud is one preset (Jorben 报告), its Token Plan and
 // TokenHub's China and global pay as you go its regions, each as its own
 // preset had it: the plan's sk-tp- endpoints under /plan with no
 // Responses and its own models, TokenHub's at its hosts with Responses,
@@ -110,25 +110,6 @@ func TestTencentCloud(t *testing.T) {
 	if IconForCatalog("tencent-tokenhub") != "tencentcloud-color" {
 		t.Fatal("tencent-tokenhub has no icon")
 	}
-	// an entry imported from another app is the preset at the region its
-	// endpoints are, whichever API it was set up on
-	for _, c := range tcRegions {
-		var es []endpoints
-		if c.region == "plan" {
-			es = []endpoints{{anthropic: c.anthropic}, {chat: c.chat}}
-		} else {
-			es = []endpoints{{chat: c.chat + "/"}, {responses: c.responses}, {anthropic: c.anthropic}}
-		}
-		for _, e := range es {
-			im, _ := imported("Tencent", "sk-x", e, nil)
-			if im.Preset != "tencent-cloud" || im.Icon != "tencentcloud-color" || im.Catalog != c.catalog || im.KeysURL != c.keys {
-				t.Fatalf("imported from %+v: %+v", e, im)
-			}
-			if got := slices.DeleteFunc([]string{im.Chat, im.Responses, im.Anthropic}, func(s string) bool { return s == "" }); !slices.Contains([]string{c.chat, c.responses, c.anthropic}, got[0]) {
-				t.Fatalf("imported from %+v at %+v", e, im)
-			}
-		}
-	}
 	// a chongyun://import link: Tencent Cloud at a region, an old link by
 	// its old id, and an old id at another region, each where it says
 	for _, c := range tcRegions {
@@ -175,15 +156,6 @@ func TestTencentCloudEnterprisePlan(t *testing.T) {
 		for _, id := range r.Models {
 			if id != strings.ToLower(id) {
 				t.Fatalf("%s: model ids are lowercase: %q", c.region, id)
-			}
-		}
-		for _, e := range []endpoints{{chat: r.Chat}, {responses: r.Responses}, {anthropic: r.Anthropic}} {
-			im, _ := imported("Tencent", "sk-x", e, nil)
-			if im.Preset != "tencent-cloud" || im.KeysURL != c.keys || im.Catalog != "" {
-				t.Fatalf("imported from %+v: %+v", e, im)
-			}
-			if got := im.regionOf(pr); got == nil || got.ID != c.region {
-				t.Fatalf("imported from %+v at %+v", e, got)
 			}
 		}
 		p, err := ParseImport("chongyun://import?preset=tencent-cloud&region=" + c.region)

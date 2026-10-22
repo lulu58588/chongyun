@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Providers switched off are kept apart (01huadalang on Discord: 已关闭的
+// Providers switched off are kept apart (01huadalang 报告: 已关闭的
 // 供应商还占着位置): the list holds the ones on, and the ones off sit below
 // it under a "Turned off (N)" fold, folded at first. The fold opens and
 // closes on a click that leaves the page where it is, and is remembered

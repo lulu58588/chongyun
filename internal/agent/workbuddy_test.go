@@ -127,7 +127,7 @@ func TestWorkBuddyEfforts(t *testing.T) {
 }
 
 // WorkBuddy pointed at a magpie on another machine stays there through a
-// sync, with that magpie's key (悠悠哥 on Discord: models moved to the
+// sync, with that magpie's key (悠悠哥 报告: models moved to the
 // magpie on a NAS were put back on this machine's), while one on this
 // machine's loopback follows the gateway.
 func TestWorkBuddyKeepsRemoteAddress(t *testing.T) {

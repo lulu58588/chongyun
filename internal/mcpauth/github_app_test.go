@@ -18,7 +18,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/mcpauth"
 )
 
-// GitHub's remote MCP server (新v学员 on Discord): its sign-in is GitHub's
+// GitHub's remote MCP server (新v学员 报告): its sign-in is GitHub's
 // own OAuth, which has no registration endpoint, so magpie signs in only as
 // an OAuth app the user made. The answers are GitHub's own, saved from
 // api.githubcopilot.com/mcp/ and github.com/login/oauth on 2026-10-12, with

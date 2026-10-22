@@ -230,7 +230,7 @@ type providerJSON struct {
 	QueueLimit int `json:"queueLimit,omitempty"`
 	QueueWait  int `json:"queueWait,omitempty"`
 	// how many requests each key or account sends the vendor in any
-	// minute, 0 for no limit (coeo91 on Discord)
+	// minute, 0 for no limit (coeo91 报告)
 	MaxRPM int `json:"maxRPM,omitempty"`
 	// what it charges against the official price, 0 for that (#819)
 	PriceRate float64     `json:"priceRate,omitempty"`
@@ -987,7 +987,6 @@ func moveContext(r *http.Request) (context.Context, context.CancelFunc) {
 }
 
 func providerRoutes(mux *http.ServeMux, w Windows) {
-	importAppsRoutes(mux)
 	pluginRoutes(mux, w)
 	traceRoutes(mux)
 	contextRoutesAPI(mux)
@@ -1304,7 +1303,7 @@ func providerRoutes(mux *http.ServeMux, w Windows) {
 			// with the models the editor has picked kept first: a failed
 			// move says to untick one the plugin doesn't serve, and the
 			// editor's Try again is pressed with it unticked but not saved
-			// (noting_ever on X: deep-model unticked, and the move failed
+			// (noting_ever 报告: deep-model unticked, and the move failed
 			// on it all the same)
 			if in.Models != nil && !in.NoModels {
 				var err error
@@ -1352,14 +1351,6 @@ func providerRoutes(mux *http.ServeMux, w Windows) {
 				fail(rw, err)
 				return
 			}
-		case "keychain-retry":
-			// Try again beside Codex's sign-in the macOS keychain didn't
-			// give: a refusal kept is dropped and the item read once
-			// (#2367); its answer, or that the prompt is still up
-			if err := provider.RetryCodexKeychain(); err != nil {
-				fail(rw, err)
-				return
-			}
 		case "save":
 			// a preset needs nothing but the key; a saved provider keeps
 			// its key when the form left it blank
@@ -1381,7 +1372,7 @@ func providerRoutes(mux *http.ServeMux, w Windows) {
 				// rate limited to the back, Unlisted and each key's proxy.
 				// A decision-only preset (TypeSafe Jev) has no chat URL, so
 				// every save of its editor came here, and In order went
-				// back to Smart (fflake33 on Discord)
+				// back to Smart (fflake33 报告)
 				pr.Routing, pr.Affinity, pr.Sink = in.Routing, in.Affinity, in.Sink
 				pr.Unlisted = in.Unlisted
 				pr.AccountProxies = in.AccountProxies
@@ -1441,7 +1432,7 @@ func providerRoutes(mux *http.ServeMux, w Windows) {
 				return
 			}
 			in.PriceRate = rate
-			// many keys pasted into the key field (361 on Discord: a provider
+			// many keys pasted into the key field (361 报告: a provider
 			// added with hundreds): the first is the key, the others its
 			// accounts, as Paste several adds them
 			var moreKeys []string
@@ -2186,43 +2177,6 @@ func providerRoutes(mux *http.ServeMux, w Windows) {
 			return
 		}
 		rw.WriteHeader(http.StatusNoContent)
-	})
-	// Accounts brought in from another tool's export (Antigravity's, from
-	// Antigravity Cockpit, Antigravity Manager, CLIProxyAPI; ChatGPT's and
-	// Claude's from CLIProxyAPI or the agents' own files), each file's
-	// text as it is; each checked with the vendor before it is kept.
-	mux.HandleFunc("POST /api/signin/import", func(rw http.ResponseWriter, r *http.Request) {
-		var in struct {
-			Agent string
-			Files []string
-		}
-		if err := json.NewDecoder(io.LimitReader(r.Body, 8<<20)).Decode(&in); err != nil {
-			fail(rw, err)
-			return
-		}
-		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Minute)
-		defer cancel()
-		imp := provider.ImportGoogleAccounts
-		if in.Agent == "codex" || in.Agent == "claude" {
-			// ChatGPT and Claude sign-ins: CLIProxyAPI's auth files, Codex
-			// CLI's auth.json, Claude Code's .credentials.json
-			imp = provider.ImportLogins
-		} else if in.Agent == "factory" {
-			// Factory API keys (fk-…), as droid takes FACTORY_API_KEY (#506)
-			imp = func(ctx context.Context, _ string, files []string) ([]provider.ImportedAccount, error) {
-				return provider.ImportFactoryKeys(ctx, files)
-			}
-		}
-		res, err := imp(ctx, in.Agent, in.Files)
-		if err != nil {
-			fail(rw, err)
-			return
-		}
-		agent.SyncCatalog()
-		writeJSON(rw, struct {
-			Results   []provider.ImportedAccount `json:"results"`
-			Providers providersJSON              `json:"providers"`
-		}{res, providersState()})
 	})
 	// StepFun's Step Plan windows: the session the user copied from their
 	// browser with magpie's bookmarklet, the provider's own (two on one

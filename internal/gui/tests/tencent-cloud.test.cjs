@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Tencent Cloud as one provider (Jorben on Discord): the Token Plan and
+// Tencent Cloud as one provider (Jorben 报告): the Token Plan and
 // TokenHub's two pay-as-you-go presets are one Tencent Cloud preset whose
 // regions are Plan · China, Pay as you go · China and Pay as you go · Global,
 // and Token Plan 企业版's Enterprise plan · China and · Global (#1574).

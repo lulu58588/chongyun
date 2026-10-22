@@ -54,7 +54,7 @@ func accountCard(agent string) cardFace {
 // discovery off ("claude" is Claude Code), or a preset's removed since.
 // The usage log keeps the id of every provider a call went to, and the
 // Usage page names those by this rather than by the bare id (@ByronVon1
-// on X: "claude" in the Provider filter). "" for an id magpie doesn't
+// 报告: "claude" in the Provider filter). "" for an id magpie doesn't
 // know, such as a custom provider removed since.
 func KnownFace(id string) (name, icon string) {
 	if !strings.HasPrefix(id, "plugin:") {

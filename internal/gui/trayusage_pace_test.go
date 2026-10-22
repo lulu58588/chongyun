@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// The menu bar's Pace number (settings.TrayPace, fflake33 on Discord): off,
+// The menu bar's Pace number (settings.TrayPace, fflake33 报告): off,
 // the rows are as they were; on, each window's figure has its Pace beside
 // it, turned where what is left is shown, and the tooltip says it too.
 func TestTrayUsagePace(t *testing.T) {

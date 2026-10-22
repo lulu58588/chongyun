@@ -14,7 +14,7 @@ import (
 )
 
 // A WSL omp under NAT reaches the gateway at Windows' address, where a
-// request without a named key is turned away (whqtian on Discord: it
+// request without a named key is turned away (whqtian 报告: it
 // connected only once auth: none was swapped for the key by hand). Its
 // models.yml carries the key the gateway is shared on the network with;
 // one on loopback stays keyless, and so does one while nothing is shared.
@@ -58,7 +58,7 @@ func TestOmpKeyBeyondLoopback(t *testing.T) {
 
 // The probe finds an omp bun installed though ~/.bun/bin is put on PATH
 // only by ~/.bashrc, which sh -l doesn't read, and asks it its version
-// with bun on PATH for its #!/usr/bin/env bun (whqtian on Discord: a WSL
+// with bun on PATH for its #!/usr/bin/env bun (whqtian 报告: a WSL
 // omp's version stayed unknown, so max stayed xhigh).
 func TestWSLProbeFindsBunOmp(t *testing.T) {
 	if runtime.GOOS == "windows" {

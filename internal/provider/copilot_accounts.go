@@ -24,6 +24,10 @@ import (
 	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
+// CopilotUserURL says where an account's Copilot API is; a var so tests can
+// point it elsewhere.
+var CopilotUserURL = "https://api.github.com/copilot_internal/user"
+
 // copilotConfigDir is where the Copilot editors keep their sign-in.
 func copilotConfigDir() string {
 	if cfg := appdir.Getenv("XDG_CONFIG_HOME"); cfg != "" {
@@ -211,17 +215,12 @@ type copilotLoginApp struct {
 // copilotLogins lists the Copilot accounts, the first in use first, then
 // the rest as they were added.
 func copilotLogins(cfg string) []copilotLoginApp {
-	own, _ := copilotLogin(cfg)
-	ownUser := copilotOwnUser(cfg)
 	var out []copilotLoginApp
-	for _, l := range sideLogins("copilot", ownUser, func(l savedLogin) bool {
+	for _, l := range sideLogins("copilot", "", func(l savedLogin) bool {
 		_, ok := copilotSaved(l)
 		return ok
 	}) {
-		app := own
-		if !l.saved.own() {
-			app, _ = copilotSaved(l.saved)
-		}
+		app, _ := copilotSaved(l.saved)
 		app.User = l.User
 		// signed out by GitHub with the token it still has (copilot_lapsed.go)
 		if copilotLapsedOn(l.saved, app.Token) {
@@ -231,15 +230,6 @@ func copilotLogins(cfg string) []copilotLoginApp {
 		out = append(out, copilotLoginApp{l.Login, app})
 	}
 	return out
-}
-
-// copilotOwnUser is who the editors' or CLI's Copilot sign-in is, "" for none.
-func copilotOwnUser(cfg string) string {
-	own, ok := copilotLogin(cfg)
-	if !ok {
-		return ""
-	}
-	return CopilotAccountName(firstNonEmpty(own.User, "GitHub"), own.Host)
 }
 
 func copilotSide() []sideLogin {
@@ -275,44 +265,7 @@ func addCopilotLogin(user, plan, token, host string) error {
 	}
 	auth, _ := json.Marshal(a)
 	name := CopilotAccountName(user, host)
-	own := copilotOwnUser(copilotConfigDir())
-	// the editors' own sign-in of this account refused (#1238): this one
-	// is kept, standing for it, rather than let go as the same account
-	if strings.EqualFold(own, name) && copilotEditorRefused(copilotConfigDir(), user, host) {
-		own = ""
-	}
-	return addSideLogin(savedLogin{Agent: "copilot", User: name, Plan: plan, Auth: auth}, own, func(savedLogin) {})
-}
-
-// copilotEditorRefused says GitHub refused the editors' sign-in of user on
-// host: a stale token in apps.json, which a sign-in from magpie is not let
-// go for (#1238). The Copilot CLI's, when it is the account's own sign-in,
-// is the same: a revoked one is signed in again in magpie (echo_ts).
-func copilotEditorRefused(cfg, user, host string) bool {
-	who := copilotApp{User: user, Host: host}
-	gh, ghe := copilotEditorLogins(cfg)
-	for _, e := range []*copilotApp{gh, ghe} {
-		if e != nil && copilotSameAccount(*e, who) && copilotRefusedToken(e.Token) {
-			return true
-		}
-	}
-	own, ok := copilotLogin(cfg)
-	return ok && own.cli && copilotSameAccount(own, who) && copilotRefusedToken(own.Token)
-}
-
-// copilotProbeEditor asks GitHub whether it still takes the editors' sign-in
-// of user on host, when magpie has not asked yet: a sign-in from magpie of
-// the same account is kept only when it doesn't (addCopilotLogin).
-func copilotProbeEditor(ctx context.Context, user, host string) {
-	gh, ghe := copilotEditorLogins(copilotConfigDir())
-	for _, e := range []*copilotApp{gh, ghe} {
-		if e != nil && copilotSameAccount(*e, copilotApp{User: user, Host: host}) && !copilotRefusedToken(e.Token) {
-			_, _ = copilotToken(ctx, *e)
-		}
-	}
-	if own, ok := copilotLogin(copilotConfigDir()); ok && own.cli && copilotSameAccount(own, copilotApp{User: user, Host: host}) && !copilotRefusedToken(own.Token) {
-		_, _ = copilotDirect(ctx, own)
-	}
+	return addSideLogin(savedLogin{Agent: "copilot", User: name, Plan: plan, Auth: auth}, "", func(savedLogin) {})
 }
 
 // copilotAccount is the Copilot account in use first.

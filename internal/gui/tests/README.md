@@ -516,7 +516,7 @@ nothing; saved, they go lowest first and the group's family stays. A group with
 its own opens on them, none picked is refused, and back to shared saves none.
 
 `group-member-fast.test.cjs` sends a group's member in its vendor's fast mode,
-in Chromium and WebKit, English and Chinese (vs on Discord: "gpt-6.1 sol ·
+in Chromium and WebKit, English and Chinese (vs 报告: "gpt-6.1 sol ·
 high · fast"). The group's card reads "· fast" after the member's reasoning; in
 the editor a model with a fast mode shows a "Standard speed"/"Fast" toggle
 beside its reasoning and one without none, toggling moves nothing on the page,
@@ -524,7 +524,7 @@ a member whose reasoning changes stays fast under its new id, one taken out
 leaves it, and the save sends the members sent fast as fast.
 
 `group-found-off.test.cjs` turns the groups magpie finds on its own off and on
-again, in Chromium and WebKit, English and Chinese (蓝猫 on Discord: "路由分组会自动创建，
+again, in Chromium and WebKit, English and Chinese (蓝猫 报告: "路由分组会自动创建，
 可以关闭掉吗"). A switch right under the routing groups' head says what found
 groups are; clicked off it posts groups/found {on:false}, the found group
 leaves the list while the user's stays, the hint says only theirs are served,
@@ -550,7 +550,7 @@ provider's name or "· routing group" follows a name in the agents' lists (#868)
 where names are given, in Chromium and WebKit, English and Chinese. The
 provider editor's Names & levels has its three choices and says what the lists
 show. For the groups it is one setting for all of them, so it sits over the
-groups on Routing (PAMI on Discord: in one group's editor it read as that
+groups on Routing (PAMI 报告: in one group's editor it read as that
 group's): a group's editor has no choices, only what its group will be called
 and that it is set above; a pick there posts settings/plain-names once and the
 open editor's line follows it with its unsaved name. No click scrolls, nothing
@@ -599,7 +599,7 @@ neither click scrolls the page, the hint isn't cut short and the three fit
 the row at 900px and 560px. English and Chinese, Chromium and WebKit.
 
 `bare-ids.test.cjs` checks Settings › Network and sharing › "Model ids
-without the provider" (love1sbug on X): off by default, On posts
+without the provider" (love1sbug 报告): off by default, On posts
 `settings/bare-ids` with `on: true` on its own and lights On, Off posts it
 back, neither click scrolls the page, the row is drawn in gateway mode, and
 nothing runs out of the row or the page sideways at 420px and 900px. Every
@@ -636,7 +636,7 @@ under Smart keep Smart's chip and the keys' own mode line. It runs in
 English, Chinese, Japanese and German on Chromium and WebKit.
 
 `routing-mode-goes.test.cjs` checks where the stage's routing chip leads
-(xczzhh on X: it always said Smart and nothing changed it). With one key
+(xczzhh 报告: it always said Smart and nothing changed it). With one key
 on, the chip and the Accounts and keys heading name no routing and the mode
 paragraph says how to get one. With a provider over two keys, the chip and
 the heading are a way to its row under Several accounts or keys: a click
@@ -895,14 +895,14 @@ for a newer magpie (Settings › About's Check does), its tooltip says what it
 reads, and no click moves the page. Window and panel, English and Chinese.
 
 `update-hide.test.cjs` keeps the header's Update pill away when asked (Wang
-Hsiaohi on Discord): its ×, shown with the pointer over the pill, hides it for
+Hsiaohi 报告): its ×, shown with the pointer over the pill, hides it for
 that version, through a reload, until a newer one is out; a right-click does
 the same. Settings → Update button says which version it is hidden for, with
 Show again, and turns it off for good; the version row still offers the
 restart. No click moves the page. Panel and window, English and Chinese.
 
 `update-download-percent.test.cjs` checks the Update pill while a failed
-update downloads again (inaction on Discord): with the size known and
+update downloads again (inaction 报告): with the size known and
 nothing in yet it says 0%, with no size "Downloading…", then the percent —
 never NaN, which it said while the answer left `done` out. The click doesn't
 move the page. English and Chinese.
@@ -939,12 +939,12 @@ accounts saved in magpie: the Providers line naming them has Remove, whose
 dialog lists them; Cancel and Escape post nothing, Remove posts
 login/forget once per account and the line goes; in English and Chinese.
 
-`codex-signout.test.cjs` opens Codex with one account (mamba on Discord: it
+`codex-signout.test.cjs` opens Codex with one account (mamba 报告: it
 couldn't be removed while Codex was signed in to it): its row has Sign out,
 asked in the app's own dialog; Cancel and Escape post nothing and go back to
 the editor, Sign out posts login/forget and says so. With another account
 saved the one in use has no Sign out but Remove, which posts login/forget
-(vincentzhang1_55530 on Discord: magpie signs Codex in to another account
+(vincentzhang1_55530 报告: magpie signs Codex in to another account
 first), and a signed_in refusal is said in the reader's language. No select, no left border, the page doesn't move; in
 English and Chinese.
 
@@ -953,11 +953,11 @@ one from the preset and one custom, as /api/providers gives them: a click
 on each row opens its editor (the key box saying one is optional) and
 nothing throws, where the row only toggled. A plugin's provider (base
 plugin://codearts) has no link in its editor's head, where it said
-"codearts ↗" and opened https://codearts (Lemon on Discord), while the
+"codearts ↗" and opened https://codearts (Lemon 报告), while the
 Ollamas keep theirs; in Chromium and WebKit, English and Chinese.
 
 `editor-short-window.test.cjs` opens a provider's editor with 40 models in a
-short window (800x500, 600x420, 420x340; 悠悠哥 on Discord: a small window's
+short window (800x500, 600x420, 420x340; 悠悠哥 报告: a small window's
 WorkBuddy editor stopped part way down its models): the dialog fits the
 window with its head and Save in sight and uncovered, and the wheel held
 over the model chips runs them to the last one and then takes the editor's
@@ -975,7 +975,7 @@ stays, and a second Add is posted, where the button stayed busy. At 600x420
 and 1000x700, in Chromium and WebKit, English and Chinese.
 
 `group-pick-filter.test.cjs` covers a group's Add a model picker and the
-filter over the routing groups (#907; PAMI on Discord). A model in the group
+filter over the routing groups (#907; PAMI 报告). A model in the group
 with its reasoning fixed (a/two:max) is ticked, and a click takes that member
 out instead of adding it a second time. A model that is in other groups names
 them, and the whole note shows on hover. The filter keeps the groups whose
@@ -1057,7 +1057,7 @@ the last agent, clicked at the strip's end, stays in view as the strip is
 drawn again; in Chromium and WebKit, English and Chinese.
 
 `usage-unpriced-names.test.cjs` checks Usage › Sessions where an agent
-recorded tokens under no model name (tony on Discord: the cost's note read
+recorded tokens under no model name (tony 报告: the cost's note read
 "未计入：，没有已知价格"): the cost header's note, a session row's cost note
 and its models name it "a model with no name", with no blank where a name
 goes; in Chromium and WebKit, English and Chinese.
@@ -1078,7 +1078,7 @@ and 1100 wide the page never scrolls sideways; in Chromium and WebKit, in
 every language. `MAGPIE_ASSETS` pointed at older assets shows it failing.
 
 `usage-keys-fold.test.cjs` checks the Usage page's card of a provider with
-many keys, each its balance (361 on Discord: an OpenRouter card listed every
+many keys, each its balance (361 报告: an OpenRouter card listed every
 key's): the first three are in sight, the rest behind "Show N more keys" at
 its foot, the keys' sum in its head; the button opens them in place and
 folds them again without moving the page, and is remembered across a
@@ -1097,7 +1097,7 @@ badge is whole (the name gives way) and nothing spills; in Chromium and
 WebKit, English and Chinese.
 
 `usage-accounts-fold.test.cjs` checks the Usage page's card of a subscription
-with many accounts (Linx on X: twenty-odd on one plugin made a very long
+with many accounts (Linx 报告: twenty-odd on one plugin made a very long
 card): of 22 WorkBuddy AI accounts the first five are in sight, the rest
 behind "Show 17 more accounts" at its foot; of nine Trae accounts the one in
 full and the one with the check-in switch stay in sight too; eight aren't
@@ -1157,7 +1157,7 @@ The daily chart also checks selection, gray bars on other days, filtered rows
 and CSV, an empty day, clearing a selection, keyboard input and resizing.
 
 `usage-model-at-provider.test.cjs` splits the Requests tab's chart by "Model ·
-provider" (inaction on Discord): one model at two providers is two rows of the
+provider" (inaction 报告): one model at two providers is two rows of the
 ranking, each named by both with the provider's icon and its own first token,
 the faster first by Speed though fewer requests went to it. A click lists that
 provider's requests of that model (provider and model both asked for), a click
@@ -1171,7 +1171,7 @@ card's padding, as far in as the tabs above it, ends before the plot, and
 nothing runs past the card or scrolls the page sideways; Chromium and WebKit,
 English and Chinese.
 
-`number-units.test.cjs` checks Settings' Number units (John on Discord): in
+`number-units.test.cjs` checks Settings' Number units (John 报告): in
 Chinese the Requests tab says a large count in K / M / B ("1.54B", an axis's
 "80M") by default, as English does (#740); picking 万 / 亿 saves chineseUnits,
 moves nothing on the settings page, and the totals and chart axis then say
@@ -1297,7 +1297,7 @@ English and Chinese, with `/api/plugins` faked.
 
 `header-relang.test.cjs` opens a macOS window in Chinese at 830px, with the
 header's tabs picked over the sidebar, and switches it from Settings to
-English, Traditional Chinese, Japanese, German and back (kiwiflysky on X).
+English, Traditional Chinese, Japanese, German and back (kiwiflysky 报告).
 In English it is handed a wide font (Menlo, as the host hands a saved font)
 on the Agents page, swept from 1000 to 640px: each width is fitted to the
 system font first and, given Menlo, must match a fresh fit. Each language is
@@ -1308,11 +1308,11 @@ Chromium and WebKit, with `/api/settings` faked.
 
 `strip-scrollbar.test.cjs` lays out an overflowing tab strip (`segs regions`,
 the Sessions page's agents and a provider's regions) in Chromium with its
-scrollbars shown (ARNO on Discord): off a Mac it scrolls under the app's
+scrollbars shown (ARNO 报告): off a Mac it scrolls under the app's
 6px thumb, not Windows' classic bar; on a Mac the system's bar is left.
 
 `own-skill.test.cjs` opens the Library with Claude Code's own impeccable in
-the library skill's way (StringKe, JasonLeeForOnly on Discord): the warning
+the library skill's way (StringKe, JasonLeeForOnly 报告): the warning
 row says so in the reader's language and has "Use the library's" and "Keep
 Claude Code's", which post `skills/use-library` and `skills/keep-own` with
 the skill and the agent; the warning goes, the toast says what was done, and
@@ -1404,7 +1404,7 @@ restart to update is the app's (TestWhatsNewQuietAfterRestartToUpdate). No
 left-border accent, every string in Chinese. Chromium and WebKit,
 English and Chinese, API faked.
 
-`sessions-manage.test.cjs` opens the Sessions page (TJHHHH on Discord): an
+`sessions-manage.test.cjs` opens the Sessions page (TJHHHH 报告): an
 agent's sessions by the folder they ran in, the latest folder open, each with
 its resume command; unfolding a folder, opening a row and picking a session
 leave the page where it is. Delete asks in magpie's own dialog (a browser
@@ -1546,7 +1546,7 @@ reopens the saved setup with the token kept secret. The API is faked; the
 test never contacts GitHub.
 
 `sync-other-kind.test.cjs` checks that moving sync between WebDAV and S3
-keeps the other's settings (ARNO on Discord: trying S3 wiped the WebDAV
+keeps the other's settings (ARNO 报告: trying S3 wiped the WebDAV
 address, user and password). With S3 synced to and a WebDAV server kept,
 the row ends "WebDAV settings kept", the form marks S3 "on" and says the
 WebDAV settings are kept; picking WebDAV, which leaves the page where it
@@ -1776,7 +1776,7 @@ so. No click moves the page and no row has a coloured left border; English
 and Chinese, Chromium and WebKit, with `/api/plugins` faked.
 
 `quota-families.test.cjs` checks Antigravity's allowance one figure a model
-family (01huadalang on Discord: several accounts, every level of every
+family (01huadalang 报告: several accounts, every level of every
 model, read as bloat): windows that name a `family` show as one a family,
 Gemini and Claude first, each the most used of its models, on the Usage
 page's card, the menu bar panel's rings and the provider's account rows;
@@ -1815,7 +1815,7 @@ rule is saved as `time: {from, to, days}`. English and Chinese, Chromium and
 WebKit, with `/api/plugins` faked.
 
 `unlisted-models.test.cjs` checks a provider set to "Only through routing
-groups" (只通过路由分组使用; 悠悠哥 on Discord: hy4 vanished from the pickers).
+groups" (只通过路由分组使用; 悠悠哥 报告: hy4 vanished from the pickers).
 The model picker's filter, finding such a model, says why it isn't offered:
 hy3, in the group Mine, is reached by picking Mine ("Pick Mine" sets it);
 hy4, in no group, can't be used, and "Make a routing group of it" opens the
@@ -1826,7 +1826,7 @@ window on one, and the tray panel asks `window/main` for it. The page doesn't
 move, no left-border accent; English and Chinese, Chromium and WebKit.
 
 `request-archive.test.cjs` turns the request archive on and off from its
-switch at the top right of the Usage page's request list (Jorben on Discord):
+switch at the top right of the Usage page's request list (Jorben 报告):
 off unless turned on, refused with sync not set up with an s3:// bucket (the
 reason in the footer, the switch left off), on with one, the bucket in its
 tooltip, and a failed upload said beside it. The Gateway page has no switch
@@ -1846,7 +1846,7 @@ archived". No click moves the page; no left-border accent; every new string
 has its Chinese. English and Chinese, app and web, Chromium and WebKit.
 
 `providers-off-fold.test.cjs` checks that providers switched off are kept
-apart (01huadalang on Discord): the Providers list holds the ones on, and the
+apart (01huadalang 报告): the Providers list holds the ones on, and the
 ones off sit below it under a "Turned off (N)" fold (已关闭的供应商), folded at
 first. Opening it with the page scrolled leaves the head and the page where
 they are, the fold is remembered across a reload, and a provider switched
@@ -1880,7 +1880,7 @@ status says it is already listed and its sign-in renewed (该账号已在列表�
 move; English and Chinese, Chromium and WebKit.
 
 `web-page.test.cjs` checks the page `magpie web` serves to a browser (Jorben
-on Discord: no request archive switch and no usage chart icons in the remote
+reported: no request archive switch and no usage chart icons in the remote
 web UI, and a 404 for `/wails/runtime.js`). With `web` set the page never
 asks for `/wails/runtime.js`, which the browser has none of, and nothing
 fails to load; the app's window still loads it. The request archive's switch
@@ -1912,7 +1912,7 @@ moves the page. English and Chinese, Chromium and WebKit, with `/api/plugins`
 faked.
 
 `searcher-pick.test.cjs` checks the Web search section's "Searches for other
-models" row (01huadalang on Discord: pick which provider searches for a model
+models" row (01huadalang 报告: pick which provider searches for a model
 that can't). With none named it shows Automatic and magpie's own pick; its
 picker offers Automatic first, each provider that can search by its small
 model, and each of its models, including a relay said to search; the row says
@@ -2136,7 +2136,7 @@ window minimum; 1000 alone could never catch a name that is too wide:
 node --test internal/gui/tests/quota-name-translated.test.cjs
 
 `quota-pools.test.cjs` checks Antigravity's allowance a row a pool of
-models, each with its 5-hour and its weekly window (a user on Discord: the
+models, each with its 5-hour and its weekly window (a user reported: the
 three models read the same, show the 5 hours and the week left): windows
 that name a `pool` show as the pool's 5 hours then its 7 days, Gemini
 first, on the Usage page's card (the pool's models in the tooltip), the
@@ -2284,14 +2284,14 @@ node --test internal/gui/tests/omp-profile-connect.test.cjs
 ```
 
 `privacy-hides-accounts.test.cjs` checks that Privacy's Mask personal data
-hides the accounts on screen too (inaction on Discord): until Hide accounts is
+hides the accounts on screen too (inaction 报告): until Hide accounts is
 chosen on a computer it follows the setting, so Usage's email address is
 blurred and its button pressed; an address shown on purpose with the button
 stays shown; on Settings › Privacy, turning Mask personal data on turns Hide
 accounts on, and Privacy's own Hide accounts row says so and turns it off,
 without scrolling. English and Chinese, Chromium and WebKit.
 
-`cli-path.test.cjs` checks Settings › About › Command line (PAMI on Discord):
+`cli-path.test.cjs` checks Settings › About › Command line (PAMI 报告):
 it says what `magpie` in a new terminal runs, with a dot for each shell (no
 left border, no native select); Add to PATH posts `/api/cli` with no shell and
 the row turns green, a shell whose PATH lacks the folder has a button naming
@@ -2336,7 +2336,7 @@ node --test internal/gui/tests/lane-limit.test.cjs
 ```
 
 `ledger-protocol.test.cjs` checks the protocol each request was sent
-upstream in, on Usage › Requests (蓝猫 on Discord): a row translated from
+upstream in, on Usage › Requests (蓝猫 报告): a row translated from
 its agent's protocol is tagged "Chat → Anthropic", one sent as it came
 "Anthropic" or "Responses", one read from a session file nothing. A
 request's details say Protocol and the upstream's own stop reason, when it

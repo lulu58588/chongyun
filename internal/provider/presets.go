@@ -239,7 +239,7 @@ var presets = []PresetDef{
 		NoList: true,
 		Models: []string{"qianfan-code-latest", "deepseek-v4.1-flash", "deepseek-v4-pro", "deepseek-v4-pro-0813",
 			"deepseek-v4-flash", "deepseek-v4-flash-0731", "deepseek-v3.2", "glm-5.3", "glm-5.3-flash", "glm-5.2", "glm-5.1", "glm-5"}},
-	// Tencent Cloud (Jorben on Discord: one Tencent Cloud, its plan and
+	// Tencent Cloud (Jorben 报告: one Tencent Cloud, its plan and
 	// pay as you go picked inside it, as Xiaomi MiMo's are), once three
 	// presets, whose ids still name it, each at its region (presetAliases):
 	//
@@ -388,7 +388,7 @@ var presets = []PresetDef{
 			"global.openai.gpt-6-astra", "global.openai.gpt-6-sol", "global.openai.gpt-6-luna",
 			"openai.gpt-oss-120b-1:0", "openai.gpt-oss-20b-1:0", "qwen.qwen3-coder-480b-a35b-v1:0", "deepseek.v3.2",
 			"moonshotai.kimi-k2.5", "zai.glm-5", "minimax.minimax-m2.5"}},
-	// Amazon Bedrock's Mantle endpoint (@marktoown on X), with the same
+	// Amazon Bedrock's Mantle endpoint (@marktoown 报告), with the same
 	// Bedrock API key: OpenAI's chat completions and Responses at /v1 (some
 	// models at /openai/v1, which the gateway picks per model: MantleBase)
 	// and Anthropic's Messages at /anthropic/v1/messages, in-region model

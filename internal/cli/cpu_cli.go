@@ -2,7 +2,7 @@ package cli
 
 // magpie cpu: a Go CPU profile of the running magpie, recorded for some
 // seconds while the user goes on using it, for a report of magpie using
-// too much CPU (@LeiCheng42 on X, while Codex runs). Activity Monitor and
+// too much CPU (@LeiCheng42 报告, while Codex runs). Activity Monitor and
 // a macOS `sample` show Go's frames as ???, so the profile is asked of the
 // process itself, through the gateway it serves on this computer
 // (gateway.CPUPath, loopback only, as magpie heap's).

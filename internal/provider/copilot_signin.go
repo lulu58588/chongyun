@@ -149,19 +149,13 @@ func startCopilotSignIn(s *signInFlow) error {
 				fail(err.Error())
 				return
 			}
-			copilotProbeEditor(fctx, user, host)
 			fcancel()
 			if err := keepLogin(ctx, func() error { return addCopilotLogin(user, plan, tok.Token, host) }); err != nil {
 				fail(err.Error())
 				return
 			}
-			// the one Copilot's editors are signed in to, if it is this
-			using := false
-			if own, ok := copilotLogin(copilotConfigDir()); ok && strings.EqualFold(own.User, user) && own.Host == host {
-				using = true
-			}
 			// named as the account list names it, so the window finds it
-			s.finish(SignInState{State: "done", User: CopilotAccountName(user, host), Plan: plan, Using: using})
+			s.finish(SignInState{State: "done", User: CopilotAccountName(user, host), Plan: plan})
 			return
 		}
 	}()

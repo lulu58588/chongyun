@@ -19,7 +19,7 @@ func sessionBus() bool {
 // dropTrayName gives up the org.kde.StatusNotifierItem-<pid>-1 name Wails'
 // tray takes. The tray registers with the watcher by its path, which the
 // watcher files under the connection's own name (:1.x); anything that also
-// registers the well-known name (songlairui on X: 为什么我的 omarchy 上会有
+// registers the well-known name (songlairui 报告: 为什么我的 omarchy 上会有
 // 两只喜鹊) makes the same icon a second item, as Quickshell's watcher tells
 // items apart by how they were named, not by who owns them. Without the name
 // such a registration is refused, and one made already is dropped with it.

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// magpie's image recognition as an MCP server (JonahFu on X): Settings ›
+// magpie's image recognition as an MCP server (JonahFu 报告): Settings ›
 // Models › Image recognition has an "MCP server" row with the gateway's
 // address of it, /mcp/magpie/vision, to copy into any agent, and says a
 // gateway key, and the image as a URL, go with it from another computer.

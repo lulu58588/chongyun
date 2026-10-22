@@ -129,7 +129,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       await page.waitForFunction(() => /didn't/.test(document.querySelector("#agentsUpdates .ag-updates-say")?.textContent || ""), null, { timeout: 4000 });
       assert.deepEqual(log.posts, ["codex", "gemini", "crush"]);
       assert.equal(log.most, 1, "two updates ran at once");
-      // each one updated with the versions it went from and to (37FlowAI on X)
+      // each one updated with the versions it went from and to (37FlowAI 报告)
       assert.equal(await bar.locator(".ag-updates-say").textContent(), "2 of 3 agents updated: Codex 0.155.1 → 0.159.0, Crush 0.3.0 → 0.4.0 · 1 didn't: Gemini CLI");
       assert.match(await bar.locator(".ag-updates-say").getAttribute("title"), /^Codex 0\.155\.1 → 0\.159\.0\nCrush 0\.3\.0 → 0\.4\.0\n.*EACCES/);
       assert.match(await page.locator("#status").textContent(), /EACCES/);

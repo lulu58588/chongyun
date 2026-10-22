@@ -13,7 +13,7 @@ import (
 )
 
 // The tray panel's Allowances tab leaves out the subscriptions set hidden
-// there (H20 on Discord), kept beside the Usage page's order: each is saved
+// there (H20 报告), kept beside the Usage page's order: each is saved
 // on its own, the other left as it was, and both outlast a save of the
 // Settings page.
 func TestUsageArrangePanelHidden(t *testing.T) {
@@ -52,7 +52,7 @@ func TestUsageArrangePanelHidden(t *testing.T) {
 }
 
 // The Usage page's Agents list leaves out the clients hidden there
-// (ikunbots on X: curl, Go-http-client, python-httpx beside the agents in
+// (ikunbots 报告: curl, Go-http-client, python-httpx beside the agents in
 // use): saved on its own, beside the panel's, and kept through a save of
 // the Settings page.
 func TestUsageArrangeAgentsHidden(t *testing.T) {

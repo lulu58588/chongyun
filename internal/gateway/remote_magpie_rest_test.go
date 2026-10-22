@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// bigsteven on Discord: another computer's magpie (LAN share) serves each
+// bigsteven 报告: another computer's magpie (LAN share) serves each
 // of its models from its own providers, and rests them itself. When one of
 // them was out of quota there, its 429 rested the whole remote magpie here
 // for the 3 hours it named, so a group whose member was another of its

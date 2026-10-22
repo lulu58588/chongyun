@@ -2,7 +2,7 @@
 // The sidebar's edge (app.js sideDrag): dragged, the sidebar is as wide as
 // the reader wants, between its narrowest and widest, kept for the next time
 // the window opens; dragged well past its narrowest it folds away, as a Mac
-// app's sidebar does (enzyme_dev on X).
+// app's sidebar does (enzyme_dev 报告).
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");

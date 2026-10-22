@@ -1,7 +1,7 @@
 // Caller keys use the same account list and edit controls as provider keys.
 let gatewayKeys = null, gatewayKeyDraft = null, gatewayKeysBusy = false;
 // gatewayOwnDraft is the value typed for a new key of the user's own (one
-// its clients already send, love1sbug on X); "" lets magpie make one
+// its clients already send, love1sbug 报告); "" lets magpie make one
 let gatewayOwnDraft = "";
 // gatewayAccountNames maps a key's stored account entry ("<provider>/<id>",
 // #905) to how it is shown; what no provider has now is shown as it is kept
@@ -277,7 +277,7 @@ function gatewayModelsBadge(k) {
     };
     for (const m of models || []) {
       // a routing group the key names is its with every member in it
-      // (Magic_zero on Discord); the groups come first
+      // (Magic_zero 报告); the groups come first
       if (m.group) {
         endBlock();
         if (!seen.has("group")) {

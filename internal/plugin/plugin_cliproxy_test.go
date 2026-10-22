@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// 𝕏 on Discord: the Grok plugin's sign-in said "grok login gave no link
+// 𝕏 报告: the Grok plugin's sign-in said "grok login gave no link
 // to open". The plugin runs `grok login`, and the host has magpie's proxy
 // only as MAGPIE_*_PROXY, so the CLI went out with none where x.ai is
 // reached only through one. A program a plugin starts has it, as the

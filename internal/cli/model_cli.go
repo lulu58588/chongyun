@@ -214,7 +214,7 @@ func modelEfforts(args []string) error {
 	given := len(p.Known(model)) == 0 // levels aren't known: those it has are the user's
 	if len(rest) == 1 && slices.Contains([]string{"off", "--off"}, rest[0]) {
 		// no reasoning field at all, for a vendor that turns one away
-		// though its list says the model reasons (yuexian7 on Discord)
+		// though its list says the model reasons (yuexian7 报告)
 		if err := provider.SetModelReasonless(id, true); err != nil {
 			return err
 		}
@@ -434,7 +434,7 @@ func parsePrice(rest []string) (catalog.Price, error) {
 // priceDetail is the parts of a price after the two perMillion gives: its
 // cache's, and what a request over each of its sizes costs.
 // A 1-hour cache write is shown only where the price has one — a Claude
-// model's, or one given — not one no vendor bills (PAMI on Discord).
+// model's, or one given — not one no vendor bills (PAMI 报告).
 func priceDetail(p catalog.Price) []string {
 	cache := "  · cache read " + money(p.CacheRead) + ", cache write " + money(p.CacheWrite)
 	if p.CacheWrite1h > 0 {

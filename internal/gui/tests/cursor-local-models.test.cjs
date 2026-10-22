@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Cursor Private Inference's own model picker lists magpie's /v1/models as
-// its key is shown them (mamba on Discord: connected through its
+// its key is shown them (mamba 报告: connected through its
 // environment variables, its models couldn't be picked in magpie): its
 // connected row picks which models that picker lists, several at once, as
 // Claude Desktop's does, beside the square copying its launch command. In

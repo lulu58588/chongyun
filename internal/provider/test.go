@@ -111,7 +111,7 @@ func tiny(q Provider, proto Protocol, model string) (url, body string) {
 // clineProbe is the smallest request asked as Cline's own clients ask:
 // streamed, with room for the model to think before it answers. Cline's
 // free models reason first, and asked for 16 tokens without a stream the
-// Cline API answered 500 "empty response content" (ARNO on Discord) while
+// Cline API answered 500 "empty response content" (ARNO 报告) while
 // an agent's request to the same model was answered. probe stops reading
 // at the model's first word, so the room is not spent.
 func clineProbe(body string) string {
@@ -163,7 +163,7 @@ func (p Provider) ModelTest() string {
 // sent a System One question of its own (TestModels): where the API is
 // System One's, TypeSafe's or a gateway's that serves it as it is
 // (Vercel's TypeSafe API, OpenRouter's), or Workers AI's, which DecideAsk
-// wraps it for (ARNO on Discord: cloudflare-jev's models couldn't be
+// wraps it for (ARNO 报告: cloudflare-jev's models couldn't be
 // tested from their right-click); not Vercel's evaluation models, which
 // name the model in headers of their own.
 func (p Provider) AsksDecideModels() bool {
@@ -263,7 +263,7 @@ func (p Provider) testOne(ctx context.Context, model string) Result {
 	}
 	if p.DecidesModel(model) && p.AsksDecideModels() {
 		// a decision model is sent the smallest System One question, a
-		// yes-or-no (ARNO on Discord: a System One model typed in by hand
+		// yes-or-no (ARNO 报告: a System One model typed in by hand
 		// couldn't be tested from its right-click)
 		t0 := time.Now()
 		r := Result{Protocol: "decide", Model: model}
@@ -398,7 +398,7 @@ const zenPublicNone = "no free model of OpenCode Zen is listed for this API: the
 // draws on an images API. On OpenCode's gateway a model models.dev names
 // no API for is served on chat alone, so no other endpoint is tried with
 // it; and with Zen's public key only a free model is tried, on an API it
-// is served on, or none (z'x on Discord: Test asked public for
+// is served on, or none (z'x 报告: Test asked public for
 // claude-fable-5 on Messages, gemini-3-flash on Gemini and big-pickle on
 // Responses, and every one failed, though big-pickle answers on chat).
 func (p Provider) testModel(q Provider, proto Protocol) string {
@@ -531,7 +531,7 @@ func probe(ctx context.Context, p Provider, proto Protocol, url string, body []b
 	}
 	if err == nil {
 		// Zhipu's Responses API refuses a key 200, in an envelope: the
-		// refusal it is, not a green check (@xanahopper on X)
+		// refusal it is, not a green check (@xanahopper 报告)
 		res = ZhipuEnveloped(req, res)
 	}
 	r.Millis = time.Since(start).Milliseconds()

@@ -759,7 +759,7 @@ func (s *Source) remote() bool { return s != nil && (s.Kind == "github" || s.Kin
 // fetch downloads the repository into a new folder and gives it back; one
 // not on GitHub is fetched with the user's git (fetchGit). A
 // repository codeload doesn't hand out without a token, a private one, is
-// asked of GitHub's API with the user's GitHub token (37FlowAI on X): the
+// asked of GitHub's API with the user's GitHub token (37FlowAI 报告): the
 // API redirects to codeload, and the token, sent to the API's host alone,
 // isn't carried over to it.
 func fetch(src Source) (string, error) {
@@ -972,7 +972,7 @@ func unhiddenFirst[T any](list []T, path func(T) string, same func(a, b T) bool)
 }
 
 // skillsCommand is the source a skills CLI command copied from a page
-// installs from (RockyShowlle on X): "npx skills add owner/repo --skill
+// installs from (RockyShowlle 报告): "npx skills add owner/repo --skill
 // x", run through npx, bunx, pnpm dlx and the like. Anything else is
 // given back as it is.
 func skillsCommand(input string) string {
@@ -1097,7 +1097,7 @@ func (in *installed) skip(name string, err error) {
 // installChange runs an install in a change of the library. Only when
 // nothing was added or had already does it fail, with the first reason a
 // skill was left out: one skill in the way of a set never stops the rest
-// (lc on Discord).
+// (lc 报告).
 func installChange(f func(l *Library, in *installed) error) (*Result, error) {
 	in := &installed{}
 	res, err := change(func(l *Library) error {
@@ -2000,7 +2000,7 @@ func RemoveFoundSkill(name string) (*Result, error) {
 
 // RemoveFoundSkills takes the skills named, of those the agents have of
 // their own, out of every agent in one change, each exactly as
-// RemoveFoundSkill takes one (wongxy on Discord: 批量删除). One that can't
+// RemoveFoundSkill takes one (wongxy 报告: 批量删除). One that can't
 // be taken out stays, and is said in Unremoved; the others go all the
 // same. Only when none went does the change fail, with the first reason.
 func RemoveFoundSkills(names []string) (*Result, error) {

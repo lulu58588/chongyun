@@ -39,7 +39,11 @@ func codexSignedIn(t *testing.T, spares ...string) {
 	}
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("me@example.com", "acct-1")), 0o600)
-	var saved []map[string]any
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	saved := []map[string]any{{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(),
+		"auth": auth("me@example.com", "acct-1")}}
 	for i, s := range spares {
 		saved = append(saved, map[string]any{"agent": "codex", "user": s, "on": true, "seen": time.Now(),
 			"auth": auth(s, "acct-"+string(rune('2'+i)))})
@@ -454,9 +458,17 @@ func TestGatewayKeyCompactOnCodexAPIKey(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Codex signs back in with an API key: no ChatGPT account behind the
-	// sign-in, and no codex provider in magpie at all
-	os.WriteFile(filepath.Join(os.Getenv("HOME"), ".codex", "auth.json"),
-		[]byte(`{"auth_mode":"apikey","OPENAI_API_KEY":"sk-test"}`), 0o600)
+	// sign-in, and no codex provider in chongyun at all. chongyun keeps
+	// what it signed the agent in to in its own logins.json, and never
+	// reads the agent's own auth.json to find out which account that is.
+	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"),
+		mustJSON([]map[string]any{
+			{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(),
+				"auth": map[string]any{"auth_mode": "apikey", "OPENAI_API_KEY": "sk-test"}},
+			{"agent": "codex", "user": "spare@example.com", "on": true, "seen": time.Now(),
+				"auth": map[string]any{"auth_mode": "chatgpt", "tokens": map[string]any{
+					"id_token": "h.e30.s", "access_token": "h.e30.s", "refresh_token": "r-acct-2", "account_id": "acct-2"}}},
+		}), 0o600)
 	provider.ForgetAccounts()
 	var asked []string
 	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -764,7 +776,7 @@ func older(a, b string) bool {
 // Codex's Ultrafast (service_tier "ultrafast", offered on a Pro plan's
 // models) reaches the ChatGPT backend when the pool of Codex's accounts
 // serves the turn, as it does on Codex's own sign-in, and Fast's
-// "priority" still does (yxinyu715 on X: two Pro accounts, Ultrafast
+// "priority" still does (yxinyu715 报告: two Pro accounts, Ultrafast
 // does nothing through magpie and works without it).
 func TestCodexPoolKeepsUltrafast(t *testing.T) {
 	codexSignedIn(t, "spare@example.com")

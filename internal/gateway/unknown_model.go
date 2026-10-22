@@ -8,7 +8,7 @@ import (
 )
 
 // unknownModel is what a request for a model magpie doesn't know is told
-// (MOMO on Discord: "Zen-Space-Bunny" got a 404 that said neither how a
+// (MOMO 报告: "Zen-Space-Bunny" got a 404 that said neither how a
 // model is named nor which one was meant): the ids nearest to it, the
 // ways a model can be named, then every id there is. what is "" for a
 // chat, or what the model was for (" to draw with").

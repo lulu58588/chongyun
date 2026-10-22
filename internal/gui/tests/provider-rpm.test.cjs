@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A provider's Requests per minute (coeo91 on Discord: OpenRouter's free
+// A provider's Requests per minute (coeo91 报告: OpenRouter's free
 // models take 20 a minute, which Concurrency can't keep to): its editor
 // has the field under Concurrency, empty for no limit; Save posts the
 // number typed, 0 when it is empty, and refuses one that isn't a whole

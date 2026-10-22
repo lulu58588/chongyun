@@ -12,7 +12,7 @@ import (
 )
 
 // Cloudflare's clef-flash says a confidence of its own calibration, far
-// below its probabilities (@VersunPan on X: 提醒我明天下午三点给 Dora 打电话
+// below its probabilities (@VersunPan 报告: 提醒我明天下午三点给 Dora 打电话
 // came out light at 0.2866, the same model in MLX-Serve 0.68, its top
 // choice right 15 of 15): the intent counts by its probabilities, on Jev's
 // scale, so it matches its rule; a spread near even still matches none.

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// A group switched off as a whole (PAMI on Discord) is kept as it is, but
+// A group switched off as a whole (PAMI 报告) is kept as it is, but
 // agents aren't offered it, it routes nowhere, a group that has it in it
 // skips it, and a save leaves it off; switched on again it is all back.
 func TestSwitchGroup(t *testing.T) {

@@ -214,7 +214,7 @@ func TestGitHubRateLimitSaid(t *testing.T) {
 	if c.Limited != nil || c.Error != "GitHub refused the GitHub token in Settings → Network and sharing: it may have expired or been revoked" {
 		t.Errorf("refused: %+v", c)
 	}
-	// one from the environment (till on Discord: a stale GITHUB_TOKEN)
+	// one from the environment (till 报告: a stale GITHUB_TOKEN)
 	// is dropped: the check is asked again without it, and isn't sent
 	// again
 	setGitHubToken(t, "")

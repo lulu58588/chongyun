@@ -255,10 +255,8 @@ func TestCapNeverSpendsACodexReset(t *testing.T) {
 // next one with room, and kept off it while it is at the cap, though it is
 // below where the switch list goes back (90%): lifted, it goes back.
 func TestCodexSwitchedAtCap(t *testing.T) {
-	home := signIn(t) // me@example.com, acct-1
-	rememberLogins(true)
-	codexSignIn(t, home, "new@example.com", "r-new") // signed in to now
-	rememberLogins(true)
+	_ = signIn(t) // me@example.com, acct-1
+	codexSignIn(t, "new@example.com", "r-new") // signed in to now
 	used := map[string]float64{"acct-new@example.com": 75, "acct-1": 20}
 	reset := time.Now().Add(3 * time.Hour).Unix()
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// foobra12 on Discord: "magpie会自动使用codex重置卡吗 我发现刚才好像不小心
+// foobra12 报告: "magpie会自动使用codex重置卡吗 我发现刚才好像不小心
 // 自动给我使用了一张". A reset magpie spent by itself was said only in the
 // gateway's log, so a reset gone from the card read the same whether magpie
 // used it, the user did, or it ran out. Each one magpie spends is kept, with
@@ -21,7 +21,6 @@ import (
 // it was about to run out, one by hand, and one as the week was used up.
 func TestResetUsesKept(t *testing.T) {
 	signIn(t)
-	rememberLogins(true) // the account kept, as the Usage page lists it
 	old, oldUntil := expiring.next, expiring.until
 	expiring.next, expiring.until = map[string]time.Time{}, map[string]time.Time{}
 	t.Cleanup(func() { expiring.next, expiring.until = old, oldUntil })

@@ -15,8 +15,6 @@ package provider
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -34,7 +32,6 @@ import (
 	"github.com/lulu58588/chongyun/internal/appdir"
 	"github.com/lulu58588/chongyun/internal/catalog"
 	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // DevinExecutable finds the devin CLI; a var so tests can fake it.
@@ -64,130 +61,6 @@ func DevinCredentialsPath() string {
 		base = filepath.Join(home, ".local", "share")
 	}
 	return filepath.Join(base, "devin", "credentials.toml")
-}
-
-var devinStatus = &cliIdentity{name: "devin", exe: func() string { return DevinExecutable() }, ask: askDevinStatus, mark: devinSignInMark}
-
-// devinSignInMark is the key credentials.toml keeps, hashed, as the mark
-// cliIdentity asks again on a change of; "" when it can't be read.
-func devinSignInMark() string {
-	b, err := readAccountFile(DevinCredentialsPath())
-	if errors.Is(err, os.ErrNotExist) {
-		return "none"
-	}
-	if err != nil {
-		return ""
-	}
-	sum := sha256.Sum256(b)
-	return hex.EncodeToString(sum[:8])
-}
-
-// devinIdentity is who Devin's CLI says is signed in; see cliIdentity.
-func devinIdentity() (user, plan string, ok bool) {
-	if settings.AccountDiscoveryOff() {
-		return "", "", false
-	}
-	return devinStatus.get()
-}
-
-// devinIdentityTimeout is how long `devin auth status` is given: it asks
-// Devin's servers, and on a real one took 3 to 11 seconds — the 10 seconds
-// it had dropped the account now and then.
-const devinIdentityTimeout = 30 * time.Second
-
-// askDevinStatus asks the CLI who is signed in. An ask that fails, runs out
-// of time (it asks Devin's servers) or prints something else couldn't tell,
-// and the account stays as it was (#154): only a CLI that says nobody is,
-// whose account's token was refused, or that keeps no credentials.toml, is
-// sure of nobody.
-func askDevinStatus() (user, plan string, ok bool, err error) {
-	return askDevinStatusAt(context.Background(), "")
-}
-
-// askDevinStatusAt asks the CLI who is signed in in home ("" for its own),
-// through the proxy ctx names, else the account's (devinCommand).
-func askDevinStatusAt(ctx context.Context, home string) (user, plan string, ok bool, err error) {
-	if settings.AccountDiscoveryOff() {
-		return "", "", false, nil
-	}
-	path := DevinExecutable()
-	if path == "" {
-		return "", "", false, nil
-	}
-	ctx, cancel := context.WithTimeout(ctx, devinIdentityTimeout)
-	defer cancel()
-	out, err := devinCommand(ctx, home, path, "auth", "status").Output()
-	user, plan, _ = parseDevinStatus(string(out))
-	switch {
-	case user != "":
-		return user, plan, true, nil
-	case devinSignedOut(string(out)), noDevinKey(home):
-		return "", "", false, nil
-	case err == nil:
-		err = errors.New("devin auth status printed no account")
-	}
-	return "", "", false, err
-}
-
-// devinSignedOut says the CLI's own report is one of nobody signed in: it
-// says so itself, or Devin's servers refused the account's token (a revoked
-// or expired one) and the CLI prints that inside a report that still begins
-// `Logged in`, with no account in it. A CLI that couldn't reach them says
-// `Connection failed` instead, and one that ran out of time says nothing:
-// neither is this, and both keep the account served (#154).
-func devinSignedOut(out string) bool {
-	for _, said := range []string{
-		"Not logged in",
-		"Authentication required",
-		"Invalid token",
-		"try logging out and logging in again",
-	} {
-		if strings.Contains(out, said) {
-			return true
-		}
-	}
-	return false
-}
-
-// noDevinKey says the account signed in in home keeps no credentials: the
-// CLI can only be sure of nobody, whatever it printed.
-func noDevinKey(home string) bool {
-	_, _, err := DevinAuthAt(home)
-	return err != nil
-}
-
-// parseDevinStatus reads `devin auth status`'s report:
-//
-//	Logged in (via Devin).
-//	  ...
-//	User:
-//	  Name:              <handle>
-//	  Email:             <email>
-//	Account:
-//	  Tier:              Devin Pro
-//	  Plan:              Pro
-func parseDevinStatus(out string) (user, plan string, ok bool) {
-	if !strings.Contains(out, "Logged in") {
-		return "", "", false
-	}
-	field := func(key string) string {
-		for _, l := range strings.Split(out, "\n") {
-			l = strings.TrimSpace(l)
-			if v, found := strings.CutPrefix(l, key+":"); found {
-				return strings.TrimSpace(v)
-			}
-		}
-		return ""
-	}
-	user = field("Email")
-	if user == "" {
-		user = field("Name")
-	}
-	plan = field("Tier")
-	if plan == "" {
-		plan = field("Plan")
-	}
-	return user, plan, true
 }
 
 // DevinFamily is one entry of `devin models list`: a name that follows the
@@ -483,7 +356,7 @@ func devinCached() []DevinFamily {
 
 // askDevinFamilies is the model list as the accounts signed in give it, the
 // one in use first: an account magpie signed in is asked in its own home,
-// not the CLI's, which may be signed out (蓝猫 on Discord: with only a
+// not the CLI's, which may be signed out (蓝猫 报告: with only a
 // magpie sign-in every request failed, as the family's id went to Devin
 // unturned into a variant, until `devin auth login`). The CLI's own is
 // asked last when it isn't among them, as it was before there were homes.
@@ -621,16 +494,17 @@ func tomlString(s string) string {
 func DevinAuth() (key, server string, err error) { return DevinAuthAt("") }
 
 // DevinAuthAt is DevinAuth for the account signed in in home, "" for the
-// CLI's own.
+// CLI's own. The CLI's own sign-in is not read: only the accounts chongyun
+// signed in itself, each in a home of its own.
 func DevinAuthAt(home string) (key, server string, err error) {
+	if home == "" {
+		return "", "", errors.New("the Devin CLI's own sign-in isn't read by chongyun")
+	}
 	path := devinCredentialsAt(home)
-	b, err := readAccountFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			if home != "" {
-				return "", "", errors.New("this Devin account's sign-in is gone; add it again in chongyun")
-			}
-			return "", "", errors.New("Devin isn't signed in; sign in from chongyun's Providers page or run `devin auth login`")
+			return "", "", errors.New("this Devin account's sign-in is gone; add it again in chongyun")
 		}
 		return "", "", err
 	}

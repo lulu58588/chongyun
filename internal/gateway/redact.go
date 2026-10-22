@@ -188,7 +188,7 @@ func redactionWanted() bool {
 // user set to go unmasked keeps it as it is). A model's web_search writes
 // its query from a request already masked, but an agent's call to the
 // search MCP carries it as the agent's model wrote it, values put back
-// (lc on Discord). It fails closed as redacted does.
+// (lc 报告). It fails closed as redacted does.
 func maskedQuery(query string, p *provider.Provider) (string, error) {
 	if p != nil && p.SkipsRedaction() {
 		return query, nil

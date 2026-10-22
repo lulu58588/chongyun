@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// netube on Discord: a Codex Plus account's turn showed a 922K context
+// netube 报告: a Codex Plus account's turn showed a 922K context
 // window on Routing, models.dev's input limit for gpt-5.5 (OpenAI's API's),
 // where Codex holds the conversation to the 272K its ChatGPT list gives.
 // A turn Codex sends through magpie's Codex backend takes Codex's window;

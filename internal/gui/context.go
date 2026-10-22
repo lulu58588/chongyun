@@ -182,7 +182,7 @@ func withTools(p *gateway.Prompt) bool { return partTokens(p, gateway.PartTools)
 // classifier ("You are a security monitor…", a transcript and no tools),
 // its title and its quota check — not a turn of the conversation, whose
 // prompt can't stand for it: a classifier's 40K after a 100K turn is no
-// compaction (Player on Discord: 45 in a session that never compacted).
+// compaction (Player 报告: 45 in a session that never compacted).
 func toolSessions(routes []gateway.Route) map[string]bool {
 	out := map[string]bool{}
 	for _, r := range routes {
@@ -502,7 +502,7 @@ func contextRoutesAPI(mux *http.ServeMux) {
 		}
 		writeJSON(rw, contextOf(contextRoutes(r, days), days))
 	})
-	// the text of a part of a request's prompt (masaka on Discord): the
+	// the text of a part of a request's prompt (masaka 报告): the
 	// part's items, and one item's text when item is given. From the
 	// gateway this GUI runs, which keeps the last requests' masked bodies
 	// in memory only; 404 when the request's is no longer kept.

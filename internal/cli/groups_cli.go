@@ -824,7 +824,7 @@ func removedOnly(ref string) (string, bool) {
 	return "", false
 }
 
-// removeGroups removes the groups refs name, all or none (lc on Discord).
+// removeGroups removes the groups refs name, all or none (lc 报告).
 func removeGroups(refs []string) ([]provider.Group, error) {
 	if len(refs) == 1 {
 		g, err := removeGroup(refs[0])
@@ -1171,7 +1171,7 @@ func showGroup(g provider.Group) error {
 
 // whyNotServed is why a group's member isn't served: most often a model its
 // provider's list has but doesn't expose, which `chongyun provider models
-// <id> +<model>` puts right (MOMO on Discord: opencode-go/deepseek-flash).
+// <id> +<model>` puts right (MOMO 报告: opencode-go/deepseek-flash).
 func whyNotServed(member string) string {
 	pid, model, ok := strings.Cut(member, "/")
 	if !ok || provider.IsGroupRef(member) {

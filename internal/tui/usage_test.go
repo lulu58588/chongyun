@@ -124,7 +124,7 @@ func TestUnlimitedQuotaCell(t *testing.T) {
 
 // The Usage page shows, under the gateway's calls, those the agents made
 // on their own, read from their session files, as the app's Usage page
-// counts them (Kumo31 on Discord: Codex used outside magpie wasn't in the
+// counts them (Kumo31 报告: Codex used outside magpie wasn't in the
 // TUI).
 func TestUsagePageShowsCallsNotThroughMagpie(t *testing.T) {
 	home(t)

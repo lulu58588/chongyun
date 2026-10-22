@@ -15,7 +15,7 @@ import (
 // leaves running, which built its model list when it started: after magpie
 // changes Codex's list, a new codex session still shows Codex's own models
 // until that app-server is restarted, while the desktop app, restarted,
-// shows magpie's (TJHHHH, luci on Discord). Restarting the app and the open
+// shows magpie's (TJHHHH, luci 报告). Restarting the app and the open
 // sessions, as the advice said, leaves it; the advice after a change names
 // it and the command that restarts it, here and in WSL, where the Agents
 // row can't tell a stale copy.

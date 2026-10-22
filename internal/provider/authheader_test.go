@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
-// What Aloha's service answered on Discord when sent both key headers.
+// What Aloha's service answered 报告 when sent both key headers.
 const bothRefusedZH = `{"error":{"type":"authentication_error","message":"鉴权 header， x-api-key 和 Authorization 不可以同时存在"}}`
 
 // oneHeaderOnly is a vendor that turns away a request carrying the key in

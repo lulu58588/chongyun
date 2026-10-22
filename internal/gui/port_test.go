@@ -40,7 +40,7 @@ func answers(p int) bool {
 	return res.StatusCode == http.StatusOK
 }
 
-// Settings' gateway port (Magic_zero on Discord) moves the gateway this
+// Settings' gateway port (Magic_zero 报告) moves the gateway this
 // magpie serves: it answers on the new port and no longer on the old one,
 // and magpie's URL, the CLI's and the agents', follows. A port another
 // program has is refused with its reason, the gateway left where it was;

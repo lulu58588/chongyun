@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Fate on Discord: taking out what magpie wrote into an agent's config
+// Fate 报告: taking out what magpie wrote into an agent's config
 // wasn't obvious — picking Default looked like it might, and isn't it (it is
 // the agent as installed). An agent magpie is in (wired) has "Disconnect from
 // magpie" in its row's menu and in its model picker, beside Default, each

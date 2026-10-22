@@ -1,5 +1,5 @@
 // Package pluginrt runs magpie's built-in plugins: the parts of magpie not
-// everyone needs (Lxxyx on X: "功能太多了"), each one a package under
+// everyone needs (Lxxyx 报告: "功能太多了"), each one a package under
 // plugins/ that registers a Manifest. The runtime applies the ones the user
 // has on (plugins.yml, see config.go) in the order their Requires and
 // Provides make, and disposes of what each registered, in reverse, when it

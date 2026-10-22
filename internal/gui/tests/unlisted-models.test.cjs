@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A provider set to "Only through routing groups" keeps its models out of
-// the agents' pickers; one in no group was simply gone (悠悠哥 on Discord:
+// the agents' pickers; one in no group was simply gone (悠悠哥 报告:
 // hy4 vanished, it looked like a bug). Now the picker's filter, finding
 // such a model, says why it isn't offered: in a group, that group is, and
 // "Pick Mine" picks it; in none, nothing can use it, and "Make a routing

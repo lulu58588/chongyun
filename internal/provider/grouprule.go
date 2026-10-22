@@ -72,7 +72,7 @@ type Rule struct {
 	Time *TimeWindow `json:"time,omitempty"`
 	// Folders: the request's working folder, as the agent states it in
 	// the request, is one of these or inside one — a project, or every
-	// project under a folder (Cario0x on X). "~/work", "/Users/me/x",
+	// project under a folder (Cario0x 报告). "~/work", "/Users/me/x",
 	// "C:\work"; WSL's /mnt/c/work is C:\work. When the agent doesn't
 	// say its folder, it doesn't match.
 	Folders []string `json:"folders,omitempty"`
@@ -83,7 +83,7 @@ type Rule struct {
 	// from there (#1606), never for one that may come from elsewhere.
 	ExceptFolders []string `json:"exceptFolders,omitempty"`
 	// Pause: rather than sending to Use first, the rule leaves Use out of
-	// the group while it holds (John on Discord: a model paused in a
+	// the group while it holds (John 报告: a model paused in a
 	// vendor's peak hours). Only Time, Agents, Folders and ExceptFolders
 	// can be its conditions: the request's clock, its agent and the folder
 	// it says, never what it asks for — a pause keeps the model out of the

@@ -45,7 +45,7 @@ var desktopApps = map[string]desktopApp{
 	// DeepSeek Harness Desktop (0.2.0-rc.2's DeepSeek Harness.app,
 	// com.deepseek.dsh) reads ~/.dsh as the CLI does — its own profile,
 	// profiles/desktop, beside the CLI's — and needs no CLI: its terminal
-	// command is optional (star on Discord: 未找到 CLI with the desktop app
+	// command is optional (star 报告: 未找到 CLI with the desktop app
 	// in use). On Windows its installer (electron-builder's per-user NSIS,
 	// productName DeepSeek Harness) puts it under %LOCALAPPDATA%\Programs
 	// by default; the folder can be changed ("Choose an empty folder or the

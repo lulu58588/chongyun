@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// cdredfox on X: in a Smart group of WorkBuddy accounts, the one whose
+// cdredfox 报告: in a Smart group of WorkBuddy accounts, the one whose
 // credits left run out first goes first, since what it has left is lost
 // then; the Credits window has no reset, so before they all ranked alike
 // and kept their order. Its share used still decides first: one all but

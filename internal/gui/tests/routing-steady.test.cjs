@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Requests coming in never move the Routing page (Jerell.OvO on Discord
+// Requests coming in never move the Routing page (Jerell.OvO 报告
 // #general: as the request log refreshed, the page kept scrolling up, so
 // the routing groups further down could not be read or edited). With the
 // view scrolled down to the groups and one open in its editor, a name being

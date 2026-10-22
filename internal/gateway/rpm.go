@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// A provider's MaxRPM (coeo91 on Discord: OpenRouter's free models take 20
+// A provider's MaxRPM (coeo91 报告: OpenRouter's free models take 20
 // requests a minute, which a limit at once of 1 doesn't keep to) is how
 // many requests each of its keys or accounts — a candidate's who(), as for
 // MaxConcurrency — sends the vendor in any 60 seconds. Every request that

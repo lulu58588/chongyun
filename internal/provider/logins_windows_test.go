@@ -14,7 +14,7 @@ import (
 // Another magpie writing logins.json (a temp file renamed over it: the one
 // an update is replacing, a second one started) has Windows say, for a
 // moment, that it isn't there: read so, it was no accounts, and the write
-// that followed left every account out (Packing1 on Discord, Windows 11:
+// that followed left every account out (Packing1 报告, Windows 11:
 // 「整行都没了，供应商里面antigravity直接消失了」 after an update).
 func TestLoginsKeptWhileAnotherMagpieWrites(t *testing.T) {
 	googleSandbox(t, &fakeGoogle{})

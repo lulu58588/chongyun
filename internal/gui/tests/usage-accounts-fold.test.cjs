@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A subscription with many accounts (Linx on X: twenty-odd signed in to one
+// A subscription with many accounts (Linx 报告: twenty-odd signed in to one
 // plugin made the Usage page a tower) shows the first five on its card, any
 // in full and the one with the check-in switch, the rest behind "Show N more
 // accounts" at the card's foot. The button opens them in place, the page not

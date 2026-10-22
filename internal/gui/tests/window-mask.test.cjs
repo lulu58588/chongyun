@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Hide accounts hides them in the whole window, not only on Routing and
-// Usage (Zhenbao TONG on Discord: with it on, the tray panel hid the
+// Usage (Zhenbao TONG 报告: with it on, the tray panel hid the
 // accounts while the window's Providers page showed every one): the
 // Providers list, a provider's editor with its accounts, and a menu or
 // dialog that sits outside any page. Turned off, each is back as it was.

@@ -11,7 +11,7 @@ import (
 // Droid and omp read too, instead of a copy in the library: the agents get
 // what the file says, a change made in it reaches them, the page's edits
 // are written to it, and removing the set lets go of the file without
-// touching it (新v学员 on Discord).
+// touching it (新v学员 报告).
 func TestLinkedSet(t *testing.T) {
 	h := sandbox(t)
 	cx := filepath.Join(h, ".codex/AGENTS.md")

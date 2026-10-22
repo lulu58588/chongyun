@@ -4,7 +4,7 @@
 // window started again — a dashed even burn from each window's start to its
 // reset, and an upright line at now. One pick in the allowances' head, the
 // app's own menu, turns every card at once: "2 days" / "Cycle", or "Off"
-// (ARNO on Discord: the curves made the cards cluttered), which draws no
+// (ARNO 报告: the curves made the cards cluttered), which draws no
 // curve on any card, the tray's thin line included; each account can pick
 // an earlier recorded cycle in Cycle mode. The global pick is remembered
 // across a reload, and no click moves the page. Several accounts on a card

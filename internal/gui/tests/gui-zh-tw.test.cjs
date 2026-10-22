@@ -84,7 +84,7 @@ for (const [name, engine] of [["webkit", webkit], ["chromium", chromium]]) {
         await page.close();
       }
       // Settings → Language is one menu button showing the language picked
-      // (1ooogle on X): it fits its row on a wide and a narrow window, and
+      // (1ooogle 报告): it fits its row on a wide and a narrow window, and
       // its menu lists all six, none cut short
       for (const width of [1000, 440]) {
         const page = await (await browser.newContext({ locale: "zh-TW", viewport: { width, height: 760 } })).newPage();

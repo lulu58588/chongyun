@@ -41,7 +41,7 @@ func allocated(f func()) uint64 {
 
 // An agent's whole conversation, sent with its length, is read into one
 // slice of its own size: io.ReadAll read it into chunks and copied them
-// into a slice of their sum, twice the body on every turn (yg6888 on X:
+// into a slice of their sum, twice the body on every turn (yg6888 报告:
 // ~1 GB).
 func TestRequestBodyReadOnceAtItsLength(t *testing.T) {
 	sent := bytes.Repeat([]byte("0123456789abcdef"), 50_000) // 800 KB

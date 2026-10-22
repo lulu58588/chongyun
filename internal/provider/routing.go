@@ -312,7 +312,7 @@ func (a Allowance) Count(model string, now time.Time) (amount, of float64, unit 
 // whose credits left run out before it renews (Limit.RunsOut) renews
 // then, as what is left is lost then all the same: WorkBuddy's accounts,
 // whose credits have no reset, go by the package that ends first
-// (cdredfox on X).
+// (cdredfox 报告).
 func (a Allowance) Renewal(model string, now time.Time) []time.Time {
 	model = strings.ToLower(model)
 	restart := a.Restarts(now)
@@ -365,7 +365,7 @@ func (a Allowance) Full(model string, share float64, now time.Time) time.Time {
 // Models pool) — or, none known full, no window of the whole account
 // counts it, only pools. Then it is that model which is out, not the
 // account: Cursor's Other Models used up leaves Auto and Composer in
-// theirs (Xiaopodev on X).
+// theirs (Xiaopodev 报告).
 func (a Allowance) Pooled(model string, share float64, now time.Time) bool {
 	model = strings.ToLower(model)
 	full, pooled, whole := false, false, false

@@ -11,7 +11,7 @@ import (
 )
 
 // The Ollama API's model routes, for a client that takes a custom endpoint
-// only as an Ollama server (Visual Studio's Copilot BYOK, wani on Discord;
+// only as an Ollama server (Visual Studio's Copilot BYOK, wani 报告;
 // VS Code's Copilot "Ollama" provider): the user enters the gateway's own
 // address (http://127.0.0.1:3425) as the Ollama endpoint. VS Code's
 // Copilot (vscode-copilot-chat, ollamaProvider.ts) asks /api/version and

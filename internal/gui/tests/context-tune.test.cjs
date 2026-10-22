@@ -342,7 +342,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
   });
 }
 
-// An agent whose files time its compactions (HirotaNagai on X, a Codex
+// An agent whose files time its compactions (HirotaNagai 报告, a Codex
 // user: a window that compacts more often keeps you waiting more): the
 // advice is named for tokens and the wait, the why says how long a
 // compaction took, the wait at the advice against the window now, and the
@@ -445,7 +445,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
   });
 }
 
-// A window the reader picked past the leanest band (yapechan on Discord:
+// A window the reader picked past the leanest band (yapechan 报告:
 // "Other window…" to a larger one). With compactions timed, tune's advice
 // never waits longer than the window now, so the picked window comes back
 // as its own advice; the row said "Already the leanest" at +52% tokens.

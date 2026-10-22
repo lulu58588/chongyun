@@ -14,7 +14,7 @@ import (
 // since 644ad1ed7, /v1/models' native endpoints), and each look at a
 // model's APIs copied and scanned the whole saved list: 2,500 models'
 // /v1/models took 3.4s from v0.1.1234, where v0.1.1232 took 1.2s (K.Liu
-// on Discord). Four times the models is four times the work, not
+// 报告). Four times the models is four times the work, not
 // sixteen.
 func TestListedAPIsCostGrowsWithTheList(t *testing.T) {
 	oneHome(t)

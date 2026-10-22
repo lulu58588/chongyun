@@ -195,7 +195,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         await page.close();
       });
 
-      // 蓝猫 on Discord: Claude Desktop's chip for a remote server was grey,
+      // 蓝猫 报告: Claude Desktop's chip for a remote server was grey,
       // and clicking it did nothing — no tooltip on a disabled button in
       // WebKit, nothing on a click. Now the click says why, and gives
       // nothing to the agent.

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// miaopasi on Discord: the Codex row stayed "已接入 · 重开 Codex 后生效"
+// miaopasi 报告: the Codex row stayed "已接入 · 重开 Codex 后生效"
 // after Codex was restarted. On macOS closing the Codex app's window keeps
 // the app running, and an editor's Codex or the CLI's daemon runs on
 // through a reopened app. Opened, the row says which copy is left on the
@@ -139,7 +139,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
   }
 }
 
-// luci on Discord (Codex 0.162): every new codex showed Codex's own models
+// luci 报告 (Codex 0.162): every new codex showed Codex's own models
 // after Codex was wired in, since the daemon they attach to had the list
 // from before. magpie restarts it itself while no codex session is on it;
 // with one on, the daemon's line has a Restart, which restarts it, and

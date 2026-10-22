@@ -10,7 +10,7 @@ import (
 
 // A conversation stays with the key or account that answered it across a
 // restart of magpie, an update's included, while the vendor still has it
-// cached there (vincentzhang on Discord: restarted, the session went to
+// cached there (vincentzhang 报告: restarted, the session went to
 // the first account; updated and restarted, back to the second, and the
 // prompt cache was read by neither).
 func TestAffinitySurvivesRestart(t *testing.T) {

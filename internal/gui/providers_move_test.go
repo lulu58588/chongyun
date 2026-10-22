@@ -49,7 +49,7 @@ func TestMoveOutlivesRequest(t *testing.T) {
 
 // Try again in the editor moves with the models as the editor shows them
 // picked: the failed move said to untick one the plugin doesn't serve,
-// and the untick wasn't saved (noting_ever on X: deep-model unticked, and
+// and the untick wasn't saved (noting_ever 报告: deep-model unticked, and
 // WorkBuddy AI's move failed on deep-model all the same). A move that
 // says no models leaves the picks as they are.
 func TestMoveTakesEditorPicks(t *testing.T) {

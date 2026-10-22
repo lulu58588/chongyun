@@ -178,7 +178,7 @@ func TestDecisionGroupClassifierFailsOver(t *testing.T) {
 	}
 }
 
-// One decision provider of several keys (fflake33 on Discord: TypeSafe Jev,
+// One decision provider of several keys (fflake33 报告: TypeSafe Jev,
 // Smart, a key out of quota) is asked over its keys in its routing's
 // order, at /v1/systemone and as a group's classifier, as a decision
 // group's members are: the key refused rests, the next answers, and the

@@ -15,7 +15,7 @@ import (
 )
 
 // pencilUser is ~/.pencil/models.json as Pencil writes a custom provider
-// (徐小小 on Discord), with a key and a top-level key besides.
+// (徐小小 报告), with a key and a top-level key besides.
 const pencilUser = `{
   "providers": {
     "XXXXX": {

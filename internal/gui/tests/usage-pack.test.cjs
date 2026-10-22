@@ -10,7 +10,7 @@
 // usage-arrange's), no card overlaps another, and a card opened to its
 // accounts in full pushes the one under it down rather than over it.
 // The last card in each column reaches down to where the tallest ends
-// (ikunbots on X, "卡片可以对齐吗"): Claude Code, Codex and Antigravity side
+// (ikunbots 报告, "卡片可以对齐吗"): Claude Code, Codex and Antigravity side
 // by side end on one line, and DeepSeek under Antigravity ends with Codex.
 // Chromium and WebKit, English, Chinese, Japanese and German; no backend,
 // the API is faked here.
@@ -45,7 +45,7 @@ function fixtures(now) {
   const history = [{ provider: "codex", user: "me@example.com", lines: [{ name: "7 days", points: week }] }];
   return { quotas, history };
 }
-// ikunbots on X: Claude Code, Codex and Antigravity side by side in one
+// ikunbots 报告: Claude Code, Codex and Antigravity side by side in one
 // row, each as tall as what it holds, their bottoms ragged
 const ikun = (now) => {
   const w = (name, used, h) => ({ name, used, resetsAt: iso(now + h * H) });
@@ -105,7 +105,7 @@ function sound(cards, what) {
   const end = Math.max(...cards.map((c) => c.bottom));
   for (const c of cards) {
     // as tall as what is in it, its padding and border, but for the last in
-    // its column, which ends where the tallest column does (ikunbots on X)
+    // its column, which ends where the tallest column does (ikunbots 报告)
     const last = !cards.some((d) => d !== c && d.x === c.x && d.y > c.y);
     assert.ok(c.inner <= c.bottom, `${what}: ${c.key} holds what is in it: ${JSON.stringify(c)}`);
     if (last) assert.ok(Math.abs(c.bottom - end) < 0.5, `${what}: ${c.key}, last in its column, ends with the others: ${JSON.stringify(cards)}`);

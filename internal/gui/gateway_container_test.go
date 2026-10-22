@@ -87,7 +87,7 @@ func TestGatewayHeldByAContainer(t *testing.T) {
 	}
 
 	// a magpie of this computer's on the port: its port is set there
-	local, localEnded := start("magpie")
+	local, localEnded := start("chongyun")
 	if _, err := setPort(freePort(t)); err == nil || settings.Load().Port != from {
 		t.Fatalf("moved past a chongyun of this computer's: %v", err)
 	}

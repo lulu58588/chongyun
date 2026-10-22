@@ -10,7 +10,7 @@ import (
 
 // A subscription refused for a pool of its allowance that counts some
 // models only rests for that model alone: the account still takes the
-// models the pool doesn't count (Xiaopodev on X: Cursor's Other Models
+// models the pool doesn't count (Xiaopodev 报告: Cursor's Other Models
 // used up kept Auto off the account too). One of the whole account's
 // windows used up rests the account.
 func TestPoolRefusalRestsTheModelOnly(t *testing.T) {

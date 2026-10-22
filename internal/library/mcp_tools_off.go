@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/edit"
 )
 
-// A server's tools can be turned off one by one (nf1qaz2w on Discord): the
+// A server's tools can be turned off one by one (nf1qaz2w 报告): the
 // library keeps the names turned off in the server's DisabledTools, and
 // writes them into each agent given the server in that agent's own way, for
 // the agents that have one. Each writes only what magpie adds, recorded in

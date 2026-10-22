@@ -9,7 +9,7 @@
 // word goes. A search while it waits shows the same. When the ask fails,
 // the section says so with Try again, which asks again. magpie answering
 // with an error beside the list (GitHub unreachable from the reader's
-// desktop: till on Discord, where the section just wasn't there) is said
+// desktop: till 报告, where the section just wasn't there) is said
 // too: with no list, in the section's place with why and Try again, which
 // has magpie ask GitHub at once (?again=1); with the cards it could give,
 // a line over them saying how many more couldn't be read, and why. English, Chinese,

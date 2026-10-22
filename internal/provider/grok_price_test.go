@@ -62,7 +62,7 @@ func TestGrokEffortListPrice(t *testing.T) {
 // mode (https://cursor.com/docs/models: Grok 4.7 (Fast) $4 / $1 cache
 // read / $12, 3x standard past 256k), whether the built-in or the plugin
 // serves them, so a routing group of grok-4.7-fast counts its cost
-// (TradingLife on Discord). A "-fast" Grok id elsewhere is a model of its
+// (TradingLife 报告). A "-fast" Grok id elsewhere is a model of its
 // own, and stays as the catalogs price it.
 func TestCursorGrokFastPrice(t *testing.T) {
 	home := t.TempDir()
@@ -211,7 +211,7 @@ func TestFactoryFastPrice(t *testing.T) {
 // "a fast variant with twice the output speed at twice the price"),
 // whether the built-in or the Grok plugin serves it: a routing group of
 // Cursor's and Grok's Grok 4.7 fast counted no cost for Grok's calls
-// (TradingLife on Discord). Elsewhere the id stays unpriced.
+// (TradingLife 报告). Elsewhere the id stays unpriced.
 func TestGrokBuildFastPrice(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)

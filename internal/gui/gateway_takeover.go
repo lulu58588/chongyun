@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/proc"
 )
 
-// The Gateway page's button (leslie_luo on Discord): with an older magpie
+// The Gateway page's button (leslie_luo 报告): with an older magpie
 // keeping the gateway's port, it quits that one and this one serves the
 // gateway at once; otherwise it restarts the gateway this one serves, or
 // starts it when none does. The page said only "quit that chongyun", and the

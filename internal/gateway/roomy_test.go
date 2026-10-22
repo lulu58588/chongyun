@@ -25,7 +25,7 @@ func roomyMember(t *testing.T, id string, window int, s *scripted) {
 }
 
 // A group's member whose model is known to take less than the request
-// isn't asked it (dgqyushen on Discord: OpenCode Zen's free DeepSeek V4.1
+// isn't asked it (dgqyushen 报告: OpenCode Zen's free DeepSeek V4.1
 // Flash, 200K, first, and a 1M subscription of it second). Asked, the
 // free one only refuses it, and a refusal that doesn't say why, for a
 // request not far enough past the window to be taken as too long for it
@@ -68,7 +68,7 @@ func TestMemberTooSmallIsNotAsked(t *testing.T) {
 
 // A member left out as too small is the last resort: asked after all
 // once every member with room is out of its allowance, for the agent to
-// be told to compact (Kai on Discord: both Claude accounts spent until
+// be told to compact (Kai 报告: both Claude accounts spent until
 // the next day, the Claude provider's Fallback a Codex model of 272K),
 // but not for a failure of another kind, whose error the agent is told
 // as before.

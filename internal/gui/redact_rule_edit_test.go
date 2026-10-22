@@ -12,7 +12,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// A masking rule is changed in place (nf1qaz2w on Discord: rules could only
+// A masking rule is changed in place (nf1qaz2w 报告: rules could only
 // be removed): its name, prefix or pattern change where it stands, and what
 // the gateway masks changes with it. A pattern that doesn't compile, a rule
 // left with nothing to match, one already listed and a rule that is no

@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// magpie's web search as an MCP server (Kayphoon on Discord): Settings ›
+// magpie's web search as an MCP server (Kayphoon 报告): Settings ›
 // Models › Web search has an "MCP server" row with the gateway's address of
 // it, /mcp/magpie/web-search, to copy into Cursor, Claude Desktop or any
 // other agent, and says a gateway key goes with it from another computer.

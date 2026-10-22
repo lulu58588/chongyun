@@ -12,20 +12,22 @@ import (
 	"github.com/lulu58588/chongyun/internal/edit"
 )
 
+// claudeProxySignIn keeps a Claude account in logins.json with a sign-in
+// of its own: two accounts holding the same sign-in are one account's
+// sign-in under two names, which chongyun refuses to save.
+func claudeProxySignIn(t *testing.T, email, plan string, expiry time.Time) savedLogin {
+	t.Helper()
+	return claudeOwnLogin(t, claudeTestSignIn{email: email, plan: plan,
+		access: "sk-ant-oat01-" + email, refresh: "sk-ant-ort01-" + email, expiry: expiry})
+}
+
 // claudeTwoAccounts signs Claude Code in to a@example.com, then to
 // b@example.com, as magpie sees both, and answers its settings.json.
 func claudeTwoAccounts(t *testing.T) string {
 	t.Helper()
 	home := claudeHome(t)
-	cred := claudeSignIn(t, home, time.Now().Add(time.Hour))
-	profile := filepath.Join(home, ".claude.json")
-	writeFile(t, profile, map[string]any{"oauthAccount": map[string]any{"emailAddress": "a@example.com", "accountUuid": "u-a"}})
-	rememberLogins(true)
-	writeFile(t, cred, map[string]any{"claudeAiOauth": map[string]any{"accessToken": "sk-ant-oat01-b", "refreshToken": "sk-ant-ort01-b",
-		"expiresAt": time.Now().Add(time.Hour).UnixMilli(), "subscriptionType": "pro"}})
-	writeFile(t, profile, map[string]any{"oauthAccount": map[string]any{"emailAddress": "b@example.com", "accountUuid": "u-b"}})
-	forgetClaudeCredential()
-	rememberLogins(true)
+	claudeProxySignIn(t, "a@example.com", "max", time.Now().Add(time.Hour))
+	claudeProxySignIn(t, "b@example.com", "pro", time.Now().Add(time.Hour))
 	old := ClaudeHandedOver
 	t.Cleanup(func() { ClaudeHandedOver = old })
 	ClaudeHandedOver = func(string) {}

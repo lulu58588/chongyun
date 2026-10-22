@@ -15,7 +15,7 @@ import (
 // setTrayTip puts the tooltip on the tray's StatusNotifierItem. Wails
 // (v3.0.0-beta.24) leaves SetTooltip on Linux a no-op ("TBD"): the item's
 // ToolTip stays the "magpie" it was made with and no NewToolTip is sent, so
-// a bar never had the quotas to show (atie on Discord: Omarchy's bar showed
+// a bar never had the quotas to show (atie 报告: Omarchy's bar showed
 // none on hover with 菜单栏显示额度 on). This sets the property Wails
 // exported, through its own prop.Properties (which keeps the (sa(iiay)ss)
 // type), and sends NewToolTip from the same connection: waybar reads ToolTip

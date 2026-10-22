@@ -19,7 +19,6 @@ import (
 // reading has already is answered here all the same.
 func TestCodexUsedUpKnownAsksTheVendorNothing(t *testing.T) {
 	signIn(t)
-	rememberLogins(true)
 	body := heldUsage(t)
 	var hits atomic.Int64
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -159,7 +159,7 @@ func TestGitPluginCheckCarriesGitHubToken(t *testing.T) {
 		t.Errorf("Settings' token refused: %+v", c)
 	}
 	setToken("")
-	// one from the environment (till on Discord: a stale GITHUB_TOKEN) is
+	// one from the environment (till 报告: a stale GITHUB_TOKEN) is
 	// dropped, and the check asked again without it
 	t.Setenv("GH_TOKEN", "bad-token")
 	mu.Lock()

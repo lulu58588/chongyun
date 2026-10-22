@@ -53,9 +53,15 @@ func effortAccounts(t *testing.T, freeLevels []string, plusOut *bool) func() []s
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("free@example.com", "acct-free", "free")), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
+		{"agent": "codex", "user": "free@example.com", "plan": "free", "active": true, "seen": time.Now(), "auth": auth("free@example.com", "acct-free", "free")},
 		{"agent": "codex", "user": "plus@example.com", "plan": "plus", "on": true, "seen": time.Now(), "auth": auth("plus@example.com", "acct-plus", "plus")},
 	}), 0o600)
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
 
 	all := []string{"none", "low", "medium", "high", "xhigh", "max"}
 	levels := func(ls []string) string {

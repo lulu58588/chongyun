@@ -11,7 +11,7 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-// ylorn on Discord: a Linux bar's tray icon was the app's icon, a bird on
+// ylorn 报告: a Linux bar's tray icon was the app's icon, a bird on
 // an opaque white tile, which a bar tinting its icons by their alpha
 // turned into a solid block. It is the bird's silhouette alone, in one
 // colour on transparency, light unless the desktop prefers light; the Mac

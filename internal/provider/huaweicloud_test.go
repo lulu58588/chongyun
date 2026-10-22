@@ -34,9 +34,4 @@ func TestHuaweiCloudTokenPlan(t *testing.T) {
 	if got := p.planModels([]catalog.Model{{ID: "glm-5.1"}}); len(got) != 1 {
 		t.Fatalf("listed: %+v", got)
 	}
-	// an entry imported from another app at the plan's endpoints is the preset
-	im, _ := imported("Huawei", "k", endpoints{anthropic: "https://api.modelarts-maas.com/plan/anthropic"}, nil)
-	if im.Preset != "huaweicloud" || im.Icon != "huaweicloud-color" {
-		t.Fatalf("imported: %+v", im)
-	}
 }

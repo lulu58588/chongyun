@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Tom on X asked for a way to add a model by hand and for more built-in
+// Tom 报告 asked for a way to add a model by hand and for more built-in
 // icons. A model's list has an Add model button beside its id box, off
 // until an id is typed; a click (or Enter) picks the typed model and a Save
 // sends it. Built-in icons offers the vendors' icons no preset uses as well,

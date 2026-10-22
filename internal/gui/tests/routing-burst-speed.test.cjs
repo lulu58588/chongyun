@@ -18,7 +18,7 @@ const key = { id: "antigravity", provider: "antigravity", name: "Antigravity", k
 // newest first: the report's burst, a 500 ms burst, then ordinary replies
 // (100 tok/s and 50 tok/s; a few rows, so the stage above holds still)
 // and last, a reply whose first words came at 5.1 s and the rest held back
-// and sent at once (John on Discord: Kimi Code, 1,367 tok/s): its flow says
+// and sent at once (John 报告: Kimi Code, 1,367 tok/s): its flow says
 // its content took 2 ms to come
 // Then John's rows after that fix (Kimi Code again: 2,237 and 2,012 tok/s),
 // a burst let go over 236 ms and 196 ms: 550 tokens, 22 of them reasoning,

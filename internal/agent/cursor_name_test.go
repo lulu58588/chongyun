@@ -2,7 +2,7 @@ package agent
 
 import "testing"
 
-// @G_Z_Y on X installed cursor-agent and looked for it on the Agents page
+// @G_Z_Y 报告 installed cursor-agent and looked for it on the Agents page
 // more than once: the row said "Cursor", which reads as the editor. The row
 // is the CLI's; the files and chats it shares with the editor (SharedName)
 // are Cursor's.

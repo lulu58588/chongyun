@@ -322,7 +322,7 @@ func TestDeclareSearch(t *testing.T) {
 		{"declared already", `{"model":"gpt-5.5","tools":[{"type":"web_search_preview"}],"input":[` + search + `]}`, false, "web_search_preview", "", "web_search_call", "auto"},
 		{"declared in additional_tools", `{"model":"gpt-5.5","input":[{"type":"additional_tools","tools":[{"type":"web_search"}]},` + search + `]}`, false, "", "web_search", "additional_tools", "auto"},
 		// Codex's web.run is its search: the backend refuses it beside the
-		// hosted tool (Savin on Discord, Codex 0.163.0-alpha)
+		// hosted tool (Savin 报告, Codex 0.163.0-alpha)
 		{"web.run in Lite's additional_tools", `{"model":"gpt-6.1-sol","reasoning":{"effort":"low","context":"all_turns"},"input":[{"type":"additional_tools","role":"developer","tools":[` + webRun + `]},` + search + `,` + user + `]}`, false, "", "namespace", "additional_tools", "auto"},
 		{"web.run among the tools", `{"model":"gpt-5.5","tools":[{"type":"function","name":"shell","parameters":{"type":"object"}},` + webRun + `],"input":[` + search + `,` + user + `]}`, false, "function,namespace", "", "web_search_call", "auto"},
 		{"web.run flat", `{"model":"gpt-5.5","tools":[{"type":"function","name":"web.run","parameters":{"type":"object"}}],"input":[` + search + `]}`, false, "function", "", "web_search_call", "auto"},

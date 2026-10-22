@@ -16,7 +16,7 @@ import (
 // conversation found with session ID"). It reads one line first, so the
 // line magpie wrote is taken and magpie hears of the end only as the
 // process goes: the order in which the turn was answered 502 "Claude Code
-// ended", with no reason (FrierenF on Discord).
+// ended", with no reason (FrierenF 报告).
 const unloadable = `if [ -n "$file" ] && [ "$sid" != "s$$" ] && [ ! -s "$file" ]; then
   read -r line
   echo "No conversation found with session ID: $sid" >&2

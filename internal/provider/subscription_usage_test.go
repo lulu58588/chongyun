@@ -160,14 +160,16 @@ func TestChosenWindows(t *testing.T) {
 func TestCopilotQuotaWithoutEditorsSignIn(t *testing.T) {
 	home := signIn(t)
 	t.Setenv("COPILOT_HOME", filepath.Join(home, ".copilot")) // not the machine's own CLI, when it has one
-	// the editors' own sign-in gone: what magpie keeps is all that's left
+	// the editors' own sign-in gone: what chongyun keeps is all that's
+	// left. chongyun never reads the editors' files, so what stands for
+	// that sign-in is the account it kept of it.
 	for _, dir := range []string{filepath.Join(home, ".config", "github-copilot"), filepath.Join(home, ".copilot")} {
 		if err := os.RemoveAll(dir); err != nil {
 			t.Fatal(err)
 		}
 	}
-	if _, ok := copilotLogin(filepath.Join(home, ".config")); ok {
-		t.Fatal("the editors' own sign-in is still readable")
+	if err := ForgetLogin("copilot", "octocat"); err != nil {
+		t.Fatal(err)
 	}
 	if err := addCopilotLogin("hubot", "Pro+", "ghu_hubot", ""); err != nil {
 		t.Fatal(err)

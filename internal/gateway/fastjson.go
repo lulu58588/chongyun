@@ -73,7 +73,7 @@ func decodeJSON(data []byte, dst any) error {
 // the images, the conversation's id, the prompt, the edits, the chat
 // parse — and each copied every message: a 1.5 MB body allocated ~60 MB
 // on its way through a group, and three agents sending such bodies at once
-// held the heap at ~310 MB (yg6888 on X: ~1 GB). A copy is still made of
+// held the heap at ~310 MB (yg6888 报告: ~1 GB). A copy is still made of
 // anything else decoded — a buffer a stream fills again, a scanner's line,
 // a body built and changed in place — since a raw value of it could be
 // written over under its holder.

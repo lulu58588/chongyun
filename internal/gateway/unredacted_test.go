@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// lc on Discord: a model on this machine or the local network the user set
+// lc 报告: a model on this machine or the local network the user set
 // to go unmasked (provider.Unredacted) gets the request as the agent wrote
 // it, with Settings' redaction on; set so, a chat, a token count and an
 // embedding go to it whole. Unset, or able to fall back to a vendor, or in

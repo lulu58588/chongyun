@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A subscription account can be used up to a share of each usage window
 // only — a new Claude account kept to 70% of its five hours and its week,
-// asked on Discord to lower the risk of a ban. Its row has a pill: a capped
+// asked 报告 to lower the risk of a ban. Its row has a pill: a capped
 // one says its cap, always shown; one without says No cap, on hover. A
 // click opens the app's own menu of shares (no native select): a share, No
 // cap, or Other… for one typed in place, each posted to provider/accountcap
@@ -198,7 +198,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       assert.deepEqual(errors, []);
     });
 
-    // 𝕏 on Discord: a Claude account capped at 90% ran its five hours to
+    // 𝕏 报告: a Claude account capped at 90% ran its five hours to
     // 100%, while its row said it was at its cap. Claude Code or Codex
     // signed in to it asks the vendor itself; with no other account on to
     // move it to, the cap stops only what goes through magpie, and the row

@@ -12,7 +12,7 @@ import (
 )
 
 // openCodeMissing is what OpenCode's gateway answers a request that names
-// no session (luci on Discord).
+// no session (luci 报告).
 const openCodeMissing = `{"type":"error","error":{"type":"invalid_request_error","message":"Request is missing x-opencode-session and cannot be routed efficiently"}}`
 
 // fakeOpenCode answers as OpenCode's gateway does: 400 openCodeMissing
@@ -49,7 +49,7 @@ func (f *fakeOpenCode) got(host string) []string {
 	return append([]string(nil), f.sessions[host]...)
 }
 
-// luci on Discord: OpenCode Go, added as a custom provider and asked from
+// luci 报告: OpenCode Go, added as a custom provider and asked from
 // Codex, answered 400 "Request is missing x-opencode-session and cannot
 // be routed efficiently", and a session set on the provider by hand put
 // every conversation on one backend. Every request to OpenCode's gateway

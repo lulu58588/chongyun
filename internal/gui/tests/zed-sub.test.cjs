@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A Zed subscription (yosocoli5 on X: bought Zed, can it be added?): the add
+// A Zed subscription (yosocoli5 报告: bought Zed, can it be added?): the add
 // sheet lists Zed under Subscriptions with its own logo, and starting its
 // sign-in first says what Zed may do about it, in Zed's words rather than
 // Antigravity's; nothing is asked of the backend until "Sign in anyway".

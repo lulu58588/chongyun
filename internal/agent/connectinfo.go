@@ -13,8 +13,6 @@ import (
 	"time"
 
 	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // What the Agents page says beside an agent's 「接入」 switch (the owner's
@@ -22,74 +20,6 @@ import (
 // subscription, sign-in or providers — so the user can tell what turning
 // it on touches; once on, whether copies of it already running still have
 // the list they started with.
-
-// Source is what an agent not connected to magpie runs on now: "sub" (a
-// Claude subscription), "chatgpt" (a ChatGPT sign-in), "key" (an API key
-// of its own), "providers:N" (N providers of its own); "" when unknown.
-//
-// With account discovery off (#1535) no sign-in is read for it: Claude
-// Code's account in .claude.json, Codex's auth.json and OpenCode's are
-// left alone, and only what the agent's own settings say is told.
-func (a *Agent) Source() string {
-	if a.WSL != "" || a.Path == "" {
-		return ""
-	}
-	dir := filepath.Dir(a.Path)
-	signIns := !settings.AccountDiscoveryOff()
-	switch a.ID {
-	case "claude":
-		// signed in to claude.ai: ~/.claude.json (or the one in
-		// CLAUDE_CONFIG_DIR) has the account
-		for _, p := range []string{filepath.Join(dir, ".claude.json"), filepath.Join(filepath.Dir(dir), ".claude.json")} {
-			if !signIns {
-				break
-			}
-			if v, _ := edit.GetJSON(p, "oauthAccount.accountUuid"); v != "" {
-				return "sub"
-			}
-		}
-		if v, _ := edit.GetJSON(a.Path, "env.ANTHROPIC_API_KEY"); v != "" {
-			return "key"
-		}
-		if v, _ := edit.GetJSON(a.Path, "apiKeyHelper"); v != "" {
-			return "key"
-		}
-	case "codex":
-		if !signIns {
-			break
-		}
-		if codexChatGPT(dir) {
-			return "chatgpt"
-		}
-		var k struct {
-			Key string `json:"OPENAI_API_KEY"`
-		}
-		if b, ok := provider.CodexSignIn(dir); ok && json.Unmarshal(b, &k) == nil && k.Key != "" {
-			return "key"
-		}
-	case "opencode", "mimocode", "deveco":
-		// the providers in its config, and those signed in through it
-		n := map[string]bool{}
-		var cfg map[string]json.RawMessage
-		if v, _ := edit.GetJSON(a.Path, "provider"); json.Unmarshal([]byte(v), &cfg) == nil {
-			for k := range cfg {
-				n[k] = true
-			}
-		}
-		home, _ := os.UserHomeDir()
-		var auth map[string]json.RawMessage
-		if b, err := readOwnAuth(filepath.Join(home, ".local", "share", a.ID, "auth.json")); err == nil && json.Unmarshal(b, &auth) == nil {
-			for k := range auth {
-				n[k] = true
-			}
-		}
-		delete(n, magpieID)
-		if len(n) > 0 {
-			return "providers:" + strconv.Itoa(len(n))
-		}
-	}
-	return ""
-}
 
 // FailoverSaid is, for an agent not connected whose requests still go
 // through magpie for account failover alone (FailingOver), what the CLI

@@ -9,7 +9,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
-// A decision model's window and whether it takes images (ARNO on Discord):
+// A decision model's window and whether it takes images (ARNO 报告):
 // read from a list that says them (OpenRouter's context_length and
 // architecture.input_modalities), else what its vendor's docs say — Jev
 // 32k and text, Clef 65,536 and images, Bailian's 65,536 and text — so

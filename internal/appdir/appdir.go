@@ -27,7 +27,7 @@
 // there is as likely another app's or the user's own. Taking one showed a
 // user who had never asked for portable an empty magpie (#989), and wrote
 // magpie's files into a Downloads\data folder a Windows user's archiver
-// empties, so a provider just added was gone (tangle778 on X).
+// empties, so a provider just added was gone (tangle778 报告).
 //
 // The decision is made once, from the executable as it was when magpie
 // started: an update moving the running copy aside (into .magpie-update on

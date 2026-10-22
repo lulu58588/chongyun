@@ -219,7 +219,6 @@ func TestCodexUnusedFiveHourWindowRetried(t *testing.T) {
 // do: the account's own sign-in, Codex's instructions, nothing stored.
 func TestCodexWarmRequest(t *testing.T) {
 	home := signIn(t) // me@example.com, acct-1, lists gpt-5.5
-	rememberLogins(true)
 	var mu sync.Mutex
 	var got []map[string]any
 	var hdr http.Header

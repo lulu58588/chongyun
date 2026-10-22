@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// Removing many keys at once (361 on Discord: hundreds of keys, some dead):
+// Removing many keys at once (361 报告: hundreds of keys, some dead):
 // those named go in one save, the first gives its place to the next key on
 // that stays, and removing every key in use is refused, leaving them all.
 func TestRemoveKeys(t *testing.T) {

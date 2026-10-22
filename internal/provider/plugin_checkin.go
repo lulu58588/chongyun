@@ -1,6 +1,6 @@
 package provider
 
-// A plugin's own daily check-in (Lemon on Discord: provider 每日签到的方法能
+// A plugin's own daily check-in (Lemon 报告: provider 每日签到的方法能
 // 放到插件里面去做吗): a plugin whose auth hook has checkin presses its
 // vendor's 签到 itself, and magpie runs it as it runs its own check-ins
 // (checkin.go): each account in use once a Beijing day while the user has
@@ -278,9 +278,6 @@ type pluginCheckiner struct {
 func (c pluginCheckiner) clock() time.Time { return c.now() }
 
 func (c pluginCheckiner) checkinNow(ctx context.Context, soon bool) []WorkBuddyCheckin {
-	if discoveryOff() {
-		return nil
-	}
 	var out []WorkBuddyCheckin
 	for _, p := range pluginCheckinProviders() {
 		if c.only != nil && !c.only(p.ID) {

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// The Requests card counts requests, not tries (小一 on Discord): a try
+// The Requests card counts requests, not tries (小一 报告): a try
 // that failed and handed its request on to another account is neither a
 // request nor a failure of its own, and a request answered after such a
 // try is counted as answered on a retry. Failed is what the agent got an

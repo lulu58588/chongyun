@@ -40,7 +40,7 @@ func pptx(t *testing.T, media int) []byte {
 	return buf.Bytes()
 }
 
-// Crispin on Discord (Skills内的template文件可以都被同步吗？好像发现无法同步PPT
+// Crispin 报告 (Skills内的template文件可以都被同步吗？好像发现无法同步PPT
 // 文件诶): a skill's PowerPoint template didn't reach the other computer.
 // A backup and a sync left out every file over 2 MB, and a template with
 // its pictures is more than that. A skill's template comes with it, bytes

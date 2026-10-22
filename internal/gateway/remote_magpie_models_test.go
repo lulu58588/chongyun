@@ -17,7 +17,7 @@ import (
 // A Remote magpie's list has the image models the other magpie draws with,
 // which draw there through it, and names each model with its provider
 // there, so the same model of two of its relays isn't two of one name here
-// (Jorben, 莫 on Discord). What it lists is still what its agents are
+// (Jorben, 莫 报告). What it lists is still what its agents are
 // shown: a model its user didn't pick, or of a provider kept to routing
 // groups, isn't in it.
 func TestRemoteMagpieModels(t *testing.T) {

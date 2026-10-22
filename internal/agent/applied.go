@@ -386,7 +386,7 @@ func (a *Agent) Reapply() error {
 		// magpie as the agent's provider too (Claude Desktop's provider
 		// field, beside its tiers on magpie's models), as Wired takes it:
 		// left out, Reconnect set the tiers again and never the gateway
-		// Check found off (dumplings on Discord)
+		// Check found off (dumplings 报告)
 		if v := vals[f.Key]; v != "" && (d != nil && f.Key == d.Field || v == magpieID || magpieValue(a, f, v, vals)) {
 			if err := a.Apply(f.Key, v); err != nil {
 				return err
@@ -537,7 +537,7 @@ func (a *Agent) Disconnected() bool { return stashLoad()[a.ID+disconnectedKey] =
 func (a *Agent) noModelLeft() error {
 	shown, hidden := provider.CatalogFor(a.ListsFor())
 	// nothing to connect it to yet: no provider or subscription added,
-	// which said only that it can't be connected (Tystem on Discord)
+	// which said only that it can't be connected (Tystem 报告)
 	if len(shown)+len(hidden) == 0 {
 		return &NoModelsError{Agent: a.Name}
 	}
@@ -626,7 +626,7 @@ func (a *Agent) connect() (Connection, error) {
 			// an app whose picker gets magpie's models as listed for it
 			// (WorkBuddy, ZCode): with none listed, setting magpie wrote
 			// none, and the agent reads as not connected right after a
-			// connect that said it was (Lumens on Discord). One connected
+			// connect that said it was (Lumens 报告). One connected
 			// by its address alone (Cursor Private Inference) is connected
 			// all the same.
 			if !a.Wired() {
@@ -715,7 +715,7 @@ func connectWas(v string, opts []Option) string {
 }
 
 // Disconnect takes magpie out of the agent's config and puts back what the
-// user had, the Agents page's "Disconnect from chongyun" (Fate on Discord:
+// user had, the Agents page's "Disconnect from chongyun" (Fate 报告:
 // picking the agent's default did it, but nothing said so). Unwire first,
 // for an agent whose default would leave it as installed; then each field
 // still on magpie goes to its default, as picking it does, and so does
@@ -734,7 +734,7 @@ func (a *Agent) Disconnect() error {
 	}
 	// the user's say, kept till they connect it again: nothing magpie does
 	// by itself (a start's Sync, Codex's account failover) puts magpie back
-	// in, this Disconnect's own writes included (paynezhuang on Discord)
+	// in, this Disconnect's own writes included (paynezhuang 报告)
 	stash(map[string]string{a.ID + disconnectedKey: "1"})
 	before, rec := a.Values(), appliedOf(a.ID)
 	if a.Unwire != nil {

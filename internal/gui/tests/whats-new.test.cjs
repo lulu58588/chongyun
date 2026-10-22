@@ -11,7 +11,7 @@
 // dialog shown by itself has "Don't show again today" (#525), posted to
 // whatsnew/today as it changes; Settings' has none. No click moves the
 // page, no left-border accent. The notes and the waiting update are asked
-// for in the page's language (freecss on Discord: the notes should follow
+// for in the page's language (freecss 报告: the notes should follow
 // Settings' language). In English and Chinese, Chromium and WebKit; the API
 // is faked.
 const assert = require("node:assert/strict");

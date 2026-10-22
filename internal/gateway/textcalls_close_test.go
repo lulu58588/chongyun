@@ -9,7 +9,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// 喜欢一个人 on Discord (v0.1.1299, a Responses client, deepseek-v4.1-flash
+// 喜欢一个人 报告 (v0.1.1299, a Responses client, deepseek-v4.1-flash
 // through a relay): the client got the text "\n</｜｜DSML｜｜ calls>",
 // DeepSeek's calls wrapper closed as it writes it (no tool_, a space after
 // the pipes), and nothing went on. These are the reporter's bytes: the

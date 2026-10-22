@@ -65,7 +65,7 @@ func TestGatewayKeyCLI(t *testing.T) {
 	}
 }
 
-// add --key keeps a value clients already send (love1sbug on X); "-"
+// add --key keeps a value clients already send (love1sbug 报告); "-"
 // takes it from stdin.
 func TestGatewayKeyCLIOwnValue(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())

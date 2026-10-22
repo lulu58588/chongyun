@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Gateway mode (Player on Discord): magpie web on a server that is only
+// Gateway mode (Player 报告): magpie web on a server that is only
 // the gateway for other computers' agents. boot.js says so and the page
 // opens on Providers with no Agents or Library tab, an address
 // kept for one of them opening Providers; Settings leaves out what is

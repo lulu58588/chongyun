@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// 悠悠哥 on Discord (macOS): the Agents page listed "Codex 0.162.1" under Not
+// 悠悠哥 报告 (macOS): the Agents page listed "Codex 0.162.1" under Not
 // set up, while `which -a codex` found nothing and ~/.codex wasn't there.
 // magpie had found a codex in a folder it adds to its own PATH (an npm
 // install under a Node nvm no longer uses) that the terminal's PATH lacks.

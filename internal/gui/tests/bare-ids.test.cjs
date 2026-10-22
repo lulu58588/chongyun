@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Settings › Network and sharing › Model ids without the provider (love1sbug
-// on X: apps moved from CLIProxyAPI ask for gpt-5.6-sol, and magpie's
+// 报告: apps moved from CLIProxyAPI ask for gpt-5.6-sol, and magpie's
 // /v1/models only gave codex/gpt-5.6-sol): off by default; On posts
 // settings/bare-ids on its own and lights On, Off posts it back, and neither
 // click scrolls the Settings page. The row is drawn in gateway mode too,

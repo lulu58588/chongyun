@@ -21,7 +21,7 @@ const daemonUsage = "usage: chongyun daemon [install|uninstall|start|stop|restar
 var daemonWait = 5 * time.Second
 
 // daemonWeb is what a daemon command says of the page the service serves
-// beside the gateway (`chongyun serve --web`, HuanCheng on Discord).
+// beside the gateway (`chongyun serve --web`, HuanCheng 报告).
 type daemonWeb struct {
 	set  bool   // the command says whether it is served; not set, it stays as it is
 	on   bool   // served

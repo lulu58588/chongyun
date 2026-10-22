@@ -110,7 +110,7 @@ func TestBalanceTrendRunsOut(t *testing.T) {
 	}
 }
 
-// TestBalanceHistoryTwoCurrencies (gakki on Discord): DeepSeek tells an
+// TestBalanceHistoryTwoCurrencies (gakki 报告): DeepSeek tells an
 // account's CNY and USD balances in an order that changes between reads.
 // The card says them in one order every time, the money left first, and
 // the trend is the USD alone, in dollars, not ¥-0.05 and $11.12 joined

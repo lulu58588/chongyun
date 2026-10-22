@@ -27,6 +27,9 @@ func TestCopilotAutoThroughGateway(t *testing.T) {
 	os.WriteFile(filepath.Join(cfg, "github-copilot", "apps.json"), mustJSON(map[string]any{
 		"github.com:Iv1.x": map[string]any{"user": "student", "oauth_token": "gho_student"},
 	}), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json: the editor's own file is never read to find out.
+	copilotLoginSaved(t, "student", "gho_student")
 
 	var mu sync.Mutex
 	var sessions int

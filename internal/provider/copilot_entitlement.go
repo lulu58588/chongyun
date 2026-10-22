@@ -31,8 +31,6 @@ func refreshCopilotEntitlement(app copilotApp, plan, sku string) {
 	if plan == "" && sku == "" {
 		return
 	}
-	// Resolve external editor/CLI credentials before taking the shared login lock.
-	own, ownOK := copilotLogin(copilotConfigDir())
 	loginsMu.Lock()
 	defer loginsMu.Unlock()
 	ls := readLogins()
@@ -42,10 +40,6 @@ func refreshCopilotEntitlement(app copilotApp, plan, sku string) {
 			continue
 		}
 		current, valid := copilotSaved(*l)
-		if l.own() {
-			current, valid = own, ownOK
-			valid = valid && strings.EqualFold(CopilotAccountName(firstNonEmpty(current.User, "GitHub"), current.Host), app.User)
-		}
 		if !valid || current.Token != app.Token {
 			continue
 		}

@@ -8,7 +8,7 @@ import (
 )
 
 // An account whose every sign-in in use was refused is listed signed out,
-// to be signed in again, never "signed in as" (LeeHom on Discord: two
+// to be signed in again, never "signed in as" (LeeHom 报告: two
 // Claude Pro accounts gone from the list, then "needs sign in again").
 func TestProvidersSaySignedOut(t *testing.T) {
 	out := map[string]bool{"claude": true}

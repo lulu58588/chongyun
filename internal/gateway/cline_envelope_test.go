@@ -12,7 +12,7 @@ import (
 )
 
 // Cline's API answers a request that isn't streamed with the completion in
-// {"success":true,"data":…} (6094S on Discord: Alma's tool-model calls read
+// {"success":true,"data":…} (6094S 报告: Alma's tool-model calls read
 // no choices and failed). An agent gets the completion itself;
 // {"success":false} is an error in the agent's API's shape; a stream and
 // another provider's reply pass as they came. (A translated request is

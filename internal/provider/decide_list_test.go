@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-// A System One provider at OpenRouter (ARNO on Discord): its /models lists
+// A System One provider at OpenRouter (ARNO 报告): its /models lists
 // chat models, Jev's router among them, and its decision models are at
 // /models?output_modalities=decisions, the URL the user gave. Every model
 // in that list is fetched, and a model typed in by hand is tested with a

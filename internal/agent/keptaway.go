@@ -17,7 +17,7 @@ import (
 // synced runs an agent's sync, which brings magpie's models in its files up
 // to date, not where they are reached: a file whose magpie the user pointed
 // at a magpie on another machine (a NAS's, or this one's LAN address, coeo91
-// on Discord) keeps that address and its key, as ZCode's and WorkBuddy's
+// 报告) keeps that address and its key, as ZCode's and WorkBuddy's
 // writers do on their own (zcodeAddress). Without it, every start and
 // update of magpie (SyncCatalog) put the agent back on 127.0.0.1.
 //
@@ -26,7 +26,7 @@ import (
 // written through edit while it is on passes through it, on whichever
 // goroutine and under whichever lock wrote it. settings.Save, the window's
 // size kept after a resize, writes under the lock settings.Load takes, and
-// a filter reading the settings waited on it for good (ylorn on Discord).
+// a filter reading the settings waited on it for good (ylorn 报告).
 func synced(sync func() error) error {
 	return edit.Filtered(keeping().away, sync)
 }
@@ -48,7 +48,7 @@ func (k kept) ours(v string) bool {
 // magpieFile says path, a file edit is about to write (a link's target,
 // edit.Target), is in magpie's own folder, as it is named or where its
 // links lead: with ~/.config a link into a dotfiles repo, settings.json is
-// written at the repo's path (ylorn on Discord). A file not there yet has
+// written at the repo's path (ylorn 报告). A file not there yet has
 // its folder's links followed.
 func magpieFile(path string) bool {
 	sep := string(filepath.Separator)

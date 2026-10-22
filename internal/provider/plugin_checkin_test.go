@@ -55,7 +55,7 @@ func pressed(t *testing.T, file string) []string {
 	return strings.Fields(string(b))
 }
 
-// A plugin's own check-in (auth.checkin; Lemon on Discord) runs as magpie's
+// A plugin's own check-in (auth.checkin; Lemon 报告) runs as magpie's
 // own do: each account once a Beijing day while it is on, a failure asked
 // again after wbCheckinRetry, a captcha left for the user (never retried
 // that day), and what came of each kept, on its card and in Settings.

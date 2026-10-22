@@ -238,7 +238,7 @@ func perKeyBarred(p provider.Provider, model string, from provider.Protocol) (ou
 		return out, nil, left, barred
 	}
 	keys := p.KeysOn()
-	serves := p.Serving(model) // the lists read once, not once a key (@NetRozee on X)
+	serves := p.Serving(model) // the lists read once, not once a key (@NetRozee 报告)
 	var unlisted []candidate
 	var noURL provider.Protocol
 	for i, k := range keys {
@@ -501,7 +501,7 @@ func planLevel(g provider.Group, ms []provider.Member, depth int, from provider.
 				// a provider routed its own way keeps it, as a group
 				// in the group does: weighed as one by the first it
 				// would try, and tried whole in its own order (kchen0x
-				// on X: Antigravity in order inside a Smart group)
+				// 报告: Antigravity in order inside a Smart group)
 				cs, wg := weigh(m.Provider, keys(m), m.Model, from)
 				var order []Weighed
 				for k, c := range cs {
@@ -1072,7 +1072,7 @@ func modelRefused(status int, body []byte) bool {
 // Antigravity or Gemini CLI built-in's — answered 404 NOT_FOUND
 // ("Requested entity was not found."). Its endpoint is the same for every
 // model, so what isn't there is the model: one fetchAvailableModels lists
-// that the account's plan doesn't serve (Packing1 on Discord: Argon on
+// that the account's plan doesn't serve (Packing1 报告: Argon on
 // Google AI Pro). Only that model rests, on that account; its others are
 // asked as before.
 func codeAssistModelMissing(p provider.Provider, status int, body []byte) bool {
@@ -1088,7 +1088,7 @@ func codeAssistModelMissing(p provider.Provider, status int, body []byte) bool {
 // retiredWords are how a vendor says the model is retired, though its
 // list may still name it: OpenCode Zen's 410 {"type":"error","error":
 // {"type":"ModelDeprecated","message":"Model exo-free has been
-// deprecated."}} (MOMO on Discord), OpenAI's "The model … has been
+// deprecated."}} (MOMO 报告), OpenAI's "The model … has been
 // deprecated".
 var retiredWords = regexp.MustCompile(`(?i)"ModelDeprecated"|model_deprecated|model.{0,80}(has been|was|is now|is) (deprecated|retired|discontinued|decommissioned|sunset)`)
 
@@ -1196,7 +1196,7 @@ func regionRefused(status int, body []byte) bool {
 
 // protectionWords are how the ChatGPT backend answers a long Codex
 // conversation it won't take as it is: 502 "response protection is
-// unavailable" (vs on Discord, 0.1.1108). It comes back the same for the
+// unavailable" (vs 报告, 0.1.1108). It comes back the same for the
 // same history on every account and model the backend serves, and the
 // history as plain text is answered, so it is about the request, not the
 // account: asked again there, it only drains the accounts' allowances.
@@ -1434,7 +1434,7 @@ func holds(c candidate, tokens int) bool {
 }
 
 // roomy leaves out, before any is asked, the candidates whose model is
-// known to take less than the request (dgqyushen on Discord: OpenCode
+// known to take less than the request (dgqyushen 报告: OpenCode
 // Zen's free DeepSeek V4.1 Flash, 200K, first in a group with a 1M
 // subscription of it second). Asked, such a member only refuses it, a
 // request spent against its limits, and a refusal that doesn't say why,
@@ -1451,7 +1451,7 @@ func holds(c candidate, tokens int) bool {
 // Those left out are handed back (small, their rows in smallW when the
 // order has one each), kept for the last resort: when every candidate
 // with room is out of its allowance, a fallback too small is asked all
-// the same (Kai on Discord: both Claude accounts at their limit until
+// the same (Kai 报告: both Claude accounts at their limit until
 // the next day, the Claude provider's Fallback a Codex model of 272K
 // under a longer conversation, left out without a word, and Claude Code
 // handed the 429). Its overflow tells the agent to compact, after which
@@ -1999,7 +1999,7 @@ func (h *holdWriter) keptQuiet() bool {
 // refusal, OpenAI's content_filter or bio_policy, Gemini's SAFETY (#248).
 // Anybody else's reasoning — GLM's, DeepSeek's, Kimi's… — is shown as it
 // comes: held, GLM on a ZCode account through a group showed Claude Code
-// its thinking only once the text began, all at once (悠悠哥 on Discord).
+// its thinking only once the text began, all at once (悠悠哥 报告).
 func refusesAfterThinking(model string) bool {
 	if modelFamily(model) != "" {
 		return true
@@ -2412,7 +2412,7 @@ var watchEvery = time.Second
 // (keepAlive), every keepaliveEvery for as long as the wait lasts, as a
 // try's held stream is. A wait of up to 2 minutes for the minute, or
 // QueueWait's for a slot, sent the agent nothing at all, which an agent's
-// or a proxy's timeout for its headers ended first (coeo91 on Discord:
+// or a proxy's timeout for its headers ended first (coeo91 报告:
 // WorkBuddy, Trae and Qoder said the request timed out). Once they are
 // sent the try is held (hold), so that a failure, or the queue turning it
 // away, reaches the agent as the stream's error (failTo), and another

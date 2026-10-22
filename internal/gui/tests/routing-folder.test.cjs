@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A routing group's rule may be for the folder the agent works in (Cario0x
-// on X: routing by the project being worked on). The group's rule reads its
+// 报告: routing by the project being worked on). The group's rule reads its
 // folders; the trace tells the rule matched by folder and the folder the
 // agent said; in the editor the folders are a condition of their own, typed
 // comma separated, a folder that isn't a whole path refused before saving,

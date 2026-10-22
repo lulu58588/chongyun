@@ -43,7 +43,7 @@ func keptAs(agent string) string {
 // signed in to at its own place among them; nil otherwise, when the one
 // signed in to is the first.
 func (p Provider) LoginRanks() map[string]int {
-	if p.Account == nil || p.Account.token != nil && !p.Account.standIn || !slices.Contains(switchedAgents, p.Account.Agent) ||
+	if p.Account == nil || p.Account.beside() || !slices.Contains(switchedAgents, p.Account.Agent) ||
 		!p.KeepLogin || p.KeepLoginAs == "" {
 		return nil
 	}

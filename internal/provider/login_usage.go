@@ -11,7 +11,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 var loginUsageCache struct {
@@ -77,7 +76,7 @@ func LoginUsage(ctx context.Context, agent string) map[string]SubscriptionQuota 
 // counts its own minute from then, not from when it asked (#1295).
 func loginUsageAt(ctx context.Context, agent string) (map[string]SubscriptionQuota, time.Time) {
 	// nor of a provider switched off or removed (leftAlone)
-	if settings.AccountDiscoveryOff() || leftAlone(agent) {
+	if leftAlone(agent) {
 		return nil, time.Time{}
 	}
 	asked := time.Now()
@@ -296,17 +295,8 @@ func loginQuota(ctx context.Context, l Login) SubscriptionQuota {
 			if strings.EqualFold(c.User, l.User) {
 				orig := c.app
 				q := copilotSubscriptionUsage(ctx, c.app.Token, c.app.Host)
-				// an editor's stale token, the CLI signed in to the same
-				// account: read as the requests are sent (#1238)
-				if q.Error == http.StatusText(http.StatusUnauthorized) {
-					if cli, ok := copilotStandIn(c.app); ok {
-						copilotRefuse(c.app.Token, http.StatusUnauthorized)
-						c.app = cli
-						q = copilotSubscriptionUsage(ctx, cli.Token, cli.Host)
-					}
-				}
 				// GitHub refused the token, with none in its place: the
-				// account is signed out (echo_ts on Discord)
+				// account is signed out (echo_ts 报告)
 				if q.Error == http.StatusText(http.StatusUnauthorized) {
 					copilotRefuse(orig.Token, http.StatusUnauthorized)
 					copilotRefuse(c.app.Token, http.StatusUnauthorized)
@@ -339,8 +329,6 @@ func loginQuota(ctx context.Context, l Login) SubscriptionQuota {
 	var err error
 	switch {
 	case l.Agent == "claude": // Claude Code reads its own (claudeWindows)
-	case l.Active:
-		tok, accountID, err = codexToken(ctx, codexHome())
 	default:
 		tok, accountID, err = savedLoginToken(ctx, l.Agent, l.User)
 	}
@@ -431,13 +419,9 @@ func loginReadingKnown(l Login) (loginUsageEntry, bool) {
 	return e, ok
 }
 
-// codexLoginAuth is the auth.json of a ChatGPT account magpie knows: the
-// sign-in Codex goes by (auth.json or its keychain item), or the one kept for it.
+// codexLoginAuth is the auth.json of a ChatGPT account chongyun knows: the
+// sign-in it keeps for it.
 func codexLoginAuth(l Login) []byte {
-	if l.Active {
-		b, _, _ := readCodexLogin(codexHome(), false)
-		return b
-	}
 	loginsMu.Lock()
 	defer loginsMu.Unlock()
 	for _, x := range readLogins() {

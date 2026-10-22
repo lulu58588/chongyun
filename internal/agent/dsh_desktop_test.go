@@ -44,7 +44,7 @@ const dshDesktopPatch = "# Your patch layer for this dsh profile, applied after 
 	"# overrides, disables, and insert lists; `!!js` expressions allowed).\n" +
 	"[]\n"
 
-// star on Discord (2026-10-09): 有一个bug DeepSeek Harness 就是现在已经有桌面版
+// star 报告 (2026-10-09): 有一个bug DeepSeek Harness 就是现在已经有桌面版
 // 了，但是他还是非要找CLI. With DeepSeek Harness Desktop in use and no dsh
 // CLI, the Agents page said 未找到 CLI and offered dsh's npm install. The
 // desktop app keeps ~/.dsh as the CLI does and needs no CLI, so with it

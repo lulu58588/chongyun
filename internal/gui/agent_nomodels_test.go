@@ -12,7 +12,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/agent"
 )
 
-// Tystem on Discord: connecting Codex with no provider or subscription in
+// Tystem 报告: connecting Codex with no provider or subscription in
 // magpie answered "Codex can't be connected to chongyun", untranslated. The
 // answer carries code no_models and the agent's name, which the GUI says
 // in the reader's language.
@@ -34,7 +34,7 @@ func TestAgentConnectNoModels(t *testing.T) {
 	}
 }
 
-// Lumens on Discord: connecting WorkBuddy, whose one field puts magpie in
+// Lumens 报告: connecting WorkBuddy, whose one field puts magpie in
 // its own picker, answered 200 with nothing added in magpie, so the page
 // said it was connected and its switch went back off. It answers
 // no_models now, as Codex does.

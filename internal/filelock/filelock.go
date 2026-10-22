@@ -92,3 +92,32 @@ func (m *Mutex) Unlock() {
 	}
 	m.mu.Unlock()
 }
+
+// TryLock takes the lock if it is free, without waiting for it: false when
+// it is held, by another chongyun or by this one. It is for a caller that
+// must not wait, and must not be told to go on without the lock either.
+func (m *Mutex) TryLock() bool {
+	if !m.mu.TryLock() {
+		return false
+	}
+	f, err := os.OpenFile(m.Path(), os.O_CREATE|os.O_RDWR, 0o600)
+	if errors.Is(err, fs.ErrNotExist) {
+		mkdirAll(filepath.Dir(m.Path()), 0o700)
+		f, err = os.OpenFile(m.Path(), os.O_CREATE|os.O_RDWR, 0o600)
+	}
+	if err != nil {
+		m.mu.Unlock()
+		return false
+	}
+	got, err := TryLock(f)
+	if err != nil || !got {
+		f.Close()
+		m.mu.Unlock()
+		return false
+	}
+	m.unlock = func() { Unlock(f); f.Close() }
+	if m.Locked != nil {
+		m.Locked()
+	}
+	return true
+}

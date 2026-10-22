@@ -76,7 +76,7 @@ func setToken(t *testing.T, settingsTok, githubTok, ghTok string) {
 	t.Setenv("GH_TOKEN", ghTok)
 }
 
-// till on Discord: a stale GITHUB_TOKEN in the environment made the
+// till 报告: a stale GITHUB_TOKEN in the environment made the
 // Plugins page say "GitHub refused GITHUB_TOKEN" while GitHub answered
 // fine without it. The request is asked again without the token, and the
 // anonymous answer is the one given back.

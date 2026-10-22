@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Another computer's quotas (莫 on Discord): a computer whose provider is
+// Another computer's quotas (莫 报告): a computer whose provider is
 // another's magpie (remote-magpie) shows that magpie's cards, each named
 // with the computer ("Codex · Office"), without the buttons that would act
 // on this computer's accounts. The remote's own card says why it has none
@@ -27,7 +27,7 @@ function fixtures(now) {
       error: "nothing read on that magpie yet; refresh to have it read" },
     { provider: "attic", name: "Attic", icon: "magpie", from: "Attic", kind: "subscription", windows: [],
       error: "remote magpie doesn't share its quotas; update magpie on that computer" },
-    // Fim980 on X: these said only "Allowance unavailable"
+    // Fim980 报告: these said only "Allowance unavailable"
     { provider: "kestrel", name: "Kestrel", icon: "magpie", from: "Kestrel", kind: "subscription", windows: [],
       error: "remote magpie isn't shared; turn on Share on local network on that computer" },
     { provider: "osprey", name: "Osprey", icon: "magpie", from: "Osprey", kind: "subscription", windows: [],

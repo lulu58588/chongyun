@@ -25,7 +25,7 @@ window.desktopFonts = (() => {
     }
     if (active) root.setAttribute("data-fonts", "");
     else root.removeAttribute("data-fonts");
-    // a wider font widens the tabs too: the header is fitted again (kiwiflysky on X)
+    // a wider font widens the tabs too: the header is fitted again (kiwiflysky 报告)
     window.fitTop?.();
   }
   return { apply, available, same, catalogue: (list) => { catalogue = list; } };

@@ -262,7 +262,7 @@ func TestAlmaProfileIsNotImported(t *testing.T) {
 
 // Claude Desktop keeps its instructions in its own settings and OpenChamber
 // reads OpenCode's: the refusal says where they go instead, and lists the
-// agents here that take that kind (MOMO on Discord: "has no user-wide
+// agents here that take that kind (MOMO 报告: "has no user-wide
 // place" said neither).
 func TestTakesSaysWhereInstead(t *testing.T) {
 	sandbox(t)
@@ -1013,7 +1013,7 @@ func TestGitHubSource(t *testing.T) {
 }
 
 // A skills CLI command pasted whole installs from its source
-// (RockyShowlle on X: the npx line a skill's page gives), whatever runs
+// (RockyShowlle 报告: the npx line a skill's page gives), whatever runs
 // it and wherever its flags are; anything else is left as it is.
 func TestSkillsCommand(t *testing.T) {
 	for in, want := range map[string]string{
@@ -1551,7 +1551,7 @@ func TestEveryServerAgents(t *testing.T) {
 	}
 }
 
-// Fate on Discord: with the Default set empty, a set made and written and
+// Fate 报告: with the Default set empty, a set made and written and
 // Claude Code switched on left CLAUDE.md as it was, since the agents read
 // the empty Default. A set added, or one given text, while the set in use
 // is empty is the one the agents read; one in use with text stays so.

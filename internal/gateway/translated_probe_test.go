@@ -14,7 +14,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// An Antigravity account's models can be tested (lc on Discord:
+// An Antigravity account's models can be tested (lc 报告:
 // "antigravity的测试按钮不可用，别的供应商正常"): Test models was off for
 // every Google sign-in, which speaks Code Assist alone, an API the gateway
 // builds each request for. The test is now that request, the smallest

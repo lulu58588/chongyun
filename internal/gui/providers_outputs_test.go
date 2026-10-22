@@ -13,7 +13,7 @@ import (
 )
 
 // A provider's Save carries its editor's Max output, as it does its
-// context window (ARNO on Discord: a model's maxTokens was wrong and only
+// context window (ARNO 报告: a model's maxTokens was wrong and only
 // the window could be set there); a save that doesn't say keeps them, and
 // the editor is given them back to show.
 func TestProviderSaveOutputs(t *testing.T) {

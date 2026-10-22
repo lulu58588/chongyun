@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Settings → Menu bar logos (Jevin on Discord: the small logos make the menu
+// Settings → Menu bar logos (Jevin 报告: the small logos make the menu
 // bar's usage look worse): on a Mac with a card in the menu bar, an On/Off
 // row under the refresh row; Off posts trayNoLogos and On takes it back; a
 // save of another setting keeps it; no row without a card, nor off a Mac;

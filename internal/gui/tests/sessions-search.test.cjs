@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // The Sessions page's filter finds a session by what was said in it, not only
-// by its title, folder, id or model (YOU on Discord: the gateway's sessions
+// by its title, folder, id or model (YOU 报告: the gateway's sessions
 // are named ses_…, and their words are how they are remembered). The page
 // asks /api/sessions/search once typing pauses, a new query cancels the one
 // in flight, one letter asks nothing, and each session found shows the words

@@ -1,5 +1,5 @@
 // A provider's editor sets the most a reply of its models may hold, as it
-// sets their context window (ARNO on Discord: 有些模型的 maxtokens 还是错误的
+// sets their context window (ARNO 报告: 有些模型的 maxtokens 还是错误的
 // …上下文长度可以手动覆盖，maxtoken 错了如何解决): one for all its models and
 // model=size for one, shown as set, sent with the Save, and a value that
 // isn't a number of tokens is refused before anything is sent.

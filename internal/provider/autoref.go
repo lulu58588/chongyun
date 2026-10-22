@@ -1,6 +1,6 @@
 package provider
 
-// The id agents are given for a group magpie found (ZeroClover on X): "auto/<model>",
+// The id agents are given for a group magpie found (ZeroClover 报告): "auto/<model>",
 // the model's own id as a vendor spells it (auto/claude-opus-5.5), so that a
 // client reading the part after the slash as a model id — as models.dev keys
 // its models — knows the model. It was "group/auto-<slug>" (Slug's, dots

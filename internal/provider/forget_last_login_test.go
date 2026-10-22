@@ -2,7 +2,6 @@ package provider
 
 import (
 	"encoding/json"
-	"path/filepath"
 	"testing"
 )
 
@@ -60,16 +59,17 @@ func TestForgetOnlyFirstLogin(t *testing.T) {
 	}
 }
 
-// 歧路亡羊 on Discord: Copilot signed in to the editors' own account and
-// two of magpie's, one of them first. Removing the first puts the next
-// first, and Sign out… takes them all, where it said "magpie uses wwjxhy
-// first; put another account first".
+// 歧路亡羊 报告: Copilot with three accounts of chongyun's, one of them
+// first. Removing the first puts the next first, and Sign out… takes them
+// all, where it said "chongyun uses wwjxhy first; put another account
+// first".
 func TestForgetFirstCopilotLogin(t *testing.T) {
 	signIn(t)
-	writeFile(t, filepath.Join(copilotConfigDir(), "github-copilot", "apps.json"), map[string]any{"github.com": map[string]any{"user": "octo", "oauth_token": "gho_own"}})
 	tok := func(s string) json.RawMessage { return json.RawMessage(`{"oauth_token":"` + s + `"}`) }
+	// every account is one of chongyun's, with its sign-in: there is no
+	// account of another tool's it only reads
 	saved := []savedLogin{
-		{Agent: "copilot", User: "octo"},
+		{Agent: "copilot", User: "octo", Auth: tok("gho_own")},
 		{Agent: "copilot", User: "wwjxhy", Auth: tok("gho_w"), On: true, First: true},
 		{Agent: "copilot", User: "other", Auth: tok("gho_o"), On: true},
 	}

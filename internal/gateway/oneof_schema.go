@@ -12,7 +12,7 @@ import (
 // compiler (xgrammar) that refuses oneOf: OpenRouter's ModelRun answered
 // a tool of Codex's (mcp__codex_app__automation_update) "unsupported
 // schema keyword: oneOf with overlapping or non-provably-disjoint
-// branches", 400, through Cline (H20 on Discord), and takes anyOf. To a
+// branches", 400, through Cline (H20 报告), and takes anyOf. To a
 // model choosing what to call, one of the branches is what either says.
 // The key is renamed in place, the same length, so nothing else of the
 // body changes and a cache keeps its prefix.

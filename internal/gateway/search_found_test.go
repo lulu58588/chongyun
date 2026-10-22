@@ -370,7 +370,7 @@ func TestSearcherFindingNothingGivesWay(t *testing.T) {
 	}
 
 	// one picked in Settings gives way to the APIs only, never to ds2
-	// (Gearclickist on Discord)
+	// (Gearclickist 报告)
 	apis.asked = nil
 	st := settings.Load()
 	st.Searcher = "ds"

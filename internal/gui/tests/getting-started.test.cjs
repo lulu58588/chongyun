@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// wangye1644294 on X: magpie isn't friendly to a first-time user; a guide,
+// wangye1644294 报告: magpie isn't friendly to a first-time user; a guide,
 // routing set up in a click and the agents found here, please. A new user's
 // Agents page (the window's first page, and the panel's first tab) has a Get
 // started card: add a model source, connect an agent (those found here, each

@@ -14,7 +14,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// What each of a search API's keys has left (SlouchyQuill on Discord):
+// What each of a search API's keys has left (SlouchyQuill 报告):
 // Tavily says it at GET /usage, by the key it is asked with. A read that
 // fails is said as unknown with why, never as 0 used.
 

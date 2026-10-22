@@ -13,7 +13,7 @@ import (
 
 // magpie provider models <id> +m adds a model to those exposed and -m takes
 // one out, keeping the rest; the whole-list form still replaces the list,
-// and says it did and how many there were before (MOMO on Discord: 35
+// and says it did and how many there were before (MOMO 报告: 35
 // exposed became 8 with nothing said).
 func TestProviderModelsAddsRemovesAndSaysWhatItReplaced(t *testing.T) {
 	groupsHome(t)
@@ -107,7 +107,7 @@ func TestProviderModelsAddsRemovesAndSaysWhatItReplaced(t *testing.T) {
 
 // magpie models and magpie provider <id> name the models a provider's list
 // has that it doesn't expose, and why, so a group naming one ("no member
-// ready (not served)") can be put right (MOMO on Discord: 35 exposed of 37,
+// ready (not served)") can be put right (MOMO 报告: 35 exposed of 37,
 // opencode-go/deepseek-flash not in magpie models).
 func TestModelsSayWhatIsNotExposed(t *testing.T) {
 	groupsHome(t)

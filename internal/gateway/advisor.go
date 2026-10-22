@@ -16,7 +16,7 @@ import (
 // "name": "advisor", "model": …}, and names the advisor's model as it
 // names its own: on magpie, by magpie's id ("anthropic/claude-opus-5-5",
 // or the tier an alias like opus is on), which no vendor knows, so the
-// whole request was turned away (JackChou on Discord).
+// whole request was turned away (JackChou 报告).
 //
 // The advisor runs at the vendor, on the same account: its model goes as
 // that upstream's own name for it when it is p's, as the request's own
@@ -139,7 +139,7 @@ func advisorGoneIn(text string) (string, bool) {
 // Left there, the reference named a tool the request no longer has, and
 // the instructions had the model call advisor() as one of the agent's own
 // tools, which Claude Code answers "No such tool available: advisor"
-// (JackChou on Discord).
+// (JackChou 报告).
 func withoutAdvisor(raw json.RawMessage, gone map[string]bool) (json.RawMessage, bool) {
 	if len(gone) == 0 || !bytes.Contains(raw, []byte("dvisor")) {
 		return raw, false

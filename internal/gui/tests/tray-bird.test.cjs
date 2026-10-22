@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Settings → Menu bar magpie icon (KevinXC on Discord: hide the icon in the
+// Settings → Menu bar magpie icon (KevinXC 报告: hide the icon in the
 // menu bar, the allowances alone): on a Mac with a card in the menu bar, an
 // On/Off row under the logos row; Off posts trayNoBird and On takes it back;
 // a save of another setting keeps it; no row without a card, nor off a Mac;

@@ -164,7 +164,7 @@ func proxyLink(key string) string {
 // serveCmd: magpie serve [--web[=host:port]] — the gateway, and with
 // --web magpie web's page from the same process: what the service runs
 // (`chongyun daemon install --web`), so the page shows the gateway that
-// serves the agents, its routing included (HuanCheng on Discord).
+// serves the agents, its routing included (HuanCheng 报告).
 func serveCmd(args []string) error {
 	args, err := tlsFlags(args)
 	if err != nil {

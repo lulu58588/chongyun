@@ -95,7 +95,7 @@ func serve(s *Server, path, body string) (int, string) {
 	return rec.Code, rec.Body.String()
 }
 
-// #2168 (@bugyaluwang on X too): OpenCode Go's gemini-4-argon-contributor
+// #2168 (@bugyaluwang 报告 too): OpenCode Go's gemini-4-argon-contributor
 // went to /zen/go/v1/chat/completions, the one API it isn't served on,
 // and Go answered "Model does not support this protocol". models.dev
 // lists it for Google's SDK, so it is asked on Gemini's

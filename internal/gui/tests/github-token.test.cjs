@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Player on Discord: checking the library's skills for updates ran into
+// Player 报告: checking the library's skills for updates ran into
 // GitHub's rate limit. Settings → Network and sharing has a GitHub token
 // row: a token typed is saved on its own and shown masked, with Remove; one
 // GITHUB_TOKEN / GH_TOKEN gives is said; one refused is said in the row,

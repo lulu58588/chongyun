@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A group in the group and a provider's accounts fold on the Routing page
-// (Aiirobyte on Discord: a routing group of many accounts took so much of
+// (Aiirobyte 报告: a routing group of many accounts took so much of
 // the page that its groups, to edit, were a long scroll down). On the
 // stage, a group in the group folds from its heading: folded, it says how
 // many it routes to and what they do together, a request to one of them

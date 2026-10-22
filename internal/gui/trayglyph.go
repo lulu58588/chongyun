@@ -12,7 +12,7 @@ import (
 )
 
 // A Linux bar's tray icon is the menu bar's bird alone, in one colour on
-// transparency, as the icons beside it are (ylorn on Discord): the app's
+// transparency, as the icons beside it are (ylorn 报告): the app's
 // own icon, a coloured bird on a white tile, stood out in a row of them, and
 // a bar that tints its icons to the theme by their alpha made the tile a
 // solid block. A bar that doesn't tint shows the colour given: light, as

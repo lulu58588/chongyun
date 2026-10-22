@@ -149,7 +149,7 @@ func missingSeerNote() string {
 // textOnlyNote is what a request turned away for its image says of why
 // magpie takes the model for text-only and where that is changed, so the
 // reader turns on the model's switch rather than trying another model or
-// reinstalling the agent (KimYx0207 on X, over mark_li21's Codex paste): the
+// reinstalling the agent (KimYx0207 报告, over mark_li21's Codex paste): the
 // user's own answer, else what the provider's list says; for a group, that
 // none of its members is marked as taking images.
 func textOnlyNote(p provider.Provider, model string, group string) string {

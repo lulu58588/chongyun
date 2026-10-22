@@ -30,7 +30,7 @@ func (w *openCounter) OpenURL(u string) error {
 
 // A plugin's sign-in page opens once. Grok Build's `grok login` opens its
 // page in the browser itself on macOS and Windows, and magpie opened it
-// again: two pages every time (andyfmyth on X). A plugin that says the page
+// again: two pages every time (andyfmyth 报告). A plugin that says the page
 // is open already gets none opened by magpie; one that doesn't gets one.
 func TestPluginSignInPageOpensOnce(t *testing.T) {
 	bun := testenv.Bun(t)

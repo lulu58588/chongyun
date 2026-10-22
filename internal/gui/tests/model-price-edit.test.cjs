@@ -5,7 +5,7 @@
 // price until one is typed, a part left empty takes the list's, and
 // Restore default gives it its list price again; all made with the
 // provider's Save. A Remote magpie's model says its list price is what the
-// other magpie counts it at (Sorghum on Discord). English and Chinese.
+// other magpie counts it at (Sorghum 报告). English and Chinese.
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
@@ -88,7 +88,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       await row("model-2").getByRole("button", { name: L.reset }).click();
       assert.deepEqual(await boxes("model-2").evaluateAll((is) => is.map((i) => i.value)), ["", "", "", "", ""]);
       // no list price: input and output must be given, one box at a time —
-      // the part typed stays (PAMI on Discord: it was emptied, so no price
+      // the part typed stays (PAMI 报告: it was emptied, so no price
       // could be set), and a Save before the other part asks for it
       await row("model-3").getByRole("textbox", { name: L.input, exact: true }).fill("3");
       await row("model-3").getByRole("textbox", { name: L.input, exact: true }).press("Enter");

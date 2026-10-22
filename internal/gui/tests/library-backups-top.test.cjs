@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Dade on Discord: on the Library pages each tab's Backups (备份) sat at the
+// Dade 报告: on the Library pages each tab's Backups (备份) sat at the
 // very foot, under a long list, and was hard to find. It is at the top of
 // every tab now, in the strip that stays as the page scrolls, right after
 // Library folder, with the same look; nothing is left at the foot. It

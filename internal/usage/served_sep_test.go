@@ -3,7 +3,7 @@ package usage
 import "testing"
 
 // A vendor that writes a version's dots as hyphens or underscores answered
-// with the model asked for (vincentzhang on Discord: Volcengine Ark's
+// with the model asked for (vincentzhang 报告: Volcengine Ark's
 // deepseek-v4.1-flash answered as deepseek-v4-1-flash, marked another
 // model); another model is still one.
 func TestSwappedIgnoresSeparators(t *testing.T) {

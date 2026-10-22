@@ -70,7 +70,7 @@ func TestHermes(t *testing.T) {
 
 	// its own model: the user's provider comes back, magpie's entry stays
 	// beside it, so Hermes's session picker still offers magpie's models
-	// and it is still connected (lijiho96940561 on X)
+	// and it is still connected (lijiho96940561 报告)
 	if err := f.Set("moonshotai/kimi-k3"); err != nil {
 		t.Fatal(err)
 	}
@@ -129,7 +129,7 @@ func TestHermes(t *testing.T) {
 // Each of Hermes's bots is a profile under ~/.hermes/profiles/<name> with a
 // config.yaml of its own, which doesn't read the main one's: connected,
 // magpie is offered in every bot's picker, each keeps its own model, and
-// Disconnect takes magpie out of each (lijiho96940561 on X: only the main
+// Disconnect takes magpie out of each (lijiho96940561 报告: only the main
 // bot had magpie).
 func TestHermesProfiles(t *testing.T) {
 	home := t.TempDir()
@@ -248,7 +248,7 @@ func TestHermesProfilesOfCustomRoot(t *testing.T) {
 	}
 }
 
-// TestHermesFolder (新v学员 on Discord): on this machine Hermes's folder is
+// TestHermesFolder (新v学员 报告): on this machine Hermes's folder is
 // its own default, %LOCALAPPDATA%\hermes on native Windows, not ~/.hermes
 // there, and its profiles are under it; in a WSL distro, which is Linux and
 // whose variables magpie can't read, it is ~/.hermes.
@@ -360,7 +360,7 @@ func TestHermesKeepsTheUsersSettings(t *testing.T) {
 	check("pick")
 }
 
-// PaulT on Discord: a key made under Gateway keys, put in Hermes's
+// PaulT 报告: a key made under Gateway keys, put in Hermes's
 // config.yaml in place of magpie's, goes through magpie all the same, so
 // the check is quiet and a sync keeps it. A key the gateway doesn't take
 // still is drift.
@@ -415,7 +415,7 @@ func TestHermesWithAGatewayKeyOfTheUsers(t *testing.T) {
 	}
 }
 
-// PaulT on Discord: Hermes's provider written as Hermes keeps keys, the
+// PaulT 报告: Hermes's provider written as Hermes keeps keys, the
 // api_key "${MAGPIE_API_KEY}" with the key in Hermes's .env, was marked as
 // needing attention. A reference names the key Hermes sends: one that
 // reaches magpie is not drift and a sync keeps it; one magpie can't see is

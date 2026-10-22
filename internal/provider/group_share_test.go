@@ -28,7 +28,7 @@ func sharedAt(t *testing.T, id string) Group {
 	return g
 }
 
-// laincatx on X: a routing group is shared as text and pasted into
+// laincatx 报告: a routing group is shared as text and pasted into
 // another magpie. What goes is the group's routing, rules and members,
 // never a key; pasted back, it is the same group under a name of its own.
 func TestSharedGroupRoundTrip(t *testing.T) {

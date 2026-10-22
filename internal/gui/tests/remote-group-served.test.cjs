@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // A request sent to a remote magpie for one of its routing groups is
-// answered with the member the group routed to (莫 on Discord: group/auto-…
+// answered with the member the group routed to (莫 报告: group/auto-…
 // answered by deepseek/deepseek-v4.1-flash, shown amber as a swap). The
 // gateway marks it routed, not swapped: the Routing page's Requests list
 // shows the member plain, not amber, with a title saying the remote magpie's

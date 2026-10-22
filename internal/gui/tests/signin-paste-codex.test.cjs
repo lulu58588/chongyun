@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// A ChatGPT sign-in finished from its address (Jorben on Discord: magpie in
+// A ChatGPT sign-in finished from its address (Jorben 报告: magpie in
 // Docker on a cloud server, its web UI in his browser; ChatGPT sent the
 // browser back to http://localhost:1455/auth/callback?code=…, his own
 // machine, and the sign-in never finished). While the sign-in waits, the box

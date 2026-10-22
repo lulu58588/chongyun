@@ -47,13 +47,13 @@ func movingOf(t *testing.T, id string) map[string]Moving {
 	return out
 }
 
-// Kiro's own sign-in goes as a marker, an account magpie signed in whole,
-// the provider's key as an API key account (off the provider while the
-// plugin has it); back, a renewed sign-in is written into its home, one
-// signed in since gets a home, and the key goes back onto the provider.
+// An account magpie signed in goes whole, the provider's key as an API key
+// account (off the provider while the plugin has it); back, a renewed
+// sign-in is written into its home, one signed in since gets a home, and
+// the key goes back onto the provider. Kiro's own sign-in is not read, so
+// it doesn't go as a marker.
 func TestKiroMover(t *testing.T) {
 	kiroSandbox(t)
-	writeFile(t, filepath.Join(kiroIDEDir(), "kiro-auth-token.json"), map[string]any{"accessToken": "ide-a", "refreshToken": "ide-r"})
 	home, err := newKiroHome()
 	if err != nil {
 		t.Fatal(err)
@@ -70,10 +70,9 @@ func TestKiroMover(t *testing.T) {
 	if k := ms["Kiro API key"]; !k.First || k.Auth["type"] != "api" || k.Auth["key"] != "ksk_1" || k.Auth["accountId"] != "Kiro API key" {
 		t.Fatalf("the key: %+v", k)
 	}
-	// retired and not moved, the own sign-in still goes, as a marker
-	own := ms["Kiro account"]
-	if !own.Own || own.First || own.Auth["source"] != "kiro" || own.Auth["access"] != "" {
-		t.Fatalf("Kiro's own: %+v", own)
+	// Kiro's own sign-in is not read, so it isn't moved
+	if own, ok := ms["Kiro account"]; ok {
+		t.Fatalf("Kiro's own sign-in was moved: %+v", own)
 	}
 	// with the key, the built-in used nothing else: b goes along off
 	b := ms["b@x"]
@@ -112,8 +111,9 @@ func TestKiroMover(t *testing.T) {
 	if c, ok := readKiroFile(filepath.Join(nx.Home, kiroTokenFile)); !ok || c.access != "n-a" || !c.social {
 		t.Fatalf("n@x's home: %+v", c)
 	}
-	// Kiro's own: nothing to write
-	if ls2, user, err := movers["kiro"].back(ls, "Kiro account", own.Auth); err != nil || user != "Kiro account" || len(ls2) != n+1 {
+	// a marker of Kiro's own sign-in, as the plugin sends it: nothing to write
+	if ls2, user, err := movers["kiro"].back(ls, "Kiro account", map[string]any{"type": "oauth", "source": "kiro",
+		"access": "", "refresh": "", "expires": 0, "accountId": "Kiro account"}); err != nil || user != "Kiro account" || len(ls2) != n+1 {
 		t.Fatalf("Kiro's own back: %v %q", err, user)
 	}
 	// the key: back onto the provider once logins.json is let go, saving

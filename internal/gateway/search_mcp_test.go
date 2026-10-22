@@ -66,7 +66,7 @@ func readMCP(t *testing.T, w *httptest.ResponseRecorder) mcpReply {
 const mcpSearchCall = `{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"web_search","arguments":{"query":"latest go"}}}`
 
 // magpie's web search is an MCP server of its own on the gateway (Kayphoon
-// on Discord): an MCP client initializes, lists its web_search tool and
+// 报告): an MCP client initializes, lists its web_search tool and
 // calls it, and the search goes where a model's web_search would go — here
 // the search API the user set up — the pages it found in the tool's text.
 func TestSearchMCPServesWebSearch(t *testing.T) {

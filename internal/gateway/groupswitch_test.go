@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// A routing group switched off (PAMI on Discord) is not in /v1/models, a
+// A routing group switched off (PAMI 报告) is not in /v1/models, a
 // request to it is turned away saying it is off rather than sent to its
 // models, and a group that has it in it goes on to its next member.
 func TestSwitchedOffGroup(t *testing.T) {

@@ -78,7 +78,7 @@ func TestCodexStaleOnlyForMagpiesChange(t *testing.T) {
 	}
 }
 
-// miaopasi on Discord: the Codex row stayed "已接入 · 重开 Codex 后生效"
+// miaopasi 报告: the Codex row stayed "已接入 · 重开 Codex 后生效"
 // after Codex was restarted. On macOS closing the Codex app's window
 // leaves the app running, its app-server with it; an editor's Codex and
 // the CLI's managed daemon run on through a reopened app too. Each copy

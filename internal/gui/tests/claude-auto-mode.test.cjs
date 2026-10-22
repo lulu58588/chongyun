@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Claude Code's auto mode classifier can run on a model of its own
-// (CLAUDE_CODE_AUTO_MODE_MODEL, Claude Code 2.1.302; Linka on Discord).
+// (CLAUDE_CODE_AUTO_MODE_MODEL, Claude Code 2.1.302; Linka 报告).
 // Connected, the opened row's Tiers has an Auto mode line after Subagents:
 // unset it says default, a click opens the app's model picker with Default
 // first, noted as Claude Code's own pick, and a model picked is posted;

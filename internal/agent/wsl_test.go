@@ -313,7 +313,7 @@ func TestWSLListFails(t *testing.T) {
 	}
 }
 
-// TJHHHH on Discord: magpie kept starting WSL while they repaired it. An
+// TJHHHH 报告: magpie kept starting WSL while they repaired it. An
 // agent made while its distro ran is still read after the user stops it
 // (wsl --shutdown): its fields shown, the catalog synced, its check, the
 // requests it made. None of them opens the stopped distro, which would

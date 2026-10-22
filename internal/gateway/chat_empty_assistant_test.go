@@ -251,7 +251,7 @@ func TestChatRelaySilentAssistantsOnly(t *testing.T) {
 // a long conversation with nothing to leave out costs it a look at the
 // assistant turns, not a decode of every message: it decoded all of a
 // 1.5 MB conversation into maps on each attempt, ~4 MB allocated a request
-// (yg6888 on X). A silent turn at the very end, or written with escapes,
+// (yg6888 报告). A silent turn at the very end, or written with escapes,
 // is still found.
 func TestSilentAssistantsOutDecodesOnlyAssistants(t *testing.T) {
 	var turns []string

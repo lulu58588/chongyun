@@ -17,7 +17,7 @@ import (
 // Go's is USERPROFILE and HOME is mostly unset, but one the user set (for
 // Git Bash, MSYS2 or Emacs) is where ZCode keeps everything, and magpie
 // wrote its provider under USERPROFILE, where ZCode never looked
-// (Gearclickist on Discord: connected, no error, and no magpie in ZCode).
+// (Gearclickist 报告: connected, no error, and no magpie in ZCode).
 func ZCodeHome(home string) string { return ZCodeHomeOn(runtime.GOOS, home) }
 
 // ZCodeHomeOn is ZCodeHome on goos, so a test can ask for Windows'. A

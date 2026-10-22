@@ -61,7 +61,7 @@ var glmChatThinksSlowly = []string{
 // A model whose vendor never refuses after reasoning has its thinking
 // streamed as it comes, through a group as directly: GLM on a ZCode
 // account behind a route group showed Claude Code its thinking only once
-// the text began (悠悠哥 on Discord), held there for a refusal (#248) that
+// the text began (悠悠哥 报告), held there for a refusal (#248) that
 // only Claude's, OpenAI's and Gemini's safety filters send.
 func TestThinkingStreamsThroughGroup(t *testing.T) {
 	for _, x := range []struct {
@@ -146,11 +146,11 @@ func TestThinkingHeldFor(t *testing.T) {
 // is streamed as it comes: held for a refusal (#248) that would go to the
 // agent anyway, as the last candidate's does, a relay's Claude showed
 // Claude Code its thinking all at once with the text, and Codex none until
-// then (iTianbao on X). Each of the relay's APIs, to Claude Code and
+// then (iTianbao 报告). Each of the relay's APIs, to Claude Code and
 // Codex. Gemini's too, which a reply that only reasoned no longer needs
 // held for (it is asked again in place, #667): held, Codex on a Gemini
 // model had nothing, not even response.created, until the text began
-// (LuckymanJC on Discord).
+// (LuckymanJC 报告).
 func TestThinkingStreamsWithNoOneElse(t *testing.T) {
 	geminiThinks := []string{
 		`data: {"candidates":[{"content":{"role":"model","parts":[{"text":"first thought","thought":true}]}}],"modelVersion":"gemini-3-pro"}`,

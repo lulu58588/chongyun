@@ -2,7 +2,7 @@ package provider
 
 // What a Cline API key has left: ClinePass's 5-hour, weekly and monthly
 // limits and the account's credit balance, read with the key as the Cline
-// plugin reads them signed in (zRain on Discord: AxonHub reads them with a
+// plugin reads them signed in (zRain 报告: AxonHub reads them with a
 // key). GET /users/me/plan/usage-limits answers a key as it answers an
 // account; an account without ClinePass is a 404 there and has its credits
 // alone.

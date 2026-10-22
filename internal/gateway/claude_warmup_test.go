@@ -179,7 +179,7 @@ func TestClaudeUsageRunsInSavedAccountDirectory(t *testing.T) {
 
 // With Claude Code's verbose output on (its /config, kept in .claude.json),
 // claude -p --output-format json prints every message as an array, the
-// system init first and the result last (KevinXC on Discord: usage
+// system init first and the result last (KevinXC 报告: usage
 // couldn't be read; the tooltip began [{"type":"system","subtype":"init")
 func TestClaudeVerboseOutput(t *testing.T) {
 	text := "Current session: 13% used"

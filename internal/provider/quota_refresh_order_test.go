@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"path/filepath"
 	"strconv"
 	"sync"
@@ -212,10 +211,9 @@ func TestRefreshUsageKeepsNewerSubscription(t *testing.T) {
 	for _, refused := range []bool{false, true} {
 		t.Run(fmt.Sprintf("late error=%t", refused), func(t *testing.T) {
 			isolateRefreshes(t)
-			home := signIn(t)
-			if err := os.RemoveAll(filepath.Join(home, ".config", "github-copilot")); err != nil {
-				t.Fatal(err)
-			}
+			// only the ChatGPT account: a Copilot one would be listed
+			// beside it, and the page reads both
+			codexOwnLogin(t, "me@example.com", "pro", codexAuthBlob("me@example.com", "pro", "acct-1", time.Now().Add(time.Hour)))
 			arrived, release := make(chan struct{}), make(chan struct{})
 			var once sync.Once
 			var mu sync.Mutex

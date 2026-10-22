@@ -40,7 +40,7 @@ func openCodeSeed(in http.Header, body []byte) string {
 // (never a value), and whether x-opencode-session was among them, by its
 // first 8 characters. OpenCode answers a request without one 400
 // "Request is missing x-opencode-session and cannot be routed
-// efficiently" (luci on Discord), and this tells that apart from a
+// efficiently" (luci 报告), and this tells that apart from a
 // session the user's own header pins every conversation to.
 func logOpenCodeRefusal(p provider.Provider, req *http.Request, status int) {
 	var names []string

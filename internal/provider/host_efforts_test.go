@@ -10,7 +10,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
-// ARNO on Discord: 我发现是之前很多能自动推导 reasoning_efforts 列表的模型
+// ARNO 报告: 我发现是之前很多能自动推导 reasoning_efforts 列表的模型
 // 现在都推导失败了. The Azure OpenAI preset (Catalog "azure, openai") was
 // taken for a maker, so models.dev's azure list — Kimi K2.5, DeepSeek V3.2
 // and R1, Grok 4.20 Reasoning, served there with no levels listed — was the

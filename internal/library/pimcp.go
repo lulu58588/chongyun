@@ -122,7 +122,7 @@ func piPackageName(spec string) (name, pin string) {
 // packages settings.json lists, its extensions entries, and what its
 // extensions folder has. A package left in npm/node_modules, git/ or npm's
 // global folder that settings.json doesn't list isn't loaded (heliar-k on
-// #1097, sydney on Discord: a pi-mcp-adapter left there with `packages: []`
+// #1097, sydney 报告: a pi-mcp-adapter left there with `packages: []`
 // sent the servers to mcp-adapter.json, which Pi 1.0 never reads); those
 // folders only tell a loaded adapter's version.
 func piDetect(d string) piPlugins {

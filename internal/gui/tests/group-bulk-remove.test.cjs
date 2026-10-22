@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Routing groups are removed several at once, and the found ones removed
-// are no longer listed one by one (lc on Discord: "路由组可否关闭自动发现，
+// are no longer listed one by one (lc 报告: "路由组可否关闭自动发现，
 // 并且可编辑批量移除，已经移除的不要显示"). Select, by New group, puts a box
 // on each card; a click on a card picks it, the bar's box picks all or
 // none, and Remove asks in a dialog before it posts groups/delete

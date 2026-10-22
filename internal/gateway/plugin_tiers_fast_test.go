@@ -7,7 +7,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// Lovest on Discord: a provider plugin says the service tiers its vendor
+// Lovest 报告: a provider plugin says the service tiers its vendor
 // serves a model at (serviceTiers, #2514), but only Cursor's plugin's
 // models could be switched fast. A plugin's model it says is served at
 // priority has fast mode, whichever plugin: it is saved fast in a group

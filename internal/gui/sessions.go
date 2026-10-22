@@ -345,7 +345,7 @@ func sessionRoutes(mux *http.ServeMux, w Windows) {
 // A session only magpie's gateway recorded is written from that record, as
 // transcript reads it: the agent of one that reaches this magpie through a
 // remote magpie ran on another machine, so there is no file of it here, and
-// its download was a 400 "no such session" (akic404 on Discord).
+// its download was a 400 "no such session" (akic404 报告).
 func sessionMarkdown(agentID, id string) (stem string, md []byte, err error) {
 	s, ok := sessions.Find(agentID, id)
 	var t sessions.Transcript

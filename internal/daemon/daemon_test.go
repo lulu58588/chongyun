@@ -76,7 +76,7 @@ func write(t *testing.T, path, text string) {
 // On Linux, install writes a user unit that runs `chongyun serve` with the
 // shell's PATH, proxy and agents' folders, readable by the user alone,
 // then enables and starts it through systemctl --user; uninstall stops,
-// disables and removes it (HuanCheng on Discord).
+// disables and removes it (HuanCheng 报告).
 func TestSystemdInstallAndUninstall(t *testing.T) {
 	log, _ := fakes(t, "linux")
 	t.Setenv("HTTPS_PROXY", "http://me:p%ss@proxy:8080")
@@ -384,7 +384,7 @@ func TestEnviron(t *testing.T) {
 // The service's PATH has the Node a terminal gets though the shell
 // install runs from hasn't: nvm loaded lazily, or not at all over ssh, put
 // no node on PATH, and plugins started under systemd found none (bookyue
-// on Discord). nvm's default is the one written, not its newest.
+// 报告). nvm's default is the one written, not its newest.
 func TestInstallFindsNvmNode(t *testing.T) {
 	log, dir := fakes(t, "linux")
 	widenPath = realWiden
@@ -432,7 +432,7 @@ var realWiden = widenPath
 // with the page's key in its environment, on both systems, and Web reads
 // both back from the service's own file: the key stays the same across
 // restarts and is what `chongyun daemon status` prints the link with
-// (HuanCheng on Discord). Installed again without, both are gone, and a
+// (HuanCheng 报告). Installed again without, both are gone, and a
 // MAGPIE_WEB_KEY in the shell is never carried into a service with no page.
 func TestInstallWithWeb(t *testing.T) {
 	const key = "0123456789abcdef0123456789abcdef"

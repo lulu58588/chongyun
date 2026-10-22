@@ -107,7 +107,7 @@ func fakeRegistry(t *testing.T, servers ...string) *[]string {
 	return &searched
 }
 
-// #lc on Discord: https://github.com/crystaldba/postgres-mcp pasted into
+// #lc 报告: https://github.com/crystaldba/postgres-mcp pasted into
 // Discover found nothing — the registry searches names, and featured ones
 // were matched on their words. An address finds what is at it.
 func TestMarketFindsByAddress(t *testing.T) {

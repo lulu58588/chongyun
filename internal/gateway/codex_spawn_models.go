@@ -20,7 +20,7 @@ import (
 // though it takes any model of the catalog named in spawn_agent's model
 // argument (find_spawn_agent_model_name). So a lead could put its
 // subagents on five models at most, with "Codex subagents on any model"
-// on or not (Gearclickist on Discord). spawnAgentModels has the tool name
+// on or not (Gearclickist 报告). spawnAgentModels has the tool name
 // the rest of the catalog too, the models a subagent spawned from that
 // lead can work on: every one, but only a ChatGPT account's when the lead
 // is answered by the ChatGPT backend in multi-agent V2, which seals its
@@ -63,7 +63,7 @@ func spawnAgentModels(r *http.Request, body []byte, lead string, codexPath bool)
 	// searches for it: Codex defers its multi-agent V1 tools behind
 	// tool_search (codex-rs core/src/tools/spec_plan.rs, Deferred when
 	// supports_search_tool), and the tool comes back in the conversation,
-	// in a tool_search_output, not in tools (Gearclickist on Discord, after
+	// in a tool_search_output, not in tools (Gearclickist 报告, after
 	// v0.1.1214). Codex sends that output as it got it on every turn, so
 	// it is widened the same way on each.
 	var input []map[string]json.RawMessage

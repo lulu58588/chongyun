@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// 新v学员 on Discord: "RTK and other actions that need elevation all fail".
+// 新v学员 报告: "RTK and other actions that need elevation all fail".
 // RTK winget installed for every user (under Program Files) only an
 // administrator can upgrade. Upgrade's title now says Windows asks for an
 // administrator first; a prompt declined, or not to be had, says so on the

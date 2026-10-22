@@ -202,7 +202,7 @@ func TestBurstTellsNoSpeed(t *testing.T) {
 	}
 }
 
-// A reply that reasoned is timed by its answer (tony on Discord: gpt-6.1-sol
+// A reply that reasoned is timed by its answer (tony 报告: gpt-6.1-sol
 // read 163 tok/s with a 14 s first token). A Codex turn of 2000 hidden
 // reasoning tokens before its first content at 14 s and a 200-token answer
 // over the 1.5 s after counted 2200 tokens in 1.5 s, 1,467 tok/s; it's 200

@@ -2,7 +2,7 @@ package library
 
 // RTK installed for every user of a Windows computer (winget --scope
 // machine, under C:\Program Files\WinGet) is one only an administrator can
-// upgrade, and magpie runs as the user (新v学员 on Discord: "RTK and
+// upgrade, and magpie runs as the user (新v学员 报告: "RTK and
 // other actions that need elevation all fail"). magpie isn't run as
 // administrator for it: an elevated magpie would write the agents' files
 // as the administrator, and couldn't start with Windows without asking each

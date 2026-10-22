@@ -12,11 +12,11 @@ import (
 )
 
 // ClinePass's DeepSeek models are served by DeepSeek's own API alone when
-// the provider pins them (White Immortal on Discord, as ClinePass +
+// the provider pins them (White Immortal 报告, as ClinePass +
 // ProviderPin does): each request for one carries
 // providerOptions.gateway.only ["deepseek"], on Chat and when an Anthropic
 // or Responses request is built into one. Its GLM models are pinned to
-// Z.ai's the same way, ["zai"] (sdytman on Discord). glm-5.3-flash, which
+// Z.ai's the same way, ["zai"] (sdytman 报告). glm-5.3-flash, which
 // Cline sends through OpenRouter, not Vercel's gateway, is pinned by
 // OpenRouter's top-level provider.only ["z-ai"] instead, while
 // deepseek-v4.1-flash and its -1017 stay on providerOptions (sdytman,

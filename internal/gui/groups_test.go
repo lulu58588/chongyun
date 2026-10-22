@@ -91,7 +91,7 @@ func TestGroupsFoundSwitch(t *testing.T) {
 	}
 }
 
-// groups/delete with ids removes them all at once (lc on Discord), or none
+// groups/delete with ids removes them all at once (lc 报告), or none
 // when it can't remove one.
 func TestGroupsDeleteSeveral(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())

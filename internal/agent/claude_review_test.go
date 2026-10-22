@@ -10,7 +10,7 @@ import (
 )
 
 // TestClaudeAutoModeReview: Claude Code in auto mode behind magpie on a
-// model Anthropic doesn't review (1EFLOPS on X, on Codex's gpt-6.1-sol)
+// model Anthropic doesn't review (1EFLOPS 报告, on Codex's gpt-6.1-sol)
 // said "this session isn't eligible because your requests go through
 // 127.0.0.1:3425…". Anthropic's page says to turn the review off
 // (CLAUDE_CODE_AUTO_MODE_SERVER=0) for a gateway that can't run it: magpie

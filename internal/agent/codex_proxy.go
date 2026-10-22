@@ -17,7 +17,7 @@ import (
 
 // Codex sends its requests to magpie's gateway, http://127.0.0.1:3425, the
 // way it sends every other: through a proxy when one is set (Muma102kMichael
-// on X: every project and every new chat 502, "a local gateway config and a
+// 报告: every project and every new chat 502, "a local gateway config and a
 // proxy switch, two pitfalls stacked"). Its HTTP client is reqwest with its
 // default features (codex-rs Cargo.toml), whose proxy is hyper-util's
 // Matcher::from_system: HTTP_PROXY, else the system's proxy for http://

@@ -216,7 +216,7 @@ func TestSearchedConversationOnCodexSignIn(t *testing.T) {
 // web search on, and runs through /alpha/search.
 const webRunTool = `{"type":"namespace","name":"web","description":"Tools in the web namespace.","tools":[{"type":"function","name":"run","description":"Search the web.","strict":false,"parameters":{"type":"object","properties":{"search_query":{"type":"array"}}}}]}`
 
-// Savin on Discord (Codex 0.163.0-alpha.10.2, signed in with ChatGPT):
+// Savin 报告 (Codex 0.163.0-alpha.10.2, signed in with ChatGPT):
 // a conversation that had searched with the hosted tool went on under
 // Codex's web.run, and magpie declared the hosted web_search for the
 // replayed search (#1270) beside it, which the backend refuses. web.run is

@@ -1,6 +1,6 @@
 package gateway
 
-// A turn's end, for the notification that an agent is done (itieniu on X):
+// A turn's end, for the notification that an agent is done (itieniu 报告):
 // the user sets a long task going and works in another window, and wants
 // to hear when it has finished.
 //

@@ -13,7 +13,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/settings"
 )
 
-// The allow list (lc on Discord) is saved cleaned; an entry that isn't an
+// The allow list (lc 报告) is saved cleaned; an entry that isn't an
 // address, a list that would shut out the page saving it, and any list
 // while MAGPIE_ALLOW_IPS sets it are refused with the list left as it
 // was; a save of the rest of the Settings page leaves it alone; the page
@@ -103,7 +103,7 @@ func TestAllowIPsUnreadableSettingsNotSavedOver(t *testing.T) {
 // The desktop window's requests reach the API through Wails, which names
 // their address 192.0.2.1:1234 when it has none. Saving an allow list from
 // the window doesn't call that address the page's and refuse the list
-// (Mathresearcher on Discord).
+// (Mathresearcher 报告).
 func TestAllowIPsFromTheAppWindow(t *testing.T) {
 	h := t.TempDir()
 	t.Setenv("HOME", h)

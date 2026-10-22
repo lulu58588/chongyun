@@ -12,7 +12,7 @@ import (
 )
 
 // Workers AI's decision models are each tested from their right-click as
-// System One's are (ARNO on Discord: cloudflare-jev's models couldn't be):
+// System One's are (ARNO 报告: cloudflare-jev's models couldn't be):
 // Jev is asked with the question as the input of a run of it, a Clef with
 // the question as it is, at its own path, and each one's answer is read
 // out of Cloudflare's envelope.

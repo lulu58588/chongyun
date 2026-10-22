@@ -31,7 +31,7 @@ func TestPresetHeaderHints(t *testing.T) {
 }
 
 // A provider named in Chinese, whose name slugs to nothing, is added under
-// its host's name, and a second one beside it (mamba on Discord: 第二个会提示
+// its host's name, and a second one beside it (mamba 报告: 第二个会提示
 // id重复).
 func TestAddNameWithoutLatin(t *testing.T) {
 	isolate(t)

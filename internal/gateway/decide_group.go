@@ -1,7 +1,7 @@
 package gateway
 
 // A decision group (provider/decide_group.go) is asked at /v1/systemone as
-// a chat group is asked a conversation (ARNO on Discord: 给decision模型也加
+// a chat group is asked a conversation (ARNO 报告: 给decision模型也加
 // 上group功能): "group/<id>", or the group's id or name, goes to its models'
 // keys and accounts in the group's routing order, and one that fails as a
 // chat request would fail over (retryable) rests, the next asked, each try
@@ -137,7 +137,7 @@ func (s *Server) serveDecisionGroup(w http.ResponseWriter, r *http.Request, body
 // resting after a failure behind the rest — planned as a chat's are, its
 // fallbacks left out: a provider of several keys asked by itself, as a
 // group's classifier or at /v1/systemone, fails over among them as a
-// decision group's members do (fflake33 on Discord: a TypeSafe Jev key
+// decision group's members do (fflake33 报告: a TypeSafe Jev key
 // out of quota was asked on every turn, the next never).
 func (s *Server) decideKeys(p provider.Provider, model string) ([]candidate, planned) {
 	p.Fallback = nil

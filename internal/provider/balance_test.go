@@ -598,7 +598,7 @@ func TestSiliconFlowRetiredBalanceQuery(t *testing.T) {
 }
 
 // A key usage query that takes only "Authorization: Bearer <key>"
-// (lx_78654 on Discord: a header of "Bearer {token}" went as written, and
+// (lx_78654 报告: a header of "Bearer {token}" went as written, and
 // the vendor said "Authorization header format must be 'Bearer {token}'").
 // The key is put in for each of its names, and the key pasted as the
 // balance token goes as a Bearer too, not bare as an access token.
@@ -706,7 +706,7 @@ func TestBalanceMethod(t *testing.T) {
 }
 
 // DeepSeek's card tells its granted credit apart from the money topped
-// up (wwcraft_ on Discord), under the total, which stays the figure the
+// up (wwcraft_ 报告), under the total, which stays the figure the
 // trend follows and an alert reads; an account with nothing granted has
 // no split, all of it topped up.
 func TestDeepSeekBalanceSplit(t *testing.T) {

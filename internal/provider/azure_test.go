@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -171,34 +170,3 @@ func TestAzureModels(t *testing.T) {
 	}
 }
 
-// Another app's Azure OpenAI entry is brought in as the preset, at its
-// resource's v1 API, where magpie used to leave it out.
-func TestImportAzure(t *testing.T) {
-	azureHome(t)
-	cfg, _ := os.UserConfigDir()
-	sqliteFixture(t, filepath.Join(cfg, "alma", "chat_threads.db"),
-		`CREATE TABLE providers (id TEXT PRIMARY KEY, name TEXT, type TEXT, api_key TEXT, models TEXT, base_url TEXT, enabled INTEGER, created_at TEXT, api_format TEXT, is_response_api INTEGER, custom_headers TEXT)`,
-		`INSERT INTO providers VALUES ('z1','Azure','azure','az-key','["team-gpt"]','https://contoso.openai.azure.com/openai',1,'1',NULL,0,NULL)`,
-		`INSERT INTO providers VALUES ('z2','Work Azure','azure','az-2','[]','contoso2',1,'2',NULL,0,NULL)`,
-		`INSERT INTO providers VALUES ('z3','Azure','azure','az-3','[]',NULL,1,'3',NULL,0,NULL)`,
-	)
-	items := itemsOf(t, "alma")
-	it := items["z1"]
-	if it.Skip != "" || it.Provider.Preset != AzurePreset || it.Provider.Name != "Azure OpenAI" || it.Provider.Key != "az-key" ||
-		it.Provider.Chat != "https://contoso.openai.azure.com/openai/v1" || it.Provider.Responses != it.Provider.Chat ||
-		len(it.Provider.Models) != 1 || it.Provider.Icon != "azure-color" {
-		t.Fatalf("azure: %+v", it)
-	}
-	if it := items["z2"]; it.Skip != "" || it.Provider.Name != "Work Azure" || it.Provider.Chat != "https://contoso2.openai.azure.com/openai/v1" {
-		t.Fatalf("by name: %+v", it)
-	}
-	if it := items["z3"]; it.Skip == "" {
-		t.Fatalf("no endpoint offered: %+v", it)
-	}
-
-	// an entry at a resource's host from an app that doesn't say Azure
-	im, skip := imported("My Azure", "k", endpoints{chat: "https://contoso.openai.azure.com/openai/deployments/gpt-4o?api-version=2024-10-21"}, nil)
-	if skip != "" || im.Preset != AzurePreset || im.Chat != "https://contoso.openai.azure.com/openai/v1" || im.Responses != im.Chat {
-		t.Fatalf("imported: %q %+v", skip, im)
-	}
-}

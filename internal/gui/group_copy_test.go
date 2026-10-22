@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// The Routing view's Duplicate (lc on Discord) makes a group of the
+// The Routing view's Duplicate (lc 报告) makes a group of the
 // user's that is the group as it is — its models, patterns, routing,
 // rules, off members — under the name asked, numbered past one in use,
 // listed right after it, switched on; the group it copies is unchanged.

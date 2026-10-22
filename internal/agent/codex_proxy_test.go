@@ -79,7 +79,7 @@ func TestCodexProxyFor(t *testing.T) {
 		// a ProxyServer per protocol is no address to reqwest: direct
 		{"Windows per protocol", plain, nil, netproxy.Proxy{URL: clash, SOCKS: socks}, "windows", ""},
 		{"macOS exceptions not read", plain, nil, mac, "darwin", clash},
-		// liu_dyj on X: reqwest takes macOS' HTTP entry alone for an
+		// liu_dyj 报告: reqwest takes macOS' HTTP entry alone for an
 		// http:// URL; with only HTTPS or SOCKS set Codex goes direct
 		{"macOS HTTPS entry alone", plain, nil, macHTTPS, "darwin", ""},
 		{"macOS SOCKS entry alone", plain, nil, macSOCKS, "darwin", ""},
@@ -144,7 +144,7 @@ func TestCodexProxyNamesItsVariable(t *testing.T) {
 	}
 }
 
-// liu_dyj on X: magpie opened from the Dock lacks the NO_PROXY a shell
+// liu_dyj 报告: magpie opened from the Dock lacks the NO_PROXY a shell
 // profile sets, which the Codex a terminal or the ChatGPT app runs has.
 // The login shell's value is Codex's; magpie's own only where the shell
 // has none.
@@ -256,7 +256,7 @@ func socksOnly(t *testing.T) string {
 	return ln.Addr().String()
 }
 
-// Muma102kMichael on X: Codex 502 on every project and every new chat once
+// Muma102kMichael 报告: Codex 502 on every project and every new chat once
 // magpie took it over, its requests for 127.0.0.1 sent through a proxy that
 // didn't pass them on. Failover, which magpie writes uninvited, is never
 // written then, and one written before goes again; once the proxy passes
@@ -274,10 +274,17 @@ func TestCodexFailoverHeldWhileProxyDoesNotPassOn(t *testing.T) {
 	}
 	me, _ := json.Marshal(auth("me@example.com", "acct-1"))
 	home, read := codexHome(t, string(me), "model = \"gpt-5.5\"\n")
-	b, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "spare@example.com", "on": true,
-		"seen": time.Now(), "auth": auth("spare@example.com", "acct-2")}})
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	b, _ := json.Marshal([]map[string]any{
+		{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(), "auth": auth("me@example.com", "acct-1")},
+		{"agent": "codex", "user": "spare@example.com", "on": true, "seen": time.Now(), "auth": auth("spare@example.com", "acct-2")},
+	})
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), b, 0o600)
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
 
 	works := false
 	proxyAs(t, nil, netproxy.Proxy{URL: "http://127.0.0.1:7890", HTTP: "http://127.0.0.1:7890", Bypass: []string{"localhost", "127.*"}}, "windows", &works)
@@ -369,7 +376,7 @@ func TestCodexProxiedDriftShowsNoCredentials(t *testing.T) {
 	}
 }
 
-// Leon920717 on X: with magpie quit, Codex CLI kept retrying the gateway
+// Leon920717 报告: with magpie quit, Codex CLI kept retrying the gateway
 // till magpie was open again. The failover base URL magpie wrote goes as
 // the magpie serving the gateway quits (EndCodexFailover), and the next
 // start's Sync writes it again; a base URL the user wrote stays.
@@ -389,10 +396,17 @@ func TestCodexFailoverEndsWithMagpie(t *testing.T) {
 	t.Setenv("HOME", home)
 	t.Setenv("USERPROFILE", home)
 	logins := func(on bool) {
-		b, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "spare@example.com", "on": on,
-			"seen": time.Now(), "auth": auth("spare@example.com", "acct-2")}})
+		// chongyun keeps the account it signed the agent in to in its own
+		// logins.json, marked as the one the agent is on: it never reads
+		// the agent's own file to find out which account that is.
+		b, _ := json.Marshal([]map[string]any{
+			{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(), "auth": auth("me@example.com", "acct-1")},
+			{"agent": "codex", "user": "spare@example.com", "on": on, "seen": time.Now(), "auth": auth("spare@example.com", "acct-2")},
+		})
 		os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 		os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), b, 0o600)
+		provider.ForgetAccounts()
+		t.Cleanup(provider.ForgetAccounts)
 	}
 	logins(true)
 	cx := codex(home)
@@ -447,7 +461,7 @@ func TestCodexFailoverEndsWithMagpie(t *testing.T) {
 	}
 }
 
-// CC Switch with "unify Codex session history" on (xuxing0727 on X) runs
+// CC Switch with "unify Codex session history" on (xuxing0727 报告) runs
 // the official sign-in as its "custom" mirror, so failover goes on that
 // table's base_url rather than openai_base_url: it too waits for the proxy
 // to pass Codex on, and goes as the magpie serving the gateway quits.
@@ -469,10 +483,17 @@ func TestCodexMirrorFailoverHeldAndEndsWithMagpie(t *testing.T) {
 	home, read := codexHome(t, string(me), unified)
 	t.Setenv("HOME", home)
 	t.Setenv("USERPROFILE", home)
-	b, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "spare@example.com", "on": true,
-		"seen": time.Now(), "auth": auth("spare@example.com", "acct-2")}})
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	b, _ := json.Marshal([]map[string]any{
+		{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(), "auth": auth("me@example.com", "acct-1")},
+		{"agent": "codex", "user": "spare@example.com", "on": true, "seen": time.Now(), "auth": auth("spare@example.com", "acct-2")},
+	})
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), b, 0o600)
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
 	wasKeep := keepCodexDaemon
 	t.Cleanup(func() { keepCodexDaemon = wasKeep })
 	keepCodexDaemon = func(context.Context, string, time.Time) provider.CodexDaemonCheck { return provider.CodexDaemonCheck{} }

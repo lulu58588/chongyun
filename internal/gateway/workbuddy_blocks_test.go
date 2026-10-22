@@ -27,7 +27,7 @@ func wbTextStream() string {
 
 // A relayed WorkBuddy stream reaches a Chat client without the empty
 // tool_calls list on each delta: Qoder closed its text block on each one,
-// so its reply read a word to a line (ARNO on Discord: workbuddy provider
+// so its reply read a word to a line (ARNO 报告: workbuddy provider
 // 断句出错). The text, the thinking and the finish are as they came.
 func TestChatRelayDropsEmptyToolCalls(t *testing.T) {
 	fresh(t)

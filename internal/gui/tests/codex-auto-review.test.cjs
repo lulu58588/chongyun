@@ -3,7 +3,7 @@
 // runs on the conversation's model, with no way to pick a cheaper one): by
 // default Codex's own pick; the app's menu (no native select) offers
 // magpie's models and groups; a pick posts settings/codex-auto-review on its
-// own, its button shows the choice under a name alone (1ooogle on X), a refusal is said and the row keeps
+// own, its button shows the choice under a name alone (1ooogle 报告), a refusal is said and the row keeps
 // what it had, and no click scrolls the Agents page, where Codex's row holds it.
 // English and Chinese, Chromium and WebKit; no backend, the API is faked here.
 const assert = require("node:assert/strict");

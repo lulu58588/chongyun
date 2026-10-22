@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Checkboxes are magpie's own, not the system's (ARNO on Discord: 会话面板下的
+// Checkboxes are magpie's own, not the system's (ARNO 报告: 会话面板下的
 // checkbox的样式和软件整体的设计风格有点割裂 — white native boxes in the dark
 // Sessions page). On the Sessions page, in light and dark, an unticked box
 // is drawn on the card's colour with a rounded border, a ticked one and a

@@ -11,7 +11,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/sessions"
 )
 
-// The Agents page calls cursor-agent Cursor CLI (@G_Z_Y on X took "Cursor"
+// The Agents page calls cursor-agent Cursor CLI (@G_Z_Y 报告 took "Cursor"
 // for the editor), but the chats Sessions lists under cursor are the Cursor
 // editor's too (its agent-transcripts in ~/.cursor/projects): they are
 // Cursor's there, not the CLI's.

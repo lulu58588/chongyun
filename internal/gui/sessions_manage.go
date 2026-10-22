@@ -227,7 +227,7 @@ func sessionManageRoutes(mux *http.ServeMux, w Windows) {
 		writeJSON(rw, out)
 	})
 	// search is the sessions of ?agent= whose conversation says ?q=, newest
-	// first, each with the words round its first match (YOU on Discord). A
+	// first, each with the words round its first match (YOU 报告). A
 	// new query from the page cancels the request, and with it the search.
 	mux.HandleFunc("GET /api/sessions/search", func(rw http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()

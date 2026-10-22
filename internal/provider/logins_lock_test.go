@@ -66,9 +66,9 @@ func TestReadOnlyRunLeavesLogins(t *testing.T) {
 	home := signIn(t)
 	t.Setenv("CLAUDE_CONFIG_DIR", "")
 	noAnthropic(t)
-	claudeSignIn(t, home, time.Now().Add(time.Hour))
+	claudeCodeSignIn(t, home, time.Now().Add(time.Hour))
 	writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "own@example.com"}})
-	rememberLogins(true)
+	claudeRemember(t, home)
 	if ls := Logins(""); len(ls) < 2 {
 		t.Fatalf("listed: %+v", ls)
 	}
@@ -96,7 +96,7 @@ func TestReadOnlyRunLeavesLogins(t *testing.T) {
 
 	// a change besides the time is written at once: Codex refreshed its own
 	raw, mod = seenAgo(t, time.Minute)
-	codexSignIn(t, home, "me@example.com", "r-refreshed")
+	codexSignIn(t, "me@example.com", "r-refreshed")
 	newProcess()
 	Logins("")
 	if loginsUnchanged(t, raw, mod) {
@@ -137,18 +137,17 @@ func TestLoginsOtherMagpie(t *testing.T) {
 // renewed sign-in stays. Codex's refresh tokens are spent by use, so the
 // old one written back would sign the account out.
 func TestLoginsKeepAnotherMagpiesWrite(t *testing.T) {
-	home := signIn(t)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
-	codexSignIn(t, home, "me@example.com", "r-me")
-	rememberLogins(true)
+	signIn(t)
+	codexSignIn(t, "work@example.com", "r-work")
+	codexSignIn(t, "me@example.com", "r-me")
 	if b, _ := os.ReadFile(loginsPath()); !bytes.Contains(b, []byte("r-work")) {
 		t.Fatalf("work@example.com not saved: %s", b)
 	}
 
-	// Codex refreshed its own sign-in: this magpie has a change to write
-	codexSignIn(t, home, "me@example.com", "r-me-2")
-	newProcess()
+	// Codex refreshed its own sign-in: this magpie has a change to write.
+	// The write is chongyun's own sign-in now — it keeps what it signed
+	// in to in logins.json — so the other chongyun is started as this one
+	// is about to write.
 	var other *exec.Cmd
 	otherDone := make(chan error, 1)
 	beforeLoginsWrite = func() {
@@ -178,7 +177,8 @@ func TestLoginsKeepAnotherMagpiesWrite(t *testing.T) {
 		}
 	}
 	t.Cleanup(func() { beforeLoginsWrite = func() {} })
-	rememberLogins(false)
+	newProcess()
+	codexSignIn(t, "me@example.com", "r-me-2")
 	if other == nil {
 		t.Fatal("this chongyun wrote nothing")
 	}
@@ -199,9 +199,8 @@ func TestLoginsKeepAnotherMagpiesWrite(t *testing.T) {
 // magpie parsed it before another wrote it: the GUI's state holds what
 // was read for a second (filememo.Hold), and taking loginsMu looks again.
 func TestLoginsReadAfreshUnderLock(t *testing.T) {
-	home := signIn(t)
-	codexSignIn(t, home, "work@example.com", "r-work")
-	rememberLogins(true)
+	emptyCodexHome(t)
+	codexSignIn(t, "work@example.com", "r-work")
 	old := time.Now().Add(-time.Hour)
 	os.Chtimes(loginsPath(), old, old)
 	release := filememo.Hold()

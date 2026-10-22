@@ -1,7 +1,7 @@
 package agent
 
 // T3 Code (pingdotgg/t3code, a GUI that drives Claude Code, Codex, Cursor
-// and others; KevinXC on Discord) keeps its settings in
+// and others; KevinXC 报告) keeps its settings in
 // ~/.t3/userdata/settings.json ($T3CODE_HOME/userdata), a sparse JSON file
 // its server watches and reloads on an outside edit. Each provider it lists
 // is an instance of a driver, and besides the built-in ones (keyed by the
@@ -248,7 +248,7 @@ var t3EffortLabels = map[string]string{"low": "Low", "medium": "Medium", "high":
 
 // t3Capabilities is the picks T3 Code shows beside a custom model: without
 // them it shows none and sends no effort, so every magpie model ran at
-// whatever Claude Code took (KevinXC on Discord). Reasoning is the levels
+// whatever Claude Code took (KevinXC 报告). Reasoning is the levels
 // of Claude Code's the model takes, medium chosen first as on T3's own
 // Claude models (else the lowest); T3 hands the level to Claude Code as it
 // is, which sends it to the gateway. Thinking, on at first, is the switch

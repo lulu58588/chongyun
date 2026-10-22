@@ -195,7 +195,7 @@ func TestGrokCheckReportsTOMLParseErrors(t *testing.T) {
 
 // The models magpie serves on the account Grok Build is signed in to are
 // Grok's own a second time, beside its own: they fold into one row of the
-// picker (Fate on Discord: grokbuild 在登录态下会加载重复的模型), the
+// picker (Fate 报告: grokbuild 在登录态下会加载重复的模型), the
 // other providers' rows left as they are.
 func TestGrokFoldsItsOwnAccount(t *testing.T) {
 	home := t.TempDir()

@@ -3,7 +3,7 @@
 // the searcher picked in Settings › Models › Web search failed or found
 // nothing, says so in its Routing row: which searcher was asked first, for
 // whom, why it didn't search, and which one searched in its place
-// (Gearclickist on Discord: Grok picked, and Codex's model searched with
+// (Gearclickist 报告: Grok picked, and Codex's model searched with
 // nothing saying why). In every language, in both engines, at a narrow
 // width too.
 const assert = require("node:assert/strict");

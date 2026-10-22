@@ -63,7 +63,7 @@ func restingNow(t *testing.T) []string {
 	return out
 }
 
-// vs on Discord (0.1.1108): a long Codex conversation's compaction on
+// vs 报告 (0.1.1108): a long Codex conversation's compaction on
 // Codex's own model, three ChatGPT accounts on, the backend answering 502
 // "response protection is unavailable" for that history. It is the
 // request, not an account: asked once, not on every account and then the

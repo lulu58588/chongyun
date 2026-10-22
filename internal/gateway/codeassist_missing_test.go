@@ -9,7 +9,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// Packing1 on Discord: a Google AI Pro account's model list names Argon,
+// Packing1 报告: a Google AI Pro account's model list names Argon,
 // which Antigravity answers 404 NOT_FOUND. The model isn't the plan's, so
 // only it rests on that account; the account itself doesn't, and its
 // other models are asked as before.

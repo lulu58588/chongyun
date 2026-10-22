@@ -4,7 +4,7 @@ const { chromium, webkit } = require("playwright");
 const { fixture } = require("./fixtures/caller-keys.cjs");
 const { openPart } = require("./reader.cjs");
 
-// coeo91 on Discord: the LAN address picked as Gateway's Base URL went back
+// coeo91 报告: the LAN address picked as Gateway's Base URL went back
 // to 127.0.0.1 after a restart or an update. The address and the gateway key
 // picked in Connect, and the address picked under Share on local network,
 // are kept across reloads; an address the machine doesn't have right now

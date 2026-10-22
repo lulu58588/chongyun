@@ -19,7 +19,7 @@ import (
 )
 
 // "not a chongyun backup" was all a sync said whatever the server sent where
-// the backup should be (JasonLeeForOnly on Discord, over several versions),
+// the backup should be (JasonLeeForOnly 报告, over several versions),
 // and nothing in magpie could get past it. Each case below is a server
 // behaving as a real one does: one that compresses though asked not to, a
 // web page in front of WebDAV, a file left empty or cut short, another

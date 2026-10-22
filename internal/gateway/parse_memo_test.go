@@ -25,7 +25,7 @@ func parseMemoBody(tag string) []byte {
 // The turn count (turnOf) and the folder (dirOf, tellWorkPlace) of a
 // request being served are read from one parse of its body, not one each:
 // each decoded every message and tool output of a long conversation again
-// (yg6888 on X: ~1 GB). What they say is what a parse of their own says.
+// (yg6888 报告: ~1 GB). What they say is what a parse of their own says.
 func TestReadersOfAHeldBodyParseItOnce(t *testing.T) {
 	ctx, done := context.WithCancel(context.Background())
 	defer done()

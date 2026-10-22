@@ -83,7 +83,7 @@ func qoderCheckinFixture(t *testing.T, now *time.Time, accts ...qoderCheckinAcct
 	return c
 }
 
-// Qoder's daily credits (ARNO on Discord): the campaigns are read, the
+// Qoder's daily credits (ARNO 报告): the campaigns are read, the
 // day's claimed while the server says claimable; one claimed already
 // is a check-in done, none listed is no event, and a refusal or an expired
 // sign-in is a failure with its reason. Other campaigns are never claimed.

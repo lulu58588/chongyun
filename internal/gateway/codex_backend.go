@@ -128,7 +128,7 @@ func (s *Server) codexBackend(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 			// spawn_agent names every model a subagent may be put on,
-			// not only Codex's first five (Gearclickist on Discord)
+			// not only Codex's first five (Gearclickist 报告)
 			body = spawnAgentModels(r, body, model, true)
 		}
 		// one of Codex's own models the user disabled (#1867) is refused
@@ -167,7 +167,7 @@ func (s *Server) codexBackend(w http.ResponseWriter, r *http.Request) {
 			// goes, as it does from a turn: with its text in it, the
 			// backend refuses the whole compaction over "input[n].content:
 			// array too long", and Codex shows it as the turn's error
-			// (jue on Discord). A summary magpie made goes as its text.
+			// (jue 报告). A summary magpie made goes as its text.
 			body, _ = codexInput(body, false)
 			// a key held to some accounts (#905) may not spend the sign-in
 			// compaction still relays on: refused as its turns are (#967),
@@ -877,7 +877,7 @@ func (s *Server) codexUpstreamOn(w http.ResponseWriter, r *http.Request, rest st
 	// nothing yet (#1418), which Codex doesn't ask again for — is asked
 	// again of it, as the accounts loop asks its last account, the same
 	// bytes with the same sign-in, and then of the subscription's
-	// fallbacks; nobody rests for it (夜松云 on Discord)
+	// fallbacks; nobody rests for it (夜松云 报告)
 	overload := r.Method == http.MethodPost && rest == "/responses" && base == provider.CodexBase && on == nil
 	streams := streamOf(body)
 	kept := &keptAlive{proto: provider.Responses, told: start, streams: streams}
@@ -931,7 +931,7 @@ func (s *Server) codexUpstreamOn(w http.ResponseWriter, r *http.Request, rest st
 			}
 			prompt := promptRead() // outside the trace's lock, which reading it takes
 			// the window Codex holds the conversation to, not models.dev's
-			// for the id, which is OpenAI's API's (netube on Discord: 922K
+			// for the id, which is OpenAI's API's (netube 报告: 922K
 			// on Routing for a Codex Plus account's 272K)
 			window := 0
 			if prompt != nil {
@@ -1060,7 +1060,7 @@ func (s *Server) codexUpstreamOn(w http.ResponseWriter, r *http.Request, rest st
 			// left to the transport, the reply comes back plain for the usage in it
 			req.Header.Del("Accept-Encoding")
 			// a turn to ChatGPT goes zstd-compressed again, as Codex sent it
-			// before magpie read it (ylorn on X); an API key's goes plain
+			// before magpie read it (ylorn 报告); an API key's goes plain
 			sent = provider.CodexCompressed(req, body)
 			if res, err = s.client.Do(req); err != nil {
 				msg := "OpenAI: " + err.Error()

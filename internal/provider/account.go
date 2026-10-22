@@ -3,10 +3,8 @@ package provider
 // Accounts: agents the user has signed in to, offered as providers.
 //
 // Claude Code, Codex CLI (ChatGPT), and Copilot logins are subscriptions with
-// models behind them. magpie reads the credentials the agent itself keeps on
-// disk or in the macOS Keychain, so every other agent can use those models
-// through the gateway. Nothing is stored twice: sign out of the agent and the
-// provider is gone.
+// models behind them. chongyun signs in to them itself, and keeps what it
+// signed in to in its own logins.json; no other agent's sign-in is read.
 
 import (
 	"bytes"
@@ -17,7 +15,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"maps"
 	"net/http"
 	"net/url"
@@ -28,7 +25,6 @@ import (
 	"regexp"
 	"runtime"
 	"slices"
-	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -38,7 +34,6 @@ import (
 	"github.com/lulu58588/chongyun/internal/claudecode"
 	"github.com/lulu58588/chongyun/internal/plugin"
 	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Account is the signed-in agent behind a provider.
@@ -65,6 +60,13 @@ type Account struct {
 	// Code's own while Claude Code is signed out (claude_dirs.go).
 	standIn bool
 
+	// primary is the account the agent is signed in to, as chongyun signed
+	// it in: the one the gateway goes to first, and the one whose other
+	// accounts are listed beside it. It is served in a config directory of
+	// chongyun's own, so it carries a token of its own; it is told apart
+	// from the accounts in use beside it by this.
+	primary bool
+
 	// codeAssist is where a Gemini CLI or Antigravity account's requests
 	// go (google.go).
 	codeAssist string
@@ -77,7 +79,7 @@ type Account struct {
 	// keeps a copy of models, magpie's own list (Claude's, from the
 	// models.dev catalog; Factory's, compiled in): the list served is
 	// always models as it is now, never the copy, which held a model
-	// listed after it out until the next Refresh (wakaka on Discord:
+	// listed after it out until the next Refresh (wakaka 报告:
 	// Claude Haiku 5.5, in Claude Code on the same account, missing from
 	// magpie).
 	magpieList bool
@@ -183,9 +185,6 @@ func (p Provider) ListedAPIs(model string) []Protocol {
 // Sign authenticates a request to the provider, refreshing what needs it.
 // Plain providers get their key; accounts get the agent's tokens.
 func (p Provider) Sign(ctx context.Context, req *http.Request, proto Protocol, body []byte) error {
-	if p.Account != nil && settings.AccountDiscoveryOff() {
-		return errAccountDiscoveryOff
-	}
 	ctx = p.Via(ctx) // a sign-in refreshed on the way goes through its proxy
 	if p.Account != nil && p.Account.sign != nil {
 		return p.Account.sign(ctx, req, body)
@@ -306,15 +305,10 @@ type Exclusion struct {
 	// Tucked: hidden from the Add sheet too, but for its "Show N hidden"
 	// and a search by name (#116).
 	Tucked bool `json:"tucked,omitempty"`
-	// Retry: the keychain didn't give Codex's sign-in (refused, no
-	// answer, or its prompt still up); Try again asks it once more
-	// (RetryCodexKeychain, #2367).
-	Retry bool `json:"retry,omitempty"`
 }
 
 // Excluded lists sign-ins magpie detects but leaves out: the accounts the
-// user removed from magpie, and the saved accounts of an agent that isn't
-// signed in here (a magpie serve under another HOME, say).
+// user removed from magpie.
 func Excluded() []Exclusion {
 	var out []Exclusion
 	for _, a := range Hidden() {
@@ -324,7 +318,7 @@ func Excluded() []Exclusion {
 		}
 		out = append(out, x)
 	}
-	return append(out, savedButSignedOut()...)
+	return out
 }
 
 // claudeBase is Anthropic's API root, which Claude Code asks; magpie never
@@ -334,35 +328,6 @@ var claudeBase = "https://api.anthropic.com"
 // claudeKeychain reads credentials from the macOS Keychain; a var so tests
 // never touch the machine's own login.
 var claudeKeychain = runtime.GOOS == "darwin"
-
-var (
-	claudeStatusMu   sync.Mutex
-	claudeStatusAt   time.Time
-	claudeStatusUser string
-	claudeStatusPlan string
-	claudeStatusOut  bool // Claude Code says nobody is signed in
-	claudeStatusGen  int  // bumped when forgotten: an answer asked before is dropped
-	claudeStatusBusy bool // asked again behind the last answer
-
-	claudeCacheMu  sync.Mutex
-	claudeCacheAt  time.Time
-	claudeCacheC   claudeCredentials
-	claudeCacheLoc claudeCredentialLocation
-	claudeCacheOK  bool
-
-	claudeAskMu sync.Mutex
-	claudeAskAt time.Time // a keychain read that may have shown a dialog
-)
-
-// claudeCacheTTL keeps All() from spawning `security` on every gateway
-// request while still noticing a fresh login quickly.
-const claudeCacheTTL = 10 * time.Second
-
-// keychainDeniedTTL is how long a keychain read that may have shown the
-// user a dialog is not asked again, as copilotCLISecret doesn't re-ask a
-// denied one at once (#723, #2408): with the item's trust list holding no
-// `security`, every ask can show the dialog again.
-const keychainDeniedTTL = 10 * time.Minute
 
 type claudeAuth struct {
 	AccessToken      string   `json:"accessToken"`
@@ -431,106 +396,12 @@ type claudeCredentialLocation struct {
 	keychain bool
 }
 
-// claudeCredentialsPath is Claude Code's credentials file, where it keeps
-// its sign-in off the Mac's keychain.
-func claudeCredentialsPath() string {
-	return filepath.Join(appdir.ClaudeDir(), ".credentials.json")
-}
-
-func readClaudeCredential() (claudeCredentials, claudeCredentialLocation, bool) {
-	if settings.AccountDiscoveryOff() {
-		return claudeCredentials{}, claudeCredentialLocation{}, false
-	}
-	var mine claudeKeychainItem
-	if claudeKeychain {
-		// the item under the account ($USER) is the sign-in Claude Code goes
-		// by, emptied or not: it reads no file beside it, so an emptied item
-		// is a sign-out even where an older file still parses, and a sign-in
-		// made in magpie is put in the item, not beside it (#1742)
-		mine = readClaudeKeychainItem(claudeKeychainAccount())
-		if mine.found && !mine.hex {
-			return mine.c, mine.loc, mine.ok
-		}
-	}
-	path := claudeCredentialsPath()
-	if b, err := readAccountFile(path); err == nil {
-		if c, ok := parseClaudeCredentials(b); ok {
-			return c, claudeCredentialLocation{path: path}, true
-		}
-	}
-	if !claudeKeychain {
-		return claudeCredentials{}, claudeCredentialLocation{}, false
-	}
-	// neither the account's item, as Claude Code reads it, nor the file
-	// holds a sign-in. Left: the account's item as magpie wrote it before,
-	// over lines that `security -w` prints as hex (#70) — Claude Code reads
-	// that as no item, hence the file first — which is written again on one
-	// line, as Claude Code writes it; else by service alone another item,
-	// left from an earlier sign-in, that Claude Code never reads (58b67666)
-	i := mine
-	if !i.ok {
-		i = readClaudeKeychainItem("")
-	}
-	if !i.ok {
-		return claudeCredentials{}, claudeCredentialLocation{}, false
-	}
-	if i.hex {
-		// not through saveClaudeCredential: claudeCredential reads under
-		// claudeCacheMu, which caching would take again, and caches what
-		// this returns itself
-		writeClaudeCredential(i.loc, i.c)
-	}
-	return i.c, i.loc, true
-}
-
-// claudeKeychainItem is what `security` reads of the "Claude Code-credentials"
-// item. found says an item is there that reads as a JSON object — the sign-in
-// Claude Code goes by, emptied or not (an item that reads as none it takes
-// for an absent one, and so does readClaudeDir of the item in a config
-// directory); ok, that it holds tokens to run on; hex, that magpie wrote it
-// over more than one line, which `security -w` prints as hex and Claude Code
-// reads as none (#70).
-type claudeKeychainItem struct {
-	c         claudeCredentials
-	loc       claudeCredentialLocation
-	ok, found bool
-	hex       bool
-}
-
 // keychainDenied says whether a failed `security find-generic-password`
 // could have been a dialog the user answered no to: 44 is the item not
 // being there, which asks nobody.
 func keychainDenied(err error) bool {
 	var xe *exec.ExitError
 	return errors.As(err, &xe) && xe.ExitCode() != 44
-}
-
-// readClaudeKeychainItem reads the item for a keychain account, or by
-// service alone when the account is "". Either way it is the one under
-// $USER that a sign-in is written back to.
-func readClaudeKeychainItem(account string) claudeKeychainItem {
-	args := []string{"find-generic-password", "-s", claudeHomeService(), "-w"}
-	if account != "" {
-		args = append(args, "-a", account)
-	}
-	out, err := proc.Command("security", args...).Output()
-	if err != nil {
-		if keychainDenied(err) {
-			claudeAskMu.Lock()
-			claudeAskAt = time.Now()
-			claudeAskMu.Unlock()
-		}
-		return claudeKeychainItem{}
-	}
-	b, wasHex := keychainText(bytes.TrimSpace(out))
-	c, ok := parseClaudeCredentials(b)
-	if c.raw == nil {
-		return claudeKeychainItem{}
-	}
-	return claudeKeychainItem{
-		c: c, ok: ok, found: true, hex: wasHex,
-		loc: claudeCredentialLocation{keychain: true, account: claudeKeychainAccount()},
-	}
 }
 
 // claudeHomeService is the keychain item Claude Code keeps the sign-in
@@ -575,58 +446,12 @@ func keychainText(out []byte) ([]byte, bool) {
 	return b, true
 }
 
-func claudeCredential() (claudeCredentials, claudeCredentialLocation, bool) {
-	if settings.AccountDiscoveryOff() {
-		return claudeCredentials{}, claudeCredentialLocation{}, false
-	}
-	claudeCacheMu.Lock()
-	defer claudeCacheMu.Unlock()
-	ttl := claudeCacheTTL
-	if !claudeCacheOK {
-		claudeAskMu.Lock()
-		ask := claudeAskAt
-		claudeAskMu.Unlock()
-		if time.Since(ask) < keychainDeniedTTL {
-			ttl = keychainDeniedTTL
-		}
-	}
-	if time.Since(claudeCacheAt) < ttl {
-		return claudeCacheC, claudeCacheLoc, claudeCacheOK
-	}
-	c, loc, ok := readClaudeCredential()
-	claudeCacheC, claudeCacheLoc, claudeCacheOK, claudeCacheAt = c, loc, ok, time.Now()
-	return c, loc, ok
-}
-
-func cacheClaudeCredential(c claudeCredentials, loc claudeCredentialLocation) {
-	claudeCacheMu.Lock()
-	claudeCacheC, claudeCacheLoc, claudeCacheOK, claudeCacheAt = c, loc, true, time.Now()
-	claudeCacheMu.Unlock()
-}
-
-// forgetClaudeCredential drops the cache; tests use it between homes.
-func forgetClaudeCredential() {
-	claudeCacheMu.Lock()
-	claudeCacheAt = time.Time{}
-	claudeCacheMu.Unlock()
-	claudeAskMu.Lock()
-	claudeAskAt = time.Time{}
-	claudeAskMu.Unlock()
-}
-
 func saveClaudeCredential(loc claudeCredentialLocation, c claudeCredentials) error {
-	if err := writeClaudeCredential(loc, c); err != nil {
-		return err
-	}
-	cacheClaudeCredential(c, loc)
-	return nil
+	return writeClaudeCredential(loc, c)
 }
 
-// writeClaudeCredential writes c where loc says, leaving the cache alone.
+// writeClaudeCredential writes c where loc says.
 func writeClaudeCredential(loc claudeCredentialLocation, c claudeCredentials) error {
-	if discoveryOff() {
-		return errAccountDiscoveryOff
-	}
 	b, err := c.marshal()
 	if err != nil {
 		return err
@@ -666,82 +491,6 @@ func writeClaudeCredential(loc claudeCredentialLocation, c claudeCredentials) er
 // (claudecode.Find); a var so tests can fake it.
 var claudeExecutable = claudecode.Find
 
-// claudeIdentity asks Claude Code itself which account is active. Its credential
-// blob intentionally contains tokens and plan metadata but no display identity;
-// `claude auth status --json` is the authoritative, non-secret view shown by the
-// CLI. Cache it briefly because the providers screen refreshes often.
-//
-// It also says when Claude Code is signed out even though credentials are
-// still lying around (a keychain item logout left behind), so a signed-out
-// account stops showing up as a provider.
-func claudeIdentity() (user, plan string, signedOut bool) {
-	// switched off or removed, Claude Code isn't asked: what it said last
-	// is served (leftAlone)
-	quiet := leftAlone("claude")
-	claudeStatusMu.Lock()
-	defer claudeStatusMu.Unlock()
-	switch {
-	case quiet:
-	case claudeStatusAt.IsZero():
-		claudeStatusAt = time.Now()
-		if u, p, out, ok := askClaudeStatus(); ok {
-			claudeStatusUser, claudeStatusPlan, claudeStatusOut = u, p, out
-		}
-	case time.Since(claudeStatusAt) >= 30*time.Second && !claudeStatusBusy:
-		// the CLI takes up to seconds and the accounts are read by every page
-		// and request: the last answer is served while it is asked again (#123)
-		claudeStatusBusy = true
-		gen := claudeStatusGen
-		go func() {
-			u, p, out, ok := askClaudeStatus()
-			claudeStatusMu.Lock()
-			defer claudeStatusMu.Unlock()
-			if gen != claudeStatusGen {
-				return
-			}
-			claudeStatusAt, claudeStatusBusy = time.Now(), false
-			if ok {
-				claudeStatusUser, claudeStatusPlan, claudeStatusOut = u, p, out
-			}
-		}()
-	}
-	return claudeStatusUser, claudeStatusPlan, claudeStatusOut
-}
-
-// askClaudeStatus runs `claude auth status`; ok is false when it gave no answer.
-func askClaudeStatus() (user, plan string, signedOut, ok bool) {
-	if settings.AccountDiscoveryOff() {
-		return "", "", false, false
-	}
-	path := claudeExecutable()
-	if path == "" {
-		return "", "", false, false
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	// signed out, `claude auth status` exits 1 but still prints the JSON.
-	// Not with a token or endpoint from magpie's own environment: the CLI
-	// would tell of that, not of its sign-in. magpie's wiring in
-	// settings.json it applies itself (auth status takes no
-	// --setting-sources), and then answers with no email; claudeSignedInUser
-	// names the account from ~/.claude.json instead (#177).
-	cmd := proc.ProbeContext(ctx, path, "auth", "status", "--json")
-	cmd.Env = withoutClaudeWiring(os.Environ())
-	out, _ := cmd.Output()
-	var status struct {
-		LoggedIn         *bool  `json:"loggedIn"`
-		Email            string `json:"email"`
-		SubscriptionType string `json:"subscriptionType"`
-	}
-	if json.Unmarshal(out, &status) != nil || status.LoggedIn == nil {
-		return "", "", false, false
-	}
-	if !*status.LoggedIn {
-		return "", "", true, true
-	}
-	return strings.TrimSpace(status.Email), strings.TrimSpace(status.SubscriptionType), false, true
-}
-
 // withoutClaudeWiring is env less what points Claude Code at another
 // endpoint or token than its own sign-in.
 func withoutClaudeWiring(env []string) []string {
@@ -757,42 +506,31 @@ func withoutClaudeWiring(env []string) []string {
 }
 
 func claudeAccount() (Provider, bool) {
-	c, _, ok := claudeCredential()
-	if !ok {
-		return claudeStandInAccount()
+	// the account the agent is signed in to, as chongyun signed it in to:
+	// the sign-in chongyun made for it is where Claude Code keeps its own
+	// (putClaudeLogin), and it is served in a config directory of
+	// chongyun's own, so it survives a logout of Claude Code. It is the
+	// account the agent is on, not a stand-in: a stand-in is a saved
+	// account served in the place of a signed-out Claude Code.
+	if l, ok := ownActive("claude"); ok {
+		acct := &Account{Agent: "claude", User: l.User, Plan: l.Plan, primary: true}
+		acct.token = func(context.Context) (string, error) { return claudeSavedDir(l.User) }
+		return claudeProvider(acct), true
 	}
-	user, statusPlan, signedOut := claudeIdentity()
-	if signedOut {
-		return claudeStandInAccount()
-	}
-	plan := c.OAuth.SubscriptionType
-	if statusPlan != "" {
-		plan = statusPlan
-	}
-	// named as its saved login is (liveLogin): it is then the account Logins
-	// flags Active, not served a second time beside itself, and its
-	// allowances and limits are found under its name (#177)
-	user, acct := claudeSignedInUser(c.OAuth.SubscriptionType, statusPlan, user)
-	if b, err := c.marshal(); err == nil && user != "" {
-		// by its sign-in when its profile is another's (claudeSignInOwner)
-		l := savedLogin{Agent: "claude", User: user, Auth: b}
-		if acct != nil {
-			l.Profile, _ = json.Marshal(acct)
-		}
-		user = claudeSignInOwner(readLogins(), l).User
-	}
-	if user == "" {
-		user = "Claude account"
-		if plan != "" {
-			user = "Claude " + strings.ToUpper(plan[:1]) + plan[1:]
-		}
-	}
-	return claudeProvider(&Account{Agent: "claude", User: user, Plan: plan}), true
+	// no account of chongyun's own is signed in to: one of them is served
+	// in its place
+	return claudeStandInAccount()
 }
 
 // StandIn says the account is a saved one served in the place of the
 // agent's own sign-in, which is signed out.
 func (a *Account) StandIn() bool { return a != nil && a.standIn }
+
+// beside is whether the account is a saved one in use beside the agent's
+// own: it is served in a config directory of chongyun's own, and it is not
+// the one the agent is on. The one the agent is on (primary) is not beside
+// itself, though it is served in a directory of chongyun's own too.
+func (a *Account) beside() bool { return a != nil && a.token != nil && !a.standIn && !a.primary }
 
 // claudeProvider is the Claude Code provider of acct.
 func claudeProvider(acct *Account) Provider {
@@ -830,10 +568,7 @@ func refreshFailed(status int, agent, msg string) error {
 
 // Accounts lists the signed-in agents as providers.
 func Accounts() []Provider {
-	if settings.AccountDiscoveryOff() {
-		return nil
-	}
-	rememberLogins(false)
+	rememberAccounts(false)
 	home, _ := os.UserHomeDir()
 	cfg := appdir.Getenv("XDG_CONFIG_HOME")
 	if cfg == "" {
@@ -843,7 +578,7 @@ func Accounts() []Provider {
 	if p, ok := claudeAccount(); ok {
 		out = append(out, p)
 	}
-	if p, ok := codexAccount(home); ok {
+	if p, ok := codexAccount(); ok {
 		out = append(out, p)
 	}
 	if p, ok := copilotAccount(cfg); ok {
@@ -893,7 +628,7 @@ func placeMoved(out, plugins []Provider) []Provider {
 }
 
 func readJSON(path string, v any) bool {
-	b, err := readAccountFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		return false
 	}
@@ -963,29 +698,24 @@ type codexAuth struct {
 	} `json:"tokens"`
 }
 
-func codexAccount(home string) (Provider, bool) {
-	if settings.AccountDiscoveryOff() {
+// codexAccount is the Codex provider: the ChatGPT account chongyun signed
+// in to itself, served with the tokens it keeps in logins.json.
+//
+// A sign-in with an OpenAI API key rather than a ChatGPT account
+// (auth.json's auth_mode) is no account to serve: its sign-in is a key's,
+// and it spends no account a gateway key's list governs. It is no
+// provider here, as it is none upstream.
+func codexAccount() (Provider, bool) {
+	l, ok := ownActive("codex")
+	if !ok {
 		return Provider{}, false
 	}
-	dir := appdir.CodexHomeIn(home)
-	// where Codex's config.toml keeps it: auth.json, or the macOS
-	// keychain item (#2367)
-	b, _, err := readCodexLogin(dir, false)
 	var a codexAuth
-	if err != nil || json.Unmarshal(b, &a) != nil || a.Tokens.AccessToken == "" || a.AuthMode == "apikey" {
+	if json.Unmarshal(l.Auth, &a) != nil || a.AuthMode == "apikey" {
 		return Provider{}, false
 	}
-	id := jwtClaims(a.Tokens.IDToken)
-	acct := &Account{Agent: "codex", Stream: true,
-		User: codexUser(id), Plan: claimString(id, "https://api.openai.com/auth", "chatgpt_plan_type")}
-	if acct.User == "" {
-		acct.User = "ChatGPT"
-	} else {
-		// as it is saved, as liveLogin names it: a second Team seat of
-		// the email is "email · Team · <workspace>" (#1424)
-		acct.User = codexLiveName(acct.User, bytes.TrimSpace(b))
-	}
-	acct.sign = codexSign(func(ctx context.Context) (string, string, error) { return codexToken(ctx, dir) })
+	acct := &Account{Agent: "codex", Stream: true, User: l.User, Plan: l.Plan}
+	acct.sign = codexSign(func(ctx context.Context) (string, string, error) { return savedLoginToken(ctx, "codex", l.User) })
 	acct.body = codexBody
 	acct.models = catalog.Codex
 	acct.fetch = func(ctx context.Context) ([]catalog.Model, error) {
@@ -999,64 +729,6 @@ func codexAccount(home string) (Provider, bool) {
 		return ms, catalog.SaveLive("codex", CodexBase, ms)
 	}
 	return Provider{ID: "codex", Name: "Codex", Icon: "codex-color", Responses: CodexBase, Website: "https://chatgpt.com/codex", Account: acct}, true
-}
-
-// codexToken returns a usable access token for the Codex home dir,
-// refreshing it through OpenAI when it is about to expire. A refresh
-// rotates the tokens, so the new ones go back where Codex keeps its
-// sign-in (auth.json or the keychain item, codexStore.write) for Codex to
-// find.
-func codexToken(ctx context.Context, dir string) (tok, accountID string, err error) {
-	codexMu.Lock()
-	defer codexMu.Unlock()
-	b, st, err := readCodexLogin(dir, false)
-	var a codexAuth
-	if err == nil && json.Unmarshal(b, &a) == nil && a.Tokens.AccessToken != "" {
-		if exp, _ := jwtClaims(a.Tokens.AccessToken)["exp"].(float64); exp == 0 || time.Until(time.Unix(int64(exp), 0)) > 5*time.Minute {
-			return a.Tokens.AccessToken, codexAccountID(a), nil
-		}
-		// about to be refreshed: the store's own, not a kept read, which
-		// Codex may have rotated since (its refresh token spent)
-		if st.keychain {
-			b, st, err = readCodexLogin(dir, true)
-			a = codexAuth{}
-			if err == nil && json.Unmarshal(b, &a) == nil && a.Tokens.AccessToken != "" {
-				if exp, _ := jwtClaims(a.Tokens.AccessToken)["exp"].(float64); exp == 0 || time.Until(time.Unix(int64(exp), 0)) > 5*time.Minute {
-					return a.Tokens.AccessToken, codexAccountID(a), nil
-				}
-			}
-		}
-	}
-	var se *codexStoreError
-	if errors.As(err, &se) {
-		return "", "", se
-	}
-	var raw map[string]any
-	if err != nil || a.Tokens.AccessToken == "" || json.Unmarshal(b, &raw) != nil {
-		return "", "", errors.New("Codex is signed out; run codex login")
-	}
-	accountID = codexAccountID(a)
-	tok, err = codexRefresh(ctx, raw)
-	if err != nil {
-		return "", "", err
-	}
-	// keep every other field as Codex wrote it. auth.json is the user's
-	// own sign-in, which Codex CLI and the Codex app read: written beside
-	// it, flushed and renamed in, never truncated in place, so a machine
-	// going down mid-write leaves the old one whole and a file held for a
-	// moment on Windows is waited out (#2239, #1505). A write that still
-	// fails loses the rotation, said in the log; the fresh access token in
-	// hand still serves this request.
-	if out, err := json.MarshalIndent(raw, "", "  "); err == nil {
-		if werr := st.write(out); werr != nil {
-			where := st.file()
-			if st.keychain {
-				where = "the keychain item " + codexKeychainService
-			}
-			log.Printf("codex: the refreshed sign-in didn't reach %s: %v", where, werr)
-		}
-	}
-	return tok, accountID, nil
 }
 
 // codexAccountID is the ChatGPT account a sign-in's requests name.
@@ -1154,14 +826,10 @@ type copilotSession struct {
 	Endpoints struct {
 		API string `json:"api"`
 	} `json:"endpoints"`
-	direct bool // the Copilot CLI's token, sent as is
 }
 
 // headers are what a request with this session carries.
 func (s copilotSession) headers() map[string]string {
-	if s.direct {
-		return copilotCLIHeaders
-	}
 	return copilotAPIHeaders
 }
 
@@ -1176,63 +844,6 @@ type copilotApp struct {
 	// Host is an enterprise's <name>.ghe.com the account is on, "" for
 	// github.com (copilot_ghe.go)
 	Host string `json:"host,omitempty"`
-	cli  bool   // the standalone Copilot CLI's sign-in
-	src  string // the editors' file it was read from, "" for any other
-}
-
-// copilotLogin finds the GitHub token Copilot's editors and CLI keep: an
-// editor's github.com sign-in first, then the Copilot CLI's, then an
-// editor's on an enterprise's GHE.com. An editor's token GitHub has
-// refused (copilotRefusedToken) gives way to the CLI's sign-in of the same
-// account, never to another account's (#1238).
-func copilotLogin(cfg string) (copilotApp, bool) {
-	gh, ghe := copilotEditorLogins(cfg)
-	if gh != nil && !copilotRefusedToken(gh.Token) {
-		return *gh, true
-	}
-	if gh != nil {
-		if cli, ok := copilotCLILogin(); ok && copilotSameAccount(cli, *gh) {
-			return cli, true
-		}
-		return *gh, true
-	}
-	if app, ok := copilotCLILogin(); ok || ghe == nil {
-		return app, ok
-	}
-	return *ghe, true
-}
-
-// copilotEditorLogins are the sign-ins Copilot's editors keep: the first on
-// github.com and the first on an enterprise's <name>.ghe.com, each with the
-// file it was read from.
-func copilotEditorLogins(cfg string) (gh, ghe *copilotApp) {
-	for _, name := range []string{"apps.json", "hosts.json"} {
-		var apps map[string]copilotApp
-		src := filepath.Join(cfg, "github-copilot", name)
-		if !readJSON(src, &apps) {
-			continue
-		}
-		var keys []string
-		for k := range apps {
-			keys = append(keys, k)
-		}
-		sort.Strings(keys)
-		for _, k := range keys {
-			if strings.HasPrefix(k, "github.com") && apps[k].Token != "" {
-				app := apps[k]
-				app.Host, app.src = "", src
-				return &app, ghe
-			}
-			// "acme.ghe.com:Iv1…", as copilot.lua keeps one (#723)
-			host, _, _ := strings.Cut(k, ":")
-			if h, err := CopilotHost(host); ghe == nil && err == nil && h != "" && apps[k].Token != "" {
-				app := apps[k]
-				app.Host, app.src = h, src
-				ghe = &app
-			}
-		}
-	}
-	return nil, ghe
 }
 
 // copilotSameAccount says two sign-ins are one GitHub account: the same
@@ -1275,16 +886,6 @@ func copilotRefuse(token string, status int) {
 	copilotRefusals.status[token] = status
 }
 
-// copilotStandIn is the Copilot CLI's sign-in of the same account as a,
-// an editor's sign-in GitHub refused (#1238).
-func copilotStandIn(a copilotApp) (copilotApp, bool) {
-	if a.cli || a.src == "" {
-		return copilotApp{}, false
-	}
-	cli, ok := copilotCLILogin()
-	return cli, ok && copilotSameAccount(cli, a)
-}
-
 // session is what this sign-in's requests carry, and what GitHub said of
 // it is kept on its account: refused, it is signed out; served, it isn't
 // (copilotSessionDone).
@@ -1294,40 +895,14 @@ func (a copilotApp) session(ctx context.Context) (copilotSession, error) {
 	return s, err
 }
 
-// trade gets this sign-in's session. An editor's token GitHub refuses is
-// replaced by the Copilot CLI's sign-in of the same account, sent as the
-// CLI sends it; with none, the error names the file the refused token is
-// in, since it is read before the CLI's (#1238).
+// trade gets this sign-in's session: the GitHub token is traded for a
+// session token the way an editor's is.
 func (a copilotApp) trade(ctx context.Context) (copilotSession, error) {
-	if a.cli {
-		return copilotDirect(ctx, a)
-	}
 	// refused before: not asked again at every request
 	if copilotRefusedToken(a.Token) {
-		if cli, ok := copilotStandIn(a); ok {
-			return copilotDirect(ctx, cli)
-		}
+		return copilotSession{}, errors.New("the GitHub token Copilot keeps was refused; sign in to Copilot again in chongyun")
 	}
-	s, err := copilotToken(ctx, a)
-	if err == nil || a.src == "" || !copilotRefusedToken(a.Token) {
-		return s, err
-	}
-	cli, ok := copilotCLILogin()
-	if ok && copilotSameAccount(cli, a) {
-		return copilotDirect(ctx, cli)
-	}
-	if !copilotStaleToken(a.Token) {
-		return s, err
-	}
-	who := ""
-	if a.User != "" {
-		who = " for " + CopilotAccountName(a.User, a.Host)
-	}
-	msg := strings.TrimSuffix(err.Error(), "; sign in to Copilot again") + ": the GitHub token Copilot's editors keep in " + a.src + who + " was refused, and it is read before any other sign-in; sign in to Copilot again in your editor or in chongyun, or move that file aside"
-	if ok {
-		msg += " (the Copilot CLI is signed in to " + CopilotAccountName(cli.User, cli.Host) + ", another account, so it isn't used in its place)"
-	}
-	return copilotSession{}, errors.New(msg)
+	return copilotToken(ctx, a)
 }
 
 // copilotProvider is Copilot as one GitHub account serves it.
@@ -1681,10 +1256,3 @@ func copilotModels(ctx context.Context, app copilotApp) ([]catalog.Model, error)
 }
 
 // forgetClaudeStatus drops what `claude auth status` said; tests use it.
-func forgetClaudeStatus() {
-	claudeStatusMu.Lock()
-	claudeStatusAt, claudeStatusUser, claudeStatusPlan, claudeStatusOut = time.Time{}, "", "", false
-	claudeStatusGen++
-	claudeStatusBusy = false
-	claudeStatusMu.Unlock()
-}

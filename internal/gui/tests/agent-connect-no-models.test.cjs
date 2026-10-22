@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Tystem on Discord: switching Codex on with no provider or subscription in
+// Tystem 报告: switching Codex on with no provider or subscription in
 // magpie said only "Codex can't be connected to magpie", in English whatever
 // the language. The server answers that case with code no_models, and the
 // toast says what to do in the reader's language; the switch goes back off.

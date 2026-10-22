@@ -78,7 +78,7 @@ func ageDsh(home string) {
 	})
 }
 
-// lc on Discord: "deepseek harness无法删除会话". A dsh session goes to the
+// lc 报告: "deepseek harness无法删除会话". A dsh session goes to the
 // trash whole — its folder, its subagent's, their cached rows — and
 // nothing of another session's goes with it.
 func TestDshDeleteRestore(t *testing.T) {

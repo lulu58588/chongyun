@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Which APIs a relay answers at the URL typed, found at a click
-// (01huadalang on Discord: 一键检测支持什么协议，发一个最小请求看是否返回200，
+// (01huadalang 报告: 一键检测支持什么协议，发一个最小请求看是否返回200，
 // 还有每个模型自定义协议): the custom provider editor's Detect APIs posts
 // provider/detect with the URL and the model typed, shows what each API
 // answered, and "Use these" sets the URLs of those that answered. A model

@@ -52,9 +52,15 @@ func tierAccounts(t *testing.T, proOut, echo *bool) func() []string {
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("plus@example.com", "acct-plus", "plus")), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
+		{"agent": "codex", "user": "plus@example.com", "plan": "plus", "active": true, "seen": time.Now(), "auth": auth("plus@example.com", "acct-plus", "plus")},
 		{"agent": "codex", "user": "pro@example.com", "plan": "pro", "on": true, "seen": time.Now(), "auth": auth("pro@example.com", "acct-pro", "pro")},
 	}), 0o600)
+	provider.ForgetAccounts()
+	t.Cleanup(provider.ForgetAccounts)
 
 	var mu sync.Mutex
 	var tried []string
@@ -111,7 +117,7 @@ func tierAccounts(t *testing.T, proOut, echo *bool) func() []string {
 	}
 }
 
-// yxinyu715 on X: Codex's Ultrafast goes first to the account whose plan
+// yxinyu715 报告: Codex's Ultrafast goes first to the account whose plan
 // offers it, here the Pro one saved second, and Fast keeps the accounts'
 // order. When the Pro one can't answer, the Plus one is asked for Fast,
 // the nearest its plan offers.
@@ -194,7 +200,7 @@ func TestFastPickKeepsTheClientsUltrafast(t *testing.T) {
 	}
 }
 
-// Codex's Fast for another agent (莫 on Discord: "gpt在自己里面有1.5倍速，
+// Codex's Fast for another agent (莫 报告: "gpt在自己里面有1.5倍速，
 // 现在接入后别人agent怎么用1.5倍速呢"): a ChatGPT account's GPT switched
 // fast in Claude Code's or OpenCode's picker (#954) goes to the ChatGPT
 // backend at service_tier "priority", as Codex's own /fast sends it,

@@ -27,7 +27,7 @@ func (zhipuResponses) RoundTrip(r *http.Request) (*http.Response, error) {
 		Body: io.NopCloser(strings.NewReader(body)), Request: r}, nil
 }
 
-// Codex on a GLM Coding Plan whose key Zhipu refuses (@xanahopper on X)
+// Codex on a GLM Coding Plan whose key Zhipu refuses (@xanahopper 报告)
 // is told the key was refused, 401 with Zhipu's words, not handed the
 // envelope as a 200 reply; a key Zhipu takes is answered as before.
 func TestZhipuResponsesRefusalIsRefusal(t *testing.T) {

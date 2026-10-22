@@ -17,7 +17,7 @@ import (
 // so a plan's key given the zhipu or zai preset at its first plan, Pay as
 // you go, works in Claude Code and is refused in Codex: the pay-as-you-go
 // endpoint answers it 429, code 1113 "余额不足或无可用资源包,请充值。" (the
-// account has no balance), as @cleverpigo on X and kkgg on Discord found.
+// account has no balance), as @cleverpigo 报告 and kkgg 报告 found.
 // Nothing in the key tells the two apart, so a 1113 at /api/paas/v4 is
 // asked again at /api/coding/paas/v4: served there, the key is a plan's,
 // and the provider is moved to the plan's endpoints (LearnZhipuCoding).

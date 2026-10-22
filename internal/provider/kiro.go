@@ -41,7 +41,6 @@ import (
 	"github.com/lulu58588/chongyun/internal/appdir"
 	"github.com/lulu58588/chongyun/internal/edit"
 	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/settings"
 	"github.com/lulu58588/chongyun/internal/steady"
 )
 
@@ -116,112 +115,6 @@ func (c kiroCred) fresh() bool {
 	return c.method == "apikey" || c.expires.IsZero() || time.Until(c.expires) > 2*time.Minute
 }
 
-// readKiroCLI reads kiro-cli's sign-in: with Google or GitHub, with AWS
-// (Builder ID, IAM Identity Center), or with a company's own identity
-// provider.
-func readKiroCLI() (kiroCred, bool) {
-	if settings.AccountDiscoveryOff() {
-		return kiroCred{}, false
-	}
-	path := kiroCLIDB()
-	if !fileExists(path) {
-		return kiroCred{}, false
-	}
-	db, err := openReadOnly(path)
-	if err != nil {
-		return kiroCred{}, false
-	}
-	defer db.Close()
-	get := func(key string) map[string]any {
-		var v string
-		if db.QueryRow(`SELECT value FROM auth_kv WHERE key = ?`, key).Scan(&v) != nil {
-			return nil
-		}
-		var m map[string]any
-		if json.Unmarshal([]byte(v), &m) != nil {
-			return nil
-		}
-		return m
-	}
-	str := func(m map[string]any, k string) string { s, _ := m[k].(string); return s }
-	for _, kind := range []string{"social", "odic", "external-idp"} {
-		key := "kirocli:" + kind + ":token"
-		m := get(key)
-		if m == nil || str(m, "access_token") == "" {
-			continue
-		}
-		c := kiroCred{access: str(m, "access_token"), refresh: str(m, "refresh_token"), region: str(m, "region"),
-			profile: str(m, "profile_arn"), dbKey: key}
-		c.expires, _ = time.Parse(time.RFC3339Nano, str(m, "expires_at"))
-		switch kind {
-		case "social":
-			c.method = "social"
-		case "odic":
-			c.method = "idc"
-			// as kiro-cli tells them apart: Builder ID's start URL, or none
-			c.builderID = str(m, "start_url") == "" || str(m, "start_url") == kiroBuilderIDStart
-			if reg := get("kirocli:odic:device-registration"); reg != nil {
-				c.clientID, c.clientSecret = str(reg, "client_id"), str(reg, "client_secret")
-			}
-		default:
-			c.method = "external-idp"
-			c.clientID, c.tokenURL = str(m, "client_id"), str(m, "token_endpoint")
-			if c.tokenURL == "" && str(m, "issuer_url") != "" {
-				c.tokenURL = strings.TrimSuffix(str(m, "issuer_url"), "/") + "/v1/token"
-			}
-		}
-		if c.region == "" {
-			c.region = "us-east-1"
-		}
-		return c, true
-	}
-	return kiroCred{}, false
-}
-
-// readKiroIDE reads the Kiro IDE's sign-in.
-func readKiroIDE() (kiroCred, bool) {
-	if settings.AccountDiscoveryOff() {
-		return kiroCred{}, false
-	}
-	path := filepath.Join(kiroIDEDir(), "kiro-auth-token.json")
-	b, err := os.ReadFile(path)
-	if err != nil {
-		return kiroCred{}, false
-	}
-	var t struct {
-		AccessToken  string `json:"accessToken"`
-		RefreshToken string `json:"refreshToken"`
-		ExpiresAt    string `json:"expiresAt"`
-		Region       string `json:"region"`
-		ClientIDHash string `json:"clientIdHash"`
-		AuthMethod   string `json:"authMethod"`
-		Provider     string `json:"provider"`
-		ProfileArn   string `json:"profileArn"`
-	}
-	if json.Unmarshal(b, &t) != nil || t.AccessToken == "" {
-		return kiroCred{}, false
-	}
-	c := kiroCred{access: t.AccessToken, refresh: t.RefreshToken, region: t.Region, profile: t.ProfileArn, method: "idc", idePath: path,
-		builderID: strings.EqualFold(t.Provider, "BuilderId")}
-	c.expires, _ = time.Parse(time.RFC3339Nano, t.ExpiresAt)
-	if c.region == "" {
-		c.region = "us-east-1"
-	}
-	if t.ClientIDHash != "" {
-		var reg struct {
-			ClientID     string `json:"clientId"`
-			ClientSecret string `json:"clientSecret"`
-		}
-		if b, err := os.ReadFile(filepath.Join(kiroIDEDir(), t.ClientIDHash+".json")); err == nil && json.Unmarshal(b, &reg) == nil {
-			c.clientID, c.clientSecret = reg.ClientID, reg.ClientSecret
-		}
-	}
-	if strings.EqualFold(t.AuthMethod, "social") || c.clientID == "" {
-		c.method, c.social = "social", true
-	}
-	return c, true
-}
-
 // readKiroAt is one account's sign-in: the key saved on the provider, one
 // magpie signed in in home, or, with neither, Kiro's own: kiro-cli's, else
 // the IDE's.
@@ -229,16 +122,12 @@ func readKiroAt(key, home string) (kiroCred, bool) {
 	if key != "" {
 		return kiroCred{access: key, method: "apikey", region: "us-east-1"}, true
 	}
-	if settings.AccountDiscoveryOff() {
-		return kiroCred{}, false
-	}
 	if home != "" {
 		return readKiroFile(filepath.Join(home, kiroTokenFile))
 	}
-	if c, ok := readKiroCLI(); ok {
-		return c, true
-	}
-	return readKiroIDE()
+	// Kiro's own sign-in — kiro-cli's or the IDE's — is not read: only
+	// the accounts chongyun signed in itself, each in a home of its own.
+	return kiroCred{}, false
 }
 
 // KiroAuth is what a call to Kiro's API is made with.
@@ -279,7 +168,7 @@ func KiroAuthOf(ctx context.Context, key, home string, stale bool) (KiroAuth, er
 		if home != "" {
 			return KiroAuth{}, errors.New("this Kiro account's sign-in is gone; add it again in chongyun")
 		}
-		return KiroAuth{}, errors.New("Kiro isn't signed in; add the Kiro subscription in chongyun, sign in with `kiro-cli login` or the Kiro IDE, or save a Kiro API key on the provider")
+		return KiroAuth{}, errors.New("Kiro isn't signed in; add the Kiro subscription in chongyun, or save a Kiro API key on the provider")
 	}
 	if kiroAuthCache.m == nil {
 		kiroAuthCache.m = map[string]kiroCred{}
@@ -345,20 +234,8 @@ var kiroRefreshURL = func(region string) string { return "https://prod." + regio
 // refreshKiro refreshes a sign-in's token and keeps the new one where the
 // old one was.
 func refreshKiro(ctx context.Context, c kiroCred) (kiroCred, error) {
-	if c.dbKey != "" {
-		// kiro-cli's own refresh, which keeps its database its own
-		if bin := KiroExecutable(); bin != "" {
-			rctx, cancel := context.WithTimeout(ctx, 20*time.Second)
-			cmd := proc.CommandContext(rctx, bin, "debug", "refresh-auth-token")
-			_ = cmd.Run()
-			cancel()
-			if n, ok := readKiroCLI(); ok && n.dbKey == c.dbKey && n.access != c.access && n.fresh() {
-				return n, nil
-			}
-		}
-	}
 	if c.refresh == "" {
-		return c, errors.New("Kiro's sign-in has expired; sign in again with `kiro-cli login` or the Kiro IDE")
+		return c, kiroExpired(c)
 	}
 	var access, refresh string
 	var expiresIn int
@@ -409,7 +286,7 @@ func refreshKiro(ctx context.Context, c kiroCred) (kiroCred, error) {
 		return c, errors.New("Kiro's sign-in has expired")
 	}
 	if access == "" {
-		return c, errors.New("Kiro's sign-in has expired; sign in again with `kiro-cli login` or the Kiro IDE")
+		return c, kiroExpired(c)
 	}
 	if expiresIn <= 0 {
 		expiresIn = 3600
@@ -420,6 +297,16 @@ func refreshKiro(ctx context.Context, c kiroCred) (kiroCred, error) {
 	}
 	saveKiro(c)
 	return c, nil
+}
+
+// kiroExpired says a sign-in is gone and what to do about it: an account
+// chongyun signed in is added again here, one of Kiro's own is signed in
+// again where it was.
+func kiroExpired(c kiroCred) error {
+	if c.idePath != "" {
+		return errors.New("Kiro's sign-in has expired; add the account again in chongyun")
+	}
+	return errors.New("Kiro's sign-in has expired; sign in again with `kiro-cli login` or the Kiro IDE")
 }
 
 // saveKiro writes a refreshed token back where it was read from.

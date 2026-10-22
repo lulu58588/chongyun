@@ -72,6 +72,10 @@ func effortCodexAccount(t *testing.T, f *fake) {
 	auth := fmt.Sprintf(`{"auth_mode":"chatgpt","tokens":{"id_token":%q,"access_token":%q,"refresh_token":"r","account_id":"acct-1"}}`,
 		claims(map[string]any{"email": "me@example.com"}), claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}))
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), []byte(auth), 0o600)
+	// chongyun keeps the account it signed the agent in to in its own
+	// logins.json, marked as the one the agent is on: it never reads the
+	// agent's own file to find out which account that is.
+	chongyunLogins(t, chongyunCodexLogin("me@example.com", json.RawMessage(auth)))
 	up := httptest.NewServer(f)
 	t.Cleanup(up.Close)
 	old := provider.CodexBase

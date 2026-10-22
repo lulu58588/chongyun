@@ -20,7 +20,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
-// magpie in Docker (xugui on Discord: "docker版登不上grok和command code"):
+// magpie in Docker (xugui 报告: "docker版登不上grok和command code"):
 // its image has no bash, curl or wget, so Grok Build's installer couldn't
 // run and Grok's sign-in never began. Grok Build is then installed as its
 // installer installs it, from the same place, without a shell.

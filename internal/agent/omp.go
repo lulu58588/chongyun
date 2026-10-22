@@ -189,7 +189,7 @@ func ompProfiles(home string) []*Agent {
 // ompIn is omp in a WSL distro (see wsl.go): ~/.omp/agent, as the
 // distro's variables that move it aren't read. The omp there isn't the one
 // on Windows' PATH: its version is the one the distro's probe asked it
-// (whqtian on Discord: a WSL omp's max became xhigh while its version wasn't
+// (whqtian 报告: a WSL omp's max became xhigh while its version wasn't
 // known), and without one its models offer xhigh rather than a max an older
 // omp would refuse.
 func ompIn(at place) *Agent {
@@ -676,7 +676,7 @@ func ompProviderAt(gw, version string) ompProviderEntry {
 	if version != "" && !Newer(ompSessionSince, version) {
 		e.Compat = map[string]string{"promptCacheSessionHeader": "x-session-affinity"}
 	}
-	// whqtian on Discord: a WSL omp under NAT asks Windows' address, where
+	// whqtian 报告: a WSL omp under NAT asks Windows' address, where
 	// the gateway turns a request without a named key away
 	if key := keyAt(gw); key != gateway.Token {
 		e.Auth, e.APIKey = "", key
@@ -737,7 +737,7 @@ func ompOwnOptions(modelsFile, cur string) []Option {
 	}
 	at := map[string]int{}
 	var out []Option
-	for _, o := range append(opts, ownOptionsFrom(ompRegistry, "", cur)...) {
+	for _, o := range append(opts, ownOptionsFrom(ompRegistry, cur)...) {
 		i, dup := at[o.Value]
 		if !dup {
 			at[o.Value] = len(out)

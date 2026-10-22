@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// An agent's model list (@ChongkaiX on X: pick which models show in Codex's
+// An agent's model list (@ChongkaiX 报告: pick which models show in Codex's
 // /model): its connected row, opened, counts them by provider and those
 // hidden, and Pick opens the list, where a click on a row takes a model out
 // or puts it back, at once.

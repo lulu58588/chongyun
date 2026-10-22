@@ -63,7 +63,7 @@ rebranded for **Chongyun Technology**.
 | The upstream partners and sponsors list | Off |
 | The upstream icon proxy | Fetched directly now (the host of a picture sees your IP; noted in the privacy section) |
 | The upstream site and its cross-origin allowlist | The `site/` directory is gone; the allowlist is empty |
-| **Reading other agents' sign-ins** (Claude Code / Codex / the keychain) | **Off by default** — run `chongyun accounts discovery on` to turn it on |
+| **Reading other agents' sign-ins** (Claude Code / Codex / the keychain) | **Removed entirely** — no agent's sign-in is read, and no other app's login file is imported |
 | The upstream icons, logo, product name and texts | All replaced with Chongyun's |
 
 **Kept on purpose** (changing these breaks compatibility with the agents, and they are not
@@ -81,8 +81,9 @@ fork's own notes are at the end of `LICENSE`.
   program on this machine can call it and spend your quota. Don't expose it to a network or
   to other people unless you put your own authentication in front.
 - Reusing subscription accounts (Claude / ChatGPT / Copilot) is a grey area upstream. This
-  build **reads no agent's sign-in by default**; even when turned on by hand, it may trip a
-  vendor's own checks. That is your call to make.
+  build **reads no agent's sign-in** — that whole layer was removed and cannot be turned back
+  on, so it cannot trip a vendor's own checks either. Accounts you sign into through Chongyun
+  itself (Codex PKCE, the Copilot device code, Google OAuth) are unaffected.
 - Sharing on the local network is off by default; when you turn it on, set
   `MAGPIE_ALLOW_IPS` (note: an empty allowlist allows every address).
 

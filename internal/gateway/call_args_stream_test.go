@@ -51,7 +51,7 @@ func (g *gatedCall) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // A call's arguments reach Codex as the upstream writes them, on the
-// translated path its web_search sends a request down (echo_ts on Discord:
+// translated path its web_search sends a request down (echo_ts 报告:
 // on Copilot, Codex saw nothing for the minutes the model wrote a patch or
 // a command, then all of it at once). A function's arguments come as
 // function_call_arguments deltas, a custom tool's input (apply_patch) as

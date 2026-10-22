@@ -132,7 +132,7 @@ func dshAt(at place) *Agent {
 		Check: func() string { return dshCheck(dir, gw()) },
 		// a model of DeepSeek's own picked in dsh (saved in its settings)
 		// leaves magpie's route in its list: dsh is still connected, its
-		// /model has magpie's models beside DeepSeek's (Fate on Discord:
+		// /model has magpie's models beside DeepSeek's (Fate 报告:
 		// DSH went back to Not connected)
 		Joined: func() bool {
 			files := dshProfiles(dir)
@@ -1973,7 +1973,7 @@ func dshWiredWith(dir string, files []string, models []catalog.Model) string {
 	// a profile dsh has just made — the desktop app's, opened for the first
 	// time while magpie runs — is its empty template: given magpie's route
 	// and start as the catalog sync would, rather than left listing dsh's
-	// own models alone until magpie's next start (star on Discord). One with
+	// own models alone until magpie's next start (star 报告). One with
 	// entries of its own and no route is the user's, left to Reapply.
 	fill := []string{}
 	fresh := false

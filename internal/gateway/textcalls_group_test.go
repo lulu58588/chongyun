@@ -8,7 +8,7 @@ import (
 	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// 喜欢一个人 on Discord called the model through a routing group of several
+// 喜欢一个人 报告 called the model through a routing group of several
 // of its entries, in order, from Alma, and only the group went wrong. A
 // group's reply is mended as a model's own is: by the member that answers,
 // the first or one after a refusal, on every route, with nothing the
