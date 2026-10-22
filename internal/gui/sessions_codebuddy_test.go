@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/sessions"
 )
 
 // CodeBuddy Code's own sessions (~/.codebuddy/projects, the real `codebuddy

@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Claude Opus 5.5 turns a forced tool_choice away whatever the schema (#668:

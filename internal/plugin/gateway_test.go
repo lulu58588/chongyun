@@ -16,7 +16,7 @@ import (
 func gatewayFixture(t *testing.T, source string) string {
 	t.Helper()
 	dir := t.TempDir()
-	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"chongyun":{"hooks":"./request.js"}}`), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"magpie":{"hooks":"./request.js"}}`), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(dir, "request.js"), []byte(source), 0o644); err != nil {
@@ -246,7 +246,7 @@ func TestGatewayHookChainRollbackAndOptions(t *testing.T) {
 func TestGatewayHookMixedProviderPackage(t *testing.T) {
 	sandbox(t)
 	dir := gatewayFixture(t, `export function onRequest(body) { body.note="recalled";return body }`)
-	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"type":"module","main":"./provider.js","chongyun":{"hooks":"./request.js"}}`), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"type":"module","main":"./provider.js","magpie":{"hooks":"./request.js"}}`), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(dir, "provider.js"), []byte(`export default async function(){return {auth:{provider:"fixture",methods:[]},config(config){config.provider.fixture={name:"Gateway fixture",models:{m1:{name:"m1"}}}}}}`), 0o644); err != nil {
@@ -281,7 +281,7 @@ func TestGatewayHookMixedPiPackage(t *testing.T) {
 			if err := json.Unmarshal(b, &pkg); err != nil {
 				t.Fatal(err)
 			}
-			pkg["chongyun"] = map[string]string{"hooks": "./request.js"}
+			pkg["magpie"] = map[string]string{"hooks": "./request.js"}
 			b = mustJSON(t, pkg)
 		}
 		if err := os.WriteFile(filepath.Join(dir, filepath.FromSlash(file)), b, 0o644); err != nil {
@@ -441,7 +441,7 @@ export async function onRequest(body: Body): Promise<Body> { body.note += "-dire
 		t.Fatal(err)
 	}
 	dir := t.TempDir()
-	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"chongyun":{"hooks":"./src/request.ts"}}`), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"magpie":{"hooks":"./src/request.ts"}}`), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.MkdirAll(filepath.Join(dir, "src"), 0o755); err != nil {
@@ -490,7 +490,7 @@ func TestGatewayHookNamesApartFromMiddleware(t *testing.T) {
 	}
 	for key, hook := range map[string]bool{"hooks": true, "gateway": false, "middleware": false} {
 		dir := t.TempDir()
-		if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"chongyun":{"`+key+`":"./entry.js"}}`), 0o644); err != nil {
+		if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"magpie":{"`+key+`":"./entry.js"}}`), 0o644); err != nil {
 			t.Fatal(err)
 		}
 		if err := os.WriteFile(filepath.Join(dir, "entry.js"), []byte(`export async function onRequest(b) { return b }`), 0o644); err != nil {

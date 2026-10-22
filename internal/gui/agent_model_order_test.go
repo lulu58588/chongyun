@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Codex's model list goes in the order dragged on the Agents page (#855):

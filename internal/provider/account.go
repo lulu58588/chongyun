@@ -33,12 +33,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/claudecode"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/claudecode"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Account is the signed-in agent behind a provider.

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // 喜欢一个人 on Discord called the model through a routing group of several

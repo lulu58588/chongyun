@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // ARNO on Discord: a model's output limit wasn't in the Gateway's model

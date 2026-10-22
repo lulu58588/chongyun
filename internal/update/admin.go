@@ -8,7 +8,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // ErrCanceled is the administrator's password prompt dismissed.

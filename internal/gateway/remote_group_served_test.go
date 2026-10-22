@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // A remote magpie asked for one of its routing groups answers with the

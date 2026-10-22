@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/filememo"
 )
 
 // AccountDiscoveryOff is whether the agents' sign-ins are left unread

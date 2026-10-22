@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // magpie's own gateway is on the port Settings has (Magic_zero on

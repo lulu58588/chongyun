@@ -3,7 +3,7 @@ package provider
 import (
 	"net/url"
 
-	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/netproxy"
 )
 
 func init() { netproxy.HTTP1 = codexBackend }

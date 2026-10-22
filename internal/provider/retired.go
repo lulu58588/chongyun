@@ -18,7 +18,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // retiredFor is how long a model retired so stays out of the lists: the

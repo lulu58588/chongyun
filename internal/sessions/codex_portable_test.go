@@ -13,8 +13,8 @@ import (
 
 	"github.com/klauspost/compress/zstd"
 
-	"github.com/lulu58588/magpie/internal/codexsummary"
-	"github.com/lulu58588/magpie/internal/filelock"
+	"github.com/lulu58588/chongyun/internal/codexsummary"
+	"github.com/lulu58588/chongyun/internal/filelock"
 )
 
 const portThread = "01a15820-ff81-7840-bb3f-e18771c53aa8"

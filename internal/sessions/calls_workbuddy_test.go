@@ -112,8 +112,8 @@ func TestWorkBuddyCallsSkipsMagpiesGateway(t *testing.T) {
 // and names a routing group on its own: "group/<id>" is a name only a magpie
 // answers to, so it needs no configuration behind it.
 func TestWorkBuddyGateway(t *testing.T) {
-	list := `[{"id":"hy3","vendor":"workbuddy"},{"id":"deepseek/v4","vendor":"chongyun"}]`
-	obj := `{"models":[{"id":"hy3","vendor":"workbuddy"},{"id":"deepseek/v4","vendor":"chongyun"},{"id":"own-proxy/glm-5","vendor":"openai"}]}`
+	list := `[{"id":"hy3","vendor":"workbuddy"},{"id":"deepseek/v4","vendor": "magpie"}]`
+	obj := `{"models":[{"id":"hy3","vendor":"workbuddy"},{"id":"deepseek/v4","vendor": "magpie"},{"id":"own-proxy/glm-5","vendor":"openai"}]}`
 	for _, c := range []struct {
 		shape, id string
 		want      bool
@@ -151,7 +151,7 @@ func TestWorkBuddyGatewayFollowsModelsJSON(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("WORKBUDDY_CONFIG_DIR", dir)
 	with := filepath.Join(dir, "models.json")
-	if err := os.WriteFile(with, []byte(`[{"id":"deepseek/v4","vendor":"chongyun"}]`), 0o644); err != nil {
+	if err := os.WriteFile(with, []byte(`[{"id":"deepseek/v4","vendor": "magpie"}]`), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	if !workbuddyGateway("custom-local:deepseek/v4") {

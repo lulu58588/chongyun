@@ -9,8 +9,8 @@ package agent
 // its own Settings → Import does (importSettingsFromPath,
 // src/core/config/importExport.ts):
 //
-//	{"providerProfiles":{"currentApiConfigName":"chongyun",
-//	  "apiConfigs":{"chongyun":{"id":"chongyun","apiProvider":"openai",
+//	{"providerProfiles":{"currentApiConfigName":"magpie",
+//	  "apiConfigs":{"magpie":{"id":"magpie","apiProvider":"openai",
 //	    "openAiBaseUrl":"http://127.0.0.1:3425/v1","openAiApiKey":"magpie-zoo-code",
 //	    "openAiModelId":"<model>","openAiCustomModelInfo":{…}}}}}
 //
@@ -28,7 +28,7 @@ package agent
 // start, so while connected each start puts Zoo Code back on magpie's
 // profile. A profile once imported lives in Zoo Code's secret storage,
 // which magpie can't write, so Disconnect stops the import and leaves the
-// profile "chongyun" there for the user to switch from or delete. Which
+// profile "magpie" there for the user to switch from or delete. Which
 // profile the user picks inside Zoo Code magpie can't see either.
 //
 // Zoo Code for JetBrains runs the same extension in its own extension
@@ -43,8 +43,8 @@ import (
 	"strings"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // zooImport is the setting naming the file Zoo Code imports at start-up,
@@ -224,7 +224,7 @@ func zooCodeInstalled(exts string) bool {
 }
 
 // zooCodeProfiles is magpie as Zoo Code's provider profiles to import: one
-// profile, "chongyun", on the gateway's Chat Completions with model ref, the
+// profile, "magpie", on the gateway's Chat Completions with model ref, the
 // one Zoo Code uses after the import.
 func zooCodeProfiles(ref string) map[string]any {
 	p := map[string]any{

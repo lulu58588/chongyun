@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Tystem on Discord: Codex wouldn't load its config ("Model provider
@@ -17,8 +17,8 @@ import (
 // back, at the top and for a profile alike.
 func TestCodexProviderWithoutTable(t *testing.T) {
 	for _, tc := range []struct{ name, config string }{
-		{"top", "model_provider = \"chongyun\"\nmodel = \"deepseek-flash\"\n"},
-		{"profile", "profile = \"ds\"\n\n[profiles.ds]\nmodel_provider = \"chongyun\"\nmodel = \"deepseek-flash\"\n"},
+		{"top", "model_provider = \"magpie\"\nmodel = \"deepseek-flash\"\n"},
+		{"profile", "profile = \"ds\"\n\n[profiles.ds]\nmodel_provider = \"magpie\"\nmodel = \"deepseek-flash\"\n"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			home, read := codexHome(t, "", tc.config)

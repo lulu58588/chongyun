@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // bareBedrock answers Anthropic's messages as Bedrock does for an inference

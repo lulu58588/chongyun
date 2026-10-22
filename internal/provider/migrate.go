@@ -43,11 +43,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/filememo"
-	"github.com/lulu58588/magpie/internal/lastgood"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // A migration's states.

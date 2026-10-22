@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // #2651 (demystify0137): a Claude account behind a socks5:// proxy was

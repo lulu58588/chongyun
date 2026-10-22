@@ -19,10 +19,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // QuotaWindow is one rolling allowance reported by a subscription provider.

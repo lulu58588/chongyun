@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // An installed plugin's provider id is kept for it signed in or not, as a

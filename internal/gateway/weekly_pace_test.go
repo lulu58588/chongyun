@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Weekly pace puts first the account with the most of its week left per
@@ -19,7 +19,7 @@ import (
 // answers goes first.
 //
 // PIN (2026-10-01): weekly pace is its own option, "pace"; Least used
-// keeps its most-left-first meaning and Smart is left as it is (yetone,
+// keeps its most-left-first meaning and Smart is left as it is (upstream,
 // PR #517 review).
 func TestWeeklyPace(t *testing.T) {
 	old := allowances

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A custom tool's call a translated vendor's model made (Codex's

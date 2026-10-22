@@ -3,7 +3,7 @@ package gateway
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // WorkBuddy AI's last chunk for gemini-3.5-flash, as it came on 10-16:

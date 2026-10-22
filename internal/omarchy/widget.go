@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // The bar widget: magpie's icon in Omarchy's own bar, where Omarchy's
@@ -21,7 +21,7 @@ import (
 // put in by hand the way Omarchy's shell README says (the files under
 // ~/.config/omarchy/plugins/<id>/, then rescanPlugins and plugin enable),
 // and only when the user asks for it in Settings.
-const WidgetID = "usemagpie.magpie"
+const WidgetID = "chongyun.gateway"
 
 //go:embed widget
 var widgetFiles embed.FS
@@ -93,7 +93,7 @@ func widget(exe string) (map[string][]byte, error) {
 		}
 		if name == "Widget.qml" {
 			// a QML string, quoted as JSON is
-			b = []byte(strings.Replace(string(b), `"__MAGPIE__"`, strconv.Quote(exe), 1))
+			b = []byte(strings.Replace(string(b), `"__CHONGYUN__"`, strconv.Quote(exe), 1))
 		}
 		files[name] = b
 	}

@@ -17,13 +17,13 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/codexcat"
-	"github.com/lulu58588/magpie/internal/codexsummary"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/codexcat"
+	"github.com/lulu58588/chongyun/internal/codexsummary"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // CodexPath is where Codex's built-in OpenAI provider reaches magpie, as its
@@ -407,7 +407,7 @@ func loggedAnswers(convs ...string) []loggedAnswer {
 	}
 	var all []loggedAnswer
 	usage.Visit(time.Now().Add(-sealerKeep), func(r usage.Record) {
-		if r.Provider == "" || r.Provider == "chongyun" || r.IsRejected() || r.IsReported() || r.Status <= 0 || r.Status >= 400 || r.Computer != "" || isTitleKind(r.Kind) {
+		if r.Provider == "" || r.Provider == "magpie" || r.IsRejected() || r.IsReported() || r.Status <= 0 || r.Status >= 400 || r.Computer != "" || isTitleKind(r.Kind) {
 			return
 		}
 		// ponytail: host " as " is provider.Where. A relay that starts

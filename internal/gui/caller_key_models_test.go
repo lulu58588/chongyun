@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // The Gateway page lists the models a key can be held to, the routing

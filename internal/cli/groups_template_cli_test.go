@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // magpie group template lists the templates as the user's models make them,
 // and adds one in one go: added twice, the second is numbered beside the
-// first rather than written over it (yetone, 10-10).
+// first rather than written over it (upstream, 10-10).
 func TestGroupTemplateCLI(t *testing.T) {
 	groupsHome(t)
 	if err := provider.Save(provider.Provider{ID: "c", Name: "C", Key: "kc", Models: []string{"gpt-5.4-mini"}, Chat: "http://127.0.0.1:1/v1"}); err != nil {

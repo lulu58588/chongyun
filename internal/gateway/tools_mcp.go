@@ -9,9 +9,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/gwtool"
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/gwtool"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // The tools the user's plugins give (OpenCode's tool hook: {tool: {name:

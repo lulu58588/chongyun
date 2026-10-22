@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // sameGroup compares two values of a field, one of them read back from the
@@ -75,7 +75,7 @@ func TestDriftReplaced(t *testing.T) {
 	if err := cx.Reapply(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model = "fake/m1"`) || !strings.Contains(cfg, `model_provider = "chongyun"`) || cx.Drift() != nil {
+	if cfg := read(); !strings.Contains(cfg, `model = "fake/m1"`) || !strings.Contains(cfg, `model_provider = "magpie"`) || cx.Drift() != nil {
 		t.Fatalf("reapplied:\n%s", cfg)
 	}
 	os.WriteFile(filepath.Join(home, ".codex", "config.toml"), []byte("model = \"gpt-5.5\"\n"), 0o644)

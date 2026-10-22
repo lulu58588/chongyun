@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // On a Claude model, Claude Code's haiku tier — its titles, Explore

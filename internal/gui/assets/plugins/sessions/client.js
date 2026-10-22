@@ -68,7 +68,7 @@ magpie.plugin("sessions", (ctx) => {
   // an app that runs Codex once per picture in a folder of its own left
   // 11,358 folders of one session each, and drawing them all made 114,000
   // elements, held every click on the page for over a second, and slowed
-  // the Library page after it (yetone).
+  // the Library page after it (upstream).
   const FOLDERS = "\x00folders";
 
   // A session seen only through magpie's gateway has no folder magpie knows

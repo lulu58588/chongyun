@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // MOMO on Discord asked for "Zen-Space-Bunny", the name a picker showed,

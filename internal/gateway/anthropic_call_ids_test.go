@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // devinRawID is the call id Devin's SWE-2 gave in #1304 (StarMoonCity's

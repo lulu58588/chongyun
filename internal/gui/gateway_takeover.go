@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // The Gateway page's button (leslie_luo on Discord): with an older magpie

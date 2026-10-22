@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // OpenCode reads its config from $OPENCODE_CONFIG_DIR when that is set

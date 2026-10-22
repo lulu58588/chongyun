@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A request that offers web search, at a provider that doesn't search by

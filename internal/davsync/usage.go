@@ -26,9 +26,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/backup"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/backup"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // usageFolder is the folder the days go in, in magpie's.

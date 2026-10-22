@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A provider's editor saves what it shows. What it doesn't show, set from

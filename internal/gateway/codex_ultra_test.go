@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/codexcat"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/codexcat"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // copilotUp is a Copilot account whose API serves gpt-6.1-sol and gpt-6-luna

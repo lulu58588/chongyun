@@ -22,7 +22,7 @@ func TestOneMagpieAtATime(t *testing.T) {
 		os.Stdout.WriteString("held\n")
 		select {}
 	}
-	lock := instanceLock(dir, "/Applications/Magpie.app/Contents/MacOS/magpie")
+	lock := instanceLock(dir, "/Applications/Chongyun.app/Contents/MacOS/magpie")
 	if dev := instanceLock(dir, "/src/magpie/magpie-dev"); dev == lock {
 		t.Fatal("magpie-dev shares the app's lock")
 	}

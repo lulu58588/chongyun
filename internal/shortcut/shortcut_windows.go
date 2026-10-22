@@ -11,7 +11,7 @@ import (
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // appPath is where Win+R and `start chongyun` look magpie.exe up: the user's

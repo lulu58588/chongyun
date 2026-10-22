@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // codexViewImage is a Codex turn whose view_image call came back with an

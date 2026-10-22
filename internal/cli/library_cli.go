@@ -11,7 +11,7 @@ import (
 
 	"golang.org/x/term"
 
-	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/chongyun/internal/library"
 )
 
 const libraryUsage = `chongyun library                     what the library gives each agent: instructions, MCP servers, skills

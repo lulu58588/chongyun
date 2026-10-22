@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/mcpauth"
-	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/mcpauth"
+	"github.com/lulu58588/chongyun/internal/netproxy"
 )
 
 // mcpClient relays the agents' requests to a remote MCP server magpie is

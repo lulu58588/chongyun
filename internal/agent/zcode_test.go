@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func TestZCode(t *testing.T) {
@@ -38,7 +38,7 @@ func TestZCode(t *testing.T) {
 		if c.Provider["builtin:bigmodel"] == nil {
 			t.Fatalf("ZCode's own provider went: %s", b)
 		}
-		return c.Provider["chongyun"]
+		return c.Provider["magpie"]
 	}
 
 	a := zcode(home)
@@ -49,24 +49,24 @@ func TestZCode(t *testing.T) {
 	if f.Get() != "" {
 		t.Fatalf("get: %q", f.Get())
 	}
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	m := read()
 	opts, _ := m["options"].(map[string]any)
 	models, _ := m["models"].(map[string]any)
 	pro, _ := models["deepseek/pro"].(map[string]any)
-	if m["kind"] != "anthropic" || m["enabled"] != true || m["source"] != "custom" || opts["apiKey"] != "chongyun" ||
+	if m["kind"] != "anthropic" || m["enabled"] != true || m["source"] != "custom" || opts["apiKey"] != "magpie" ||
 		opts["baseURL"] == "" || pro == nil || pro["limit"] == nil || pro["modalities"] == nil {
 		t.Fatalf("chongyun provider: %v", m)
 	}
-	if f.Get() != "chongyun" {
+	if f.Get() != "magpie" {
 		t.Fatalf("get: %q", f.Get())
 	}
 	// ZCode 3.14 reads provider_config.json
 	rules := filepath.Join(home, ".zcode", "v2", "provider_config.json")
-	os.WriteFile(rules, []byte(`{"schemaVersion":1,"config":{"providerConfigRules":{"providerRules":[{"providerId":"mine","config":{}}]},"modelConfigRules":{"providerModelRules":[],"manualProviderModelRules":[{"providerId":"chongyun","modelId":"deepseek/pro","config":{"enabled":true}}]}},"other":1}`), 0o600)
-	if err := f.Set("chongyun"); err != nil {
+	os.WriteFile(rules, []byte(`{"schemaVersion":1,"config":{"providerConfigRules":{"providerRules":[{"providerId":"mine","config":{}}]},"modelConfigRules":{"providerModelRules":[],"manualProviderModelRules":[{"providerId":"magpie","modelId":"deepseek/pro","config":{"enabled":true}}]}},"other":1}`), 0o600)
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	type rulesDoc struct {
@@ -100,8 +100,8 @@ func TestZCode(t *testing.T) {
 	cfg, _ := pr[1]["config"].(map[string]any)
 	access, _ := cfg["access"].(map[string]any)
 	api, _ := cfg["api"].(map[string]any)
-	if pr[1]["providerId"] != "chongyun" || pr[1]["enabled"] != true || cfg["group"] != "standard-personal" ||
-		access["type"] != "api-key" || access["apiKey"] != "chongyun" || api["type"] != "anthropic-messages" || api["baseUrl"] == "" ||
+	if pr[1]["providerId"] != "magpie" || pr[1]["enabled"] != true || cfg["group"] != "standard-personal" ||
+		access["type"] != "api-key" || access["apiKey"] != "magpie" || api["type"] != "anthropic-messages" || api["baseUrl"] == "" ||
 		len(cfg["personalModelIds"].([]any)) != 1 {
 		t.Fatalf("chongyun rule: %v", pr[1])
 	}
@@ -155,9 +155,9 @@ func TestZCodeKeepsUserChoices(t *testing.T) {
 	path := filepath.Join(home, ".zcode", "v2", "config.json")
 	rules := filepath.Join(home, ".zcode", "v2", "provider_config.json")
 	os.MkdirAll(filepath.Dir(path), 0o755)
-	os.WriteFile(path, []byte(`{"provider":{"chongyun":{"name":"chongyun","kind":"anthropic","enabled":false}}}`), 0o644)
+	os.WriteFile(path, []byte(`{"provider":{"magpie":{"name": "崇云科技","kind":"anthropic","enabled":false}}}`), 0o644)
 	os.WriteFile(rules, []byte(`{"schemaVersion":1,"config":{"providerConfigRules":{"providerRules":[
-	  {"providerId":"a","config":{}},{"providerId":"chongyun","enabled":false,"config":{}},{"providerId":"b","config":{}}]}}}`), 0o600)
+	  {"providerId":"a","config":{}},{"providerId":"magpie","enabled":false,"config":{}},{"providerId":"b","config":{}}]}}}`), 0o600)
 	a := zcode(home)
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
@@ -178,7 +178,7 @@ func TestZCodeKeepsUserChoices(t *testing.T) {
 		}
 		return out, on
 	}
-	if got, on := ids(); len(got) != 3 || got[1] != "chongyun" || on[1] != false {
+	if got, on := ids(); len(got) != 3 || got[1] != "magpie" || on[1] != false {
 		t.Fatalf("rules %v %v", got, on)
 	}
 	var c struct {
@@ -186,7 +186,7 @@ func TestZCodeKeepsUserChoices(t *testing.T) {
 	}
 	b, _ := os.ReadFile(path)
 	json.Unmarshal(b, &c)
-	if c.Provider["chongyun"]["enabled"] != false || c.Provider["chongyun"]["models"] == nil {
+	if c.Provider["magpie"]["enabled"] != false || c.Provider["magpie"]["models"] == nil {
 		t.Fatalf("config.json: %s", b)
 	}
 
@@ -214,7 +214,7 @@ func TestZCodeOutputAndReasoning(t *testing.T) {
 	os.MkdirAll(filepath.Dir(path), 0o755)
 	os.WriteFile(path, []byte(`{"provider":{"builtin:zai":{"models":{"GLM-5-Turbo":{"reasoning":{"enabled":true,"variants":["enabled","off"],"defaultVariant":"enabled"},"limit":{"context":200000,"output":64000}}}}}}`), 0o644)
 	os.WriteFile(rules, []byte(`{"schemaVersion":1,"config":{"providerConfigRules":{"providerRules":[]},"modelConfigRules":{"providerModelRules":[{"providerId":"mine","modelId":"x","config":{"optionSpecs":{"maxOutputTokens":{"max":7}}}}],"manualProviderModelRules":[]}}}`), 0o600)
-	if err := zcode(home).Field("provider").Set("chongyun"); err != nil {
+	if err := zcode(home).Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(path)
@@ -425,7 +425,7 @@ func TestZCodeKeepsUserFormat(t *testing.T) {
 	}
 	rule := func(doc map[string]any) map[string]any {
 		for _, r := range doc["config"].(map[string]any)["providerConfigRules"].(map[string]any)["providerRules"].([]any) {
-			if r := r.(map[string]any); r["providerId"] == "chongyun" {
+			if r := r.(map[string]any); r["providerId"] == "magpie" {
 				return r["config"].(map[string]any)["api"].(map[string]any)
 			}
 		}
@@ -445,7 +445,7 @@ func TestZCodeKeepsUserFormat(t *testing.T) {
 		return k, api
 	}
 	a := zcode(home)
-	if err := a.Field("provider").Set("chongyun"); err != nil {
+	if err := a.Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if k, api := formats(); k != "anthropic" || api != "anthropic-messages" {
@@ -471,7 +471,7 @@ func TestZCodeKeepsUserFormat(t *testing.T) {
 
 	// an older ZCode writes config.json
 	edited(path, func(doc map[string]any) {
-		doc["provider"].(map[string]any)["chongyun"].(map[string]any)["kind"] = "openai-compatible"
+		doc["provider"].(map[string]any)["magpie"].(map[string]any)["kind"] = "openai-compatible"
 	})
 	later := time.Now().Add(2 * time.Minute) // past rules' edit above
 	os.Chtimes(path, later, later)
@@ -484,7 +484,7 @@ func TestZCodeKeepsUserFormat(t *testing.T) {
 
 	// a format ZCode doesn't have isn't kept
 	edited(rules, func(doc map[string]any) { rule(doc)["type"] = "grpc" })
-	edited(path, func(doc map[string]any) { doc["provider"].(map[string]any)["chongyun"].(map[string]any)["kind"] = "grpc" })
+	edited(path, func(doc map[string]any) { doc["provider"].(map[string]any)["magpie"].(map[string]any)["kind"] = "grpc" })
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}
@@ -519,7 +519,7 @@ func TestZCodeMovedDataFolder(t *testing.T) {
 
 	a := zcode(home)
 	f := a.Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if !zcodeRuled(filepath.Join(movedV2, "provider_config.json")) {
@@ -534,7 +534,7 @@ func TestZCodeMovedDataFolder(t *testing.T) {
 			t.Fatalf("%s written in the home folder ZCode no longer reads", n)
 		}
 	}
-	if f.Get() != "chongyun" {
+	if f.Get() != "magpie" {
 		t.Fatalf("get: %q", f.Get())
 	}
 
@@ -559,7 +559,7 @@ func TestZCodeKeepsTheUsersSettings(t *testing.T) {
 	os.WriteFile(filepath.Join(filepath.Dir(rules), "config.json"), []byte(`{}`), 0o644)
 	a := zcode(home)
 	f := a.Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	type rule = map[string]any
@@ -613,7 +613,7 @@ func TestZCodeKeepsTheUsersSettings(t *testing.T) {
 		}
 	}
 	check("sync")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	check("pick")
@@ -640,7 +640,7 @@ func TestZCodeOnWindowsUsesTheHomeZCodeReads(t *testing.T) {
 	if a.Dir != want || a.Path != filepath.Join(want, "v2", "config.json") {
 		t.Fatalf("ZCode's folder on Windows with HOME set: %s, %s; want %s", a.Dir, a.Path, want)
 	}
-	if err := a.Field("provider").Set("chongyun"); err != nil {
+	if err := a.Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if !zcodeRuled(filepath.Join(want, "v2", "provider_config.json")) {

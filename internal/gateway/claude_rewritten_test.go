@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // almaReply is a reply as Alma is given it: its own notification block at

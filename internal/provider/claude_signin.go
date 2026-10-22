@@ -24,10 +24,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/claudecode"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/wslrun"
+	"github.com/lulu58588/chongyun/internal/claudecode"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/wslrun"
 )
 
 // claudeCLISignIn is a `claude auth login` magpie is running.

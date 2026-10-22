@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // An agent that hangs up the moment a stream's last event reaches it had the

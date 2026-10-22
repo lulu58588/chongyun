@@ -31,8 +31,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/filememo"
-	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/lastgood"
 )
 
 // DailyCredits is what an account's credits went to day by day.

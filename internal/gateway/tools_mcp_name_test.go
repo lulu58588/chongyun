@@ -5,7 +5,7 @@ import (
 	"testing"
 	"unicode/utf8"
 
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // A tool's name in Chinese is cut to 64 bytes where a character begins,

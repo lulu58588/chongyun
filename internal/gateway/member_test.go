@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // A reply from a group says which member answered it (#822): its

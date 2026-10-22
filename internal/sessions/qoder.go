@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // Qoder's CLI (qodercli, and qoderclicn for the China site: one build)

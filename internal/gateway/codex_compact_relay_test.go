@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #292: a magpie model's summary goes to a relay in front of the ChatGPT

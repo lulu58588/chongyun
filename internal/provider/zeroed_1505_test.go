@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/lastgood"
-	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/steady"
 )
 
 // #1505: a Windows machine that went down mid-write left logins.json at

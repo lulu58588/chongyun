@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // Every agent on the Agents page that reads skills has a place for them in

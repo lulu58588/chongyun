@@ -13,8 +13,8 @@ import (
 	"testing/synctest"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 func otelConfig(t *testing.T, config settings.OTel) {

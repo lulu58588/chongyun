@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // glmPlan plays a GLM Coding Plan: chat completions at /api/coding/paas/v4,

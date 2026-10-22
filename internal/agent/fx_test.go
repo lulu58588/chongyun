@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 func TestFx(t *testing.T) {
@@ -40,8 +40,8 @@ func TestFx(t *testing.T) {
 	}
 	s := read()
 	ps := s["providers"].(map[string]any)
-	m, ok := ps["chongyun"].(map[string]any)
-	if !ok || ps["local"] == nil || s["provider"] != "chongyun" || s["models"].(map[string]any)["chongyun"] != "deepseek/flash" || s["theme"] != "dark" {
+	m, ok := ps["magpie"].(map[string]any)
+	if !ok || ps["local"] == nil || s["provider"] != "magpie" || s["models"].(map[string]any)["magpie"] != "deepseek/flash" || s["theme"] != "dark" {
 		t.Fatalf("settings: %v", s)
 	}
 	if m["protocol"] != "openai-chat-completions" || m["base_url"] != gatewayV1() || m["auth"].(map[string]any)["type"] != "none" {
@@ -59,7 +59,7 @@ func TestFx(t *testing.T) {
 		t.Fatal(err)
 	}
 	s = read()
-	if s["provider"] != nil || s["providers"].(map[string]any)["chongyun"] != nil || s["providers"].(map[string]any)["local"] == nil ||
+	if s["provider"] != nil || s["providers"].(map[string]any)["magpie"] != nil || s["providers"].(map[string]any)["local"] == nil ||
 		s["models"].(map[string]any)["gateway"] != "openai/gpt-6-sol" || f.Get() != "openai/gpt-6-sol" {
 		t.Fatalf("own: %v", s)
 	}
@@ -76,7 +76,7 @@ func TestFx(t *testing.T) {
 		t.Fatal(err)
 	}
 	s = read()
-	if s["provider"] != nil || s["providers"].(map[string]any)["chongyun"] != nil || s["models"].(map[string]any)["chongyun"] != nil {
+	if s["provider"] != nil || s["providers"].(map[string]any)["magpie"] != nil || s["models"].(map[string]any)["magpie"] != nil {
 		t.Fatalf("reset: %v", s)
 	}
 }

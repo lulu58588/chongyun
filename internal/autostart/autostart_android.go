@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // Termux:Boot runs executable scripts in ~/.termux/boot after Android boots.

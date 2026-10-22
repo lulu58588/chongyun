@@ -95,7 +95,7 @@ enabled = true
 func TestTOMLTableWithSpacedDots(t *testing.T) {
 	const input = `top = 1
 
-[ model_providers . chongyun ] # keep the spaces
+[ model_providers . magpie ] # keep the spaces
 name = "old"
 wire_api = "responses"
 
@@ -133,7 +133,7 @@ note = "spaces are the key"
 	if err := SetTOMLTable(p, "model_providers.magpie", KV{Path: "name", Value: "DeepSeek"}); err != nil {
 		t.Fatal(err)
 	}
-	want := strings.Replace(input, "[ model_providers . chongyun ] # keep the spaces\nname = \"old\"\nwire_api = \"responses\"\n", "[model_providers.magpie]\nname = \"DeepSeek\"\n", 1)
+	want := strings.Replace(input, "[ model_providers . magpie ] # keep the spaces\nname = \"old\"\nwire_api = \"responses\"\n", "[model_providers.magpie]\nname = \"DeepSeek\"\n", 1)
 	assertTOMLContent(t, p, want)
 	// and an array table under a spaced header is owned by its normalised name
 	if err := SetTOMLTables(p, []string{"skills."}, nil); err != nil {

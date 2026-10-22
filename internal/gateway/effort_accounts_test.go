@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // freeRefusesHigh is the ChatGPT backend's 400 for a reasoning level the

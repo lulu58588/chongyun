@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/lulu58588/magpie/internal/pluginrt"
+	"github.com/lulu58588/chongyun/internal/pluginrt"
 )
 
 // Plugins › Built-in (Lxxyx on X: "功能太多了"): magpie's built-in plugins

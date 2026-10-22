@@ -22,7 +22,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // QuotaAlert is one thing to tell the user: a window used past the share

@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // installedShells are the shells installed here that a terminal may open:

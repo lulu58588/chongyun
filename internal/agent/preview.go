@@ -12,10 +12,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Before an agent is disconnected the user is shown what changes in its
@@ -488,7 +488,7 @@ func mask(l string) string {
 	}
 	val := strings.TrimSpace(l[m[1]:])
 	bare := strings.Trim(val, `"', `)
-	if bare == "" || bare == "chongyun" || strings.HasPrefix(bare, "{") || strings.HasPrefix(bare, "$") {
+	if bare == "" || bare == "magpie" || strings.HasPrefix(bare, "{") || strings.HasPrefix(bare, "$") {
 		return l
 	}
 	return l[:m[1]] + " ••••"

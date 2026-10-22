@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/chongyun/internal/mcpauth/mcpauthtest"
 )
 
 // A body past an MCP route's limit is refused whole (#1766, ggbdpq): a

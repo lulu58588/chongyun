@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // codeModeRequest is a turn as Codex sends it for a model its catalog puts

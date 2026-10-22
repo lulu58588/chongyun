@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/middleware"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/middleware"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // magpie plugin says which plugins are gateway middleware and their hooks,
@@ -63,7 +63,7 @@ func TestPluginOnOffRmShortName(t *testing.T) {
 	t.Cleanup(plugin.Settle)
 	dir := filepath.Join(t.TempDir(), "middleware-zz-tags")
 	os.MkdirAll(dir, 0o755)
-	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name": "@magpie-community/middleware-zz-tags", "chongyun": {"middleware": "./zz.middleware.js"}}`), 0o644)
+	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name": "@magpie-community/middleware-zz-tags", "magpie": {"middleware": "./zz.middleware.js"}}`), 0o644)
 	os.WriteFile(filepath.Join(dir, "zz.middleware.js"), []byte("export function onRequest(b) {}\n"), 0o644)
 	if _, err := plugin.Add(context.Background(), dir); err != nil {
 		t.Fatal(err)

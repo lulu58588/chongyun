@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // The allow list (lc on Discord, magpie in Docker on a public host): the

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // A deprecated built-in whose plugin the user installed is handed to it

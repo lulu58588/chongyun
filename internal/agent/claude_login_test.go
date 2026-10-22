@@ -5,10 +5,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func saveDeepseek(t *testing.T) {
@@ -163,7 +163,7 @@ func TestClaudeSignInThroughDisconnect(t *testing.T) {
 
 // An empty key at an endpoint the user set after magpie stepped out is
 // theirs, though Claude Code kept its claude.ai sign-in through magpie
-// before: its model default leaves it (yetone on #1218).
+// before: its model default leaves it (upstream on #1218).
 func TestClaudeOwnEndpointWithAnEmptyKey(t *testing.T) {
 	t.Setenv("MAGPIE_ADDR", "")
 	home, path := claudeSettings(t, `{"theme":"dark","env":{"ANTHROPIC_BASE_URL":"https://relay.example","ANTHROPIC_AUTH_TOKEN":"sk-relay"}}`)

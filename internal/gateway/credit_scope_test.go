@@ -13,9 +13,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // wbExhausted is WorkBuddy's 429 for credits used up, as the WorkBuddy

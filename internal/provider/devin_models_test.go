@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // devinListed is a CLI list the way Devin gives it: families whose

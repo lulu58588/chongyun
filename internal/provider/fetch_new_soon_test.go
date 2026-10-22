@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // An account whose list couldn't be had is asked again a minute on, and

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #1515: `chongyun accounts alias` names an account for the user, as

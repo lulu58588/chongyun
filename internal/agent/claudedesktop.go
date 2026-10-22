@@ -15,7 +15,7 @@ package agent
 //	  "inferenceGatewayAuthScheme":"bearer",
 //	  "disableDeploymentModeChooser":true,"coworkEgressAllowedHosts":["*"]}
 //	Claude-3p/configLibrary/_meta.json     {"appliedId":"<id>",
-//	  "entries":[…,{"id":"<id>","name":"chongyun"}]}
+//	  "entries":[…,{"id":"<id>","name":"magpie"}]}
 //
 // as CC Switch writes them (claude_desktop_config.rs). The folders are in
 // ~/Library/Application Support on macOS, %LOCALAPPDATA% on Windows (the
@@ -41,14 +41,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/desktopdir"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/desktopdir"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // desktopProfileID is magpie's profile in Desktop's configLibrary: a
-// UUID like the ones Desktop makes, its last part "chongyun" in hex.
+// UUID like the ones Desktop makes, its last part "magpie" in hex.
 const desktopProfileID = "00000000-0000-4000-8000-6d6167706965"
 
 // desktopPaths are the files and folders magpie writes for Claude Desktop.
@@ -484,7 +484,7 @@ func desktopOn(p desktopPaths) error {
 
 	// _meta.json: magpie's entry (where it was, if it was), applied
 	if !wired {
-		entry, _ := json.Marshal(map[string]string{"id": desktopProfileID, "name": "chongyun"})
+		entry, _ := json.Marshal(map[string]string{"id": desktopProfileID, "name": "magpie"})
 		entries = append(entries, entry)
 		if err := edit.SetJSON(p.meta, edit.KV{Path: "entries", Value: entries}); err != nil {
 			return err

@@ -22,7 +22,7 @@ func ocCalls(t *testing.T) map[string]Call {
 }
 
 // checkOCCalls checks the fixtures' replies as calls: the one through
-// magpie's gateway (msg_0003, provider "chongyun") left to the gateway's log,
+// magpie's gateway (msg_0003, provider "magpie") left to the gateway's log,
 // the subagent's in the session it ran under, the reasoning in the output.
 func checkOCCalls(t *testing.T, cs map[string]Call) {
 	t.Helper()

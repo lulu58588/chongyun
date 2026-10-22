@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/chongyun/internal/agent"
 	"gopkg.in/yaml.v3"
 )
 

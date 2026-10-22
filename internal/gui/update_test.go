@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // A version downloaded and waiting for a restart gives way to a newer one

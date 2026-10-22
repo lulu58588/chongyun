@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A model id can hold a space ("Opus 5.5" on a relay, #1976): models=,

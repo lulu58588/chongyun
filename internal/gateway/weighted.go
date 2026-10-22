@@ -17,8 +17,8 @@ package gateway
 // it is one member, planned by its own.
 
 import (
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/routes"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/routes"
 )
 
 // keyWeight is a candidate's weight: its key's, 1 when none.

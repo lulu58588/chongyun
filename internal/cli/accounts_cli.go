@@ -14,9 +14,9 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // accountsCmd: `chongyun accounts [agent] [--json]`, `chongyun accounts add <agent>`,

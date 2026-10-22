@@ -8,10 +8,10 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/sessions"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // A web page the user listed in Settings (#1051, SkyAerope: a preflight
@@ -90,7 +90,7 @@ func TestCORSOrigins(t *testing.T) {
 	}
 	// without one, or with a key that isn't a gateway key, it is refused —
 	// readably, so the page can say why
-	for _, key := range []string{"", "chongyun", "sk-magpie-not-a-key"} {
+	for _, key := range []string{"", "magpie", "sk-magpie-not-a-key"} {
 		w := do("POST", "/v1/chat/completions", "http://localhost:3000", key, nil)
 		if w.Code != http.StatusUnauthorized || w.Header().Get("Access-Control-Allow-Origin") != "http://localhost:3000" || !strings.Contains(w.Body.String(), "gateway key") {
 			t.Errorf("key %q: %d %v %s", key, w.Code, w.Header(), w.Body)
@@ -250,7 +250,7 @@ func TestForeignPagesRefused(t *testing.T) {
 		{"OPTIONS", "/v1/chat/completions", ""},
 	}
 	const loop = "127.0.0.1:50123"
-	for _, o := range []string{"https://evil.example", "http://evil.example:3425", "http://localhost.evil.example", "http://192.168.1.7:3000", "HTTPS://Evil.Example", "https://usemagpie.ai"} {
+	for _, o := range []string{"https://evil.example", "http://evil.example:3425", "http://localhost.evil.example", "http://192.168.1.7:3000", "HTTPS://Evil.Example", "https://site.example"} {
 		for _, c := range routes {
 			if w := do(c, o, "127.0.0.1:3425", loop, ""); w.Code != http.StatusForbidden || !strings.Contains(w.Body.String(), "web page") || w.Header().Get("Access-Control-Allow-Origin") != "" {
 				t.Errorf("%s %s from %s: %d %s", c.method, c.path, o, w.Code, w.Body)
@@ -291,9 +291,10 @@ func TestForeignPagesRefused(t *testing.T) {
 			t.Errorf("%q to %s: %d %s", c.origin, c.host, w.Code, w.Body)
 		}
 	}
-	// usemagpie.ai still reads the Omarchy theme, and only that
-	if w := do(call{"GET", "/v1/magpie/omarchy", ""}, "https://usemagpie.ai", "127.0.0.1:3425", loop, ""); w.Code == http.StatusForbidden {
-		t.Errorf("usemagpie.ai's Omarchy theme: %d %s", w.Code, w.Body)
+	// no page outside this machine reads the Omarchy theme any more: this
+	// build names no site of its own to allow
+	if w := do(call{"GET", "/v1/magpie/omarchy", ""}, "https://example.com", "127.0.0.1:3425", loop, ""); w.Code != http.StatusForbidden {
+		t.Errorf("another page's Omarchy theme: %d %s", w.Code, w.Body)
 	}
 }
 

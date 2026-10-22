@@ -30,9 +30,9 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/magpie/internal/desktopdir"
-	"github.com/lulu58588/magpie/internal/dirent"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/desktopdir"
+	"github.com/lulu58588/chongyun/internal/dirent"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 const desktopManifest = "manifest.json"

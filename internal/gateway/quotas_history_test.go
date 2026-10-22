@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // GET /v1/magpie/quotas/history is each account's windows over time

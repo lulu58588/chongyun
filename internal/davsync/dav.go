@@ -14,12 +14,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/backup"
+	"github.com/lulu58588/chongyun/internal/backup"
 )
 
 // folder and file are where the backup lives under the address given.
 const (
-	folder = "chongyun"
+	folder = "magpie"
 	file   = "magpie.magpie-backup"
 )
 

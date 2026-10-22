@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // TestClaudeModelCapabilities: Claude Code on a gateway (Claude Desktop's
@@ -97,7 +97,7 @@ func TestClaudeModelCapabilities(t *testing.T) {
 
 	// Claude Desktop on magpie: its ids for magpie's models, as Claude Code
 	// gets them from its Code tab
-	if err := claudeDesktop(home).Field("provider").Set("chongyun"); err != nil {
+	if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	var deep provider.Entry

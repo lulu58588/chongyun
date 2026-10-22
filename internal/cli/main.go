@@ -13,22 +13,22 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/claudebridge"
-	"github.com/lulu58588/magpie/internal/davsync"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/imagemcp"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/pluginrt"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/profile"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/sessions"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/tui"
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/claudebridge"
+	"github.com/lulu58588/chongyun/internal/davsync"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/imagemcp"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/pluginrt"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/profile"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/tui"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // version is the root main package's, set at build time
@@ -137,7 +137,7 @@ const usage = `chongyun — 崇云科技的统一 AI 模型网关 / one place to
   chongyun update [check] [--proxy <url>] [--mirror <prefix>]
                                   install the newest release (check: only say if there is one); --proxy: an
                                   http(s):// or socks5:// proxy for it; --mirror: a GitHub download mirror put
-                                  before the github.com URL (none unless given; still checked against usemagpie.ai's SHA-256)
+                                  before the github.com URL (none unless given; still checked against the feed's SHA-256)
   chongyun update mirror [<prefix>|off]  the mirror every update, the app's own too, is downloaded through
   chongyun update auto [on|off] [download|notify] [30m|1h|6h|24h]
                                   whether the app looks for updates by itself, how often (6h), and whether
@@ -165,7 +165,7 @@ func Main(v string) {
 		if len(os.Args) > 1 {
 			switch os.Args[1] {
 			case "-v", "--version", "version":
-				fmt.Println("chongyun", version)
+				fmt.Println("magpie", version)
 				return
 			case "-h", "--help", "help":
 				fmt.Print(usage)
@@ -340,7 +340,7 @@ func run(args []string) error {
 		fmt.Print(usage)
 		return nil
 	case "-v", "--version", "version":
-		fmt.Println("chongyun", version)
+		fmt.Println("magpie", version)
 		return nil
 	case "ls", "list":
 		// in the order the app lists them; those hidden there come last, dimmed

@@ -5,7 +5,7 @@ package agent
 // ~/.omo/agent, or OMO_CODING_AGENT_DIR's, else SENPI_CODING_AGENT_DIR's
 // (bin/lib/agent-dir.js, canonicalAgentDir). magpie wires it as it does Pi:
 // defaultProvider/defaultModel/defaultThinkingLevel in settings.json and
-// magpie as the provider "chongyun" in models.json. Its requests say
+// magpie as the provider "magpie" in models.json. Its requests say
 // omo/<version>.
 //
 // OmO reads PI_CODING_AGENT_DIR as well, after its own two; that one is

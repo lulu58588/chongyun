@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // asideAccountsJSON is ~/.aside/accounts.json as fjrtdk pasted it on #1499

@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // #275: a restart to update from the open window (Windows, Linux) came
@@ -51,7 +51,7 @@ func TestRelaunchBinaryArgs(t *testing.T) {
 		// read as the next one's
 		dir := t.TempDir()
 		out := filepath.Join(dir, "out")
-		exe := filepath.Join(dir, "chongyun")
+		exe := filepath.Join(dir, "magpie")
 		script := "#!/bin/sh\necho \"$* $MAGPIE_REPLACES\" > " + out + ".tmp && mv " + out + ".tmp " + out + "\n"
 		testenv.Program(t, exe, script)
 		if err := RelaunchBinary(exe, "", c.window, c.view); err != nil {

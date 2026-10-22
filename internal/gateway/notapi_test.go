@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // cloudflarePage is a page a relay serves 200 text/html in place of a

@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // Run the public command in a fresh process, with only a fake account,
@@ -36,7 +36,7 @@ func TestAccountsCachedReading(t *testing.T) {
 	for _, mode := range []string{"cached-text", "cached-json", "fresh-text", "fresh-json"} {
 		t.Run(mode, func(t *testing.T) {
 			home := t.TempDir()
-			config := filepath.Join(home, ".config", "chongyun")
+			config := filepath.Join(home, ".config", "magpie")
 			at := time.Now().Add(-2 * time.Hour).UTC().Truncate(time.Second)
 			reset := at.Add(time.Hour)
 			write := func(path string, value any) {

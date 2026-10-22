@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // One of Codex's own models, when OpenAI can't be reached, fails saying so

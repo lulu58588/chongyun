@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 func systemCABundle() string { return "" }

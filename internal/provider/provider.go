@@ -24,11 +24,11 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/lastgood"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/steady"
 )
 
 // Protocol is a wire API magpie can speak to an upstream.
@@ -785,8 +785,8 @@ func Save(p Provider) error {
 	if p.ID == "" || p.ID != Slug(p.ID) && !stored(p.ID) {
 		return fmt.Errorf("provider id must be lowercase letters, digits and dashes, not %q", p.ID)
 	}
-	if p.ID == "chongyun" {
-		return errors.New(`"chongyun" is what agents call the gateway itself; pick another id`)
+	if p.ID == "magpie" {
+		return errors.New(`"magpie" is what agents call the gateway itself; pick another id`)
 	}
 	if p.ID == strings.TrimSuffix(GroupPrefix, "/") {
 		return errors.New(`"group" starts the ids of routing groups; pick another id`)

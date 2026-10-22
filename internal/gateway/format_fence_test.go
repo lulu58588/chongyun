@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // fencedChat is a Chat upstream that answers every request with the JSON

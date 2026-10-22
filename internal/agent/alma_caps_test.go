@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Alma is told which of magpie's models reason, in each model's
@@ -38,7 +38,7 @@ func TestAlmaToldReasoning(t *testing.T) {
 	}
 	var mine map[string]any
 	for _, p := range f.providers {
-		if p["name"] == "chongyun" {
+		if p["name"] == "magpie" {
 			mine = p
 		}
 	}
@@ -131,7 +131,7 @@ func TestAlmaToldPricing(t *testing.T) {
 	}
 	var mine map[string]any
 	for _, p := range f.providers {
-		if p["name"] == "chongyun" {
+		if p["name"] == "magpie" {
 			mine = p
 		}
 	}

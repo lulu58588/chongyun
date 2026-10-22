@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // Another magpie is added by its address however it was typed, and

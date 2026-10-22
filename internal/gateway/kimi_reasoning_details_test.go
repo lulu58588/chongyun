@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // kimiRefuseDetails answers as api.kimi.com/coding/v1 did on 2026-10-12 a

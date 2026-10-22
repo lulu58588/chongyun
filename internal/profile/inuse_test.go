@@ -3,9 +3,9 @@ package profile
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/library"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/library"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // inUse is which of the saved profiles InUse names, read as the GUI's state

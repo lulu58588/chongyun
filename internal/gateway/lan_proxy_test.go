@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // A tunnel or proxy on this computer (cloudflared, ngrok, Tailscale serve,
@@ -46,11 +46,11 @@ func TestProxiedLoopbackNeedsTheKey(t *testing.T) {
 		"Tailscale serve": {"Tailscale-User-Login", "someone@example.com"},
 	}
 
-	if c, _ := call("/v1/messages", "Authorization", "Bearer chongyun"); c != 200 || reached != "|Bearer chongyun" {
+	if c, _ := call("/v1/messages", "Authorization", "Bearer magpie"); c != 200 || reached != "|Bearer magpie" {
 		t.Fatal("an agent on loopback:", c, reached)
 	}
 	for name, hdr := range tunnels {
-		c, body := call("/v1/messages", append([]string{"Authorization", "Bearer chongyun"}, hdr...)...)
+		c, body := call("/v1/messages", append([]string{"Authorization", "Bearer magpie"}, hdr...)...)
 		if c != http.StatusForbidden || reached != "" || !strings.Contains(body, "proxy or tunnel") || !strings.Contains(body, "Share on local network") {
 			t.Fatalf("%s, chongyun not shared: %d %q reached=%q", name, c, body, reached)
 		}
@@ -58,12 +58,12 @@ func TestProxiedLoopbackNeedsTheKey(t *testing.T) {
 
 	keys, secrets := newCaller(t, "Tunnel client") // shares magpie
 	for name, hdr := range tunnels {
-		for _, bad := range [][]string{nil, {"Authorization", "Bearer chongyun"}, {"x-api-key", "sk-magpie-wrong"}} {
+		for _, bad := range [][]string{nil, {"Authorization", "Bearer magpie"}, {"x-api-key", "sk-magpie-wrong"}} {
 			if c, _ := call("/v1/messages", append(append([]string{}, bad...), hdr...)...); c != http.StatusUnauthorized || reached != "" {
 				t.Fatalf("%s with %v: %d reached=%q", name, bad, c, reached)
 			}
 		}
-		if c, _ := call("/v1/messages", append([]string{"Authorization", "Bearer " + secrets[0]}, hdr...)...); c != 200 || reached != keys[0].ID+"|Bearer chongyun" {
+		if c, _ := call("/v1/messages", append([]string{"Authorization", "Bearer " + secrets[0]}, hdr...)...); c != 200 || reached != keys[0].ID+"|Bearer magpie" {
 			t.Fatalf("%s with the key: %d reached=%q", name, c, reached)
 		}
 	}
@@ -80,7 +80,7 @@ func TestProxiedLoopbackNeedsTheKey(t *testing.T) {
 	s := settings.Load()
 	s.LAN = false
 	settings.Save(s)
-	if c, _ := call("/v1/messages", "Authorization", "Bearer chongyun", "X-Forwarded-For", "10.0.0.2"); c != 200 {
+	if c, _ := call("/v1/messages", "Authorization", "Bearer magpie", "X-Forwarded-For", "10.0.0.2"); c != 200 {
 		t.Fatal("MAGPIE_TRUST_PROXY:", c)
 	}
 	t.Setenv("MAGPIE_TRUST_PROXY", "")
@@ -92,7 +92,7 @@ func TestProxiedLoopbackNeedsTheKey(t *testing.T) {
 		t.Fatal("MAGPIE_ADDR on loopback, through a tunnel:", c)
 	}
 	t.Setenv("MAGPIE_ADDR", "0.0.0.0:4555")
-	if c, _ := call("/v1/messages", "Authorization", "Bearer chongyun", "Cf-Connecting-IP", "203.0.113.9"); c != http.StatusUnauthorized {
+	if c, _ := call("/v1/messages", "Authorization", "Bearer magpie", "Cf-Connecting-IP", "203.0.113.9"); c != http.StatusUnauthorized {
 		t.Fatal("MAGPIE_ADDR on the network, through a tunnel, no key:", c)
 	}
 }
@@ -172,7 +172,7 @@ func TestSharedKeepsPinnedAddr(t *testing.T) {
 	if u := LANURLs(); len(u) != 0 {
 		t.Fatal("shared on loopback offers", u)
 	}
-	for _, bad := range [][]string{nil, {"Authorization", "Bearer chongyun"}, {"x-api-key", "sk-magpie-wrong"}} {
+	for _, bad := range [][]string{nil, {"Authorization", "Bearer magpie"}, {"x-api-key", "sk-magpie-wrong"}} {
 		if c := call(append(append([]string{}, bad...), serve...)...); c != http.StatusUnauthorized || reached {
 			t.Fatalf("through Serve with %v: %d reached=%v", bad, c, reached)
 		}

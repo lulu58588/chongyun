@@ -14,11 +14,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/otlp"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/sessions"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/otlp"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // fastOTel has the exporter read the agents' transcripts and send what it

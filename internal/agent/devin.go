@@ -17,8 +17,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func devin(home, cfg string) *Agent {

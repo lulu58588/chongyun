@@ -13,10 +13,10 @@
 package middleware
 
 import (
-	"github.com/lulu58588/magpie/internal/gwmw"
-	"github.com/lulu58588/magpie/internal/middleware"
-	"github.com/lulu58588/magpie/internal/pluginrt"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/gwmw"
+	"github.com/lulu58588/chongyun/internal/middleware"
+	"github.com/lulu58588/chongyun/internal/pluginrt"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 func init() {

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func atomcodeSaveFake(t *testing.T) {
@@ -19,7 +19,7 @@ func atomcodeSaveFake(t *testing.T) {
 	}
 }
 
-// Picking a model for AtomCode writes the account "chongyun" and one model
+// Picking a model for AtomCode writes the account "magpie" and one model
 // table per catalog model — as its own CodingPlan sign-in writes them — and
 // points both defaults at the picked one; the table's model is the catalog
 // reference the gateway resolves.
@@ -39,12 +39,12 @@ func TestAtomcodeWiring(t *testing.T) {
 	for _, want := range []string{
 		`default_provider = "magpie/fake/m1"`,
 		`default_model = "magpie/fake/m1"`,
-		`[provider_accounts."chongyun"]`,
+		`[provider_accounts."magpie"]`,
 		`provider = "openai-compatible"`,
 		`base_url = "` + gatewayV1() + `"`,
 		`api_key = "` + gateway.TokenFor("atomcode") + `"`,
 		`[models."magpie/fake/m1"]`,
-		`account = "chongyun"`,
+		`account = "magpie"`,
 		`model = "fake/m1"`,
 		`context_window = 128000`,
 	} {
@@ -176,7 +176,7 @@ func TestAtomcodeSync(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(path)
-	config := strings.ReplaceAll(string(b), `[provider_accounts."chongyun"]`, `[provider_accounts.magpie]`)
+	config := strings.ReplaceAll(string(b), `[provider_accounts."magpie"]`, `[provider_accounts.magpie]`)
 	config = strings.ReplaceAll(config, `[models."magpie/fake/m1"]`, `[models.'magpie/fake/m1']`)
 	if err := os.WriteFile(path, []byte(config), 0o644); err != nil {
 		t.Fatal(err)
@@ -200,10 +200,10 @@ func TestAtomcodeSync(t *testing.T) {
 	if !strings.Contains(string(cfg), `reasoning_effort = "high"`) {
 		t.Fatalf("Sync dropped the selected effort:\n%s", cfg)
 	}
-	if strings.Count(string(cfg), "[provider_accounts.magpie]") != 0 || strings.Count(string(cfg), `[provider_accounts."chongyun"]`) != 1 {
+	if strings.Count(string(cfg), "[provider_accounts.magpie]") != 0 || strings.Count(string(cfg), `[provider_accounts."magpie"]`) != 1 {
 		t.Fatalf("Sync did not canonicalize the exact chongyun account:\n%s", cfg)
 	}
-	config = strings.ReplaceAll(string(cfg), `[provider_accounts."chongyun"]`, `[provider_accounts.magpie]`)
+	config = strings.ReplaceAll(string(cfg), `[provider_accounts."magpie"]`, `[provider_accounts.magpie]`)
 	config = strings.ReplaceAll(config, `[models."magpie/fake/m1"]`, `[models.'magpie/fake/m1']`)
 	if err := os.WriteFile(path, []byte(config), 0o644); err != nil {
 		t.Fatal(err)

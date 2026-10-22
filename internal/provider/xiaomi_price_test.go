@@ -7,7 +7,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // useXiaomiCatalog puts testdata/xiaomi_catalog.json in the catalog cache:

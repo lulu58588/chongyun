@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/source"
+	"github.com/lulu58588/chongyun/internal/source"
 )
 
 // ---- fetching only a repository's skills ----------------------------------

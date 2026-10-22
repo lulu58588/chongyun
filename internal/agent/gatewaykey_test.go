@@ -8,14 +8,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // An agent in a WSL distro under NAT reaches the gateway at Windows'
 // address, where gateway.Token is turned away (whqtian on Discord: OpenCode
-// in WSL was written "apiKey": "chongyun" and refused). Every agent's config
+// in WSL was written "apiKey": "magpie" and refused). Every agent's config
 // carries the LAN sharing key there while sharing is on, and gateway.Token on
 // loopback, or while nothing is shared.
 func TestGatewayKeyBeyondLoopback(t *testing.T) {

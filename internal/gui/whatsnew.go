@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // whatsNew shows what changed once magpie runs a newer release than it last

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // cursorUp is an upstream for the fake plugin that answers every chat and

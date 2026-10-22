@@ -15,7 +15,7 @@ import (
 // inline http_headers written beside it defined the key twice: "edited TOML
 // is invalid: toml: key http_headers should be a table, not a value".
 func TestSetTOMLTableInlineMergesUsersSpelling(t *testing.T) {
-	actor := Inline{{Path: "x-openai-actor-authorization", Value: "chongyun"}}
+	actor := Inline{{Path: "x-openai-actor-authorization", Value: "magpie"}}
 	cases := []struct {
 		name, in string
 		want     []string // lines the result has
@@ -24,37 +24,37 @@ func TestSetTOMLTableInlineMergesUsersSpelling(t *testing.T) {
 		name: "own table",
 		in: "model = \"m\"\n\n[model_providers.magpie]\nname = \"old\"\n\n" +
 			"[model_providers.magpie.http_headers]\n# mine\n\"x-org\" = \"acme\" # keep\n\"x-openai-actor-authorization\" = \"old\"\n",
-		want: []string{"# mine", `"x-org" = "acme" # keep`, `"x-openai-actor-authorization" = "chongyun"`, `name = "chongyun"`},
+		want: []string{"# mine", `"x-org" = "acme" # keep`, `"x-openai-actor-authorization" = "magpie"`, `name = "magpie"`},
 		gone: []string{"http_headers = {", `"old"`},
 	}, {
 		name: "own table, header not there yet",
-		in:   "[model_providers.magpie]\nname = \"chongyun\"\n\n[model_providers.magpie.http_headers]\nx-org = \"acme\"\n",
-		want: []string{`x-org = "acme"`, `"x-openai-actor-authorization" = "chongyun"`},
+		in:   "[model_providers.magpie]\nname = \"magpie\"\n\n[model_providers.magpie.http_headers]\nx-org = \"acme\"\n",
+		want: []string{`x-org = "acme"`, `"x-openai-actor-authorization" = "magpie"`},
 		gone: []string{"http_headers = {"},
 	}, {
 		name: "own table only",
 		in:   "model = \"m\"\n\n[model_providers.magpie.http_headers]\nx-org = \"acme\"\n",
-		want: []string{"[model_providers.magpie]", `x-org = "acme"`, `"x-openai-actor-authorization" = "chongyun"`},
+		want: []string{"[model_providers.magpie]", `x-org = "acme"`, `"x-openai-actor-authorization" = "magpie"`},
 		gone: []string{"http_headers = {"},
 	}, {
 		name: "dotted keys",
 		in:   "[model_providers.magpie]\nname = \"old\"\nhttp_headers.\"x-org\" = \"acme\" # keep\nhttp_headers.\"x-openai-actor-authorization\" = \"old\"\n",
-		want: []string{`http_headers."x-org" = "acme" # keep`, `http_headers."x-openai-actor-authorization" = "chongyun"`},
+		want: []string{`http_headers."x-org" = "acme" # keep`, `http_headers."x-openai-actor-authorization" = "magpie"`},
 		gone: []string{"http_headers = {", `"old"`},
 	}, {
 		name: "dotted keys, header not there yet",
 		in:   "[model_providers.magpie]\nhttp_headers.x-org = \"acme\"\n",
-		want: []string{`http_headers.x-org = "acme"`, `http_headers."x-openai-actor-authorization" = "chongyun"`},
+		want: []string{`http_headers.x-org = "acme"`, `http_headers."x-openai-actor-authorization" = "magpie"`},
 		gone: []string{"http_headers = {"},
 	}, {
 		name: "inline",
 		in:   "[model_providers.magpie]\nname = \"old\"\nhttp_headers = { \"x-openai-actor-authorization\" = \"old\" }\n",
-		want: []string{`http_headers = { "x-openai-actor-authorization" = "chongyun" }`},
+		want: []string{`http_headers = { "x-openai-actor-authorization" = "magpie" }`},
 		gone: []string{`"old"`},
 	}, {
 		name: "absent",
 		in:   "model = \"m\"\n",
-		want: []string{`http_headers = { "x-openai-actor-authorization" = "chongyun" }`},
+		want: []string{`http_headers = { "x-openai-actor-authorization" = "magpie" }`},
 	}}
 	for _, c := range cases {
 		for _, crlf := range []bool{false, true} {
@@ -67,7 +67,7 @@ func TestSetTOMLTableInlineMergesUsersSpelling(t *testing.T) {
 				t.Fatal(err)
 			}
 			err := SetTOMLTable(path, "model_providers.magpie",
-				KV{Path: "name", Value: "chongyun"},
+				KV{Path: "name", Value: "magpie"},
 				KV{Path: "http_headers", Value: actor})
 			if err != nil {
 				t.Fatalf("%s (crlf %v): %v", c.name, crlf, err)
@@ -100,10 +100,10 @@ func TestSetTOMLTableInlineMergesUsersSpelling(t *testing.T) {
 			if err := toml.Unmarshal(b, &cfg); err != nil {
 				t.Fatalf("%s: %v", c.name, err)
 			}
-			if h := cfg.Providers["chongyun"].Headers["x-openai-actor-authorization"]; h != "chongyun" {
+			if h := cfg.Providers["magpie"].Headers["x-openai-actor-authorization"]; h != "magpie" {
 				t.Errorf("%s (crlf %v): header reads %q:\n%s", c.name, crlf, h, got)
 			}
-			if strings.Contains(c.in, "acme") && cfg.Providers["chongyun"].Headers["x-org"] != "acme" {
+			if strings.Contains(c.in, "acme") && cfg.Providers["magpie"].Headers["x-org"] != "acme" {
 				t.Errorf("%s (crlf %v): the user's x-org header is lost:\n%s", c.name, crlf, got)
 			}
 		}

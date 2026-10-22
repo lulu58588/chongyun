@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // chatOnlyOn is a provider serving Chat Completions only, as the Qoder

@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // deadKeys answers as #1772's mock did: a key starting with "dead" is

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Cloudflare's clef-flash says a confidence of its own calibration, far

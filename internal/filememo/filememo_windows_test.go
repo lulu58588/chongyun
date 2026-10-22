@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/chongyun/internal/steady"
 )
 
 // Another magpie replacing the file (a write is a temp file renamed over

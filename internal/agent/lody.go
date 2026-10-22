@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // LodyScheme opens Lody's local-machine provider confirmation dialog.
@@ -58,7 +58,7 @@ func LodyLink(base string) string {
 		Auth      map[string]string `json:"auth"`
 		Endpoints []endpoint        `json:"endpoints"`
 	}{
-		Kind: "custom", ID: "chongyun", Name: "Chongyun",
+		Kind: "custom", ID: "magpie", Name: "Chongyun",
 		Auth: map[string]string{"method": "apiKey", "apiKey": gateway.TokenFor("lody")},
 		Endpoints: []endpoint{
 			{"anthropic-messages", base, []string{"claude-code"}, base + "/v1/models"},

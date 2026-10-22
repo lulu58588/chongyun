@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // twoProviders: "plan" (the one agents pick) falls back to "spare".

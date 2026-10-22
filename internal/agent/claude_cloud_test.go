@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // claudeCloudHome is claudeAboutHome with the managed settings in the

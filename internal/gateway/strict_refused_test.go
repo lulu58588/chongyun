@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // strictRefusal is #1980's refusal ("Unsupported Chat Completions API

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // user-agent=agent has a key+URL provider pass the agent's User-Agent on

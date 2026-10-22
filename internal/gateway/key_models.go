@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A gateway key may be held to some models (#882, access.Key.Models): it

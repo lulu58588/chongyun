@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #1778 (Vigilans): a Factory account, its 5 hours unused, 32% into its

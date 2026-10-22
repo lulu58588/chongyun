@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // Sorghum on Discord: a magpie with another computer's magpie as its
@@ -144,7 +144,7 @@ func TestRemoteMagpiePricesTold(t *testing.T) {
 		}
 		json.Unmarshal(w.Body.Bytes(), &v)
 		for _, m := range v.Data {
-			if _, ok := m["chongyun_price"]; ok {
+			if _, ok := m["magpie_price"]; ok {
 				return w.Code, true
 			}
 		}

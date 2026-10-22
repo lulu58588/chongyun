@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // grokShape422 is xAI's answer to an input item its API doesn't know (#350).

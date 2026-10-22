@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // keepFast makes the keepalives of a test's streams come at its pace.

@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // An agent uninstalled outside magpie leaves its folder behind (~/.dsh,

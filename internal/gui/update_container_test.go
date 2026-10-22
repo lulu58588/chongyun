@@ -16,8 +16,8 @@ func TestUpdateInContainerSaysPullTheImage(t *testing.T) {
 		t.Skip("needs a folder this user may not write to")
 	}
 	dir := t.TempDir()
-	exe := filepath.Join(dir, "chongyun")
-	if err := os.WriteFile(exe, []byte("chongyun"), 0o755); err != nil {
+	exe := filepath.Join(dir, "magpie")
+	if err := os.WriteFile(exe, []byte("magpie"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.Chmod(dir, 0o555); err != nil {

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // Codex signed in with ChatGPT, connected on one of magpie's models beside

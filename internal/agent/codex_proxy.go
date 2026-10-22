@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // Codex sends its requests to magpie's gateway, http://127.0.0.1:3425, the

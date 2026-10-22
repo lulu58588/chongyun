@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // cutStart is the start of the reporter's first attempt (#726): the whole

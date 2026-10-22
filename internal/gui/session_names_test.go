@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/sessions"
 )
 
 // The Routing page names a Claude Code session by the title in its own

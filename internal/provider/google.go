@@ -37,8 +37,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // CodeAssist is Google's Code Assist API, which magpie only speaks

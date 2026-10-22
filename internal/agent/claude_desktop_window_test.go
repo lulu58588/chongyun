@@ -5,11 +5,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // desktopWindowSandbox is a HOME with provider v's models: gpt 272K and
@@ -91,7 +91,7 @@ func TestClaudeDesktopContextWindow(t *testing.T) {
 	if window() != "" {
 		t.Fatalf("plain, Desktop off: %q", window())
 	}
-	desktop("chongyun")
+	desktop("magpie")
 	// glm's 1M is the largest; GPT is held to the working window (272K)
 	// as the top-level autoCompactWindow holds every model, Grok to its
 	// own 256K
@@ -199,7 +199,7 @@ func TestClaudeDesktopContextWindow(t *testing.T) {
 	if err := edit.SetJSON(path, edit.KV{Path: "env." + claudeContextEnv, Value: "64000"}); err != nil {
 		t.Fatal(err)
 	}
-	desktop("chongyun")
+	desktop("magpie")
 	set("model", "v/gpt")
 	if err := a.Sync(); err != nil || window() != "64000" || budget("v/grok") != "" {
 		t.Fatalf("the user's value was overwritten: %q %v %s", window(), err, readFile(path))
@@ -246,7 +246,7 @@ func TestClaudeDesktopExploreInheritCap(t *testing.T) {
 			must(a.Sync())
 			check("", false)
 			d := claudeDesktop(home)
-			must(d.Field("provider").Set("chongyun"))
+			must(d.Field("provider").Set("magpie"))
 			check("1", true)
 			must(a.Sync())
 			check("1", true)
@@ -264,7 +264,7 @@ func TestClaudeDesktopExploreInheritCap(t *testing.T) {
 			must(a.Sync())
 			check("", false)
 			// Reconnecting must acquire and release ownership again.
-			must(d.Field("provider").Set("chongyun"))
+			must(d.Field("provider").Set("magpie"))
 			check("1", true)
 			must(a.Field("model").Set(""))
 			check("1", true)
@@ -303,13 +303,13 @@ func TestClaudeDesktopExploreKeepsUserValue(t *testing.T) {
 					}
 				}
 				if changed {
-					must(d.Field("provider").Set("chongyun"))
+					must(d.Field("provider").Set("magpie"))
 					if got, has := edit.GetJSON(path, key); !has || got != "1" {
 						t.Fatalf("Desktop did not install Explore compatibility: %q, %v", got, has)
 					}
 				}
 				must(edit.SetJSON(path, edit.KV{Path: key, Value: mine}))
-				must(d.Field("provider").Set("chongyun"))
+				must(d.Field("provider").Set("magpie"))
 				check()
 				must(a.Field("model").Set("v/gpt"))
 				check()
@@ -342,7 +342,7 @@ func TestClaudeDesktopContextWindow1M(t *testing.T) {
 	if err := a.Field("model").Set("v/plain"); err != nil {
 		t.Fatal(err)
 	}
-	if err := claudeDesktop(home).Field("provider").Set("chongyun"); err != nil {
+	if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if window() != "1000000" {
@@ -397,7 +397,7 @@ func TestClaudeDesktopAloneContextWindow(t *testing.T) {
 		}
 	}
 
-	desktop("chongyun")
+	desktop("magpie")
 	if window() != "1000000" {
 		t.Fatalf("Desktop alone on chongyun: window %q, want glm's 1000000", window())
 	}

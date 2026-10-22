@@ -28,7 +28,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // AutoPrefix starts the id agents are given for a group magpie found:

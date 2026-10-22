@@ -11,8 +11,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // ruleUp is a Chat vendor that answers as its key, streaming when asked,

@@ -31,7 +31,7 @@ func TestWindowPageStaysInside(t *testing.T) {
 		}
 		return d
 	}
-	good := mk("good", `{"name":"good","chongyun":{"page":{"title":"Good","file":"page/index.html","icon":"page/index.html"},"permissions":["usage:summary","secrets:all","usage:summary"]}}`)
+	good := mk("good", `{"name":"good","magpie":{"page":{"title":"Good","file":"page/index.html","icon":"page/index.html"},"permissions":["usage:summary","secrets:all","usage:summary"]}}`)
 	w, only := Window(good)
 	if w == nil || w.Page == nil || !only || w.Page.Title != "Good" || w.Page.Icon != "index.html" {
 		t.Fatalf("good: %+v only=%v", w, only)
@@ -43,18 +43,18 @@ func TestWindowPageStaysInside(t *testing.T) {
 	if !InMagpieOnly(good) || notPlugin(good) != nil {
 		t.Errorf("a page-only plugin: InMagpieOnly %v, notPlugin %v", InMagpieOnly(good), notPlugin(good))
 	}
-	if _, only := Window(mk("main", `{"name":"m","main":"index.js","chongyun":{"page":{"file":"page/index.html"}}}`)); only {
+	if _, only := Window(mk("main", `{"name":"m","main":"index.js","magpie":{"page":{"file":"page/index.html"}}}`)); only {
 		t.Error("a plugin with a main is more than its page")
 	}
-	link := mk("link", `{"name":"l","chongyun":{"page":{"file":"page/out.html"}}}`)
+	link := mk("link", `{"name":"l","magpie":{"page":{"file":"page/out.html"}}}`)
 	if err := os.Symlink(outside, filepath.Join(link, "page", "out.html")); err != nil {
 		t.Fatal(err)
 	}
 	for name, pkg := range map[string]string{
-		"dotdot": `{"name":"d","chongyun":{"page":{"file":"../secret.html"}}}`,
-		"abs":    `{"name":"a","chongyun":{"page":{"file":"` + filepath.ToSlash(outside) + `"}}}`,
-		"notml":  `{"name":"n","chongyun":{"page":{"file":"package.json"}}}`,
-		"none":   `{"name":"x","chongyun":{"page":{"file":"page/missing.html"}}}`,
+		"dotdot": `{"name":"d","magpie":{"page":{"file":"../secret.html"}}}`,
+		"abs":    `{"name":"a","magpie":{"page":{"file":"` + filepath.ToSlash(outside) + `"}}}`,
+		"notml":  `{"name":"n","magpie":{"page":{"file":"package.json"}}}`,
+		"none":   `{"name":"x","magpie":{"page":{"file":"page/missing.html"}}}`,
 	} {
 		if w, _ := Window(mk(name, pkg)); w != nil {
 			t.Errorf("%s: %+v is a page", name, w)
@@ -96,7 +96,7 @@ func TestWindowPanels(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	write(`{"name":"p","chongyun":{"panels":[
+	write(`{"name":"p","magpie":{"panels":[
 		{"slot":"usage","file":"ui/usage.html","title":"Spend"},
 		{"slot":"provider","file":"ui/prov.html"},
 		{"slot":"nowhere","file":"ui/usage.html"},
@@ -126,13 +126,13 @@ func TestWindowPanels(t *testing.T) {
 	for range maxPanels {
 		many += `,{"slot":"usage","file":"ui/usage.html"}`
 	}
-	write(`{"name":"p","chongyun":{"panels":[` + many + `]}}`)
+	write(`{"name":"p","magpie":{"panels":[` + many + `]}}`)
 	if w, _ := Window(d); w == nil || len(w.Panels) != maxPanels {
 		t.Errorf("%+v kept, want %d panels at most", w, maxPanels)
 	}
 
 	for replaces, want := range map[string]string{"usage": "usage", "sessions": "sessions", "agents": "", "settings": "", "plugins": "", "": ""} {
-		write(`{"name":"p","chongyun":{"page":{"file":"ui/page.html","replaces":"` + replaces + `"}}}`)
+		write(`{"name":"p","magpie":{"page":{"file":"ui/page.html","replaces":"` + replaces + `"}}}`)
 		w, _ := Window(d)
 		if w == nil || w.Page == nil || w.Page.Replaces != want {
 			t.Errorf("replaces %q: %+v, want %q", replaces, w, want)
@@ -150,7 +150,7 @@ func TestWindowTitles(t *testing.T) {
 	}
 	write := func(titles string) *WindowSpec {
 		t.Helper()
-		pkg := `{"name":"p","chongyun":{"page":{"title":"Glance","file":"index.html","titles":` + titles + `},
+		pkg := `{"name":"p","magpie":{"page":{"title":"Glance","file":"index.html","titles":` + titles + `},
 			"panels":[{"slot":"usage","file":"index.html","title":"Spend","titles":` + titles + `}]}}`
 		if err := os.WriteFile(filepath.Join(d, "package.json"), []byte(pkg), 0o644); err != nil {
 			t.Fatal(err)
@@ -190,7 +190,7 @@ func TestWindowActions(t *testing.T) {
 		if err := os.WriteFile(filepath.Join(d, "index.html"), []byte("<p>hi</p>"), 0o644); err != nil {
 			t.Fatal(err)
 		}
-		if err := os.WriteFile(filepath.Join(d, "package.json"), []byte(`{"name":"`+name+`","chongyun":`+magpie+`}`), 0o644); err != nil {
+		if err := os.WriteFile(filepath.Join(d, "package.json"), []byte(`{"name":"`+name+`","magpie":`+magpie+`}`), 0o644); err != nil {
 			t.Fatal(err)
 		}
 		return d

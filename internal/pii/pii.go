@@ -25,7 +25,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // The model, at a revision of LocalAI's repo, so the file is always the

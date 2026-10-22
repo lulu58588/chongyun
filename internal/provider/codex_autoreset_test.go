@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Only the week's window being used up counts: the five hours pass on

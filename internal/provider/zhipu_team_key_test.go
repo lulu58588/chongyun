@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/agentenv"
 )
 
 // #236: a Zhipu key on a team's GLM Coding Plan, added as a key and not

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // claudeOpusThenSonnet is #1050's Claude Code before the switch: on
@@ -126,7 +126,7 @@ func TestWSLClaudeFollowerOnTheMainModelIsNoDrift(t *testing.T) {
 // with the main model's way back from Sonnet 5.5, the pick lost without a
 // word. "Same as model" picked for them afterwards has them follow again.
 func TestClaudeOwnTierStaysThroughTheMainModel(t *testing.T) {
-	for _, via := range []string{"chongyun", "/model"} {
+	for _, via := range []string{"magpie", "/model"} {
 		t.Run(via, func(t *testing.T) {
 			home, _ := codexHome(t, "", "")
 			a := claude(home)
@@ -134,7 +134,7 @@ func TestClaudeOwnTierStaysThroughTheMainModel(t *testing.T) {
 			env := func(k string) string { v, _ := edit.GetJSON(path, "env."+k); return v }
 			main := func(m string) {
 				t.Helper()
-				if via == "chongyun" {
+				if via == "magpie" {
 					if err := a.Apply("model", m); err != nil {
 						t.Fatal(err)
 					}
@@ -189,7 +189,7 @@ func TestClaudeOwnTierStaysThroughTheMainModel(t *testing.T) {
 func TestClaudeOwnTierOnTheNewMainModelStays(t *testing.T) {
 	for _, own := range []string{"oa/gpt-6.1-sol", "anth/claude-opus-5-5"} {
 		for _, tier := range claudeTiers {
-			for _, via := range []string{"chongyun", "/model"} {
+			for _, via := range []string{"magpie", "/model"} {
 				t.Run(own+"/"+tier+"/"+via, func(t *testing.T) {
 					home, _ := codexHome(t, "", "")
 					a := claude(home)
@@ -205,7 +205,7 @@ func TestClaudeOwnTierOnTheNewMainModelStays(t *testing.T) {
 					bare := func(s string) string { return strings.TrimSuffix(s, "[1m]") }
 					main := func(m string) {
 						t.Helper()
-						if via == "chongyun" {
+						if via == "magpie" {
 							if err := a.Apply("model", m); err != nil {
 								t.Fatal(err)
 							}

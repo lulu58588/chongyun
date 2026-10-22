@@ -14,7 +14,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // codexShellTools are Codex's exec_command and write_stdin as it offers

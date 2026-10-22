@@ -28,7 +28,7 @@ package agent
 // up itself), custom_headers and custom_extra_body objects, modalities a
 // list of text/image/audio/tool_use.
 //
-// magpie adds a source "chongyun", OpenAI Compatible at the gateway's /v1 with
+// magpie adds a source "magpie", OpenAI Compatible at the gateway's /v1 with
 // a key naming AstrBot (its requests carry no User-Agent of its own), and an
 // entry "magpie/<provider>/<model>" for every model of magpie's, and makes
 // the one picked AstrBot's default chat model: agent_runner.config.model.
@@ -66,8 +66,8 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 const (

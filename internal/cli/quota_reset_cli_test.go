@@ -3,7 +3,7 @@ package cli
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #2008: `chongyun provider quota-rest <id> until 00:00+08:00` sets the time

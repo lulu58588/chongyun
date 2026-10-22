@@ -21,7 +21,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 var errAccountDiscoveryOff = errors.New("subscription accounts are off in this build (Settings → Privacy, or `chongyun accounts discovery on`)")

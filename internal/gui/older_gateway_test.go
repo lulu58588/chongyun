@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // An older magpie keeping the gateway's port sends every agent's request
@@ -41,10 +41,10 @@ func TestGatewayServedByAnOlderMagpie(t *testing.T) {
 		answer, version string
 		older, window   bool
 	}{
-		{`{"name":"chongyun","version":"0.1.550","models":3,"window":true,"apis":[]}`, "0.1.550", true, true},
-		{`{"name":"chongyun","version":"0.1.630","models":3,"window":false}`, "0.1.630", false, false},
-		{`{"name":"chongyun","version":"0.1.640","models":3}`, "0.1.640", false, false},
-		{`{"name":"chongyun","models":3}`, "", false, false}, // one that doesn't say
+		{`{"name": "崇云科技","version":"0.1.550","models":3,"window":true,"apis":[]}`, "0.1.550", true, true},
+		{`{"name": "崇云科技","version":"0.1.630","models":3,"window":false}`, "0.1.630", false, false},
+		{`{"name": "崇云科技","version":"0.1.640","models":3}`, "0.1.640", false, false},
+		{`{"name": "崇云科技","models":3}`, "", false, false}, // one that doesn't say
 	} {
 		answer = c.answer
 		g := providersState().Gateway

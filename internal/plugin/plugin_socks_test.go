@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/netproxy"
 )
 
 // socksTo is a SOCKS5 proxy that carries every connection to addr,

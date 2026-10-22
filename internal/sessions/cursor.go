@@ -15,7 +15,7 @@ import (
 
 	"net/url"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // Cursor's CLI (cursor-agent) keeps a chat in a folder of its own under its

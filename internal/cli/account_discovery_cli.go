@@ -3,8 +3,8 @@ package cli
 import (
 	"fmt"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // accountsDiscoveryCmd is `chongyun accounts discovery [on|off]` (#1535):

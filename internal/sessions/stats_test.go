@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // inZone runs the test with the local time zone at a fixed offset. The

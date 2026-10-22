@@ -161,7 +161,7 @@ func TestAgentMCPFiles(t *testing.T) {
 			// and the route and magpie's channel stay
 			id: "grok-app", file: "grok-app-data/agent-home/config.toml", toml: true,
 			env:   map[string]string{"GROK_APP_HOME": "grok-app-data"},
-			user:  "# mine\n[models]\ndefault = \"deepseek\"\n\n[model.magpie]\nmodel = \"grok/grok-4.7\"\nname = \"chongyun\"\n\n[mcp_servers.mine]\ncommand = \"uvx\"\nargs = [\"mine\"]\nenabled = true\n",
+			user:  "# mine\n[models]\ndefault = \"deepseek\"\n\n[model.magpie]\nmodel = \"grok/grok-4.7\"\nname = \"magpie\"\n\n[mcp_servers.mine]\ncommand = \"uvx\"\nargs = [\"mine\"]\nenabled = true\n",
 			fs:    entry{"command": "npx", "args": []any{"-y", "@mcp/fs"}, "env": entry{"K": "V"}},
 			web:   entry{"url": "https://example.com/mcp", "headers": entry{"Authorization": "Bearer x"}},
 			noSSE: true,

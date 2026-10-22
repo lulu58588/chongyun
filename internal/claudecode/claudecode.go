@@ -25,9 +25,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/libc"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/libc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // Base is where Anthropic publishes Claude Code's builds, as its installer

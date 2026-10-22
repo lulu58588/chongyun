@@ -6,7 +6,7 @@ import (
 	"regexp"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Claude Code begins its system prompt with a billing line, a block of its

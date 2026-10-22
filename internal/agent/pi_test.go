@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // Every one of Pi's levels is in the map, the model's own mapped and the

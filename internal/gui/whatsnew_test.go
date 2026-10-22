@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // The version last run is kept in magpie's folder, and the notes since are
@@ -19,7 +19,7 @@ import (
 func TestWhatsNewAfterUpgrade(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", home)
-	dir := filepath.Join(home, "chongyun")
+	dir := filepath.Join(home, "magpie")
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]any{"releases": []update.Note{
 			{Version: "0.1.604", Notes: "- four (#464)\n\n### Install\n\nlinks"},
@@ -99,7 +99,7 @@ func TestUpdateNotesWithoutInstall(t *testing.T) {
 func TestWhatsNewFromBefore(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", home)
-	dir := filepath.Join(home, "chongyun")
+	dir := filepath.Join(home, "magpie")
 	os.MkdirAll(dir, 0o755)
 	os.WriteFile(filepath.Join(dir, "settings.json"), []byte("{}"), 0o644)
 	os.Chtimes(filepath.Join(dir, "settings.json"), started.Add(-time.Hour), started.Add(-time.Hour))
@@ -125,7 +125,7 @@ func TestWhatsNewFromBefore(t *testing.T) {
 func TestWhatsNewQuietAfterRestartToUpdate(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", home)
-	dir := filepath.Join(home, "chongyun")
+	dir := filepath.Join(home, "magpie")
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]any{"releases": []update.Note{
 			{Version: "0.1.606", Notes: "- six"},
@@ -157,7 +157,7 @@ func TestWhatsNewQuietAfterRestartToUpdate(t *testing.T) {
 		updates.exe, updates.self, updates.latest, updates.staged = oExe, oSelf, oLatest, oStaged
 		updates.mu.Unlock()
 	}()
-	exe := filepath.Join(t.TempDir(), "chongyun")
+	exe := filepath.Join(t.TempDir(), "magpie")
 	os.WriteFile(exe, []byte("old"), 0o755)
 	self, _ := os.Stat(exe)
 	os.WriteFile(exe, []byte("newer"), 0o755) // in already: install has nothing to swap

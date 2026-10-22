@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // alwaysAdaptiveVendor answers as Anthropic documents for Claude Fable and

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // The web search APIs, from the terminal: magpie search (#419).

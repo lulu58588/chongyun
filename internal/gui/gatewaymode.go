@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"sync/atomic"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Gateway mode (Player on Discord): `chongyun web` on a server that is only

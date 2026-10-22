@@ -59,7 +59,7 @@ func TestImportCCSwitch(t *testing.T) {
 		`INSERT INTO providers VALUES ('relay','claude','Some Relay','{"env":{"ANTHROPIC_BASE_URL":"https://relay.example.com","ANTHROPIC_AUTH_TOKEN":"sk-relay","ANTHROPIC_MODEL":"claude-sonnet-5"}}','https://relay.example.com','custom',2,1)`,
 		`INSERT INTO providers VALUES ('relay','codex','Some Relay','{"auth":{"OPENAI_API_KEY":"sk-relay"},"config":"model_provider = \"relay\"\nmodel = \"gpt-5.5\"\n\n[model_providers.relay]\nname = \"relay\"\nbase_url = \"https://relay.example.com/v1\"\nwire_api = \"responses\"\n"}','','custom',3,0)`,
 		`INSERT INTO providers VALUES ('ds','claude','DeepSeek','{"env":{"ANTHROPIC_BASE_URL":"https://api.deepseek.com/anthropic","ANTHROPIC_AUTH_TOKEN":"sk-ds"}}','','cn_official',4,2)`,
-		`INSERT INTO providers VALUES ('dial','pi','dial','{"api":"openai-completions","apiKey":"chongyun","baseUrl":"http://127.0.0.1:3425/v1"}','','custom',5,0)`,
+		`INSERT INTO providers VALUES ('dial','pi','dial','{"api":"openai-completions","apiKey":"magpie","baseUrl":"http://127.0.0.1:3425/v1"}','','custom',5,0)`,
 		`INSERT INTO providers VALUES ('g','gemini','Gemini relay','{"env":{"GOOGLE_GEMINI_BASE_URL":"https://g.example.com","GEMINI_API_KEY":"k","GEMINI_MODEL":"gemini-3.8-flash"}}','','custom',6,0)`,
 		`INSERT INTO providers VALUES ('g2','gemini','Gemini relay under a path','{"env":{"GOOGLE_GEMINI_BASE_URL":"https://g2.example.com/gemini/","GEMINI_API_KEY":"k2"}}','','custom',7,0)`,
 	)
@@ -169,13 +169,13 @@ func TestImportCodexConfig(t *testing.T) {
 	if err := os.MkdirAll(filepath.Dir(config), 0o700); err != nil {
 		t.Fatal(err)
 	}
-	data := `model_provider = "chongyun"
+	data := `model_provider = "magpie"
 model = "deepseek/deepseek-chat"
-model_catalog_json = "magpie-models.json"
+model_catalog_json = "chongyun-models.json"
 
 [model_providers.magpie]
 base_url = "http://127.0.0.1:3448/v1"
-experimental_bearer_token = "chongyun"
+experimental_bearer_token = "magpie"
 
 [model_providers.deepseek]
 name = "DeepSeek"
@@ -218,7 +218,7 @@ model = "gpt-6-sol"
 [profiles.magpiecatalog]
 model_provider = "deepseek"
 model = "gpt-6-sol"
-model_catalog_json = "magpie-models.json"
+model_catalog_json = "chongyun-models.json"
 `
 	if err := os.WriteFile(config, []byte(data), 0o600); err != nil {
 		t.Fatal(err)
@@ -226,7 +226,7 @@ model_catalog_json = "magpie-models.json"
 	if err := os.WriteFile(filepath.Join(filepath.Dir(config), "models.json"), []byte(`{"models":[{"slug":"deepseek-chat","visibility":"list"},{"slug":"deepseek-reasoner","visibility":"list"},{"slug":"old-model","visibility":"hide"}]}`), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(filepath.Dir(config), "magpie-models.json"), []byte(`{"models":[{"slug":"openrouter/x-ai/grok-4.7","visibility":"list"},{"slug":"group/auto-glm-5-3","visibility":"list"}]}`), 0o600); err != nil {
+	if err := os.WriteFile(filepath.Join(filepath.Dir(config), "chongyun-models.json"), []byte(`{"models":[{"slug":"openrouter/x-ai/grok-4.7","visibility":"list"},{"slug":"group/auto-glm-5-3","visibility":"list"}]}`), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	items := itemsOf(t, "codex")
@@ -239,8 +239,8 @@ model_catalog_json = "magpie-models.json"
 	if p := items["openrouter"].Provider; p.Preset != "openrouter" || p.Headers["X-Org"] != "preset" {
 		t.Fatalf("preset import should keep the preset and its headers: %+v", p)
 	}
-	if items["chongyun"].Skip == "" || items["unkeyed"].Skip == "" {
-		t.Fatalf("gateway or env-key provider offered: %+v %+v", items["chongyun"], items["unkeyed"])
+	if items["magpie"].Skip == "" || items["unkeyed"].Skip == "" {
+		t.Fatalf("gateway or env-key provider offered: %+v %+v", items["magpie"], items["unkeyed"])
 	}
 	ds := items["deepseek"]
 	if ds.Skip != "" || ds.Provider.Key != "sk-explicit" || ds.Provider.Responses != "https://relay.example.com/v1" || strings.Join(ds.Provider.Models, ",") != "deepseek-chat,deepseek-reasoner,gpt-6-sol" {
@@ -338,8 +338,8 @@ func TestCodexImportModelsSameBasename(t *testing.T) {
 	config := filepath.Join(home, "other", "config.toml")
 	models := []byte(`{"models":[{"slug":"custom-model","visibility":"list"}]}`)
 	for _, path := range []string{
-		filepath.Join(home, ".codex", "magpie-models.json"),
-		filepath.Join(home, "other", "magpie-models.json"),
+		filepath.Join(home, ".codex", "chongyun-models.json"),
+		filepath.Join(home, "other", "chongyun-models.json"),
 	} {
 		if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 			t.Fatal(err)
@@ -348,10 +348,10 @@ func TestCodexImportModelsSameBasename(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if got := codexImportModels(config, "../.codex/magpie-models.json"); len(got) != 0 {
+	if got := codexImportModels(config, "../.codex/chongyun-models.json"); len(got) != 0 {
 		t.Fatalf("chongyun's own catalog was imported: %v", got)
 	}
-	if got := codexImportModels(config, "magpie-models.json"); len(got) != 1 || got[0] != "custom-model" {
+	if got := codexImportModels(config, "chongyun-models.json"); len(got) != 1 || got[0] != "custom-model" {
 		t.Fatalf("user catalog with the same basename was skipped: %v", got)
 	}
 }

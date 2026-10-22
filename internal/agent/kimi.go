@@ -5,7 +5,7 @@ package agent
 // Python kimi-cli's in ~/.kimi ($KIMI_SHARE_DIR), in the same shape (see
 // KimiDir): the model sessions start with as default_model, a key
 // of its [models."<key>"] tables, each naming a [providers.<name>] table and
-// the model to ask it for. magpie adds itself as the provider "chongyun" (the
+// the model to ask it for. magpie adds itself as the provider "magpie" (the
 // gateway, spoken to as Kimi's own chat completions, so the thinking goes
 // both ways as reasoning_content) and one model table per catalog model,
 // keyed "magpie/<provider>/<model>", so the catalog joins Kimi's /model
@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // kimiModelTable is the header prefix of every model table magpie writes.

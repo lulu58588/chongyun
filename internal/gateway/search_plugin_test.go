@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gwtool"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/gwtool"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // The tool point's web search with plugins/search on and off, for a user

@@ -11,7 +11,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/chongyun/internal/access"
 )
 
 // magpie's web search, the one a model that can't search is given

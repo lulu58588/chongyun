@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // Pi's enabledModels (settings.json) is its Ctrl+P cycle and /scoped-models

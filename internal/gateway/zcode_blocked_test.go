@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // countAsked is an upstream that counts tokens, noting each time it's asked.

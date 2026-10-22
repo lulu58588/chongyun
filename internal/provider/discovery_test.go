@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // openWatch turns each path into a FIFO and records every open of one for

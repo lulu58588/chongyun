@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Claude Code sends this tool only inline, not also in the top-level tools.

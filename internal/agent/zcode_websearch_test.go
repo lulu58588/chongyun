@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Every model magpie lists in ZCode has native web search (原生联网搜索) on,
@@ -29,12 +29,12 @@ func TestZCodeWebSearch(t *testing.T) {
 	// a rule an older magpie wrote, without the key, and one the user set
 	// by hand in ZCode
 	os.WriteFile(rules, []byte(`{"schemaVersion":1,"config":{
-	  "providerConfigRules":{"providerRules":[{"providerId":"chongyun","providerName":"chongyun","enabled":true,"config":{"group":"standard-personal",
-	    "access":{"type":"api-key","apiKey":"chongyun"},"api":{"type":"anthropic-messages","baseUrl":"http://127.0.0.1:3425"},
+	  "providerConfigRules":{"providerRules":[{"providerId":"magpie","providerName":"magpie","enabled":true,"config":{"group":"standard-personal",
+	    "access":{"type":"api-key","apiKey":"magpie"},"api":{"type":"anthropic-messages","baseUrl":"http://127.0.0.1:3425"},
 	    "personalModelIds":["deepseek/pro"],"modelOrder":["deepseek/pro"]}}]},
-	  "modelConfigRules":{"providerModelRules":[{"providerId":"chongyun","modelId":"deepseek/pro","config":{"properties":{"contextWindow":128000,"inputFormat":{"supportsImage":false}}}}],
-	    "manualProviderModelRules":[{"providerId":"chongyun","modelId":"deepseek/mine","config":{"enabled":true,"properties":{"contextWindow":64000,"supportsNativeWebSearch":false,"inputFormat":{"supportsImage":false}}}}]}}}`), 0o600)
-	os.WriteFile(filepath.Join(dir, "config.json"), []byte(`{"provider":{"chongyun":{"name":"chongyun","kind":"anthropic","enabled":true,"models":{}}}}`), 0o600)
+	  "modelConfigRules":{"providerModelRules":[{"providerId":"magpie","modelId":"deepseek/pro","config":{"properties":{"contextWindow":128000,"inputFormat":{"supportsImage":false}}}}],
+	    "manualProviderModelRules":[{"providerId":"magpie","modelId":"deepseek/mine","config":{"enabled":true,"properties":{"contextWindow":64000,"supportsNativeWebSearch":false,"inputFormat":{"supportsImage":false}}}}]}}}`), 0o600)
+	os.WriteFile(filepath.Join(dir, "config.json"), []byte(`{"provider":{"magpie":{"name": "崇云科技","kind":"anthropic","enabled":true,"models":{}}}}`), 0o600)
 
 	doc := func() map[string]any {
 		b, _ := os.ReadFile(rules)
@@ -49,7 +49,7 @@ func TestZCodeWebSearch(t *testing.T) {
 	}
 	props := func(d map[string]any, id string) map[string]any {
 		for _, r := range mcr(d)["providerModelRules"].([]any) {
-			if r := r.(map[string]any); r["providerId"] == "chongyun" && r["modelId"] == "deepseek/"+id {
+			if r := r.(map[string]any); r["providerId"] == "magpie" && r["modelId"] == "deepseek/"+id {
 				return r["config"].(map[string]any)["properties"].(map[string]any)
 			}
 		}
@@ -120,7 +120,7 @@ func TestZCodeWebSearch(t *testing.T) {
 	// the user's off stays
 	d = doc()
 	for _, r := range d["config"].(map[string]any)["providerConfigRules"].(map[string]any)["providerRules"].([]any) {
-		if r := r.(map[string]any); r["providerId"] == "chongyun" {
+		if r := r.(map[string]any); r["providerId"] == "magpie" {
 			r["config"].(map[string]any)["api"].(map[string]any)["type"] = "openai-chat-completions"
 		}
 	}
@@ -134,7 +134,7 @@ func TestZCodeWebSearch(t *testing.T) {
 	// back on Anthropic Messages, it is on again
 	d = doc()
 	for _, r := range d["config"].(map[string]any)["providerConfigRules"].(map[string]any)["providerRules"].([]any) {
-		if r := r.(map[string]any); r["providerId"] == "chongyun" {
+		if r := r.(map[string]any); r["providerId"] == "magpie" {
 			r["config"].(map[string]any)["api"].(map[string]any)["type"] = "anthropic-messages"
 		}
 	}

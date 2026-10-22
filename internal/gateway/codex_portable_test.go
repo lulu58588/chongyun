@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/codexsummary"
+	"github.com/lulu58588/chongyun/internal/codexsummary"
 )
 
 // A rollout written portable (sessions.PortCodexRollouts) holds, in place

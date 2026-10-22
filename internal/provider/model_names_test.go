@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // John (Discord #feedback): a GLM Coding Plan's models read glm-5-turbo

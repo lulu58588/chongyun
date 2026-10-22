@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 type otelAttribute struct {
@@ -50,8 +50,8 @@ func otelAttributes(r Record) []otelAttribute {
 
 func otelEnvelope(signal string, data any) map[string]any {
 	return map[string]any{"resource" + signal: []any{map[string]any{
-		"resource":       map[string]any{"attributes": []otelAttribute{otelString("service.name", "chongyun")}},
-		"scope" + signal: []any{map[string]any{"scope": map[string]any{"name": "github.com/lulu58588/magpie"}, map[string]string{"Spans": "spans", "Metrics": "metrics"}[signal]: data}},
+		"resource":       map[string]any{"attributes": []otelAttribute{otelString("service.name", "magpie")}},
+		"scope" + signal: []any{map[string]any{"scope": map[string]any{"name": "github.com/lulu58588/chongyun"}, map[string]string{"Spans": "spans", "Metrics": "metrics"}[signal]: data}},
 	}}}
 }
 

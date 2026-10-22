@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/sessions"
-	stats "github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/sessions"
+	stats "github.com/lulu58588/chongyun/internal/usage"
 )
 
 const sessionsUsage = "usage: chongyun sessions [--days N|today|all] [--model <model>] [--folder <folder>] [--limit N] [--json]"

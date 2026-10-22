@@ -15,8 +15,8 @@ import (
 	"unicode/utf8"
 
 	"github.com/pelletier/go-toml/v2"
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // Subagents (#2283) are agents of their own the main agent hands a task

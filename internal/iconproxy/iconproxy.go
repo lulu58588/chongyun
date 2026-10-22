@@ -1,9 +1,9 @@
 // Package iconproxy names where magpie downloads a remote picture from. A
 // plugin's, an import link's or the library's icon sits on a host its author
 // picked, and fetching it straight from there would hand that author the
-// user's IP each time a page showed it. Every such fetch goes through
-// usemagpie.ai's /api/icon instead (site/worker.js), which asks the host
-// itself and passes on only an image; the host sees Cloudflare's address.
+// user's IP each time a page showed it. Every such fetch goes through the
+// proxy MAGPIE_ICON_PROXY names (none by default), which asks the host
+// itself and passes on only an image.
 package iconproxy
 
 import (
@@ -14,8 +14,8 @@ import (
 // Base is the proxy's endpoint. MAGPIE_ICON_PROXY replaces it, for tests.
 const Base = ""
 
-// URL is the address to fetch the picture at u through. One on usemagpie.ai
-// already is asked for as it is: the worker needn't fetch its own site.
+// URL is the address to fetch the picture at u through. Without a proxy of
+// our own the picture is fetched where it lives.
 func URL(u string) string {
 	// no proxy of our own: the picture is fetched where it lives, so the
 	// host that made it sees the reader's address.

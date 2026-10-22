@@ -3,8 +3,8 @@ package provider
 import (
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Where Codex and Claude Code compact a long conversation (#876): the

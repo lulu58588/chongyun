@@ -17,7 +17,7 @@ export function connect({ gateway, models }) {
   for (const m of models) {
     catalog[m.id] = { name: m.name ?? m.id, variants: { low: { reasoningEffort: "low" }, medium: { reasoningEffort: "medium" }, high: { reasoningEffort: "high" } } };
   }
-  return { "provider.magpie": { name: "chongyun", npm: "@ai-sdk/openai-compatible", options: { baseURL: gateway.v1, apiKey: gateway.key }, models: catalog } };
+  return { "provider.magpie": { name: "magpie", npm: "@ai-sdk/openai-compatible", options: { baseURL: gateway.v1, apiKey: gateway.key }, models: catalog } };
 }
 `
 
@@ -62,7 +62,7 @@ func TestPluggedKeepsPluginOrder(t *testing.T) {
 	b, _ := os.ReadFile(path)
 	s := string(b)
 	inOrder(t, s, `"$schema"`, "// mine", `"theme": "tokyonight"`, `"provider"`, `"zeta": 1`, `"alpha": 2`, `"autoupdate": false`)
-	inOrder(t, s, `"chongyun"`, `"name": "chongyun"`, `"npm"`, `"options"`, `"baseURL"`, `"apiKey"`, `"models"`)
+	inOrder(t, s, `"magpie"`, `"name": "magpie"`, `"npm"`, `"options"`, `"baseURL"`, `"apiKey"`, `"models"`)
 	// magpie's catalog order, then each model's variants weakest first
 	inOrder(t, s, `"deepseek/pro"`, `"low"`, `"medium"`, `"high"`, `"deepseek/flash"`, `"low"`, `"medium"`, `"high"`)
 
@@ -71,7 +71,7 @@ func TestPluggedKeepsPluginOrder(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, _ = os.ReadFile(path)
-	if s := string(b); strings.Contains(s, `"chongyun"`) || !strings.Contains(s, `"mine": { "zeta": 1, "alpha": 2 }`) || !strings.Contains(s, "// mine") {
+	if s := string(b); strings.Contains(s, `"magpie"`) || !strings.Contains(s, `"mine": { "zeta": 1, "alpha": 2 }`) || !strings.Contains(s, "// mine") {
 		t.Fatalf("own:\n%s", s)
 	}
 }

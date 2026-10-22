@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func TestAsideInitialReadOffersStageWithoutWrites(t *testing.T) {
@@ -258,7 +258,7 @@ func TestAsideOfflinePlanGuards(t *testing.T) {
 
 func TestAsideOfflineLegacyRecordDoesNotResurrect(t *testing.T) {
 	settings, _ := asideHome(t)
-	edit.SetJSON(settings, edit.KV{Path: "defaultModel.provider", Value: "chongyun"}, edit.KV{Path: "defaultModel.modelId", Value: "relay/glm-4.6"})
+	edit.SetJSON(settings, edit.KV{Path: "defaultModel.provider", Value: "magpie"}, edit.KV{Path: "defaultModel.modelId", Value: "relay/glm-4.6"})
 	stash(map[string]string{"aside.was": "native/native-model"})
 	a := mustFindAside(t)
 	if err := a.Connect(); err != nil {

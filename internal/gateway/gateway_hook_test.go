@@ -12,11 +12,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 func TestAsyncGatewayResponseDoesNotHoldStream(t *testing.T) {
@@ -76,7 +76,7 @@ export async function onResponse(body,ctx){await fetch(ctx.options.url,{method:"
 	// Client reads the first delta while upstream generation is still blocked.
 	go func() {
 		req, _ := http.NewRequestWithContext(t.Context(), "POST", gw.URL+"/v1/chat/completions", strings.NewReader(`{"model":"fake/m1","stream":true,"messages":[{"role":"user","content":"question"}]}`))
-		req.Header.Set("Authorization", "Bearer chongyun")
+		req.Header.Set("Authorization", "Bearer magpie")
 		res, err := gw.Client().Do(req)
 		if err != nil {
 			first <- err.Error()

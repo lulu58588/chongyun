@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // overloadedStatus is the ChatGPT backend's overload said as a status.

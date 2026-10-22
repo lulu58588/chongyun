@@ -4,7 +4,7 @@ package agent
 // by default %LOCALAPPDATA%\hermes\config.yaml on Windows and
 // ~/.hermes/config.yaml elsewhere (place.hermesHome): the model under model.default, served by
 // model.provider, which may name an entry of providers. magpie adds itself
-// there as the provider "chongyun" (the gateway, spoken to as chat completions,
+// there as the provider "magpie" (the gateway, spoken to as chat completions,
 // with the catalog as its models) and points model.provider at it; a model
 // through magpie is "magpie/<provider>/<model>" here and model.default holds
 // "<provider>/<model>". The provider and model the user had are stashed and
@@ -29,9 +29,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/dirent"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/dirent"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 func hermes(home string) *Agent { return hermesIn(here(home)) }

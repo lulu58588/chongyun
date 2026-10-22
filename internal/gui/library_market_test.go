@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/library"
+	"github.com/lulu58588/chongyun/internal/library"
 )
 
 // A market search one source of which didn't answer tells the page which

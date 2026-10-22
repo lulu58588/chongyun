@@ -30,7 +30,7 @@ func TestPiCalls(t *testing.T) {
 	by := map[string][]Call{}
 	for _, c := range Calls(time.Time{}) {
 		by[c.Agent] = append(by[c.Agent], c)
-		if c.Upstream == "chongyun" || c.Upstream == "dead" {
+		if c.Upstream == "magpie" || c.Upstream == "dead" {
 			t.Errorf("a call through chongyun or one that failed: %+v", c)
 		}
 	}

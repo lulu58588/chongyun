@@ -3,7 +3,7 @@ package cli
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // magpie provider account-concurrency gives a key its own limit on

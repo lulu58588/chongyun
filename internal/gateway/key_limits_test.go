@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // sub2api's refusals, as v0.1.149 sends them on the OpenAI and Responses

@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // A plugin provider's accounts are arranged like a built-in's: the page

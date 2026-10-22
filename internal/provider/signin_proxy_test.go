@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // setProxies gives subscription id a proxy of its own, and its accounts

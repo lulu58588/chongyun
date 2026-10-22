@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // effortModels is a provider whose models take the levels models.dev gives
@@ -39,7 +39,7 @@ func TestCodexNewSessionEffortLastsModelSwitch(t *testing.T) {
 	cx := codex(home)
 	defaults := func() map[string]string {
 		t.Helper()
-		b, _ := os.ReadFile(filepath.Join(home, ".codex", "magpie-models.json"))
+		b, _ := os.ReadFile(filepath.Join(home, ".codex", "chongyun-models.json"))
 		var cat struct {
 			Models []struct {
 				Slug    string  `json:"slug"`

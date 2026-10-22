@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/testenv"
-	"github.com/lulu58588/magpie/internal/wslrun"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/wslrun"
 )
 
 // claudeRootRefusal is what Claude Code 2.1.296 prints, and exits 1 on,

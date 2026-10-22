@@ -22,11 +22,11 @@ import (
 	"strings"
 
 	"github.com/tidwall/jsonc"
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/settings"
-	_ "github.com/lulu58588/magpie/internal/sqlitedb"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/settings"
+	_ "github.com/lulu58588/chongyun/internal/sqlitedb"
 )
 
 // AppSource is one app magpie can import from, with what it holds.
@@ -212,7 +212,7 @@ func ImportFromApps(picks []AppPick) ([]string, error) {
 // reservedID is an id no imported provider can have: the gateway's own, a
 // subscription's or a plugin's, signed in or not.
 func reservedID(id string) bool {
-	if id == "chongyun" || subscriptionID(id) {
+	if id == "magpie" || subscriptionID(id) {
 		return true
 	}
 	_, ok := find(Accounts(), id)
@@ -232,7 +232,7 @@ func holds(p Provider) bool {
 
 // freeID is id, or id-2, id-3… whichever no provider has.
 func freeID(id string) string {
-	taken := map[string]bool{"chongyun": true}
+	taken := map[string]bool{"magpie": true}
 	for _, id := range accountIDs {
 		taken[id] = true
 	}
@@ -267,10 +267,10 @@ func settle(items []AppImport, have []Provider, used map[string]bool) []AppImpor
 			continue
 		}
 		p := &it.Provider
-		if p.ID == "" || p.ID == "chongyun" {
+		if p.ID == "" || p.ID == "magpie" {
 			p.ID = Slug(p.Name)
 		}
-		if p.ID == "" || p.ID == "chongyun" {
+		if p.ID == "" || p.ID == "magpie" {
 			p.ID = "imported"
 		}
 		for base, n := p.ID, 2; used[p.ID]; n++ {

@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/daemon"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/gui"
+	"github.com/lulu58588/chongyun/internal/daemon"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gui"
 )
 
 // webAddr is where `chongyun web` listens unless told: beside the gateway.

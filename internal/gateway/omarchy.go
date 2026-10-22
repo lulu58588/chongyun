@@ -4,14 +4,13 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/lulu58588/magpie/internal/omarchy"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/omarchy"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// siteOrigins are the pages that may read the Omarchy theme: usemagpie.ai,
-// which on an Omarchy machine draws itself in that machine's theme
-// (site/public/omarchy.js) and asks the magpie running there which one it
-// is; MAGPIE_SITE_ORIGIN adds one (the site served locally to try it).
+// siteOrigins are the pages that may read the Omarchy theme. This build
+// names none; MAGPIE_SITE_ORIGIN adds one (a site served on this machine
+// to try it).
 var siteOrigins = map[string]bool{}
 
 func siteOrigin(o string) bool {
@@ -23,8 +22,8 @@ var onOmarchy = omarchy.Detect()
 
 // omarchyTheme is Omarchy's current theme as magpie's own windows draw it
 // (name, mode, stamp, CSS variables: palette, font, corners, border), for
-// usemagpie.ai's pages on the same machine. It answers this machine only,
-// and the browser lets only usemagpie.ai read it; a magpie elsewhere says
+// a site served on the same machine. It answers this machine only,
+// and the browser lets only that site read it; a chongyun elsewhere says
 // 404.
 func (s *Server) omarchyTheme(w http.ResponseWriter, r *http.Request) {
 	if o := r.Header.Get("Origin"); siteOrigin(o) {

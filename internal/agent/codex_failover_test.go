@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Codex on one of its own models, signed in to ChatGPT, goes through

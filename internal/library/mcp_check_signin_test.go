@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/mcpauth"
-	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/chongyun/internal/mcpauth"
+	"github.com/lulu58588/chongyun/internal/mcpauth/mcpauthtest"
 )
 
 // A server magpie is signed in to is checked as the gateway relays it: a

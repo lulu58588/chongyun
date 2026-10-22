@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // OpenCode Zen's free models are listed: magpie asks them as OpenCode does

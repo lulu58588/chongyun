@@ -3,7 +3,7 @@ package gui
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // A list, a manage page and a detail never read a gateway session's days,

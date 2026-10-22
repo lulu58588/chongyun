@@ -26,7 +26,7 @@
 
 ```sh
 # 从源码安装（需要 Go 1.26+）
-go install github.com/lulu58588/magpie@latest
+go install github.com/lulu58588/chongyun@latest
 
 # 或直接跑源码
 make cli && ./chongyun serve
@@ -62,8 +62,8 @@ chongyun tui                                    # 终端里的一切
 **故意保留的技术标识**（改动会破坏与各 Agent 的兼容性与互操作，不是品牌内容）：
 
 `~/.config/magpie` 配置目录 · `/v1/magpie/*` 接口路径 · `X-Magpie-*` 响应头 ·
-`MAGPIE_*` 环境变量 · `magpie://` 导入链接 · 各 Agent 配置里的 provider id `magpie` ·
-Go module path `github.com/yetone/magpie`。
+`MAGPIE_*` 环境变量 · 各 Agent 配置里的 provider id `magpie` ·
+Go module path `github.com/lulu58588/chongyun`（导入链接的 scheme 已是 `chongyun://`）。
 
 **必须保留的法律声明**：根目录 `LICENSE` 中 MIT 协议原文、`Copyright (c) 2026 yetone`
 与 `internal/qoder/LICENSE` 中第三方作者的版权声明，均原样保留，二开说明见 LICENSE 末尾。

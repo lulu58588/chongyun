@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // snowDefault is a profile as Snow CLI 0.9.2 writes it for someone on a
@@ -134,7 +134,7 @@ func TestSnow(t *testing.T) {
 	if !strings.Contains(readFile(ours), `"companionMuted": true`) {
 		t.Errorf("the profile's other settings are gone:\n%s", readFile(ours))
 	}
-	if got := snowActive(dir); got != "chongyun" {
+	if got := snowActive(dir); got != "magpie" {
 		t.Fatalf("active profile %q", got)
 	}
 	// config.json is a copy of the active profile, as Snow's switch makes it
@@ -291,7 +291,7 @@ func TestSnowUsersMagpieProfile(t *testing.T) {
 	snowUser(t, dir)
 	mine := filepath.Join(dir, "profiles", "magpie.json")
 	os.WriteFile(mine, []byte(snowWork), 0o644)
-	os.WriteFile(filepath.Join(dir, "active-profile.json"), []byte(`{"activeProfile": "chongyun"}`), 0o644)
+	os.WriteFile(filepath.Join(dir, "active-profile.json"), []byte(`{"activeProfile": "magpie"}`), 0o644)
 	a, _ := Find("snow")
 	if got := a.Values()["model"]; got != "kimi-k3" || a.Wired() {
 		t.Fatalf("the user's own chongyun profile reads %q, wired %v", got, a.Wired())
@@ -305,7 +305,7 @@ func TestSnowUsersMagpieProfile(t *testing.T) {
 	if err := a.Apply("model", ""); err != nil {
 		t.Fatal(err)
 	}
-	if readFile(mine) != snowWork || snowActive(dir) != "chongyun" {
+	if readFile(mine) != snowWork || snowActive(dir) != "magpie" {
 		t.Fatalf("the user's chongyun profile not back (active %q):\n%s", snowActive(dir), readFile(mine))
 	}
 }

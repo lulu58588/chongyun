@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // A plugin's provider leaves a record in providers.json once the user picks
@@ -47,7 +47,7 @@ func pluginRecordIDs(spec string) ([]string, bool) {
 	var ids []string
 	for _, pp := range listed {
 		id := PluginID(pp.ID)
-		if pp.Spec != spec || id == "" || id == "chongyun" || slices.Contains(accountIDs, id) || others[id] || slices.Contains(ids, id) {
+		if pp.Spec != spec || id == "" || id == "magpie" || slices.Contains(accountIDs, id) || others[id] || slices.Contains(ids, id) {
 			continue
 		}
 		ids = append(ids, id)

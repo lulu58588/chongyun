@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // CC Switch's Codex config, as it writes it: its "custom" table, one of

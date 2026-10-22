@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // anteHome is a HOME with an Ante of the user's: a catalog holding a provider
@@ -120,12 +120,12 @@ func TestAnte(t *testing.T) {
 	for _, o := range f.Options(a.Values()) {
 		vals = append(vals, o.Value)
 	}
-	if !reflect.DeepEqual(vals, []string{"chongyun"}) {
+	if !reflect.DeepEqual(vals, []string{"magpie"}) {
 		t.Fatalf("options: %v", vals)
 	}
 
 	for range 2 { // twice: one magpie provider, and the user's left alone
-		if err := f.Set("chongyun"); err != nil {
+		if err := f.Set("magpie"); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -137,7 +137,7 @@ func TestAnte(t *testing.T) {
 		t.Fatalf("models: %v", got)
 	}
 	mine := anteEntry(t, path)
-	if mine["base_url"] != gatewayV1() || mine["wire_style"] != "OpenAiCompatible" || mine["display_name"] != "chongyun" {
+	if mine["base_url"] != gatewayV1() || mine["wire_style"] != "OpenAiCompatible" || mine["display_name"] != "崇云科技" {
 		t.Fatalf("chongyun provider: %v", mine)
 	}
 	// no auth block of magpie's: the gateway lets this machine in with any
@@ -167,7 +167,7 @@ func TestAnte(t *testing.T) {
 			t.Fatalf("%s: effort written: %v", id, e)
 		}
 	}
-	if f.Get() != "chongyun" || a.Check() != "" {
+	if f.Get() != "magpie" || a.Check() != "" {
 		t.Fatalf("on: %q %q", f.Get(), a.Check())
 	}
 	// Ante starts on magpie: its provider named, and the provider and model
@@ -226,7 +226,7 @@ func TestAnte(t *testing.T) {
 	// nothing: its auto-detection, not a made-up choice
 	os.Remove(path)
 	os.Remove(settings)
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if _, ok := anteProv(t, path)[magpieID]; !ok {
@@ -332,7 +332,7 @@ func TestAnteKeepsWhatTheUserPickedWhileWired(t *testing.T) {
 	home, path, settings := anteHome(t)
 	a := ante(home)
 	f := a.Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	// the user moves to their own provider, and to one of magpie's models
@@ -460,7 +460,7 @@ func TestAnteSyncKeepsTheUsersKeys(t *testing.T) {
 	const theirs = `{
   "providers": {
     "together": { "base_url": "https://api.together.xyz/v1", "wire_style": "OpenAiCompatible" },
-    "chongyun": {
+    "magpie": {
       "display_name": "old",
       "base_url": "http://127.0.0.1:1/v1",
       "wire_style": "OpenAiCompatible",
@@ -482,7 +482,7 @@ func TestAnteSyncKeepsTheUsersKeys(t *testing.T) {
 			home, path, settings := anteHome(t)
 			a := ante(home)
 			f := a.Field("provider")
-			if err := f.Set("chongyun"); err != nil {
+			if err := f.Set("magpie"); err != nil {
 				t.Fatal(err)
 			}
 			writeFile(t, path, theirs)
@@ -509,7 +509,7 @@ func TestAnteSyncKeepsTheUsersKeys(t *testing.T) {
 					}
 				}
 				// the fields magpie owns still follow the gateway
-				for k, want := range map[string]string{"base_url": gatewayV1(), "display_name": "chongyun", "wire_style": "OpenAiCompatible"} {
+				for k, want := range map[string]string{"base_url": gatewayV1(), "display_name": "崇云科技", "wire_style": "OpenAiCompatible"} {
 					if v, _ := edit.GetJSON(path, anteProvider+"."+k); v != want {
 						t.Errorf("%s = %q, want %q", k, v, want)
 					}
@@ -531,7 +531,7 @@ func TestAnteSyncKeepsTheUsersKeys(t *testing.T) {
 				if err := a.Sync(); err != nil {
 					t.Fatal(err)
 				}
-			} else if err := f.Set("chongyun"); err != nil {
+			} else if err := f.Set("magpie"); err != nil {
 				t.Fatal(err)
 			}
 			check()
@@ -594,7 +594,7 @@ func TestAnteHome(t *testing.T) {
 		t.Fatalf("a relative $ANTE_HOME was taken: %q", got)
 	}
 	t.Setenv("ANTE_HOME", elsewhere)
-	if err := a.Field("provider").Set("chongyun"); err != nil {
+	if err := a.Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if _, ok := anteProv(t, path)[magpieID]; !ok {
@@ -648,14 +648,14 @@ func TestAnteWriteFailureRollsBothFilesBack(t *testing.T) {
 	home, path, settings := anteHome(t)
 	a := ante(home)
 	f := a.Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	beforeSettings := readFile(settings)
 	if v, _ := edit.GetJSON(settings, "provider"); v != magpieID {
 		t.Fatalf("not wired: %q", v)
 	}
-	bad := `{"providers": {"chongyun": {"base_url": "http://127.0.0.1:1/v1"`
+	bad := `{"providers": {"magpie": {"base_url": "http://127.0.0.1:1/v1"`
 	writeFile(t, path, bad)
 	if err := f.Set(""); err == nil {
 		t.Fatal("a catalog that can't be written was stepped over")
@@ -677,7 +677,7 @@ func TestAnteConnectWriteFailureRollsBack(t *testing.T) {
 	// nothing of it is written over, so the first settings write fails
 	bad := `{"provider": "together",`
 	writeFile(t, settings, bad)
-	if err := ante(home).Field("provider").Set("chongyun"); err == nil {
+	if err := ante(home).Field("provider").Set("magpie"); err == nil {
 		t.Fatal("a settings.json that can't be written was stepped over")
 	}
 	if got := readFile(path); got != before {
@@ -697,7 +697,7 @@ func TestAnteConnectWriteFailureRollsBack(t *testing.T) {
 func TestAnteKeepsTheUsersFile(t *testing.T) {
 	home, path, _ := anteHome(t)
 	a := ante(home)
-	if err := a.Field("provider").Set("chongyun"); err != nil {
+	if err := a.Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	ps := anteProv(t, path)
@@ -723,7 +723,7 @@ func TestAnteGroupSaysNoCapabilities(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := ante(home)
-	if err := a.Field("provider").Set("chongyun"); err != nil {
+	if err := a.Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	var sawGroup bool

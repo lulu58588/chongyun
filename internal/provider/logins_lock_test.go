@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/filememo"
 )
 
 // newProcess is what a magpie run from a terminal starts with: nothing

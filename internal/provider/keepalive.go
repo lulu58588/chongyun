@@ -19,7 +19,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // keepAliveEvery is how long a saved sign-in goes before it is renewed.

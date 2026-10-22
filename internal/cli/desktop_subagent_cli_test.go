@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/chongyun/internal/agent"
 )
 
 // magpie claude-desktop subagent_model prints no restart advice once

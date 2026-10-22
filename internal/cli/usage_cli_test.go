@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/sessions"
-	stats "github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/sessions"
+	stats "github.com/lulu58588/chongyun/internal/usage"
 )
 
 // holdUsageClock stops the usage clock at at for the test and gives at back,

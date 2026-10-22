@@ -29,7 +29,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/lastgood"
 )
 
 const (

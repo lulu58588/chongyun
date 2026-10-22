@@ -10,7 +10,7 @@ import (
 
 	"github.com/tidwall/jsonc"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // A server's tools can be turned off one by one (nf1qaz2w on Discord): the

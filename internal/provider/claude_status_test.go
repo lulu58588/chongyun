@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // With magpie wired into Claude Code, `claude auth status` tells of magpie's
@@ -21,7 +21,7 @@ func TestClaudeAccountNamedAsItsLogin(t *testing.T) {
 	t.Setenv("USERPROFILE", home)
 	t.Setenv("CLAUDE_CONFIG_DIR", "")
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
-	t.Setenv("ANTHROPIC_AUTH_TOKEN", "chongyun")
+	t.Setenv("ANTHROPIC_AUTH_TOKEN", "magpie")
 	far := time.Now().Add(24 * time.Hour).UnixMilli()
 	oauth := func(tok string) map[string]any {
 		return map[string]any{"claudeAiOauth": map[string]any{"accessToken": tok, "refreshToken": "r-" + tok, "expiresAt": far, "subscriptionType": "max"}}

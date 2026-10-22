@@ -7,12 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agentplug"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/agentplug"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/usage"
 	"gopkg.in/yaml.v3"
 )
 
@@ -33,7 +33,7 @@ func pluggedHome(t *testing.T, srcs ...string) string {
 	for i, src := range srcs {
 		dir := filepath.Join(home, "plugins", "p"+string(rune('a'+i)))
 		os.MkdirAll(dir, 0o755)
-		os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"p`+string(rune('a'+i))+`","chongyun":{"agent":"./agent.js"}}`), 0o644)
+		os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"p`+string(rune('a'+i))+`","magpie":{"agent":"./agent.js"}}`), 0o644)
 		os.WriteFile(filepath.Join(dir, "agent.js"), []byte(src), 0o644)
 		l.Plugins = append(l.Plugins, plugin.Entry{Spec: dir})
 	}

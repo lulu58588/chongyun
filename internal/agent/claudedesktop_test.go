@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/desktopdir"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/desktopdir"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // desktopSandbox is a home of its own with nothing of this machine's in
@@ -131,7 +131,7 @@ func TestClaudeDesktopFresh(t *testing.T) {
 		t.Fatalf("get: %q", f.Get())
 	}
 
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	for _, c := range []string{p.config, p.config3p} {
@@ -151,10 +151,10 @@ func TestClaudeDesktopFresh(t *testing.T) {
 		t.Errorf("profile mode %v", st.Mode())
 	}
 	meta := desktopJSON(t, p.meta)
-	if meta["appliedId"] != desktopProfileID || !reflect.DeepEqual(meta["entries"], []any{map[string]any{"id": desktopProfileID, "name": "chongyun"}}) {
+	if meta["appliedId"] != desktopProfileID || !reflect.DeepEqual(meta["entries"], []any{map[string]any{"id": desktopProfileID, "name": "magpie"}}) {
 		t.Errorf("meta: %v", meta)
 	}
-	if f.Get() != "chongyun" || a.Check() != "" {
+	if f.Get() != "magpie" || a.Check() != "" {
 		t.Fatalf("get %q, check %q", f.Get(), a.Check())
 	}
 	if n := a.Notice(); n == "" {
@@ -191,7 +191,7 @@ func TestClaudeDesktopKeepsTheUsers(t *testing.T) {
 
 	a := claudeDesktop(home)
 	f := a.Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	cfg := desktopJSON(t, p.config)
@@ -213,7 +213,7 @@ func TestClaudeDesktopKeepsTheUsers(t *testing.T) {
 	on := desktopTree(t, p)
 
 	// on again changes nothing
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if again := desktopTree(t, p); !reflect.DeepEqual(again, on) {
@@ -234,7 +234,7 @@ func TestClaudeDesktopKeepsTheUsers(t *testing.T) {
 	}
 
 	// on → off → on is the first on again
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if again := desktopTree(t, p); !reflect.DeepEqual(again, on) {
@@ -250,7 +250,7 @@ func TestClaudeDesktopChangedSince(t *testing.T) {
 	desktopWrite(t, p.meta, `{"entries":[{"id":"mine","name":"Mine"}],"appliedId":"mine"}`)
 	a := claudeDesktop(home)
 	f := a.Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	// a setting made in Desktop's window stays through a second on
@@ -258,7 +258,7 @@ func TestClaudeDesktopChangedSince(t *testing.T) {
 	if c := a.Check(); c == "" {
 		t.Error("check: a profile pointing elsewhere is fine")
 	}
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	prof := desktopJSON(t, p.prof)
@@ -299,7 +299,7 @@ func TestClaudeDesktopOffOnKeepsTheUsersSettings(t *testing.T) {
 	os.MkdirAll(p.dir, 0o755)
 	a := claudeDesktop(home)
 	f := a.Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	desktopWrite(t, p.prof, `{"inferenceProvider":"gateway","inferenceGatewayBaseUrl":"http://old:1","inferenceGatewayApiKey":"old","inferenceGatewayAuthScheme":"bearer",`+
@@ -310,7 +310,7 @@ func TestClaudeDesktopOffOnKeepsTheUsersSettings(t *testing.T) {
 	if _, err := os.Stat(p.prof); !os.IsNotExist(err) {
 		t.Fatal("chongyun's profile is still there after off")
 	}
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	prof := desktopJSON(t, p.prof)
@@ -323,7 +323,7 @@ func TestClaudeDesktopOffOnKeepsTheUsersSettings(t *testing.T) {
 	if !reflect.DeepEqual(prof, want) {
 		t.Errorf("profile after off and on:\n%v\nwant\n%v", prof, want)
 	}
-	if f.Get() != "chongyun" || a.Check() != "" {
+	if f.Get() != "magpie" || a.Check() != "" {
 		t.Errorf("get %q, check %q", f.Get(), a.Check())
 	}
 }
@@ -337,7 +337,7 @@ func TestClaudeDesktopOnKeepsTheUsersOwnGatewayProfile(t *testing.T) {
 	home, p := desktopSandbox(t)
 	const theirs = `{
   "inferenceGatewayBaseUrl": "` + "%s" + `",
-  "inferenceGatewayApiKey": "chongyun",
+  "inferenceGatewayApiKey": "magpie",
   "sshHostAllowlist": ["*"],
   "chatTabEnabled": true,
   "chatAdvancedFileAnalysisEnabled": true,
@@ -359,7 +359,7 @@ func TestClaudeDesktopOnKeepsTheUsersOwnGatewayProfile(t *testing.T) {
 	desktopWrite(t, p.meta, `{"appliedId":"5b0d0c6e-1f2a-4c3b-9d4e-0a1b2c3d4e5f","entries":[{"id":"5b0d0c6e-1f2a-4c3b-9d4e-0a1b2c3d4e5f","name":"mine"}]}`)
 	a := claudeDesktop(home)
 	f := a.Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	var want map[string]any
@@ -394,7 +394,7 @@ func TestClaudeDesktopOnLeavesOtherProfilesOut(t *testing.T) {
 			home, p := desktopSandbox(t)
 			desktopWrite(t, filepath.Join(p.library, "abc.json"), prof)
 			desktopWrite(t, p.meta, `{"appliedId":"abc","entries":[{"id":"abc","name":"mine"}]}`)
-			if err := claudeDesktop(home).Field("provider").Set("chongyun"); err != nil {
+			if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
 				t.Fatal(err)
 			}
 			got := desktopJSON(t, p.prof)
@@ -410,7 +410,7 @@ func TestClaudeDesktopOnLeavesOtherProfilesOut(t *testing.T) {
 func TestClaudeDesktopRefusesOddFiles(t *testing.T) {
 	home, p := desktopSandbox(t)
 	desktopWrite(t, p.meta, `[]`)
-	if err := claudeDesktop(home).Field("provider").Set("chongyun"); err == nil {
+	if err := claudeDesktop(home).Field("provider").Set("magpie"); err == nil {
 		t.Fatal("a meta file that isn't an object was taken")
 	}
 	if b, _ := os.ReadFile(p.meta); string(b) != "[]" {
@@ -422,7 +422,7 @@ func TestClaudeDesktopRefusesOddFiles(t *testing.T) {
 		}
 	}
 	desktopWrite(t, p.meta, `{"entries":{}}`)
-	if err := claudeDesktop(home).Field("provider").Set("chongyun"); err == nil {
+	if err := claudeDesktop(home).Field("provider").Set("magpie"); err == nil {
 		t.Fatal("entries that aren't a list were taken")
 	}
 }
@@ -443,7 +443,7 @@ func TestClaudeDesktopTiers(t *testing.T) {
 	if len(f.Options(nil)) != 0 {
 		t.Fatal("tiers offered before Desktop is on chongyun")
 	}
-	if err := a.Field("provider").Set("chongyun"); err != nil {
+	if err := a.Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if len(f.Options(nil)) != 2 {
@@ -501,7 +501,7 @@ func TestClaudeDesktopMSIX(t *testing.T) {
 	if want := filepath.Join(pkg, "Local", "Claude", "claude_desktop_config.json"); a.Path != want {
 		t.Errorf("path %s, want %s", a.Path, want)
 	}
-	if err := a.Field("provider").Set("chongyun"); err != nil {
+	if err := a.Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if a.Field("provider").Get() != magpieID {
@@ -568,7 +568,7 @@ func TestClaudeDesktopMSIXStashBefore(t *testing.T) {
 	r := desktopPathsOf(filepath.Join(local, "Claude"), filepath.Join(local, "Claude-3p"))
 
 	a := claudeDesktop(home)
-	if err := a.Field("provider").Set("chongyun"); err != nil {
+	if err := a.Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if !desktopWired(r) {
@@ -614,7 +614,7 @@ func TestClaudeDesktopMSIXChecksTheFoldersDesktopRuns(t *testing.T) {
 		os.Chtimes(f, then, then)
 	}
 	a := claudeDesktop(home)
-	if err := a.Field("provider").Set("chongyun"); err != nil {
+	if err := a.Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.Field("sonnet").Set("v/a"); err != nil {
@@ -670,7 +670,7 @@ func TestClaudeDesktopCarriesTheLanguage(t *testing.T) {
 	before := desktopTree(t, p)
 
 	f := claudeDesktop(home).Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if m := desktopJSON(t, p.app3p); !reflect.DeepEqual(m, map[string]any{"locale": "zh-CN"}) {
@@ -697,7 +697,7 @@ func TestClaudeDesktopKeepsThe3pLanguage(t *testing.T) {
 	desktopWrite(t, p.app3p, mine)
 
 	f := claudeDesktop(home).Field("provider")
-	for i, v := range []string{"chongyun", "chongyun", "", "chongyun"} {
+	for i, v := range []string{"magpie", "magpie", "", "magpie"} {
 		if err := f.Set(v); err != nil {
 			t.Fatal(err)
 		}
@@ -713,7 +713,7 @@ func TestClaudeDesktopKeepsThe3pLanguage(t *testing.T) {
 func TestClaudeDesktopUserEditsThenReapply(t *testing.T) {
 	home, p := desktopSandbox(t)
 	f := claudeDesktop(home).Field("provider")
-	if err := f.Set("chongyun"); err != nil {
+	if err := f.Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(p.app3p); err == nil {
@@ -722,7 +722,7 @@ func TestClaudeDesktopUserEditsThenReapply(t *testing.T) {
 	desktopWrite(t, p.app, `{"locale":"zh-CN"}`)
 	edited := "{\n  \"locale\": \"zh-TW\",\n  \"hasCompletedOnboarding\": true\n}\n"
 	desktopWrite(t, p.app3p, edited)
-	for _, v := range []string{"chongyun", "", "chongyun"} {
+	for _, v := range []string{"magpie", "", "magpie"} {
 		if err := f.Set(v); err != nil {
 			t.Fatal(err)
 		}
@@ -738,7 +738,7 @@ func TestClaudeDesktopLanguageOddValues(t *testing.T) {
 	for _, own := range []string{`{"locale":"../../x"}`, `{"locale":7}`, `{"locale":""}`, `not json`} {
 		home, p := desktopSandbox(t)
 		desktopWrite(t, p.app, own)
-		if err := claudeDesktop(home).Field("provider").Set("chongyun"); err != nil {
+		if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
 			t.Fatal(err)
 		}
 		if b, err := os.ReadFile(p.app3p); err == nil {
@@ -748,7 +748,7 @@ func TestClaudeDesktopLanguageOddValues(t *testing.T) {
 	home, p := desktopSandbox(t)
 	desktopWrite(t, p.app, `{"locale":"zh-CN"}`)
 	desktopWrite(t, p.app3p, `[1]`)
-	if err := claudeDesktop(home).Field("provider").Set("chongyun"); err != nil {
+	if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
 		t.Fatal(err)
 	}
 	if b, _ := os.ReadFile(p.app3p); string(b) != `[1]` {

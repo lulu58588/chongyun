@@ -3,7 +3,7 @@ package agent
 import (
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Every model in a picker carries its vendor's real logo. A models.dev

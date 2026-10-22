@@ -12,8 +12,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // argonBudgetRefused is Gemini 4 Argon's answer to a thinkingBudget, as

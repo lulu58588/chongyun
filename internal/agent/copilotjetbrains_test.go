@@ -9,7 +9,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // copilotJBUser is byok.json as the Copilot language server 1.545.1 (in the

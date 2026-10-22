@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // turnDoneText is the notification that an agent's turn is done (itieniu

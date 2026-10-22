@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // dialsOut has magpie's own requests go as netproxy.Install has them, and

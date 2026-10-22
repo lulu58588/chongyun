@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // An account signed in while magpie runs gets its vendor's list the next

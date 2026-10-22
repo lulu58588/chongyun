@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // crushHome is effortHome with Crush's data folder in the sandbox too, and
@@ -44,7 +44,7 @@ func TestCrushPickWhereCrushReadsIt(t *testing.T) {
 	if err := large.Set("magpie/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
-	if p, _ := edit.GetJSON(data, "models.large.provider"); p != "chongyun" {
+	if p, _ := edit.GetJSON(data, "models.large.provider"); p != "magpie" {
 		t.Fatalf("Crush still picks %q from its data file:\n%s", p, readFile(data))
 	}
 	if m, _ := edit.GetJSON(data, "models.large.model"); m != "deepseek/pro" {
@@ -107,7 +107,7 @@ func TestCrushPickInCrushJSON(t *testing.T) {
 	if cr.Path == data {
 		t.Skip("crush.json is Crush's data file here")
 	}
-	writeFile(t, cr.Path, `{"providers":{"chongyun":{"base_url":"x"}},"models":{"large":{"provider":"chongyun","model":"deepseek/pro"}}}`)
+	writeFile(t, cr.Path, `{"providers":{"magpie":{"base_url":"x"}},"models":{"large":{"provider":"magpie","model":"deepseek/pro"}}}`)
 	if got := cr.Field("model").Get(); got != "magpie/deepseek/pro" {
 		t.Fatalf("large reads %q", got)
 	}
@@ -146,7 +146,7 @@ func TestCrushPickReplacesCrushsModelObject(t *testing.T) {
 		if err := json.Unmarshal([]byte(raw), &obj); err != nil {
 			t.Fatalf("models.%s: %v\n%s", typ, err, readFile(data))
 		}
-		if len(obj) != 2 || obj["provider"] != "chongyun" {
+		if len(obj) != 2 || obj["provider"] != "magpie" {
 			t.Fatalf("models.%s after chongyun's pick: %s", typ, raw)
 		}
 	}
@@ -174,7 +174,7 @@ func TestCrushPickReplacesCrushsModelObject(t *testing.T) {
 
 	// once Crush's picker has saved its own object again, magpie's next pick
 	// drops all of it, the effort Crush saved too
-	writeFile(t, data, `{"models":{"large":{"model":"deepseek/pro","provider":"chongyun","reasoning_effort":"low","max_tokens":64000}}}`)
+	writeFile(t, data, `{"models":{"large":{"model":"deepseek/pro","provider":"magpie","reasoning_effort":"low","max_tokens":64000}}}`)
 	if err := cr.Field("model").Set("magpie/deepseek/max"); err != nil {
 		t.Fatal(err)
 	}
@@ -226,7 +226,7 @@ func TestCrushInWSLPicksInTheDistrosDataFile(t *testing.T) {
 	if err := large.Set("magpie/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
-	if p, _ := edit.GetJSON(data, "models.large.provider"); p != "chongyun" {
+	if p, _ := edit.GetJSON(data, "models.large.provider"); p != "magpie" {
 		t.Fatalf("the distro's Crush still picks %q:\n%s", p, readFile(data))
 	}
 	if got := large.Get(); got != "magpie/deepseek/pro" {

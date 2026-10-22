@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #1839: the calls magpie made by itself — its routing classifier's (UA
@@ -82,7 +82,7 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 	if ownModel != 2 {
 		t.Fatalf("model: %d own calls: %+v", ownModel, s.Models)
 	}
-	// magpie's calls are an agent's row of their own, as before ("chongyun"
+	// magpie's calls are an agent's row of their own, as before ("magpie"
 	// where the agents are loaded, its User-Agent's name here)
 	mine := 0
 	for _, g := range s.Agents {
@@ -109,7 +109,7 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 // Every request magpie sends by itself is magpie's own: the classifier, the
 // search, the image description; an agent's is not.
 func TestByMagpie(t *testing.T) {
-	for ua, want := range map[string]bool{"magpie-router/1": true, "magpie-search/1": true, "magpie-vision/1": true, "chongyun": true, "claude-cli/2.1": false, "codex_cli_rs/0.50": false, "": false} {
+	for ua, want := range map[string]bool{"magpie-router/1": true, "magpie-search/1": true, "magpie-vision/1": true, "magpie": true, "claude-cli/2.1": false, "codex_cli_rs/0.50": false, "": false} {
 		if got := (Record{Agent: ua}).ByMagpie(); got != want {
 			t.Errorf("%q: %v, want %v", ua, got, want)
 		}

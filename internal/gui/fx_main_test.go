@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/fx"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/fx"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // TestMain keeps the rate off the network: a state read with no rate cached

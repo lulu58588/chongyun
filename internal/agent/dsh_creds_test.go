@@ -7,12 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // #969 (pan17): the DeepSeek Harness desktop app, wired through magpie, failed
-// every turn with `no credential for provider route "chongyun"; its profile
+// every turn with `no credential for provider route "magpie"; its profile
 // resolves MAGPIE_GATEWAY_KEY, which is not set — store MAGPIE_GATEWAY_KEY
 // through the credentials service (the web Models page writes it) or export
 // it` (MISSING_CREDENTIAL), while magpie said it was connected. The route was
@@ -37,7 +37,7 @@ func TestDshDesktopGetsTheKeyFromItsStore(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if s := string(b); !strings.HasPrefix(s, "version: 1\n") || !strings.Contains(s, "refs:\n  "+dshKeyRef+": chongyun\n") {
+	if s := string(b); !strings.HasPrefix(s, "version: 1\n") || !strings.Contains(s, "refs:\n  "+dshKeyRef+": magpie\n") {
 		t.Fatalf("the key is not in dsh's store:\n%s", s)
 	}
 	// dsh refuses to start on a store any other user can read
@@ -62,7 +62,7 @@ func TestDshDesktopGetsTheKeyFromItsStore(t *testing.T) {
 	}
 
 	// back to dsh's own models: magpie's key goes, the rest stays
-	os.WriteFile(creds, []byte("version: 1\n# mine\nrefs:\n  DEEPSEEK_API_KEY: sk-mine\n  "+dshKeyRef+": chongyun\n"), 0o600)
+	os.WriteFile(creds, []byte("version: 1\n# mine\nrefs:\n  DEEPSEEK_API_KEY: sk-mine\n  "+dshKeyRef+": magpie\n"), 0o600)
 	if err := a.Field("model").Set("deepseek-v4-pro"); err != nil {
 		t.Fatal(err)
 	}
@@ -113,7 +113,7 @@ func TestDshStoreOfTheUsersOwn(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(creds)
-	for _, want := range []string{"DEEPSEEK_API_KEY: sk-mine", "AWS_PROFILE: prod", dshKeyRef + ": chongyun"} {
+	for _, want := range []string{"DEEPSEEK_API_KEY: sk-mine", "AWS_PROFILE: prod", dshKeyRef + ": magpie"} {
 		if !strings.Contains(string(b), want) {
 			t.Fatalf("missing %q:\n%s", want, b)
 		}
@@ -171,7 +171,7 @@ func TestDshApplyReplacesAKeyTheGatewayRefuses(t *testing.T) {
 	if err := a.Field("model").Set("magpie/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
-	if v, _ := edit.GetYAML(creds, "refs."+dshKeyRef); v != "chongyun" {
+	if v, _ := edit.GetYAML(creds, "refs."+dshKeyRef); v != "magpie" {
 		t.Fatalf("the refused key is still there: %q", v)
 	}
 	if v, _ := edit.GetYAML(creds, "refs.DEEPSEEK_API_KEY"); v != "sk-mine" {

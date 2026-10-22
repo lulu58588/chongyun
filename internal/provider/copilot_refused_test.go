@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // copilot371Models is a Copilot Student account's /models as #371 measured

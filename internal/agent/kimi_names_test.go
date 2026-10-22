@@ -7,9 +7,9 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Sorghum on Discord: each of magpie's models in Kimi Code has the name

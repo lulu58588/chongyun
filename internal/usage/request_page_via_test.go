@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/sessions"
 )
 
 // viaAll builds a ledger with two gateway rows and three session-file calls,

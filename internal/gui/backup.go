@@ -10,10 +10,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/backup"
-	"github.com/lulu58588/magpie/internal/davsync"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/backup"
+	"github.com/lulu58588/chongyun/internal/davsync"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // backupRoutes are the Settings page's Export and Import, and the WebDAV

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // spawnDescription is the description of the spawn_agent tool in a
@@ -96,7 +96,7 @@ func TestSpawnAgentNamesEveryModel(t *testing.T) {
 		// what magpie adds goes upstream in the prompt, to OpenAI too:
 		// it names neither magpie nor Codex and its limit
 		added := desc[len(head) : len(desc)-len(rest)]
-		for _, w := range []string{"chongyun", "Chongyun", "Codex", "five"} {
+		for _, w := range []string{"magpie", "Chongyun", "Codex", "five"} {
 			if strings.Contains(added, w) {
 				t.Fatalf("the added text names %q:\n%s", w, added)
 			}

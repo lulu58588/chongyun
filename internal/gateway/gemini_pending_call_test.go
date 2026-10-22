@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // geminiPairingUpstream is a Gemini API that reads its histories as

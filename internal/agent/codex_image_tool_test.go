@@ -23,7 +23,7 @@ func TestCodexMagpieProviderCarriesActorAuthorization(t *testing.T) {
 	if !strings.Contains(cfg, "[model_providers.magpie]") {
 		t.Fatalf("no chongyun provider table:\n%s", cfg)
 	}
-	if !strings.Contains(cfg, `"x-openai-actor-authorization" = "chongyun"`) {
+	if !strings.Contains(cfg, `"x-openai-actor-authorization" = "magpie"`) {
 		t.Fatalf("chongyun provider table carries no actor-authorization header:\n%s", cfg)
 	}
 	// uses_openai_actor_authorization() also requires !requires_openai_auth:

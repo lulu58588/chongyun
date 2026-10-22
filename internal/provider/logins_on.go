@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/filelock"
+	"github.com/lulu58588/chongyun/internal/filelock"
 )
 
 // savedTokenMu keeps two requests from refreshing one saved account at

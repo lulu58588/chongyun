@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // fakeAPI is GitHub's API answering 401 to every token but good, and

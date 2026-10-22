@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // chunked hands its bytes out a piece at a time, as a socket does.

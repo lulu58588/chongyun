@@ -3,7 +3,7 @@
 # another one (make -f path/to/Makefile) they would act there. make -C
 # works. go.mod is read relative to the working folder, so a path with
 # spaces (or a symlinked Makefile) changes nothing.
-ifneq ($(shell sed -n 's/^module //p' go.mod 2>/dev/null),github.com/lulu58588/magpie)
+ifneq ($(shell sed -n 's/^module //p' go.mod 2>/dev/null),github.com/lulu58588/chongyun)
   $(error run make in this project's folder (make -C path/to/chongyun), not in $(CURDIR))
 endif
 
@@ -117,16 +117,16 @@ release-windows:
 release-linux:
 	@mkdir -p dist
 	@echo "  linux/$(shell go env GOARCH) (app)"
-	@go build -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" -o dist/magpie-linux-$(shell go env GOARCH) .
+	@go build -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" -o dist/chongyun-linux-$(shell go env GOARCH) .
 
 clean:
-	rm -rf magpie magpie.exe magpie.app dist rsrc_windows_*.syso
+	rm -rf chongyun chongyun.exe chongyun.app dist rsrc_windows_*.syso
 
 # Development: the UI is served from internal/gui/assets and the window
 # reloads itself when a file there is saved. With fswatch installed, the
 # windows stay up and a Go change rebuilds and restarts only the backend
 # behind them (build/dev.sh); without it, dev-once runs the app as one
-# process. Uses its own ports so a running magpie keeps serving the agents.
+# process. Uses its own ports so a running chongyun keeps serving the agents.
 DEV_ADDR ?= 127.0.0.1:3426
 DEV_UI ?= 127.0.0.1:3427
 DEV_BACKEND ?= 127.0.0.1:3428
@@ -137,5 +137,5 @@ dev:
 	else $(MAKE) --no-print-directory dev-once; fi
 
 dev-once:
-	@go build -tags dev -o magpie-dev . && echo "  magpie-dev · UI from internal/gui/assets, reload on save · gateway $(DEV_ADDR)"
-	@MAGPIE_ADDR=$(DEV_ADDR) MAGPIE_DEV_UI=$(DEV_UI) ./magpie-dev app
+	@go build -tags dev -o chongyun-dev . && echo "  chongyun-dev · UI from internal/gui/assets, reload on save · gateway $(DEV_ADDR)"
+	@MAGPIE_ADDR=$(DEV_ADDR) MAGPIE_DEV_UI=$(DEV_UI) ./chongyun-dev app

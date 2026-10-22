@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // routeWaitMax caps how long one ask waits for the route to change.

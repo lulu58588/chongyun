@@ -9,8 +9,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // codexSearchBody is the SearchRequest Codex's web.run sends, as its own
@@ -25,8 +25,8 @@ func codexSearchBody(model string) string {
 func codexSearchPost(h http.Handler, path, body string) *httptest.ResponseRecorder {
 	r := httptest.NewRequest(http.MethodPost, path, strings.NewReader(body))
 	r.Header.Set("Content-Type", "application/json")
-	r.Header.Set("Authorization", "Bearer chongyun")
-	r.Header.Set("x-openai-actor-authorization", "chongyun")
+	r.Header.Set("Authorization", "Bearer magpie")
+	r.Header.Set("x-openai-actor-authorization", "magpie")
 	r.Header.Set("x-codex-turn-metadata", `{"turn_id":"t1"}`)
 	r.Header.Set("originator", "codex_exec")
 	r.Header.Set("User-Agent", "codex_exec/0.162.1 (Linux 6.8; x86_64)")
@@ -101,7 +101,7 @@ func TestCodexWebRunSearchesOnChatGPTAccount(t *testing.T) {
 			if paths[i] != "/backend-api/codex/alpha/search" {
 				t.Fatalf("%s: went to %s", path, paths[i])
 			}
-			if a := hd.Get("Authorization"); a == "" || a == "Bearer chongyun" || hd.Get("x-openai-actor-authorization") != "" {
+			if a := hd.Get("Authorization"); a == "" || a == "Bearer magpie" || hd.Get("x-openai-actor-authorization") != "" {
 				t.Fatalf("%s: chongyun's own token or actor header went on: %v", path, hd)
 			}
 			if hd.Get("x-codex-turn-metadata") != `{"turn_id":"t1"}` || hd.Get("originator") != "codex_cli_rs" || hd.Get("Accept") == "text/event-stream" {

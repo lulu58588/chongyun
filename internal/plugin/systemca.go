@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // caEnv has Bun trust what this machine trusts. Bun checks TLS against

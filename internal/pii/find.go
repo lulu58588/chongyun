@@ -5,7 +5,7 @@ import (
 	"crypto/sha256"
 	"sync"
 
-	"github.com/lulu58588/magpie/internal/redact"
+	"github.com/lulu58588/chongyun/internal/redact"
 )
 
 // Find is redact's Model: what the model finds in each of texts. A

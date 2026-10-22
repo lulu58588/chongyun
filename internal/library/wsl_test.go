@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/chongyun/internal/agent"
 )
 
 // wslSandbox is sandbox with a running WSL distro, Ubuntu-24.04, whose /
@@ -211,7 +211,7 @@ func TestWSLInstructions(t *testing.T) {
 func TestWSLMagpieImage(t *testing.T) {
 	h := wslSandbox(t)
 	probed := 0
-	answer := "/mnt/d/tools/Magpie/magpie-windows-amd64.exe\ninterop:on\n"
+	answer := "/mnt/d/tools/Chongyun/magpie-windows-amd64.exe\ninterop:on\n"
 	old := wslProbe
 	wslProbe = func(distro, script string) (string, error) {
 		probed++
@@ -237,12 +237,12 @@ func TestWSLMagpieImage(t *testing.T) {
 		t.Fatalf("problems: %+v", res.Problems)
 	}
 	s := read(t, filepath.Join(h, ".codex/config.toml"))
-	for _, w := range []string{"[mcp_servers.magpie-image]", `command = "/mnt/d/tools/Magpie/magpie-windows-amd64.exe"`, `"--wsl"`, `"Ubuntu-24.04"`, `WSLENV = "MAGPIE_ADDR"`} {
+	for _, w := range []string{"[mcp_servers.magpie-image]", `command = "/mnt/d/tools/Chongyun/magpie-windows-amd64.exe"`, `"--wsl"`, `"Ubuntu-24.04"`, `WSLENV = "MAGPIE_ADDR"`} {
 		if !strings.Contains(s, w) {
 			t.Errorf("codex@wsl config.toml has no %s:\n%s", w, s)
 		}
 	}
-	if s := read(t, filepath.Join(h, ".claude.json")); !strings.Contains(s, `"/mnt/d/tools/Magpie/magpie-windows-amd64.exe"`) || !strings.Contains(s, `"--wsl"`) {
+	if s := read(t, filepath.Join(h, ".claude.json")); !strings.Contains(s, `"/mnt/d/tools/Chongyun/magpie-windows-amd64.exe"`) || !strings.Contains(s, `"--wsl"`) {
 		t.Errorf("claude@wsl .claude.json:\n%s", s)
 	}
 	// written as it is: the next sync changes nothing, nor asks the distro again
@@ -255,15 +255,15 @@ func TestWSLMagpieImage(t *testing.T) {
 
 	// drives mounted elsewhere: the server is told where
 	reset()
-	answer = "/win/d/tools/Magpie/magpie-windows-amd64.exe\ninterop:on\n"
+	answer = "/win/d/tools/Chongyun/magpie-windows-amd64.exe\ninterop:on\n"
 	ok(t)(Sync())
-	if s := read(t, filepath.Join(h, ".codex/config.toml")); !strings.Contains(s, `"/win/d/tools/Magpie/magpie-windows-amd64.exe"`) || !strings.Contains(s, `"--mount"`) || !strings.Contains(s, `"/win/"`) {
+	if s := read(t, filepath.Join(h, ".codex/config.toml")); !strings.Contains(s, `"/win/d/tools/Chongyun/magpie-windows-amd64.exe"`) || !strings.Contains(s, `"--mount"`) || !strings.Contains(s, `"/win/"`) {
 		t.Errorf("custom mount:\n%s", s)
 	}
 
 	// interop off: nothing it could start, and why
 	reset()
-	answer = "/mnt/d/tools/Magpie/magpie-windows-amd64.exe\ninterop:off\n"
+	answer = "/mnt/d/tools/Chongyun/magpie-windows-amd64.exe\ninterop:off\n"
 	res, err := Sync()
 	if err != nil || len(res.Problems) == 0 || !strings.Contains(res.Problems[0].Error, "interop") {
 		t.Errorf("interop off: %+v", res.Problems)

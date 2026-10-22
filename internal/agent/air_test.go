@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // airHome is a sandbox home with Air's config folder and an OpenCode at a
@@ -59,9 +59,9 @@ func TestAirAddsMagpieAgent(t *testing.T) {
 	cfg := filepath.Join(dir, "magpie-opencode.json")
 	for k, v := range map[string]string{
 		"agent_servers.Goose.command":              "goose",
-		"agent_servers.Magpie.command":             "/opt/bin/opencode",
-		"agent_servers.Magpie.args.0":              "acp",
-		"agent_servers.Magpie.env.OPENCODE_CONFIG": cfg,
+		"agent_servers.Chongyun.command":             "/opt/bin/opencode",
+		"agent_servers.Chongyun.args.0":              "acp",
+		"agent_servers.Chongyun.env.OPENCODE_CONFIG": cfg,
 	} {
 		if got, _ := edit.GetJSON(acp, k); got != v {
 			t.Fatalf("%s = %q, want %q\n%s", k, got, v, readFile(acp))
@@ -70,9 +70,9 @@ func TestAirAddsMagpieAgent(t *testing.T) {
 	for k, v := range map[string]string{
 		"model":                           "magpie/fake/m1",
 		"small_model":                     "magpie/fake/m1",
-		"enabled_providers":               `["chongyun"]`,
+		"enabled_providers":               `["magpie"]`,
 		"provider.magpie.options.baseURL": gatewayV1(),
-		"provider.magpie.options.apiKey":  "chongyun",
+		"provider.magpie.options.apiKey":  "magpie",
 		"provider.magpie.npm":             "@ai-sdk/openai-compatible",
 	} {
 		if got, _ := edit.GetJSON(cfg, k); strings.Join(strings.Fields(got), "") != v {
@@ -98,7 +98,7 @@ func TestAirAddsMagpieAgent(t *testing.T) {
 	if err := a.Apply("model", ""); err != nil {
 		t.Fatal(err)
 	}
-	if _, ok := edit.GetJSON(acp, "agent_servers.Magpie"); ok {
+	if _, ok := edit.GetJSON(acp, "agent_servers.Chongyun"); ok {
 		t.Fatalf("Chongyun still in acp.json: %s", readFile(acp))
 	}
 	if v, _ := edit.GetJSON(acp, "agent_servers.Goose.command"); v != "goose" {
@@ -123,7 +123,7 @@ func TestAirWithoutOpenCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	acp := filepath.Join(dir, "acp.json")
-	if v, _ := edit.GetJSON(acp, "agent_servers.Magpie.command"); v != "opencode" {
+	if v, _ := edit.GetJSON(acp, "agent_servers.Chongyun.command"); v != "opencode" {
 		t.Fatalf("command = %q\n%s", v, readFile(acp))
 	}
 	if n := a.Notice(); !strings.Contains(n, "install OpenCode") {
@@ -157,7 +157,7 @@ func TestAirCheckAndSync(t *testing.T) {
 	if _, ok := edit.GetJSON(cfg, `provider.magpie.models.fake2/m2`); !ok {
 		t.Fatalf("a provider added later isn't listed: %s", readFile(cfg))
 	}
-	if err := edit.DelJSON(acp, "agent_servers.Magpie"); err != nil {
+	if err := edit.DelJSON(acp, "agent_servers.Chongyun"); err != nil {
 		t.Fatal(err)
 	}
 	if d := a.Drift(); d == nil || d.Kind != "unwired" || !strings.Contains(d.Detail, "Chongyun agent") {
@@ -166,7 +166,7 @@ func TestAirCheckAndSync(t *testing.T) {
 	if err := a.Reapply(); err != nil {
 		t.Fatal(err)
 	}
-	if v, _ := edit.GetJSON(acp, "agent_servers.Magpie.env.OPENCODE_CONFIG"); v != cfg {
+	if v, _ := edit.GetJSON(acp, "agent_servers.Chongyun.env.OPENCODE_CONFIG"); v != cfg {
 		t.Fatalf("not put back: %s", readFile(acp))
 	}
 	if d := a.Drift(); d != nil {
@@ -191,7 +191,7 @@ func TestAirProviderWritesKeepCustomFields(t *testing.T) {
   "model": "magpie/fake/m1",
   "provider": {
     "mine": {"name": "mine"},
-    "chongyun": {
+    "magpie": {
       "name": "old",
       "npm": "old",
       "options": {

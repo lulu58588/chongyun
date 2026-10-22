@@ -121,8 +121,8 @@ func ParseImport(link string) (Provider, error) {
 	if p.ID == "" {
 		return Provider{}, errors.New("the link's name has no letters or digits to make an id from")
 	}
-	if p.ID == "chongyun" {
-		return Provider{}, errors.New(`"chongyun" is what agents call the gateway itself; the link needs another id`)
+	if p.ID == "magpie" {
+		return Provider{}, errors.New(`"magpie" is what agents call the gateway itself; the link needs another id`)
 	}
 	if subscriptionID(p.ID) {
 		// named as a subscription is (claude, kiro): a provider of its own

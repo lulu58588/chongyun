@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // clientCache owns the marks of an explicitly opted-in Messages request.

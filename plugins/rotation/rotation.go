@@ -10,9 +10,9 @@
 package rotation
 
 import (
-	"github.com/lulu58588/magpie/internal/pluginrt"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/routes"
+	"github.com/lulu58588/chongyun/internal/pluginrt"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/routes"
 )
 
 func init() {

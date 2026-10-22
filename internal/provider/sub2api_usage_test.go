@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/agentenv"
 )
 
 // sub2apiUsage is a sub2api key's /v1/usage as sub2api v0.1.149 answered

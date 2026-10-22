@@ -28,12 +28,12 @@ func TestFromRegistry(t *testing.T) {
 		"remotes": [
 			{"type": "sse", "url": "https://acme.dev/sse"},
 			{"type": "streamable-http", "url": "https://acme.dev/mcp", "headers": [
-				{"name": "X-Client", "value": "chongyun"},
+				{"name": "X-Client", "value": "magpie"},
 				{"name": "Authorization", "value": "Bearer {token}", "isRequired": true, "isSecret": true}
 			]}
 		]}`))
 	if !ok || m.Name != "weather" || m.Title != "weather" || m.Publisher != "acme" || m.Homepage != "https://github.com/acme/weather" ||
-		m.Icon != gh("acme") || m.Transport != "http" || m.server.URL != "https://acme.dev/mcp" || m.server.Headers["X-Client"] != "chongyun" {
+		m.Icon != gh("acme") || m.Transport != "http" || m.server.URL != "https://acme.dev/mcp" || m.server.Headers["X-Client"] != "magpie" {
 		t.Fatalf("remote: %+v %v", m, ok)
 	}
 	if len(m.Inputs) != 1 || m.Inputs[0].Key != "Authorization" || m.Inputs[0].format != "Bearer {}" || !m.Inputs[0].Secret {

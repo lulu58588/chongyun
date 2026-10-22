@@ -16,10 +16,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/ghtoken"
-	"github.com/lulu58588/magpie/internal/source"
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/ghtoken"
+	"github.com/lulu58588/chongyun/internal/source"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // The plugin market: the plugins magpie suggests, from the community
@@ -373,7 +373,7 @@ type npmLatest struct {
 	} `json:"_npmUser"`
 	Magpie struct {
 		Icon string `json:"icon"`
-	} `json:"chongyun"`
+	} `json:"magpie"`
 }
 
 func person(v any) string {
@@ -690,7 +690,7 @@ func InstalledIcon(spec string) string {
 	var p struct {
 		Magpie struct {
 			Icon string `json:"icon"`
-		} `json:"chongyun"`
+		} `json:"magpie"`
 	}
 	if json.Unmarshal(b, &p) != nil {
 		return ""

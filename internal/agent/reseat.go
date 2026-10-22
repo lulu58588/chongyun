@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A provider switched off or removed, or the last account of a sign-in

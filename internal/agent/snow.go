@@ -39,8 +39,8 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // snowProfile is the name of the profile magpie writes.
@@ -90,7 +90,7 @@ func snowIn(at place) *Agent {
 		return "default"
 	}
 	// onOurs says Snow is on magpie's profile: the active one, and a key
-	// magpie gave it, so a profile of the user's own named "chongyun" is not
+	// magpie gave it, so a profile of the user's own named "magpie" is not
 	// taken for it
 	onOurs := func() bool {
 		if active() != snowProfile {

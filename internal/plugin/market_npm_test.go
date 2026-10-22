@@ -151,7 +151,7 @@ func TestNPMInfoAtOnce(t *testing.T) {
 	}
 }
 
-// yetone: 这里的 agent plugin 为什么没有 logo. The picture a package gives
+// upstream: 这里的 agent plugin 为什么没有 logo. The picture a package gives
 // in package.json's magpie.icon comes with what npm says of it, so a
 // listing the market gives no icon shows it; anything but an https URL or
 // a data:image URI is left out.
@@ -169,7 +169,7 @@ func TestNPMInfoGivesIcon(t *testing.T) {
 			return
 		}
 		name := strings.TrimSuffix(strings.TrimPrefix(r.URL.Path, "/"), "/latest")
-		w.Write([]byte(`{"version":"0.1.1","chongyun":{"agent":"./a.agent.js","icon":"` + icons[name] + `"}}`))
+		w.Write([]byte(`{"version":"0.1.1","magpie":{"agent":"./a.agent.js","icon":"` + icons[name] + `"}}`))
 	})
 	names := []string{}
 	for n := range icons {

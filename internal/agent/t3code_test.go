@@ -9,9 +9,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // t3User is ~/.t3/userdata/settings.json as T3 Code writes it sparse: its
@@ -359,7 +359,7 @@ func TestT3CodeKeepsTheUsersSettings(t *testing.T) {
 	}
 	var mine map[string]any
 	json.Unmarshal(read()[magpieID], &mine)
-	if mine["displayName"] != "chongyun" {
+	if mine["displayName"] != "崇云科技" {
 		t.Fatalf("first written as %v", mine["displayName"])
 	}
 	cfg := mine["config"].(map[string]any)

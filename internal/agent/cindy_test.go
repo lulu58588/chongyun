@@ -30,7 +30,7 @@ func TestCindyLink(t *testing.T) {
 	if err := json.Unmarshal(b, &p); err != nil {
 		t.Fatal(err)
 	}
-	if p.Kind != "custom" || p.ID != "chongyun" || p.Auth.Method != "apiKey" || p.Auth.APIKey != "magpie-cindy" || len(p.Endpoints) != 3 {
+	if p.Kind != "custom" || p.ID != "magpie" || p.Auth.Method != "apiKey" || p.Auth.APIKey != "magpie-cindy" || len(p.Endpoints) != 3 {
 		t.Fatalf("payload = %+v", p)
 	}
 	if p.Endpoints[0].BaseURL != "http://127.0.0.1:3425" || p.Endpoints[1].BaseURL != "http://127.0.0.1:3425/v1" {

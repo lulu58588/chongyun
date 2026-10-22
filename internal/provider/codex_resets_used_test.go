@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // foobra12 on Discord: "magpie会自动使用codex重置卡吗 我发现刚才好像不小心

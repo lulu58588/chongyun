@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // codexTitleRequest is a title request as Codex's TUI sends one on its own
@@ -132,11 +132,11 @@ func TestCodexTitlesSetting(t *testing.T) {
 	var kinds []string
 	for _, u := range usage.Load(time.Time{}) {
 		kinds = append(kinds, u.Provider+":"+u.Kind)
-		if u.Provider == "chongyun" && (!u.IsRejected() || u.Status != 200) {
+		if u.Provider == "magpie" && (!u.IsRejected() || u.Status != 200) {
 			t.Errorf("an answered-here title %+v", u)
 		}
 	}
-	want := "openai:thread_title chongyun:thread_title chongyun:thread_title chongyun:thread_title_reconsideration fake:thread_title openai:"
+	want := "openai:thread_title magpie:thread_title magpie:thread_title magpie:thread_title_reconsideration fake:thread_title openai:"
 	if got := strings.Join(kinds, " "); got != want {
 		t.Errorf("ledger %s\nwant   %s", got, want)
 	}
@@ -153,7 +153,7 @@ func TestCodexTitlesSetting(t *testing.T) {
 }
 
 // codexProviderTitle is a title request as Codex's TUI sends one with
-// magpie as its model provider (model_provider = "chongyun", #743): to
+// magpie as its model provider (model_provider = "magpie", #743): to
 // magpie's own /v1/responses, on the conversation's model, a magpie id —
 // or, with backend, to the ChatGPT backend path on that magpie model.
 func codexProviderTitle(t *testing.T, s *Server, backend bool) *httptest.ResponseRecorder {

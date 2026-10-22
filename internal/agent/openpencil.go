@@ -12,7 +12,7 @@ package agent
 // settings_payload.rs, main at 40902a3f and v0.8.4):
 //
 //	{"version":1, …,
-//	 "builtin_agents":[{"id":"chongyun","preset":"custom","display_name": "崇云科技",
+//	 "builtin_agents":[{"id":"magpie","preset":"custom","display_name": "崇云科技",
 //	   "kind":"openai-compat","api_key":"magpie-openpencil",
 //	   "model":"<first model>","models":["<model>",…],
 //	   "base_url":"http://127.0.0.1:3425/v1","enabled":true}], …}
@@ -56,9 +56,9 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // openPencilApp is OpenPencil's macOS bundle, as its release builds it

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #1907 (foobra): two ChatGPT accounts, both on in magpie, for Codex

@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/lastgood"
 )
 
 // LoadChecked tells settings that aren't there (no error) from settings

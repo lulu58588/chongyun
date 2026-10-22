@@ -16,7 +16,7 @@ import (
 	"github.com/pelletier/go-toml/v2"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // Hooks (#1790) are commands an agent runs at a point of its turn: when

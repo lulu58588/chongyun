@@ -16,8 +16,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/source"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/source"
 )
 
 // rtk's version is kept up to date the way it was installed: Homebrew's

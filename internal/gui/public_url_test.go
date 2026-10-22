@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/fx"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/fx"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // Settings shows the local address agents use; the Gateway page advertises

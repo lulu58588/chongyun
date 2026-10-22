@@ -20,10 +20,10 @@ import (
 	"github.com/tidwall/jsonc"
 	"gopkg.in/yaml.v3"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/filememo"
-	"github.com/lulu58588/magpie/internal/imagemcp"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/imagemcp"
 )
 
 // Server is one MCP server: a command magpie's agents start, or a URL they

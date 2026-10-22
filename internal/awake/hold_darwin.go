@@ -4,7 +4,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // takeHold runs caffeinate -i, which keeps the Mac from idle sleep while it

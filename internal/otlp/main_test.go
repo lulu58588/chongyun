@@ -3,8 +3,8 @@ package otlp
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/testenv"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 func TestMain(m *testing.M) { testenv.Main(m) }

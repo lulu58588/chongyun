@@ -54,7 +54,7 @@ func TestDshCalls(t *testing.T) {
 		t.Fatalf("dsh-gw's own call: %+v", gw)
 	}
 	for _, c := range cs {
-		if c.Upstream == "chongyun" || c.Upstream == "dial" {
+		if c.Upstream == "magpie" || c.Upstream == "dial" {
 			t.Fatalf("a call through chongyun's gateway was counted here: %+v", c)
 		}
 		if c.Tokens == (Tokens{700, 90, 5000, 0, 0}) {
@@ -129,7 +129,7 @@ func TestDshCallsKept(t *testing.T) {
 // a route of the user's named like one is not taken for it.
 func TestDshGatewayProviderTakesEveryRouteOfMagpies(t *testing.T) {
 	for p, want := range map[string]bool{
-		"chongyun": true, "magpie-responses": true, "magpie-anthropic": true, "dial": true,
+		"magpie": true, "magpie-responses": true, "magpie-anthropic": true, "dial": true,
 		"magpie-mine": false, "jieyue": false, "": false,
 	} {
 		if got := dshGatewayProvider(dshSource{Provider: p}); got != want {

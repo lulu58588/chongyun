@@ -25,7 +25,7 @@ package agent
 // Raycast watches the file and picks a change up without a restart. The
 // model is picked in Raycast's own model picker (Quick AI, AI Chat, AI
 // Commands), not in a file, so what magpie sets is whether its models are in
-// that picker: one entry of the providers list, id "chongyun". The user's other
+// that picker: one entry of the providers list, id "magpie". The user's other
 // entries, the top-level tools block and comments stay, and so does a key
 // magpie doesn't write in its own entry (include_user_email,
 // additional_parameters, a model's description). Raycast's User-Agent isn't
@@ -42,8 +42,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // raycastApp is Raycast's macOS bundle.

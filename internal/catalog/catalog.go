@@ -19,8 +19,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/filememo"
 )
 
 // Model is one entry the picker can offer.
@@ -120,7 +120,7 @@ type Model struct {
 	Reasoning bool `json:",omitempty"`
 	// WebSearch is how another magpie (a Remote magpie) searches the web
 	// for the model when a web search tool is offered: "native", its own
-	// provider by itself, or "chongyun", with that magpie's searcher; "" it
+	// provider by itself, or "magpie", with that magpie's searcher; "" it
 	// doesn't, or didn't say. A plugin's model it says searches by itself
 	// (m.searches) is "native" too.
 	WebSearch string `json:",omitempty"`

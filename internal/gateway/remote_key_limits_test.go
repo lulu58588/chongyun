@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/budget"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/budget"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #1547 (PennyVibe), between two magpies: a computer with another magpie

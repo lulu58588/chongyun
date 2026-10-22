@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func TestCline(t *testing.T) {
@@ -251,7 +251,7 @@ func TestClineKeepsTheUsersSettings(t *testing.T) {
 		if e.Provider["modelsSourceUrl"] != "https://x/models" || e.Provider["protocol"] != "openai-chat" || e.Models["relay/glm-4.6"]["temperature"] != 0.3 {
 			t.Errorf("%s: the user's settings not kept:\n%s", when, raw)
 		}
-		if e.Provider["baseUrl"] == "http://127.0.0.1:1/v1" || e.Provider["name"] != "chongyun" || e.Models["gone/old"] != nil ||
+		if e.Provider["baseUrl"] == "http://127.0.0.1:1/v1" || e.Provider["name"] != "崇云科技" || e.Models["gone/old"] != nil ||
 			e.Models["deepseek/pro"] == nil || e.Models["relay/glm-4.6"]["name"] == nil {
 			t.Errorf("%s: chongyun's own parts not written:\n%s", when, raw)
 		}

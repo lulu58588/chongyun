@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agent"
+	"github.com/lulu58588/chongyun/internal/agent"
 )
 
 // helpHome points the home and every config, cache and data folder into

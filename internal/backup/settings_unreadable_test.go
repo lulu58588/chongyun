@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/lastgood"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // A settings.json that is there but can't be read stops the backup, as an

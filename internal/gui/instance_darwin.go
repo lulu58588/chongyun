@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // runningAlready is whether another magpie, this same one on this config,
@@ -49,7 +49,7 @@ func runningAlready(showMain bool, link string) bool {
 		// by its bundle id: the magpie running may be another copy of the
 		// app, which opening this one's path wouldn't reach
 		if update.Bundle() != "" {
-			proc.Command("open", "-b", "com.yetone.magpie").Run()
+			proc.Command("open", "-b", "com.chongyun.ai.gateway").Run()
 		}
 	}
 	return true

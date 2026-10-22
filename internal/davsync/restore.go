@@ -10,8 +10,8 @@ import (
 	"slices"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/backup"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/backup"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // ErrOff is a Restore, Undo or SetAuto asked for with sync off.
@@ -161,7 +161,7 @@ func Upload(ctx context.Context) error {
 			return err
 		}
 		b := local
-		b.Created, b.App = time.Now().UTC(), "chongyun"
+		b.Created, b.App = time.Now().UTC(), "magpie"
 		sealed, err := backup.Seal(b, c.Passphrase)
 		if err != nil {
 			return err

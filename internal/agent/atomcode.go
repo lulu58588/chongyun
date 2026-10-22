@@ -7,7 +7,7 @@ package agent
 // protocol, the gateway's /v1 and the key; the model table holds the model
 // string, the context window (AtomCode compacts as it nears it), the output
 // limit, whether it sees images, the reasoning levels its picker offers and
-// the one in use. magpie adds the account "chongyun" and one model table per
+// the one in use. magpie adds the account "magpie" and one model table per
 // catalog model, keyed "magpie/<provider>/<model>" — the model string goes
 // to the gateway as it is, for it to resolve — and points default_provider
 // and default_model at the one picked, default_model winning when both are
@@ -23,8 +23,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // atomcodeAccount is the account table magpie writes, and atomcodeModels the

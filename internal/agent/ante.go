@@ -14,7 +14,7 @@ package agent
 //	 "models":{…}}
 //
 // The providers map's key is what --provider takes; an id inside an entry is
-// ignored. magpie adds the entry "chongyun" at the gateway's /v1, on
+// ignored. magpie adds the entry "magpie" at the gateway's /v1, on
 // OpenAiCompatible — the wire style Ante speaks Chat Completions with, which
 // is what the gateway takes every model on — and lists magpie's models in its
 // preferred_models, Ante's model picker. The user's own providers and the
@@ -57,9 +57,9 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 const (

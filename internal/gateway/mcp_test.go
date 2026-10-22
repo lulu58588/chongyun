@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/mcpauth"
-	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/mcpauth"
+	"github.com/lulu58588/chongyun/internal/mcpauth/mcpauthtest"
 )
 
 // /mcp/<server> is a remote MCP server magpie signed in to (#615), as the
@@ -233,11 +233,11 @@ func TestMCPProxyKeepsQueryAndHeaders(t *testing.T) {
 			t.Fatalf("%s: %d %s", body, resp.StatusCode, b)
 		}
 	}
-	call(`{"jsonrpc":"2.0","id":1,"method":"initialize"}`, "X-Api-Key", "exa-key", "X-Exa-Source", "chongyun")
+	call(`{"jsonrpc":"2.0","id":1,"method":"initialize"}`, "X-Api-Key", "exa-key", "X-Exa-Source", "magpie")
 	if f.SeenQuery != "login" {
 		t.Fatalf("the server got the query %q, not login", f.SeenQuery)
 	}
-	if f.Seen.Get("X-Api-Key") != "exa-key" || f.Seen.Get("X-Exa-Source") != "chongyun" {
+	if f.Seen.Get("X-Api-Key") != "exa-key" || f.Seen.Get("X-Exa-Source") != "magpie" {
 		t.Fatalf("headers not passed on: %v", f.Seen)
 	}
 	token, _ := mcpauth.Token(t.Context(), "exa")

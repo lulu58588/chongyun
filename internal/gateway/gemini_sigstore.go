@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // sigStore keeps Gemini's thought signatures that a tool call's id refers

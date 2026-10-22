@@ -25,7 +25,7 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // MemberEfforts are the levels a group's member may be fixed at, lowest

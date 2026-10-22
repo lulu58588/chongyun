@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // Settings › About › Download source (#893): the mirror is set and taken
@@ -55,7 +55,7 @@ func TestUpdateMirrorSetting(t *testing.T) {
 	defer mirror.Close()
 	feed := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", Assets: map[string]update.Asset{
-			update.BinaryAsset(): {URL: "https://github.com/lulu58588/magpie-releases/releases/download/v0.1.11/x", SHA256: strings.Repeat("0", 64)},
+			update.BinaryAsset(): {URL: "https://github.com/lulu58588/chongyun-releases/releases/download/v0.1.11/x", SHA256: strings.Repeat("0", 64)},
 		}})
 	}))
 	defer feed.Close()

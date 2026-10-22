@@ -15,8 +15,8 @@ import (
 func TestCodexMagpieHeadersAsOwnTable(t *testing.T) {
 	for _, crlf := range []bool{false, true} {
 		config := "model = \"gpt-5.5\"\n\n" +
-			"[model_providers.magpie]\nname = \"chongyun\"\nbase_url = \"http://127.0.0.1:1/v1\"\nwire_api = \"responses\"\n\n" +
-			"[model_providers.magpie.http_headers]\n# my proxy\n\"x-org\" = \"acme\"\n\"x-openai-actor-authorization\" = \"chongyun\"\n"
+			"[model_providers.magpie]\nname = \"magpie\"\nbase_url = \"http://127.0.0.1:1/v1\"\nwire_api = \"responses\"\n\n" +
+			"[model_providers.magpie.http_headers]\n# my proxy\n\"x-org\" = \"acme\"\n\"x-openai-actor-authorization\" = \"magpie\"\n"
 		if crlf {
 			config = strings.ReplaceAll(config, "\n", "\r\n")
 		}
@@ -29,7 +29,7 @@ func TestCodexMagpieHeadersAsOwnTable(t *testing.T) {
 		if strings.Contains(cfg, "http_headers = {") {
 			t.Fatalf("crlf %v: inline http_headers beside the table:\n%s", crlf, cfg)
 		}
-		for _, w := range []string{"[model_providers.magpie.http_headers]", "# my proxy", `"x-org" = "acme"`, `"x-openai-actor-authorization" = "chongyun"`} {
+		for _, w := range []string{"[model_providers.magpie.http_headers]", "# my proxy", `"x-org" = "acme"`, `"x-openai-actor-authorization" = "magpie"`} {
 			if !strings.Contains(cfg, w) {
 				t.Fatalf("crlf %v: no %q:\n%s", crlf, w, cfg)
 			}

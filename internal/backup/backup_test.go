@@ -13,12 +13,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/library"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/profile"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/library"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/profile"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 func TestRestoreKeepsCorruptSettings(t *testing.T) {

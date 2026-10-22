@@ -6,8 +6,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // What a model makes, as the user says it (shen-joe, #1399): a provider set

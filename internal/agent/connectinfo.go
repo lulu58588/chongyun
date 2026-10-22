@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // What the Agents page says beside an agent's 「接入」 switch (the owner's
@@ -113,7 +113,7 @@ func (a *Agent) FailoverSaid() string {
 func (a *Agent) startsWith() (pats []string, files []string, reads func() string) {
 	switch a.ID {
 	case "codex":
-		list := filepath.Join(filepath.Dir(a.Path), "magpie-models.json")
+		list := filepath.Join(filepath.Dir(a.Path), "chongyun-models.json")
 		return []string{`(^|/)codex( |$)`}, []string{a.Path, list}, func() string {
 			var b strings.Builder
 			for _, k := range []string{"model_provider", "model_catalog_json", "openai_base_url"} {

@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/desktopdir"
+	"github.com/lulu58588/chongyun/internal/desktopdir"
 )
 
 // Call is one model call as an agent's own session file records it.

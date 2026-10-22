@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // The part of an agent's instructions file magpie writes sits between

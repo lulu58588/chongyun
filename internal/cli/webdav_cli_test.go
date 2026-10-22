@@ -12,9 +12,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/davsync"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/davsync"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // webdavHome is a machine of its own: no agent on it, no gateway at the

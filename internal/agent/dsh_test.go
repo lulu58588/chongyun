@@ -8,9 +8,9 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func TestDsh(t *testing.T) {
@@ -44,7 +44,7 @@ func TestDsh(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := read()
-	for _, want := range []string{"# mine", "- id: tools", "- id: llm-deepseek # chongyun", `baseURL: "http://`, `apiKey: "chongyun"`, `- id: "deepseek/flash"`, "- id: agent-loop # magpie", `model: "deepseek/pro"`, "cwd: !!js process.cwd()", "- id: api-gateway # magpie"} {
+	for _, want := range []string{"# mine", "- id: tools", "- id: llm-deepseek # chongyun", `baseURL: "http://`, `apiKey: "magpie"`, `- id: "deepseek/flash"`, "- id: agent-loop # chongyun", `model: "deepseek/pro"`, "cwd: !!js process.cwd()", "- id: api-gateway # chongyun"} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q in\n%s", want, s)
 		}
@@ -121,7 +121,7 @@ func TestDshProfiles(t *testing.T) {
 	}
 	for _, p := range []string{web, desktop} {
 		s := read(p)
-		for _, want := range []string{"# Your patch layer", "- id: llm-pi-ai # chongyun", "    providers:\n      chongyun:\n", "apiKeyEnv: " + dshKeyRef, "baseURL: http://", "- id: agent-default-model # chongyun", "provider: chongyun", `model: "deepseek/pro"`} {
+		for _, want := range []string{"# Your patch layer", "- id: llm-pi-ai # chongyun", "    providers:\n      magpie:\n", "apiKeyEnv: " + dshKeyRef, "baseURL: http://", "- id: agent-default-model # chongyun", "provider: magpie", `model: "deepseek/pro"`} {
 			if !strings.Contains(s, want) {
 				t.Fatalf("missing %q in %s:\n%s", want, p, s)
 			}
@@ -133,7 +133,7 @@ func TestDshProfiles(t *testing.T) {
 	if got := read(legacy); got != "[]\n" {
 		t.Fatalf("config.yaml should lose chongyun's entries: %q", got)
 	}
-	if !strings.Contains(read(filepath.Join(dir, ".env")), dshKeyRef+"=chongyun") {
+	if !strings.Contains(read(filepath.Join(dir, ".env")), dshKeyRef+"=magpie") {
 		t.Fatal("no key for the gateway")
 	}
 	if s := read(settings); strings.Contains(s, "agent-default-model") || !strings.Contains(s, "theme: dark") {

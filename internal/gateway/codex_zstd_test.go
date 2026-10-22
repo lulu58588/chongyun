@@ -12,7 +12,7 @@ import (
 
 	"github.com/klauspost/compress/zstd"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // zstdTurns sends turns to the ChatGPT backend compressed, as the gateway

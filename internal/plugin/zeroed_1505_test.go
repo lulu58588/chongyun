@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/lastgood"
 )
 
 // zeroedAuth is plugin-auth.json as #1505's Windows crash left it: its full

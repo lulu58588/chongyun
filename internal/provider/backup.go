@@ -7,7 +7,7 @@ import (
 	"context"
 	"slices"
 
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // handOver is HandOver: a var so a test can see it asked.
@@ -33,7 +33,7 @@ func Restore(ps []Provider) (added, replaced int, err error) {
 	}
 	for _, p := range ps {
 		p.IconURL = ""
-		if p.ID == "" || p.ID != Slug(p.ID) || p.ID == "chongyun" {
+		if p.ID == "" || p.ID != Slug(p.ID) || p.ID == "magpie" {
 			continue
 		}
 		i := -1
@@ -104,7 +104,7 @@ func Mirror(ps []Provider, gs []Group) error {
 	out := []Provider{}
 	for _, p := range ps {
 		p.IconURL = ""
-		if p.ID == "" || p.ID != Slug(p.ID) || p.ID == "chongyun" {
+		if p.ID == "" || p.ID != Slug(p.ID) || p.ID == "magpie" {
 			continue
 		}
 		if h, ok := here[p.ID]; ok {

@@ -65,7 +65,7 @@ func evalPath(p string) string {
 // every name it can take while it still runs is magpie's.
 func TestIsMagpie(t *testing.T) {
 	for path, want := range map[string]bool{
-		"/Applications/Magpie.app/Contents/MacOS/magpie": true,
+		"/Applications/Chongyun.app/Contents/MacOS/magpie": true,
 		"/usr/local/bin/magpie":                          true,
 		`C:\Users\u\AppData\Local\chongyun\magpie.exe`:     true,
 		`C:\Users\u\AppData\Local\chongyun\magpie.exe.old`: true,
@@ -103,7 +103,7 @@ func TestIsForwarder(t *testing.T) {
 		`C:\Windows\System32\wslrelay.exe`:                                true,
 		"/opt/homebrew/bin/limactl":                                       true,
 		"/usr/libexec/podman/gvproxy":                                     true,
-		"/Applications/Magpie.app/Contents/MacOS/magpie":                  false,
+		"/Applications/Chongyun.app/Contents/MacOS/magpie":                  false,
 		"/usr/bin/python3":                                                false,
 		"/tmp/other-server":                                               false,
 		"":                                                                false,

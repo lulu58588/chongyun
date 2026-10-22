@@ -19,8 +19,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // BlockedError is a new version that couldn't be started on this computer.

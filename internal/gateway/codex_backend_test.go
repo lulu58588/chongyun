@@ -15,9 +15,9 @@ import (
 	"time"
 
 	"github.com/klauspost/compress/zstd"
-	"github.com/lulu58588/magpie/internal/codexcat"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/codexcat"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // chatgpt stands in for the ChatGPT backend behind CodexBase.

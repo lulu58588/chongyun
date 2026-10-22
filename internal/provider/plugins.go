@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // A plugin's provider (see internal/plugin) is a subscription like the
@@ -52,7 +52,7 @@ func PluginID(id string) string {
 	if PluginServes(id) {
 		return id
 	}
-	if slices.Contains(accountIDs, id) || Preset(id) != nil || id == "chongyun" || id == autoID || id == strings.TrimSuffix(GroupPrefix, "/") || customIDs()[id] {
+	if slices.Contains(accountIDs, id) || Preset(id) != nil || id == "magpie" || id == autoID || id == strings.TrimSuffix(GroupPrefix, "/") || customIDs()[id] {
 		return id + "-plugin"
 	}
 	return id

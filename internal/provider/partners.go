@@ -16,8 +16,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/source"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/source"
 )
 
 // Partners are services that pay to be listed first in the add sheet,
@@ -27,8 +27,9 @@ import (
 // from, so adding one, its editor and its key page work as a preset's do.
 
 // PartnersURL is where the list is kept; MAGPIE_PARTNERS moves it, and
-// MAGPIE_PARTNERS=off keeps to none.
-const PartnersURL = "https://usemagpie.ai/api/partners"
+// MAGPIE_PARTNERS=off keeps to none. 崇云版不内置任何列表源：没有自己的
+// 站点可指，默认即 off；MAGPIE_PARTNERS 可指向自建的源。
+const PartnersURL = ""
 
 // KindPartner is a partner's Kind: the add sheet lists them apart.
 const KindPartner Kind = "partner"

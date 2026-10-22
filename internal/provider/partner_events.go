@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // A partner pays to be listed, so how often it is seen and picked is

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // desktopPicker is Claude Desktop's tIt (index.chunk-D3OyLXgG.js, 2.7032):

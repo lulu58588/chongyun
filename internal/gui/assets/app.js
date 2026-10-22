@@ -484,7 +484,7 @@ function renderAgents() {
       // in words like the rest, the row itself the link (or the command)
       const act = a.import ? importButton(a) : launchSolo(a);
       sum = el("span", "ag-sum");
-      sum.append(a.import ? el("span", "v" + (a.added ? "" : " empty"), a.added ? "Chongyun" : t("Add Chongyun")) : el("span", "v empty", t("Copy launch command")), el("span"));
+      sum.append(a.import ? el("span", "v" + (a.added ? "" : " empty"), a.added ? t("Chongyun") : t("Add Chongyun")) : el("span", "v empty", t("Copy launch command")), el("span"));
       const c = el("span", "chev");
       c.append(a.import ? svg(OUT, 10, 1.6) : svg(LAUNCH_GLYPH, 10, 1.5));
       sum.append(c);
@@ -1526,7 +1526,7 @@ function agentsLead(list) {
   lead.classList.toggle("welcome", first);
   if (!first) {
     const [pre, post] = t("Switch an agent on and the models you set up in Chongyun show up as the {Chongyun} provider in its own model list; or pick its model right here.").split("{Chongyun}");
-    lead.append(pre, el("b", "", "Chongyun"), post || "");
+    lead.append(pre, el("b", "", t("Chongyun")), post || "");
     return;
   }
   lead.append(el("b", "ag-lead-h", t("Let your agents use the models you set up in Chongyun")));
@@ -2525,7 +2525,7 @@ function importButton(a) {
   b.title = a.added
     ? t("{name} has Chongyun as a provider · click to add it again", { name: a.name })
     : t("Opens {name} to add Chongyun as a provider — confirm it there", { name: a.name });
-  b.append(icon("chongyun"), el("span", "v" + (a.added ? "" : " empty"), a.added ? "Chongyun" : t("Add Chongyun")));
+  b.append(icon("chongyun"), el("span", "v" + (a.added ? "" : " empty"), a.added ? t("Chongyun") : t("Add Chongyun")));
   const c = el("span", "chev");
   c.append(svg(OUT, 11, 1.6));
   b.append(c);
@@ -4193,7 +4193,7 @@ async function backAsNew(was) {
 // the Mac, a folder it may not write to, such as C:\ (#1277), or a
 // container, whose image is what gets updated.
 function updateStuck(u) {
-  if (u.stuck === "container") return t("Chongyun runs in a container, so it can't update itself; pull the new image (docker pull ghcr.io/yetone/magpie:latest) and recreate the container.");
+  if (u.stuck === "container") return t("Chongyun runs in a container, so it can't update itself; pull the new image (docker pull ghcr.io/lulu58588/chongyun:latest) and recreate the container.");
   if (u.stuck === "not-writable") return t("Chongyun can't write to the folder it runs from ({dir}), so it can't update itself; move it to a folder you can write to and open it from there.", { dir: u.stuckDir || "" });
   return u.stuck === "translocated"
     ? t("macOS is running Chongyun from a temporary copy, so it can't update itself; move Chongyun to Applications and open it from there.")
@@ -4206,7 +4206,7 @@ function updateStuck(u) {
 // their issue was fixed). Not in the tray's panel, where a dialog has no
 // room; Settings' version row opens it again, and with an update waiting,
 // that one's notes first.
-const ISSUES = "https://github.com/yetone/magpie/issues/";
+const ISSUES = "https://github.com/lulu58588/chongyun/issues/";
 let whatsNewAsked = false;
 // cliBehindOnce: the terminal's Chongyun is a copied file rather than the
 // installer's link, so it can't follow the app's updates (#531's lesson: a
@@ -7273,13 +7273,13 @@ function renderAdd() {
     // a deprecated one whose plugin is installed is that plugin's row alone
     // (ARNO on Discord: Qoder CN twice), and one with no account isn't
     // offered at all: it is the Plugins page's, installed from there
-    // (yetone: 对于新用户来说，这里应该只显示内置的 provider), unless it is
+    // (上游：对于新用户来说，这里应该只显示内置的 provider), unless it is
     // signing in now. A search naming one finds it there.
     const named = (x) => !f || x.name.toLowerCase().includes(f) || x.agent.includes(f) || "subscription".includes(f);
     const subs = SUBS.filter((x) => !(replacedSub(x.agent) || unusedSub(x.agent)) || signing?.agent === x.agent).map((x) => subOf(x.agent)).filter(named);
     const inPlugins = f && SUBS.some((x) => unusedSub(x.agent) && signing?.agent !== x.agent && named(subOf(x.agent)));
     // partners pay to be listed first, under a heading that says so; who
-    // they are comes from usemagpie.ai (internal/provider/partners.go), and
+    // they come from the update feed (internal/provider/partners.go), and
     // each may name the languages it is shown in
     const partners = providers.presets.filter((p) => p.kind === "partner" && partnerShown(p) && (hit(p) || partnerNote(p).toLowerCase().includes(f)));
     if (partners.length) {
@@ -7540,7 +7540,7 @@ function countPartner(what, ids) {
 
 // a partner listed since the add sheet last showed the partners puts a
 // small dot on the add button, its name in the button's title, until the
-// sheet shows it (yetone: 有了新的合作伙伴的时候…提醒吸引用户点击查看)
+// sheet shows it (上游：有了新的合作伙伴的时候…提醒吸引用户点击查看)
 function markNewPartners() {
   const b = $("#addProvider");
   if (!b) return;
@@ -19315,7 +19315,7 @@ function renderCLI(r) {
 // Settings' Download source (#893): where an update's file is downloaded
 // from — GitHub, or a GitHub download mirror put before its URL, the same
 // setting `Chongyun update mirror` writes. Chongyun names no mirror of its
-// own; the feed and each file's SHA-256 still come from usemagpie.ai, and a
+// own; the feed and each file's SHA-256 still come from the update feed, and a
 // file that doesn't match is never installed. A draft and its error are
 // kept across the page being drawn again.
 let mirrorEditing = false, mirrorDraft = "", mirrorErr = "";
@@ -19331,10 +19331,10 @@ function renderUpdateMirror(r, s) {
   const sub = el("div", "sub");
   who.append(sub);
   const m = s.updateMirror || "";
-  sub.textContent = mirrorErr || (m ? t("Updates are downloaded through this mirror, each checked against usemagpie.ai's checksum")
+  sub.textContent = mirrorErr || (m ? t("Updates are downloaded through this mirror, each checked against the update feed's checksum")
     : t("Updates are downloaded from GitHub; a mirror can be used where GitHub is slow"));
   sub.classList.toggle("err", !!mirrorErr);
-  sub.title = t("The update and its checksum always come from usemagpie.ai; a file from the mirror that doesn't match it is not installed.");
+  sub.title = t("The update and its checksum always come from the update feed; a file from the mirror that doesn't match it is not installed.");
   if (!mirrorEditing) {
     if (m) {
       const official = el("button", "text", t("Use GitHub"));
@@ -19577,8 +19577,8 @@ function renderSettings() {
   const repo = el("button", "github");
   repo.innerHTML = GITHUB_SVG;
   repo.append(el("span", "", "GitHub"));
-  repo.title = "github.com/yetone/magpie";
-  repo.onclick = () => api("open", { url: "https://github.com/yetone/magpie" }).catch(() => {});
+  repo.title = "github.com/lulu58588/chongyun";
+  repo.onclick = () => api("open", { url: "https://github.com/lulu58588/chongyun" }).catch(() => {});
   row(t("Community"), t("questions, ideas and feedback, on Discord or GitHub"), "", join, repo);
   // gateway mode leaves out what is written into this computer's agents'
   // files, and the alerts its desktop would show

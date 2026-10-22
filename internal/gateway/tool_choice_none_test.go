@@ -11,7 +11,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // toolsOffNoTools is the same ask, tools off with none declared, in each

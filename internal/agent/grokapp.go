@@ -16,13 +16,13 @@ package agent
 // GROK_HOME at agent-home, switching itself to its independent mode
 // (grok-app's providers.rs, ensure_independent_for_custom_route).
 //
-// So magpie adds itself as the channel "chongyun", written as the App writes
+// So magpie adds itself as the channel "magpie", written as the App writes
 // one (upsert_custom_provider): the gateway as base_url with Grok App's own
 // key, chat completions, app_models a JSON list of magpie's models with each
 // one's context window, images and effort levels, so Accounts › Custom
 // providers lists it and the composer can offer the models and their
 // efforts. It does not set [models] default. That key is the route, and
-// making it "chongyun" takes the App over: the App then drops its own sign-in
+// making it "magpie" takes the App over: the App then drops its own sign-in
 // and the session no longer runs. The route stays whatever the App had.
 // Pressing Use on the provider in the App is what switches the route, and
 // that choice is the App's. A magpie that already set the route puts the
@@ -38,8 +38,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // grokAppChannel is magpie's channel's table in the App's config.toml.
@@ -245,7 +245,7 @@ func grokApp(home string) *Agent {
 		kvs := []kv{
 			{"model", picked.ID, false},
 			{"base_url", at.v1(), false},
-			{"name", "chongyun", false},
+			{"name", "magpie", false},
 			{"api_key", key(), false},
 			{"api_backend", "chat_completions", false},
 			{"app_provider_mode", "generic", false},

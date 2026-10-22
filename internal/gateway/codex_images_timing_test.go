@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // computerUseShots are n distinct w×h JPEG screenshots as data URLs: a

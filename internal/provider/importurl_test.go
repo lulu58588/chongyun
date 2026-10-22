@@ -176,7 +176,7 @@ func TestParseImportRejects(t *testing.T) {
 		"chongyun://import?name=X&chat=http://relay.example/v1",
 		"chongyun://import?name=X&chat=https://user:pw@relay.example/v1",
 		"chongyun://import?name=X&chat=file:///etc/passwd",
-		"chongyun://import?name=chongyun&chat=https://x.example/v1",
+		"chongyun://import?name=magpie&chat=https://x.example/v1",
 		"chongyun://import?name=%E2%80%94&chat=https://x.example/v1",
 		"chongyun://import?preset=deepseek&key=sk%0Aevil",
 	} {

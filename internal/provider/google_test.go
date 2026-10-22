@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // fakeGoogle is Google's token endpoint and Code Assist, as far as magpie

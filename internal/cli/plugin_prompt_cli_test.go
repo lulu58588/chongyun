@@ -3,7 +3,7 @@ package cli
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // TestAskPromptPasswordIsUnseen: a plugin question of type "password" (a

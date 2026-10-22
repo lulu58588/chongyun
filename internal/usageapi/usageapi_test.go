@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/testenv"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 func TestMain(m *testing.M) { testenv.Main(m) }

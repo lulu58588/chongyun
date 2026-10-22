@@ -10,8 +10,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // listedIDs is /v1/models' ids, in order, as the request r is answered.

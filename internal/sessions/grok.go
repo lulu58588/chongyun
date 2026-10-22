@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // Grok Build keeps a session in a folder of its own under its sessions

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/netproxy"
 )
 
 // #1938 (kensenzhao): two Claude accounts, each with its own proxy. magpie

@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 func TestGrok(t *testing.T) {
@@ -50,7 +50,7 @@ func TestGrok(t *testing.T) {
 	}
 	raw := read()
 	m := table(`model."magpie/deepseek/pro"`)
-	if m["model"] != "deepseek/pro" || m["api_key"] != "chongyun" || !strings.HasSuffix(m["base_url"], "/v1") ||
+	if m["model"] != "deepseek/pro" || m["api_key"] != "magpie" || !strings.HasSuffix(m["base_url"], "/v1") ||
 		m["api_backend"] != "chat_completions" || table(`model."magpie/deepseek/flash"`) == nil {
 		t.Fatalf("tables:\n%s", raw)
 	}
@@ -89,7 +89,7 @@ func TestGrok(t *testing.T) {
 		t.Fatal(err)
 	}
 	raw = read()
-	if f.Get() != "grok-4.6" || strings.Contains(raw, "chongyun") || !strings.Contains(raw, "[model.my-own]") {
+	if f.Get() != "grok-4.6" || strings.Contains(raw, "magpie") || !strings.Contains(raw, "[model.my-own]") {
 		t.Fatalf("own:\n%s", raw)
 	}
 	// nothing through magpie: sync leaves the file alone
@@ -106,7 +106,7 @@ func TestGrok(t *testing.T) {
 		t.Fatal(err)
 	}
 	raw = read()
-	if f.Get() != "" || strings.Contains(raw, "chongyun") || strings.Contains(raw, "campaigns") || e.Get() != "high" {
+	if f.Get() != "" || strings.Contains(raw, "magpie") || strings.Contains(raw, "campaigns") || e.Get() != "high" {
 		t.Fatalf("reset:\n%s", raw)
 	}
 }

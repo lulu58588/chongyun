@@ -3,9 +3,9 @@
 package main
 
 import (
-	"github.com/lulu58588/magpie/internal/cli"
+	"github.com/lulu58588/chongyun/internal/cli"
 	// the built-in plugins, registered with the runtime (internal/pluginrt)
-	_ "github.com/lulu58588/magpie/plugins/all"
+	_ "github.com/lulu58588/chongyun/plugins/all"
 )
 
 // version is set at build time: -ldflags "-X main.version=…" (Makefile,

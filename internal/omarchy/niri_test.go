@@ -21,7 +21,7 @@ import (
 
 // panelJSON is a Window as niri-ipc's Window and WindowLayout have it.
 func panelJSON(id, pid int, title string, floating bool) string {
-	return `{"id":` + itoa(id) + `,"title":` + quote(title) + `,"app_id":"chongyun","pid":` + itoa(pid) +
+	return `{"id":` + itoa(id) + `,"title":` + quote(title) + `,"app_id":"magpie","pid":` + itoa(pid) +
 		`,"workspace_id":1,"is_focused":true,"is_floating":` + map[bool]string{true: "true", false: "false"}[floating] +
 		`,"is_urgent":false,"layout":{"pos_in_scrolling_layout":null,"tile_size":[440.0,520.0],"window_size":[440,520],` +
 		`"tile_pos_in_workspace_view":[633.0,273.5],"window_offset_in_tile":[0.0,0.0]},"focus_timestamp":{"secs":12,"nanos":5000}}`
@@ -71,12 +71,12 @@ func TestWatchWindows(t *testing.T) {
 	stream := strings.Join([]string{
 		`{"Ok":"Handled"}`,
 		`{"WorkspacesChanged":{"workspaces":[]}}`,
-		`{"WindowsChanged":{"windows":[` + panelJSON(3, pid, "chongyun", false) + `,` + panelJSON(7, pid, "chongyun panel", true) + `,` + panelJSON(8, 99, "chongyun panel", true) + `]}}`,
+		`{"WindowsChanged":{"windows":[` + panelJSON(3, pid, "magpie", false) + `,` + panelJSON(7, pid, "chongyun panel", true) + `,` + panelJSON(8, 99, "chongyun panel", true) + `]}}`,
 		`{"WindowFocusChanged":{"id":7}}`,
 		`{"WindowOpenedOrChanged":{"window":` + panelJSON(7, pid, "chongyun panel", true) + `}}`,
 		`{"WindowLayoutsChanged":{"changes":[[7,{"pos_in_scrolling_layout":null,"tile_size":[440.0,520.0],"window_size":[440,520],"tile_pos_in_workspace_view":[1000.0,6.0],"window_offset_in_tile":[0.0,0.0]}]]}}`,
 		`{"WindowClosed":{"id":7}}`,
-		`{"WindowOpenedOrChanged":{"window":` + panelJSON(9, pid, "chongyun", false) + `}}`,
+		`{"WindowOpenedOrChanged":{"window":` + panelJSON(9, pid, "magpie", false) + `}}`,
 		`{"WindowOpenedOrChanged":{"window":` + panelJSON(9, pid, "chongyun panel", false) + `}}`,
 		`{"WindowOpenedOrChanged":{"window":` + panelJSON(9, pid, "chongyun panel", false) + `}}`,
 		`{"SomeEventNiriAddsLater":{"x":1}}`,

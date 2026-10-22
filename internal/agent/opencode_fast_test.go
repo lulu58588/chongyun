@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #2379 (jiz4oh): OpenCode has no /fast. A GPT model a ChatGPT account
@@ -51,7 +51,7 @@ func TestOpenCodeCodexFastVariants(t *testing.T) {
 	// the user's own: a variant of their own on magpie's GPT-5.5, and
 	// high-fast written over; max is a variant an older magpie wrote that
 	// the model hasn't
-	writeFile(t, path, `{"theme":"dark","provider":{"chongyun":{"models":{"codex/gpt-5.5":{"variants":{
+	writeFile(t, path, `{"theme":"dark","provider":{"magpie":{"models":{"codex/gpt-5.5":{"variants":{
 	  "max":{"reasoningEffort":"max"},
 	  "turbo":{"reasoningEffort":"low","service_tier":"priority","textVerbosity":"low"},
 	  "high-fast":{"reasoningEffort":"high","service_tier":"flex"}}}}}}}`)
@@ -77,7 +77,7 @@ func TestOpenCodeCodexFastVariants(t *testing.T) {
 	if cfg.Theme != "dark" {
 		t.Fatalf("theme lost: %s", b)
 	}
-	ms := cfg.Provider["chongyun"].Models
+	ms := cfg.Provider["magpie"].Models
 	gpt, ok := ms["codex/gpt-5.5"]
 	if !ok {
 		t.Fatalf("no codex/gpt-5.5: %s", b)

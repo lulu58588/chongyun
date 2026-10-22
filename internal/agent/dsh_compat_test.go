@@ -60,15 +60,15 @@ func TestDshRefreshKeepsHandSetCompat(t *testing.T) {
 	}
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		"- id: llm-pi-ai\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n"+
-		route("chongyun", "openai-completions")+route("magpie-responses", "openai-responses")+
-		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/pro\n"), 0o644)
+		route("magpie", "openai-completions")+route("magpie-responses", "openai-responses")+
+		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/pro\n"), 0o644)
 	a := dsh(home)
 	for i := 0; i < 2; i++ {
 		if err := a.Sync(); err != nil {
 			t.Fatal(err)
 		}
 		b, _ := os.ReadFile(web)
-		models, compat := dshRouteCompat(t, web, "chongyun")
+		models, compat := dshRouteCompat(t, web, "magpie")
 		if len(models) == 0 || strings.Contains(strings.Join(models, ","), "stale") {
 			t.Fatalf("the route wasn't written as the catalog has it: %v\n%s", models, b)
 		}

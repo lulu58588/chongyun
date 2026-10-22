@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // dshSettled is a profile with magpie's route, and keepDshWired's rounds
@@ -19,7 +19,7 @@ func dshSettled(t *testing.T) (r *dshRounds, web string) {
 	dshKeyFixture(dir)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 		dshRouteFixture("deepseek/pro")+
-		"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
+		"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
 	r = &dshRounds{}
 	r.once()
 	r.once()
@@ -84,7 +84,7 @@ func TestDshRoundAfterAChangeWritesAgain(t *testing.T) {
 		r, web := dshSettled(t)
 		os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+
 			dshRouteFixture("deepseek/pro")+
-			"- id: agent-default-model\n  config:\n    provider: chongyun\n    model: deepseek/flash\n"), 0o644)
+			"- id: agent-default-model\n  config:\n    provider: magpie\n    model: deepseek/flash\n"), 0o644)
 		r.once()
 		if !dshListed(web, "deepseek/flash") {
 			t.Fatal("a route dsh wrote over is not written again by the next round")

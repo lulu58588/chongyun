@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // agentFiles reads every file under home but magpie's own (its settings,
@@ -23,7 +23,7 @@ func agentFiles(t *testing.T, home string) map[string]string {
 		}
 		rel, _ := filepath.Rel(home, p)
 		if e.IsDir() {
-			if rel == filepath.Join(".config", "chongyun") || rel == ".cache" {
+			if rel == filepath.Join(".config", "magpie") || rel == ".cache" {
 				return filepath.SkipDir
 			}
 			return nil
@@ -204,7 +204,7 @@ func TestCodexAPIDisconnectStays(t *testing.T) {
 		t.Fatal(err)
 	}
 	SyncCatalog()
-	if cfg := read(); !cx.Wired() || !strings.Contains(cfg, `model_provider = "chongyun"`) {
+	if cfg := read(); !cx.Wired() || !strings.Contains(cfg, `model_provider = "magpie"`) {
 		t.Fatalf("connected again:\n%s", cfg)
 	}
 }

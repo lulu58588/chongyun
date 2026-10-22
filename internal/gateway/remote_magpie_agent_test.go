@@ -10,13 +10,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // A request one magpie passes on to another computer's (a Remote magpie
 // provider) is recorded there as the agent's that made it, by the computer
-// it came through, not as "chongyun"'s (Jorben on Discord). The names go in
+// it came through, not as "magpie"'s (Jorben on Discord). The names go in
 // headers of magpie's own, which a vendor never sees, and which a request
 // that isn't magpie's can't use to pass itself off as another agent.
 func TestRemoteMagpieAgent(t *testing.T) {

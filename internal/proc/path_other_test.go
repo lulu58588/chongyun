@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 	"golang.org/x/sys/unix"
 )
 

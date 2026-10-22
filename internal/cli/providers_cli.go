@@ -15,11 +15,11 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 var amber = lipgloss.NewStyle().Foreground(lipgloss.AdaptiveColor{Light: "#B45309", Dark: "#F2B544"})
@@ -37,10 +37,10 @@ const providerUsage = `usage:
                                           (a relay that checks they are Codex's own), codex=default fits them;
                                           user-agent=agent sends the User-Agent the agent gave (pi, opencode…)
                                           in place of chongyun's, for a plan that serves only agents it names;
-                                          user-agent=chongyun, the default, sends chongyun's;
+                                          user-agent=chongyun (=magpie), the default, sends chongyun's;
                                           compaction=native asks the provider Codex's own compaction and hands
                                           Codex its sealed item as it came (a Responses API, a ChatGPT account,
-                                          Copilot), compaction=chongyun, the default, has chongyun summarise
+                                          Copilot), compaction=chongyun (=magpie), the default, has chongyun summarise
                                           additional-tools=on sends a tool Claude Code's tool search loads to its
                                           Responses API where it was loaded (an additional_tools item, which
                                           keeps the cache); additional-tools=default puts it with the other tools
@@ -1071,9 +1071,9 @@ func applyPairs(p *provider.Provider, pairs []string) error {
 			switch strings.ToLower(v) {
 			case "agent", "pass", "yes", "on":
 				on = true
-			case "chongyun", "default", "no", "off":
+			case "magpie", "chongyun", "default", "no", "off":
 			default:
-				return fmt.Errorf("user-agent=agent|chongyun, not %q", v)
+				return fmt.Errorf("user-agent=agent|chongyun|magpie, not %q", v)
 			}
 			if on && p.Account != nil {
 				return fmt.Errorf("%s signs in as its own client, which sends the User-Agent it does; user-agent= is for a provider with an API key", p.Name)
@@ -1094,10 +1094,10 @@ func applyPairs(p *provider.Provider, pairs []string) error {
 			switch strings.ToLower(v) {
 			case "native", "yes", "on":
 				p.NativeCompaction = true
-			case "chongyun", "default", "no", "off":
+			case "magpie", "chongyun", "default", "no", "off":
 				p.NativeCompaction = false
 			default:
-				return fmt.Errorf("compaction=native|chongyun, not %q", v)
+				return fmt.Errorf("compaction=native|chongyun|magpie, not %q", v)
 			}
 		case "unmasked":
 			// yes: a model on this computer or the local network gets the

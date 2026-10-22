@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/redact"
+	"github.com/lulu58588/chongyun/internal/redact"
 )
 
 // Settings lists the kinds of personal data the gateway masks, in

@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // PluginIcon is the icon a plugin's provider shows: the picture its plugin
@@ -130,7 +130,7 @@ func pluginOwnIcon(said string) string {
 // give in their package.json (repositories tagged magpie-plugin), checked
 // and kept as an installed plugin's are: "" where there is none to show.
 // An https picture not fetched before is waited for up to wait, so the
-// list's first answer has it (yetone: 非官方插件显示不出来 logo); one
+// list's first answer has it (upstream: 非官方插件显示不出来 logo); one
 // slower than that shows the next time the list is asked.
 func RepoIcons(said []string, wait time.Duration) []string {
 	out := make([]string, len(said))

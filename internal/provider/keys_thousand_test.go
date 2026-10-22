@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // @NetRozee on X: a custom endpoint given a thousand keys froze magpie.

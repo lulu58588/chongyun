@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // An omp bun installed is asked its version though ~/.bun/bin isn't on

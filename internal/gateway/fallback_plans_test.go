@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A Free ChatGPT account behind a Plus one: when the Plus one is out of

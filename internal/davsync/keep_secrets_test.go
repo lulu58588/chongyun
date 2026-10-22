@@ -3,8 +3,8 @@ package davsync
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/backup"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/backup"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #1821: an upload with keys from a magpie that knows no access key (one

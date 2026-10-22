@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/mcpauth"
-	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/mcpauth"
+	"github.com/lulu58588/chongyun/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 func TestSaveServerRenameKeepsOAuth(t *testing.T) {

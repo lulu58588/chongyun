@@ -23,7 +23,7 @@ package provider
 import (
 	"slices"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // CodexCredits says whether the Codex account user spends its credits

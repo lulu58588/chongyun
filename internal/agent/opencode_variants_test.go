@@ -9,9 +9,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func TestOpenCodeVariants(t *testing.T) {
@@ -186,7 +186,7 @@ func TestOpenCodeWritesVariants(t *testing.T) {
 	if cfg.Theme != "dark" || cfg.Model != "magpie/think/deep" {
 		t.Fatalf("config: %s", b)
 	}
-	p := cfg.Provider["chongyun"]
+	p := cfg.Provider["magpie"]
 	if p.NPM != "@ai-sdk/openai-compatible" {
 		t.Fatalf("npm %q", p.NPM)
 	}
@@ -282,7 +282,7 @@ func TestOpenCodeNoResellerLevelsForSwitchModel(t *testing.T) {
 	if err := json.Unmarshal(b, &cfg); err != nil {
 		t.Fatal(err)
 	}
-	ms := cfg.Provider["chongyun"].Models
+	ms := cfg.Provider["magpie"].Models
 	for id, want := range map[string]int{"xiaomi/mimo-v2.6-flash": 0, "relay/mimo-v2.6-flash": 0, "relay/open-model": 3} {
 		m, ok := ms[id]
 		if !ok || m.Variants == nil || len(m.Variants) != want {
@@ -376,7 +376,7 @@ func TestOpenCodeZenModelReasons(t *testing.T) {
 	if err := json.Unmarshal(b, &cfg); err != nil {
 		t.Fatal(err)
 	}
-	ms := cfg.Provider["chongyun"].Models
+	ms := cfg.Provider["magpie"].Models
 	for id, want := range map[string]bool{"mimo-v2.6-flash-free": true, "laguna-s-2.1-free": true,
 		"deepseek-v4-flash-free": false, "ling-2.6-flash-free": false} {
 		m, ok := ms["opencode-zen/"+id]

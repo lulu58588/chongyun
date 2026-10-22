@@ -20,8 +20,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/lulu58588/magpie/internal/redact"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/redact"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 const GatewayRetention = 7 * 24 * time.Hour

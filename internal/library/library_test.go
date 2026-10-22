@@ -20,8 +20,8 @@ import (
 	"github.com/pelletier/go-toml/v2"
 	"github.com/tidwall/jsonc"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // sandbox is a home with every agent magpie can give the library to, and

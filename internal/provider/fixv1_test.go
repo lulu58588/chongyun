@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/agentenv"
 )
 
 // A relay given without its /v1 lists its models under /v1 only; fetching

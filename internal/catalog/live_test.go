@@ -136,11 +136,11 @@ func TestFetchAtVersionedBase(t *testing.T) {
 func TestLiveMagpiePrice(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, `{"data":[
-			{"id":"a/priced","chongyun_price":{"input":3,"output":12,"cache_read":0.3,"cache_write":3.75,"tiers":[{"above":200000,"input":6,"output":18,"cache_read":0.6,"cache_write":7.5}]}},
-			{"id":"a/free","chongyun_price":{"input":0,"output":0,"cache_read":0,"cache_write":0}},
-			{"id":"a/negative","chongyun_price":{"input":-1,"output":12,"cache_read":0,"cache_write":0}},
-			{"id":"a/sizeless","chongyun_price":{"input":1,"output":2,"cache_read":0,"cache_write":0,"tiers":[{"above":0,"input":2,"output":4}]}},
-			{"id":"a/odd","chongyun_price":"cheap"},
+			{"id":"a/priced","magpie_price":{"input":3,"output":12,"cache_read":0.3,"cache_write":3.75,"tiers":[{"above":200000,"input":6,"output":18,"cache_read":0.6,"cache_write":7.5}]}},
+			{"id":"a/free","magpie_price":{"input":0,"output":0,"cache_read":0,"cache_write":0}},
+			{"id":"a/negative","magpie_price":{"input":-1,"output":12,"cache_read":0,"cache_write":0}},
+			{"id":"a/sizeless","magpie_price":{"input":1,"output":2,"cache_read":0,"cache_write":0,"tiers":[{"above":0,"input":2,"output":4}]}},
+			{"id":"a/odd","magpie_price":"cheap"},
 			{"id":"a/none"}]}`)
 	}))
 	defer srv.Close()
@@ -208,13 +208,13 @@ func TestFetchCommandCodeNames(t *testing.T) {
 func TestFetchNamePrecedence(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"models":[
-		  {"id":"all","chongyun_label":"label","display_name":"display","name":"name"},
-		  {"id":"display","chongyun_label":"","display_name":"display name","name":"name"},
+		  {"id":"all","magpie_label":"label","display_name":"display","name":"name"},
+		  {"id":"display","magpie_label":"","display_name":"display name","name":"name"},
 		  {"id":"name","display_name":"","name":"provider name"},
 		  {"id":"id","name":""},
 		  {"id":"prefixed","name":"Vendor: Model"},
 		  {"id":"prefixed-display","display_name":"Vendor: Display","name":"Vendor: Name"},
-		  {"id":"prefixed-label","chongyun_label":"Vendor: Label","name":"Vendor: Name"},
+		  {"id":"prefixed-label","magpie_label":"Vendor: Label","name":"Vendor: Name"},
 		  {"id":"variant","name":"Model:free"},
 		  {"name":"name-only"},
 		  {"display_name":"no identifier"},

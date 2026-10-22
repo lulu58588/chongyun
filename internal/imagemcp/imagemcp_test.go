@@ -33,7 +33,7 @@ func (g *gw) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	g.mu.Lock()
 	g.path, g.body, g.ua = append(g.path, r.URL.Path), append(g.body, string(b)), append(g.ua, r.Header.Get("User-Agent"))
 	g.mu.Unlock()
-	if r.Header.Get("Authorization") != "Bearer chongyun" {
+	if r.Header.Get("Authorization") != "Bearer magpie" {
 		w.WriteHeader(401)
 		return
 	}
@@ -133,7 +133,7 @@ func TestGenerateSavesInTheProject(t *testing.T) {
 	if r["isError"] == true || strings.Count(out, filepath.Join(project, Folder)) != 2 {
 		t.Fatalf("%v", r)
 	}
-	files, _ := filepath.Glob(filepath.Join(project, Folder, "a-magpie-on-a-branch-*.png"))
+	files, _ := filepath.Glob(filepath.Join(project, Folder, "a-chongyun-on-a-branch-*.png"))
 	if len(files) != 2 {
 		t.Fatalf("saved %v", files)
 	}

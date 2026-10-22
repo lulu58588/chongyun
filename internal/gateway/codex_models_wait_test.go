@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A ChatGPT backend slow to hand over its model list doesn't hold magpie's

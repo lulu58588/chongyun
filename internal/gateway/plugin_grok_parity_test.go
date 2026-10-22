@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/testenv"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // besideFake installs the fake plugin as the plugin of the built-in id,
@@ -242,7 +242,7 @@ func TestGrokPluginCallsGiveCodexIntegers(t *testing.T) {
 func TestGrokPluginNonStreamKeepsHostedTools(t *testing.T) {
 	var mu sync.Mutex
 	var sent []map[string]any
-	call := `{"type":"custom_tool_call","id":"ctc_1","call_id":"xs_1","name":"x_keyword_search","input":"{\"query\":\"chongyun\"}","status":"completed"}`
+	call := `{"type":"custom_tool_call","id":"ctc_1","call_id":"xs_1","name":"x_keyword_search","input":"{\"query\":\"magpie\"}","status":"completed"}`
 	msg := `{"type":"message","id":"msg_1","role":"assistant","status":"completed","content":[{"type":"output_text","text":"Found it.","annotations":[]}]}`
 	done := `{"id":"r1","object":"response","status":"completed","model":"grok-4.7","tools":[{"type":"x_search"}],"output":[` + call + `,` + msg + `],"usage":{"input_tokens":50,"output_tokens":7,"total_tokens":57,"server_side_tool_usage_details":{"web_search_calls":0,"x_search_calls":1}}}`
 	pid := besideFake(t, "grok", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

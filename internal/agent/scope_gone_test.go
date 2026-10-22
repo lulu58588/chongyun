@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // wevnal is the #2055 reporter's provider, its models the ones Pi warned
@@ -173,7 +173,7 @@ func TestPiEnabledModelsEmptiedAndBack(t *testing.T) {
 		t.Fatalf("user's removal undone: %s", got)
 	}
 
-	const theirs = `{"enabledModels": ["xai/grok-4.6", "magpie/*/*"], "defaultProvider": "chongyun", "defaultModel": "wevnal/kimi-k3"}` + "\n"
+	const theirs = `{"enabledModels": ["xai/grok-4.6", "magpie/*/*"], "defaultProvider": "magpie", "defaultModel": "wevnal/kimi-k3"}` + "\n"
 	os.WriteFile(settings, []byte(theirs), 0o644)
 	wevnalSave(t, "kimi-k3")
 	if err := a.Sync(); err != nil {
@@ -186,7 +186,7 @@ func TestPiEnabledModelsEmptiedAndBack(t *testing.T) {
 	// models.json unreadable: unknown, so nothing goes
 	const one = `{"enabledModels": ["magpie/wevnal/kimi-k3"]}` + "\n"
 	os.WriteFile(settings, []byte(one), 0o644)
-	os.WriteFile(filepath.Join(home, ".pi", "agent", "models.json"), []byte(`{"providers": {"chongyun": {"models": "not a list"`), 0o644)
+	os.WriteFile(filepath.Join(home, ".pi", "agent", "models.json"), []byte(`{"providers": {"magpie": {"models": "not a list"`), 0o644)
 	a.Sync()
 	if got := readFile(settings); got != one {
 		t.Fatalf("unreadable models.json pruned: %s", got)

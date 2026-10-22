@@ -6,8 +6,8 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // #304: PI_CODING_AGENT_DIR moves Pi's agent folder (config.js,
@@ -48,7 +48,7 @@ func TestPiAgentDir(t *testing.T) {
 		t.Fatal(err)
 	}
 	settings := filepath.Join(custom, "settings.json")
-	for k, want := range map[string]string{"defaultProvider": "chongyun", "defaultModel": "relay/glm-4.6", "theme": "dark"} {
+	for k, want := range map[string]string{"defaultProvider": "magpie", "defaultModel": "relay/glm-4.6", "theme": "dark"} {
 		if v, _ := edit.GetJSON(settings, k); v != want {
 			t.Fatalf("%s = %q:\n%s", k, v, readFile(settings))
 		}

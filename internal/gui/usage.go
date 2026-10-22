@@ -13,12 +13,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/sessions"
-	"github.com/lulu58588/magpie/internal/usage"
-	"github.com/lulu58588/magpie/internal/usageapi"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/chongyun/internal/usageapi"
 )
 
 // The Usage page's JSON is built in usageapi, which the gateway's

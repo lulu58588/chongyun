@@ -29,17 +29,17 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/awake"
-	"github.com/lulu58588/magpie/internal/gwbudget"
-	"github.com/lulu58588/magpie/internal/gwmw"
-	"github.com/lulu58588/magpie/internal/gwtool"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/pluginrt"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/redact"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/awake"
+	"github.com/lulu58588/chongyun/internal/gwbudget"
+	"github.com/lulu58588/chongyun/internal/gwmw"
+	"github.com/lulu58588/chongyun/internal/gwtool"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/pluginrt"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/redact"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // DefaultAddr is where the gateway listens unless Settings' port or
@@ -48,7 +48,7 @@ const DefaultAddr = "127.0.0.1:3425"
 
 // Token is the bearer token agents are told to use. The gateway only
 // listens on loopback and accepts anything, but agents insist on one.
-const Token = "chongyun"
+const Token = "magpie"
 
 // TokenFor is the token an agent that says nothing of itself in its
 // User-Agent is told to use, so the gateway still knows it: Alma's requests
@@ -73,7 +73,7 @@ func agentOf(r *http.Request) string {
 		// cursor-agent talks to Cursor's backend alone, never to a
 		// gateway: a Cursor User-Agent here is Cursor Private Inference's
 		// ("Cursor-CLI/…") sent with a key other than its own, the one
-		// typed in its Open configuration or a model's settings ("chongyun"),
+		// typed in its Open configuration or a model's settings ("magpie"),
 		// and it is shown its models as with its key (mamba on Discord)
 		return "cursor-local"
 	}
@@ -233,6 +233,11 @@ func switchedOff(p provider.Provider, model string) string {
 // Version is set by main.
 var Version = "dev"
 
+// ProductName is what the gateway answers as: its info (GET /) says it,
+// and the probes that tell an address from the gateway's own — the agents'
+// reachability check, a reverse proxy in front of it — look for it.
+const ProductName = "崇云科技"
+
 // Addr is the listen address: MAGPIE_ADDR, else Settings' port on
 // loopback (settings.GatewayAddr).
 func Addr() string { return settings.GatewayAddr() }
@@ -306,8 +311,8 @@ func ServedBy() Served {
 		Pid     int    `json:"pid"`
 		Serves  string `json:"serves"`
 	}
-	if decodeJSON(b, &info) != nil || info.Name != "chongyun" {
-		return Served{Running: bytes.Contains(b, []byte(`"chongyun"`)), Window: bytes.Contains(b, []byte(`"window":true`))}
+	if decodeJSON(b, &info) != nil || info.Name != ProductName {
+		return Served{Running: bytes.Contains(b, []byte(`"`+ProductName+`"`)), Window: bytes.Contains(b, []byte(`"window":true`))}
 	}
 	return Served{Running: true, Window: info.Window, Version: info.Version, Pid: info.Pid, Serves: info.Serves}
 }
@@ -666,7 +671,7 @@ func (s *Server) Handler() http.Handler {
 	// Claude Desktop's third-party gateway looks for one here before it
 	// takes the address
 	mux.HandleFunc("GET /api/hello", func(w http.ResponseWriter, r *http.Request) {
-		writeJSON(w, 200, map[string]any{"name": "崇云科技", "version": Version})
+		writeJSON(w, 200, map[string]any{"name": ProductName, "version": Version})
 	})
 	// the Ollama API's model routes, for a client that takes a custom
 	// endpoint only as an Ollama server (ollama.go)
@@ -765,7 +770,7 @@ func responsesOverHTTP(w http.ResponseWriter, r *http.Request) {
 var catalogSize stamped[struct{}, int]
 
 func (s *Server) info(w http.ResponseWriter, r *http.Request) {
-	out := map[string]any{"name": "崇云科技", "version": Version, "models": catalogSize.get(struct{}{}, func() int { return len(provider.Catalog()) }), "window": Window,
+	out := map[string]any{"name": ProductName, "version": Version, "models": catalogSize.get(struct{}{}, func() int { return len(provider.Catalog()) }), "window": Window,
 		"apis": []string{"/v1/chat/completions", "/v1/responses", "/v1/messages", "/v1/systemone", "/v1beta/models/{model}:generateContent", "/v1/images/generations", "/v1/images/edits", "/v1/videos", "/v1/embeddings", "/v1/rerank", "/v1/audio/transcriptions", "/v1/audio/translations", "/v1/magpie/quotas", "/v1/magpie/quotas/history", "/v1/magpie/usage", "/v1/magpie/usage/requests", "/v1/magpie/route", "/v1/magpie/trace", SearchMCPPath, VisionMCPPath, ToolsMCPPath}}
 	// which process serves, for another magpie on this computer to name it
 	// on its Routing page (#2606); not told to another machine
@@ -1029,7 +1034,7 @@ func drawerObjects(r *http.Request) []map[string]any {
 			}
 			name := cmp.Or(m.Name, m.ID)
 			o := map[string]any{"id": p.ID + "/" + m.ID, "object": "model", "type": "model", "kind": "image", "created": 0,
-				"owned_by": p.ID, "display_name": name, "chongyun_label": name + " · " + p.Name,
+				"owned_by": p.ID, "display_name": name, "magpie_label": name + " · " + p.Name,
 				"modalities": map[string]any{"input": []string{"text"}, "output": []string{"image"}}}
 			if m.Images {
 				o["modalities"] = map[string]any{"input": []string{"text", "image"}, "output": []string{"image"}}
@@ -1057,7 +1062,7 @@ func videomakerObjects(r *http.Request) []map[string]any {
 			}
 			name := cmp.Or(m.Name, m.ID)
 			out = append(out, map[string]any{"id": p.ID + "/" + m.ID, "object": "model", "type": "model", "kind": "video", "created": 0,
-				"owned_by": p.ID, "display_name": name, "chongyun_label": name + " · " + p.Name,
+				"owned_by": p.ID, "display_name": name, "magpie_label": name + " · " + p.Name,
 				"modalities": map[string]any{"input": []string{"text", "image"}, "output": []string{"video"}}})
 		}
 	}
@@ -1126,14 +1131,14 @@ func (s *Server) models(w http.ResponseWriter, r *http.Request) {
 			}
 			if prices {
 				if pr, ok := provider.EntryPriceIn(st, find, e); ok {
-					m["chongyun_price"] = pr
+					m["magpie_price"] = pr
 				}
 			}
 			// for another magpie: its name as the agents' lists here call
 			// it, with its provider's after it unless the user wants it
 			// plain, so two providers' models of one name are told apart
 			// there as they are here
-			m["chongyun_label"] = labels[i]
+			m["magpie_label"] = labels[i]
 			if agentOf(r) == "cursor-local" {
 				cursorLocalModel(m, e)
 			}
@@ -1157,7 +1162,7 @@ func (s *Server) models(w http.ResponseWriter, r *http.Request) {
 		labels := provider.Labels(deciders)
 		for i, e := range deciders {
 			m := modelObject(e)
-			m["kind"], m["chongyun_label"] = "decision", labels[i]
+			m["kind"], m["magpie_label"] = "decision", labels[i]
 			m["native_endpoints"] = []string{"/v1/systemone"}
 			data = append(data, m)
 		}

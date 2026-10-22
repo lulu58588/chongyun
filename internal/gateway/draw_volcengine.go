@@ -28,7 +28,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // isArk is a provider at Volcengine Ark (ark.<region>.volces.com): the

@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // ---- OpenAI Chat Completions --------------------------------------------------
@@ -931,14 +931,14 @@ type cUsage struct {
 	Credit *float64 `json:"credit"`
 	// what a plugin's step collected of its conversation's earlier steps,
 	// which their own replies couldn't count (the Cursor plugin's usage
-	// events that showed late, yetone/magpie#1053): billed with the step,
+	// events that showed late, upstream issue #1053): billed with the step,
 	// never its prompt, which a client reads as how full its context is
 	MagpieDeferred *struct {
 		PromptTokens     int `json:"prompt_tokens"`
 		CompletionTokens int `json:"completion_tokens"`
 		CachedTokens     int `json:"cached_tokens"`
 		CacheWriteTokens int `json:"cache_write_tokens"`
-	} `json:"chongyun_deferred,omitempty"`
+	} `json:"magpie_deferred,omitempty"`
 }
 
 func (u cUsage) usage() Usage {

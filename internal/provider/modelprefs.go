@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // A model's name is the vendor's, or models.dev's, and agents are shown it

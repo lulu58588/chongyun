@@ -35,8 +35,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // ChatGPTAPIID is the subscription's id, as a provider and in logins.json.
@@ -59,7 +59,7 @@ const (
 	siwcResource = "https://api.openai.com/v1"
 	// siwcDynamicClient registers the app on its first sign-in
 	siwcDynamicClient = "dynamic_agent_client"
-	siwcAgentName     = "chongyun"
+	siwcAgentName     = "magpie"
 	// siwcDirectScope lets the token be sent to api.openai.com itself
 	siwcDirectScope = "chatgpt.tokens.use.direct"
 	siwcScopes      = "openid profile email offline_access resource.invoke " + siwcDirectScope

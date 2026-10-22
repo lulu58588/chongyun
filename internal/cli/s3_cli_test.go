@@ -11,8 +11,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/davsync"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/davsync"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // s3Server is an S3 server with buckets of any name, path-style, keeping

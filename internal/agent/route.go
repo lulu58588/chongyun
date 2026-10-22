@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Every agent's model picker has two halves: the models the agent reaches
@@ -20,7 +20,7 @@ import (
 // the gateway gets the vendor's reply in whichever API the agent speaks.
 
 // magpieID is the provider id agents know the gateway by.
-const magpieID = "chongyun"
+const magpieID = "magpie"
 
 // RoutingGroups is the picker's group of routing groups.
 const RoutingGroups = "Routing groups"

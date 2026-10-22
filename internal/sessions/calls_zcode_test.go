@@ -26,7 +26,7 @@ func TestZCodeCalls(t *testing.T) {
 	setupAgents(t)
 	cs := zcodeCalls(t)
 	// ses_zcA's own reply went through magpie's gateway (the route magpie
-	// writes names it "chongyun"), so it is the gateway's record to keep; the
+	// writes names it "magpie"), so it is the gateway's record to keep; the
 	// others are read here: ses_zcB's (a subagent, counted under the session
 	// it ran in) and ses_zcC's
 	if len(cs) != 2 {

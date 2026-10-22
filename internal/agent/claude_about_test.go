@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // claudeAboutSetup is #1227's settings.json before magpie: every tier on the

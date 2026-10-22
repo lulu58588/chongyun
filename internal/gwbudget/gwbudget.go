@@ -15,7 +15,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/access"
+	"github.com/lulu58588/chongyun/internal/access"
 )
 
 // Refusal is why a key's request was turned away, as the client is told.

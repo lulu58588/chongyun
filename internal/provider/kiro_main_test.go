@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // TestMain keeps the package's tests off the Kiro and Copilot CLI sign-ins

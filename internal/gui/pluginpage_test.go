@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // pagePlugins writes plugins.json with the example page plugin
@@ -258,7 +258,7 @@ func TestPluginPageWebGuard(t *testing.T) {
 func TestPluginPageActions(t *testing.T) {
 	on, off := pagePlugins(t)
 	for _, dir := range []string{on, off} {
-		pkg := `{"name":"magpie-usage-glance","chongyun":{"page":{"title":"Usage glance","titles":{"zh":"用量速览"},"file":"page/index.html"},
+		pkg := `{"name":"magpie-usage-glance","magpie":{"page":{"title":"Usage glance","titles":{"zh":"用量速览"},"file":"page/index.html"},
 			"actions":[{"id":"check","menu":"provider","title":"Check balance","titles":{"ja":"残高を確認"}},{"id":"logs","menu":"agent"}]}}`
 		if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(pkg), 0o644); err != nil {
 			t.Fatal(err)

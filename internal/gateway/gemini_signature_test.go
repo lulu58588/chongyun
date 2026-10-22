@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // geminiSigUpstream is Gemini's OpenAI-compatible API as far as thought

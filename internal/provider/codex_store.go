@@ -36,8 +36,8 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/magpie/internal/filememo"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 const codexKeychainService = "Codex Auth"

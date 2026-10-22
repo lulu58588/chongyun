@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/lulu58588/magpie/internal/autostart"
+	"github.com/lulu58588/chongyun/internal/autostart"
 )
 
 // magpie autostart [on|off]: whether magpie opens at login, in the tray.

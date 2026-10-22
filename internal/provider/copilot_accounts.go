@@ -21,7 +21,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // copilotConfigDir is where the Copilot editors keep their sign-in.

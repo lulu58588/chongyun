@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/chongyun/internal/mcpauth/mcpauthtest"
 )
 
 // #1478 (xiaozhu1337): a project magpie doesn't keep gets the library's

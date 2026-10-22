@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/claudecode"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/claudecode"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 const claudeCodeUsage = "usage: chongyun claude-code                  which Claude Code the Claude subscription runs\n" +

@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/agentenv"
 )
 
 // UserPath gives the desktop app the PATH a terminal of the user's has. One

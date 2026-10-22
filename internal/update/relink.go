@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // StaleCLI is the path of a `chongyun` command that is a copied file behind

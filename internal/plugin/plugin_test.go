@@ -18,8 +18,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // sandbox gives the test its own magpie folders and the Bun on PATH; a

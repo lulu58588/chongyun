@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/sessions"
 )
 
 // #2097: an agy step that went through magpie is counted once. agy 1.2.16,

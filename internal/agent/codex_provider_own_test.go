@@ -31,7 +31,7 @@ func TestCodexProviderOwnModelSaysItsPath(t *testing.T) {
 		if err := cx.Fields[0].Set("fake/m1"); err != nil {
 			t.Fatal(err)
 		}
-		if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
+		if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
 			t.Fatalf("chongyun isn't Codex's provider:\n%s", cfg)
 		}
 		own := ownOf(codex(home))
@@ -51,7 +51,7 @@ func TestCodexProviderOwnModelSaysItsPath(t *testing.T) {
 		if err := cx.Fields[0].Set("fake/m1"); err != nil {
 			t.Fatal(err)
 		}
-		if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
+		if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
 			t.Fatalf("chongyun isn't Codex's provider:\n%s", cfg)
 		}
 		own := ownOf(codex(home))
@@ -61,7 +61,7 @@ func TestCodexProviderOwnModelSaysItsPath(t *testing.T) {
 		if err := codex(home).Fields[0].Set(own[0].Value); err != nil {
 			t.Fatal(err)
 		}
-		if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) || !strings.Contains(cfg, `model = "codex/gpt-a"`) {
+		if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, `model = "codex/gpt-a"`) {
 			t.Fatalf("picking it took Codex off chongyun:\n%s", cfg)
 		}
 	})

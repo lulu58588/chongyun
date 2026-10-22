@@ -21,8 +21,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/iconproxy"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/iconproxy"
 )
 
 // The market is where the page finds MCP servers and skills to add in one
@@ -155,7 +155,7 @@ var featured = []MarketServer{
 // magpieCommand stands for this magpie's own binary in a featured server's
 // command, which InstallServer puts in when it is added, and in a library
 // carried to another computer, which reads it as its own (self_here.go).
-const magpieCommand = "chongyun"
+const magpieCommand = "magpie"
 
 // selfServerName is the name magpie's own image generation server is written
 // under, in every agent's config.
@@ -166,7 +166,7 @@ const selfServerName = "magpie-image"
 // in the project. It costs what the model does, so it is given only to the
 // agents picked for it.
 func selfServer() MarketServer {
-	m := localServer(selfServerName, "Chongyun Image", "Chongyun", "https://usemagpie.ai/favicon.png", "https://usemagpie.ai",
+	m := localServer(selfServerName, "Chongyun Image", "Chongyun", "https://raw.githubusercontent.com/lulu58588/chongyun/main/build/icon/chongyun.svg", "https://github.com/lulu58588/chongyun",
 		"Generate and edit images with the image model set in Chongyun (Settings → Images), and make short videos with a video model set up in Chongyun (Grok Imagine, Seedance), saved in the project.", magpieCommand, []string{"mcp", "image"})
 	m.OptIn = true
 	return m
@@ -1113,8 +1113,8 @@ func offered(u string) bool {
 	return false
 }
 
-// fetchImage downloads an icon through usemagpie.ai's icon proxy, so the
-// host a server's author picked never sees the user's IP.
+// fetchImage downloads an icon through the icon proxy (iconproxy.URL), so
+// the host a server's author picked never sees the user's IP.
 func fetchImage(u string) ([]byte, string, error) {
 	b, err := get(iconproxy.URL(u), "image/*", 1<<20)
 	if err != nil {

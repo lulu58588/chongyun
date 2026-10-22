@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // --help and its other forms print magpie cpu's usage, ask nothing and

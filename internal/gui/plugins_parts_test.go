@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // The Plugins page is drawn in parts (#488): the plugins suggested come at
@@ -23,7 +23,7 @@ func TestPluginMarketInParts(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("MAGPIE_PLUGIN_MARKET", "off")
 	const pkg = "@magpie-community/opencode-zcode-auth"
-	// a listing the market gives no icon (yetone: 这里的 agent plugin 为什么
+	// a listing the market gives no icon (upstream: 这里的 agent plugin 为什么
 	// 没有 logo): the picture its package gives (magpie.icon) is kept here,
 	// and the page gets it as a file, never the data URI
 	const agent = "@magpie-community/middleware-word-guard"
@@ -34,10 +34,10 @@ func TestPluginMarketInParts(t *testing.T) {
 		agent: map[string]any{"info": map[string]any{"version": "0.1.1", "icon": data}, "at": time.Now()},
 	}
 	b, _ := json.Marshal(kept)
-	if err := os.MkdirAll(filepath.Join(cache, "chongyun"), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Join(cache, "magpie"), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(cache, "chongyun", "plugin-npm.json"), b, 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(cache, "magpie", "plugin-npm.json"), b, 0o644); err != nil {
 		t.Fatal(err)
 	}
 	plugin.ReloadInfo()

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Codex 0.162's TUI runs on a background app-server it starts once and
@@ -50,8 +50,8 @@ func TestCodexAdviceNamesTheSharedAppServer(t *testing.T) {
 func TestCodexNoticeKeepsTheDaemonCurrent(t *testing.T) {
 	home, _ := codexHome(t, "", "")
 	dir := filepath.Join(home, ".codex")
-	cfg, list := filepath.Join(dir, "config.toml"), filepath.Join(dir, "magpie-models.json")
-	os.WriteFile(cfg, []byte("model_provider = \"chongyun\"\nmodel_catalog_json = \""+list+"\"\n"), 0o600)
+	cfg, list := filepath.Join(dir, "config.toml"), filepath.Join(dir, "chongyun-models.json")
+	os.WriteFile(cfg, []byte("model_provider = \"magpie\"\nmodel_catalog_json = \""+list+"\"\n"), 0o600)
 	os.WriteFile(list, []byte(`{"models":[{"slug":"magpie/a"}]}`), 0o644)
 	then := time.Now().Add(-2 * time.Hour)
 	os.Chtimes(cfg, then, then)

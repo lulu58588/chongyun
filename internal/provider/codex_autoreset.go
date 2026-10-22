@@ -22,8 +22,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/steady"
 )
 
 // The two times an account the user lets spend its resets by itself

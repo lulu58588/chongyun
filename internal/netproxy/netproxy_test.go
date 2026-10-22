@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 func TestParseScutil(t *testing.T) {
@@ -112,7 +112,7 @@ func TestFor(t *testing.T) {
 	if err := settings.Save(settings.Settings{Proxy: "ftp://x"}); err == nil {
 		t.Fatal("ftp proxy accepted")
 	}
-	if settings.Save(settings.Settings{Proxy: "127.0.0.1:7890"}) != nil || filepath.Dir(settings.Path()) != filepath.Join(dir, "chongyun") {
+	if settings.Save(settings.Settings{Proxy: "127.0.0.1:7890"}) != nil || filepath.Dir(settings.Path()) != filepath.Join(dir, "magpie") {
 		t.Fatal("host:port proxy refused")
 	}
 }

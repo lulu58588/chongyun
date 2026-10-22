@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func TestPiTakes(t *testing.T) {
@@ -123,7 +123,7 @@ func TestPiModelOffLeavesEnabledModels(t *testing.T) {
 		t.Errorf("enabledModels = %s", got)
 	}
 
-	os.WriteFile(settings, []byte(`{"enabledModels":["magpie/relay/glm-4.6"],"defaultProvider":"chongyun","defaultModel":"relay/glm-4.6"}`), 0o644)
+	os.WriteFile(settings, []byte(`{"enabledModels":["magpie/relay/glm-4.6"],"defaultProvider":"magpie","defaultModel":"relay/glm-4.6"}`), 0o644)
 	if err := f.Set(""); err != nil {
 		t.Fatal(err)
 	}

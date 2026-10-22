@@ -39,7 +39,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/lastgood"
 )
 
 // stepfunSites are StepFun's two platforms, by the API host a provider uses.

@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // codexTitlesTo is where a request Codex makes for a thread's title goes
@@ -391,18 +391,18 @@ func (s *Server) sentNowhere(w http.ResponseWriter, r *http.Request, body []byte
 	metadata := requestSessionMetadata(r.Header, body)
 	kind := requestCallKind(r.Header, metadata)
 	model := modelOf(body)
-	seat := Weighed{ID: "chongyun", Provider: "chongyun", Name: "崇云科技", Who: who, Kind: "provider", Model: model}
+	seat := Weighed{ID: "magpie", Provider: "magpie", Name: "崇云科技", Who: who, Kind: "provider", Model: model}
 	tr := s.trace.beginFor(r, Route{Time: start, Agent: agentOf(r), Session: sessionOf(r.Header), ParentSession: titleParentSession(r.Header, metadata, kind),
-		Kind: kind, Model: model, Provider: "chongyun", Order: []Weighed{seat}, Tries: []Try{{ID: seat.ID, Model: model, Start: start}}})
+		Kind: kind, Model: model, Provider: "magpie", Order: []Weighed{seat}, Tries: []Try{{ID: seat.ID, Model: model, Start: start}}})
 	writeTitleReply(w, fmt.Sprintf("resp_magpie_%d", start.UnixNano()), out, nil)
 	ms := time.Since(start).Milliseconds()
 	s.trace.update(tr, func(t *Route) {
 		t.Tries[0].Done, t.Tries[0].Status, t.Tries[0].Millis, t.Tries[0].Error = true, 200, ms, why
 		t.Done, t.Status, t.Error, t.Millis = true, 200, why, ms
 	})
-	s.record(Call{Route: tr.ID, Time: start, From: provider.Responses, To: provider.Responses, Model: model, Provider: "chongyun",
+	s.record(Call{Route: tr.ID, Time: start, From: provider.Responses, To: provider.Responses, Model: model, Provider: "magpie",
 		Agent: agentOf(r), Kind: kind, Status: 200, Millis: ms, Error: why})
-	appendUsage(r, usage.Record{RouteID: tr.ID, Time: start, Agent: agentOf(r), Provider: "chongyun", Model: model, Requested: model,
+	appendUsage(r, usage.Record{RouteID: tr.ID, Time: start, Agent: agentOf(r), Provider: "magpie", Model: model, Requested: model,
 		Millis: ms, Status: 200, Rejected: true, Error: why, Session: sessionOf(r.Header), NativeSession: nativeSessionOf(r.Header),
 		Kind: kind, Endpoint: r.URL.Path})
 }

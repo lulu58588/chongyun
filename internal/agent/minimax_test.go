@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -133,7 +133,7 @@ func TestMiniMaxCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw := readMiniMax(t, path)
-	mp, ok := c.CustomProvider["chongyun"]
+	mp, ok := c.CustomProvider["magpie"]
 	if !ok || c.DefaultModel != "custom_provider:magpie/think~deep" || c.DefaultModelVariant != "" {
 		t.Fatalf("config:\n%s", raw)
 	}
@@ -182,7 +182,7 @@ func TestMiniMaxCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	if d := c.CustomProvider["chongyun"].Models["think~deep"]; c.DefaultModel != "custom_provider:magpie/think~v1.5-flash" ||
+	if d := c.CustomProvider["magpie"].Models["think~deep"]; c.DefaultModel != "custom_provider:magpie/think~v1.5-flash" ||
 		d.Enabled == nil || *d.Enabled || !strings.Contains(raw, "# hidden in /model") {
 		t.Fatalf("second:\n%s", raw)
 	}
@@ -199,7 +199,7 @@ func TestMiniMaxCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	if c.DefaultModel != "minimax/MiniMax-M2.7" || c.DefaultModelVariant != "thinking" || c.CustomProvider["chongyun"].Kind != "" ||
+	if c.DefaultModel != "minimax/MiniMax-M2.7" || c.DefaultModelVariant != "thinking" || c.CustomProvider["magpie"].Kind != "" ||
 		c.CustomProvider["work"].Kind != "custom" || !strings.Contains(raw, "# my notes") {
 		t.Fatalf("reset:\n%s", raw)
 	}
@@ -210,7 +210,7 @@ func TestMiniMaxCode(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	if c.DefaultModel != "custom_provider:work/deep-reasoner-1" || c.DefaultModelVariant != "" || c.CustomProvider["chongyun"].Kind != "" {
+	if c.DefaultModel != "custom_provider:work/deep-reasoner-1" || c.DefaultModelVariant != "" || c.CustomProvider["magpie"].Kind != "" {
 		t.Fatalf("own:\n%s", raw)
 	}
 }
@@ -237,7 +237,7 @@ func TestMiniMaxCodeSync(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw := readMiniMax(t, path)
-	if _, ok := c.CustomProvider["chongyun"].Models["think~v2"]; !ok || len(c.CustomProvider["chongyun"].Models) != 3 {
+	if _, ok := c.CustomProvider["magpie"].Models["think~v2"]; !ok || len(c.CustomProvider["magpie"].Models) != 3 {
 		t.Fatalf("sync:\n%s", raw)
 	}
 	st, _ := os.Stat(path)
@@ -321,7 +321,7 @@ func TestMiniMaxCodeOneSlash(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	ms := c.CustomProvider["chongyun"].Models
+	ms := c.CustomProvider["magpie"].Models
 	sol, was := ms["bb-codex~gpt-6.1-sol"], ms["bb-codex/gpt-6.1-sol"]
 	if c.DefaultModel != "custom_provider:magpie/bb-codex~gpt-6.1-sol" ||
 		c.Memory["captureModel"] != "custom_provider:magpie/bb-codex~gpt-6.1-sol" || c.Memory["consolidationModel"] != "minimax/MiniMax-M2.7" ||
@@ -347,7 +347,7 @@ func TestMiniMaxCodeOneSlash(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, raw = readMiniMax(t, path)
-	if c.DefaultModel != "minimax/MiniMax-M2.7" || c.DefaultModelVariant != "thinking" || c.CustomProvider["chongyun"].Kind != "" {
+	if c.DefaultModel != "minimax/MiniMax-M2.7" || c.DefaultModelVariant != "thinking" || c.CustomProvider["magpie"].Kind != "" {
 		t.Fatalf("reset:\n%s", raw)
 	}
 }
@@ -369,7 +369,7 @@ func oneSlash(t *testing.T, raw string) {
 			t.Fatalf("%s fails MiniMax Code's check:\n%s", m, raw)
 		}
 	}
-	for k, m := range c.CustomProvider["chongyun"].Models {
+	for k, m := range c.CustomProvider["magpie"].Models {
 		if (m.Enabled == nil || *m.Enabled) && !mcodeOneSlash.MatchString("custom_provider:magpie/"+k) {
 			t.Fatalf("model %s fails MiniMax Code's check:\n%s", k, raw)
 		}

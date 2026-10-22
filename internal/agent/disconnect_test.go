@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Disconnect leaves Codex as it was before magpie was wired in (Fate on
@@ -66,7 +66,7 @@ func TestCodexDisconnect(t *testing.T) {
 			if mine, _ := edit.GetTOMLTable(path, "model_providers.mine"); tc.config != "" && mine["base_url"] != "https://mine.example/v1" {
 				t.Fatalf("own provider table changed:\n%s", read())
 			}
-			if _, err := os.Stat(filepath.Join(home, ".codex", "magpie-models.json")); err == nil {
+			if _, err := os.Stat(filepath.Join(home, ".codex", "chongyun-models.json")); err == nil {
 				t.Error("chongyun's catalog left")
 			}
 			if cx.Wired() || cx.Drift() != nil {

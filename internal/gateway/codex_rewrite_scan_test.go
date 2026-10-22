@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // The rewrites a Codex request goes through on its way (#1532, #2354):

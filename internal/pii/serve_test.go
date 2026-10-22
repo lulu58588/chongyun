@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/redact"
+	"github.com/lulu58588/chongyun/internal/redact"
 )
 
 func person(s, e int) redact.Found { return redact.Found{Start: s, End: e, Label: "private_person"} }

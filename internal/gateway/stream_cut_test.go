@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // dshTransport is how dsh's pi-ai adapter tells a failure it retries as a

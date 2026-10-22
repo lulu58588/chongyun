@@ -17,9 +17,9 @@ import (
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/charset"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/budget"
-	"github.com/lulu58588/magpie/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/budget"
+	"github.com/lulu58588/chongyun/internal/netproxy"
 )
 
 // The web search MCP server's second tool, web_fetch (#2286, blackrion):

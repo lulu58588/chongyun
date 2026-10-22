@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/desktopdir"
+	"github.com/lulu58588/chongyun/internal/desktopdir"
 )
 
 // Claude Desktop installed on Windows and not yet opened has none of its

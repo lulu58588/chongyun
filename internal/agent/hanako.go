@@ -22,7 +22,7 @@ package agent
 // the primary agent's chat model. While OpenHanako runs, both go through its
 // local API, which saves them and reloads its models at once:
 //
-//	PUT /api/config               {"providers":{"chongyun":{…}|null}}
+//	PUT /api/config               {"providers":{"magpie":{…}|null}}
 //	PUT /api/agents/:id/config    {"models":{"chat":{"id","provider"}}}
 //	GET /api/models               {"models":[{"id","provider",…}]}
 //
@@ -46,9 +46,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // hanakoProbe gives up quickly, as OpenHanako's own liveness probe does:
@@ -226,7 +226,7 @@ func hanakoProvider() hanakoProviderEntry {
 		ms = append(ms, hanakoModel{ID: m.ID, Name: m.Name, Context: m.Context, MaxOutput: maxTokens(m),
 			Image: m.Images, Reasoning: len(m.Efforts) > 0, XHigh: slices.Contains(m.Efforts, "xhigh")})
 	}
-	return hanakoProviderEntry{DisplayName: magpieID, BaseURL: gatewayV1(), API: "openai-completions",
+	return hanakoProviderEntry{DisplayName: "崇云科技", BaseURL: gatewayV1(), API: "openai-completions",
 		APIKey: agentKey("hanako"), Models: ms}
 }
 

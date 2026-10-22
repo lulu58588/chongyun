@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 func reasonixDetected(home string) bool {

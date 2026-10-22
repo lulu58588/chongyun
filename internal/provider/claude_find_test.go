@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // Claude Code installed off magpie's PATH, in ~/.local/bin as its

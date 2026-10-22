@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 	"gopkg.in/yaml.v3"
 )
 
@@ -55,7 +55,7 @@ func TestOmp(t *testing.T) {
 	}
 	m, raw := read(modelsPath)
 	ps := providers(m)
-	mp, ok := ps["chongyun"].(map[string]any)
+	mp, ok := ps["magpie"].(map[string]any)
 	if !ok || ps["mine"] == nil || mp["auth"] != "none" || mp["api"] != "openai-completions" || !strings.HasSuffix(mp["baseUrl"].(string), "/v1") {
 		t.Fatalf("models:\n%s", raw)
 	}
@@ -73,7 +73,7 @@ func TestOmp(t *testing.T) {
 	}
 	c, _ = read(configPath)
 	m, _ = read(modelsPath)
-	if roles(c)["default"] != "moonshotai/kimi-k3" || providers(m)["chongyun"] != nil || providers(m)["mine"] == nil {
+	if roles(c)["default"] != "moonshotai/kimi-k3" || providers(m)["magpie"] != nil || providers(m)["mine"] == nil {
 		t.Fatalf("own: %v %v", c, m)
 	}
 
@@ -86,7 +86,7 @@ func TestOmp(t *testing.T) {
 	}
 	c, _ = read(configPath)
 	m, _ = read(modelsPath)
-	if roles(c)["default"] != "moonshotai/kimi-k3" || roles(c)["smol"] != "magpie/deepseek/pro" || providers(m)["chongyun"] == nil {
+	if roles(c)["default"] != "moonshotai/kimi-k3" || roles(c)["smol"] != "magpie/deepseek/pro" || providers(m)["magpie"] == nil {
 		t.Fatalf("reset with smol: %v %v", c, m)
 	}
 
@@ -97,7 +97,7 @@ func TestOmp(t *testing.T) {
 	}
 	c, _ = read(configPath)
 	m, _ = read(modelsPath)
-	if roles(c)["default"] != nil || roles(c)["smol"] != "openai/gpt-6-mini" || c["theme"] != "dark" || providers(m)["chongyun"] != nil || providers(m)["mine"] == nil {
+	if roles(c)["default"] != nil || roles(c)["smol"] != "openai/gpt-6-mini" || c["theme"] != "dark" || providers(m)["magpie"] != nil || providers(m)["mine"] == nil {
 		t.Fatalf("reset: %v %v", c, m)
 	}
 }
@@ -125,7 +125,7 @@ func TestOmpRefsBeyondDefault(t *testing.T) {
 		var m struct{ Providers map[string]any }
 		b, _ := os.ReadFile(modelsPath)
 		yaml.Unmarshal(b, &m)
-		return m.Providers["chongyun"] != nil
+		return m.Providers["magpie"] != nil
 	}
 	f := omp(home).Field("model")
 
@@ -661,7 +661,7 @@ func TestOmpOwnModels(t *testing.T) {
   zzrelay:
     models:
       - id: m1
-  chongyun:
+  magpie:
     baseUrl: http://127.0.0.1:1/v1
     auth: none
     models:

@@ -13,8 +13,8 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/wailsapp/wails/v3/pkg/events"
 
-	"github.com/lulu58588/magpie/internal/omarchy"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/omarchy"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // The windows, h.main and h.panel, are nil while lightweight mode has let

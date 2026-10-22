@@ -68,7 +68,7 @@ func TestCommandListedIsLookedFor(t *testing.T) {
 	if *looks != 1 {
 		t.Fatalf("looked %d times, want 1", *looks)
 	}
-	for _, n := range []string{"magpie-fake-agent.cmd", "Magpie-Fake-Agent.EXE"} {
+	for _, n := range []string{"magpie-fake-agent.cmd", "Chongyun-Fake-Agent.EXE"} {
 		os.WriteFile(filepath.Join(d, n), nil, 0o755)
 		if !mayBeIn("magpie-fake-agent", []string{d}) {
 			t.Errorf("with %s there, magpie-fake-agent isn't thought to be", n)

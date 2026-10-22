@@ -6,7 +6,7 @@ package agent
 // as CodeBuddy Code's CLI writes it. Its own "local models" are entries of
 // the same list (local: true).
 //
-//	[{"id":"deepseek/pro","name":…,"vendor": "chongyun","apiKey":"magpie-workbuddy",
+//	[{"id":"deepseek/pro","name":…,"vendor": "magpie","apiKey":"magpie-workbuddy",
 //	  "url":"http://127.0.0.1:3425/v1/chat/completions",
 //	  "maxInputTokens":…,"maxOutputTokens":…,
 //	  "supportsToolCall":true,"supportsImages":…,"supportsReasoning":true,
@@ -36,9 +36,9 @@ import (
 	"runtime"
 	"slices"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 func workbuddy(home string) *Agent {

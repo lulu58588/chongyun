@@ -9,8 +9,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // OpenCode's own sign-ins, as `opencode auth login` keeps them: auth.json in

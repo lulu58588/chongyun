@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // relayOfEvery is a relay that answers on Chat, Responses and Anthropic's

@@ -18,7 +18,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/iconproxy"
+	"github.com/lulu58588/chongyun/internal/iconproxy"
 )
 
 // A provider's own picture lives in the icons folder beside providers.json,
@@ -72,8 +72,8 @@ func StoreIcon(data []byte) (string, error) {
 // user confirms the import, never at parse time; the URL is re-checked here
 // so a crafted request can't point magpie at anything but a public https
 // picture, and the read stops one byte past MaxIcon so a huge body is
-// refused rather than buffered. The picture is asked for through
-// usemagpie.ai's icon proxy, so its host never sees the user's IP.
+// refused rather than buffered. The picture is asked for through the icon
+// proxy (iconproxy.URL), so its host never sees the user's IP.
 func FetchIcon(ctx context.Context, rawURL string) (string, error) {
 	u, err := iconURL(rawURL)
 	if err != nil {

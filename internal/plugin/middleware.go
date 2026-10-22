@@ -36,7 +36,7 @@ func Middleware(target string) (file string, only bool) {
 		Magpie  struct {
 			Middleware string `json:"middleware"`
 			Gateway    string `json:"gateway"`
-		} `json:"chongyun"`
+		} `json:"magpie"`
 	}
 	if json.Unmarshal(b, &pkg) != nil {
 		return "", false
@@ -66,7 +66,7 @@ func OptionsExample(target string) map[string]any {
 	var pkg struct {
 		Magpie struct {
 			Options map[string]any `json:"options"`
-		} `json:"chongyun"`
+		} `json:"magpie"`
 	}
 	if json.Unmarshal(b, &pkg) != nil {
 		return nil

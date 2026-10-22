@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // transcribe serves OpenAI's speech-to-text APIs (#2053):

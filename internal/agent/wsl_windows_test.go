@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // On a real WSL: MAGPIE_WSL_TEST_DISTRO names a throwaway distro with a
@@ -77,10 +77,10 @@ func TestWSLCodexLive(t *testing.T) {
 	if !strings.Contains(got, `model = "fake/m1"`) || !strings.Contains(got, `base_url = "`+d.base()+`/v1"`) {
 		t.Fatal("not written")
 	}
-	if !strings.Contains(before, "OPENAI_API_KEY") && !strings.Contains(got, `model_catalog_json = "`+d.Home+`/.codex/magpie-models.json"`) {
+	if !strings.Contains(before, "OPENAI_API_KEY") && !strings.Contains(got, `model_catalog_json = "`+d.Home+`/.codex/chongyun-models.json"`) {
 		t.Fatal("catalog path")
 	}
-	if !strings.Contains(cat(d.Home+"/.codex/magpie-models.json"), "fake/m1") {
+	if !strings.Contains(cat(d.Home+"/.codex/chongyun-models.json"), "fake/m1") {
 		t.Fatal("catalog not seen inside WSL")
 	}
 	if c := a.Check(); c != "" {

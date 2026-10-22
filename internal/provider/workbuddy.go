@@ -40,7 +40,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // Where WorkBuddy's plan is; vars so tests can point them elsewhere.

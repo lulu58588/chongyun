@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A window the user typed is the one Codex and Claude Code run to (#1809,
@@ -46,7 +46,7 @@ func TestTypedWindowReachesCodexAndClaudeCode(t *testing.T) {
 				Max     int    `json:"max_context_window"`
 			} `json:"models"`
 		}
-		raw := readFile(filepath.Join(home, ".codex", "magpie-models.json"))
+		raw := readFile(filepath.Join(home, ".codex", "chongyun-models.json"))
 		if err := json.Unmarshal([]byte(raw), &got); err != nil {
 			t.Fatalf("%v: %s", err, raw)
 		}
@@ -148,7 +148,7 @@ func TestSmallestMemberTypedWindow(t *testing.T) {
 	}
 
 	// Claude Desktop: each group's own autoCompactWindow
-	must(claudeDesktop(home).Field("provider").Set("chongyun"))
+	must(claudeDesktop(home).Field("provider").Set("magpie"))
 	ids := map[string]string{}
 	for _, e := range provider.Catalog() {
 		ids[e.ID] = gateway.DesktopID(e)
@@ -199,7 +199,7 @@ func TestLargestMemberTypedWindow(t *testing.T) {
 			Max     int    `json:"max_context_window"`
 		} `json:"models"`
 	}
-	raw := readFile(filepath.Join(home, ".codex", "magpie-models.json"))
+	raw := readFile(filepath.Join(home, ".codex", "chongyun-models.json"))
 	must(json.Unmarshal([]byte(raw), &disk))
 	for _, m := range disk.Models {
 		want := map[string][2]int{"group/ultra": {872000, 0}, "group/loose": {272000, 1000000}}
@@ -223,7 +223,7 @@ func TestLargestMemberTypedWindow(t *testing.T) {
 
 	// Claude Desktop: the typed group's own autoCompactWindow; the
 	// other is left to the top-level one, the default
-	must(claudeDesktop(home).Field("provider").Set("chongyun"))
+	must(claudeDesktop(home).Field("provider").Set("magpie"))
 	ids := map[string]string{}
 	for _, e := range provider.Catalog() {
 		ids[e.ID] = gateway.DesktopID(e)

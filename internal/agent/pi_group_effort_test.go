@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #597: Pi on a routing group of DeepSeek V4 Pro (TokenHub's, and the Token
@@ -54,7 +54,7 @@ func TestPiGroupThinkingIsWhatPiRuns(t *testing.T) {
 		t.Fatal(err)
 	}
 	var entry map[string]any
-	for _, raw := range file["providers"].(map[string]any)["chongyun"].(map[string]any)["models"].([]any) {
+	for _, raw := range file["providers"].(map[string]any)["magpie"].(map[string]any)["models"].([]any) {
 		if m := raw.(map[string]any); m["id"] == "group/deepseek" {
 			entry = m
 		}

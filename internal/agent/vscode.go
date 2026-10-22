@@ -7,7 +7,7 @@ package agent
 // profile's, in its User folder, and each other profile's in its own:
 // vscodeProfiles), a JSONC array VS Code watches and reads again when it
 // changes. magpie adds a group of its own there,
-// {"vendor": "customendpoint", "name": "chongyun"}, listing the catalog: each
+// {"vendor": "customendpoint", "name": "magpie"}, listing the catalog: each
 // model at the gateway's /v1/chat/completions with tool calling on (agent
 // mode lists only models that call tools). A group's apiKey can't be
 // written in the file: VS Code reads it from its secret storage alone, so
@@ -37,9 +37,9 @@ import (
 	"strings"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // vscodeDefault is chat.defaultModel, a key with a dot in it, escaped for

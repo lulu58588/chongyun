@@ -3,7 +3,7 @@ package provider
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // The ChatGPT account running out of its allowance, or getting it back, is

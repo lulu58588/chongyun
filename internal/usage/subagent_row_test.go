@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/sessions"
 )
 
 // A call read from a Claude Code subagent's own file names that subagent

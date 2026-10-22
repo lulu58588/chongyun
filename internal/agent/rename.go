@@ -4,7 +4,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // RenameProvider gives a provider another id (provider.Rename) and moves

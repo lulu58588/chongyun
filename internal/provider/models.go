@@ -15,9 +15,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 func errorf(format string, a ...any) error { return fmt.Errorf(format, a...) }
@@ -722,7 +722,7 @@ func (p Provider) fetchOne(ctx context.Context) (fetched, error) {
 			}
 			// what it listed is a side like any other protocol's, so that a
 			// fetch finding this base down keeps its own models instead of
-			// reading a picked Gemini model as gone (#904, yetone's review
+			// reading a picked Gemini model as gone (#904, the upstream review
 			// of #1006)
 			sides = append(sides, side{protoBase, ms})
 			answered[protoBase] = true
@@ -904,14 +904,14 @@ func sidesOf(sides []side) map[string][]catalog.Model {
 // answered have dropped is dropped here too, however many of them dropped
 // it, and however many endpoints are down. Keeping every model of the list
 // saved before would bring such a model back, which is the same fault the
-// other way round (#904, yetone's review).
+// other way round (#904, the upstream review).
 //
 // A base in none of the saved parts is one that has never answered, and
 // keeps nothing: the whole list saved before is not its own. Reading an
 // absent part as the whole list kept a model its vendor had already
 // dropped, and then saved that guess as what the base listed, so from then
 // on the model was a base's own and could never be dropped again (#904,
-// yetone's review of #1006).
+// the upstream review of #1006).
 //
 // A list saved without its parts (before this kept them) says nothing about
 // which base listed what, so the models no answering base lists are kept
@@ -1270,7 +1270,7 @@ func (p Provider) fetchPerKey(ctx context.Context, keys []KeyAccount) ([]catalog
 	// as one kept for that base alone (#904). A base that was asked this
 	// round for one of the model's own keys, and answered it without
 	// listing the model, has said what it serves today and no longer owns
-	// it: sides may only say what the bases listed (yetone's review of
+	// it: sides may only say what the bases listed (the upstream review of
 	// #1006).
 	spokeFor := func(keys []string, b string) bool {
 		for _, j := range keys {

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/sessions"
 )
 
 // A group's speed says how many replies it is of, and a group none of whose

@@ -61,7 +61,7 @@ func TestNotPluginKeepsPlugins(t *testing.T) {
 		"index.mjs":  pkg(`{"name":"a","bin":{"a":"cli.js"}}`, "index.mjs"),
 		"main":       pkg(`{"name":"b","main":"dist/x.js"}`),
 		"exports":    pkg(`{"name":"c","exports":{"./server":"./s.js"}}`),
-		"middleware": pkg(`{"name":"d","chongyun":{"middleware":"d.middleware.js"}}`),
+		"middleware": pkg(`{"name":"d","magpie":{"middleware":"d.middleware.js"}}`),
 		"pi":         pkg(`{"name":"e","pi":{"extensions":["./x.ts"]},"peerDependencies":{"@earendil-works/pi-coding-agent":"*"}}`),
 	} {
 		if err := notPlugin(d); err != nil {

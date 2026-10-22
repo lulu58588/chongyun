@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // staleOnWindows is why the tests of copies told from the process list
@@ -35,9 +35,9 @@ func TestCodexStaleOnlyForMagpiesChange(t *testing.T) {
 	dir := filepath.Join(home, ".codex")
 	os.MkdirAll(dir, 0o755)
 	cfg := filepath.Join(dir, "config.toml")
-	list := filepath.Join(dir, "magpie-models.json")
-	conf := "model = \"magpie/gpt-6-luna\"\nmodel_provider = \"chongyun\"\nmodel_catalog_json = \"" + tomlString(list) + "\"\n\n" +
-		"[model_providers.magpie]\nname = \"chongyun\"\nbase_url = \"http://127.0.0.1:3425/v1\"\n"
+	list := filepath.Join(dir, "chongyun-models.json")
+	conf := "model = \"magpie/gpt-6-luna\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = \"" + tomlString(list) + "\"\n\n" +
+		"[model_providers.magpie]\nname = \"magpie\"\nbase_url = \"http://127.0.0.1:3425/v1\"\n"
 	os.WriteFile(cfg, []byte(conf), 0o600)
 	os.WriteFile(list, []byte(`{"models":[{"slug":"magpie/gpt-6-luna"}]}`), 0o644)
 	then := time.Now().Add(-2 * time.Hour)
@@ -198,8 +198,8 @@ func TestCodexDaemonHelperIsNoStaleCopy(t *testing.T) {
 func TestCodexStaleOnWindowsIsTheDaemonsLastCheck(t *testing.T) {
 	home, _ := codexHome(t, "", "")
 	dir := filepath.Join(home, ".codex")
-	cfg, list := filepath.Join(dir, "config.toml"), filepath.Join(dir, "magpie-models.json")
-	os.WriteFile(cfg, []byte("model_provider = \"chongyun\"\nmodel_catalog_json = \""+tomlString(list)+"\"\n"), 0o600)
+	cfg, list := filepath.Join(dir, "config.toml"), filepath.Join(dir, "chongyun-models.json")
+	os.WriteFile(cfg, []byte("model_provider = \"magpie\"\nmodel_catalog_json = \""+tomlString(list)+"\"\n"), 0o600)
 	os.WriteFile(list, []byte(`{"models":[{"slug":"magpie/a"}]}`), 0o644)
 	wasKeep, wasRunning := keepCodexDaemon, running
 	t.Cleanup(func() {

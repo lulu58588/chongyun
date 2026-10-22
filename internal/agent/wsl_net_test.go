@@ -9,7 +9,7 @@ import (
 	"time"
 	"unicode/utf16"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // A .wslconfig Notepad saved as "Unicode" (UTF-16LE with a BOM), as

@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/daemon"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/gui"
+	"github.com/lulu58588/chongyun/internal/daemon"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gui"
 )
 
 const daemonUsage = "usage: chongyun daemon [install|uninstall|start|stop|restart|status] · chongyun daemon install [--web] [--lan] [--addr host:port] [--no-web] [--tls-cert <file> --tls-key <file>|--no-tls] · chongyun daemon web [on|off] [--lan] [--addr host:port]"

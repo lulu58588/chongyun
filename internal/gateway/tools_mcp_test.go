@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/gwtool"
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/gwtool"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // fakePluginTools has the gateway's plugin tools be pts and record the

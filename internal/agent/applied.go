@@ -13,11 +13,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/lastgood"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // An agent's config is a file anyone can write: another switcher, an
@@ -496,7 +496,7 @@ func (a *Agent) Connect() error {
 //   - "again": the models it was on when it was switched off, put back
 //   - "joined": the model it is on stays its own (Codex signed in with
 //     ChatGPT), magpie's models join its list
-//   - "chongyun": an app whose one setting is magpie as its provider
+//   - "magpie": an app whose one setting is magpie as its provider
 //   - "same": the model it is on now, through magpie
 //   - "alike": the model its alias (opus) stands for, through magpie
 //   - "default": on its own default with no model set: the first of its
@@ -634,7 +634,7 @@ func (a *Agent) connect() (Connection, error) {
 					return Connection{}, err
 				}
 			}
-			return Connection{How: "chongyun", Field: f.Key, Value: magpieID}, nil
+			return Connection{How: "magpie", Field: f.Key, Value: magpieID}, nil
 		}
 		if o.Ref != "" && o.Group == RoutingGroups && group == "" {
 			group = o.Value
@@ -804,7 +804,7 @@ func (a *Agent) DisconnectOffline() error {
 // fields it changed (Routed: those that were magpie's) and what it left
 // every field at.
 type reconnection struct {
-	Magpie map[string]string `json:"chongyun"`
+	Magpie map[string]string `json:"magpie"`
 	Routed []string          `json:"routed,omitempty"`
 	Left   map[string]string `json:"left"`
 }

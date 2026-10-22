@@ -27,7 +27,7 @@ func TestCodexProviderIsNotJoined(t *testing.T) {
 	if err := cx.Field("login").Set("api"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
 		t.Fatalf("api:\n%s", cfg)
 	}
 	if cx.Joined() || cx.Beside() {
@@ -49,7 +49,7 @@ func TestCodexProviderIsNotJoined(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) || cx.Joined() {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) || cx.Joined() {
 		t.Fatalf("held: joined %v\n%s", cx.Joined(), cfg)
 	}
 	codexUsedUp = func() bool { return false }

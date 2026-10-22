@@ -23,7 +23,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // gitPath is where git is, "" when it isn't here; a variable for tests.

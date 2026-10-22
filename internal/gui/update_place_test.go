@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // The terminal build on a Mac (magpie-cli-darwin, which `chongyun web` runs
@@ -19,8 +19,8 @@ import (
 // of its .app still isn't replaced by the terminal build.
 func TestUpdateTakesTheMacTerminalBuild(t *testing.T) {
 	dir := t.TempDir()
-	exe := filepath.Join(dir, "chongyun")
-	if err := os.WriteFile(exe, []byte("chongyun"), 0o755); err != nil {
+	exe := filepath.Join(dir, "magpie")
+	if err := os.WriteFile(exe, []byte("magpie"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	wasB, wasE, wasGUI := bundleOf, executable, update.GUI
@@ -41,7 +41,7 @@ func TestUpdateTakesTheMacTerminalBuild(t *testing.T) {
 			http.NotFound(w, r)
 			return
 		}
-		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", URL: "https://github.com/lulu58588/magpie-releases/releases/tag/v0.1.11",
+		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", URL: "https://github.com/lulu58588/chongyun-releases/releases/tag/v0.1.11",
 			Assets: map[string]update.Asset{
 				update.BinaryAsset(): {URL: "http://" + r.Host + "/asset"}}})
 	}))

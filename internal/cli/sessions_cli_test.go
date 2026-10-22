@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/sessions"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // sessionsHome is a sandbox HOME with the sessions package's fixtures as
@@ -138,7 +138,7 @@ func TestSessionsCmd(t *testing.T) {
 // list cut at sessions.Limit: with the default --limit 20 the command read
 // only 200, so a history longer than that reported a remainder that was
 // wrong, and a model or folder filter picked among the rest could never be
-// resolved (yetone, #1019).
+// resolved (upstream, #1019).
 func TestSessionsMoreCountsTheWholeSet(t *testing.T) {
 	now := sessionsHome(t)
 	claude := os.Getenv("CLAUDE_CONFIG_DIR")

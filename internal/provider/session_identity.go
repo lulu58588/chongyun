@@ -9,8 +9,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/filememo"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // SessionIdentity is an account's public identity, without its credentials.

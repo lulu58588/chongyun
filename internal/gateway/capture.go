@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/lulu58588/magpie/internal/redact"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/redact"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // Recent-call bodies are diagnostics, not an unbounded traffic log. Keeping the

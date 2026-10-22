@@ -13,9 +13,9 @@ import (
 	"testing"
 
 	"github.com/klauspost/compress/zstd"
-	"github.com/lulu58588/magpie/internal/backup"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/backup"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // "not a chongyun backup" was all a sync said whatever the server sent where

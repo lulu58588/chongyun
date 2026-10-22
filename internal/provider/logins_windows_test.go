@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/chongyun/internal/steady"
 )
 
 // Another magpie writing logins.json (a temp file renamed over it: the one

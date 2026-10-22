@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // On Windows npm's global folder may be Node.js's own, C:\Program

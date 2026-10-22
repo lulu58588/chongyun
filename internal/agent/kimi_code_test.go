@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #290: a kimi-cli user who moved to the new Kimi Code has both ~/.kimi and
@@ -54,7 +54,7 @@ max_context_size = 262144
 		t.Fatalf("default_model in ~/.kimi-code: %q", v)
 	}
 	m, err := edit.GetTOMLTable(path, `models."magpie/relay/gemini-3.8-flash"`)
-	if err != nil || m == nil || m["provider"] != "chongyun" || !kimiToolUse(path) {
+	if err != nil || m == nil || m["provider"] != "magpie" || !kimiToolUse(path) {
 		t.Fatalf("model table: %v %v", m, err)
 	}
 	if b, _ := os.ReadFile(old); string(b) != cfg {
@@ -63,7 +63,7 @@ max_context_size = 262144
 	if err := f.Set(""); err != nil {
 		t.Fatal(err)
 	}
-	if b, _ := os.ReadFile(path); strings.Contains(string(b), "chongyun") || !strings.Contains(string(b), `default_model = "kimi-code/kimi-for-coding"`) {
+	if b, _ := os.ReadFile(path); strings.Contains(string(b), "magpie") || !strings.Contains(string(b), `default_model = "kimi-code/kimi-for-coding"`) {
 		t.Fatalf("reset:\n%s", b)
 	}
 

@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // pemPair writes a self-signed certificate and its key into dir.
@@ -115,10 +115,10 @@ func TestDaemonReinstallKeepsTLS(t *testing.T) {
 	var file string
 	switch runtime.GOOS {
 	case "darwin":
-		file = filepath.Join(os.Getenv("HOME"), "Library", "LaunchAgents", "com.yetone.magpie.serve.plist")
+		file = filepath.Join(os.Getenv("HOME"), "Library", "LaunchAgents", "com.chongyun.ai.gateway.serve.plist")
 	case "linux":
 		t.Setenv("XDG_CONFIG_HOME", filepath.Join(t.TempDir(), "config"))
-		file = filepath.Join(os.Getenv("XDG_CONFIG_HOME"), "systemd", "user", "magpie.service")
+		file = filepath.Join(os.Getenv("XDG_CONFIG_HOME"), "systemd", "user", "chongyun.service")
 	default:
 		t.Skip("no service on " + runtime.GOOS)
 	}

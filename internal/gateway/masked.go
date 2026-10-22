@@ -7,8 +7,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/lulu58588/magpie/internal/gwmw"
-	"github.com/lulu58588/magpie/internal/maskrec"
+	"github.com/lulu58588/chongyun/internal/gwmw"
+	"github.com/lulu58588/chongyun/internal/maskrec"
 )
 
 // Masked is what masking swapped in a request, for the Routing page and

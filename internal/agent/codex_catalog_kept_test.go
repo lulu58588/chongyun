@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // What the user adds by hand to the model list magpie writes for Codex
@@ -18,7 +18,7 @@ import (
 // magpie's.
 func TestCodexCatalogKeepsWhatTheUserAdded(t *testing.T) {
 	home, _ := codexHome(t, "", "")
-	list := filepath.Join(home, ".codex", "magpie-models.json")
+	list := filepath.Join(home, ".codex", "chongyun-models.json")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
@@ -96,7 +96,7 @@ func TestCodexCatalogKeepsWhatTheUserAdded(t *testing.T) {
 // A list holding nothing of the user's still goes as magpie steps out.
 func TestCodexCatalogRemovedWhenNothingAdded(t *testing.T) {
 	home, _ := codexHome(t, "", "")
-	list := filepath.Join(home, ".codex", "magpie-models.json")
+	list := filepath.Join(home, ".codex", "chongyun-models.json")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)

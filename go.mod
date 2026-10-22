@@ -1,4 +1,4 @@
-module github.com/lulu58588/magpie
+module github.com/lulu58588/chongyun
 
 go 1.26.8
 

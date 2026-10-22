@@ -9,8 +9,8 @@ import (
 
 	"github.com/tidwall/jsonc"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 func piDoc(t *testing.T, p string) map[string]any {

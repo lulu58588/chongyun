@@ -29,27 +29,27 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/autostart"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/filememo"
-	"github.com/lulu58588/magpie/internal/fonts"
-	"github.com/lulu58588/magpie/internal/fx"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/lastgood"
-	"github.com/lulu58588/magpie/internal/library"
-	"github.com/lulu58588/magpie/internal/mcpauth"
-	"github.com/lulu58588/magpie/internal/middleware"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/profile"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/redact"
-	"github.com/lulu58588/magpie/internal/sessions"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/update"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/autostart"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/fonts"
+	"github.com/lulu58588/chongyun/internal/fx"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/library"
+	"github.com/lulu58588/chongyun/internal/mcpauth"
+	"github.com/lulu58588/chongyun/internal/middleware"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/profile"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/redact"
+	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // cliBehind is the terminal's magpie command when it's a copied file rather
@@ -1271,6 +1271,7 @@ func Handler(w Windows, gw *gateway.Server) http.Handler {
 		// gateway mode, set on its own (gateway-mode)
 		in.GatewayMode = cur.GatewayMode
 		in.NoAccountDiscovery = cur.NoAccountDiscovery // set on its own (account-discovery below, or the CLI)
+		in.AccountDiscovery = cur.AccountDiscovery    // the same, the other way round (the CLI)
 		if v := strings.TrimSpace(in.Vision); v != "" && v != "off" && v != cur.Vision {
 			if _, _, ok := provider.Resolve(v); !ok {
 				fail(rw, fmt.Errorf("no model %s to describe images", v))
@@ -2536,10 +2537,10 @@ func countClient(m map[string]string, client, as string) (map[string]string, err
 		delete(out, strings.ToLower(client))
 		return out, nil
 	}
-	if usage.IsAgent(client) || client == "other" || usage.AgentOf(client) == "chongyun" || strings.HasPrefix(strings.ToLower(client), "chongyun") {
+	if usage.IsAgent(client) || client == "other" || usage.AgentOf(client) == "magpie" || strings.HasPrefix(strings.ToLower(client), "magpie") {
 		return nil, fmt.Errorf("%s is counted on its own", client)
 	}
-	if !usage.IsAgent(as) || as == "chongyun" {
+	if !usage.IsAgent(as) || as == "magpie" {
 		return nil, fmt.Errorf("%s is not an agent chongyun knows", as)
 	}
 	out[strings.ToLower(client)] = as

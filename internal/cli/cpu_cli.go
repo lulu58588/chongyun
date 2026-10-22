@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 const cpuUsage = `usage: chongyun cpu [<file>] [--seconds N]

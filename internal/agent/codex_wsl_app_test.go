@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // The Codex app on Windows with its agent in WSL reads Windows'
@@ -28,7 +28,7 @@ func TestCodexWSLAppAddressKept(t *testing.T) {
 		t.Fatal(err)
 	}
 	// on Windows magpie names the catalog as the app's WSL agent can read it
-	if c, _ := edit.GetTOMLTop(cx.Path, "model_catalog_json"); runtime.GOOS == "windows" && c != "magpie-models.json" {
+	if c, _ := edit.GetTOMLTop(cx.Path, "model_catalog_json"); runtime.GOOS == "windows" && c != "chongyun-models.json" {
 		t.Fatalf("catalog named %q", c)
 	}
 	if c := cx.Check(); c != "" {
@@ -37,7 +37,7 @@ func TestCodexWSLAppAddressKept(t *testing.T) {
 
 	// the user's edit: Windows as WSL reaches it, the catalog by its name
 	wsl := "http://172.28.96.1:" + gateway.Port()
-	if err := edit.SetTOMLTop(cx.Path, edit.KV{Path: "model_catalog_json", Value: "magpie-models.json"}, edit.KV{Path: "openai_base_url", Value: wsl + gateway.CodexPath}); err != nil {
+	if err := edit.SetTOMLTop(cx.Path, edit.KV{Path: "model_catalog_json", Value: "chongyun-models.json"}, edit.KV{Path: "openai_base_url", Value: wsl + gateway.CodexPath}); err != nil {
 		t.Fatal(err)
 	}
 	if err := edit.SetTOMLKey(cx.Path, "model_providers."+magpieID, "base_url", wsl+"/v1"); err != nil {
@@ -69,7 +69,7 @@ func TestCodexWSLAppAddressKept(t *testing.T) {
 		t.Fatal(err)
 	}
 	keep("sync")
-	if _, err := os.Stat(home + "/.codex/magpie-models.json"); err != nil {
+	if _, err := os.Stat(home + "/.codex/chongyun-models.json"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -77,7 +77,7 @@ func TestCodexWSLAppAddressKept(t *testing.T) {
 	if err := cx.Unwire(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); strings.Contains(cfg, "openai_base_url") || strings.Contains(cfg, "model_catalog_json") || strings.Contains(cfg, `model_provider = "chongyun"`) {
+	if cfg := read(); strings.Contains(cfg, "openai_base_url") || strings.Contains(cfg, "model_catalog_json") || strings.Contains(cfg, `model_provider = "magpie"`) {
 		t.Fatalf("unwired:\n%s", cfg)
 	}
 }

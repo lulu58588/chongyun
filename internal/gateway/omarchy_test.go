@@ -9,8 +9,8 @@ import (
 	"testing"
 )
 
-// usemagpie.ai on an Omarchy machine asks the magpie there for the theme it
-// draws itself in: only from this machine, only readable by the site.
+// a site served on an Omarchy machine asks the chongyun there for the theme
+// it draws itself in: only from this machine, only readable by that site.
 func TestOmarchyThemeForTheSite(t *testing.T) {
 	fresh(t)
 	t.Setenv("MAGPIE_ADDR", "")
@@ -40,14 +40,18 @@ func TestOmarchyThemeForTheSite(t *testing.T) {
 		return w
 	}
 
+	// this build names no site of its own: the one that may read the theme
+	// is MAGPIE_SITE_ORIGIN
+	t.Setenv("MAGPIE_SITE_ORIGIN", "https://site.example")
+
 	onOmarchy = false
-	if w := call("GET", "127.0.0.1:5000", "https://usemagpie.ai"); w.Code != http.StatusNotFound {
+	if w := call("GET", "127.0.0.1:5000", "https://site.example"); w.Code != http.StatusNotFound {
 		t.Fatal("not on Omarchy:", w.Code, w.Body)
 	}
 
 	onOmarchy = true
-	w := call("GET", "127.0.0.1:5000", "https://usemagpie.ai")
-	if w.Code != 200 || w.Header().Get("Access-Control-Allow-Origin") != "https://usemagpie.ai" {
+	w := call("GET", "127.0.0.1:5000", "https://site.example")
+	if w.Code != 200 || w.Header().Get("Access-Control-Allow-Origin") != "https://site.example" {
 		t.Fatal("the site, on this machine:", w.Code, w.Header(), w.Body)
 	}
 	var th struct {
@@ -70,7 +74,7 @@ func TestOmarchyThemeForTheSite(t *testing.T) {
 	if w := call("GET", "192.168.1.9:5000", ""); w.Code == 200 {
 		t.Fatal("another machine got it:", w.Code)
 	}
-	w = call("OPTIONS", "127.0.0.1:5000", "https://usemagpie.ai")
+	w = call("OPTIONS", "127.0.0.1:5000", "https://site.example")
 	if w.Code != http.StatusNoContent || w.Header().Get("Access-Control-Allow-Private-Network") != "true" {
 		t.Fatal("preflight:", w.Code, w.Header())
 	}

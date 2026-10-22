@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // AlphaSearchPath is where Codex's own web search, its web.run tool, goes:

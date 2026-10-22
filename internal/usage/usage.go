@@ -18,8 +18,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Record is one call.
@@ -715,9 +715,9 @@ func (g *Group) addOwn(r Record, price *catalog.Price) {
 // image description it asked for (#1839).
 func (r Record) ByMagpie() bool {
 	id := AgentOf(r.Agent)
-	// "chongyun" as the agents know it; its own User-Agents (magpie-router/1,
+	// "magpie" as the agents know it; its own User-Agents (magpie-router/1,
 	// magpie-search/1) where they aren't loaded
-	return id == "chongyun" || strings.HasPrefix(id, "magpie-")
+	return id == "magpie" || strings.HasPrefix(id, "magpie-")
 }
 
 // who is where a subscription's calls went as the account signed in

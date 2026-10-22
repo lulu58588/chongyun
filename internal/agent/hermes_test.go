@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -47,8 +47,8 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw := read()
-	mp, _ := providers(c)["chongyun"].(map[string]any)
-	if m["default"] != "deepseek/pro" || m["provider"] != "chongyun" || m["base_url"] != "https://openrouter.ai/api/v1" ||
+	mp, _ := providers(c)["magpie"].(map[string]any)
+	if m["default"] != "deepseek/pro" || m["provider"] != "magpie" || m["base_url"] != "https://openrouter.ai/api/v1" ||
 		providers(c)["mine"] == nil || mp == nil || mp["api_mode"] != "chat_completions" || !strings.HasSuffix(mp["base_url"].(string), "/v1") ||
 		!strings.Contains(raw, "# mine") {
 		t.Fatalf("config:\n%s", raw)
@@ -75,7 +75,7 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw = read()
-	if m["default"] != "moonshotai/kimi-k3" || m["provider"] != "openrouter" || providers(c)["chongyun"] == nil || providers(c)["mine"] == nil {
+	if m["default"] != "moonshotai/kimi-k3" || m["provider"] != "openrouter" || providers(c)["magpie"] == nil || providers(c)["mine"] == nil {
 		t.Fatalf("own:\n%s", raw)
 	}
 	a := hermes(home)
@@ -100,7 +100,7 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw = read()
-	if m["default"] != "claude-opus-5" || m["provider"] != "anthropic" || providers(c)["chongyun"] != nil || providers(c)["mine"] == nil || a.Wired() {
+	if m["default"] != "claude-opus-5" || m["provider"] != "anthropic" || providers(c)["magpie"] != nil || providers(c)["mine"] == nil || a.Wired() {
 		t.Fatalf("disconnect, own model:\n%s", raw)
 	}
 
@@ -110,7 +110,7 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw = read()
-	if m["default"] != "claude-opus-5" || m["provider"] != "anthropic" || providers(c)["chongyun"] != nil {
+	if m["default"] != "claude-opus-5" || m["provider"] != "anthropic" || providers(c)["magpie"] != nil {
 		t.Fatalf("disconnect:\n%s", raw)
 	}
 
@@ -121,7 +121,7 @@ func TestHermes(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, m, raw = read()
-	if m["provider"] != nil || m["default"] != nil || providers(c)["chongyun"] != nil || c["agent"] == nil {
+	if m["provider"] != nil || m["default"] != nil || providers(c)["magpie"] != nil || c["agent"] == nil {
 		t.Fatalf("disconnect, no provider:\n%s", raw)
 	}
 }
@@ -153,7 +153,7 @@ func TestHermesProfiles(t *testing.T) {
 	bot := write("profiles/coder/config.yaml", "# coder bot\nmodel:\n  default: kimi-k3\n  provider: moonshot\nproviders:\n  mine:\n    base_url: https://x\n")
 	write("profiles/coder/SOUL.md", "coder\n")
 	// cloned from a main config already on magpie
-	clone := write("profiles/writer/config.yaml", "model:\n  default: deepseek/pro\n  provider: chongyun\n")
+	clone := write("profiles/writer/config.yaml", "model:\n  default: deepseek/pro\n  provider: magpie\n")
 	// deleted (a tombstone beside it), and a name Hermes doesn't allow
 	gone := write("profiles/old/config.yaml", "model:\n  default: x\n")
 	write("profiles/.deleted/old", "")
@@ -167,7 +167,7 @@ func TestHermesProfiles(t *testing.T) {
 	has := func(p string) bool {
 		c, _ := read(p)
 		ps, _ := c["providers"].(map[string]any)
-		return ps["chongyun"] != nil
+		return ps["magpie"] != nil
 	}
 
 	a := hermes(home)
@@ -447,7 +447,7 @@ func TestHermesWithAKeyInItsEnvFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	// the reporter's provider, as he wrote it
-	mine := "model:\n  default: deepseek/pro\n  provider: chongyun\nproviders:\n  chongyun:\n    name: chongyun\n    api_key: \"${MAGPIE_API_KEY}\"\n    api_mode: chat_completions\n    base_url: " + here(home).v1() + "\n"
+	mine := "model:\n  default: deepseek/pro\n  provider: magpie\nproviders:\n  magpie:\n    name: chongyun\n    api_key: \"${MAGPIE_API_KEY}\"\n    api_mode: chat_completions\n    base_url: " + here(home).v1() + "\n"
 	if err := os.WriteFile(path, []byte(mine), 0o644); err != nil {
 		t.Fatal(err)
 	}

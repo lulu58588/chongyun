@@ -4,8 +4,8 @@ package agent
 // ~/.qoder by default. A provider of one's own is an entry of "providers",
 // its models picked as "<provider>/<model>":
 //
-//	{"providers":{"chongyun":{"displayName": "崇云科技","protocol":"openai",
-//	   "baseUrl":"http://127.0.0.1:3425/v1","apiKey":"chongyun","model":…,
+//	{"providers":{"magpie":{"displayName": "崇云科技","protocol":"openai",
+//	   "baseUrl":"http://127.0.0.1:3425/v1","apiKey":"magpie","model":…,
 //	   "models":[{"model":…,"displayName":…,"contextWindow":…,"maxOutputTokens":…,
 //	     "capabilities":{"tools":true,"vision":…,"thinking":{"modes":["enabled"],
 //	       "supportsEffort":true,"supportedEffortLevels":[…]}}}]}},
@@ -34,8 +34,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 func qoder(home string) *Agent {

@@ -10,9 +10,9 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // grokAppConfig is agent-home/config.toml as Grok App 0.2.39 writes it
@@ -152,7 +152,7 @@ func TestGrokApp(t *testing.T) {
 	if d := m["models"].(map[string]any); d["default"] != "deepseek" || d["max_retries"] != int64(3) {
 		t.Fatalf("[models] route changed: %v", d)
 	}
-	ch := m["model"].(map[string]any)["chongyun"].(map[string]any)
+	ch := m["model"].(map[string]any)["magpie"].(map[string]any)
 	// Grok Build reads these two bare: a quoted context window is what the
 	// App heals as broken (#538 of its own), and the effort gate a bool
 	if ch["context_window"] != int64(262144) || ch["supports_reasoning_effort"] != true {
@@ -166,8 +166,8 @@ func TestGrokApp(t *testing.T) {
 	}
 
 	secs := grokAppSections(t, path)
-	s := secs["chongyun"]
-	if s["model"] != "kimi/k2" || s["base_url"] != here(home).v1() || s["name"] != "chongyun" ||
+	s := secs["magpie"]
+	if s["model"] != "kimi/k2" || s["base_url"] != here(home).v1() || s["name"] != "magpie" ||
 		s["api_key"] != agentKeyAt("grok-app", here(home).gw()) || s["api_backend"] != "chat_completions" ||
 		s["app_provider_mode"] != "generic" || s["context_window"] != "262144" || s["supports_reasoning_effort"] != "true" {
 		t.Fatalf("chongyun's channel as the App reads it: %v", s)
@@ -222,7 +222,7 @@ func TestGrokApp(t *testing.T) {
 	if err := a.Pick("model", "magpie/kimi/k2-vision"); err != nil {
 		t.Fatal(err)
 	}
-	s = grokAppSections(t, path)["chongyun"]
+	s = grokAppSections(t, path)["magpie"]
 	if s["model"] != "kimi/k2-vision" || s["app_supports_vision"] != "true" || s["supports_reasoning_effort"] != "false" ||
 		s["app_efforts"] != "[]" {
 		t.Fatalf("k2-vision's channel: %v", s)
@@ -270,7 +270,7 @@ func TestGrokAppSyncKeepsTheirs(t *testing.T) {
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	s := grokAppSections(t, path)["chongyun"]
+	s := grokAppSections(t, path)["magpie"]
 	if s["model"] != "kimi/k2-vision" || s["app_supports_vision"] != "true" {
 		t.Fatalf("the App's pick went: %v", s)
 	}
@@ -308,8 +308,8 @@ func TestGrokAppOwnRouteStays(t *testing.T) {
 		t.Fatalf("picking the official route: %v", err)
 	}
 	secs := grokAppSections(t, path)
-	if _, ok := secs["chongyun"]; ok || a.Field("model").Get() != "grok" {
-		t.Fatalf("chongyun's channel stayed: model %q\n%v", a.Field("model").Get(), secs["chongyun"])
+	if _, ok := secs["magpie"]; ok || a.Field("model").Get() != "grok" {
+		t.Fatalf("chongyun's channel stayed: model %q\n%v", a.Field("model").Get(), secs["magpie"])
 	}
 	def, _, rerr = grokAppRead(path)
 	if rerr != nil || def != "grok" {
@@ -361,7 +361,7 @@ func TestGrokAppSyncUnconnected(t *testing.T) {
 		t.Fatalf("check: %q", c)
 	}
 	stash(map[string]string{grokAppReleased: "1"}) // a Use after the one put back
-	if err := os.WriteFile(path, []byte(strings.Replace(before, `default = "deepseek"`, `default = "chongyun"`, 1)), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte(strings.Replace(before, `default = "deepseek"`, `default = "magpie"`, 1)), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	if c := a.Check(); !strings.Contains(c, "no longer reaches chongyun") {
@@ -379,7 +379,7 @@ func TestGrokAppReleasesATakeover(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(path, []byte(strings.Replace(string(b), `default = "deepseek"`, `default = "chongyun"`, 1)), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte(strings.Replace(string(b), `default = "deepseek"`, `default = "magpie"`, 1)), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.Sync(); err != nil {
@@ -389,14 +389,14 @@ func TestGrokAppReleasesATakeover(t *testing.T) {
 	if err != nil || def != "deepseek" {
 		t.Fatalf("after sync: route %q err %v", def, err)
 	}
-	if err := os.WriteFile(path, []byte(strings.Replace(string(mustRead(t, path)), `default = "deepseek"`, `default = "chongyun"`, 1)), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte(strings.Replace(string(mustRead(t, path)), `default = "deepseek"`, `default = "magpie"`, 1)), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}
 	def, _, err = grokAppRead(path)
-	if err != nil || def != "chongyun" {
+	if err != nil || def != "magpie" {
 		t.Fatalf("Use was undone: %q err %v", def, err)
 	}
 }
@@ -422,7 +422,7 @@ func TestGrokAppFresh(t *testing.T) {
 	if err := a.Pick("model", "magpie/kimi/k2-vision"); err != nil {
 		t.Fatal(err)
 	}
-	if s := grokAppSections(t, path)["chongyun"]; s["model"] != "kimi/k2-vision" {
+	if s := grokAppSections(t, path)["magpie"]; s["model"] != "kimi/k2-vision" {
 		t.Fatalf("channel: %v", s)
 	}
 	if err := a.Disconnect(); err != nil {

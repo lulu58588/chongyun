@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // zooCodeHere is Zoo Code in a VS Code User folder under home, the
@@ -63,7 +63,7 @@ func TestZooCode(t *testing.T) {
 	// a current profile that is one of apiConfigs, and a modelInfo with
 	// contextWindow and supportsPromptCache
 	for k, want := range map[string]string{
-		"providerProfiles.currentApiConfigName":                                        "chongyun",
+		"providerProfiles.currentApiConfigName":                                        "magpie",
 		"providerProfiles.apiConfigs.magpie.apiProvider":                               "openai",
 		"providerProfiles.apiConfigs.magpie.openAiBaseUrl":                             gatewayV1(),
 		"providerProfiles.apiConfigs.magpie.openAiApiKey":                              agentKey("zoo-code"),

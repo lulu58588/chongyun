@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/lastgood"
 )
 
 // A settings.json a crash left at its length, every byte zero (#1505), is

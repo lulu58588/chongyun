@@ -20,12 +20,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	_ "github.com/lulu58588/magpie/internal/sqlitedb"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	_ "github.com/lulu58588/chongyun/internal/sqlitedb"
 )
 
 // CindyScheme begins every Cindy import link.
 const CindyScheme = "cindy://provider/import?"
+
+// cindyName is the name the link gives the provider, and so the name Cindy
+// shows it under and keeps in its own database: how it is found there.
+const cindyName = "Chongyun"
 
 type cindyEndpoint struct {
 	Protocol  string   `json:"protocol"`
@@ -35,7 +39,7 @@ type cindyEndpoint struct {
 }
 
 // CindyLink is the link that adds the gateway at url to Cindy as the
-// provider Magpie, keyed so that its requests are counted as Cindy's.
+// provider Chongyun, keyed so that its requests are counted as Cindy's.
 func CindyLink(url string) string {
 	v1 := url + "/v1"
 	models := v1 + "/models"
@@ -46,7 +50,7 @@ func CindyLink(url string) string {
 		Auth      map[string]any  `json:"auth"`
 		Endpoints []cindyEndpoint `json:"endpoints"`
 	}{
-		Kind: "custom", Name: "Chongyun", ID: magpieID,
+		Kind: "custom", Name: cindyName, ID: magpieID,
 		Auth: map[string]any{"method": "apiKey", "apiKey": agentKeyAt("cindy", url)},
 		Endpoints: []cindyEndpoint{
 			{"anthropic-messages", url, []string{"claude-code"}, models},
@@ -78,7 +82,8 @@ func cindyHas(path, gw string) bool {
 	defer db.Close()
 	var n int
 	err = db.QueryRow(`SELECT count(*) FROM custom_providers
-		WHERE id = ? OR lower(name) = ? OR instr(runtimes, ?) > 0`, magpieID, magpieID, gw).Scan(&n)
+		WHERE id = ? OR lower(name) IN (?, ?) OR instr(runtimes, ?) > 0`,
+		magpieID, magpieID, strings.ToLower(cindyName), gw).Scan(&n)
 	return err == nil && n > 0
 }
 

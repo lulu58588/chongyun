@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // magpie provider zed, once Zed is moved onto its plugin, reads as the
@@ -20,7 +20,7 @@ func TestShowMovedProvider(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
 	t.Setenv("MAGPIE_BUN", "")
-	dir := filepath.Join(home, ".config", "chongyun")
+	dir := filepath.Join(home, ".config", "magpie")
 	for name, body := range map[string]string{
 		"plugins.json":     `{"plugins":[{"spec":"opencode-zed-auth"}]}`,
 		"plugin-auth.json": `{"zed":{"type":"oauth","access":"a","refresh":"r","expires":0,"accountId":"me@zed"}}`,

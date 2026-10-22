@@ -9,7 +9,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/lulu58588/magpie/internal/pluginrt"
+	"github.com/lulu58588/chongyun/internal/pluginrt"
 )
 
 // builtinCmd: `chongyun plugin builtin [on|off <id>]` — magpie's built-in

@@ -18,11 +18,11 @@ func TestCodexAPIKeepsMagpieOnOwnModel(t *testing.T) {
 	os.WriteFile(filepath.Join(dir, "models_cache.json"), []byte(`{"models":[
 		{"slug":"gpt-a","display_name":"A","priority":1},
 		{"slug":"gpt-b","display_name":"B","priority":2}]}`), 0o644)
-	catalogPath := filepath.Join(dir, "magpie-models.json")
+	catalogPath := filepath.Join(dir, "chongyun-models.json")
 	wired := func(model string) {
 		t.Helper()
 		cfg := read()
-		if !strings.Contains(cfg, `model_provider = "chongyun"`) || !strings.Contains(cfg, "model_catalog_json") ||
+		if !strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, "model_catalog_json") ||
 			!strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model = "`+model+`"`) {
 			t.Fatalf("not wired on %s:\n%s", model, cfg)
 		}
@@ -102,7 +102,7 @@ func TestCodexAPISyncWiresOwnModel(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "chongyun"`) || !strings.Contains(cfg, `model = "codex/gpt-a"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, `model = "codex/gpt-a"`) {
 		t.Fatalf("after sync:\n%s", cfg)
 	}
 }

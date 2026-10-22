@@ -11,10 +11,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/fx"
-	"github.com/lulu58588/magpie/internal/settings"
-	stats "github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/fx"
+	"github.com/lulu58588/chongyun/internal/settings"
+	stats "github.com/lulu58588/chongyun/internal/usage"
 )
 
 // costCurrency and costRate are cost's currency and, for cny, the

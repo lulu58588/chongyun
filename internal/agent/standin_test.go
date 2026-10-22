@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 func TestClaudeStandIn(t *testing.T) {
@@ -67,7 +67,7 @@ func TestCodexStandIn(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	write("model = \"deepseek/deepseek-v4\"\nmodel_provider = \"chongyun\"\n\n[model_providers.magpie]\nname = \"chongyun\"\n")
+	write("model = \"deepseek/deepseek-v4\"\nmodel_provider = \"magpie\"\n\n[model_providers.magpie]\nname = \"magpie\"\n")
 	if got := StandIn("codex", "codex-auto-review"); got != "deepseek/deepseek-v4" {
 		t.Errorf("chongyun as provider: %q", got)
 	}

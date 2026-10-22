@@ -12,7 +12,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // bedrock plays Bedrock's runtime: Anthropic's messages under /anthropic,

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A tier, or the subagents, given a model picked from the list keeps it
@@ -27,7 +27,7 @@ func TestClaudeTierPickedAsTheMainModelStays(t *testing.T) {
 	// haiku on a Claude main model follows its Haiku: that Haiku picked
 	picks = append(picks, pick{"anth/claude-opus-5-5", "haiku", "anth/claude-haiku-4-5"})
 	for _, p := range picks {
-		for _, via := range []string{"chongyun", "/model"} {
+		for _, via := range []string{"magpie", "/model"} {
 			t.Run(p.main+"/"+p.key+"="+p.model+"/"+via, func(t *testing.T) {
 				home, _ := codexHome(t, "", "")
 				a := claude(home)
@@ -48,7 +48,7 @@ func TestClaudeTierPickedAsTheMainModelStays(t *testing.T) {
 				written := func() string { m, _ := edit.GetJSON(path, "env."+envKey); return bare(m) }
 				main := func(m string) {
 					t.Helper()
-					if via == "chongyun" {
+					if via == "magpie" {
 						if err := a.Apply("model", m); err != nil {
 							t.Fatal(err)
 						}

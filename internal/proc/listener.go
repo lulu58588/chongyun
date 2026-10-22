@@ -58,7 +58,7 @@ func IsMagpie(path string) bool {
 	n = strings.TrimSuffix(n, ".old")
 	n = strings.TrimSuffix(n, ".new")
 	n = strings.TrimSuffix(n, ".exe")
-	for _, name := range []string{"chongyun", "chongyun", "dial"} {
+	for _, name := range []string{"magpie", "magpie", "dial"} {
 		if n == name || strings.HasPrefix(n, name+"-") || strings.HasPrefix(n, name+"_") {
 			return true
 		}

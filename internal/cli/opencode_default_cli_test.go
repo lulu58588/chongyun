@@ -46,7 +46,7 @@ func TestAgentOpenCodeDefaultPutsBackTheModel(t *testing.T) {
 				t.Fatal(err)
 			}
 			s = read()
-			if !strings.Contains(s, `"model": "native/glm-5"`) || !strings.Contains(s, `"small_model": "native/glm-5-mini"`) || strings.Contains(s, `"chongyun"`) || strings.Contains(s, "baseURL") || !strings.Contains(s, `"theme": "dark"`) {
+			if !strings.Contains(s, `"model": "native/glm-5"`) || !strings.Contains(s, `"small_model": "native/glm-5-mini"`) || strings.Contains(s, `"magpie"`) || strings.Contains(s, "baseURL") || !strings.Contains(s, `"theme": "dark"`) {
 				t.Fatalf("default didn't put back what was there:\n%s", s)
 			}
 		})

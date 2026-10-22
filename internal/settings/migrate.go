@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // Migrate carries the files of an install that predates the name over:
@@ -24,7 +24,7 @@ func Migrate() {
 		home, _ := os.UserHomeDir()
 		cache = filepath.Join(home, ".cache")
 	}
-	copyTree(filepath.Join(cache, "dial"), filepath.Join(cache, "chongyun"))
+	copyTree(filepath.Join(cache, "dial"), filepath.Join(cache, "magpie"))
 }
 
 // copyTree copies src into dst, files and modes alike, when src exists and

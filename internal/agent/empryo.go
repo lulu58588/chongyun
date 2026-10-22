@@ -8,9 +8,9 @@ package agent
 // The model sessions start on is defaultModel, "<provider id>/<model id>",
 // split at the first "/".
 //
-// magpie adds a provider of its own, id "chongyun", at the gateway, and sets
+// magpie adds a provider of its own, id "magpie", at the gateway, and sets
 // defaultModel to magpie/<catalog id>; the defaultModel the user had is
-// stashed and put back when magpie steps out, and the "chongyun" provider
+// stashed and put back when magpie steps out, and the "magpie" provider
 // goes again then. The user's providers and other keys are left as they
 // are. With no envVar Empryo only lists a provider whose baseURL answers
 // (2xx, 401 or 403), which the gateway's GET /v1 does.
@@ -22,7 +22,7 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 const (

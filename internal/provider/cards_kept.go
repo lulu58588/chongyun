@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // cardFace is what a card is named and drawn with.

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // onAlerts is told when the Settings page turns a usage or balance alert

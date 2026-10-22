@@ -29,7 +29,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // streamRetries is how many times a cut reply is asked to go on before it

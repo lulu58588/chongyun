@@ -3,7 +3,7 @@ package provider
 import (
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Model ids without the provider (settings.BareModelIDs; love1sbug on X):

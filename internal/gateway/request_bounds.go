@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/klauspost/compress/zstd"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // Bound a single body and its read time without limiting how long a client

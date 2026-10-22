@@ -1,6 +1,7 @@
-// Package update keeps magpie current. Builds are published as GitHub
-// releases of yetone/magpie-releases; usemagpie.ai/api/latest describes the
-// newest one: its version, notes, and every file with its SHA-256.
+// Package update keeps chongyun current. This build names no update feed
+// of its own: the newest release is described by the feed MAGPIE_UPDATE_FEED
+// points at (none by default), with its version, notes, and every file with
+// its SHA-256.
 //
 // The macOS app replaces its own bundle: the new zip is downloaded, checked
 // against its hash, unpacked, and accepted only if it is signed by the same
@@ -30,10 +31,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/source"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/source"
 )
 
 // Site is where this build's own releases live; its /api/latest is the

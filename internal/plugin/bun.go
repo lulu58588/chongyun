@@ -22,10 +22,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/ghtoken"
-	"github.com/lulu58588/magpie/internal/libc"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/source"
+	"github.com/lulu58588/chongyun/internal/ghtoken"
+	"github.com/lulu58588/chongyun/internal/libc"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/source"
 )
 
 // BunVersion is the Bun magpie downloads to run plugins with the first

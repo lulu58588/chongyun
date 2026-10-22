@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // A plugin's provider is signed in to as many times as the user likes, as

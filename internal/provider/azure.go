@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // Azure OpenAI is reached at the user's own resource, never at one host

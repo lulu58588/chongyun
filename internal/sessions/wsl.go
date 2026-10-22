@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/lastgood"
 )
 
 // Sessions in WSL. On Windows an agent installed in a WSL distro keeps its

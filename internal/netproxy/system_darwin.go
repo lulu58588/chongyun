@@ -1,6 +1,6 @@
 package netproxy
 
-import "github.com/lulu58588/magpie/internal/proc"
+import "github.com/lulu58588/chongyun/internal/proc"
 
 // system reads what System Settings → Network → Proxies says, through
 // scutil (the same dictionary CFNetwork uses).

@@ -11,8 +11,8 @@ import (
 
 	"golang.org/x/term"
 
-	"github.com/lulu58588/magpie/internal/backup"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/backup"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // backupCmd writes every provider, setting, profile and agent model, and
@@ -35,7 +35,7 @@ func backupCmd(args []string) error {
 		}
 	}
 	if file == "" {
-		file = "chongyun" + backup.Ext
+		file = "magpie" + backup.Ext
 	}
 	b, err := backup.Collect(keys, version)
 	if err != nil {

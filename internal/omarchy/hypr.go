@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // Hyprland is whether magpie runs under Hyprland, Omarchy's compositor or

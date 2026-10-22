@@ -16,7 +16,7 @@ package agent
 // user's ~/.claude settings read as Claude Code reads them) with the
 // instance's environment added, and lists Claude's models and its custom
 // models, each sent as Claude Code's model. So magpie is an instance of its
-// own, "chongyun": Claude Code pointed at the gateway (ANTHROPIC_BASE_URL and
+// own, "magpie": Claude Code pointed at the gateway (ANTHROPIC_BASE_URL and
 // the token Claude Code is routed with, so its requests are Claude Code's
 // to the gateway, tiers and all), every magpie model one of its custom
 // models, a 1M one marked [1m] as magpie marks it for Claude Code, with
@@ -42,11 +42,11 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // t3Instance is the key of magpie's provider instance in T3 Code's

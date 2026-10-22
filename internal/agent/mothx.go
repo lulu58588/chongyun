@@ -7,9 +7,9 @@ package agent
 // configDirForOS). Its fields (config.Settings, ProviderConfig,
 // ModelConfig, mothx 1.3.104):
 //
-//	{"defaultProvider":"chongyun","defaultModel":"<model>",
+//	{"defaultProvider":"magpie","defaultModel":"<model>",
 //	 "defaultThinkingLevel":"high",
-//	 "providers":{"chongyun":{"baseUrl":"http://127.0.0.1:3425/v1",
+//	 "providers":{"magpie":{"baseUrl":"http://127.0.0.1:3425/v1",
 //	   "api":"openai-chat","apiKey":"magpie-mothx","thinkingFormat":"openai",
 //	   "models":[{"id":…,"name":…,"reasoning":true,"contextWindow":…,
 //	     "maxTokens":…,"cost":{…},"input":["text","image"]}]}}}
@@ -33,9 +33,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // mothxLevels are the thinking levels MothX takes (provider.ThinkingLevel,

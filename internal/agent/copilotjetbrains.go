@@ -19,7 +19,7 @@ package agent
 //	  "isCustomModel": true, "modelCapabilities": {"name": …, "maxInputTokens": …,
 //	  "maxOutputTokens": …, "toolCalling": true, "vision": …}}}
 //
-// So magpie adds the provider "chongyun" there: its catalog, each model at the
+// So magpie adds the provider "magpie" there: its catalog, each model at the
 // gateway's /v1/chat/completions, sent with the key as a Bearer token (the
 // key is the file's, not the IDE's password safe). Tool calling is on, as
 // Copilot's agent mode lists only models that call tools; a model's
@@ -48,8 +48,8 @@ import (
 	"runtime"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // copilotJBID is the agent's id, and what its token names.

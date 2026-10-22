@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // fakeAlma is Alma's API as its spec has it: providers and settings in
@@ -211,7 +211,7 @@ func TestAlma(t *testing.T) {
 	}
 	var mine []map[string]any
 	for _, p := range f.providers {
-		if p["name"] == "chongyun" {
+		if p["name"] == "magpie" {
 			mine = append(mine, p)
 		}
 	}
@@ -330,7 +330,7 @@ func TestAlmaModelObjects(t *testing.T) {
 	// magpie's own listed as objects too, the same ones: nothing to write
 	var mine map[string]any
 	for _, p := range f.providers {
-		if p["name"] == "chongyun" {
+		if p["name"] == "magpie" {
 			mine = p
 		}
 	}
@@ -450,8 +450,8 @@ func TestAlmaServerKeyed(t *testing.T) {
 		t.Fatal(err)
 	}
 	f := startAlma(t)
-	f.providers = append(f.providers, map[string]any{"id": "mg", "name": "chongyun", "type": "openai", "baseURL": gatewayV1(),
-		"enabled": true, "apiKey": "chongyun", "models": []any{}, "availableModels": []any{}})
+	f.providers = append(f.providers, map[string]any{"id": "mg", "name": "magpie", "type": "openai", "baseURL": gatewayV1(),
+		"enabled": true, "apiKey": "magpie", "models": []any{}, "availableModels": []any{}})
 	a := alma()
 	if a.Dir != data {
 		t.Fatalf("Alma's folder: %q, want alma-server's %q", a.Dir, data)
@@ -528,7 +528,7 @@ func TestAlmaImageGen(t *testing.T) {
 	}
 	var p map[string]any
 	for _, q := range f.providers {
-		if q["name"] == "chongyun" {
+		if q["name"] == "magpie" {
 			p = q
 		}
 	}
@@ -598,8 +598,8 @@ func TestAlmaKey(t *testing.T) {
 	if err := os.MkdirAll(a.Dir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	f.providers = append(f.providers, map[string]any{"id": "mg", "name": "chongyun", "type": "openai", "baseURL": gatewayV1(),
-		"enabled": true, "apiKey": "chongyun", "models": []any{}, "availableModels": []any{}})
+	f.providers = append(f.providers, map[string]any{"id": "mg", "name": "magpie", "type": "openai", "baseURL": gatewayV1(),
+		"enabled": true, "apiKey": "magpie", "models": []any{}, "availableModels": []any{}})
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}

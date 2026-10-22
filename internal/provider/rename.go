@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Rename gives a provider another id, the one its models are picked by
@@ -43,8 +43,8 @@ func Rename(from, to string) error {
 		return fmt.Errorf("%s is a subscription: its id is its agent's", from)
 	}
 	switch {
-	case to == "chongyun":
-		return errors.New(`"chongyun" is what agents call the gateway itself; pick another id`)
+	case to == "magpie":
+		return errors.New(`"magpie" is what agents call the gateway itself; pick another id`)
 	case to == strings.TrimSuffix(GroupPrefix, "/"):
 		return errors.New(`"group" starts the ids of routing groups; pick another id`)
 	case to == autoID:

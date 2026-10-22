@@ -20,9 +20,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/filelock"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/chongyun/internal/filelock"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/steady"
 )
 
 // Why a reset was used: by itself as the account's week was used up and no

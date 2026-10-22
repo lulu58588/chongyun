@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // fastUp is every vendor at once: the gateway's calls to api.openai.com,

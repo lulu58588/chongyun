@@ -11,8 +11,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // raycastUser is a providers.yaml as the manual's examples write one
@@ -91,7 +91,7 @@ func raycastOf(f raycastFile, id string) *raycastEntry {
 }
 
 // Raycast AI reads Custom Providers from ~/.config/raycast/ai/providers.yaml
-// (lx_78654 on Discord). magpie adds itself as the entry "chongyun" at the
+// (lx_78654 on Discord). magpie adds itself as the entry "magpie" at the
 // gateway's /v1, with its models and their abilities, and leaves the user's
 // providers, tools and comments as they are; a sync keeps what the user
 // added to magpie's entry and writes nothing when nothing changed; off, it
@@ -144,7 +144,7 @@ func TestRaycastProviders(t *testing.T) {
 		}
 	}
 	m := raycastOf(got, magpieID)
-	if m == nil || m.Name != "chongyun" || m.BaseURL != gatewayV1() || strings.HasSuffix(m.BaseURL, "/chat/completions") ||
+	if m == nil || m.Name != "崇云科技" || m.BaseURL != gatewayV1() || strings.HasSuffix(m.BaseURL, "/chat/completions") ||
 		!reflect.DeepEqual(m.APIKeys, map[string]string{magpieID: gateway.TokenFor("raycast")}) {
 		t.Fatalf("chongyun's entry: %+v", m)
 	}
@@ -167,7 +167,7 @@ func TestRaycastProviders(t *testing.T) {
 	}
 
 	// the user adds to magpie's entry: a sync keeps it
-	withTheirs := strings.Replace(readFile(path), "    name: chongyun\n", "    name: chongyun\n    include_user_email: true # mine\n", 1)
+	withTheirs := strings.Replace(readFile(path), "    name: 崇云科技\n", "    name: 崇云科技\n    include_user_email: true # mine\n", 1)
 	withTheirs = strings.Replace(withTheirs, "        name: GLM-4.6 · Relay\n", "        name: GLM-4.6 · Relay\n        description: the one I use\n", 1)
 	if withTheirs == readFile(path) || !strings.Contains(withTheirs, "the one I use") {
 		t.Fatalf("fixture edit didn't apply:\n%s", readFile(path))

@@ -16,10 +16,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // proxyAs has codexProxyFor read env, sys and goos, and proxyProbe answer
@@ -172,7 +172,7 @@ func TestCodexEnvTakesLoginShell(t *testing.T) {
 // A proxy's own 502 isn't magpie; a proxy that passes the request on is.
 func TestRealProxyProbe(t *testing.T) {
 	gw := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, `{"name":"chongyun"}`)
+		io.WriteString(w, `{"name": "崇云科技"}`)
 	}))
 	defer gw.Close()
 	dead := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

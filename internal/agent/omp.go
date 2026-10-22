@@ -4,7 +4,7 @@ package agent
 // (or where ompDir says its variables move it),
 // the model of each role under modelRoles as "provider/model", and providers
 // of the user's own in models.yml beside it. magpie adds itself there as the
-// provider "chongyun", keyless (auth: none) on loopback, with the catalog as its models; a
+// provider "magpie", keyless (auth: none) on loopback, with the catalog as its models; a
 // model through magpie is "magpie/<provider>/<model>", which omp matches
 // whole against provider/id. The other roles, the fallback chains and the
 // like may name them as well (ompRefKeys); magpie stays while any does.
@@ -18,12 +18,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/dirent"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/dirent"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 

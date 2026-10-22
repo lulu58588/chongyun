@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -133,7 +133,7 @@ func TestOmpEnabledModelsCleared(t *testing.T) {
 	hasMagpie := func(modelsPath string) bool {
 		m, _ := ompScopeRead(t, modelsPath)
 		p, _ := m["providers"].(map[string]any)
-		return p["chongyun"] != nil
+		return p["magpie"] != nil
 	}
 
 	home, configPath, modelsPath := ompScopeHome(t)
@@ -228,7 +228,7 @@ func TestOmpEnabledModelsTakeEveryMagpieModel(t *testing.T) {
 	}
 	// every model magpie wrote for omp is one the list takes in
 	m, _ := ompScopeRead(t, modelsPath)
-	ms, _ := m["providers"].(map[string]any)["chongyun"].(map[string]any)["models"].([]any)
+	ms, _ := m["providers"].(map[string]any)["magpie"].(map[string]any)["models"].([]any)
 	if len(ms) < 2 {
 		t.Fatalf("models.yml: %v", m)
 	}

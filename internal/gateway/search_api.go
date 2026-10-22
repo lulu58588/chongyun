@@ -15,7 +15,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // When no provider can search, magpie's web_search tool is answered by a
@@ -252,7 +252,7 @@ func (s *Server) askSearchAPI(ctx context.Context, a provider.SearchAPI, query s
 	r.Header.Set("User-Agent", SearchAgent)
 	if a.Vendor == "you" {
 		// the tag You.com asked for, to tell magpie's searches apart (#1626)
-		r.Header.Set("User-Agent", SearchAgent+" youdotcom-integration/yetone-magpie")
+		r.Header.Set("User-Agent", SearchAgent+" youdotcom-integration/chongyun")
 	}
 	if a.Key != "" {
 		switch a.Vendor {

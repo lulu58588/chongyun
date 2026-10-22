@@ -7,16 +7,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/budget"
-	"github.com/lulu58588/magpie/internal/gwbudget"
-	"github.com/lulu58588/magpie/internal/gwmw"
-	"github.com/lulu58588/magpie/internal/gwtool"
-	"github.com/lulu58588/magpie/internal/masking"
-	"github.com/lulu58588/magpie/internal/middleware"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/routes"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/budget"
+	"github.com/lulu58588/chongyun/internal/gwbudget"
+	"github.com/lulu58588/chongyun/internal/gwmw"
+	"github.com/lulu58588/chongyun/internal/gwtool"
+	"github.com/lulu58588/chongyun/internal/masking"
+	"github.com/lulu58588/chongyun/internal/middleware"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/routes"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // standInsEnv names the folder of a test binary's stand-in CLIs, for a
@@ -46,6 +46,10 @@ func isolatedTests(m *testing.M) (int, error) {
 		return 1, err
 	}
 	defer os.RemoveAll(home)
+	// this build reads an agent's sign-in only when the user asks for it
+	// (AccountDiscovery); the tests here are about that code, so they turn
+	// it on for the run.
+	os.Setenv("MAGPIE_ACCOUNT_DISCOVERY", "1")
 	for name, value := range map[string]string{
 		"HOME": home, "USERPROFILE": home,
 		"XDG_CONFIG_HOME": filepath.Join(home, ".config"),

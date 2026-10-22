@@ -12,8 +12,8 @@ import (
 // login, and again when it stops with a failure.
 type launchd struct{}
 
-// Label is the launch agent's; the tray's at login is com.yetone.magpie.
-const Label = "com.yetone.magpie.serve"
+// Label is the launch agent's; the tray's at login is com.chongyun.ai.gateway.
+const Label = "com.chongyun.ai.gateway.serve"
 
 func home() string {
 	h, _ := os.UserHomeDir()
@@ -24,7 +24,7 @@ func (launchd) file() string {
 	return filepath.Join(home(), "Library", "LaunchAgents", Label+".plist")
 }
 
-func logFile() string { return filepath.Join(home(), "Library", "Logs", "chongyun", "serve.log") }
+func logFile() string { return filepath.Join(home(), "Library", "Logs", "magpie", "serve.log") }
 
 func (launchd) logs() string { return "tail -f " + strconv.Quote(logFile()) }
 

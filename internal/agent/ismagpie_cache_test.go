@@ -3,7 +3,7 @@ package agent
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // isMagpie answers again from what it kept while nothing the catalog is

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // An agent the user pointed at magpie on another machine (coeo91 on
@@ -107,13 +107,13 @@ func TestKeptAwayOnlyWhatIsSure(t *testing.T) {
 	syncHome(t)
 	t.Setenv("MAGPIE_ADDR", "127.0.0.1:3591")
 	dir := t.TempDir()
-	now := `{"p":{"baseUrl":"http://127.0.0.1:3591/v1","apiKey":"chongyun"}}`
+	now := `{"p":{"baseUrl":"http://127.0.0.1:3591/v1","apiKey":"magpie"}}`
 	for _, c := range []struct{ name, was, want string }{
 		{"nas", `{"p":{"baseUrl":"http://192.168.1.20:3425/v1","apiKey":"nas-key"}}`,
 			`{"p":{"baseUrl":"http://192.168.1.20:3425/v1","apiKey":"nas-key"}}`},
-		{"nas, chongyun's key", `{"p":{"baseUrl":"http://nas.local:3425/v1","apiKey":"chongyun"}}`,
-			`{"p":{"baseUrl":"http://nas.local:3425/v1","apiKey":"chongyun"}}`},
-		{"old port", `{"p":{"baseUrl":"http://127.0.0.1:3425/v1","apiKey":"chongyun"}}`, now},
+		{"nas, chongyun's key", `{"p":{"baseUrl":"http://nas.local:3425/v1","apiKey":"magpie"}}`,
+			`{"p":{"baseUrl":"http://nas.local:3425/v1","apiKey":"magpie"}}`},
+		{"old port", `{"p":{"baseUrl":"http://127.0.0.1:3425/v1","apiKey":"magpie"}}`, now},
 		{"localhost", `{"p":{"baseUrl":"http://localhost:3591/v1","apiKey":"other"}}`, now},
 		{"two gone", `{"p":{"baseUrl":"http://192.168.1.20:3425/v1","apiKey":"a"},"q":{"baseUrl":"http://192.168.1.21:3425/v1"}}`, now},
 		{"wsl", `{"p":{"baseUrl":"http://172.29.0.1:3591/v1","apiKey":"lan"}}`, now},
@@ -131,14 +131,14 @@ func TestKeptAwayOnlyWhatIsSure(t *testing.T) {
 	// magpie here
 	p := filepath.Join(dir, "ollama.json")
 	os.WriteFile(p, []byte(`{"o":{"baseUrl":"http://localhost:11434/v1"},"p":{"baseUrl":"http://192.168.1.20:3425/v1","apiKey":"nas-key"}}`), 0o644)
-	if got, want := string(keeping().away(p, []byte(`{"o":{"baseUrl":"http://localhost:11434/v1"},"p":{"baseUrl":"http://127.0.0.1:3591/v1","apiKey":"chongyun"}}`))),
+	if got, want := string(keeping().away(p, []byte(`{"o":{"baseUrl":"http://localhost:11434/v1"},"p":{"baseUrl":"http://127.0.0.1:3591/v1","apiKey":"magpie"}}`))),
 		`{"o":{"baseUrl":"http://localhost:11434/v1"},"p":{"baseUrl":"http://192.168.1.20:3425/v1","apiKey":"nas-key"}}`; got != want {
 		t.Errorf("beside Ollama: %s, want %s", got, want)
 	}
 	// Qwen Code writes its key on its own, before the models
 	p = filepath.Join(dir, "qwen.json")
 	os.WriteFile(p, []byte(`{"env":{"MAGPIE_QWEN_API_KEY":"nas-key"},"m":{"baseUrl":"http://192.168.1.20:3425/v1"}}`), 0o644)
-	if got := string(keeping().away(p, []byte(`{"env":{"MAGPIE_QWEN_API_KEY":"chongyun"},"m":{"baseUrl":"http://192.168.1.20:3425/v1"}}`))); !strings.Contains(got, `"nas-key"`) {
+	if got := string(keeping().away(p, []byte(`{"env":{"MAGPIE_QWEN_API_KEY":"magpie"},"m":{"baseUrl":"http://192.168.1.20:3425/v1"}}`))); !strings.Contains(got, `"nas-key"`) {
 		t.Errorf("the key alone went back to chongyun's: %s", got)
 	}
 	wsl.Lock()
@@ -152,20 +152,20 @@ func TestKeptAwayOnlyWhatIsSure(t *testing.T) {
 func TestKeyValuesFormats(t *testing.T) {
 	in := strings.Join([]string{
 		`"apiKey": "magpie-qoder",`,
-		`api_key = "chongyun"`,
-		`  apiKey: chongyun`,
-		`GEMINI_API_KEY=chongyun`,
-		`"Authorization": "Bearer chongyun"`,
-		`http_headers = { "x-openai-actor-authorization" = "chongyun" }`,
+		`api_key = "magpie"`,
+		`  apiKey: magpie`,
+		`GEMINI_API_KEY=magpie`,
+		`"Authorization": "Bearer magpie"`,
+		`http_headers = { "x-openai-actor-authorization" = "magpie" }`,
 		`"max_tokens": 8192,`,
-		`"name": "chongyun"`,
+		`"name": "magpie"`,
 		`"token": {"x": 1},`,
 	}, "\n")
 	var got []string
 	for _, kv := range keyValues([]byte(in)) {
 		got = append(got, in[kv.start:kv.end])
 	}
-	want := []string{"magpie-qoder", "chongyun", "chongyun", "chongyun", "Bearer chongyun", "chongyun"}
+	want := []string{"magpie-qoder", "magpie", "magpie", "magpie", "Bearer magpie", "magpie"}
 	if strings.Join(got, "|") != strings.Join(want, "|") {
 		t.Errorf("got %q, want %q", got, want)
 	}

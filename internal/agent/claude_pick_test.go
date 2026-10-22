@@ -4,9 +4,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A model picked in Claude Code's /model holds for its next sessions (the
@@ -74,7 +74,7 @@ func TestClaudeModelPickedInClaudeCode(t *testing.T) {
 	}
 
 	// an older magpie's ANTHROPIC_MODEL comes out, the model kept
-	writeFile(t, path, `{"model": "deepseek/pro", "env": {"ANTHROPIC_BASE_URL": "`+gateway.URL()+`", "ANTHROPIC_AUTH_TOKEN": "chongyun", "ANTHROPIC_MODEL": "deepseek/pro", "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek/pro", "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek/pro"}}`)
+	writeFile(t, path, `{"model": "deepseek/pro", "env": {"ANTHROPIC_BASE_URL": "`+gateway.URL()+`", "ANTHROPIC_AUTH_TOKEN": "magpie", "ANTHROPIC_MODEL": "deepseek/pro", "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek/pro", "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek/pro"}}`)
 	forget(a.ID + ".main")
 	forget("claude.main")
 	if err := a.Follow(); err != nil {

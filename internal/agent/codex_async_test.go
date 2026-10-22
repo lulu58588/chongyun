@@ -6,8 +6,8 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // setAsyncCompact sets Codex's background compaction as the Settings row

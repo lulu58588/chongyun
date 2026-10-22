@@ -11,10 +11,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/fx"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/fx"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // Settings → Allowances in the menu bar: the windows of the subscriptions and
@@ -286,7 +286,7 @@ func trayTokens(t usage.Totals) string {
 
 // trayIdleTip is the tooltip while the menu bar shows no cards: magpie's
 // name over what went through it today, as the panel's Usage tab counts it
-// (ylorn on Discord: a Linux bar's tooltip said only "chongyun"): every
+// (ylorn on Discord: a Linux bar's tooltip said only "magpie"): every
 // token, split into input, output and cache as the usage:today card's
 // tooltip does (NextCommit on Discord), then the cost and the requests.
 func trayIdleTip(t usage.Totals, currency string, rate float64) string {

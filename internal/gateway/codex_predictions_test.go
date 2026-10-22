@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // predictionSchema is the schema ChatGPT.app's composer predictions ask
@@ -110,11 +110,11 @@ func TestCodexPredictionsSetting(t *testing.T) {
 	var kinds []string
 	for _, u := range usage.Load(time.Time{}) {
 		kinds = append(kinds, u.Provider+":"+u.Kind)
-		if u.Provider == "chongyun" && (!u.IsRejected() || u.Status != 200) {
+		if u.Provider == "magpie" && (!u.IsRejected() || u.Status != 200) {
 			t.Errorf("an answered-here prediction %+v", u)
 		}
 	}
-	want := "openai:composer_predictions chongyun:composer_predictions fake:composer_predictions openai:"
+	want := "openai:composer_predictions magpie:composer_predictions fake:composer_predictions openai:"
 	if got := strings.Join(kinds, " "); got != want {
 		t.Errorf("ledger %s\nwant   %s", got, want)
 	}

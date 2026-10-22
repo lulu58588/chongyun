@@ -35,12 +35,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/filelock"
-	"github.com/lulu58588/magpie/internal/lastgood"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/steady"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/filelock"
+	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/steady"
 )
 
 // Client makes the sign-in's requests, through the proxy magpie's others
@@ -686,7 +686,7 @@ func register(ctx context.Context, m meta, redirect string) (id, secret, method 
 	}
 	reg := map[string]any{
 		"client_name":                "Chongyun",
-		"client_uri":                 "https://usemagpie.ai",
+		"client_uri":                 "https://github.com/lulu58588/chongyun",
 		"redirect_uris":              []string{redirect},
 		"grant_types":                []string{"authorization_code", "refresh_token"},
 		"response_types":             []string{"code"},

@@ -14,7 +14,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 func updateHome(t *testing.T) {
@@ -37,7 +37,7 @@ func TestUpdateThroughAMirror(t *testing.T) {
 	updateHome(t)
 	body := []byte("new chongyun")
 	sum := sha256.Sum256(body)
-	asset := Asset{URL: "https://github.com/lulu58588/magpie-releases/releases/download/v9.9.9/magpie-cli-linux-amd64", SHA256: hex.EncodeToString(sum[:])}
+	asset := Asset{URL: "https://github.com/lulu58588/chongyun-releases/releases/download/v9.9.9/magpie-cli-linux-amd64", SHA256: hex.EncodeToString(sum[:])}
 
 	var mu sync.Mutex
 	var seen []string
@@ -201,7 +201,7 @@ func TestMirrorFailuresAreTheMirrors(t *testing.T) {
 	updateHome(t)
 	body := []byte("new chongyun")
 	sum := sha256.Sum256(body)
-	asset := Asset{URL: "https://github.com/lulu58588/magpie-releases/releases/download/v9.9.9/magpie-cli-linux-amd64", SHA256: hex.EncodeToString(sum[:])}
+	asset := Asset{URL: "https://github.com/lulu58588/chongyun-releases/releases/download/v9.9.9/magpie-cli-linux-amd64", SHA256: hex.EncodeToString(sum[:])}
 	tampered := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("not chongyun")) }))
 	defer tampered.Close()
 	missing := httptest.NewServer(http.NotFoundHandler())

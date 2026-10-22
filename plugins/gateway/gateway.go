@@ -9,8 +9,8 @@
 package gateway
 
 import (
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/pluginrt"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/pluginrt"
 )
 
 // Settings are the page's settings, at their defaults.

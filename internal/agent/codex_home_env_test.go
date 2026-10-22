@@ -30,10 +30,10 @@ func TestCodexHomeEnvTakesThePick(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(filepath.Join(ch, "config.toml"))
-	if cfg := string(b); !strings.Contains(cfg, `model = "fake/m1"`) || !strings.Contains(cfg, "magpie-models.json") {
+	if cfg := string(b); !strings.Contains(cfg, `model = "fake/m1"`) || !strings.Contains(cfg, "chongyun-models.json") {
 		t.Fatalf("$CODEX_HOME/config.toml doesn't have the pick:\n%s", cfg)
 	}
-	if _, err := os.Stat(filepath.Join(ch, "magpie-models.json")); err != nil {
+	if _, err := os.Stat(filepath.Join(ch, "chongyun-models.json")); err != nil {
 		t.Fatalf("the catalog isn't beside it: %v", err)
 	}
 	if got := codex(home).Fields[0].Get(); got != "fake/m1" {

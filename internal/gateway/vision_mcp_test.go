@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/budget"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/budget"
 )
 
 // visionPost sends one JSON-RPC body to the image recognition MCP server

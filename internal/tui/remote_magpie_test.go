@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A remote magpie is added from the TUI with its address, as the app's
@@ -131,7 +131,7 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 		}
 		var data []map[string]any
 		for _, id := range ids {
-			data = append(data, map[string]any{"id": id, "object": "model", "display_name": id, "chongyun_label": id + " · 中转站"})
+			data = append(data, map[string]any{"id": id, "object": "model", "display_name": id, "magpie_label": id + " · 中转站"})
 		}
 		json.NewEncoder(w).Encode(map[string]any{"object": "list", "data": data})
 	}))

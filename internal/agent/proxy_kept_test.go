@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // corpProxy is a company's reverse proxy in front of the gateway, with a
@@ -232,7 +232,7 @@ func TestMagpieProbe(t *testing.T) {
 			gw.ServeHTTP(w, r)
 		case r.URL.Path == "/broken/":
 			w.WriteHeader(502)
-			w.Write([]byte(`{"name":"chongyun"}`))
+			w.Write([]byte(`{"name": "崇云科技"}`))
 		default:
 			w.WriteHeader(404)
 			w.Write([]byte(`{"error":{"message":"not found"}}`))

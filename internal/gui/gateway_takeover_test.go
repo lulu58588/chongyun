@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // fakeOlderGateway is the test binary run as another process holding the
@@ -24,7 +24,7 @@ func fakeOlderGateway(addr string) {
 	}
 	http.Serve(ln, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		io.WriteString(w, `{"name":"chongyun","version":"0.1.550","models":3}`)
+		io.WriteString(w, `{"name": "崇云科技","version":"0.1.550","models":3}`)
 	}))
 }
 
@@ -124,7 +124,7 @@ func TestGatewayFixQuitsOnlyAMagpie(t *testing.T) {
 	<-otherEnded
 
 	// an older magpie is quit, and this one serves at once
-	old, oldEnded := start("chongyun")
+	old, oldEnded := start("magpie")
 	_ = old
 	if g := providersState().Gateway; !g.Older || g.Mine {
 		t.Fatalf("not seen as older: %+v", g)

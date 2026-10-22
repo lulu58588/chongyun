@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // A magpie in a container holding the gateway's port (leslie_luo on
@@ -87,7 +87,7 @@ func TestGatewayHeldByAContainer(t *testing.T) {
 	}
 
 	// a magpie of this computer's on the port: its port is set there
-	local, localEnded := start("chongyun")
+	local, localEnded := start("magpie")
 	if _, err := setPort(freePort(t)); err == nil || settings.Load().Port != from {
 		t.Fatalf("moved past a chongyun of this computer's: %v", err)
 	}

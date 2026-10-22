@@ -13,12 +13,12 @@ import (
 	"time"
 
 	"github.com/pelletier/go-toml/v2"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 func TestReasonixRegistered(t *testing.T) {
@@ -139,7 +139,7 @@ func TestReasonixRestoreKeepsLaterUserEdits(t *testing.T) {
 	}
 	edit.SetTOMLTop(a.Path, edit.KV{Path: "default_model", Value: "native/other"})
 	edit.SetTOMLKey(a.Path, "ui", "theme", "light")
-	edit.SetTOMLKey(a.Path, "desktop", "provider_access", edit.Raw("[\"native\", \"chongyun\", \"later\"]"))
+	edit.SetTOMLKey(a.Path, "desktop", "provider_access", edit.Raw("[\"native\", \"magpie\", \"later\"]"))
 	edit.SetEnvFile(env, edit.KV{Path: "LATER_API_KEY", Value: "later-secret"})
 	if err := a.Field("model").Set(""); err != nil {
 		t.Fatal(err)
@@ -345,7 +345,7 @@ func TestReasonixGatewayAndRestore(t *testing.T) {
 		t.Fatalf("native provider changed: %v", providers)
 	}
 	p := providers[1].(map[string]any)
-	if p["name"] != "chongyun" || p["kind"] != "openai" || p["base_url"] != gatewayV1() || p["default"] != "group/code" {
+	if p["name"] != "magpie" || p["kind"] != "openai" || p["base_url"] != gatewayV1() || p["default"] != "group/code" {
 		t.Fatalf("wiring: %v", p)
 	}
 	key, _ := p["api_key_env"].(string)
@@ -435,7 +435,7 @@ func TestReasonixEffortAndSync(t *testing.T) {
 
 func TestReasonixConflictsAndReadErrorsLeaveFiles(t *testing.T) {
 	for _, extra := range []string{
-		"\n[[providers]]\nname = \"chongyun\"\nmodels = [\"mine\"]\n",
+		"\n[[providers]]\nname = \"magpie\"\nmodels = [\"mine\"]\n",
 		"\n[[providers]]\nname = \"broken\"\nmodels = [\n",
 	} {
 		t.Run(extra, func(t *testing.T) {

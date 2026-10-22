@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 func TestLegacyLANFallbackBeforeMigration(t *testing.T) {
@@ -22,7 +22,7 @@ func TestLegacyLANFallbackBeforeMigration(t *testing.T) {
 	if _, err := os.Stat(Path()); !errors.Is(err, os.ErrNotExist) {
 		t.Fatal("authentication must not create a key store", err)
 	}
-	for _, secret := range []string{"", "wrong", "chongyun", s.LANKey + "x"} {
+	for _, secret := range []string{"", "wrong", "magpie", s.LANKey + "x"} {
 		if _, ok := Authenticate(secret); ok {
 			t.Fatal("legacy fallback accepted another token")
 		}

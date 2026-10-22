@@ -12,9 +12,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/claudecode"
-	"github.com/lulu58588/magpie/internal/libc"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/claudecode"
+	"github.com/lulu58588/chongyun/internal/libc"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // claudeCodeOut runs `chongyun claude-code args…` and gives what it printed.

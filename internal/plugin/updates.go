@@ -23,11 +23,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/ghtoken"
-	"github.com/lulu58588/magpie/internal/lastgood"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/steady"
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/ghtoken"
+	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // Updates is what magpie's last look at npm found for the plugins.

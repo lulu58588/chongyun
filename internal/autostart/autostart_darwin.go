@@ -8,10 +8,10 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
-const label = "com.yetone.magpie"
+const label = "com.chongyun.ai.gateway"
 
 func record() string {
 	home, _ := os.UserHomeDir()

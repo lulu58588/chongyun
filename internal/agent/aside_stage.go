@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // stage is an explicit offline write, separate from confirmed runtime apply.
@@ -48,7 +48,7 @@ func (c *asideConnection) stage(key, value string) error {
 		had = false
 		owned = asideOwned{}
 	}
-	if p == "chongyun" {
+	if p == "magpie" {
 		if err := c.connectLocked(); err != nil {
 			return err
 		}

@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // gathers is whether a request to p on proto that asked for one body is

@@ -12,11 +12,11 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/filememo"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/filememo"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 var asideRead = func(account string) (map[string]json.RawMessage, error) {
@@ -146,7 +146,7 @@ func asideOwnOptions(path, cur string) []Option {
 	sort.Strings(names)
 	for _, p := range names {
 		v := s.Providers[p]
-		if p == "chongyun" {
+		if p == "magpie" {
 			continue
 		}
 		for _, m := range v.Models {
@@ -256,7 +256,7 @@ func (c *asideConnection) load() (asideRecord, error) {
 		}
 		value, ok := legacy[c.at.key(name)]
 		p, m, valid := strings.Cut(value, "/")
-		if !ok || !valid || p == "" || m == "" || p == "chongyun" {
+		if !ok || !valid || p == "" || m == "" || p == "magpie" {
 			continue
 		}
 		raw, _ := edit.GetJSON(c.path, asideFieldPath(key))
@@ -458,7 +458,7 @@ func (c *asideConnection) validateSelection(key, value string) (string, error) {
 	if !ok || p == "" || m == "" {
 		return "", fmt.Errorf("expected provider/model")
 	}
-	if key == "image" && p == "chongyun" && !asideImageOffered(value) {
+	if key == "image" && p == "magpie" && !asideImageOffered(value) {
 		return "", fmt.Errorf("%s is not an image generation model", value)
 	}
 	return value, nil

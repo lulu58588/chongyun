@@ -30,8 +30,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/redact"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/redact"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Putter is a bucket the archive is written to.

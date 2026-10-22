@@ -18,7 +18,7 @@ func TestDiffLines(t *testing.T) {
 	for i := 0; i < 30000; i++ {
 		fmt.Fprintf(&big, "[projects.\"/p/%d\"]\ntrust_level = \"trusted\"\n", i)
 	}
-	before := "model = \"magpie/deepseek/pro\"\nmodel_provider = \"chongyun\"\napi_key = \"sk-live-123\"\n" + big.String() + "[model_providers.magpie]\nname = \"chongyun\"\n"
+	before := "model = \"magpie/deepseek/pro\"\nmodel_provider = \"magpie\"\napi_key = \"sk-live-123\"\n" + big.String() + "[model_providers.magpie]\nname = \"magpie\"\n"
 	after := "model = \"gpt-6\"\nopenai_key = \"sk-live-456\"\n" + big.String()
 	start := time.Now()
 	got := diffLines(before, after)
@@ -28,10 +28,10 @@ func TestDiffLines(t *testing.T) {
 	want := []LineDiff{
 		{Op: "~", Text: `model = "gpt-6"`, Was: `model = "magpie/deepseek/pro"`},
 		{Op: "+", Text: "openai_key = ••••"},
-		{Op: "-", Text: `model_provider = "chongyun"`},
+		{Op: "-", Text: `model_provider = "magpie"`},
 		{Op: "-", Text: "api_key = ••••"},
 		{Op: "-", Text: "[model_providers.magpie]"},
-		{Op: "-", Text: `name = "chongyun"`},
+		{Op: "-", Text: `name = "magpie"`},
 	}
 	if fmt.Sprint(got) != fmt.Sprint(want) {
 		t.Fatalf("got  %v\nwant %v", got, want)
@@ -62,9 +62,9 @@ func TestDiffLines(t *testing.T) {
 }
 
 func TestMask(t *testing.T) {
-	const compact = `[{"requestHeaders":{"Authorization":"Bearer chongyun"}}]`
+	const compact = `[{"requestHeaders":{"Authorization":"Bearer magpie"}}]`
 	for in, want := range map[string]string{
-		`  "ANTHROPIC_AUTH_TOKEN": "chongyun",`:          `  "ANTHROPIC_AUTH_TOKEN": "chongyun",`,
+		`  "ANTHROPIC_AUTH_TOKEN": "magpie",`:          `  "ANTHROPIC_AUTH_TOKEN": "magpie",`,
 		`  "ANTHROPIC_API_KEY": "sk-ant-x",`:           `  "ANTHROPIC_API_KEY": ••••`,
 		`export OPENAI_API_KEY=sk-1`:                   `export OPENAI_API_KEY= ••••`,
 		`env_key = "$KEY"`:                             `env_key = "$KEY"`,

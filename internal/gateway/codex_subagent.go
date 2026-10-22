@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // SubagentPick is a subagent's request put on the model the user set for

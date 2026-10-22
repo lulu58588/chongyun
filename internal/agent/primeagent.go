@@ -7,7 +7,7 @@ package agent
 // reads both files with Pi's fields and types (pa-core models/custom.rs,
 // settings/types.rs), so magpie wires it as it does Pi:
 // defaultProvider/defaultModel/defaultThinkingLevel in settings.json and
-// magpie as the provider "chongyun" in models.json.
+// magpie as the provider "magpie" in models.json.
 //
 // Its requests carry no User-Agent (its HTTP client sets none), so the key
 // magpie gives it names it (magpie-prime-agent): that is how the gateway
@@ -21,7 +21,7 @@ package agent
 import (
 	"path/filepath"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 func primeAgent(home string) *Agent { return primeAgentIn(here(home)) }

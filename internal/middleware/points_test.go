@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/routes"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/routes"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // serve serves a Points observer as the gateway would, until the test ends.
@@ -310,7 +310,7 @@ func TestPointsLoadErrors(t *testing.T) {
 func TestGatewayAlias(t *testing.T) {
 	dir := filepath.Join(t.TempDir(), "magpie-fastest")
 	os.MkdirAll(dir, 0o755)
-	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"magpie-fastest","chongyun":{"gateway":"gw.js"}}`), 0o644)
+	os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"magpie-fastest","magpie":{"gateway":"gw.js"}}`), 0o644)
 	os.WriteFile(filepath.Join(dir, "gw.js"), []byte(`export const strategies = { first: (p, s) => s.map((_, i) => i) };`), 0o644)
 	if f, only := plugin.Middleware(dir); f != filepath.Join(dir, "gw.js") || !only {
 		t.Fatalf("Middleware = %q, %v", f, only)

@@ -3,7 +3,7 @@ package agent
 // Command Code (commandcode.ai) keeps its settings in ~/.commandcode/
 // settings.json, the model as "provider/model", and takes providers of the
 // user's own in ~/.commandcode/providers.json. magpie adds itself there as
-// the provider "chongyun", keyless, with the catalog as its models; a model
+// the provider "magpie", keyless, with the catalog as its models; a model
 // through magpie is "magpie/<provider>/<model>", which Command Code splits
 // at the first "/". Command Code still wants its own sign-in for these.
 
@@ -15,7 +15,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // ccEfforts are the reasoning levels Command Code knows.

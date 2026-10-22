@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // zcodeAsking is jinyue806's reproduction of #2622 as they sent it to

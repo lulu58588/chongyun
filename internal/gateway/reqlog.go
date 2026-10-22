@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // What the usage log keeps of a call besides its tokens: the path it came

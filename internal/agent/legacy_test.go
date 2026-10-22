@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func TestRenameLegacy(t *testing.T) {
@@ -58,31 +58,31 @@ func TestRenameLegacy(t *testing.T) {
 	if v, _ := edit.GetJSON(filepath.Join(home, ".config/opencode/opencode.jsonc"), "model"); v != "magpie/deepseek/deepseek-flash" {
 		t.Fatalf("opencode model: %q", v)
 	}
-	if !strings.Contains(oc, `"chongyun": {`) || strings.Contains(oc, `"dial"`) || !strings.Contains(oc, "// keep me") || !strings.Contains(oc, `"mine"`) {
+	if !strings.Contains(oc, `"magpie": {`) || strings.Contains(oc, `"dial"`) || !strings.Contains(oc, "// keep me") || !strings.Contains(oc, `"mine"`) {
 		t.Fatalf("opencode:\n%s", oc)
 	}
 	cx := read(".codex/config.toml")
-	if strings.Contains(cx, "dial") || !strings.Contains(cx, "[model_providers.magpie]") || !strings.Contains(cx, `model_provider = "chongyun"`) || !strings.Contains(cx, `[projects."/x"]`) {
+	if strings.Contains(cx, "dial") || !strings.Contains(cx, "[model_providers.magpie]") || !strings.Contains(cx, `model_provider = "magpie"`) || !strings.Contains(cx, `[projects."/x"]`) {
 		t.Fatalf("codex:\n%s", cx)
 	}
 	if _, err := os.Stat(filepath.Join(home, ".codex", "dial-models.json")); err == nil {
 		t.Fatal("dial-models.json still there")
 	}
-	if _, err := os.Stat(filepath.Join(home, ".codex", "magpie-models.json")); err != nil {
-		t.Fatal("magpie-models.json missing")
+	if _, err := os.Stat(filepath.Join(home, ".codex", "chongyun-models.json")); err != nil {
+		t.Fatal("chongyun-models.json missing")
 	}
 	if b := stashLoad(); b["codex.provider"] == "dial" {
 		t.Fatal("dial stashed as the provider to go back to")
 	}
-	if v, _ := edit.GetJSON(filepath.Join(home, ".pi/agent/settings.json"), "defaultProvider"); v != "chongyun" {
+	if v, _ := edit.GetJSON(filepath.Join(home, ".pi/agent/settings.json"), "defaultProvider"); v != "magpie" {
 		t.Fatalf("pi provider: %q", v)
 	}
 	pm := read(".pi/agent/models.json")
-	if strings.Contains(pm, `"dial"`) || !strings.Contains(pm, `"chongyun"`) {
+	if strings.Contains(pm, `"dial"`) || !strings.Contains(pm, `"magpie"`) {
 		t.Fatalf("pi models:\n%s", pm)
 	}
 	cl := read(".claude/settings.json")
-	if strings.Contains(cl, `"dial"`) || !strings.Contains(cl, `"ANTHROPIC_AUTH_TOKEN": "chongyun"`) || !strings.Contains(cl, `"theme": "dark"`) {
+	if strings.Contains(cl, `"dial"`) || !strings.Contains(cl, `"ANTHROPIC_AUTH_TOKEN": "magpie"`) || !strings.Contains(cl, `"theme": "dark"`) {
 		t.Fatalf("claude:\n%s", cl)
 	}
 
@@ -131,20 +131,20 @@ func TestMoveCursorEfforts(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	write(`{"defaultProvider": "chongyun", "defaultModel": "curs/grok-4.7-low", "theme": "dark"}`)
+	write(`{"defaultProvider": "magpie", "defaultModel": "curs/grok-4.7-low", "theme": "dark"}`)
 	moveEfforts("curs", base)
-	for k, want := range map[string]string{"defaultProvider": "chongyun", "defaultModel": "curs/grok-4.7", "defaultThinkingLevel": "low", "theme": "dark"} {
+	for k, want := range map[string]string{"defaultProvider": "magpie", "defaultModel": "curs/grok-4.7", "defaultThinkingLevel": "low", "theme": "dark"} {
 		if v, _ := edit.GetJSON(pi, k); v != want {
 			t.Errorf("%s = %q, want %q", k, v, want)
 		}
 	}
 	// an effort of its own stays; a model the picker doesn't offer stays
-	write(`{"defaultProvider": "chongyun", "defaultModel": "curs/grok-4.7-low", "defaultThinkingLevel": "high"}`)
+	write(`{"defaultProvider": "magpie", "defaultModel": "curs/grok-4.7-low", "defaultThinkingLevel": "high"}`)
 	moveEfforts("curs", base)
 	if v, _ := edit.GetJSON(pi, "defaultThinkingLevel"); v != "high" {
 		t.Errorf("thinking level %q", v)
 	}
-	write(`{"defaultProvider": "chongyun", "defaultModel": "curs/gone-low"}`)
+	write(`{"defaultProvider": "magpie", "defaultModel": "curs/gone-low"}`)
 	moveEfforts("curs", base)
 	if v, _ := edit.GetJSON(pi, "defaultModel"); v != "curs/gone-low" {
 		t.Errorf("model %q", v)

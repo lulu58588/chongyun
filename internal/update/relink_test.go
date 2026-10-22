@@ -76,7 +76,7 @@ func TestStaleCLI(t *testing.T) {
 
 	t.Run("the installer's link is quiet", func(t *testing.T) {
 		os.Remove(cli)
-		os.Symlink("/Applications/magpie.app/Contents/MacOS/magpie", cli)
+		os.Symlink("/Applications/chongyun.app/Contents/MacOS/chongyun", cli)
 		withCLIVersion(t, "0.1.000") // would look old if we dereferenced it
 		if got := StaleCLI(app); got != "" {
 			t.Errorf("StaleCLI = %q, want empty: a link already follows the app", got)

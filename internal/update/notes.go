@@ -32,10 +32,10 @@ func NotesFeed() string {
 // ReleasePage is version's page on GitHub, where its notes are when the
 // site can't give them (#661).
 func ReleasePage(version string) string {
-	// this build publishes nowhere of its own: the page is the version
-	// itself, so the notes still read.
+	// this build publishes nowhere of its own: the page is the release on
+	// this project's own GitHub, so the notes still read.
 	if Site == "" {
-		return "v" + strings.TrimPrefix(strings.TrimSpace(version), "v")
+		return "https://github.com/lulu58588/chongyun/releases/tag/v" + strings.TrimPrefix(strings.TrimSpace(version), "v")
 	}
 	return Site + "/releases/tag/v" + strings.TrimPrefix(strings.TrimSpace(version), "v")
 }

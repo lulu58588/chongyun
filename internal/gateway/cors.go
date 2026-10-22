@@ -9,9 +9,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // corsGuard lets the web pages and browser extensions the user listed
@@ -101,9 +101,9 @@ func keyedCaller(r *http.Request) bool {
 // foreignPage: origin is an http(s) web page that is neither on this
 // computer (localhost, *.localhost, 127.0.0.0/8, [::1], any port) nor the
 // request's own origin (a page served at the address the request names,
-// such as magpie's web app on a LAN address), so a browser sent it for a
-// site elsewhere. usemagpie.ai may still read the Omarchy theme
-// (omarchyTheme).
+// such as chongyun's web app on a LAN address), so a browser sent it for a
+// site elsewhere. A site served on this machine may still read the Omarchy
+// theme (omarchyTheme).
 //
 // Only http and https are judged. A scheme only an app or an extension
 // can send — app://, file://, tauri://, vscode-webview://,

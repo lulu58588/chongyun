@@ -3,7 +3,7 @@ package gateway
 import (
 	"unsafe"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // bodyFacts is what the readers of a request's conversation that only

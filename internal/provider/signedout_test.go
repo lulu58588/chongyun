@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // Saved accounts of an agent not signed in where magpie looks (a magpie
@@ -174,7 +174,7 @@ func TestSavedButSignedOutCanBeRemoved(t *testing.T) {
 }
 
 // The keychain item under the account is the sign-in Claude Code goes by,
-// emptied or not: it reads no file beside it (yetone/magpie#1742). So an
+// emptied or not: it reads no file beside it (upstream issue #1742). So an
 // emptied item beside a still-parseable file is signed out, and a sign-in
 // made in magpie is put in the item, not beside it.
 func TestClaudeEmptiedKeychainItemIsTheSignInBesideAFile(t *testing.T) {

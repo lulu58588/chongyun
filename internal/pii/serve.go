@@ -14,8 +14,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/redact"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/redact"
 )
 
 // hello is the line pf-serve writes once the model is loaded.

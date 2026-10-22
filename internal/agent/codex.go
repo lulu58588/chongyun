@@ -19,15 +19,15 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/codexcat"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/lastgood"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/sessions"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/codexcat"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // Codex talks the OpenAI Responses API. Signed in to ChatGPT, it is
@@ -38,7 +38,7 @@ import (
 // answers the rest — the model list included, so magpie's models join
 // OpenAI's in /model. Not signed in, the built-in provider can't run, and
 // magpie is a provider of its own: a [model_providers.magpie] table,
-// `model_provider = "chongyun"`, and a model catalog file for /model. So it
+// `model_provider = "magpie"`, and a model catalog file for /model. So it
 // is too for Codex signed in with an API key, often one a relay issued:
 // Codex then never asks for the model list (its models manager skips the
 // fetch for an API key), so its picker was the models it was built with
@@ -59,7 +59,7 @@ import (
 // again without the table ("Model provider `chongyun` not found"), whichever
 // way Codex is routed now. Codex looks model_provider up in the tables as
 // it loads config.toml (codex-rs config: "Model provider `{id}` not
-// found"), so `model_provider = "chongyun"` without the table keeps it from
+// found"), so `model_provider = "magpie"` without the table keeps it from
 // loading its config at all, a new thread too: magpie never writes the one
 // without the other, takes model_provider out whenever it steps out as the
 // provider (disconnected, unwired, joined beside the sign-in), and Sync
@@ -233,7 +233,7 @@ func writeOwnList(path string, b []byte) error {
 func codexIn(at place) *Agent {
 	dir := at.codexHome()
 	path := filepath.Join(dir, "config.toml")
-	catalogPath := filepath.Join(dir, "magpie-models.json")
+	catalogPath := filepath.Join(dir, "chongyun-models.json")
 	get := func(k string) string { v, _ := edit.GetTOMLTop(path, k); return v }
 	// this machine's Codex reaches the gateway at the address its config
 	// gives, when that is magpie's on another host: the Codex app on
@@ -413,7 +413,7 @@ func codexIn(at place) *Agent {
 	}
 	putProvider := func() error {
 		kvs := []edit.KV{
-			{Path: "name", Value: "chongyun"},
+			{Path: "name", Value: "magpie"},
 			{Path: "base_url", Value: at.v1()},
 			{Path: "wire_api", Value: "responses"},
 			{Path: "experimental_bearer_token", Value: keptBearerToken("model_providers." + magpieID)},
@@ -429,7 +429,7 @@ func codexIn(at place) *Agent {
 			// gets the header set there, the user's others kept; written
 			// inline beside that table it defined http_headers twice and
 			// every model switch failed (wztlink1013 on Discord).
-			{Path: "http_headers", Value: edit.Inline{{Path: "x-openai-actor-authorization", Value: "chongyun"}}},
+			{Path: "http_headers", Value: edit.Inline{{Path: "x-openai-actor-authorization", Value: "magpie"}}},
 		}
 		// the table's capabilities, the user's or the background
 		// compaction's, aren't lost as it is written again
@@ -1186,7 +1186,7 @@ func codexIn(at place) *Agent {
 			if err := asyncCompaction(routed()); err != nil {
 				return err
 			}
-			// model_provider = "chongyun" left with its table gone (taken by
+			// model_provider = "magpie" left with its table gone (taken by
 			// another tool, or a hand edit), which keeps Codex from loading
 			// its config at all, connected to magpie or not (Tystem on
 			// Discord): the table is written back, as it stays once written

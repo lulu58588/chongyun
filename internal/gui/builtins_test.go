@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/pluginrt"
-	"github.com/lulu58588/magpie/internal/settings"
-	_ "github.com/lulu58588/magpie/plugins/all"
+	"github.com/lulu58588/chongyun/internal/pluginrt"
+	"github.com/lulu58588/chongyun/internal/settings"
+	_ "github.com/lulu58588/chongyun/plugins/all"
 )
 
 func builtinHome(t *testing.T) http.Handler {

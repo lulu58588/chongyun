@@ -21,7 +21,7 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 const (

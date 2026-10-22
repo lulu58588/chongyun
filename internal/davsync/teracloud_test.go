@@ -15,8 +15,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/backup"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/backup"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // apacheDAV answers as InfiniCLOUD's (TeraCloud's) WebDAV plausibly does
@@ -200,7 +200,7 @@ func TestSyncTeraCloudGzipETag(t *testing.T) {
 // A server that sends the file gzip though it was asked for as it is: the
 // file is still read whole.
 func TestDAVGetGzipAnyway(t *testing.T) {
-	want := []byte(`{"app":"chongyun"}`)
+	want := []byte(`{"app":"magpie"}`)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("ETag", `"1-gzip"`)
 		w.Header().Set("Content-Encoding", "gzip")

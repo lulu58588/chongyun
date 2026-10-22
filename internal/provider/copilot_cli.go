@@ -23,9 +23,9 @@ import (
 
 	"github.com/tidwall/jsonc"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // copilotCLIHeaders are what the CLI sends with its token.

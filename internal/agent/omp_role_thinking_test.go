@@ -6,8 +6,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #1397 (KKKKKKKEM): omp's plan, vision and advisor roles can be put on a

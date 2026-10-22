@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // OmO (#264) is an agent of its own, wired as Pi is but in ~/.omo/agent:
@@ -46,7 +46,7 @@ func TestOmo(t *testing.T) {
 	if err := a.Field("effort").Set("high"); err != nil {
 		t.Fatal(err)
 	}
-	for k, want := range map[string]string{"defaultProvider": "chongyun", "defaultModel": "relay/glm-4.6", "defaultThinkingLevel": "high", "theme": "dark"} {
+	for k, want := range map[string]string{"defaultProvider": "magpie", "defaultModel": "relay/glm-4.6", "defaultThinkingLevel": "high", "theme": "dark"} {
 		if v, _ := edit.GetJSON(settings, k); v != want {
 			t.Fatalf("%s = %q:\n%s", k, v, readFile(settings))
 		}
@@ -57,7 +57,7 @@ func TestOmo(t *testing.T) {
 	if err := json.Unmarshal([]byte(readFile(models)), &file); err != nil {
 		t.Fatal(err)
 	}
-	got := file.Providers["chongyun"]
+	got := file.Providers["magpie"]
 	if got["baseUrl"] != gateway.URL()+"/v1" || got["apiKey"] != gateway.Token {
 		t.Fatalf("models:\n%s", readFile(models))
 	}

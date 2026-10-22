@@ -11,8 +11,8 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // astrbotConfig is a cmd_config.json as AstrBot 4.28.2 writes it (json.dump,
@@ -216,7 +216,7 @@ func TestAstrBot(t *testing.T) {
 		t.Fatalf("check: %s", c)
 	}
 	sources := astrbotByID(t, m, "provider_sources")
-	src := sources["chongyun"]
+	src := sources["magpie"]
 	if src == nil || src["type"] != "openai_chat_completion" || src["provider_type"] != "chat_completion" ||
 		!strings.HasSuffix(src["api_base"].(string), "/v1") || src["timeout"] != float64(120) {
 		t.Fatalf("chongyun's source: %v", src)
@@ -237,7 +237,7 @@ func TestAstrBot(t *testing.T) {
 	if provider.Described != nil && provider.Described() {
 		k2mods = []any{"text", "image", "tool_use"}
 	}
-	if k2["provider_source_id"] != "chongyun" || k2["model"] != "kimi/k2" || k2["max_context_tokens"] != float64(262144) ||
+	if k2["provider_source_id"] != "magpie" || k2["model"] != "kimi/k2" || k2["max_context_tokens"] != float64(262144) ||
 		!reflect.DeepEqual(k2["modalities"], k2mods) || !reflect.DeepEqual(k2["custom_extra_body"], map[string]any{}) {
 		t.Fatalf("k2: %v", k2)
 	}
@@ -291,7 +291,7 @@ func TestAstrBotSyncKeepsTheirs(t *testing.T) {
 	}
 	// as AstrBot's WebUI saves it: the whole file, from what it holds
 	astrbotEdit(t, path, func(m map[string]any) {
-		src := astrbotByID(t, m, "provider_sources")["chongyun"]
+		src := astrbotByID(t, m, "provider_sources")["magpie"]
 		src["timeout"], src["proxy"] = 300, "http://127.0.0.1:7890"
 		astrbotByID(t, m, "provider")["magpie/kimi/k2-vision"]["enable"] = false
 	})
@@ -310,7 +310,7 @@ func TestAstrBotSyncKeepsTheirs(t *testing.T) {
 		t.Fatal(err)
 	}
 	m := astrbotRead(t, path)
-	src := astrbotByID(t, m, "provider_sources")["chongyun"]
+	src := astrbotByID(t, m, "provider_sources")["magpie"]
 	if src["timeout"] != float64(300) || src["proxy"] != "http://127.0.0.1:7890" {
 		t.Fatalf("the user's timeout and proxy were written over: %v", src)
 	}
@@ -372,7 +372,7 @@ func TestAstrBotTheirPickStands(t *testing.T) {
 	if got := astrbotPick(m); got != "openai/gpt-5" {
 		t.Fatalf("the user's pick became %v", got)
 	}
-	if _, ok := astrbotByID(t, m, "provider_sources")["chongyun"]; ok {
+	if _, ok := astrbotByID(t, m, "provider_sources")["magpie"]; ok {
 		t.Fatal("chongyun's source stayed")
 	}
 	for id := range astrbotByID(t, m, "provider") {

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // quotaRefreshGap is how soon magpie quota refresh asks a card's vendor

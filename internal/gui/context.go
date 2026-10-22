@@ -15,8 +15,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/sessions"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/sessions"
 )
 
 // defaultWindow is the window a prompt is measured against when the

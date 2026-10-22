@@ -4,7 +4,7 @@ import (
 	"maps"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/catalog"
 )
 
 // A remote magpie is another computer's magpie gateway, shared on its
@@ -56,7 +56,7 @@ const DrawersHeader = "X-Magpie-Drawers"
 const VideomakersHeader = "X-Magpie-Videomakers"
 
 // PricesHeader asks a magpie's model list for what each model costs
-// there ("chongyun_price"): a magpie that doesn't send it is told nothing
+// there ("magpie_price"): a magpie that doesn't send it is told nothing
 // more than before.
 const PricesHeader = "X-Magpie-Prices"
 

@@ -8,9 +8,9 @@ import (
 
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/jsonc"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // VS Code's chat: switched on, magpie's group joins the user's in
@@ -69,10 +69,10 @@ func TestVSCode(t *testing.T) {
 	}
 	g, _ := edit.GetJSONItem(lm, vscodeGroup)
 	for k, want := range map[string]string{
-		"vendor": "customendpoint", "name": "chongyun", "apiType": "chat-completions",
+		"vendor": "customendpoint", "name": "magpie", "apiType": "chat-completions",
 		"models.0.id": "relay/glm-4.6", "models.0.url": gatewayV1() + "/chat/completions",
 		"models.0.toolCalling": "true", "models.0.contextWindow": "204800",
-		"models.0.requestHeaders.Authorization": "Bearer chongyun",
+		"models.0.requestHeaders.Authorization": "Bearer magpie",
 	} {
 		if got := gjson.Get(g, k).String(); got != want {
 			t.Errorf("%s = %q, want %q", k, got, want)

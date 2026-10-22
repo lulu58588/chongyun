@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // codexThreads makes Codex's state database with a thread on each of the
@@ -43,7 +43,7 @@ func TestCodexWritesTablesThreadsName(t *testing.T) {
 		inline := "model_providers.inl = { name = \"inl\", base_url = \"https://inl.example/v1\" }\n"
 		home, read := codexHome(t, auth, "model = \"gpt-5.4\"\n"+inline+"\n"+mine)
 		dir := filepath.Join(home, ".codex")
-		codexThreads(t, dir, "custom", "openai", "chongyun", "mine", "ollama", "cc-switch-2", "custom", "inl")
+		codexThreads(t, dir, "custom", "openai", "magpie", "mine", "ollama", "cc-switch-2", "custom", "inl")
 		path := filepath.Join(dir, "config.toml")
 		table := func(id string) map[string]string {
 			tb, err := edit.GetTOMLTable(path, "model_providers."+id)

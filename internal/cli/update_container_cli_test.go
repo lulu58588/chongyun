@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // `chongyun update` in the Docker image (/magpie, run as nonroot) failed with
@@ -22,14 +22,14 @@ func TestUpdateInContainerSaysPullTheImage(t *testing.T) {
 	}
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// no checksum: a download is refused before anything is fetched or written
-		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", URL: "https://github.com/lulu58588/magpie-releases/releases/tag/v0.1.11",
+		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", URL: "https://github.com/lulu58588/chongyun-releases/releases/tag/v0.1.11",
 			Assets: map[string]update.Asset{update.BinaryAsset(): {URL: "http://" + r.Host + "/asset"}}})
 	}))
 	defer srv.Close()
 	t.Setenv("MAGPIE_UPDATE_FEED", srv.URL)
 	dir := t.TempDir()
-	exe := filepath.Join(dir, "chongyun")
-	if err := os.WriteFile(exe, []byte("chongyun"), 0o755); err != nil {
+	exe := filepath.Join(dir, "magpie")
+	if err := os.WriteFile(exe, []byte("magpie"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.Chmod(dir, 0o555); err != nil {
@@ -44,7 +44,7 @@ func TestUpdateInContainerSaysPullTheImage(t *testing.T) {
 
 	updateInContainer = func() bool { return true }
 	err := updateCmd([]string{"update"})
-	if err == nil || !strings.Contains(err.Error(), "docker pull ghcr.io/yetone/magpie:latest") {
+	if err == nil || !strings.Contains(err.Error(), "docker pull ghcr.io/lulu58588/chongyun:latest") {
 		t.Fatalf("in a container: %v", err)
 	}
 

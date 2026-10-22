@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // A magpie that found the gateway taken serves it once the one that had it
@@ -24,7 +24,7 @@ func TestGatewayTakenOver(t *testing.T) {
 	}
 	t.Setenv("MAGPIE_ADDR", ln.Addr().String())
 	other := &http.Server{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`{"name":"chongyun"}`))
+		w.Write([]byte(`{"name": "崇云科技"}`))
 	})}
 	go other.Serve(ln)
 	defer other.Close()
@@ -79,7 +79,7 @@ func TestGatewayNotServedBesideASlowOne(t *testing.T) {
 	slow := make(chan struct{})
 	other := &http.Server{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		<-slow
-		w.Write([]byte(`{"name":"chongyun"}`))
+		w.Write([]byte(`{"name": "崇云科技"}`))
 	})}
 	go other.Serve(ln)
 	defer other.Close()

@@ -19,16 +19,16 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/wailsapp/wails/v3/pkg/events"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/autostart"
-	"github.com/lulu58588/magpie/internal/library"
-	"github.com/lulu58588/magpie/internal/omarchy"
-	"github.com/lulu58588/magpie/internal/proc"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/shortcut"
-	"github.com/lulu58588/magpie/internal/update"
-	"github.com/lulu58588/magpie/internal/webview2env"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/autostart"
+	"github.com/lulu58588/chongyun/internal/library"
+	"github.com/lulu58588/chongyun/internal/omarchy"
+	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/shortcut"
+	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/chongyun/internal/webview2env"
 )
 
 //go:embed tray.png
@@ -178,7 +178,7 @@ func (h *host) ChooseFolder(title string) (string, error) {
 }
 
 // panelTitle names the panel for Hyprland's rule, which places it, and
-// for niri, which finds it by it (the main window is "chongyun")
+// for niri, which finds it by it (the main window is "magpie")
 const panelTitle = "chongyun panel"
 
 // FitPanel grows or shrinks the panel to its content and keeps it anchored
@@ -396,7 +396,7 @@ func Run(version string, showMain bool, link string) error {
 		appMenu := application.DefaultApplicationMenu()
 		help := appMenu.FindByRole(application.HelpMenu).GetSubmenu()
 		help.Clear()
-		help.Add("Learn More").OnClick(func(*application.Context) { _ = h.OpenURL("https://usemagpie.ai") })
+		help.Add("Learn More").OnClick(func(*application.Context) { _ = h.OpenURL("https://github.com/lulu58588/chongyun") })
 		h.app.Menu.Set(appMenu)
 	}
 	if Started != nil {
@@ -605,7 +605,7 @@ func singleInstance(h *host) *application.SingleInstanceOptions {
 	}
 	sum := sha256.Sum256([]byte(settings.Dir()))
 	return &application.SingleInstanceOptions{
-		UniqueID: "ai.usemagpie.app.i" + hex.EncodeToString(sum[:6]),
+		UniqueID: "ai.chongyun.app.i" + hex.EncodeToString(sum[:6]),
 		OnSecondInstanceLaunch: func(d application.SecondInstanceData) {
 			args := d.Args
 			if len(args) > 0 {

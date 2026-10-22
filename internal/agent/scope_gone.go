@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/edit"
 	"gopkg.in/yaml.v3"
 )
 

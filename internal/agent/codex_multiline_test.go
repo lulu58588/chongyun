@@ -42,7 +42,7 @@ func TestCodexMultilineArray(t *testing.T) {
 				t.Fatalf("%v\n%s", err, read())
 			}
 			if want := []string{"/usr/local/bin/notifier", "turn-ended"}; cfg.Model != "fake/m1" || !reflect.DeepEqual(cfg.Notify, want) ||
-				cfg.ModelProviders["chongyun"] == nil || cfg.ModelProviders["example"] == nil {
+				cfg.ModelProviders["magpie"] == nil || cfg.ModelProviders["example"] == nil {
 				t.Fatalf("after the pick:\n%s", read())
 			}
 			if !strings.Contains(read(), "notify = [\n    \"/usr/local/bin/notifier\",\n    \"turn-ended\",\n]\n") {

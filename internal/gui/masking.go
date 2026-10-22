@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/gwmw"
-	"github.com/lulu58588/magpie/internal/masking"
-	"github.com/lulu58588/magpie/internal/maskrec"
+	"github.com/lulu58588/chongyun/internal/gwmw"
+	"github.com/lulu58588/chongyun/internal/masking"
+	"github.com/lulu58588/chongyun/internal/maskrec"
 )
 
 // previewMax is how much text the preview masks.

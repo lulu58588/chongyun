@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // A model of DeepSeek's own picked in dsh's /model, which dsh saves in its
@@ -107,7 +107,7 @@ func TestDshPickSavedIntoMagpiesEntryOutlivesDisconnect(t *testing.T) {
 	// dsh 0.2.0-rc.2's ConfigEditor.edit: the last agent-default-model
 	// entry's config replaced, its id line (and magpie's mark) kept
 	s := read(headless)
-	ours := "- id: agent-default-model # chongyun\n  config:\n    provider: chongyun\n    model: \"deepseek/pro\"\n"
+	ours := "- id: agent-default-model # chongyun\n  config:\n    provider: magpie\n    model: \"deepseek/pro\"\n"
 	if !strings.Contains(s, ours) {
 		t.Fatalf("chongyun's start:\n%s", s)
 	}

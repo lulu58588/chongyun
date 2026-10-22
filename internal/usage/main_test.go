@@ -3,7 +3,7 @@ package usage
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // TestMain gives the package a home of its own (testenv): a test that

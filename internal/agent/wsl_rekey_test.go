@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // Codex in a WSL distro under NAT connected while the gateway wasn't shared
@@ -109,7 +109,7 @@ func TestRekeyLeavesLoopback(t *testing.T) {
 	if moved, err := Rekey(as); err != nil || len(moved) != 0 {
 		t.Fatalf("moved %v, %v", moved, err)
 	}
-	if cfg := read(); strings.Contains(cfg, "chongyun") {
+	if cfg := read(); strings.Contains(cfg, "magpie") {
 		t.Fatalf("written:\n%s", cfg)
 	}
 }

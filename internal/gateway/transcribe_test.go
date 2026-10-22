@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 // scribe is a vendor with OpenAI's speech-to-text APIs; what each path was
@@ -144,7 +144,7 @@ func formOf(t *testing.T, ctype string, body []byte) (map[string]string, []byte)
 // boundary, and the vendor's answer comes back; it is in the usage ledger.
 func TestTranscriptionGoesToTheModelsProvider(t *testing.T) {
 	s, sc := scribed(t)
-	body, ctype := audioFormBody(t, "model", "ears/whisper-1", "language", "zh", "prompt", "chongyun", "response_format", "json", "temperature", "0")
+	body, ctype := audioFormBody(t, "model", "ears/whisper-1", "language", "zh", "prompt", "magpie", "response_format", "json", "temperature", "0")
 	code, _, raw := postAudio(t, s, "/v1/audio/transcriptions", ctype, body)
 	if code != 200 || !strings.Contains(raw, `"text":"Hello from the chongyun."`) {
 		t.Fatalf("%d %s", code, raw)
@@ -157,7 +157,7 @@ func TestTranscriptionGoesToTheModelsProvider(t *testing.T) {
 	if !bytes.Equal(audio, voice) || vals["filename"] != "voice.webm" || vals["file type"] != "audio/webm" {
 		t.Fatalf("audio arrived as %d bytes %q (%s), not the %d sent", len(audio), vals["filename"], vals["file type"], len(voice))
 	}
-	if vals["model"] != "whisper-1" || vals["language"] != "zh" || vals["prompt"] != "chongyun" || vals["response_format"] != "json" || vals["temperature"] != "0" {
+	if vals["model"] != "whisper-1" || vals["language"] != "zh" || vals["prompt"] != "magpie" || vals["response_format"] != "json" || vals["temperature"] != "0" {
 		t.Fatalf("vendor's form %v", vals)
 	}
 	var recs []usage.Record

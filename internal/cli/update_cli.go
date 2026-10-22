@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // updateExecutable, updateCanElevate and updateInContainer are
@@ -161,13 +161,13 @@ func updateCmd(args []string) error {
 	}
 	if !update.Newer(rel.Version, version) {
 		if update.Released(version) {
-			fmt.Println(green.Render("✓"), "chongyun", version, muted.Render("is the latest"))
+			fmt.Println(green.Render("✓"), "magpie", version, muted.Render("is the latest"))
 		} else {
-			fmt.Println("chongyun", version, muted.Render("was built from source; the latest release is "+rel.Version))
+			fmt.Println("magpie", version, muted.Render("was built from source; the latest release is "+rel.Version))
 		}
 		return nil
 	}
-	fmt.Println("chongyun", bold.Render(rel.Version), "is out", muted.Render("(you have "+version+") · "+rel.URL))
+	fmt.Println("magpie", bold.Render(rel.Version), "is out", muted.Render("(you have "+version+") · "+rel.URL))
 	if len(args) > 1 && args[1] == "check" {
 		return nil
 	}
@@ -195,7 +195,7 @@ func updateCmd(args []string) error {
 			// The copy won't follow the app; the fix is the link install.sh
 			// makes. `chongyun update` run from the copy can't do it (it
 			// replaces the copy with another copy), so name the real step.
-			bin := filepath.Join(app, "Contents", "MacOS", "chongyun")
+			bin := filepath.Join(app, "Contents", "MacOS", "magpie")
 			fmt.Println(muted.Render("  the `chongyun` command at " + tilde(stale) + " is a copy behind this app; re-run the installer, or link it: ln -sf " + tilde(bin) + " " + tilde(stale)))
 		}
 		return nil
@@ -203,7 +203,7 @@ func updateCmd(args []string) error {
 	// the Docker image's /magpie, run as nonroot: the image is what is
 	// updated, and a replace would only fail with "permission denied"
 	if exe, err := updateExecutable(); err == nil && !update.Writable(filepath.Dir(exe)) && !updateCanElevate() && updateInContainer() {
-		return fmt.Errorf("this chongyun runs in a container and can't replace itself; pull the new image (docker pull ghcr.io/yetone/magpie:latest) and recreate the container")
+		return fmt.Errorf("this chongyun runs in a container and can't replace itself; pull the new image (docker pull ghcr.io/lulu58588/chongyun:latest) and recreate the container")
 	}
 	if exe, err := update.Executable(); err == nil && update.Homebrew(exe) {
 		return fmt.Errorf("this chongyun was installed with Homebrew; update it with: brew upgrade chongyun")

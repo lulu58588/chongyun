@@ -23,7 +23,7 @@ import (
 	"bytes"
 	"encoding/json"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // quietTo is whether pid/model is known not to think: magpie has a word on

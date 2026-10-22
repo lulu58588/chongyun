@@ -7,8 +7,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/agent"
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // A file where an agent keeps its folder (~/.dsh, another tool's) is not

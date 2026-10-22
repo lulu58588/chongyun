@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/davsync"
+	"github.com/lulu58588/chongyun/internal/davsync"
 )
 
 func TestGitHubCmd(t *testing.T) {

@@ -54,7 +54,7 @@ func TestCLIBehindIsLstatOnlyAndDismissible(t *testing.T) {
 	if got := cliBehind(); got != "" {
 		t.Fatalf("cliBehind = %q after dismiss, want empty", got)
 	}
-	b, err := os.ReadFile(filepath.Join(home, "chongyun", cliQuietFile))
+	b, err := os.ReadFile(filepath.Join(home, "magpie", cliQuietFile))
 	if err != nil || string(b) != Version+"\n" {
 		t.Fatalf("dismiss file = %q, %v; want this version, so the next one asks again", b, err)
 	}
@@ -77,7 +77,7 @@ func TestCLIBehindIsLstatOnlyAndDismissible(t *testing.T) {
 
 	// a link, not a copy: quiet even undismissed
 	os.Remove(cli)
-	if err := os.Symlink("/Applications/magpie.app/Contents/MacOS/magpie", cli); err != nil {
+	if err := os.Symlink("/Applications/chongyun.app/Contents/MacOS/chongyun", cli); err != nil {
 		t.Fatal(err)
 	}
 	cliBehindOnce = new(sync.Once)

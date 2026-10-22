@@ -17,7 +17,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/appdir"
 )
 
 // Name is what the shortcut is called, and what Windows search finds.

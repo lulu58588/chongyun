@@ -29,7 +29,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // dailySlack is how late a day's start is still sent: a machine that

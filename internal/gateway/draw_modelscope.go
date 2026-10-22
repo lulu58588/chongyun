@@ -18,7 +18,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // isModelScope is a provider at ModelScope's API-Inference, a preset's or

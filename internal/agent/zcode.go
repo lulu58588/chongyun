@@ -12,17 +12,17 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/appdir"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // ZCode (Zhipu's desktop app) keeps its model providers in
 // ~/.zcode/v2/config.json (under the folder the user moved its data to, when
 // they did: appdir.ZCodeDataIn), OpenCode's provider shape with a kind of its own:
 //
-//	{"provider":{"chongyun":{"name": "崇云科技","kind":"anthropic",
-//	  "options":{"apiKey":"chongyun","baseURL":"http://127.0.0.1:3425"},
+//	{"provider":{"magpie":{"name": "崇云科技","kind":"anthropic",
+//	  "options":{"apiKey":"magpie","baseURL":"http://127.0.0.1:3425"},
 //	  "enabled":true,"source":"custom",
 //	  "models":{"<id>":{"name":…,"limit":{"context":…,"output":…},"modalities":{…},
 //	    "reasoning":{"enabled":true,"variants":[…],"defaultVariant":…}}}}}}
@@ -37,13 +37,13 @@ import (
 // context window and inputs are rules of their own:
 //
 //	{"schemaVersion":1,"config":{
-//	  "providerConfigRules":{"providerRules":[{"providerId":"chongyun",
-//	    "providerName":"chongyun","enabled":true,"config":{
+//	  "providerConfigRules":{"providerRules":[{"providerId":"magpie",
+//	    "providerName":"magpie","enabled":true,"config":{
 //	      "group":"standard-personal",
-//	      "access":{"type":"api-key","apiKey":"chongyun"},
+//	      "access":{"type":"api-key","apiKey":"magpie"},
 //	      "api":{"type":"anthropic-messages","baseUrl":"http://127.0.0.1:3425"},
 //	      "personalModelIds":[…],"modelOrder":[…]}}]},
-//	  "modelConfigRules":{"providerModelRules":[{"providerId":"chongyun",
+//	  "modelConfigRules":{"providerModelRules":[{"providerId":"magpie",
 //	    "modelId":…,"config":{"properties":{"contextWindow":…,
 //	      "inputFormat":{"supportsImage":…},"supportsNativeWebSearch":true},
 //	      "optionSpecs":{"maxOutputTokens":{"max":…},"reasoningLevel":{"values":[…]}}}}],
@@ -481,7 +481,7 @@ func zcodeRules(path string, on, keep bool) error {
 		if keep {
 			base, token = zcodeKept(filepath.Dir(path))
 		}
-		rule := map[string]any{"providerId": magpieID, "providerName": "chongyun", "enabled": true,
+		rule := map[string]any{"providerId": magpieID, "providerName": "magpie", "enabled": true,
 			"config": map[string]any{
 				"group":            "standard-personal",
 				"access":           map[string]any{"type": "api-key", "apiKey": token},

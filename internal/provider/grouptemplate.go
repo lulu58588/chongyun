@@ -7,14 +7,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/settings"
+	"github.com/lulu58588/chongyun/internal/settings"
 )
 
 // A template is a routing group made of the user's own models for a need
 // most users have, so a group is had in a click rather than by filling in
 // the group editor: hard turns to the strongest model and easy ones to a
 // cheap one, a cheap model with the strongest behind it, or the strongest
-// models of different providers each behind the other (yetone, 10-10).
+// models of different providers each behind the other (upstream, 10-10).
 // Which model is strong and which is cheap is read off the models' list
 // prices and release days, never a list of names kept here, so the
 // templates follow the catalog as models come and go.

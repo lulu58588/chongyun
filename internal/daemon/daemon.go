@@ -18,13 +18,13 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/agentenv"
-	"github.com/lulu58588/magpie/internal/autostart"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/chongyun/internal/autostart"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
-// Name is the service's name: magpie.service, com.yetone.magpie.serve.
+// Name is the service's name: chongyun.service, com.chongyun.ai.gateway.serve.
 const Name = "chongyun"
 
 // Status is what the system says of the service.

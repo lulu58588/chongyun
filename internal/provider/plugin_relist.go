@@ -21,7 +21,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/plugin"
 )
 
 // relistEvery is how often the gateway's magpie lists the plugins'

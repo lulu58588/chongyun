@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/gateway"
 )
 
 // A turn's end is said in the page's language: the agent, how long the
@@ -12,11 +12,11 @@ import (
 func TestTurnDoneText(t *testing.T) {
 	long := gateway.TurnEnd{Agent: "claude", Session: "s", Folder: "/Users/u/work/magpie/", Took: 3*time.Minute + 12*time.Second}
 	for _, c := range []struct{ lang, title, body string }{
-		{"en", "Claude Code is done", "Took 3m 12s · chongyun"},
-		{"zh", "Claude Code 已完成", "用时 3 分 12 秒 · chongyun"},
-		{"zh-TW", "Claude Code 已完成", "用時 3 分 12 秒 · chongyun"},
-		{"ja", "Claude Code が完了しました", "所要時間 3 分 12 秒 · chongyun"},
-		{"de", "Claude Code ist fertig", "Dauer: 3 Min. 12 Sek. · chongyun"},
+		{"en", "Claude Code is done", "Took 3m 12s · magpie"},
+		{"zh", "Claude Code 已完成", "用时 3 分 12 秒 · magpie"},
+		{"zh-TW", "Claude Code 已完成", "用時 3 分 12 秒 · magpie"},
+		{"ja", "Claude Code が完了しました", "所要時間 3 分 12 秒 · magpie"},
+		{"de", "Claude Code ist fertig", "Dauer: 3 Min. 12 Sek. · magpie"},
 	} {
 		if title, body := turnDoneText(c.lang, "Claude Code", long); title != c.title || body != c.body {
 			t.Errorf("%s: %q / %q", c.lang, title, body)

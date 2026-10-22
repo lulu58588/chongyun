@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // #1016: a provider with one key on — Kimi Code (China), its plan's 5

@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/magpie/internal/gateway"
-	"github.com/lulu58588/magpie/internal/netproxy"
-	"github.com/lulu58588/magpie/internal/wslrun"
+	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/chongyun/internal/wslrun"
 )
 
 // An agent pointed at magpie by an address other than this machine's
@@ -64,7 +64,7 @@ func answersAsMagpie(res *http.Response) bool {
 	var info struct {
 		Name string `json:"name"`
 	}
-	return res.StatusCode == http.StatusOK && json.NewDecoder(res.Body).Decode(&info) == nil && info.Name == "chongyun"
+	return res.StatusCode == http.StatusOK && json.NewDecoder(res.Body).Decode(&info) == nil && info.Name == gateway.ProductName
 }
 
 // magpieAt is whether base answers as magpie (magpieProbe), and whether

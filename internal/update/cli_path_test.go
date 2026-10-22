@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/testenv"
+	"github.com/lulu58588/chongyun/internal/testenv"
 )
 
 // Settings' Command line (PAMI on Discord): which magpie each shell runs,
@@ -21,7 +21,7 @@ func TestCLIOnPath(t *testing.T) {
 	t.Setenv("HOME", h)
 	t.Setenv("ZDOTDIR", "")
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(h, ".config"))
-	exe := filepath.Join(h, "Applications", "magpie.app", "Contents", "MacOS", "chongyun")
+	exe := filepath.Join(h, "Applications", "chongyun.app", "Contents", "MacOS", "chongyun")
 	bin := filepath.Join(h, ".local", "bin")
 	other := filepath.Join(h, "other")
 	for _, d := range []string{filepath.Dir(exe), bin, other} {
@@ -118,8 +118,8 @@ func TestCLIOnPath(t *testing.T) {
 		t.Fatal("a shell that isn't offered was written")
 	}
 
-	// a magpie.app elsewhere says its version without being run
-	app := filepath.Join(h, "Old", "magpie.app", "Contents")
+	// a chongyun.app elsewhere says its version without being run
+	app := filepath.Join(h, "Old", "chongyun.app", "Contents")
 	os.MkdirAll(filepath.Join(app, "MacOS"), 0o755)
 	testenv.Program(t, filepath.Join(app, "MacOS", "chongyun"), "#!/bin/sh\nexit 1\n")
 	os.WriteFile(filepath.Join(app, "Info.plist"), []byte("<dict><key>CFBundleShortVersionString</key>\n<string>0.1.500</string></dict>"), 0o644)

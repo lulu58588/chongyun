@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 func codexHome(t *testing.T, auth, config string) (home string, read func() string) {
@@ -68,7 +68,7 @@ func TestCodexSignedInRoutesByBaseURL(t *testing.T) {
 		strings.Contains(cfg, "model_catalog_json") || !strings.Contains(cfg, "[model_providers.magpie]") {
 		t.Fatalf("chongyun model:\n%s", cfg)
 	}
-	if _, err := os.Stat(filepath.Join(home, ".codex", "magpie-models.json")); err == nil {
+	if _, err := os.Stat(filepath.Join(home, ".codex", "chongyun-models.json")); err == nil {
 		t.Error("catalog file written")
 	}
 	if err := cx.Fields[0].Set("gpt-5.4"); err != nil {
@@ -86,13 +86,13 @@ func TestCodexSignedInRoutesByBaseURL(t *testing.T) {
 // started on it name it, and without it Codex can't open them (#129).
 func TestCodexSignedInLeavesProviderTable(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`,
-		"model = \"fake/m1\"\nmodel_provider = \"chongyun\"\nmodel_catalog_json = \"/x/magpie-models.json\"\n\n[model_providers.magpie]\nname = \"chongyun\"\nbase_url = \"http://127.0.0.1:3425/v1\"\nwire_api = \"responses\"\n")
+		"model = \"fake/m1\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = \"/x/chongyun-models.json\"\n\n[model_providers.magpie]\nname = \"magpie\"\nbase_url = \"http://127.0.0.1:3425/v1\"\nwire_api = \"responses\"\n")
 	if err := codex(home).Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
 	cfg := read()
 	if !strings.Contains(cfg, "openai_base_url") || strings.Contains(cfg, "model_provider =") || strings.Contains(cfg, "model_catalog_json") ||
-		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, `experimental_bearer_token = "chongyun"`) {
+		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, `experimental_bearer_token = "magpie"`) {
 		t.Fatalf("\n%s", cfg)
 	}
 }
@@ -102,13 +102,13 @@ func TestCodexSignedInLeavesProviderTable(t *testing.T) {
 // threads started on it when Codex steps back to its own models, as if
 // magpie had written it.
 func TestCodexSpacedProviderTable(t *testing.T) {
-	home, read := codexHome(t, "", "model = \"gpt-5.5\"\n\n[ model_providers . chongyun ]\nname = \"chongyun\"\nbase_url = \"http://127.0.0.1:1/v1\"\n\n[[skills.config]]\npath = \"/skill\"\n")
+	home, read := codexHome(t, "", "model = \"gpt-5.5\"\n\n[ model_providers . magpie ]\nname = \"magpie\"\nbase_url = \"http://127.0.0.1:1/v1\"\n\n[[skills.config]]\npath = \"/skill\"\n")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
 	cfg := read()
-	if strings.Count(cfg, "model_providers") != 1 || !strings.Contains(cfg, `model_provider = "chongyun"`) {
+	if strings.Count(cfg, "model_providers") != 1 || !strings.Contains(cfg, `model_provider = "magpie"`) {
 		t.Fatalf("provider table was not reused:\n%s", cfg)
 	}
 	if err := cx.Fields[0].Set(""); err != nil {
@@ -130,7 +130,7 @@ func TestCodexSignedOutUsesProvider(t *testing.T) {
 		t.Fatal(err)
 	}
 	cfg := read()
-	if !strings.Contains(cfg, `openai_base_url = "`+codexGatewayURL()+`"`) || !strings.Contains(cfg, `model_provider = "chongyun"`) ||
+	if !strings.Contains(cfg, `openai_base_url = "`+codexGatewayURL()+`"`) || !strings.Contains(cfg, `model_provider = "magpie"`) ||
 		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, "model_catalog_json") {
 		t.Fatalf("\n%s", cfg)
 	}
@@ -141,7 +141,7 @@ func TestCodexSignedOutUsesProvider(t *testing.T) {
 		strings.Contains(cfg, "model_catalog_json") || !strings.Contains(cfg, "[model_providers.magpie]") {
 		t.Fatalf("reset:\n%s", cfg)
 	}
-	if _, err := os.Stat(filepath.Join(home, ".codex", "magpie-models.json")); err == nil {
+	if _, err := os.Stat(filepath.Join(home, ".codex", "chongyun-models.json")); err == nil {
 		t.Error("catalog file left")
 	}
 }
@@ -155,7 +155,7 @@ func TestCodexUsedUpUsesProvider(t *testing.T) {
 		t.Fatal(err)
 	}
 	cfg := read()
-	if !strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model_provider = "chongyun"`) ||
+	if !strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model_provider = "magpie"`) ||
 		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, `model = "fake/m1"`) {
 		t.Fatalf("\n%s", cfg)
 	}
@@ -298,7 +298,7 @@ func TestCodexSubagentEffort(t *testing.T) {
 }
 
 func TestCodexSubagentReadErrorStopsChanges(t *testing.T) {
-	const input = "model = \"fake/m1\"\nmodel_provider = \"chongyun\"\n\n[agents]\ndefault_subagent_model = [\n"
+	const input = "model = \"fake/m1\"\nmodel_provider = \"magpie\"\n\n[agents]\ndefault_subagent_model = [\n"
 	for _, model := range []string{"", "gpt-native"} {
 		t.Run("model="+model, func(t *testing.T) {
 			home := t.TempDir()
@@ -326,7 +326,7 @@ func TestCodexSubagentReadErrorStopsChanges(t *testing.T) {
 
 func TestCodexCheckReportsTOMLParseErrors(t *testing.T) {
 	for _, profile := range []string{"", "profile = \"work\"\n"} {
-		input := "model = \"fake/m1\"\nmodel_provider = \"chongyun\"\n" + profile + "\n[model_providers.magpie]\ninvalid = [\n"
+		input := "model = \"fake/m1\"\nmodel_provider = \"magpie\"\n" + profile + "\n[model_providers.magpie]\ninvalid = [\n"
 		home, read := codexHome(t, "", input)
 		path := filepath.Join(home, ".codex", "config.toml")
 		message := codex(home).Check()
@@ -363,7 +363,7 @@ func TestCodexLoginAPI(t *testing.T) {
 		t.Fatal(err)
 	}
 	cfg := read()
-	if !strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model_provider = "chongyun"`) ||
+	if !strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model_provider = "magpie"`) ||
 		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, "model_catalog_json") {
 		t.Fatalf("api:\n%s", cfg)
 	}
@@ -379,7 +379,7 @@ func TestCodexLoginAPI(t *testing.T) {
 	if err := login.Set("api"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg = read(); !strings.Contains(cfg, `model_provider = "chongyun"`) || strings.Count(cfg, "openai_base_url") != 1 {
+	if cfg = read(); !strings.Contains(cfg, `model_provider = "magpie"`) || strings.Count(cfg, "openai_base_url") != 1 {
 		t.Fatalf("api again:\n%s", cfg)
 	}
 	if err := cx.Fields[0].Set(""); err != nil {
@@ -391,7 +391,7 @@ func TestCodexLoginAPI(t *testing.T) {
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg = read(); !strings.Contains(cfg, `model_provider = "chongyun"`) {
+	if cfg = read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
 		t.Fatalf("api after default:\n%s", cfg)
 	}
 }
@@ -430,7 +430,7 @@ func TestCodexPickKeepsAGatewayKeyOfTheUsers(t *testing.T) {
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `experimental_bearer_token = "chongyun"`) {
+	if cfg := read(); !strings.Contains(cfg, `experimental_bearer_token = "magpie"`) {
 		t.Fatalf("not wired:\n%s", cfg)
 	}
 	secret, err := access.Update("add-key", access.Change{Name: "codex"})

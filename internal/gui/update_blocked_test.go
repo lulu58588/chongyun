@@ -12,8 +12,8 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/settings"
-	"github.com/lulu58588/magpie/internal/update"
+	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/chongyun/internal/update"
 )
 
 // #894: on Windows with Smart App Control on, the new unsigned exe was
@@ -43,7 +43,7 @@ func TestUpdateThatWontStart(t *testing.T) {
 	t.Cleanup(update.ClearBlocked)
 
 	// the running binary, in a folder of its own
-	exe := filepath.Join(t.TempDir(), "chongyun")
+	exe := filepath.Join(t.TempDir(), "magpie")
 	os.WriteFile(exe, []byte("running chongyun"), 0o755)
 	self, _ := os.Stat(exe)
 	staged := exe + ".new"

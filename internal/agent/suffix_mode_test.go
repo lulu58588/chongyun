@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // tomlString quotes a path for a TOML basic string: Windows separators
@@ -31,10 +31,10 @@ func TestSuffixModesReachAgentFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	piModels := filepath.Join(home, ".pi", "agent", "models.json")
-	writeFile(t, piModels, `{"providers":{"chongyun":{"name":"chongyun","models":[]}}}`)
+	writeFile(t, piModels, `{"providers":{"magpie":{"name": "崇云科技","models":[]}}}`)
 	codexDir := filepath.Join(home, ".codex")
-	codexCat := filepath.Join(codexDir, "magpie-models.json")
-	writeFile(t, filepath.Join(codexDir, "config.toml"), "model = \"relay/glm-4.6\"\nmodel_provider = \"chongyun\"\nmodel_catalog_json = \""+tomlString(codexCat)+"\"\n")
+	codexCat := filepath.Join(codexDir, "chongyun-models.json")
+	writeFile(t, filepath.Join(codexDir, "config.toml"), "model = \"relay/glm-4.6\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = \""+tomlString(codexCat)+"\"\n")
 	writeFile(t, codexCat, `{"models":[]}`)
 	catalog.Changed = SyncCatalog
 	t.Cleanup(func() { catalog.Changed = nil })
@@ -52,7 +52,7 @@ func TestSuffixModesReachAgentFiles(t *testing.T) {
 			t.Fatal(err)
 		}
 		pi = map[string]string{}
-		for _, m := range p.Providers["chongyun"].Models {
+		for _, m := range p.Providers["magpie"].Models {
 			pi[m["id"].(string)], _ = m["name"].(string)
 		}
 		var cx struct {

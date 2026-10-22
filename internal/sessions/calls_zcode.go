@@ -22,7 +22,7 @@ import (
 //
 // A reply through magpie's gateway is left out here as OpenCode's is
 // (ocGatewayProvider): ZCode records the provider it was told to use, and
-// the route magpie writes says "chongyun", so unlike dsh's this one is a
+// the route magpie writes says "magpie", so unlike dsh's this one is a
 // provider id magpie itself chose and can be trusted to mean the gateway.
 
 // zcCallList is the last listing of ZCode's database, kept while the

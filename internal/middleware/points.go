@@ -35,9 +35,9 @@ import (
 
 	"github.com/Calcium-Ion/moejs"
 
-	"github.com/lulu58588/magpie/internal/plugin"
-	"github.com/lulu58588/magpie/internal/routes"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/chongyun/internal/routes"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 var (

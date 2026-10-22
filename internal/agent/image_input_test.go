@@ -7,9 +7,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/codexcat"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/codexcat"
+	"github.com/lulu58588/chongyun/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -51,14 +51,14 @@ func TestConfiguredModelsAdvertiseImageInput(t *testing.T) {
 	if err := os.MkdirAll(filepath.Dir(ocPath), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(ocPath, []byte(`{"provider":{"chongyun":{"models":{"vision/image":{"name":"image","attachment":true}}}}}`), 0o644); err != nil {
+	if err := os.WriteFile(ocPath, []byte(`{"provider":{"magpie":{"models":{"vision/image":{"name":"image","attachment":true}}}}}`), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	if err := opencode(home, filepath.Join(home, ".config")).Field("model").Set("magpie/vision/image"); err != nil {
 		t.Fatal(err)
 	}
 	oc := read(filepath.Join(home, ".config", "opencode", "opencode.json"))
-	ocModels := oc["provider"].(map[string]any)["chongyun"].(map[string]any)["models"].(map[string]any)
+	ocModels := oc["provider"].(map[string]any)["magpie"].(map[string]any)["models"].(map[string]any)
 	image := ocModels["vision/image"].(map[string]any)
 	// OpenCode 2 warns on attachment, a V1 field it ignores (#2209)
 	if _, ok := image["attachment"]; ok {
@@ -79,7 +79,7 @@ func TestConfiguredModelsAdvertiseImageInput(t *testing.T) {
 		t.Fatal(err)
 	}
 	pm := read(filepath.Join(home, ".pi", "agent", "models.json"))
-	piModels := pm["providers"].(map[string]any)["chongyun"].(map[string]any)["models"].([]any)
+	piModels := pm["providers"].(map[string]any)["magpie"].(map[string]any)["models"].([]any)
 	if len(piModels) != 3 {
 		t.Fatalf("Pi models: %v", piModels)
 	}
@@ -102,7 +102,7 @@ func TestConfiguredModelsAdvertiseImageInput(t *testing.T) {
 	// omp: an entry written before input was, brought up to date by Sync
 	ompModels := filepath.Join(home, ".omp", "agent", "models.yml")
 	os.MkdirAll(filepath.Dir(ompModels), 0o755)
-	os.WriteFile(ompModels, []byte("providers:\n  chongyun:\n    baseUrl: x\n    models:\n      - id: vision/image\n"), 0o644)
+	os.WriteFile(ompModels, []byte("providers:\n  magpie:\n    baseUrl: x\n    models:\n      - id: vision/image\n"), 0o644)
 	if err := omp(home).Sync(); err != nil {
 		t.Fatal(err)
 	}
@@ -120,7 +120,7 @@ func TestConfiguredModelsAdvertiseImageInput(t *testing.T) {
 	}
 	want := map[string][]string{"vision/image": {"text", "image"}, "vision/text": {"text"}, "vision/unknown": nil}
 	got := map[string][]string{}
-	for _, m := range om.Providers["chongyun"].Models {
+	for _, m := range om.Providers["magpie"].Models {
 		got[m.ID] = m.Input
 	}
 	if !reflect.DeepEqual(got, want) {

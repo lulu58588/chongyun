@@ -4,9 +4,9 @@ package agent
 // provider it talks to under "provider" (gateway, codex, grok or one of
 // the user's own), each provider's model under "models", and providers of
 // the user's own under "providers". magpie adds itself there as the
-// provider "chongyun", keyless (auth none), speaking chat completions, with
+// provider "magpie", keyless (auth none), speaking chat completions, with
 // the catalog as its model_metadata; a model through magpie is
-// "magpie/<provider>/<model>" here, provider "chongyun" and models.magpie
+// "magpie/<provider>/<model>" here, provider "magpie" and models.magpie
 // "<provider>/<model>" in fx's settings. fx sends no effort to a provider
 // of the user's own, so there is no effort to pick.
 
@@ -17,8 +17,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
 )
 
 // fxMaxModels is how many models fx takes in a provider's model_metadata;

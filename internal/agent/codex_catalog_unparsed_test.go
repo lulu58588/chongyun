@@ -6,17 +6,17 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
-// A magpie-models.json that doesn't parse is kept aside before magpie
+// A chongyun-models.json that doesn't parse is kept aside before magpie
 // writes its list over the file or takes the file away: Keep (#1450) can
 // hold nothing of a file it can't read, so the keys the user added by hand
 // would end with no copy — the rule the other state files were given
 // (#2263), which this file missed.
 func TestUnparsedCodexCatalogKeptAside(t *testing.T) {
 	home, _ := codexHome(t, "", "")
-	list := filepath.Join(home, ".codex", "magpie-models.json")
+	list := filepath.Join(home, ".codex", "chongyun-models.json")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)

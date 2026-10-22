@@ -16,11 +16,11 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/magpie/internal/access"
-	"github.com/lulu58588/magpie/internal/catalog"
-	"github.com/lulu58588/magpie/internal/edit"
-	"github.com/lulu58588/magpie/internal/provider"
-	"github.com/lulu58588/magpie/internal/usage"
+	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/chongyun/internal/usage"
 )
 
 func stepcodeWriteTestFile(t *testing.T, path, content string) {
@@ -128,7 +128,7 @@ command = "node"
 	if err := toml.Unmarshal([]byte(cfgStr), &parsedCfg); err != nil {
 		t.Fatalf("config.toml invalid TOML: %v", err)
 	}
-	if parsedCfg["defaultProvider"] != "chongyun" {
+	if parsedCfg["defaultProvider"] != "magpie" {
 		t.Errorf("defaultProvider = %v, want chongyun", parsedCfg["defaultProvider"])
 	}
 
@@ -177,7 +177,7 @@ command = "node"
 	if provs["anthropic"] == nil {
 		t.Errorf("native provider anthropic lost from models.json")
 	}
-	if provs["chongyun"] != nil {
+	if provs["magpie"] != nil {
 		t.Errorf("chongyun provider not removed on disconnect")
 	}
 
@@ -323,7 +323,7 @@ func TestStepCodeNativeChangedAndPreexisting(t *testing.T) {
 	modelsPath := filepath.Join(dir, "models.json")
 
 	stepcodeWriteTestFile(t, configPath, "defaultProvider = \"anthropic\"\ndefaultModel = \"claude-3-5\"\ncustom_opt = \"keep-me\"\n")
-	stepcodeWriteTestFile(t, modelsPath, "{\n  \"providers\": {\n    \"chongyun\": {\n      \"name\": \"my-preexisting-magpie\",\n      \"baseUrl\": \"https://custom.endpoint/v1\",\n      \"customKey\": \"keep-me-too\"\n    }\n  }\n}\n")
+	stepcodeWriteTestFile(t, modelsPath, "{\n  \"providers\": {\n    \"magpie\": {\n      \"name\": \"my-preexisting-magpie\",\n      \"baseUrl\": \"https://custom.endpoint/v1\",\n      \"customKey\": \"keep-me-too\"\n    }\n  }\n}\n")
 
 	a := stepcode(home)
 	if err := a.Apply("model", "magpie/deepseek/pro"); err != nil {
@@ -354,7 +354,7 @@ func TestStepCodeNativeChangedAndPreexisting(t *testing.T) {
 		t.Fatal(err)
 	}
 	provs := parsedModels["providers"].(map[string]any)
-	magpieProv := provs["chongyun"].(map[string]any)
+	magpieProv := provs["magpie"].(map[string]any)
 	if magpieProv["name"] != "my-preexisting-magpie" || magpieProv["customKey"] != "keep-me-too" {
 		t.Errorf("preexisting providers.magpie was not restored: %v", magpieProv)
 	}
@@ -452,7 +452,7 @@ func TestStepCodeSyncAndDrift(t *testing.T) {
 	if err := json.Unmarshal([]byte(modelsContent), &parsed); err != nil {
 		t.Fatal(err)
 	}
-	magpieProv := parsed["providers"].(map[string]any)["chongyun"].(map[string]any)
+	magpieProv := parsed["providers"].(map[string]any)["magpie"].(map[string]any)
 	magpieProv["customUnknownKey"] = "keep-this"
 	b, err := json.MarshalIndent(parsed, "", "  ")
 	if err != nil {
@@ -468,7 +468,7 @@ func TestStepCodeSyncAndDrift(t *testing.T) {
 	if err := json.Unmarshal([]byte(modelsContent), &parsed); err != nil {
 		t.Fatal(err)
 	}
-	magpieProv = parsed["providers"].(map[string]any)["chongyun"].(map[string]any)
+	magpieProv = parsed["providers"].(map[string]any)["magpie"].(map[string]any)
 	if magpieProv["customUnknownKey"] != "keep-this" {
 		t.Errorf("Sync dropped unknown key in providers.magpie: %v", magpieProv)
 	}
@@ -585,7 +585,7 @@ func TestStepCodeMetadataAndLANKey(t *testing.T) {
 	if err := json.Unmarshal([]byte(stepcodeReadTestFile(t, modelsPath)), &parsed); err != nil {
 		t.Fatal(err)
 	}
-	magpieProv := parsed["providers"].(map[string]any)["chongyun"].(map[string]any)
+	magpieProv := parsed["providers"].(map[string]any)["magpie"].(map[string]any)
 	if magpieProv["api"] != "openai-completions" {
 		t.Errorf("api = %v, want openai-completions", magpieProv["api"])
 	}
@@ -633,7 +633,7 @@ func TestStepCodeMetadataAndLANKey(t *testing.T) {
 	if err := json.Unmarshal([]byte(stepcodeReadTestFile(t, wslModelsPath)), &wslParsed); err != nil {
 		t.Fatal(err)
 	}
-	wslMagpieProv := wslParsed["providers"].(map[string]any)["chongyun"].(map[string]any)
+	wslMagpieProv := wslParsed["providers"].(map[string]any)["magpie"].(map[string]any)
 	if wslMagpieProv["baseUrl"] != wslAddr+"/v1" {
 		t.Errorf("wsl baseUrl = %v, want %v", wslMagpieProv["baseUrl"], wslAddr+"/v1")
 	}
@@ -680,7 +680,7 @@ func TestStepCodeStrictValidationAndRollback(t *testing.T) {
 	if err := a.Apply("model", "magpie/deepseek/pro"); err == nil {
 		t.Errorf("expected error applying on non-object providers in models.json")
 	}
-	stepcodeWriteTestFile(t, modelsPath, `{"providers": {"chongyun": "not-an-object"}}`)
+	stepcodeWriteTestFile(t, modelsPath, `{"providers": {"magpie": "not-an-object"}}`)
 	if err := a.Apply("model", "magpie/deepseek/pro"); err == nil {
 		t.Errorf("expected error applying on non-object providers.magpie in models.json")
 	}
@@ -1025,7 +1025,7 @@ func TestStepCodeRealCLISandbox(t *testing.T) {
 		t.Fatalf("step --list-models after disconnect failed: %v, output:\n%s", err, string(outListAfter))
 	}
 	// a row of the list is "<provider> <model> …"; the folder step prints
-	// its docs from may itself have "chongyun" in it, so only a row counts
+	// its docs from may itself have "magpie" in it, so only a row counts
 	if stepcodeListsMagpie(string(outListAfter)) {
 		t.Errorf("step --list-models still lists chongyun after Disconnect:\n%s", string(outListAfter))
 	}
@@ -1128,7 +1128,7 @@ enabledModels = ["anthropic/*", "custom/fast", "custom/fast"]
 // magpie provider.
 func stepcodeListsMagpie(out string) bool {
 	for _, line := range strings.Split(out, "\n") {
-		if f := strings.Fields(line); len(f) > 0 && f[0] == "chongyun" {
+		if f := strings.Fields(line); len(f) > 0 && f[0] == "magpie" {
 			return true
 		}
 	}

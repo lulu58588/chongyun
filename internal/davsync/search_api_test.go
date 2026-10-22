@@ -3,8 +3,8 @@ package davsync
 import (
 	"testing"
 
-	"github.com/lulu58588/magpie/internal/backup"
-	"github.com/lulu58588/magpie/internal/provider"
+	"github.com/lulu58588/chongyun/internal/backup"
+	"github.com/lulu58588/chongyun/internal/provider"
 )
 
 // The search APIs (#419) sync with the providers: sent without keys, the

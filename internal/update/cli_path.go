@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lulu58588/magpie/internal/proc"
+	"github.com/lulu58588/chongyun/internal/proc"
 )
 
 // The `chongyun` command in a terminal (PAMI on Discord: a way in the app to
@@ -190,7 +190,7 @@ func cliProgram() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if i := strings.Index(filepath.ToSlash(exe), "/Cellar/magpie/"); i > 0 {
+	if i := strings.Index(filepath.ToSlash(exe), "/Cellar/chongyun/"); i > 0 {
 		opt := filepath.Join(exe[:i], "opt", "chongyun", "bin", "chongyun")
 		if sameFile(opt, exe) {
 			return opt, nil
@@ -209,7 +209,7 @@ var cliStuck = func() string {
 
 func cliNames() []string {
 	if runtime.GOOS == "windows" {
-		return []string{"magpie.exe", "magpie.cmd", "magpie.bat"}
+		return []string{"chongyun.exe", "chongyun.cmd", "chongyun.bat"}
 	}
 	return []string{"chongyun"}
 }
@@ -343,16 +343,16 @@ func tildeHome(p string) string {
 	return p
 }
 
-// A Windows app not named magpie.exe — the site's download is
-// magpie-windows-amd64.exe (#942) — is given a magpie.cmd beside it that
+// A Windows app not named chongyun.exe — the download is
+// chongyun-windows-amd64.exe — is given a chongyun.cmd beside it that
 // runs it, since a terminal looks for `chongyun` by that name only. It names
 // the program by its folder (%~dp0) and file name, which an update keeps:
 // it replaces the program where it is, under its name.
 
 // shimName is the file a shim is written to.
-const shimName = "magpie.cmd"
+const shimName = "chongyun.cmd"
 
-// shimText is the magpie.cmd that runs the program exe in its folder.
+// shimText is the chongyun.cmd that runs the program exe in its folder.
 func shimText(exe string) string {
 	name := filepath.Base(strings.ReplaceAll(exe, `\`, "/"))
 	return "@echo off\r\nrem added by chongyun (Settings > Command line): the chongyun command runs " + name + " in this folder\r\n\"%~dp0" + name + "\" %*\r\n"
@@ -361,7 +361,7 @@ func shimText(exe string) string {
 // needsShim says whether the program exe can't be run as `chongyun` by its
 // own name.
 func needsShim(exe string) bool {
-	return !strings.EqualFold(filepath.Base(strings.ReplaceAll(exe, `\`, "/")), "magpie.exe")
+	return !strings.EqualFold(filepath.Base(strings.ReplaceAll(exe, `\`, "/")), "chongyun.exe")
 }
 
 // writeShim writes the magpie.cmd for exe beside it, when its name needs
