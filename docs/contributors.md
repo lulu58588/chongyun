@@ -1,92 +1,92 @@
-# Community PRs: what is closed unreviewed, and who is blocked
+# 社区 PR：哪些未经评审就关闭，以及谁被拉黑
 
-magpie merges community PRs through agents. Two things keep that from
-wearing the project down: a PR that could harm users is caught before any
-review of what it does, and an author who keeps sending work that costs
-more to review than it gives is stopped.
+<a id="community-prs-what-is-closed-unreviewed-and-who-is-blocked"></a>
 
-## Look for harm first
+崇云科技通过 agent 合并社区 PR。有两件事防止这件事拖垮项目：可能伤害用户的
+PR 在对它做了什么进行任何评审之前就被拦下；反复提交"评审成本高于收益"的
+作者会被叫停。
 
-Before running a PR, read its diff for anything that reaches past its stated
-goal. Any one of these stops the review until the maintainer has looked:
+## 先找伤害
 
-- It changes `.github/` (workflows, actions, permissions, secrets), a release
-  or publish script, the Dockerfile, or `site/`.
-- It adds a network address, an upload, telemetry, or sends a credential,
-  token, cookie or file anywhere it didn't go before.
-- It reads or writes a credential file, keychain entry or agent config the
-  goal doesn't need.
-- It adds a dependency, a `replace` in go.mod, an npm install script, a
-  binary, a minified or encoded blob, or code built from a string at run time.
-- It adds a relay, reseller or affiliate address, or a vendor the maintainer
-  removed (DimAgent).
+<a id="look-for-harm-first"></a>
 
-Say which line stopped it in the review. Don't run the PR's code on a machine
-with real accounts until the maintainer has cleared it.
+在运行一个 PR 之前，先读它的 diff，看有没有超出它所声明目标的东西。下面任何
+一条都会中止评审，直到维护者看过：
 
-## Close without a full review
+- 它改了 `.github/`（workflows、actions、permissions、secrets）、某个 release
+  或 publish 脚本、Dockerfile，或 `site/`。
+- 它新增一个网络地址、一个上传、遥测，或者把凭据、token、cookie 或文件发到
+  以前没发去的地方。
+- 它读取或写入目标并不需要的凭据文件、钥匙串条目或 agent 配置。
+- 它新增一个依赖、go.mod 里的一个 `replace`、一个 npm 安装脚本、一个二进制
+  文件、一个压缩或编码后的 blob，或运行时由字符串拼出来的代码。
+- 它新增一个中转、经销或联盟地址，或一个维护者已经移除的厂商（DimAgent）。
 
-Close with a short reason, without running it, a PR that:
+在评审里说明是哪一行让它停下的。在维护者放行之前，不要在有真实账号的机器上
+运行这个 PR 的代码。
 
-- changes what the maintainer has ruled on (see "Don't reverse deliberate
-  decisions" in [code standards](code-standards.md)), such as the Codex
-  prompt files, which are kept byte for byte;
-- is a resubmission of a PR closed for its idea, with nothing new to answer
-  the reason it was closed;
-- is one of several near-identical PRs opened seconds apart.
+## 不做完整评审就关闭
 
-## Blocking an author
+<a id="close-without-a-full-review"></a>
 
-An author is proposed for the block list when any one of these holds:
+下面这类 PR，不用运行，直接以简短理由关闭：
 
-1. They have 3 or more PRs closed by a maintainer as low-value (wrong,
-   untested, unrelated, machine-made filler), and fewer than 30% of their
-   PRs merged.
-2. They resubmitted a PR after an explicit rejection, twice.
-3. They did anything deceptive: hid a change outside the PR's stated goal,
-   faked a test or a verification, or anything from "Look for harm first"
-   done on purpose.
-4. They open PRs in machine bursts (several within a minute) that are
-   low-value as in 1.
-5. They re-add a removed vendor, a relay or an advertisement after being
-   told no.
+- 改动维护者已经定过的事（见 [code standards](code-standards.md) 里的"不要推翻
+  深思熟虑的决定"），比如 Codex 的 prompt 文件，它们逐字节保留；
+- 是某个因为想法而被关闭的 PR 的重新提交，没有新东西能回答当初关闭它的理由；
+- 是几个几乎相同、相隔几秒内提交的 PR 之一。
 
-An agent only proposes. It writes the evidence (PR numbers, dates, what was
-wrong) to the maintainer; the maintainer decides. A blocked author's new PRs
-and issues are closed with: "Thanks — this account's contributions aren't
-accepted in this repository." Nothing more is argued.
+## 拉黑一个作者
 
-An author being watched (one or two low-value PRs, no pattern yet) gets a
-normal review; the reviewer notes the PR here if it is low-value too.
+<a id="blocking-an-author"></a>
 
-## Lists
+满足下面任何一条，就把作者提为拉黑名单候选：
 
-Blocked: none yet.
+1. 他有 3 个或更多被维护者以低价值为由关闭的 PR（方向错误、未测试、不相关、
+   机器批量填充），且合并率低于 30%。
+2. 他在明确被拒之后，两次重新提交同一个 PR。
+3. 他做过任何欺骗性的事：把改动藏在 PR 声明的目标之外，伪造测试或验证，或
+   故意做"先找伤害"里说的任何一条。
+4. 他机器式地成批开 PR（一分钟内几个），且如第 1 条所说属于低价值。
+5. 在被告知不行之后他又加回一个已移除的厂商、中转或广告。
 
-### Reviewed with extra care
+agent 只做提议。它把证据（PR 编号、日期、哪里不对）写给维护者；由维护者决定。
+被拉黑作者的新 PR 和 issue 会被关闭并附上："谢谢 —— 该账号的贡献不在本仓库被
+接受。" 不再多做争论。
 
-The maintainer chose not to block these authors, so their PRs are still
-reviewed, but more strictly than others:
+被观察中的作者（一两个低价值 PR，还没形成规律）走正常评审；如果那个 PR 也低
+价值，评审者就在这里记一笔。
 
-- Read every line of the diff, not only the part the description talks
-  about. Compare the files it touches with its stated goal; anything outside
-  the goal is a reason to close it.
-- Run "Look for harm first" in full, even on a PR that looks like a typo
-  fix.
-- Run it yourself on current `main`; don't rely on the PR's claims or its
-  CI. Never merge it in the same tick it was opened, and use
-  `--match-head-commit`.
-- A PR that repeats one already closed is closed with a link to the first.
+## 列表
 
-| Author | Evidence |
+<a id="lists"></a>
+
+已拉黑：暂时没有。
+
+### 评审时格外仔细
+
+<a id="reviewed-with-extra-care"></a>
+
+维护者选择不拉黑这些作者，所以他们的 PR 仍然会被评审，只是比别人更严：
+
+- 读 diff 的每一行，不只是描述里谈到的那部分。把它碰到的文件与它声明的目标
+  对照；目标之外的任何东西都是关闭它的理由。
+- 完整跑一遍"先找伤害"，哪怕这个 PR 看起来只是改个错别字。
+- 自己在当前的 `main` 上跑；不要依赖 PR 自己的说法或它的 CI。绝不在它被提交
+  的同一拍里合并它，并且要用 `--match-head-commit`。
+- 重复了某个已经关闭的 PR 的 PR，会附上第一个的链接后关闭。
+
+| 作者 | 证据 |
 | --- | --- |
-| lunar-me | #233, #234, #235 opened within 12 seconds, all rewriting `codex_prompt.md`, which is kept byte for byte. #590 resubmitted after the rejection. #592 broke a path in AGENTS.md. #590, #592 and #593 opened within 51 seconds. The same template across many repositories. |
+| lunar-me | #233、#234、#235 在 12 秒内提交，都在重写 `codex_prompt.md`，而该文件逐字节保留。#590 在被拒之后重新提交。#592 弄坏了 AGENTS.md 里的一条路径。#590、#592 和 #593 在 51 秒内提交。同一个模板用在很多仓库上。 |
 
-### Watched
+### 观察中
 
-Work that is useful but keeps coming back for the same gaps. Not a block
-and not extra care: the review checks the named gaps before merging.
+<a id="watched"></a>
 
-| Author | Check | Evidence |
+有用但总在同样的缺口上反复回来的作品。不是拉黑，也不是格外仔细：评审在合并
+前检查指出的那些缺口。
+
+| 作者 | 检查 | 证据 |
 | --- | --- | --- |
-| ggbdpq | Break each fix by hand and see its new test go red. Grep for the sibling sites (other deciders, other routes, other providers, other agents) the change didn't touch. Check what a failed read becomes. | On 10-13 two of their batches needed a follow-up. 44b5b2b96 and e21b1dbc1 were merged with tests that pass on the old code. 4ed379f11 decoded `\uXXXX` at four sites but left three deciders reading the raw body, and one site had no test (0c6752dbd). #1919 (90ac1f038) mended a renamed provider's models for StepCode only; Pi, OmO and Prime Agent followed in cb003877f. #2017's patch kept an unreadable codex-autoreset.json aside but still read it as "no reset spent", so its own crash-and-restart case spent a second reset (fixed at the read in e297a8ab2). On 10-14 94e3b3f52 came from a patch marked "wip and unverified" on its branch: json.Valid let an object through to be written over, and the review finished it. Better since: eb0d5750f, ca5dc773c, f348ff2c7, 7a6b10104 and 05107bf03 each have a test red before and green after, and #2256 was a careful security report. |
+| ggbdpq | 手动破坏每个修复，看它的新测试是否变红。grep 这次改动没碰到的同类位置（其他判定处、其他路由、其他 provider、其他 agent）。检查一次读取失败会变成什么。 | 10-13 他的两批提交需要后续跟进。44b5b2b96 和 e21b1dbc1 带着在旧代码上也能通过的测试被合并。4ed379f11 在四个位置解码了 `\uXXXX`，但留下三个判定处仍读原始 body，还有一个位置没有测试（0c6752dbd）。#1919（90ac1f038）只修了改名 provider 的模型，StepCode 一家；Pi、OmO 和 Prime Agent 在 cb003877f 里跟上。#2017 的补丁把读不了的 codex-autoreset.json 放在了一边，但仍把它读成"没有重置额度用掉"，所以它自己的崩溃重启场景多用了一次重置（在 e297a8ab2 的读取处修复）。10-14 的 94e3b3f52 来自一个在分支上标着"wip and unverified"的补丁：json.Valid 放过一个对象去被覆盖写，评审把它补完了。之后好了：eb0d5750f、ca5dc773c、f348ff2c7、7a6b10104 和 05107bf03 每个都有一个改动前红、改动后绿的测试，而 #2256 是一份细致的安全报告。 |

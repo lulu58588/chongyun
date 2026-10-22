@@ -1,159 +1,69 @@
-# Integrating your app or agent with magpie
+# 把你的应用或 Agent 接入崇云网关
 
-For developers of an AI app, agent or client who want it to work well with
-magpie. There are three levels, from no work on magpie's side to a row of
-your own on the Agents page. The web version is
-<https://usemagpie.ai/docs/integrate>.
+面向希望与崇云科技网关良好配合的 AI 应用、Agent 与客户端开发者。接入分三个层级，从完全不需要改动网关这一侧，到在 Agents 页面拥有自己的一行。
 
-| You want                                              | Route                          | Change to magpie |
-| ----------------------------------------------------- | ------------------------------ | ---------------- |
-| Your app's requests served by magpie, counted under its own name in Usage | [Talk to the gateway](#1-talk-to-the-gateway) | none |
-| A row on the Agents page: detected, its model picked there, put back on disconnect | [An agent adapter](#2-a-row-on-the-agents-page) | a pull request |
-| A new model source (a subscription, a vendor), or rewriting requests | [A plugin](#3-plugins) | none |
+| 你的目标 | 路线 | 对崇云网关的改动 |
+| --- | --- | --- |
+| 让你的应用请求由崇云网关提供服务，并在用量里记在你自己的名下 | [与网关对话](#1-talk-to-the-gateway) | 无 |
+| 在 Agents 页面拥有一行：可被识别、可在那里选模型、断开后还原 | [一个 Agent 适配器](#2-a-row-on-the-agents-page) | 提交一个 PR |
+| 新的模型来源（某个订阅、某个厂商），或改写请求 | [一个插件](#3-plugins) | 无 |
 
-## 1. Talk to the gateway
+## 1. 与网关对话
 
-magpie runs a local LLM gateway. Every model the user has in magpie
-(subscriptions, API keys, local models, routing groups) is served there
-under one id each, so your app needs one provider entry, not one per
-vendor.
+<a id="1-talk-to-the-gateway"></a>
 
-**Find it.** The gateway listens on `127.0.0.1:3425`, or on the port in
-`port` of magpie's `settings.json` (`~/.config/magpie/settings.json`, the
-same path under the user's folder on Windows; `$XDG_CONFIG_HOME/magpie`
-when that is set). `GET /api/hello` answers
-`{"name":"magpie","version":"…"}` when it is magpie. Read that file, never
-write it. magpie must be running (the app or `magpie serve`). An app that
-finds nothing there should offer its own providers as usual.
+崇云科技在本机运行一个 LLM 网关。用户在此配置好的每一个模型（订阅、API Key、本地模型、路由组）都在这里以各自唯一的 id 对外提供，因此你的应用只需要一条供应商配置，而不是每家厂商各写一条。
 
-**Endpoints.** Requests go straight through when the vendor speaks your
-API, and are translated otherwise, streaming, tool calls, images and
-reasoning included:
+**找到它。** 网关监听 `127.0.0.1:3425`，或崇云 `settings.json` 里 `port` 指定的端口（`~/.config/magpie/settings.json`；Windows 下是用户目录下的同一路径；若设置了 `$XDG_CONFIG_HOME/magpie` 则在该目录下）。`GET /api/hello` 在网关为崇云科技时返回 `{"name":"崇云科技","version":"…"}`。只读取这个文件，不要写它。崇云网关需处于运行状态（应用本身或 `chongyun serve`）。若某个应用在此什么也没找到，就照常提供它自己的供应商。
 
-| Path | API |
-| ---- | --- |
+**接口。** 当厂商本身就说你的 API 时请求直接透传，否则会被翻译，流式输出、工具调用、图片与推理都一并处理：
+
+| 路径 | API |
+| --- | --- |
 | `/v1/chat/completions` | OpenAI Chat Completions |
 | `/v1/responses` | OpenAI Responses |
-| `/v1/messages`, `/v1/messages/count_tokens` | Anthropic Messages |
-| `/v1beta/models/{model}:generateContent` (and `:streamGenerateContent`) | Google Gemini |
-| `/v1/models` | the catalog |
+| `/v1/messages`、`/v1/messages/count_tokens` | Anthropic Messages |
+| `/v1beta/models/{model}:generateContent`（以及 `:streamGenerateContent`） | Google Gemini |
+| `/v1/models` | 模型目录 |
 
-So the base URL is `http://127.0.0.1:<port>/v1` for an OpenAI client and
-`http://127.0.0.1:<port>` for an Anthropic or Gemini one.
+因此对 OpenAI 客户端，base URL 是 `http://127.0.0.1:<port>/v1`；对 Anthropic 或 Gemini 客户端是 `http://127.0.0.1:<port>`。
 
-**The key names your app.** On this machine the gateway takes any key.
-Send `magpie-<your-app-id>` (`Authorization: Bearer magpie-acme`, or
-`x-api-key`) and every call is counted as `acme` in Usage, the Requests
-log and the routing rules that match on agents. Without it, magpie counts
-the call by the first word of your `User-Agent` (`Acme/1.4 (darwin)` is
-`Acme`); an SDK's own User-Agent (`OpenAI/JS …`, `ai-sdk/…`) would count it
-as that SDK. From another computer (Settings → Share on local network) the
-key must be one of the user's gateway keys, and the User-Agent names your
-app.
+**你的应用使用的密钥名。** 在本机上网关接受任意密钥。发送 `magpie-<your-app-id>`（`Authorization: Bearer magpie-acme`，或 `x-api-key`），每次调用就会在用量、请求日志以及按 Agent 匹配的路由规则里都记作 `acme`。不带它的话，崇云网关会按你 `User-Agent` 的第一个词计名（`Acme/1.4 (darwin)` 记作 `Acme`）；SDK 自带的 User-Agent（`OpenAI/JS …`、`ai-sdk/…`）则会被记成那个 SDK。从另一台电脑访问（设置 → 在局域网上共享）时，密钥必须是用户的网关密钥之一，并由 User-Agent 指明你的应用。
 
-**Models.** `GET /v1/models` lists what the user has turned on: `id`
-(`provider/model`, or a routing group's name, which you send as it is),
-`display_name`, `owned_by` (the provider), `reasoning` and
-`supported_reasoning_levels` (`[{"effort":"low"},…]`, and the same as
-plain names in `reasoning_levels`), `context_window`
-and `max_output_tokens` when known, `modalities` when magpie knows whether
-it takes images. List them from there rather than shipping a list: the
-user adds and removes providers in magpie. Reasoning is asked in your
-API's own field (`reasoning_effort`, `reasoning.effort`, Anthropic's
-`thinking` or `output_config.effort`). `?format=text` gives the ids one a
-line.
+**模型。** `GET /v1/models` 列出用户已启用的内容：`id`（形如 `provider/model`，或路由组的名字——原样发送即可）、`display_name`、`owned_by`（供应商）、`reasoning` 与 `supported_reasoning_levels`（`[{"effort":"low"},…]`，`reasoning_levels` 里是同样内容的平铺写法）、已知时的 `context_window` 与 `max_output_tokens`、以及崇云知道该模型是否接受图片时的 `modalities`。请从那里读取列表，不要自己维护一份：用户会在崇云里增删供应商。推理强度要用你这套 API 自己的字段来传（`reasoning_effort`、`reasoning.effort`、Anthropic 的 `thinking` 或 `output_config.effort`）。加 `?format=text` 可让 id 一行一个。
 
-**Optional.** Send `X-Magpie-Session: <id>` with a conversation's requests
-and `GET /v1/magpie/route?session=<id>` says which model a routing group
-picked for the turn and the fallbacks it tried, before the first token
-(long-poll with `after=<seq>&wait=<s>`). `GET /v1/magpie/quotas` lists the
-user's subscription allowances, and `GET /v1/magpie/usage` and
-`/v1/magpie/usage/requests` the Usage page's numbers and its requests
-(with `session`, and `subagent`/`parent_agent` for a Claude Code
-subagent's call). They answer only this machine, or another with a gateway
-key; a key held to a budget, models or accounts sees its own calls and
-routes alone, and is refused the quotas unless its owner lets it see
-those of what it may use (`magpie gateway-key quotas <id> on`, #2216;
-its own limit is `GET /v1/magpie/limit`).
-Calls your app makes to its vendor itself can be reported with `POST
-/v1/magpie/usage/requests` (one record or up to 5000 a post, in
-`usage.jsonl`'s shape, each with a `rid`; past times are kept, so a
-history can be backfilled). They show on the Usage page as reported, and
-never count against a key's limit. [Connecting anything else](reference.md#connecting-anything-else)
-has the details.
+**可选。** 对同一会话的请求带上 `X-Magpie-Session: <id>`，然后 `GET /v1/magpie/route?session=<id>` 会说明路由组为这一轮挑了哪个模型、尝试过哪些回退（在第一个 token 之前就能拿到，长轮询参数为 `after=<seq>&wait=<s>`）。`GET /v1/magpie/quotas` 列出用户的订阅额度；`GET /v1/magpie/usage` 与 `/v1/magpie/usage/requests` 给出用量页面的数字与请求明细（可带 `session`，以及 Claude Code 子 Agent 调用时的 `subagent`/`parent_agent`）。这些接口只对本机作答，或对持有网关密钥的另一台电脑作答；一个受预算、模型或账号限制的密钥只能看到自己的调用与路由，除非它的持有者允许它查看可访问对象的额度（`chongyun gateway-key quotas <id> on`，#2216；它自身的上限是 `GET /v1/magpie/limit`）。你的应用直接向厂商发起的调用，也可以用 `POST /v1/magpie/usage/requests` 上报（一次一条，或一次最多 5000 条，格式与 `usage.jsonl` 相同，每条带 `rid`；过去时间也会保留，因此可以回填历史）。它们在用量页面上显示为「已上报」，且永不计入某个密钥的上限。详见[接入其他任何东西](reference.md#connecting-anything-else)。
 
-**Keep the user's providers.** Add magpie as one more provider (named
-Magpie) beside the ones the user set up in your app, rather than replacing
-them, so turning magpie off is picking another provider.
+**保留用户自己的供应商。** 把崇云网关作为你应用里众多供应商中的又一个（命名为 Chongyun）并列加入，而不是替换掉用户已有的供应商，这样"关掉崇云"就等于改选另一个供应商。
 
-## 2. A row on the Agents page
+## 2. 在 Agents 页面拥有一行
 
-The agents magpie lists (Claude Code, Codex, OpenCode, dsh, Alma, Cindy…)
-are adapters in [`internal/agent`](../internal/agent), one file each,
-listed in [`agents.go`](../internal/agent/agents.go). A row gets your
-app's name and icon, shows when your app is installed, lets the user pick
-its model (and reasoning) from magpie's catalog, follows the catalog as
-providers change, and on disconnect puts back what your app had before.
-There is no runtime registration: a row is added by a pull request to
-this repository, and ships in the next release.
+<a id="2-a-row-on-the-agents-page"></a>
 
-An adapter is an [`Agent`](../internal/agent/agent.go) value. What your
-app offers decides its shape:
+崇云列出的 Agent（Claude Code、Codex、OpenCode、dsh、Alma、Cindy……）是 [`internal/agent`](../internal/agent) 里的适配器，一个应用一个文件，统一登记在 [`agents.go`](../internal/agent/agents.go)。这样一行会显示你应用的名字与图标、反映你是否已安装、允许用户从崇云的模型目录里挑选它的模型（以及推理强度）、跟随目录随供应商变化，并在断开时还原你应用原有的设置。没有运行时注册机制：新增一行需要向本仓库提交 PR，随下一个版本发布。
 
-- **magpie edits your config file** (most adapters; [`fx.go`](../internal/agent/fx.go),
-  [`empryo.go`](../internal/agent/empryo.go)). `Dir`, `Path` and `Bin` find
-  the app; each `Field` (`model`, `effort`, …) has `Get`, `Set` and
-  `Options`. Connecting adds a `magpie` provider at the gateway, keyed
-  `magpie-<id>`, and sets your model to one of magpie's; `Set("")` (the
-  agent's default) or `Unwire` takes magpie's entries out and restores
-  what was there. Only the keys magpie sets are touched; the user's other
-  settings, providers and comments stay. `Notice` says when your app must
-  be restarted to see a change; `Sync` rewrites a model list your app keeps
-  in a file rather than asking `/v1/models`.
-- **Your app takes a provider only through its own import link, which the
-  user confirms in your app** ([`cindy.go`](../internal/agent/cindy.go)).
-  `Import` returns the link (`yourapp://provider/import?…` carrying the
-  gateway's URL, the key `magpie-<id>` and the endpoints), the row's button
-  opens it, and the user says yes once, in your app. `Added` reads,
-  read-only, whether your app has magpie already. Leave `Added` nil if your
-  app has no public status reader (as [Lody](../internal/agent/lody.go) does);
-  the row then asks the user to confirm in your app without claiming an
-  import status. magpie writes nothing of yours. This suits an app that keeps
-  its providers in a database or encrypted.
-- **Your app has a local API while it runs** (Alma, at `localhost:23001`):
-  magpie adds itself as a provider and sets the default model through it.
+一个适配器是一个 [`Agent`](../internal/agent/agent.go) 值。它的形态由你的应用能提供什么决定：
 
-A pull request needs: the adapter and its registration, `UA` (what your
-User-Agent begins with, lower-case) so Usage knows your calls, an icon in
-`internal/gui/assets/icons`, tests that run under a temporary `HOME`
-(connect, switch, disconnect restoring the original file), and a row in
-the [Agents table](reference.md#agents). What helps us most is a stable,
-documented config format or import link, and where your app keeps it on
-each system.
+- **崇云直接改写你的配置文件**（多数适配器如此；[`fx.go`](../internal/agent/fx.go)、[`empryo.go`](../internal/agent/empryo.go)）。`Dir`、`Path` 与 `Bin` 用于定位应用；每个 `Field`（`model`、`effort` 等）都有 `Get`、`Set` 与 `Options`。接入时会在网关侧加一个 `magpie` 供应商，键为 `magpie-<id>`，并把你的模型设为崇云的某个模型；`Set("")`（Agent 的默认值）或 `Unwire` 会移除崇云写入的条目并还原原状。只有崇云设置过的键会被改动，用户其他设置、供应商与注释都保持不变。`Notice` 说明你的应用何时需要重启才能看到改动；`Sync` 用于改写那些把模型列表存在文件里、而不是通过 `/v1/models` 获取的应用。
+- **你的应用只通过自己的导入链接接入供应商，且由用户在你的应用里确认**（[`cindy.go`](../internal/agent/cindy.go)）。`Import` 返回那个链接（`yourapp://provider/import?…`，其中带着网关地址、密钥 `magpie-<id>` 与各接口），这一行的按钮会打开它，用户在你的应用里点一次同意。`Added` 以只读方式读取你的应用里是否已经接入崇云。若你的应用没有公开的状态读取器（正如 [Lody](../internal/agent/lody.go) 所做的），就留空 `Added`；此时这一行会请用户在你的应用里确认，而不会声称自己知道导入状态。崇云不会写入你应用的任何东西。这适合把供应商存在数据库或加密存储里的应用。
+- **你的应用在运行时有一个本地 API**（Alma，在 `localhost:23001`）：崇云通过它把自己加为供应商，并设置默认模型。
 
-## 3. Plugins
+一个 PR 需要包含：适配器及其登记、`UA`（你的 User-Agent 以什么开头，小写），让用量能认出你的调用；`internal/gui/assets/icons` 里的图标；在临时 `HOME` 下运行的测试（接入、切换、断开后还原原文件）；以及 [Agents 表格](reference.md#agents)里的一行。对我们最有帮助的是：稳定且有文档的配置格式或导入链接，以及你的应用在各个系统上分别把它存在哪里。
 
-A plugin is an npm package magpie runs; the user installs it from
-Settings → Plugins or with `magpie plugin add <package>`. There are two
-kinds ([plugin guide](https://usemagpie.ai/docs/plugins)):
+## 3. 插件
 
-- **Provider plugins**, OpenCode's `auth` hook or a pi package: a new
-  source of models, such as a subscription magpie doesn't sign in to
-  itself. They sign in, list models and make requests.
-- **Gateway middleware**: rewrites requests and replies as they pass
-  (`onRequest`, `onProvider`, `onEvent`, `onResponse`).
+<a id="3-plugins"></a>
 
-A plugin can't add a row to the Agents page or write another app's
-config, so it is not how an app registers itself.
+插件是崇云运行的一个 npm 包；用户在设置 → 插件里安装，或用 `chongyun plugin add <package>` 安装。插件分两类（详见[插件指南](subsystems/plugin-runtime.md)）：
 
-## What isn't there
+- **供应商插件**，即 OpenCode 的 `auth` 钩子或一个 pi 包：提供新的模型来源，例如崇云自己不登录的某个订阅。它们负责登录、列出模型并发起请求。
+- **网关中间件**：在请求与应答经过时改写它们（`onRequest`、`onProvider`、`onEvent`、`onResponse`）。
 
-- No API or link lets another app register itself as an agent, or install
-  a plugin, without the user: plugins are installed in magpie by the user,
-  and agent rows come from adapters in magpie's source.
-- `magpie://import` links add a *provider* (a source of models, with its
-  key), not an agent or an app; see [Import links](reference.md#import-links).
+插件无法在 Agents 页面新增一行，也无法改写其他应用的配置，所以它不是应用自我登记的方式。
 
-Questions, or an adapter you'd like to discuss first: open an issue at
-<https://github.com/yetone/magpie/issues> or ask on
-[Discord](https://discord.gg/vGSnD3ZKQF).
+## 没有的部分
+
+- 没有任何 API 或链接能让其他应用在未经用户同意的情况下自我登记为 Agent，或自行安装插件：插件由用户在崇云里安装，Agent 行来自崇云源码中的适配器。
+- `magpie://import` 链接添加的是*供应商*（一个模型来源，带自己的密钥），而不是 Agent 或应用；见[导入链接](reference.md#import-links)。
+
+有疑问，或希望先讨论某个适配器：请在 <https://github.com/lulu58588/chongyun/issues> 提交 issue。

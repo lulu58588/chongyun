@@ -1,27 +1,19 @@
-# magpie reference
+# 崇云科技参考手册
 
-The full manual: every agent magpie wires, every provider option, the gateway, routing, plugins, the CLI, Docker, sync and the files magpie keeps. For the overview, see the [README](../README.md).
+<a id="magpie-reference"></a>
 
-Renamed a project folder? See [relocating Claude Code sessions](session-relocation.md).
+完整手册：崇云科技接线的每一个 agent、每一个 provider 选项、网关、路由、plugin、CLI、Docker、同步，以及崇云科技保存的文件。概览请看 [README](../README.md)。
 
-One place to pick every agent's model: Codex on DeepSeek, Claude Code
-on Kimi, Gemini CLI on GLM, from the menu bar. [usemagpie.ai](https://usemagpie.ai)
+改过项目文件夹的名字？见[迁移 Claude Code 会话](session-relocation.md)。
 
-[![Discord](https://img.shields.io/badge/Discord-join%20the%20community-5865F2?logo=discord&logoColor=white)](https://discord.gg/vGSnD3ZKQF)
+一处挑定每个 agent 的模型：Codex 跑 DeepSeek、Claude Code 跑 Kimi、Gemini CLI 跑 GLM，都在菜单栏里完成。[GitHub](https://github.com/lulu58588/chongyun)
 
-`magpie` is a single screen that lists each AI agent on your machine and
-the model it is set to. Click a value, pick a model. That is the whole app.
+`chongyun` 是一块屏幕，列出你机器上的每个 AI agent 以及它被设成的模型。点一个值，挑一个模型。整个应用就这些。
 
-It lives in the menu bar: click the icon and a panel drops down; the same
-screen also opens as a normal window (`magpie`, or *Open magpie* in the tray menu),
-which opens on the page you last left, as a Mac app comes back as it was,
-and there is a terminal version (`magpie tui`) and a plain CLI. The
-terminal version serves the gateway while it is open when no other magpie
-(the app, `magpie web`, `magpie serve`) does, and says so on its status
-line; agents connected to magpie lose it when it quits.
+它住在菜单栏里：点一下图标，面板就落下来；同一块屏幕也能当作普通窗口打开（`chongyun`，或托盘菜单里的 *Open chongyun*），并且会停在你上次离开的那一页，就像 Mac 应用回到它原来的样子那样；另外还有一个终端版（`chongyun tui`）和一个纯 CLI。当没有别的崇云科技实例（应用本身、`chongyun web`、`chongyun serve`）在服务网关时，终端版会在开着期间负责服务网关，并在状态行里说明这一点；连到崇云科技网关上的 agent 会在它退出时失去连接。
 
 ```
-  ◉ magpie
+  ◉ chongyun
 
   ▸ Claude Code   claude-fable-5-1[1m]                        ~/.claude/settings.json
     Codex         gpt-6-astra   effort medium
@@ -36,632 +28,244 @@ line; agents connected to magpie lose it when it quits.
   ↑↓ agent  ·  ←→ field  ·  ↵ change  ·  s save profile  ·  p profiles  ·  q quit
 ```
 
-- **One binary.** About 30 MB with the desktop app (it uses the system
-  webview through [Wails](https://wails.io), nothing bundled; a 15 MB
-  download on a Mac), and under 30 MB for the terminal-only build. macOS,
-  Linux and Windows.
-- **Edits config files surgically.** Only the one key you change is touched;
-  comments, ordering and indentation in your `settings.json`, `config.toml`,
-  `opencode.jsonc` or `config.yaml` survive intact. Writes are atomic.
-- **One endpoint for every agent.** magpie runs a local gateway that speaks
-  OpenAI chat completions, OpenAI Responses and the Anthropic Messages API,
-  and forwards to whichever vendor serves the model. Codex, Claude Code,
-  OpenCode and the rest all point at `http://127.0.0.1:3425/v1` and pick
-  from one catalog; the translation between APIs happens in magpie, streaming
-  and tool calls included.
-- **Your subscriptions, shared.** Sign in to Claude Code, Codex (ChatGPT)
-  or Copilot and that login shows up as a provider: every other agent can
-  use its models through the gateway, with nothing copied and no key to
-  paste.
-- **Providers with one field.** Pick a preset (Anthropic, OpenAI, Gemini,
-  Amazon Bedrock and its Mantle endpoint, DeepSeek, Kimi, GLM, MiniMax, StepFun, Qwen, Baidu Qianfan, Tencent Cloud Token Plan,
-  Huawei Cloud MaaS, Volcengine Ark, Mistral, Groq, Nous Portal, xAI, OpenRouter, Together,
-  Fireworks, SiliconFlow, NVIDIA NIM, ModelScope, AiHubMix, PipeLLM, 302.AI, Ollama, LM Studio…),
-  paste a key, done. Custom vendors need a name and a base URL. magpie never
-  reads keys from your shell environment.
-- **Real model lists, nothing compiled in.** With a key in hand magpie asks
-  the vendor which models it serves and offers exactly those; the
-  [models.dev](https://models.dev) catalog fills in names, reasoning efforts
-  and the list for vendors that have none (a model the vendor's own entry
-  doesn't list is named as the other providers serving it name it, so
-  glm-5-turbo reads GLM-5-Turbo under Zhipu as under ZCode; an Azure
-  deployment keeps its own name), and refreshes itself in the
-  background once it goes stale. Choose which models each provider exposes,
-  or expose them all — a model released this morning is in the picker on
-  the next refresh.
-- **Each agent's own model list.** Under an agent's name on the Agents page,
-  "Showing 5 / 32 models" opens its list: click a model to take it out of
-  that agent's picker (Codex's `/model` included, its ChatGPT models too) or
-  put it back; other agents still use it, and a new model is shown. Its
-  "Only models I pick" switch turns the list around: the models ticked
-  when it is switched on stay, and a model added later, of any provider,
-  stays out of that agent's picker and its config until it is ticked
-  (`magpie visible <agent> --only-picked`, back with `--show-new`). A
-  model asked for by name still works either way.
-- **Profiles.** Snapshot every agent's settings under a name and switch all of
-  them back in one move. The profile in use, the one applying would change
-  nothing, is ticked, the tray panel's Profiles button shows its name, and
-  `magpie profiles` marks it ✓.
-- **Real logos, no framework.** Plain HTML over the system webview; brand
-  icons from [lobehub/icons](https://github.com/lobehub/lobe-icons).
+- **一个二进制。** 带上桌面应用大约 30 MB（它通过 [Wails](https://wails.io) 使用系统 webview，不打包任何东西；在 Mac 上下载 15 MB），纯终端版本则不到 30 MB。支持 macOS、Linux 和 Windows。
+- **外科手术式地改配置文件。** 只有你改动的那一个键会被碰到；你的 `settings.json`、`config.toml`、`opencode.jsonc` 或 `config.yaml` 里的注释、顺序和缩进都原样保留。写入是原子的。
+- **每个 agent 只有一个 endpoint。** 崇云科技跑一个本地网关，它说 OpenAI chat completions、OpenAI Responses 和 Anthropic Messages API，并把请求转发给真正提供该模型的厂商。Codex、Claude Code、OpenCode 以及其余 agent 全都指向 `http://127.0.0.1:3425/v1`，从同一份目录里挑模型；API 之间的翻译在崇云科技这里完成，流式输出和工具调用也一样。
+- **你的订阅，人人共享。** 在 Claude Code、Codex（ChatGPT）或 Copilot 里登录之后，这个登录就会作为一个 provider 出现：其它每个 agent 都能通过网关使用它的模型，既不用复制什么，也不用粘贴任何 key。
+- **只有一个字段的 provider。** 选一个预设（Anthropic、OpenAI、Gemini、Amazon Bedrock 及其 Mantle endpoint、DeepSeek、Kimi、GLM、MiniMax、StepFun、Qwen、百度千帆、腾讯云 Token Plan、华为云 MaaS、火山方舟、Mistral、Groq、Nous Portal、xAI、OpenRouter、Together、Fireworks、SiliconFlow、NVIDIA NIM、ModelScope、AiHubMix、PipeLLM、302.AI、Ollama、LM Studio……），粘贴一个 key，完事。自定义厂商需要一个名字和一个 base URL。崇云科技绝不从你的 shell 环境里读取 key。
+- **真实的模型列表，没有编译进去的东西。** 手上有 key 之后，崇云科技会问厂商它提供哪些模型，然后原样给出这些；[models.dev](https://models.dev) 目录补上名字、推理强度，以及那些自己没有列表的厂商的模型清单（厂商自己的条目没列出的模型，就按其它提供它的 provider 的叫法来命名，所以 glm-5-turbo 在 Zhipu 下和在 ZCode 下都叫 GLM-5-Turbo；Azure 部署则保留它自己的名字），并且在数据变旧之后于后台自我刷新。你可以挑每个 provider 暴露哪些模型，也可以全部暴露——今天上午刚发布的模型，下一次刷新后就在选择器里了。
+- **每个 agent 自己的模型列表。** 在 Agents 页面里某个 agent 名字下面，"Showing 5 / 32 models"（显示 5 / 32 个模型）会打开它的列表：点一个模型，把它从那个 agent 的选择器里拿掉（Codex 的 `/model` 也在内，它的 ChatGPT 模型同样），或者再放回去；其它 agent 照旧能用它，而新模型会被显示出来。它的 "Only models I pick"（只显示我勾选的模型）开关把逻辑反过来：开启时勾上的模型会留下，而之后新加进来的模型——不管来自哪个 provider——在被勾上之前都不会进入那个 agent 的选择器和它的配置（`chongyun visible <agent> --only-picked`，用 `--show-new` 恢复）。按名字点名的模型无论哪种情况都照常可用。
+- **配置档。** 把每个 agent 的设置按一个名字存档，然后一步全切回去。正在用的那个档——也就是切过去也不会有任何变化的那个——会被打上勾，托盘面板的 Profiles 按钮显示它的名字，`chongyun profiles` 也会给它标上 ✓。
+- **真图标，不套框架。** 系统 webview 上的纯 HTML；品牌图标来自 [lobehub/icons](https://github.com/lobehub/lobe-icons)。
 
-## Agents
+## Agent 列表
 
-| Agent        | File                              | Fields          |
+<a id="agents"></a>
+
+| Agent        | 文件                              | 字段            |
 | ------------ | --------------------------------- | --------------- |
-| Claude Code  | `~/.claude/settings.json`         | provider, model, opus/sonnet/haiku/fable, auto mode, sign-in (through magpie) |
-| Claude Desktop | `Claude/` + `Claude-3p/configLibrary/` in `~/Library/Application Support` (`%LOCALAPPDATA%` on Windows, `~/.config` on Linux). A Desktop installed as an MSIX package on Windows keeps them in its package instead (`%LOCALAPPDATA%\Packages\Claude_<publisher>\LocalCache\Local`, or `AnthropicPBC.Claude_<publisher>` for the Store's package, its own data in `LocalCache\Roaming\Claude`). Desktop 2.31226 and later, packaged, reads the real `%LOCALAPPDATA%\Claude-3p` instead, so for a packaged Desktop magpie writes both ([`desktopdir`](../internal/desktopdir/desktopdir.go)) | provider (its third-party gateway mode: Code and Cowork on magpie, no Anthropic sign-in; restart Desktop), opus/sonnet/haiku/fable, subagent model and subagent effort (magpie's settings, applied by the gateway to subagent tool turns; no restart) |
-| Codex        | `~/.codex/config.toml`            | provider, model, effort |
-| Gemini CLI   | `~/.gemini/settings.json`, `~/.gemini/.env` | auth, model |
-| OpenCode     | `~/.config/opencode/opencode.json(c)` (`$OPENCODE_CONFIG_DIR`) | model, small |
-| OpenChamber  | `~/.config/openchamber/preferences.json` (`$OPENCHAMBER_DATA_DIR`; magpie's provider in OpenCode's config) | model, small (its own defaults, over OpenCode's) |
-| MiMo Code    | `~/.config/mimocode/mimocode.json(c)` | model, small |
-| DevEco Code  | `~/.config/deveco/deveco.json(c)` (`$DEVECO_CONFIG_DIR`; its key is `magpie-deveco`, as parts of it send OpenCode's User-Agent) | model, small |
+| Claude Code  | `~/.claude/settings.json`         | provider、model、opus/sonnet/haiku/fable、自动模式、登录（通过崇云科技） |
+| Claude Desktop | `Claude/` + `Claude-3p/configLibrary/`，在 `~/Library/Application Support` 下（Windows 上是 `%LOCALAPPDATA%`，Linux 上是 `~/.config`）。以 MSIX 包形式装在 Windows 上的 Desktop 把它们放在自己的包里（`%LOCALAPPDATA%\Packages\Claude_<publisher>\LocalCache\Local`，或者 Store 包的 `AnthropicPBC.Claude_<publisher>`，它自己的数据在 `LocalCache\Roaming\Claude`）。2.31226 及以后打包版的 Desktop 改读真正的 `%LOCALAPPDATA%\Claude-3p`，所以对着打包版 Desktop，崇云科技两处都写（[`desktopdir`](../internal/desktopdir/desktopdir.go)） | provider（它的第三方网关模式：Code 和 Cowork 走崇云科技，不登录 Anthropic；需要重启 Desktop）、opus/sonnet/haiku/fable、subagent 模型与 subagent effort（崇云科技的设置，由网关在 subagent 的工具轮次上套用；无需重启） |
+| Codex        | `~/.codex/config.toml`            | provider、model、effort |
+| Gemini CLI   | `~/.gemini/settings.json`、`~/.gemini/.env` | auth、model |
+| OpenCode     | `~/.config/opencode/opencode.json(c)`（`$OPENCODE_CONFIG_DIR`） | model、small |
+| OpenChamber  | `~/.config/openchamber/preferences.json`（`$OPENCHAMBER_DATA_DIR`；崇云科技的 provider 写在 OpenCode 的配置里） | model、small（用它自己的默认值，覆盖 OpenCode 的） |
+| MiMo Code    | `~/.config/mimocode/mimocode.json(c)` | model、small |
+| DevEco Code  | `~/.config/deveco/deveco.json(c)`（`$DEVECO_CONFIG_DIR`；它的 key 是 `magpie-deveco`，因为它的一部分请求会带上 OpenCode 的 User-Agent） | model、small |
 | Pi           | `~/.pi/agent/settings.json`       | model           |
-| StepCode     | `~/.stepcode/config.toml` (+ `models.json`; `$STEP_CODING_AGENT_DIR`, `$STEPCODE_CONFIG_DIR`) | model |
-| MothX        | `~/.mothx/settings.json` (`$MOTHX_DIR`; `%APPDATA%\mothx` on Windows) | model, thinking (`defaultProvider`/`defaultModel`/`defaultThinkingLevel`; magpie as the provider `magpie` beside the user's own, `openai-chat` with `thinkingFormat: "openai"`) |
-| Aside        | `~/.aside/u/0/settings.json` (+ `models.json`; the first account, the only one magpie wires) | model, effort, fast, standard, deep, visual, image |
-| OmO (omo-ai) | `~/.omo/agent/settings.json` (+ `models.json`; `$OMO_CODING_AGENT_DIR`, `$SENPI_CODING_AGENT_DIR`) | model |
-| Prime Agent  | `~/.prime/agent/settings.json` (+ `models.json`; `$PRIME_AGENT_CODING_AGENT_DIR`) | model, thinking (Pi's fields; its key `magpie-prime-agent` names it, since its requests carry no User-Agent; the global settings alone, `allowedModels` and `subagentDefaultModel` left as they are) |
+| StepCode     | `~/.stepcode/config.toml`（外加 `models.json`；`$STEP_CODING_AGENT_DIR`、`$STEPCODE_CONFIG_DIR`） | model |
+| MothX        | `~/.mothx/settings.json`（`$MOTHX_DIR`；Windows 上是 `%APPDATA%\mothx`） | model、thinking（`defaultProvider`/`defaultModel`/`defaultThinkingLevel`；崇云科技作为 provider `magpie` 写在用户自己的那个旁边，`openai-chat` 带 `thinkingFormat: "openai"`） |
+| Aside        | `~/.aside/u/0/settings.json`（外加 `models.json`；第一个账号，也是崇云科技唯一接线的那个） | model、effort、fast、standard、deep、visual、image |
+| OmO (omo-ai) | `~/.omo/agent/settings.json`（外加 `models.json`；`$OMO_CODING_AGENT_DIR`、`$SENPI_CODING_AGENT_DIR`） | model |
+| Prime Agent  | `~/.prime/agent/settings.json`（外加 `models.json`；`$PRIME_AGENT_CODING_AGENT_DIR`） | model、thinking（Pi 的字段；它的 key `magpie-prime-agent` 指明了它，因为它的请求不带 User-Agent；只改全局设置，`allowedModels` 和 `subagentDefaultModel` 保持原样） |
 | Goose        | `~/.config/goose/config.yaml`     | model           |
 | Cursor CLI   | `~/.cursor/cli-config.json`       | model           |
-| Zed          | `~/.config/zed/settings.json` (`$XDG_CONFIG_HOME` on Linux, `%APPDATA%\Zed` on Windows) | model (a `magpie` OpenAI-compatible provider; its catalog in Zed's picker) |
-| VS Code (Chat) | `~/Library/Application Support/Code/User/settings.json` + `chatLanguageModels.json` (`~/.config/Code/User` on Linux, `%APPDATA%\Code\User` on Windows) | model (`chat.defaultModel`; a `magpie` Custom Endpoint group, its catalog in Chat's model picker; VS Code 1.122+, no Copilot sign-in or key needed). Each profile's own pair under `User/profiles/<id>/` (listed in `globalStorage/storage.json`) gets the same, unless the profile uses the default's |
-| VS Code Insiders (Chat) | the same files under `Code - Insiders/User` in place of `Code/User` | as VS Code, a row of its own; its models send the token `magpie-vscode-insiders`, since its chat's User-Agent is VS Code's |
-| VSCodium (Chat) | the same files under `VSCodium/User` in place of `Code/User` | as VS Code, a row of its own; its models send the token `magpie-vscodium`, so Usage counts them as VSCodium; its Chat features must be turned on (`chat.disableAIFeatures=false`, and `defaultChatAgent` plus `trustedExtensionAuthAccess` for GitHub.copilot-chat in its product.json). With the Marketplace's GitHub Copilot Chat 0.48.1, which has no Custom Endpoint provider, the group is written for its OpenAI Compatible provider (`customoai`, the token sent as `x-api-key`), which lists models only while Copilot Chat is signed in to GitHub with a personal Copilot plan |
-| Zoo Code (VS Code) | VS Code's `Code/User/settings.json` (and each profile's): `zoo-code.autoImportSettingsPath` names `globalStorage/zoocodeorganization.zoo-code/settings/magpie-import.json` beside it | model (one provider profile `magpie`, OpenAI Compatible, imported by Zoo Code at start-up) |
-| Copilot (JetBrains) | `byok.json` in `~/.config/github-copilot` (`$XDG_CONFIG_HOME/github-copilot` when set, `%USERPROFILE%\AppData\Local\github-copilot` on Windows), the Copilot language server's own file, which Xcode's and Eclipse's Copilot read too | provider (a `magpie` custom endpoint provider beside the user's: every magpie model at the gateway's `/v1/chat/completions`, sent with `magpie-copilot-jetbrains`; a model hidden in Manage Models stays hidden through a sync; off removes magpie's three keys alone). Found by the `github-copilot-intellij` plugin in a JetBrains IDE or Android Studio. Listed after the IDE restarts, and only while Copilot is signed in to GitHub on a plan with Bring Your Own Key (Free, Pro, Pro+; Business and Enterprise when the organisation allows it); the model is picked in Copilot Chat |
-| JetBrains Air | `acp.json` in `~/Library/Application Support/JetBrains/Air` (`~/.config/JetBrains/Air` on Linux, `%APPDATA%\JetBrains\Air` on Windows) + `magpie-opencode.json` beside it | model (a `Magpie` ACP agent: OpenCode's `opencode acp` on magpie's provider alone, its models and routing groups in Air's model menu; needs OpenCode installed) |
+| Zed          | `~/.config/zed/settings.json`（Linux 上是 `$XDG_CONFIG_HOME`，Windows 上是 `%APPDATA%\Zed`） | model（一个 OpenAI 兼容的 `magpie` provider；它的目录出现在 Zed 的选择器里） |
+| VS Code (Chat) | `~/Library/Application Support/Code/User/settings.json` + `chatLanguageModels.json`（Linux 上是 `~/.config/Code/User`，Windows 上是 `%APPDATA%\Code\User`） | model（`chat.defaultModel`；一个 `magpie` Custom Endpoint 组，它的目录出现在 Chat 的模型选择器里；VS Code 1.122+，不需要 Copilot 登录或 key）。每个 profile 在 `User/profiles/<id>/` 下自己那一对文件（在 `globalStorage/storage.json` 里列出）也得到同样的设置，除非该 profile 用的是默认值那一套 |
+| VS Code Insiders (Chat) | 同样的文件，位置在 `Code - Insiders/User` 下，代替 `Code/User` | 与 VS Code 相同，自己单独一行；它的模型发送 token `magpie-vscode-insiders`，因为它的 chat 的 User-Agent 就是 VS Code 的 |
+| VSCodium (Chat) | 同样的文件，位置在 `VSCodium/User` 下，代替 `Code/User` | 与 VS Code 相同，自己单独一行；它的模型发送 token `magpie-vscodium`，所以用量里把它们记作 VSCodium；它的 Chat 功能必须打开（`chat.disableAIFeatures=false`，以及在它的 product.json 里为 GitHub.copilot-chat 设置 `defaultChatAgent` 和 `trustedExtensionAuthAccess`）。用应用市场里的 GitHub Copilot Chat 0.48.1 时，它没有 Custom Endpoint provider，于是这个组改为写给它的 OpenAI Compatible provider（`customoai`，token 以 `x-api-key` 发送），而这个 provider 只有在 Copilot Chat 用个人 Copilot 套餐登录 GitHub 时才列出模型 |
+| Zoo Code (VS Code) | VS Code 的 `Code/User/settings.json`（以及每个 profile 的那份）：`zoo-code.autoImportSettingsPath` 指向它旁边的 `globalStorage/zoocodeorganization.zoo-code/settings/magpie-import.json` | model（一个 provider 配置 `magpie`，OpenAI Compatible，由 Zoo Code 在启动时导入） |
+| Copilot (JetBrains) | `~/.config/github-copilot` 下的 `byok.json`（设了 `$XDG_CONFIG_HOME/github-copilot` 时用它，Windows 上是 `%USERPROFILE%\AppData\Local\github-copilot`），这是 Copilot language server 自己的文件，Xcode 的和 Eclipse 的 Copilot 也读它 | provider（用户自己那个旁边的一个 `magpie` custom endpoint provider：网关 `/v1/chat/completions` 上的每一个崇云科技模型都带着 `magpie-copilot-jetbrains` 发送；在 Manage Models 里被藏起来的模型，同步之后仍然藏起来；关掉时只删掉崇云科技那三个 key）。由 JetBrains IDE 或 Android Studio 里的 `github-copilot-intellij` 插件找到。IDE 重启后才会列出，且只在 Copilot 用支持自带 key（Bring Your Own Key）的套餐登录 GitHub 时才列出（Free、Pro、Pro+；组织允许时还有 Business 和 Enterprise）；模型在 Copilot Chat 里挑选 |
+| JetBrains Air | `~/Library/Application Support/JetBrains/Air` 下的 `acp.json`（Linux 上是 `~/.config/JetBrains/Air`，Windows 上是 `%APPDATA%\JetBrains\Air`）+ 它旁边的 `magpie-opencode.json` | model（一个 `Magpie` ACP agent：OpenCode 的 `opencode acp` 只走崇云科技的 provider，它的模型和路由组出现在 Air 的模型菜单里；需要装好 OpenCode） |
 | Copilot CLI  | `~/.copilot/settings.json`        | model           |
-| Crush        | `~/.config/crush/crush.json`      | large, small    |
-| DeepSeek Harness (dsh) | `~/.dsh/profiles/*/cordis.patch.yml` (`$DSH_HOME`; a custom provider, Magpie, its key `MAGPIE_GATEWAY_KEY` in `~/.dsh/.env` and dsh's own key store `~/.dsh/.credentials.yaml`, which the desktop app reads; on one of magpie's models its `web-search-deepseek` row also goes to the gateway, which searches with the model or Settings › Web search, unless dsh has a `DEEPSEEK_API_KEY` or a row of your own), or `~/.dsh/config.yaml` before dsh 0.1.5 | model, effort |
-| Reasonix Studio (2.x, or a native Go `reasonix` 2.x / 1.39.x CLI) | `~/.reasonix/config.toml` + `.env` (`%APPDATA%/reasonix` on Windows; `$REASONIX_HOME`) | model (Executor), planner (Plan), effort (a dedicated `magpie` provider, shared by Studio and the native CLI) |
-| Command Code | `~/.commandcode/settings.json` (+ `providers.json`) | model |
-| fx           | `~/.fx/settings.json`             | model (a keyless `magpie` provider) |
-| omp (oh-my-pi) | `~/.omp/agent/config.yml` (+ `models.yml`) | model |
-| Devin        | `~/.config/devin/config.json` (`%APPDATA%\devin\config.json` on Windows) | model |
-| Hermes Agent | `~/.hermes/config.yaml` (`%LOCALAPPDATA%\hermes` on Windows; `$HERMES_HOME`), and each profile's under `profiles/` | model |
-| Mister Morph | `~/.morph/config.yaml` (`$MISTER_MORPH_CONFIG`) | model, effort (`llm` on the gateway as `openai_response_compatible`, the Responses API; what it had comes back when you switch away) |
-| Kimi Code    | `~/.kimi/config.toml` (`$KIMI_SHARE_DIR`) | model (a `magpie` provider; magpie's models in Kimi's /model) |
-| Qwen Code    | `~/.qwen/settings.json` (`$QWEN_HOME`) | model (magpie's models as `modelProviders.openai` entries on a `MAGPIE_QWEN_API_KEY` env var; settings.model; `security.auth.selectedType` openai while wired) |
-| Muse Code    | `~/.config/muse/settings.json` (`$XDG_CONFIG_HOME`) | model (endpoint_transport to the gateway, auth none; magpie's models in Muse's list) |
-| Empryo       | `~/.empryo/config.json` | defaultModel (a `magpie` provider at the gateway in `providers`) |
-| Ante         | `~/.ante/catalog.json` and `settings.json` (`$ANTE_HOME`) | provider, model (a `magpie` provider on OpenAiCompatible, with no auth of magpie's: the gateway lets this machine in with any token and Ante counts a provider with none as authenticated; magpie's models in Ante's model picker, and Ante started on magpie, which is what its settings' `provider` decides) |
-| AstrBot      | `data/cmd_config.json` under `$ASTRBOT_ROOT`, else `~/.astrbot` (the desktop app's) | model (a `magpie` entry in `provider_sources` and magpie's models in `provider`, the user's own entries kept; the default chat model in `agent_runner.config.model.provider_id`, or `provider_settings.default_provider_id` on AstrBot before 4.28's agent runner; restart AstrBot after connecting; Docker installs aren't reached) |
-| jcode        | `config.toml` in `$JCODE_HOME`, else `~/.jcode` | model (a `[providers.magpie]` profile, `openai-compatible`, with magpie's models in it; `[provider] default_provider`/`default_model` set to it, what was there put back on Disconnect; the user's own keys in the profile, such as `headers` and a model's `reasoning_effort`, kept; restart open jcode sessions after connecting) |
-| MiniMax Code (mcode) | `~/.minimax/config.yaml` (`$MINIMAX_DATA_DIR`) | model (a `magpie` custom provider; magpie's models in its /model) |
-| Droid (Factory) | `~/.factory/settings.json` (`$FACTORY_HOME_OVERRIDE`) | model (magpie's models as BYOK `customModels`, in Droid's /model) |
-| Cline (CLI)  | `~/.cline/data/settings/providers.json` (`$CLINE_DIR`) | model, effort (magpie takes its openai-compatible provider) |
-| Qoder (CLI)  | `~/.qoder/settings.json` (`$QODER_CONFIG_DIR`) | model, effort (a `magpie` custom provider; needs a Qoder plan with BYOK) |
-| Qoder CN (CLI) | `~/.qoder-cn/settings.json` (`$QODERCN_CONFIG_DIR`) | model, effort (as Qoder; its own accounts, a Qoder CN plan with BYOK) |
-| Grok Build   | `~/.grok/config.toml` (`$GROK_HOME`) | model, effort |
-| Grok App     | `agent-home/config.toml` in its data folder (`$GROK_APP_HOME`, else `~/Library/Application Support/com.grokapp.grok-app`, `%APPDATA%\grokapp\grok-app\data`, `$XDG_DATA_HOME/grok-app`, or `~/.grok-app`) | model (a `[model.magpie]` custom provider under Accounts, with magpie's models and their effort levels in `app_models`; the route, `[models] default`, stays until the user presses Use on magpie there (one of the App's own routes picked in magpie is written as the route, and magpie's channel goes); a route an older magpie set to `magpie` is put back once; Disconnect drops the channel and puts the route back only if it is still `magpie`, else the one it was on before Connect if none is left; a model or default effort picked in the App kept; instructions, MCP and skills are the Library's Grok App row on agent-home; RTK has no hook for it or for Grok Build) |
-| ZCode        | `~/.zcode/v2/provider_config.json` and `config.json`, under the data folder moved in ZCode's settings (`dataBaseDir`); `~` is `$HOME` when set, on Windows too, as ZCode reads it before `%USERPROFILE%` | provider (magpie's models in ZCode's picker) |
-| WorkBuddy    | `~/.workbuddy/models.json` (`$WORKBUDDY_CONFIG_DIR`) | provider (magpie's models in WorkBuddy's picker) |
-| WorkBuddy AI | `~/.workbuddy-ai/models.json` (the international build) | provider (magpie's models in WorkBuddy AI's picker) |
-| CodeBuddy Code | `~/.codebuddy/models.json` (`$CODEBUDDY_CONFIG_DIR`), `settings.json` | model (magpie's models in its list; the session model) |
-| Raycast      | `~/.config/raycast/ai/providers.yaml` in the user's folder, on Mac and Windows | provider (a `magpie` entry in Raycast AI's Custom Providers, magpie's models in its model picker; Raycast Pro; the user's providers, `tools` and comments kept) |
-| OpenPencil   | `openpencil/settings.json` in the config folder: `~/Library/Application Support` (macOS), `$XDG_CONFIG_HOME` or `~/.config` (Linux), `%APPDATA%` (Windows) | provider (a `magpie` entry in its `builtin_agents`, magpie's models in its chat's model picker; the user's entries and settings kept; refused while OpenPencil runs, as it writes the file back when it quits) |
-| T3 Code      | `~/.t3/userdata/settings.json` (`$T3CODE_HOME/userdata`) | provider (a `magpie` provider instance on Claude Code, magpie's models as its custom models) |
-| OpenHanako   | `~/.hanako/provider-catalog.json` + `agents/<id>/config.yaml` (`$HANA_HOME`; its local API while it runs) | model (the primary agent's; magpie's models as a provider) |
-| AtomCode     | `~/.atomcode/config.toml` (`$ATOMCODE_HOME`) | model, effort (a `magpie` provider account, one model table per catalog model as its own sign-in writes) |
-| Snow CLI     | `~/.snow/profiles/magpie.json` (`$SNOW_CONFIG_DIR`), made the active profile and copied to `config.json` | model (the user's other profiles' models too; Snow App takes the profile in with "Sync Snow CLI API config") |
-| Alma         | Alma's local API (`localhost:23001`, while Alma runs; alma-server's data in `$ALMA_DATA_DIR`, `$XDG_DATA_HOME/alma` or `~/.local/share/alma` on Linux) | model (Alma's default; magpie's models as a provider), and Image Generation's model when it is Auto: the one magpie draws with |
-| Lody | Its own confirmation dialog (`lody://provider/import`) | adds selected Claude, Codex, Pi, DSH, Kimi Code, Grok and Bub Providers on the local machine; no settings edited by magpie |
+| Crush        | `~/.config/crush/crush.json`      | large、small    |
+| DeepSeek Harness (dsh) | `~/.dsh/profiles/*/cordis.patch.yml`（`$DSH_HOME`；一个 custom provider，Magpie，它的 key `MAGPIE_GATEWAY_KEY` 放在 `~/.dsh/.env` 里，dsh 自己的 key 仓库 `~/.dsh/.credentials.yaml` 也放一份，桌面应用读的就是它；当模型是崇云科技的一个模型时，它的 `web-search-deepseek` 那一行也走网关，由网关用该模型或设置 › 网络搜索去搜索，除非 dsh 自己有 `DEEPSEEK_API_KEY` 或你自己的一行），dsh 0.1.5 之前则是 `~/.dsh/config.yaml` | model、effort |
+| Reasonix Studio（2.x，或原生 Go 的 `reasonix` 2.x / 1.39.x CLI） | `~/.reasonix/config.toml` + `.env`（Windows 上是 `%APPDATA%/reasonix`；`$REASONIX_HOME`） | model（Executor）、planner（Plan）、effort（一个专门的 `magpie` provider，Studio 和原生 CLI 共用） |
+| Command Code | `~/.commandcode/settings.json`（外加 `providers.json`） | model |
+| fx           | `~/.fx/settings.json`             | model（一个不要 key 的 `magpie` provider） |
+| omp (oh-my-pi) | `~/.omp/agent/config.yml`（外加 `models.yml`） | model |
+| Devin        | `~/.config/devin/config.json`（Windows 上是 `%APPDATA%\devin\config.json`） | model |
+| Hermes Agent | `~/.hermes/config.yaml`（Windows 上是 `%LOCALAPPDATA%\hermes`；`$HERMES_HOME`），以及 `profiles/` 下每个 profile 的那份 | model |
+| Mister Morph | `~/.morph/config.yaml`（`$MISTER_MORPH_CONFIG`） | model、effort（网关上的 `llm` 用 `openai_response_compatible`，也就是 Responses API；切走之后它原来的设置会回来） |
+| Kimi Code    | `~/.kimi/config.toml`（`$KIMI_SHARE_DIR`） | model（一个 `magpie` provider；崇云科技的模型出现在 Kimi 的 /model 里） |
+| Qwen Code    | `~/.qwen/settings.json`（`$QWEN_HOME`） | model（崇云科技的模型作为 `modelProviders.openai` 条目，靠一个 `MAGPIE_QWEN_API_KEY` 环境变量；settings.model；接线期间 `security.auth.selectedType` 为 openai） |
+| Muse Code    | `~/.config/muse/settings.json`（`$XDG_CONFIG_HOME`） | model（endpoint_transport 指向网关，auth 为 none；崇云科技的模型出现在 Muse 的列表里） |
+| Empryo       | `~/.empryo/config.json` | defaultModel（`providers` 里一个指向网关的 `magpie` provider） |
+| Ante         | `~/.ante/catalog.json` 和 `settings.json`（`$ANTE_HOME`） | provider、model（一个基于 OpenAiCompatible 的 `magpie` provider，不带崇云科技的 auth：网关放这台机器用任何 token 进来，而 Ante 把没有 auth 的 provider 视为已认证；崇云科技的模型出现在 Ante 的模型选择器里，而 Ante 启动时是否落在崇云科技上，由它的设置里的 `provider` 决定） |
+| AstrBot      | `$ASTRBOT_ROOT` 下的 `data/cmd_config.json`，否则是 `~/.astrbot`（桌面应用的那份） | model（`provider_sources` 里一个 `magpie` 条目，崇云科技的模型写进 `provider`，用户自己的条目保留；默认对话模型写进 `agent_runner.config.model.provider_id`，AstrBot 4.28 之前的 agent runner 则是 `provider_settings.default_provider_id`；接上之后要重启 AstrBot；Docker 装的那些够不着） |
+| jcode        | `$JCODE_HOME` 下的 `config.toml`，否则是 `~/.jcode` | model（一个 `[providers.magpie]` 配置，`openai-compatible`，里面放着崇云科技的模型；`[provider] default_provider`/`default_model` 指向它，断开时把原来那份放回去；配置里用户自己的键，比如 `headers` 和某个模型的 `reasoning_effort`，保留；接上之后要重启已打开的 jcode 会话） |
+| MiniMax Code (mcode) | `~/.minimax/config.yaml`（`$MINIMAX_DATA_DIR`） | model（一个 `magpie` custom provider；崇云科技的模型出现在它的 /model 里） |
+| Droid (Factory) | `~/.factory/settings.json`（`$FACTORY_HOME_OVERRIDE`） | model（崇云科技的模型作为 BYOK 的 `customModels`，出现在 Droid 的 /model 里） |
+| Cline (CLI)  | `~/.cline/data/settings/providers.json`（`$CLINE_DIR`） | model、effort（崇云科技接管它的 openai-compatible provider） |
+| Qoder (CLI)  | `~/.qoder/settings.json`（`$QODER_CONFIG_DIR`） | model、effort（一个 `magpie` custom provider；需要带 BYOK 的 Qoder 套餐） |
+| Qoder CN (CLI) | `~/.qoder-cn/settings.json`（`$QODERCN_CONFIG_DIR`） | model、effort（同 Qoder；它自己的账号，一个带 BYOK 的 Qoder CN 套餐） |
+| Grok Build   | `~/.grok/config.toml`（`$GROK_HOME`） | model、effort |
+| Grok App     | `agent-home/config.toml`，在它的数据文件夹里（`$GROK_APP_HOME`，否则是 `~/Library/Application Support/com.grokapp.grok-app`、`%APPDATA%\grokapp\grok-app\data`、`$XDG_DATA_HOME/grok-app`，或 `~/.grok-app`） | model（Accounts 下一个 `[model.magpie]` custom provider，`app_models` 里放着崇云科技的模型及其 effort 档位；路由 `[models] default` 保持不变，直到用户在那里对崇云科技按 Use（在崇云科技里挑的 App 自己的某条路由会被写成这条路由，而崇云科技这个 channel 则被去掉）；旧版崇云科技设成 `magpie` 的路由会被还原一次；断开时会去掉这个 channel，只有当路由仍然是 `magpie` 时才把它放回去，否则在没有剩下路由的情况下回到 Connect 之前那一条；在 App 里挑的模型或默认 effort 保留；指令、MCP 和 skills 用的是资源库里 agent-home 上的 Grok App 那一行；RTK 对它和对 Grok Build 都没有 hook） |
+| ZCode        | `~/.zcode/v2/provider_config.json` 和 `config.json`，在 ZCode 设置里改过的那个数据文件夹下（`dataBaseDir`）；设了 `$HOME` 时，`~` 指向它，Windows 上也一样，因为 ZCode 先读它再读 `%USERPROFILE%` | provider（崇云科技的模型出现在 ZCode 的选择器里） |
+| WorkBuddy    | `~/.workbuddy/models.json`（`$WORKBUDDY_CONFIG_DIR`） | provider（崇云科技的模型出现在 WorkBuddy 的选择器里） |
+| WorkBuddy AI | `~/.workbuddy-ai/models.json`（国际版） | provider（崇云科技的模型出现在 WorkBuddy AI 的选择器里） |
+| CodeBuddy Code | `~/.codebuddy/models.json`（`$CODEBUDDY_CONFIG_DIR`）、`settings.json` | model（崇云科技的模型出现在它的列表里；对话模型） |
+| Raycast      | `~/.config/raycast/ai/providers.yaml`，在用户的文件夹里，Mac 和 Windows 都是 | provider（Raycast AI 的 Custom Providers 里一个 `magpie` 条目，崇云科技的模型出现在它的模型选择器里；需要 Raycast Pro；用户自己的 provider、`tools` 和注释保留） |
+| OpenPencil   | 配置文件目录下的 `openpencil/settings.json`：`~/Library/Application Support`（macOS）、`$XDG_CONFIG_HOME` 或 `~/.config`（Linux）、`%APPDATA%`（Windows） | provider（它的 `builtin_agents` 里一个 `magpie` 条目，崇云科技的模型出现在它的 chat 的模型选择器里；用户自己的条目和设置保留；OpenPencil 运行时拒绝操作，因为它退出时会把这个文件写回去） |
+| T3 Code      | `~/.t3/userdata/settings.json`（`$T3CODE_HOME/userdata`） | provider（一个基于 Claude Code 的 `magpie` provider 实例，崇云科技的模型作为它的自定义模型） |
+| OpenHanako   | `~/.hanako/provider-catalog.json` + `agents/<id>/config.yaml`（`$HANA_HOME`；它在运行时提供本地 API） | model（主 agent 的；崇云科技的模型作为一个 provider） |
+| AtomCode     | `~/.atomcode/config.toml`（`$ATOMCODE_HOME`） | model、effort（一个 `magpie` provider 账号，按目录里的每个模型各写一张模型表，就像它自己的登录流程那样） |
+| Snow CLI     | `~/.snow/profiles/magpie.json`（`$SNOW_CONFIG_DIR`），把它设为当前配置并复制到 `config.json` | model（用户其它配置里的模型也一样；Snow App 通过 "Sync Snow CLI API config" 导入这个配置） |
+| Alma         | Alma 的本地 API（`localhost:23001`，在 Alma 运行时；alma-server 的数据在 `$ALMA_DATA_DIR`、Linux 上是 `$XDG_DATA_HOME/alma` 或 `~/.local/share/alma`） | model（Alma 的默认值；崇云科技的模型作为一个 provider），以及 Image Generation 的模型在 Auto 时，就是崇云科技用来画图的那个模型 |
+| Lody | 它自己的确认对话框（`lody://provider/import`） | 在本机上添加所选的 Claude、Codex、Pi、DSH、Kimi Code、Grok 和 Bub provider；崇云科技不改动任何设置 |
 
-Provider-scoped agents (OpenCode, MiMo Code, DevEco Code, Pi, OmO, StepCode, MothX, Aside, Goose, Crush, omp, Hermes Agent) take `provider/model`.
-Only agents that are installed or configured are shown.
+按 provider 取值的 agent（OpenCode、MiMo Code、DevEco Code、Pi、OmO、StepCode、MothX、Aside、Goose、Crush、omp、Hermes Agent）取的是 `provider/model`。
 
-### Notes on some agents
+只显示已经安装或已经配置过的 agent。
+
+### 关于几个 agent 的说明
+
+<a id="notes-on-some-agents"></a>
 
 #### StepCode
 
-StepCode is configured via [`stepcode.go`](../internal/agent/stepcode.go). Magpie manages global `defaultProvider` and `defaultModel` in `~/.stepcode/config.toml` (or the parent of an absolute `STEP_CODING_AGENT_DIR`) and writes its catalog into `~/.stepcode/models.json` using Pi's provider format. Magpie only manages model selection; StepCode controls thinking levels itself. Project-local `.stepcode/config.toml` overlays take precedence over global settings. Restart StepCode or begin a new session after changing models. Detection is strictly directory-based (`~/.stepcode`), so having Smallstep's unrelated `step` certificate CLI on `PATH` is never mistaken for StepCode.
+<a id="stepcode"></a>
 
-The optional real CLI verification test is run with `MAGPIE_TEST_STEPCODE_BIN=/path/to/step go test ./internal/agent -run '^TestStepCodeRealCLISandbox$' -count=1`. It runs StepCode in an isolated temporary sandbox with telemetry disabled and without live credentials.
+StepCode 通过 [`stepcode.go`](../internal/agent/stepcode.go) 配置。崇云科技管理 `~/.stepcode/config.toml` 里的全局 `defaultProvider` 和 `defaultModel`（或者一个绝对路径 `STEP_CODING_AGENT_DIR` 的父目录），并用 Pi 的 provider 格式把自己的目录写进 `~/.stepcode/models.json`。崇云科技只管选模型；思考档位由 StepCode 自己控制。项目本地的 `.stepcode/config.toml` 覆盖层优先于全局设置。改完模型后要重启 StepCode 或开一个新会话。检测严格按目录来（`~/.stepcode`），所以 `PATH` 上装着的 Smallstep 那个无关的 `step` 证书命令行工具永远不会被当成 StepCode。
+
+可选的真实 CLI 验证测试这样跑：`MAGPIE_TEST_STEPCODE_BIN=/path/to/step go test ./internal/agent -run '^TestStepCodeRealCLISandbox$' -count=1`。它在一个隔离的临时沙箱里运行 StepCode，遥测关闭，也不带线上凭据。
 
 #### MothX
 
-MothX (oschina/mothx, formerly vibecoding) is configured via [`mothx.go`](../internal/agent/mothx.go). Magpie writes its provider `magpie` into `providers` in MothX's global `settings.json` (`$MOTHX_DIR`, else `%APPDATA%\mothx` on Windows, else `~/.mothx`) and sets `defaultProvider`, `defaultModel` and `defaultThinkingLevel`. The provider uses `openai-chat` with `thinkingFormat: "openai"`, so a thinking level goes out as `reasoning_effort` for every model; without it MothX guesses Qwen's or DeepSeek's thinking fields from a model id. What the user adds to magpie's block (headers, a `thinkingFormat` of their own) stays. The key `magpie-mothx` names it, and so does its User-Agent (`Vibecoding Client/<version>`). A project's `.mothx/settings.json` overlays the global one and is left alone. MothX reads its settings at start-up, so restart open `mothx` sessions after a change. Disconnect puts `settings.json` back byte for byte when nothing else changed in it; when MothX or the user changed it meanwhile (its `/model` and `/statusline … global` write the whole file), Disconnect takes out only magpie's provider, its pick and a `providers` object it left empty.
+<a id="mothx"></a>
+
+MothX（oschina/mothx，原名 vibecoding）通过 [`mothx.go`](../internal/agent/mothx.go) 配置。崇云科技把自己的 provider `magpie` 写进 MothX 全局 `settings.json` 里的 `providers`（`$MOTHX_DIR`，否则 Windows 上是 `%APPDATA%\mothx`，再否则是 `~/.mothx`），并设置 `defaultProvider`、`defaultModel` 和 `defaultThinkingLevel`。这个 provider 用 `openai-chat` 配 `thinkingFormat: "openai"`，因此思考档位对每个模型都以 `reasoning_effort` 发出去；没有它的话，MothX 会从一个模型 id 猜这是 Qwen 还是 DeepSeek 的思考字段。用户往崇云科技那一个块里加的东西（headers、他自己的 `thinkingFormat`）保留。key `magpie-mothx` 指明了它，它的 User-Agent（`Vibecoding Client/<version>`）也一样。项目的 `.mothx/settings.json` 覆盖全局那份，并且不受改动。MothX 在启动时读自己的设置，所以改完要重启已打开的 `mothx` 会话。若期间没有别人改过 `settings.json`，断开时它会逐字节放回原样；若期间 MothX 或用户改过它（它的 `/model` 和 `/statusline … global` 会写整个文件），断开时只摘掉崇云科技的 provider、它的选择，以及它留下的一个空的 `providers` 对象。
 
 #### Reasonix Studio
 
-Reasonix Studio is detected from its desktop installation or a native Go
-`reasonix` 2.x or 1.39.x CLI; historical npm wrappers and a shared config alone
-do not count. Tested with
-[Studio 2.24.0](https://github.com/esengine/DeepSeek-Reasonix/releases/tag/studio-v2.24.0).
+<a id="reasonix-studio"></a>
 
-Pick the Executor model in the app, or use
-`magpie reasonix magpie/deepseek/deepseek-chat` (`magpie reasonix
-magpie/group/code` for a routing group). Select Plan independently with
-`magpie reasonix planner magpie/deepseek/deepseek-chat`, or use `magpie reasonix
-planner off` to disable the separate planner. `magpie reasonix effort high` sets
-an advertised Executor reasoning level. `magpie reasonix default` restores the
-previous Executor selection; `magpie reasonix planner default` restores Plan.
-Magpie's provider and private `.env` key are removed when neither role needs
-them. Restart Studio for new sessions; project/session overrides still take
-precedence. Other providers and credentials are preserved. A non-managed
-provider named `magpie` is a conflict, reported without overwriting it. Studio
-and the native CLI share these files, so updating only Studio does not isolate
-their settings.
+Reasonix Studio 从它的桌面安装或原生 Go 的 `reasonix` 2.x、1.39.x CLI 来检测；历史上的 npm 包装和仅有一个共享配置都不算。已用 [Studio 2.24.0](https://github.com/esengine/DeepSeek-Reasonix/releases/tag/studio-v2.24.0) 测试过。
 
-The released-client stream/tool contract test is run with
-`MAGPIE_TEST_REASONIX_CLI=/path/to/reasonix go test ./internal/agent -run
-'^TestReasonixStudioCLIIntegration$' -count=1`. It uses isolated settings and
-a local test upstream, with no vendor credentials.
+在应用里挑 Executor 的模型，或者用 `chongyun reasonix magpie/deepseek/deepseek-chat`（路由组则是 `chongyun reasonix magpie/group/code`）。Plan 单独选，用 `chongyun reasonix planner magpie/deepseek/deepseek-chat`；用 `chongyun reasonix planner off` 关掉独立的 planner。`chongyun reasonix effort high` 设置一个对外声明的 Executor 推理档位。`chongyun reasonix default` 恢复之前的 Executor 选择；`chongyun reasonix planner default` 恢复 Plan。两个角色都不再需要时，崇云科技的 provider 和那个放在 `.env` 里的私有 key 会被移除。新会话要重启 Studio；项目/会话级的覆盖仍然优先。其它 provider 和凭据保留。一个名字叫 `magpie` 但不由本程序管理的 provider 属于冲突，只作报告，不会覆盖它。Studio 和原生 CLI 共用这些文件，所以只升级 Studio 并不会把它们的设置隔离开。
+
+已发布客户端的流式/工具契约测试这样跑：`MAGPIE_TEST_REASONIX_CLI=/path/to/reasonix go test ./internal/agent -run '^TestReasonixStudioCLIIntegration$' -count=1`。它使用隔离的设置和一个本地的测试上游，不带厂商凭据。
 
 #### VSCodium Chat
 
-VSCodium's Chat features are disabled by default. To use the Chat model
-picker with magpie, set `"chat.disableAIFeatures": false` in VSCodium's
-settings and add the `defaultChatAgent` and `trustedExtensionAuthAccess`
-entries required by [VSCodium's Copilot guide](https://github.com/VSCodium/vscodium/blob/master/docs/ext-github-copilot.md)
-to VSCodium's `product.json`. The guide also explains how to install a
-compatible GitHub Copilot Chat extension, since the Open VSX registry does
-not normally provide Microsoft's extension. Restart VSCodium, or run
-**Developer: Reload Window**, after changing these files. Magpie's models
-then appear under the `magpie` custom endpoint group.
+<a id="vscodium-chat"></a>
+
+VSCodium 的 Chat 功能默认是关着的。要用 Chat 的模型选择器接上崇云科技，在 VSCodium 的设置里把 `"chat.disableAIFeatures": false` 设上，并按 [VSCodium 的 Copilot 指南](https://github.com/VSCodium/vscodium/blob/master/docs/ext-github-copilot.md) 的要求，把 `defaultChatAgent` 和 `trustedExtensionAuthAccess` 两个条目加进 VSCodium 的 `product.json`。那份指南也解释了怎么装一个兼容的 GitHub Copilot Chat 扩展，因为 Open VSX 的注册表通常不提供微软的扩展。改完这些文件后重启 VSCodium，或者执行 **Developer: Reload Window**。之后崇云科技的模型就出现在 `magpie` 这个 custom endpoint 组下。
 
 #### Zoo Code
 
-Zoo Code (the VS Code extension `ZooCodeOrganization.zoo-code`) keeps its
-provider profiles in VS Code's encrypted secret storage, which magpie can't
-write. Magpie uses Zoo Code's own `zoo-code.autoImportSettingsPath` setting
-instead: it writes a settings file, `magpie-import.json` in Zoo Code's
-`globalStorage/zoocodeorganization.zoo-code/settings` folder, with one OpenAI Compatible profile named `magpie` (the
-gateway's `/v1`, the key `magpie-zoo-code`, the model picked), and points the
-setting at it in VS Code's `settings.json` and each profile's. Zoo Code imports
-that file each time it starts, so run **Developer: Reload Window** after a
-change. While connected, every start switches Zoo Code back to the `magpie`
-profile. Disconnect puts the setting back as it was and deletes the file, but
-the imported `magpie` profile stays in Zoo Code: pick another profile there, or
-delete it in Zoo Code's settings. Only VS Code (Stable) is wired. Zoo Code for
-JetBrains starts its extension with an empty configuration, so the setting
-can't reach it there.
+<a id="zoo-code"></a>
 
-#### Zed-compatible Agent paths
+Zoo Code（VS Code 扩展 `ZooCodeOrganization.zoo-code`）把它的 provider 配置存在 VS Code 的加密 secret 存储里，崇云科技写不了那里。所以崇云科技改用 Zoo Code 自己的 `zoo-code.autoImportSettingsPath` 设置：它写一个设置文件 `magpie-import.json`，放在 Zoo Code 的 `globalStorage/zoocodeorganization.zoo-code/settings` 目录下，里面有一个名叫 `magpie` 的 OpenAI Compatible 配置（网关的 `/v1`、key `magpie-zoo-code`、选好的模型），并在 VS Code 的 `settings.json` 以及每个 profile 的那份里把设置指向它。Zoo Code 每次启动都会导入那个文件，所以改完要执行 **Developer: Reload Window**。连接期间，每次启动都会把 Zoo Code 切回 `magpie` 配置。断开时把设置还原成原样并删掉那个文件，但导入的 `magpie` 配置仍留在 Zoo Code 里：在那里挑另一个配置，或者在 Zoo Code 的设置里删掉它。只接线了 VS Code（Stable）。JetBrains 版 Zoo Code 启动扩展时用的是空配置，所以这个设置在那里够不着。
 
-Magpie can use a Zed-compatible fork or installation whose executable or
-configuration directory is different from the upstream defaults. Set these
-variables before starting Magpie:
+#### 兼容 Zed 的 agent 路径
+
+<a id="zed-compatible-agent-paths"></a>
+
+崇云科技可以使用一个兼容 Zed 的 fork 或安装，只要它的可执行文件或配置目录与上游默认的不同。启动崇云科技之前先设好这些变量：
 
 ```sh
 export MAGPIE_ZED_BIN=/Applications/ZedG.app/Contents/MacOS/zedg
 export MAGPIE_ZED_CONFIG_DIR="$HOME/.config/zed"
 export MAGPIE_ZED_PROCESS_NAMES=zedg,ZedG
-magpie serve
+chongyun serve
 ```
 
-`MAGPIE_ZED_BIN` controls installation detection, `MAGPIE_ZED_CONFIG_DIR`
-selects the directory containing `settings.json`, and
-`MAGPIE_ZED_PROCESS_NAMES` supplies comma-separated process names used for
-restart notices. The existing Zed configuration adapter is reused, so this is
-intended for forks that keep Zed's `settings.json` and Agent model schema, such
-as [ZedG](https://github.com/x6nux/zed-globalization). These variables affect
-the Magpie process in which they are set; put them in the service environment
-when running Magpie under systemd or Docker. They configure a Zed-compatible
-Agent on the same machine as Magpie; they do not discover or modify an Agent
-running on another host. On macOS, if the configured binary does not resolve to
-a `.app` bundle, Magpie falls back to the standard Zed application locations
-when authorizing the gateway credential.
+`MAGPIE_ZED_BIN` 控制安装检测，`MAGPIE_ZED_CONFIG_DIR` 选定装着 `settings.json` 的目录，`MAGPIE_ZED_PROCESS_NAMES` 给出逗号分隔的进程名，用于重启提示。现有的 Zed 配置适配器被复用，所以这套变量是给那些保留了 Zed 的 `settings.json` 和 Agent 模型 schema 的 fork 用的，比如 [ZedG](https://github.com/x6nux/zed-globalization)。这些变量只影响设置它们的那个崇云科技进程；在 systemd 或 Docker 下运行崇云科技时，把它们放进服务环境里。它们配置的是与崇云科技同一台机器上的兼容 Zed 的 agent；它们不会发现或修改跑在另一台主机上的 agent。在 macOS 上，如果配置的二进制解析不到一个 `.app` bundle，崇云科技在授权网关凭据时会退回 Zed 应用的标准位置。
 
-## Providers and the gateway
+## Provider 与网关
 
-Every model an agent can pick is spelled `provider/model` and served by
-magpie's gateway, so agents never hold vendor keys or vendor URLs. Add a
-provider, and its models appear in every agent's picker:
+<a id="providers-and-the-gateway"></a>
+
+agent 能挑的每个模型都写成 `provider/model`，由崇云科技的网关来提供，所以 agent 从来不持有厂商的 key 或厂商的地址。加一个 provider，它的模型就出现在每个 agent 的选择器里：
 
 ```sh
-magpie presets                          # the vendors magpie knows, grouped: vendors, relays, local
-magpie provider add deepseek sk-…       # a preset needs only the key
-magpie provider add ollama              # local servers need none
-magpie provider add "My Relay" url=https://relay.example.com/v1 key=sk-… models=gpt-5.5,claude-sonnet-5
-magpie providers                        # host, key, exposed models, who uses what
-magpie provider deepseek                # one provider in detail
-magpie provider models deepseek         # re-fetch the vendor's list (add ids to choose which to expose)
-magpie provider models deepseek +deepseek-v4 -deepseek-chat   # expose one more, take one out; the rest stay
-magpie provider models deepseek a b c   # the whole list of models to expose, replacing it (all: the default)
-magpie provider refresh deepseek        # re-fetch it, and drop picks it no longer has (the TUI: m)
-magpie provider refresh-every relay 6h  # the gateway fetches its list every 6h (1d, 30m; off; at least 10m)
-magpie provider auto-include relay 'gpt-*' 're:claude-.*'  # a newly listed model these match is exposed (none clears)
-magpie provider test deepseek           # one tiny request per API, with latency
-magpie provider key deepseek sk-…       # replace the key
-magpie provider rm deepseek
-magpie models                           # the catalog agents see
-magpie claude deepseek/deepseek-chat    # use it
+chongyun presets                        # the vendors chongyun knows, grouped: vendors, relays, local
+chongyun provider add deepseek sk-…     # a preset needs only the key
+chongyun provider add ollama            # local servers need none
+chongyun provider add "My Relay" url=https://relay.example.com/v1 key=sk-… models=gpt-5.5,claude-sonnet-5
+chongyun providers                      # host, key, exposed models, who uses what
+chongyun provider deepseek              # one provider in detail
+chongyun provider models deepseek       # re-fetch the vendor's list (add ids to choose which to expose)
+chongyun provider models deepseek +deepseek-v4 -deepseek-chat # expose one more, take one out; the rest stay
+chongyun provider models deepseek a b c # the whole list of models to expose, replacing it (all: the default)
+chongyun provider refresh deepseek      # re-fetch it, and drop picks it no longer has (the TUI: m)
+chongyun provider refresh-every relay 6h # the gateway fetches its list every 6h (1d, 30m; off; at least 10m)
+chongyun provider auto-include relay 'gpt-*' 're:claude-.*' # a newly listed model these match is exposed (none clears)
+chongyun provider test deepseek         # one tiny request per API, with latency
+chongyun provider key deepseek sk-…     # replace the key
+chongyun provider rm deepseek
+chongyun models                         # the catalog agents see
+chongyun claude deepseek/deepseek-chat  # use it
 ```
 
-Custom providers take `url=` (an OpenAI-compatible base), `anthropic=` (an
-Anthropic-compatible base), or both, plus `responses=` when the vendor has a
-separate Responses endpoint, `catalog=` to borrow a models.dev list, and
-`models=` to name the models to expose. Anything a preset does not know can
-be overridden the same way.
+自定义 provider 可以取 `url=`（一个 OpenAI 兼容的 base）、`anthropic=`（一个 Anthropic 兼容的 base），或者两者都要；厂商另有 Responses endpoint 时再加 `responses=`，用 `catalog=` 借用一份 models.dev 清单，用 `models=` 指定要暴露的模型。预设不知道的任何东西，都可以用同样的方式覆盖。
 
-A model whose vendor answers that it is deprecated or retired (OpenCode
-Zen's 410 "Model exo-free has been deprecated.") leaves that provider's
-models in `magpie models`, `/v1/models` and every agent's list, even while
-the vendor's own list still names it. It comes back once a request for it
-as `provider/model` is answered, or after a week.
+某个模型如果厂商回答它已废弃或已下线（OpenCode Zen 的 410 "Model exo-free has been deprecated."），它仍会留在那个 provider 的模型里、留在 `chongyun models`、`/v1/models` 以及每个 agent 的列表里，即便厂商自己的清单还列着它。等一次以 `provider/model` 请求它的调用被应答之后，它就回来了，或者一周之后回来。
 
-`magpie provider set <id> header.<Name>=<value>` sends a header of your own
-on every request to a key+URL provider (an empty value removes it; signed-in
-accounts ignore them). It replaces a header of the same name magpie would
-send, except `anthropic-beta`, which is a list: your betas are added after
-the ones the agent asked for that request (Claude Code's, its 1M context's
-`context-1m-2025-08-07` for a `[1m]` model, fast mode's), each once. A beta
-the provider turns away (`Unexpected value(s) … for the anthropic-beta
-header`) is dropped from the retry and from then on, yours as well as the
-agent's; any other of yours is always sent. The beta of the agent's own
-sign-in (`oauth-2025-04-20`, which Claude Code signed in to claude.ai asks)
-never goes, as the sign-in never does; one you set yourself does.
+`chongyun provider set <id> header.<Name>=<value>` 会给 key+URL 型 provider 的每个请求都带上你自己指定的一个 header（值为空表示移除；已登录的账号会忽略它们）。它会替换掉崇云科技本来要发的同名 header，`anthropic-beta` 除外——那是一个列表：你加的 beta 会排在这次请求里 agent 申请的那些之后（Claude Code 的、1M 上下文的 `context-1m-2025-08-07`（`[1m]` 模型时）、快速模式的），每样只加一次。provider 拒绝掉的某个 beta（`Unexpected value(s) … for the anthropic-beta header`）会从重试里去掉，并且从此以后你的和 agent 的都不再发；你的其它 header 则一直都会发。agent 自己登录带来的 beta（`oauth-2025-04-20`，Claude Code 登录 claude.ai 时申请的）永远不发，因为登录本身就不发；但你自己设置的那个会发。
 
-Requests go to a vendor with magpie's own User-Agent (`magpie/<version>`).
-A coding plan that serves only the agents it names knows them by theirs:
-`magpie provider set <id> user-agent=agent` (the editor's "Send the
-agent's own User-Agent") sends a key+URL provider the User-Agent the agent
-sent magpie, as it sent it, on every API (chat, Anthropic, Responses,
-Gemini, count_tokens, embeddings, images, videos). A request the agent
-sent without one, and magpie's own (its classifier's, the image tool's),
-still go as magpie. A `header.User-Agent` you set wins over both.
-`user-agent=magpie` turns it off again; off is the default. A signed-in
-account, a plugin's and a vendor whose own client magpie goes as
-(OpenCode, Cline, Kilo, another magpie) keep the User-Agent their sign-in
-sends, and don't take it.
+请求发往厂商时用的是崇云科技自己的 User-Agent（`magpie/<version>`）。只服务它点名的那些 agent 的编程套餐，则认得出它们各自的：`chongyun provider set <id> user-agent=agent`（编辑器里的「Send the agent's own User-Agent」）会给 key+URL 型 provider 带上 agent 发给崇云科技的那个 User-Agent，原样带上，在每一个 API 上都是如此（chat、Anthropic、Responses、Gemini、count_tokens、embeddings、images、videos）。agent 发请求时没带 User-Agent 的那些，以及崇云科技自己发的那些（分类器的、图片工具的），仍然以崇云科技的身份发。你设置的 `header.User-Agent` 比这两个都优先。`user-agent=chongyun` 可以再把它关掉；默认就是关的。已登录的账号、plugin 的、以及那些「崇云科技以它自己的客户端身份去走」的厂商（OpenCode、Cline、Kilo、另一个崇云科技），都保留它们登录时发送的 User-Agent，不接受这个设置。
 
-`magpie usage` (and `--csv`) takes `today`, `7d`, `30d` or `all`, each from a
-local midnight, or a window ending now: `--last 24h` (any Go duration, `90m`)
-or `--days 1.5`; the CSV then holds that window's calls only (#2075).
+`chongyun usage`（还有 `--csv`）可以取 `today`、`7d`、`30d` 或 `all`，每个都从本地时间的午夜算起，或者取一个到此刻为止的窗口：`--last 24h`（任意 Go duration，`90m`）或 `--days 1.5`；这时 CSV 里就只有那个窗口的调用（#2075）。
 
-`magpie usage` also lists **upstream provider keys** to help check upstream bills.
-Each request records the fingerprint and saved name of the key that actually
-served it, including image calls and account/key failover. The CSV adds
-`provider_key_id` and `provider_key_name`. JSON uses `providerKeyId` and `providerKeyName`, distinct from gateway caller
-keys. System One calls use the same attribution. No raw credential is stored
-in usage records.
-Rotating the provider's first key does not move old usage to its replacement;
-deleted keys keep their historical identity. Older records appear as
-**key not recorded**, never inferred from today's configured key.
-These are upstream credentials, not keys clients use to call Magpie.
+`chongyun usage` 还会列出**上游 provider key**，方便核对上游账单。每次调用都记下真正应答它的那把 key 的指纹和保存下来的名字，包括图片调用和账号/key 故障切换。CSV 里多了 `provider_key_id` 和 `provider_key_name`，JSON 里用 `providerKeyId` 和 `providerKeyName`，它们和网关的调用方 key 是两回事。System One 的调用用同样的归属方式。用量记录里不存任何原始凭据。轮换 provider 的第一把 key 不会把旧的用量迁到它的替代品上；被删掉的 key 保留它们各自的历史身份。更早的记录显示为**key not recorded**，绝不会用今天配置的 key 去反推。这些是上游凭据，不是客户端用来调用崇云科技的 key。
 
-The CSV's `cache_write_tokens` is still every cache write; the two
-columns, `cache_write_5m_tokens` and `cache_write_1h_tokens`, split it by how
-long Anthropic keeps it (a record from before the split is all 5-minute).
-The app shows the split on a request's Cache and the usage tiles' tooltips.
+CSV 里的 `cache_write_tokens` 仍然是全部缓存写入；新增的两列 `cache_write_5m_tokens` 和 `cache_write_1h_tokens` 按 Anthropic 保留它多久来拆开（在拆分之前记的算全是 5 分钟那档）。应用会在某次请求的 Cache 上以及用量磁贴的提示里显示这个拆分。
 
-**Requests and failures** count requests, each once by how it ended: a
-request failed when the agent got an error. One that a later try answered
-(the next member of a group, another account) is not a failure; the Usage
-page, the Requests card, its rankings and group rows, and `magpie usage`
-count it as answered on a retry (`retried` in the JSON). On the Requests
-card each count is a button for its requests in the list below (the
-Failed and Retried filters, `failed=1` and `retried=1`). A try a vendor
-refused or turned away keeps its own row, for what it billed and why, marked
-handed on, and isn't counted as a request. The CSV's last columns are
-`tries` (on the final row, when the request took more than one),
-`handed_on`, then `tier_asked`, `tier_sent` and `tier_served`: the
-service tier the client asked for (Claude's fast speed reads `fast`), the
-one that try went out at (a fast pick sends `priority`, or `ultrafast`
-where the pick is set to Ultrafast; Ultrafast becomes
-`priority` on an account whose plan doesn't offer it), and the one the
-vendor's reply said it ran at, empty when the reply doesn't say. The JSON
-log keeps them as `tier_asked`, `tier_sent` and `tier_served`, and each
-try in `/v1/magpie/route` has `tier` and `tier_served`. The last column,
-`upstream_stop`, is why the upstream said its reply ended, in its own
-words (`stop`, `tool_calls`, `end_turn`, a Responses reply's
-`completed`), empty when it said none. A request's row on the Requests
-page shows it as Upstream stop reason.
+**请求与失败**按请求计数，每条按它最终的结果算一次：agent 拿到错误就算一次失败。后来某次重试应答了它（组里的下一个成员、另一个账号），就不算失败；用量页面、Requests 卡片、它的排名和组行，以及 `chongyun usage`，都把它记成重试后被应答（JSON 里是 `retried`）。在 Requests 卡片上，每个计数都是下面列表里对应请求的按钮（Failed 和 Retried 两个过滤器，`failed=1` 和 `retried=1`）。厂商拒绝或挡回的那次尝试会保留自己的一行，记下它被计费多少、为什么，并标记为已移交，且不计入请求数。CSV 的最后几列是 `tries`（在最后一行，也就是这次请求用了不止一次时）、`handed_on`，然后是 `tier_asked`、`tier_sent` 和 `tier_served`：客户端要求的服务档位（Claude 的快速速度读作 `fast`）、那次尝试实际发出去时的档位（选了快速就发 `priority`，或者在档位选成 Ultrafast 时发 `ultrafast`；套餐不提供 Ultrafast 时 Ultrafast 变成 `priority`），以及厂商回话说它实际跑在哪个档位（回话没提就是空）。JSON 日志里它们是 `tier_asked`、`tier_sent` 和 `tier_served`，而 `/v1/magpie/route` 里的每次尝试都有 `tier` 和 `tier_served`。最后一列 `upstream_stop` 是上游说它的回话为什么结束，用它自己的说法（`stop`、`tool_calls`、`end_turn`、Responses 回话的 `completed`），它没说就是空。Requests 页面上某次请求的那一行把它显示为 Upstream stop reason。
 
-**Output speed** (tok/s on the Usage and Routing pages, `magpie usage`) is
-output tokens over the time after the first token, summed per request: the
-tokens of every timed request over the sum of their windows, so concurrent
-subagents never add up. A reply that reasoned counts only its answer, from its
-first text (`usage.DecodeOf`): hidden reasoning is written before the stream
-shows anything, so counting it in a window that starts after it read
-gpt-6.1-sol at hundreds of tok/s. A reply that reasoned and then wrote only
-tool calls, one not streamed, and a burst (under 100 ms, or over 10,000 tok/s)
-tell no speed. So does a reply its vendor held back and let go in a burst at
-its end, however long the burst took to come: one whose content came in under
-a quarter of its window (`flow_ms`, from a tenth of its bytes to nine tenths,
-scaled to the whole), or that reasoned and whose answer would have come over
-20 times faster than its reasoning came before its first text (its text came
-with the burst). The time a burst takes to come is not the time it took to
-write, and that time isn't seen. History is read the same way, as it keeps the
-reasoning, the first text and the flow; a record from before the flow was kept
-is told by its reasoning's pace alone.
+**输出速度**（用量页和路由页上的 tok/s，`chongyun usage`）是输出 token 除以第一个 token 之后的时间，按请求各自求和：每个计了时的请求的 token 之和，除以它们各自窗口之和，所以并发的子 agent 不会互相累加。一个推理过的回话只算它的答案部分，从它第一次出现文本开始算（`usage.DecodeOf`）：隐藏的推理是在流里显示任何东西之前写下的，把它算进一个从它之后才开始的窗口里，会让 gpt-6.1-sol 显示成每秒几百 tok/s。一个推理之后只写了工具调用（且不是流式的）的回话，以及一次爆发（低于 100 ms，或高于 10,000 tok/s），都说明不了速度。厂商扣住之后在末尾一下放出来的回话同样说明不了，无论那下爆发花了多久才来：内容在它窗口的四分之一之内就到的那个（`flow_ms`，从它字节的十分之一到十分之九，再按整体缩放），或者推理之后、它的答案本该比推理快 20 倍以上到达的那个（它的文本是跟着爆发一起来的）。一次爆发花了多久才到，不是它写了多久，那个时间也看不见。历史也用同样的方式读，因为它保存了推理、第一次文本和流量；在开始保存流量之前的记录，只能靠推理的节奏来判断。
 
-A call read from an agent's session file rather than seen by the gateway has
-no first token: Claude Code's file has only when the line that asked for a
-reply and the reply's last line were written. Such a row on the Requests tab
-shows the least its reply wrote at instead (`≥98 tok/s`): its output tokens
-over that whole time, the wait for the first token in it, so the speed after
-the first token is never under it. Only a reply of 1,000 tokens or more
-written over a second or more shows one; a shorter reply's wait is too much
-of its time to tell anything; a count of tokens bounds that share, a
-duration doesn't (a 5 s reply can be 4 s of wait). Claude Code's, Claude
-Desktop's and Codex's rows show one: Claude's line that asked for a reply is
-written before it is sent, and a Codex call in a turn of several is timed
-from what the model had last been given before the call's first output
-item to its last, never from the output of a tool the call itself ran,
-which an older rollout writes before the call's token count. OpenCode's rows
-show none.
-A call whose session file timed it (a Codex turn of one call) shows its own
-speed when the time after its first token is a second or more and it wrote
-100 tokens or more in it (`usage.CodexWindowMs`, `usage.CodexBodyTokens`).
-That time can be one network push rather than the writing: a reply whose
-first token came at 6.8 s and the rest 0.2 s later read 1,900 tok/s. When
-that call reasoned, the file has its first token but not its first text, so
-no speed is measured; it shows the least its answer wrote at instead: its
-output less the reasoning, all written after the first token, over the time
-from the first token to its end, held to the same second and 100 tokens. Its
-whole output over that time would count reasoning written before the first
-token and read high. A Codex turn of one call that tells neither shows the
-least it wrote at over the whole turn, the wait for the first token in it
-(`≥120 tok/s` for 1,200 tokens in 10 s), by the same rule as any floor over
-a whole time: 1,000 tokens or more over a second or more. Under that the
-wait is too much of the time to tell anything, so an 11-token answer in
-2.75 s shows none, as an 815-token Claude Code reply does. Gateway rows and other agents' keep their own
-speed. A floor never mixes into a measured speed: the Speed trend and
-`magpie usage` count timed calls only.
+一次从 agent 的会话文件里读出来、而不是网关亲眼看见的调用，没有第一个 token：Claude Code 的文件只有在请求回话的那一行和回话的最后一行都写下之后才有。所以 Requests 标签页上这样的行改为显示它的回话至少是按什么速度写出来的（`≥98 tok/s`）：它的输出 token 除以整段时间，其中就包含等第一个 token 的那段时间，所以第一个 token 之后的速度绝不会低于它。只有写出 1,000 token 或更多、且用了一秒或更久的回话才会显示一个；更短的回话里等待占的时间太大，说明不了任何事；能说明问题的是一个 token 数，不是时长（一个 5 秒的回复里可能有 4 秒都在等）。Claude Code 的、Claude Desktop 的和 Codex 的行会显示：Claude 那条请求回话的行是在发出之前写下的，而一轮里有好几次调用的 Codex，其计时从该次调用第一个输出项之前模型最后拿到的东西算到最后一项，绝不从该次调用自己跑的工具的输出来算——更早的 rollout 会把那个写在调用的 token 数之前。OpenCode 的行不显示。一个由会话文件计时的调用（一轮里只有一次调用的 Codex）在第一个 token 之后的时间达到一秒或更多、且在那期间写了 100 token 或更多时，显示它自己的速度（`usage.CodexWindowMs`、`usage.CodexBodyTokens`）。那段时间可能只是一次网络推送而不是在写：一个第一个 token 出现在 6.8 秒、其余 0.2 秒后到的回话，读作 1,900 tok/s。当那次调用做了推理时，文件里有它的第一个 token 但没有它的第一次文本，所以测不出速度；它改为显示它的答案至少是按什么速度写出来的：它的输出减去推理，全部写在第一个 token 之后，除以从第一个 token 到它结束的时间，同样以一秒和 100 token 为下限。它在整个输出上除以那段时间会把写在第一个 token 之前的推理也算进去，读出来的速度偏高。一轮里只有一次调用、两者都说明不了的，显示它至少是按什么速度写出来的，除以整轮时间（其中包含等第一个 token 的那段时间）（1,200 token 用 10 秒就是 `≥120 tok/s`），用的是任何「对整段时间取下限」都用的同一条规则：1,000 token 或更多、且一秒或更多。低于这个门槛时等待占的时间太大，说明不了任何事，所以一个 11 token 的答案花 2.75 秒就不显示，815 token 的 Claude Code 回话也不显示。网关的行和其它 agent 的行保留它们自己的速度。下限永远不会混进一个实测速度里：Speed 趋势和 `chongyun usage` 只统计计了时的调用。
 
-A group's speed (a row of the Usage page's ranking, by model, provider or
-agent, its Output speed card, and the overview's lists) says how many
-replies it is of, by one rule: with replies whose speed was measured, their
-speed and how many they are (`62 tok/s · 2 timed replies`, not beside "260
-requests" alone); with rows that tell a floor, the least those wrote at and
-how many (`≥100 tok/s · 30 replies`); with both, both, the one of more
-replies first (`≥50 tok/s · 259 replies; 125 tok/s · 1 timed reply`), as a
-few measured replies may not stand for the rest; with neither, nothing.
-Counts are words, never a bare number in parentheses. The Output speed card
-shows the first as its figure, its count beside it, the other under it, and
-the mean wait for the first token on a line of its own with how many timed
-replies it is of. The tooltip says what each is of. A ranking by speed
-orders and bars a group by the figure it shows first (`usage.Totals`
-`decode_n`, `floor_out`, `floor_ms`, `floor_n`; `usage.Row.Floor`).
+一个组的速度（用量页面排名里的一行，按模型、provider 或 agent，它的 Output speed 卡片，以及概览里的那些列表）说的是它由多少个回话构成，遵循一条规则：对于速度被测出来的回话，给出它们的速度和它们有多少个（`62 tok/s · 2 timed replies`，而不只是旁边写「260 requests」）；对于只能给出下限的行，给出它们至少写出了多少（`≥100 tok/s · 30 replies`）；两者都有时，两个都给，回复多的那个在前（`≥50 tok/s · 259 replies; 125 tok/s · 1 timed reply`），因为少数被测出来的回话未必能代表其余的；两者都没有时，什么都不给。计数用文字表达，绝不是括号里的一个裸数字。Output speed 卡片把第一个作为它的数值，把它的计数放在旁边，把另一个放在下面，并把第一个 token 的平均等待时间单独放一行，写明它是多少个计时的回话的平均。提示文字说明每一个是什么。按速度排的排名，用它最先给出的那个数值来给一个组排序和画条（`usage.Totals` 的 `decode_n`、`floor_out`、`floor_ms`、`floor_n`；`usage.Row.Floor`）。
 
-It lists **accounts** too: each Codex, Claude or other subscription account's
-tokens and cost, by the account that actually answered — the one that took
-over after a failover, the one `X-Magpie-Account` pinned. The account is named
-as the Routing view names it (its email or login, never a token); the CSV
-adds `provider_account` (JSON `providerAccount`), `magpie usage --csv
---account <name>` keeps one account's calls, and the app's Usage page has an
-Accounts list and an Account filter on Requests. An older record names the
-account its call went out as when its host says so (`chatgpt.com as
-dee@example.com`); otherwise it appears as **account not recorded**, never
-inferred from today's sign-in. OTLP export never carries the account.
+它也列出**账号**：每个 Codex、Claude 或其它订阅账号的 token 和成本，按真正应答的那个账号归——故障切换后接手的那个，或者 `X-Magpie-Account` 钉住的那个。账号的名字就是路由视图里的叫法（它的邮箱或登录名，绝不是 token）；CSV 里多了 `provider_account`（JSON 里是 `providerAccount`），`chongyun usage --csv --account <name>` 只保留某一个账号的调用，而应用的用量页面上有一个 Accounts 列表和 Requests 上的 Account 过滤器。更早的记录在它那台主机说明的情况下会写出它的调用是以哪个账号发出的（`chatgpt.com as dee@example.com`）；否则它显示为 **account not recorded**，绝不用今天的登录态去反推。OTLP 导出从不带账号。
 
-One magpie can serve several computers (an office one, a personal one):
-share it on the network (Settings → Share on local network), and on each
-other computer add it as a **Remote magpie** — in the app's Add sheet, under
-its own heading, Another computer's magpie, after On this machine; on the
-TUI's Providers page (`a`, then its address and key; `w` changes the address,
-`m` fetches its list again), or
-`magpie provider add remote-magpie sk-magpie-… url=http://192.168.1.20:3425 id=office`.
-Each computer's own magpie still wires its agents, while the providers,
-routing groups (`office/group/…`) and usage are the shared one's. A request
-goes on in the API the agent spoke — Anthropic Messages, Responses, Chat
-Completions, token counting — and a model the shared magpie's provider serves
-on another API only is turned into that API once, never on both computers.
-Its list is the models the shared magpie's agents are shown, each named with
-its provider there (`Claude Sonnet 5 · Relay A · office`) — the ids stay ids
-(`office/relay-a/claude-sonnet-5`), only these labels carry the names.
-Its image and video models are discovered automatically and served through
-its image generation/edit and video creation/status/content APIs. System One
-is also configured automatically at its `/v1/systemone`: refresh the remote
-provider's model list to discover its decision models, including Jev, Clef
-and models with custom names. These appear as decision models rather than
-chat models. A bare provider id such as `office` asks the first listed
-decision model; it does not pick another model to satisfy a key's limits.
-If the key permits only another model, use its full `office/provider/model`
-id to avoid a 403. Embeddings, rerank and speech-to-text requests use the remote's corresponding
-APIs, and its exposed retrieval models are kept when fetching its list.
-These remain in agent model lists as on the remote; being listed does not
-mean an embedding or rerank model can hold a conversation.
-The remote must serve the requested API and model, and allow the supplied
-key to use them. Responses uses HTTP, including SSE, rather than WebSocket.
-An older remote without decision-model discovery still serves its existing
-APIs; update it and refresh the list to expose System One models here.
-Its quotas show too: the Usage page, the menu bar and `magpie quota` list the
-shared magpie's cards named with it (`Codex · office`, id `office/codex`), as
-that magpie last read them — only the computer holding the sign-ins asks the
-vendors, and it answers from what it has kept (`GET /v1/magpie/quotas/cards`).
-A card's refresh here has it read that card once more
-(`POST /v1/magpie/quotas/refresh`, at most once in 30 seconds a card); until it
-has read anything, the remote's one card says so. Their history is shown with
-its own. A Codex reset or a check-in is pressed on that computer, not here.
+一个崇云科技可以同时服务好几台电脑（办公室那台、家里那台）：把它共享到网络上（设置 → 在局域网上共享），然后在其它每台电脑上把它加成**Remote chongyun**——在应用的添加面板里，在它自己那个标题「Another computer's Chongyun」下，排在「On this machine」之后；在 TUI 的 Providers 页面上（按 `a`，然后是它的地址和 key；`w` 改地址，`m` 重新取它的清单），或者用 `chongyun provider add remote-magpie sk-magpie-… url=http://192.168.1.20:3425 id=office`。每台电脑自己的崇云科技仍然接线它自己的 agent，而 provider、路由组（`office/group/…`）和用量则来自共享的那台。请求会沿着 agent 说的那个 API 继续走——Anthropic Messages、Responses、Chat Completions、token 计数——而共享那台的 provider 只在另一个 API 上提供的模型，会被转成那个 API 一次，不会两台电脑都转。它的清单是共享那台给它的 agent 展示的模型，每个都带上那里的 provider 名字（`Claude Sonnet 5 · Relay A · office`）——id 还是 id（`office/relay-a/claude-sonnet-5`），只是这些标签带上了名字。它的图片和视频模型会被自动发现，并通过它的图片生成/编辑和视频创建/状态/内容 API 提供。System One 也自动在它的 `/v1/systemone` 配置好：刷新远端 provider 的模型清单就能发现它的决策模型，包括 Jev、Clef 和带自定义名字的模型。这些显示为决策模型，而不是对话模型。像 `office` 这样一个裸的 provider id 会请求清单里第一个决策模型；它不会为了满足某个 key 的额度限制而改挑别的模型。如果这个 key 只允许另一个模型，就用它完整的 `office/provider/model` id，免得撞上 403。Embeddings、rerank 和语音转文字的请求走远端对应的 API，而它暴露出来的检索模型在取清单时会保留。这些在 agent 的模型列表里和远端上一样；列出来并不意味着一个 embedding 或 rerank 模型能撑起一场对话。远端必须提供被请求的那个 API 和模型，并允许所给的那把 key 使用它们。Responses 走 HTTP（包括 SSE），而不是 WebSocket。没有决策模型发现的旧远端仍然提供它已有的那些 API；升级它并刷新清单，就能在这边暴露 System One 的模型。它的额度也会显示：用量页面、菜单栏和 `chongyun quota` 会列出共享那台的卡片，并带上它的名字（`Codex · office`，id `office/codex`），内容是它最近一次读到的——只有持有登录态的那台电脑才会去问厂商，而它是用自己保存下来的内容作答（`GET /v1/magpie/quotas/cards`）。在这里刷新一张卡片，会让它再读那张卡片一次（`POST /v1/magpie/quotas/refresh`，同一张卡片 30 秒内最多一次）；在它读到任何东西之前，远端的那张卡片会这么说。它们的历史也各自带着自己的显示。Codex 的重置或签到是在那台上按的，不是在这里。
 
-Codex's native image tool first asks the provider that served its conversation
-turn for the requested image model. If that provider does not list the model,
-or the turn cannot be identified, it uses Settings → Images → Image generation
-(including Automatic). Off disables this fallback, not a matching model on the
-turn's provider. An explicit `provider/model` keeps its destination; an upstream
-image error does not retry through the setting. Magpie Image MCP is not required.
+Codex 自带的图片工具会先向给它这一轮对话提供服务的那个 provider 要那个图片模型。如果那个 provider 没有列出这个模型，或者认不出是哪一轮，它就改用设置 → 图片 → 图片生成（包括「自动」）。关掉这一项只是关掉这个兜底，不会让这一轮 provider 上本来匹配的模型也没了。显式写出的 `provider/model` 保持它的去处；上游的图片错误不会通过这个设置去重试。不需要崇云科技 Image MCP。
 
-WorkBuddy (China)'s daily check-in (签到) is pressed from the app's Usage card
-(*Check in now*), `magpie accounts checkin`, or `c` on the TUI's Usage page,
-which checks in every account signed in on this computer at once; its
-WorkBuddy lines say how today's went. A shared magpie's accounts are checked
-in on that magpie, from its own app, TUI or CLI.
+WorkBuddy（中国版）的每日签到可以从应用的用量卡片（*Check in now*）、`chongyun accounts checkin`，或者 TUI 用量页面上的 `c` 来按，后者会一次给本机登录的所有账号签到；它的 WorkBuddy 各行会说明今天的情况。共享那台的账号要在那台上签到，用它自己的应用、TUI 或 CLI。
 
-A vendor with two or more accounts lists each under its Daily check-in in
-**Settings → Usage**, with its own Off/On (#1902). An account turned off is
-left out of the daily check-in and of *Check in now*, the CLI's and the
-TUI's too, while the vendor's other accounts are checked in; its Usage card
-says its auto check-in is off. The choice is kept in `checkinOff` in
-`settings.json`, by the account's entry in the vendor's check-in file
-(`workbuddy|<uid>`), and set with `POST /api/settings/checkin-account
-{key, on}`.
+有两个或更多账号的厂商，会在**设置 → 用量**下的「每日签到」里把每一个都列出来，各自带自己的开/关（#1902）。被关掉的账号会被排除在每日签到和*Check in now*之外，CLI 和 TUI 的也一样，而厂商的其它账号照常签到；它的用量卡片会说明它的自动签到已关。这个选择保存在 `settings.json` 的 `checkinOff` 里，由该账号在厂商签到文件（`workbuddy|<uid>`）里的条目决定，并用 `POST /api/settings/checkin-account {key, on}` 设置。
 
-A plugin whose `auth` hook has `checkin` checks its own accounts in the same
-way: once a day while its switch under **Settings → Usage → Plugins** is on,
-with the result on each account's Usage card. A check-in the vendor wants a
-captcha for is shown as such (check in in the vendor's app); magpie never
-solves captchas. See [provider-plugins.md](subsystems/provider-plugins.md#a-plugins-daily-check-in).
+`auth` 钩子里带 `checkin` 的 plugin 也用同样的方式给自己的账号签到：只要**设置 → 用量 → Plugins**下它的开关是开的，每天一次，结果显示在每个账号的用量卡片上。厂商要求验证码的签到会照实标出来（去厂商的应用里签）；崇云科技绝不破解验证码。见 [provider-plugins.md](subsystems/provider-plugins.md#a-plugins-daily-check-in)。
 
-A plugin can also declare its own switches for its provider (`auth.options`).
-They are listed under **Plugin options** in the provider's editor, an Off/On
-each with the plugin's own words, and saved with the provider. The values are
-kept in `pluginOptions` in `settings.json`, and the plugin reads them as it
-works. Changing one starts nothing by itself. See
-[provider-plugins.md](subsystems/provider-plugins.md#a-plugins-own-options).
+plugin 也可以为自己的 provider 声明自己的开关（`auth.options`）。它们列在 provider 编辑器的 **Plugin options** 下，每一个都是开/关，配上 plugin 自己的措辞，并随 provider 一起保存。这些值保存在 `settings.json` 的 `pluginOptions` 里，plugin 在工作时读它们。改动其中一个本身不会启动任何东西。见 [provider-plugins.md](subsystems/provider-plugins.md#a-plugins-own-options)。
 
-The gateway issues **gateway keys** for clients, separate from a provider's
-upstream API keys. Turn on **Settings → Share on local network**, then open
-**Gateway → Gateway keys → Add gateway key**. This block appears only while
-sharing is on. Create a named key for each client and copy it from its row.
-To move from another gateway without touching its clients, enter the key they
-already send in **Your own key (optional)** (8–256 characters, no spaces, not
-starting with `sk-magpie-`, unlike any other key); left empty, magpie makes
-one. The list shows only its last four characters, and it is counted,
-limited and restricted as any other key, from this computer too.
-Rename, disable, rotate or remove keys independently; rotation and removal
-ask for confirmation. Rotation keeps the name, enabled state and usage
-history; other keys are unchanged. While sharing is on, **Gateway → Connect**
-offers loopback and shared addresses, plus enabled gateway keys, for all
-connection examples. With sharing off, Connect keeps the original **API key**
-field and local `magpie` token, without a gateway-key picker. Its arbitrary
-local option is **This computer**, distinct from the named **Magpie** key.
+网关为客户端签发**网关 key**，它们和 provider 的上游 API key 是两回事。打开**设置 → 在局域网上共享**，然后进入**网关 → 网关 key → 添加网关 key**。这一块只在共享打开时出现。为每个客户端建一把有名字的 key，并从它那一行复制。要从另一个网关搬过来、又不动它的客户端，就把它已经在发送的那把 key 填进 **Your own key (optional)**（8–256 个字符，不能有空格，不能以 `sk-magpie-` 开头，这一点和其它任何 key 都不同）；留空的话，崇云科技会自己造一把。列表只显示它最后四个字符，而它和其它任何 key 一样会被计数、限额和限制，从这台电脑上用也一样。各把 key 可以独立改名、禁用、轮换或删除；轮换和删除会要求确认。轮换保留名字、启用状态和用量历史；其它 key 不变。共享打开时，**网关 → 连接**会给出回环地址和共享地址，以及已启用的网关 key，供所有连接示例使用。共享关闭时，连接页保留原来的 **API key** 字段和本地 `magpie` token，没有网关 key 选择器。它那个任意的本地选项是 **This computer**，与那个具名的 **Chongyun** key 不同。
 
-For a headless gateway, use the CLI before exposing the port:
+要一个无界面的网关，就在暴露端口之前先用 CLI：
 
 ```sh
-magpie gateway-key add "Remote laptop" # prints the new credential once
-magpie gateway-key add Family --key -  # keeps a key clients already send, read from stdin
-magpie gateway-key list                # ids, names, enabled state and masked keys
-magpie gateway-key rotate <id>         # prints the replacement; identity stays the same
-magpie gateway-key remove <id>         # revokes remote access
-magpie gateway-key limit <id> week --tokens 2m --cost 5   # its own limit
-magpie gateway-key limit <id> list     # each limit, used, left and reset
-magpie gateway-key limit <id> 10d --tokens 5m   # every 10 days, from now
-magpie gateway-key limit <id> 5h --tokens 200k  # every 5 hours, from now
-magpie gateway-key limit <id> add week --cost 20   # one more limit; all must pass
-magpie gateway-key limit <id> remove 2 # take off the 2nd limit
-magpie gateway-key limit <id> reset    # count its usage from 0 again (reset 2: only the 2nd)
-magpie gateway-key limit <id> off      # no limit
-magpie gateway-key models <id> openai/gpt-5 anthropic/*   # only these models
-magpie gateway-key models <id> all     # every model
-magpie gateway-key accounts <id> codex/me@example.com   # only these accounts
-magpie gateway-key accounts <id> all    # every account
-magpie gateway-key quotas <id> on      # told the quotas of what it may use
+chongyun gateway-key add "Remote laptop" # prints the new credential once
+chongyun gateway-key add Family --key - # keeps a key clients already send, read from stdin
+chongyun gateway-key list              # ids, names, enabled state and masked keys
+chongyun gateway-key rotate <id>       # prints the replacement; identity stays the same
+chongyun gateway-key remove <id>       # revokes remote access
+chongyun gateway-key limit <id> week --tokens 2m --cost 5 # its own limit
+chongyun gateway-key limit <id> list   # each limit, used, left and reset
+chongyun gateway-key limit <id> 10d --tokens 5m # every 10 days, from now
+chongyun gateway-key limit <id> 5h --tokens 200k # every 5 hours, from now
+chongyun gateway-key limit <id> add week --cost 20 # one more limit; all must pass
+chongyun gateway-key limit <id> remove 2 # take off the 2nd limit
+chongyun gateway-key limit <id> reset  # count its usage from 0 again (reset 2: only the 2nd)
+chongyun gateway-key limit <id> off    # no limit
+chongyun gateway-key models <id> openai/gpt-5 anthropic/* # only these models
+chongyun gateway-key models <id> all   # every model
+chongyun gateway-key accounts <id> codex/me@example.com # only these accounts
+chongyun gateway-key accounts <id> all  # every account
+chongyun gateway-key quotas <id> on    # told the quotas of what it may use
 ```
 
-Each gateway key can have its own **limit**: a token total, an estimated
-cost in US$, or both, per day, week or month (calendar windows in local
-time: from midnight, from Monday, from the 1st), every N days (#1509;
-N from 1 to 3650) or every N hours (#2102; N from 1 to 8760, such as 5 for
-a subscription's 5-hour pace). An N-day or N-hour cycle starts when the
-limit is set and runs N×24 or N hours, then the next one starts where it
-ended, so a restart, a time-zone change or a daylight-saving shift doesn't
-move it. Changing only
-the caps or **Count cache reads too** keeps the cycle; changing N or the
-period, or turning the limit on, starts a new one then. Set it with **Limit** on
-the key's row (saved with Save) or `magpie gateway-key limit`; the row shows
-what the key has used, what is left and when it resets. A key can have up to
-five limits, each in a window of its own (#2227), such as $3 every 5 hours and
-$20 a week, as a subscription's two windows: **Add a limit** in the editor or
-`magpie gateway-key limit <id> add`. A request passes only while every one has
-something left; its reservation is held in each window, and its 429 names the
-spent limit that resets last. Two limits can't share a window: a window's
-tokens and cost caps go in one limit. Setting a window without `add` changes
-the key's limit of that window, or its only one. `GET /v1/magpie/limit` gives
-each in `limits`, and in `limit` the one holding the key most, which a magpie
-from before #2227 reads; such a magpie also keeps only the first limit
-(`limit` in caller-keys.json, the rest under `moreLimits`). Tokens counted are a
-call's uncached input, output and cache writes, plus cache reads when **Count
-cache reads too** is on. Cost is an estimate at the Usage page's prices; a
-call with no known price adds none. A call counts in the window it started
-in. Once a key is spent, its requests are refused before any provider is
-asked, with a 429 in the API's own error shape that names the key, the
-limit and the reset time, plus `Retry-After`; other keys are unaffected. The
-counts are read from the usage log, so they survive a restart. A request in
-flight holds a reservation (its body's size in tokens plus the key's mean
-output per call), so requests sent at once overshoot by about one call; a
-streamed reply is settled when it ends with the usage its vendor reported.
-**Reset usage** in the key's limit editor (or `magpie gateway-key limit
-<id> reset`) counts the key's tokens and cost from 0 together, from now: the
-editor's resets the limit it is open on, the CLI's every limit, or the nth
-with `reset <n>`. An
-N-day or N-hour key starts a new cycle then. A day, week or month key keeps
-its window's end (midnight, Monday, the 1st): only the calls before the
-reset stop counting, so it doesn't drift off the calendar. The reset is
-stored with the key (`since` in caller-keys.json, magpie's own: a value a
-client sends is ignored), so it survives a restart; the usage log itself is
-untouched. Keys saved before keep their JSON as it was.
-A key can read its own status with `GET /v1/magpie/limit`; it is told its
-own and no other key's, whatever the request names. A magpie that has this
-one as a Remote magpie provider shows each of its keys' limits on its
-Usage page this way (#1547). Requests from
-this computer that send no gateway key are not limited; a gateway key used
-from this computer is.
+每把网关 key 都可以有自己的**限额**：一个 token 总量、一个按美元估算的成本，或两者都要，按天、按周或按月（本地时间的日历窗口：从午夜、从周一、从 1 号），每 N 天一次（#1509；N 从 1 到 3650）或每 N 小时一次（#2102；N 从 1 到 8760，比如订阅的 5 小时节奏就取 5）。一个 N 天或 N 小时的周期从设定限额的那一刻开始，跑 N×24 或 N 小时，然后下一个周期从它结束的地方接着开始，所以重启、改时区或夏令时切换都不会让它挪位。只改上限数值或 **Count cache reads too** 会保留这个周期；改 N 或周期长度，或者把限额打开，则从那时起开始一个新的周期。用 key 那一行的 **Limit** 来设置（随 Save 一起保存），或者用 `chongyun gateway-key limit`；那一行显示这个 key 用了多少、还剩多少以及何时重置。一把 key 最多可以有五条限额，各自在自己的窗口里（#2227），比如每 5 小时 $3、每周 $20，就像订阅的两个窗口那样：在编辑器里用 **Add a limit**，或者用 `chongyun gateway-key limit <id> add`。只要每一条限额都还有余额，请求就放行；它的预留会在每个窗口里被占住，而它的 429 会指出最后重置的那条已经花完的限额。两条限额不能共用一个窗口：一个窗口的 token 和成本上限写在同一条限额里。不带 `add` 设置某个窗口，改的是这个 key 在那个窗口上的限额，或者它仅有的那一条。`GET /v1/magpie/limit` 在 `limits` 里给出每一条，在 `limit` 里给出占用这个 key 最多的那一条，早于 #2227 的崇云科技读的是后者；这样的崇云科技也只保留第一条限额（caller-keys.json 里的 `limit`，其余在 `moreLimits` 下）。被计入的 token 是一次调用的未缓存输入、输出和缓存写入，再加上开启 **Count cache reads too** 时的缓存读取。成本是按用量页面的价格估算的；没有已知价格的调用不计入任何成本。调用算在它开始的那个窗口里。一旦某个 key 花完，它的请求会在问任何 provider 之前被拒绝，用 API 自己的错误格式返回 429，并写出那个 key、那条限额和重置时间，外加 `Retry-After`；其它 key 不受影响。这些计数是从用量日志里读出来的，所以重启后仍在。一路在飞的请求会占住一个预留（它请求体的 token 数加上该 key 每次调用的平均输出），所以同时发出的请求会超出一整个调用左右；流式的回话在结束时按厂商报上来的用量结算。key 的限额编辑器里的 **Reset usage**（或者 `chongyun gateway-key limit <id> reset`）从此刻起把该 key 的 token 和成本一起从 0 重新计：编辑器的重置它当前打开的那条限额，CLI 的重置所有限额，或者用 `reset <n>` 重置第 n 条。N 天或 N 小时的 key 从那时起开始一个新的周期。按天、按周或按月的 key 保留它窗口的终点（午夜、周一、1 号）：只有重置之前的调用不再计入，所以它不会偏离日历。重置状态和 key 一起保存（caller-keys.json 里的 `since`，崇云科技自己写的：客户端发来的值会被忽略），因此重启后仍在；用量日志本身不动。更早保存的 key 保留它们原来的 JSON。一个 key 可以用 `GET /v1/magpie/limit` 读自己的状态；不管请求里写了什么，它只会被告知自己的情况，不会知道别的 key 的。把这一台作为 Remote chongyun provider 的崇云科技，就用这种方式在它的用量页面上显示每一把 key 的限额（#1547）。从这台电脑发出、不带网关 key 的请求不受限额；用在这台电脑上的网关 key 受限。
 
-A gateway key can also be held to some **models** (#882): pick them with the
-**All models** badge on the key's row, or run `magpie gateway-key models <id>
-openai/gpt-5 anthropic/*` (`all` takes the restriction off). A pattern is
-`<provider>/<model>` or `<provider>/*`, matched against the provider that
-serves the call, so a bare model name is resolved first, or a routing group,
-`group/<id>` (`group/*` for every group). A key that names a group may use
-the group with every member in it, though not those members asked for by
-name. Such a key sees only its models in `/v1/models`, `/v1/codex/models`
-and the Anthropic and Gemini lists, a routing group it doesn't name only when it may use every
-member, and is refused any other model with a 403 in the API's error shape
-before a provider is asked; a fallback it may not use is skipped. A key with
-no models listed may use every model.
+网关 key 也可以被限制在某些**模型**上（#882）：用 key 那一行的 **All models** 徽章来挑，或者运行 `chongyun gateway-key models <id> openai/gpt-5 anthropic/*`（`all` 取消这个限制）。一个模式是 `<provider>/<model>` 或 `<provider>/*`，它按真正提供这次调用的那个 provider 来匹配，所以一个裸的模型名会先被解析出来；或者是一个路由组 `group/<id>`（`group/*` 表示所有组）。一把点名的 key 可以用这个组里的每一个成员，但它不能用那些被点名单独请求的成员。这样的 key 在 `/v1/models`、`/v1/codex/models` 以及 Anthropic 和 Gemini 的清单里只看得到自己的模型；它没点名的路由组只有在它能用组内每个成员时才看得见；别的模型一律在问任何 provider 之前就被拒绝，用 API 的错误格式返回 403；它无权使用的回退会被跳过。一把没有列出任何模型的 key 可以用所有模型。
 
-A gateway key can also be held to some **accounts** (#905): the accounts
-and keys its requests may use, picked in the same menu right after their
-provider's models — an account by who is signed in, a key by its
-fingerprint — or with
-`magpie gateway-key accounts <id> codex/me@example.com openai/<key id>`
-(`all` takes the restriction off). The list holds a key to some accounts
-**of the providers it names**: a provider it names no account of, the key
-uses as it always did. The list keeps an account by its stable id, kept
-through renames, shown by who is signed in; one gone later — a key
-rotated, an account signed out, an account of an agent that keeps no
-logins renamed — is kept as it is, matching nothing, so the key is held
-closer, never wider. A routing group the key names is its members'
-through the accounts it may use only: naming a group is not naming its
-accounts, and magpie's own calls for the key — a web search, a picture
-described, a Codex title — are of the models the user picked, but their
-spend lands on an account, so the accounts hold them too. When every
-account or key behind a model is one the key may not use, the request is
-refused with a 403 in the API's own error shape naming the model and the
-accounts it may use, before a provider is asked — after a usage cap's 429
-and before an account barred for the model's — and `/v1/models` lists the
-key only the models an account or key it may use serves, the Routing
-view's left-out list marking what the key held out. A key with no
-accounts listed may use every account, as keys always did.
+网关 key 也可以被限制在某些**账号**上（#905）：它的请求可以用的账号和 key，在同一个菜单里、紧跟在该 provider 的模型之后挑——账号按登录的人来认，key 按它的指纹来认——或者用 `chongyun gateway-key accounts <id> codex/me@example.com openai/<key id>`（`all` 取消这个限制）。这份清单把一把 key 限制在**它点名的那些 provider 的**某些账号上：它点名了却没有账号的 provider，key 还是照旧那样用。清单按账号的稳定 id 保留它们，这个 id 跨改名保持不变，界面上按登录的人显示；后来没了的账号——被轮换的 key、被登出的账号、一个不留登录信息的 agent 的账号改了名——仍按原样保留，谁都匹配不上，所以这把 key 被收得更紧，绝不会更松。key 点名的路由组只通过它可以用的那些账号来覆盖它的成员：点名一个组不等于点名它的账号，而崇云科技替这把 key 发出的调用——一次联网搜索、一张描述出来的图片、一个 Codex 标题——用的是用户挑的模型，但花的钱记在某个账号上，所以账号也管着它们。当一个模型背后所有的账号或 key 都是这把 key 不许用的，请求会在问任何 provider 之前被拒绝，用 API 自己的错误格式返回 403，并写出那个模型和它可以用的那些账号——它在一个用量上限的 429 之后、在为该模型被禁用的账号之前——而 `/v1/models` 给这把 key 列出的只有它可以用的某个账号或 key 所提供的模型，路由视图的「未列出」清单标出这把 key 排除了什么。一把没有列出任何账号的 key 可以用所有账号，就像 key 一直以来那样。
 
-While LAN sharing is enabled, or `MAGPIE_ADDR` puts the gateway on the
-network (a host other than loopback or `localhost`: `0.0.0.0` in the Docker
-image, a server's address), remote requests require an enabled gateway key
-sent as Bearer, `x-api-key`, `x-goog-api-key` or `?key=`; one without gets
-401. A request is remote when its peer isn't loopback, which includes
-Docker's port publishing (the peer is the bridge, not the host's loopback)
-and a WSL distro under NAT. Loopback remains permissive: any token works,
-including a stale or disabled gateway key. Only a valid, enabled key is
-attributed to its named identity. Neither shared nor on the network, a
-remote request is refused (403). A `MAGPIE_ADDR` pinned to one interface's
-address asks a key even of this computer's agents calling that address;
-`0.0.0.0` with agents on `127.0.0.1` doesn't. The Claude subscription's
-own tool calls back to magpie are let in there by their run's one-time
-token, without a key (#1546).
-Sharing listens on every interface, unless `MAGPIE_ADDR` names a host of its
-own: `MAGPIE_ADDR=127.0.0.1:3425` behind Tailscale Serve, or one interface's
-address, stays where it is while shared, and what reaches it from elsewhere
-still needs an enabled gateway key (#1112).
+在局域网共享打开期间，或者 `MAGPIE_ADDR` 把网关放到网络上（一个不是回环也不是 `localhost` 的主机：Docker 镜像里的 `0.0.0.0`、一台服务器的地址），远端请求需要一把已启用的网关 key，以 Bearer、`x-api-key`、`x-goog-api-key` 或 `?key=` 的形式发送；不带就得到 401。对端不是回环的请求算远端请求，这包括 Docker 的端口发布（对端是网桥，不是主机的回环）和 NAT 下的 WSL 发行版。回环依然宽松：任何 token 都行，包括过期的或已禁用的网关 key。只有有效且已启用的 key 才会归属到它那个具名身份上。既没共享也不在网络上时，远端请求被拒绝（403）。`MAGPIE_ADDR` 固定到某个网卡的地址时，即便是这台电脑上的 agent 调用那个地址也要 key；而 `0.0.0.0` 配 `127.0.0.1` 上的 agent 则不用。Claude 订阅自己那些回调崇云科技的工具调用，靠它们那次运行的一次性 token 放行，不需要 key（#1546）。共享会监听每一个网卡，除非 `MAGPIE_ADDR` 指定了它自己的某个主机：`MAGPIE_ADDR=127.0.0.1:3425` 放在 Tailscale Serve 后面，或者某个网卡的地址，在共享期间留在原处，而从别处到达它的请求仍然需要一把已启用的网关 key（#1112）。
 
-**Codex on another computer** (#1281) can name the shared magpie its model
-provider, with a gateway key, and read magpie's models in Codex's own
-catalog shape from `GET /v1/codex/models`. `/v1/models` is OpenAI's list,
-which Codex can't read, and `/backend-api/codex/models` is the ChatGPT
-backend's, for a Codex signed in to ChatGPT on the gateway's own computer;
-a gateway key gets a 401 there.
+**另一台电脑上的 Codex**（#1281）可以把共享的崇云科技指定为它的模型 provider，配一把网关 key，并从 `GET /v1/codex/models` 按 Codex 自己的目录格式读到崇云科技的模型。`/v1/models` 是 OpenAI 的清单，Codex 读不了；`/backend-api/codex/models` 是 ChatGPT 后端的，给的是登录在网关自己那台电脑上的 Codex 用的，网关 key 在那里会得到 401。
 
 ```toml
 model_provider = "magpie"
 model = "provider/model"
 
 [model_providers.magpie]
-name = "magpie"
+name = "Chongyun"
 base_url = "http://192.168.1.20:3425/v1"
 model_catalog_url = "http://192.168.1.20:3425/v1/codex/models"
 env_key = "MAGPIE_API_KEY"   # the gateway key
@@ -669,282 +273,108 @@ wire_api = "responses"
 supports_websockets = false
 ```
 
-The list is the models the shared magpie shows Codex (its Agents page
-picks), each as the `model_catalog_json` magpie writes for a Codex on its
-own computer describes it, and only the models the key may use. Codex 0.161
-reads it by default; 0.160 needs `[features] api_key_model_discovery = true`.
-Codex reads at most 1 MiB of a catalog, and every entry carries Codex's
-prompt, so past about 125 models the list keeps the first that fit and the
-answer's `X-Magpie-Left-Out` header says how many it left out: pick fewer
-for Codex, or hold the key to fewer.
+这份清单是共享的崇云科技给 Codex 看的模型（它的 Agents 页面挑的那些），每一个都以 `model_catalog_json` 的形式给出——那是崇云科技为在自己电脑上的 Codex 写下的描述——并且只有这把 key 可以用的那些模型。Codex 0.161 默认就读它；0.160 需要 `[features] api_key_model_discovery = true`。Codex 最多读 1 MiB 的目录，而每个条目都带着 Codex 的提示词，所以超过大约 125 个模型之后，清单只保留放得下的前几个，而应答的 `X-Magpie-Left-Out` 响应头会说明它排除了多少个：给 Codex 少挑一些，或者把 key 限制得更少。
 
-A request that reaches loopback through a proxy or tunnel on this computer
-(Cloudflare Tunnel's `cloudflared`, ngrok, Tailscale serve or funnel, frp's
-HTTP proxy, Caddy, nginx) is someone else's, and is answered as one from
-another machine (#1022): it carries a forwarding header (`Forwarded`,
-`X-Forwarded-For`, `X-Real-IP`, `Cf-Connecting-IP`, `True-Client-IP`,
-`Tailscale-User-Login`), which no agent sends. Without sharing it is refused;
-with sharing, or a `MAGPIE_ADDR` on the network, it needs an enabled gateway
-key, as from the network. This
-covers every route: the model APIs, quotas, MCP sign-ins. To serve magpie
-through a Cloudflare Tunnel, turn on **Settings → Share on local network**,
-add a gateway key for each client, point the tunnel's service at
-`http://127.0.0.1:3425`, and give clients the tunnel's address with that key.
-A tunnel that forwards bare TCP (frp's `tcp`, `ssh -R`, socat) adds no header
-and can't be told from an agent here: point it at this computer's LAN
-address with sharing on, not at loopback. A proxy here that signs its
-clients in itself can be trusted with `MAGPIE_TRUST_PROXY=1`, which keeps
-what it forwards local, as before.
+一个经由本机的代理或隧道到达回环地址的请求（Cloudflare Tunnel 的 `cloudflared`、ngrok、Tailscale serve 或 funnel、frp 的 HTTP 代理、Caddy、nginx）算是别人的请求，并按来自另一台机器的请求来应答（#1022）：它带一个转发 header（`Forwarded`、`X-Forwarded-For`、`X-Real-IP`、`Cf-Connecting-IP`、`True-Client-IP`、`Tailscale-User-Login`），而没有 agent 会发这些。没共享时它被拒绝；共享打开、或者 `MAGPIE_ADDR` 在网络上时，它需要一把已启用的网关 key，和从网络上来的请求一样。这覆盖每一条路由：模型 API、额度、MCP 登录。要通过 Cloudflare Tunnel 提供崇云科技，打开**设置 → 在局域网上共享**，为每个客户端加一把网关 key，把隧道的服务指向 `http://127.0.0.1:3425`，并把隧道的地址连同那把 key 给客户端。只转发裸 TCP 的隧道（frp 的 `tcp`、`ssh -R`、socat）不加任何 header，无法和这里的 agent 区分：把它指向这台电脑的局域网地址并打开共享，而不是回环。本机上一个自己给客户端签入的代理可以用 `MAGPIE_TRUST_PROXY=1` 信任，它转发的东西仍算本机，和以前一样。
 
-To let other computers in only from some addresses, list them as IPs and
-CIDR ranges in **Settings → Network and sharing → Allowed addresses**, or in
-`MAGPIE_ALLOW_IPS` (`203.0.113.7,10.0.0.0/8,2001:db8::/32`), which comes
-first. A request from any other address is refused 403, even with an
-enabled gateway key, and the refusal names the address it came from. This
-computer is always let in. The address is the connection's own, never a
-forwarding header, so behind a proxy or tunnel every client has the proxy's
-address: limit them at the proxy. A mistyped entry in `MAGPIE_ALLOW_IPS`
-lets nothing in rather than everything. When settings.json can't be read, or
-doesn't parse and has no good backup, the list read last stays in force; if
-none was read since magpie started, only this computer is let in until the
-file is repaired. `magpie web`'s page honours the same list.
+要只让某些地址的其它电脑进来，就用 IP 和 CIDR 段把它们列在**设置 → 网络与共享 → 允许的地址**里，或者列在 `MAGPIE_ALLOW_IPS`（`203.0.113.7,10.0.0.0/8,2001:db8::/32`）里，后者优先。其它任何地址来的请求都被 403 拒绝，即便带着已启用的网关 key，拒绝信息会写明它来自哪个地址。这台电脑永远放行。地址取自连接本身，绝不是转发 header，所以在代理或隧道后面，每个客户端都是代理的地址：要在代理那边限制。`MAGPIE_ALLOW_IPS` 里写错一个条目，结果是什么都进不来，而不是什么都能进来。settings.json 读不出来、或者解析不了又没有可用备份时，上次读到的清单继续生效；如果崇云科技启动后一次也没读到过，那么在文件修好之前只有这台电脑能进。`chongyun web` 的页面也遵守同一份清单。
 
-**HTTPS.** A magpie reached over the internet (a server used as a relay)
-can serve HTTPS itself, with no proxy in front:
+**HTTPS。** 一台通过互联网访问到的崇云科技（比如当中继用的服务器）可以自己提供 HTTPS，前面不需要代理：
 
 ```sh
-magpie serve --tls-cert /etc/letsencrypt/live/relay.example.com/fullchain.pem \
-             --tls-key  /etc/letsencrypt/live/relay.example.com/privkey.pem
+chongyun serve --tls-cert /etc/letsencrypt/live/relay.example.com/fullchain.pem \
+               --tls-key  /etc/letsencrypt/live/relay.example.com/privkey.pem
 ```
 
-`MAGPIE_TLS_CERT` and `MAGPIE_TLS_KEY` do the same (for Docker), and `magpie
-web` and `magpie daemon install` take the same flags; the service keeps the
-pair when it is installed again without them, and `--no-tls` takes it away.
-The files are PEM: the certificate with its chain after it, and its private
-key. One without the other, or files that don't load, refuse to start
-rather than serve plain HTTP. The certificate is read again when either
-file changes, so a renewal (certbot, acme.sh) is served on the next
-connection without a restart; files that don't load then (a renewal half
-written) leave the one before in place, and the log says so. Other
-computers reach the gateway, and `magpie web`'s page, over `https://` only,
-and the network links magpie prints say `https://`; plain HTTP from them is
-answered 400. This computer may still call `http://127.0.0.1` on the same
-port, as the agents, MCP servers and status checks magpie wires here do,
-since no certificate for the server's name covers loopback. A container or
-a WSL distro calling through its NAT address is another computer, and uses
-`https://`. Gateway keys, sharing and allowed addresses work as over HTTP.
+`MAGPIE_TLS_CERT` 和 `MAGPIE_TLS_KEY` 做同样的事（给 Docker 用），`chongyun web` 和 `chongyun daemon install` 也接同样的开关；服务在不带它们的情况下重新安装时会保留这一对证书，而 `--no-tls` 会把它去掉。这些文件是 PEM：证书后面跟着它的证书链，以及它的私钥。缺其中一个，或者文件加载不了，就拒绝启动，而不是改用普通 HTTP。任何一个文件变化时证书都会重新读取，所以续签（certbot、acme.sh）在下一次连接时就生效，不用重启；那时如果文件加载不了（一次续签只写了一半），就沿用之前那一份，日志会说明。其它电脑访问网关、以及 `chongyun web` 的页面，只能走 `https://`，而崇云科技打印的网络链接也写 `https://`；从它们发来的普通 HTTP 会得到 400。这台电脑仍然可以在同一个端口上用 `http://127.0.0.1` 调用，就像这里接线的 agent、MCP server 和状态检查那样，因为服务器名字对应的证书覆盖不到回环。通过 NAT 地址调用的容器或 WSL 发行版算是另一台电脑，走 `https://`。网关 key、共享和允许地址与在 HTTP 上时一样工作。
 
-Caddy is the alternative that also gets the certificate for you: run
-`relay.example.com { reverse_proxy 127.0.0.1:3425 }` with sharing on and a
-gateway key per client. A proxy on this computer adds forwarding headers,
-so its requests count as another computer's, as above.
+Caddy 是另一个选择，而且证书也由它替你搞定：开着共享、每个客户端一把网关 key，运行 `relay.example.com { reverse_proxy 127.0.0.1:3425 }`。本机上的代理会加转发 header，所以它的请求按前面说的算另一台电脑的。
 
-**Usage → Overview → Gateway keys** groups calls by the client's key, never
-the provider's credential. **Usage → Requests** offers the same filter;
-CSV includes `caller_key_id` and `caller_key_name`. Deleted keys keep their
-history. The usual local `magpie` token and older records stay unattributed.
-Caller attribution includes chat, images, video creation and System One.
-Provider attribution stays independent; CSV puts `provider_key_*` before
-`caller_key_*`.
-An existing LAN key becomes **Magpie** without changing the credential.
-`lanKey` remains in settings for older Magpie versions. Disabling or removing
-the default key replaces that mirror with a random non-empty revoked value;
-rotation does not re-enable it. Turning sharing off and on again neither
-re-enables a disabled default key nor makes a removed one again; only
-asking for a new sharing key makes one. The key store records migration completion,
-even if `lanKeyId` cannot be saved, so reads do not keep retrying that write.
-A migration write failure is logged without preventing gateway startup,
-CLI key management, or the Settings and key-list pages from opening.
-If settings are read-only, changing the default key fails without changing
-it: make `settings.json` writable and retry so older versions cannot keep
-accepting its old credential. Independent named keys remain manageable.
-Gateway credentials stay in `~/.config/magpie/caller-keys.json` (XDG-aware,
-mode `0600`), never in usage records or list responses.
+**用量 → 概览 → 网关 key**按客户端的 key 把调用分组，绝不按 provider 的凭据分组。**用量 → 请求**提供同样的过滤器；CSV 里包含 `caller_key_id` 和 `caller_key_name`。被删掉的 key 保留它们的历史。通常那个本地 `magpie` token 和更早的记录保持不归属。调用方归属涵盖对话、图片、视频创建和 System One。provider 归属仍然独立；CSV 里 `provider_key_*` 排在 `caller_key_*` 前面。一个已有的局域网 key 会变成 **Chongyun**，凭据不变。`lanKey` 仍留在设置里，供旧版崇云科技读取。禁用或删除默认 key 会把那面镜子换成一个随机的非空吊销值；轮换不会把它重新启用。把共享关掉再打开，既不会重新启用一个被禁用的默认 key，也不会让一个被删掉的 key 回来；只有去申请一把新的共享 key 才会造一把。key 仓库会记下迁移已完成，哪怕 `lanKeyId` 存不下去，这样读取就不会一直重试那次写入。迁移写入失败会被记下，但不会妨碍网关启动、CLI 的 key 管理，或者设置页和 key 列表页打开。如果设置是只读的，改默认 key 会失败且不改动它：把 `settings.json` 变成可写再重试，免得旧版本继续接受它原来的凭据。独立的具名 key 仍然可以管理。网关凭据留在 `~/.config/magpie/caller-keys.json`（感知 XDG，权限 `0600`），绝不出现在用量记录或清单响应里。
 
-Baidu Qianfan's [Token Plans](https://cloud.baidu.com/doc/qianfan/s/Dmrabu8b6)
-are available as `baidu-qianfan`: a personal (个人版) and an enterprise (企业版)
-plan and pay as you go, each with its own Chat Completions, Responses and
-Anthropic Messages endpoints, and a key that works only on its own plan. Add
-it with `magpie provider add baidu-qianfan <api-key>` — the id it carried its
-first day, `qianfan-token-plan`, is taken too. The plans serve no model list,
-so the preset carries their documented models; pay as you go serves its own
-at `/v2/models`.
+百度千帆的 [Token Plans](https://cloud.baidu.com/doc/qianfan/s/Dmrabu8b6) 以 `baidu-qianfan` 的形式提供：个人版（个人版）和企业版（企业版）两个套餐，加上按量付费，每一个都有自己的 Chat Completions、Responses 和 Anthropic Messages endpoint，以及一把只在自己那个套餐上生效的 key。用 `chongyun provider add baidu-qianfan <api-key>` 添加——它第一天用的 id `qianfan-token-plan` 也会被占用。这些套餐不提供模型清单，所以预设里带着它们有文档的模型；按量付费在 `/v2/models` 提供它自己的。
 
-Alibaba's Token Plan is sold in two places, each with its own `sk-sp-` key
-that only its own host takes: on the Qwen AI platform as `qwen-token-plan`
-(`token-plan.maas.qianwenaiapi.com`), and on Alibaba Cloud Bailian as
-`bailian-token-plan` (`token-plan.cn-beijing.maas.aliyuncs.com`). Both serve
-Chat Completions at `/compatible-mode/v1` and Anthropic Messages at
-`/apps/anthropic`, and carry the plans' documented text models for when the
-host lists none. Bailian's also answers its decision model,
-`decision-model-preview`, on System One at `/compatible-mode/v1/systemone`
-with the same key, so a routing group can pick it as its classifier. The
-same model on the Qwen AI platform's pay as you go is `qwen-decision`
-(`maas.qianwenaiapi.com`), and on a Bailian workspace `bailian-decision`.
-Neither plan has an API for its credits: the console's subscription page
-shows them, so magpie shows no plan usage for these keys.
+阿里的 Token Plan 在两处销售，各有各的 `sk-sp-` key，且只有它自己的主机认：在 Qwen AI 平台上叫 `qwen-token-plan`（`token-plan.maas.qianwenaiapi.com`），在阿里云百炼上叫 `bailian-token-plan`（`token-plan.cn-beijing.maas.aliyuncs.com`）。两者都在 `/compatible-mode/v1` 提供 Chat Completions，在 `/apps/anthropic` 提供 Anthropic Messages，并带着这些套餐有文档的文本模型，以备主机一个都不列的时候。百炼那个还会在 System One 的 `/compatible-mode/v1/systemone` 上用同一把 key 应答它的决策模型 `decision-model-preview`，所以路由组可以挑它当分类器。同一个模型在 Qwen AI 平台的按量付费里叫 `qwen-decision`（`maas.qianwenaiapi.com`），在百炼的工作空间里叫 `bailian-decision`。两个套餐都没有查额度的 API：额度在控制台的订阅页面里看，所以崇云科技不为这些 key 显示套餐用量。
 
 ### Google Vertex AI
 
-Google Vertex AI (`google-vertex`), which Google's documentation now calls
-Gemini Enterprise Agent Platform, serves Google's Gemini models from your own
-Google Cloud project, which is billed for them. It takes no API key: each
-request is signed with a token minted from your Google credentials. First turn
-on the Agent Platform API (`aiplatform.googleapis.com`) in the project (billing
-has to be on there), then sign in with `gcloud auth application-default login`
-or have a service account's key file
-([Google's guide](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/start/gcp-auth)).
-[Where magpie looks for the credentials, and the kinds it reads](subsystems/providers-accounts.md#responsibilities-and-sources-of-truth).
+<a id="google-vertex-ai"></a>
+
+Google Vertex AI（`google-vertex`，谷歌的文档现在称它为 Gemini Enterprise Agent Platform）用你自己的 Google Cloud 项目提供谷歌的 Gemini 模型，费用记在那个项目上。它不要 API key：每个请求都用一个由你的 Google 凭据签出的 token 来签名。先在项目里打开 Agent Platform API（`aiplatform.googleapis.com`）（项目上必须开着结算），然后用 `gcloud auth application-default login` 登录，或者准备一个服务账号的 key 文件（[谷歌的指南](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/start/gcp-auth)）。[崇云科技到哪里找这些凭据，以及它读哪些种类](subsystems/providers-accounts.md#responsibilities-and-sources-of-truth)。
 
 ```sh
-magpie provider add google-vertex project=my-project
-magpie provider set google-vertex location=us-central1        # global (the default), us, eu or a region
-magpie provider set google-vertex credentials=~/keys/vertex.json
-magpie provider set google-vertex impersonate=vertex@my-project.iam.gserviceaccount.com
-magpie provider set google-vertex impersonate=                # empty clears it
-magpie provider test google-vertex
+chongyun provider add google-vertex project=my-project
+chongyun provider set google-vertex location=us-central1      # global (the default), us, eu or a region
+chongyun provider set google-vertex credentials=~/keys/vertex.json
+chongyun provider set google-vertex impersonate=vertex@my-project.iam.gserviceaccount.com
+chongyun provider set google-vertex impersonate=              # empty clears it
+chongyun provider test google-vertex
 ```
 
-`project=` is the project's id. `location=` is `global` (the default, and what
-an empty value goes back to), `us`, `eu` or a region such as `us-central1`.
-`credentials=` names a credentials file to sign with in place of gcloud's
-sign-in, such as a service account's key; a relative path is made full from
-the folder the command runs in. `impersonate=` has requests made as that
-service account; the account signed in needs the Service Account Token Creator
-role on it. The app's editor asks the same in **Project ID**,
-**Location**, **Credentials file** and **Service account**; the TUI's `a` asks
-for the project alone, and the CLI sets the rest. A key is refused, and so is
-an address (`url=` and the like): the project and location make the only one
-its token is sent to. Adding, listing and showing it ask Google nothing; the
-credentials are read when a request is signed.
+`project=` 是项目的 id。`location=` 是 `global`（默认值，空值也会回到它）、`us`、`eu` 或某个区域（比如 `us-central1`）。`credentials=` 指定一个凭据文件，用来代替 gcloud 的登录来签名，比如服务账号的 key；相对路径会按命令所在的目录补成完整路径。`impersonate=` 让请求以那个服务账号的身份发出；登录的账号需要在它身上有 Service Account Token Creator 角色。应用的编辑器在 **Project ID**、**Location**、**Credentials file** 和 **Service account** 里问同样的东西；TUI 的 `a` 只问项目，其余由 CLI 设置。key 会被拒绝，地址（`url=` 之类）也一样：项目和位置决定了它的 token 唯一会发往的那个地址。添加、列出和显示它都不会问谷歌任何东西；凭据是在给请求签名时才读的。
 
-Each location serves models of its own, and Vertex AI has no list to ask which,
-so magpie gives each location the models it answered with on 2026-10-06
-(and `gemini-4-argon`, at `global` since 2026-10-13):
+每个位置提供它自己的模型，而 Vertex AI 没有一张清单可以问，所以崇云科技给每个位置配的是它在 2026-10-06 应答过的那些模型（以及 `gemini-4-argon`，从 2026-10-13 起在 `global` 上）：
 
-| Location | Models |
+| 位置 | 模型 |
 | --- | --- |
-| `global` | `gemini-3.8-flash`, `gemini-3.7-flash`, `gemini-3.6-flash`, `gemini-3.5-flash`, `gemini-3.5-flash-lite`, `gemini-4-argon`, `gemini-3.1-pro-preview`, `gemini-3.1-pro-preview-customtools`, `gemini-3.1-flash-lite`, `gemini-3-flash-preview`, `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.5-flash-lite` |
-| `us`, `eu` | `gemini-3.8-flash`, `gemini-3.7-flash`, `gemini-3.6-flash`, `gemini-3.5-flash`, `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite` |
-| A region | `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.5-flash-lite` |
+| `global` | `gemini-3.8-flash`、`gemini-3.7-flash`、`gemini-3.6-flash`、`gemini-3.5-flash`、`gemini-3.5-flash-lite`、`gemini-4-argon`、`gemini-3.1-pro-preview`、`gemini-3.1-pro-preview-customtools`、`gemini-3.1-flash-lite`、`gemini-3-flash-preview`、`gemini-2.5-pro`、`gemini-2.5-flash`、`gemini-2.5-flash-lite` |
+| `us`、`eu` | `gemini-3.8-flash`、`gemini-3.7-flash`、`gemini-3.6-flash`、`gemini-3.5-flash`、`gemini-3.5-flash-lite`、`gemini-3.1-flash-lite` |
+| 一个区域 | `gemini-2.5-pro`、`gemini-2.5-flash`、`gemini-2.5-flash-lite` |
 
-A region that serves one more, as asia-northeast1 serves `gemini-3.5-flash`,
-has it typed in with the rest you want:
-
-```sh
-magpie provider models google-vertex gemini-2.5-pro gemini-2.5-flash gemini-2.5-flash-lite gemini-3.5-flash
-magpie provider models google-vertex all     # back to the location's list
-```
-
-`magpie provider set google-vertex location=…` keeps the models picked, so pick
-again after a move.
-
-Google's [Priority PayGo](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/priority-paygo)
-and [Flex PayGo](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/flex-paygo)
-are asked for with request headers. The editor's **Headers** offers both,
-`X-Vertex-AI-LLM-Request-Type` and `X-Vertex-AI-LLM-Shared-Request-Type`, to
-add; their values are the ones Google's pages give. From the CLI:
-`magpie provider set google-vertex header.<Name>=<value>`. [What was seen of
-Priority PayGo](subsystems/providers-accounts.md#constraints-and-failure-behavior).
-
-When a request fails:
-
-- `no Google credentials at <file>`: there is no credentials file there. When
-  it is the provider's own, correct `credentials=`, or clear it with
-  `credentials=` alone; otherwise run `gcloud auth application-default login`,
-  or set `credentials=`.
-- `GOOGLE_APPLICATION_CREDENTIALS names <file>, which isn't there`, or
-  `GOOGLE_APPLICATION_CREDENTIALS is "…", not a full path` (`CLOUDSDK_CONFIG`
-  too): the variable names no file magpie can read, and gcloud's own isn't
-  read in its place. Give the whole path (a `~/` at its start is the home),
-  unset it, or set `credentials=`.
-- `the Google credentials in <file>: the sign-in was refused`, with the advice
-  to sign in again: the sign-in expired or was revoked. Run the command the
-  advice names for that file: `gcloud auth application-default login` (with
-  `--impersonate-service-account=` when the file impersonates one) for
-  gcloud's Application Default Credentials, `gcloud auth login <account>`
-  for a file under gcloud's `legacy_credentials`. A file of your own is
-  written anew, or another one given with `credentials=`. The next request
-  reads the new file, with no restart.
-- A 403 `PERMISSION_DENIED` naming `aiplatform.endpoints.predict`: the account
-  that signs, or the service account it goes as, may not use Vertex AI in the
-  project. Give it Agent Platform User (`roles/aiplatform.user`) on the project
-  ([the role](https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/access-control#aiplatform.user)).
-- `impersonating …: the sign-in was refused (403)`: the account signed in
-  needs Service Account Token Creator (`roles/iam.serviceAccountTokenCreator`)
-  on that service account.
-
-### Plugins
-
-A subscription magpie doesn't sign in to itself can come from an
-[OpenCode](https://opencode.ai) provider plugin or a
-[pi](https://github.com/earendil-works/pi) package: the npm packages OpenCode
-users install to sign in to a plan (their `auth` hook), and the pi packages
-that register a provider (`pi.registerProvider`), work in magpie as they do
-there. magpie runs them on [Bun](https://bun.sh), downloaded the first
-time a plugin needs it, and the plugin signs in, lists the models and makes
-each request; magpie serves them to agents like any provider's.
+某个区域如果多提供一个模型（比如 asia-northeast1 提供 `gemini-3.5-flash`），就把它和你想要的其余模型一起敲进去：
 
 ```sh
-magpie plugin add opencode-gemini-auth   # an npm package, or a path to a plugin of your own
-magpie plugin add pi-antigravity         # a pi package, the same way
-magpie plugin                           # the plugins, what each signs in to, and whether you are
-magpie plugin login google-plugin       # its sign-in: the method, its questions, the browser or a key
-magpie plugin logout google-plugin
-magpie plugin off opencode-gemini-auth  # on brings it back; rm removes it; update updates them all
+chongyun provider models google-vertex gemini-2.5-pro gemini-2.5-flash gemini-2.5-flash-lite gemini-3.5-flash
+chongyun provider models google-vertex all   # back to the location's list
 ```
 
-A provider id magpie already has (google, openai, anthropic) is
-`<id>-plugin`. In the app, Settings → Plugins adds and removes them, and
-the providers they sign in to are in Add provider → From plugins.
+`chongyun provider set google-vertex location=…` 会保留已经挑好的模型，所以搬过之后要再挑一次。
 
-Sometimes two installed plugins sign in to the same provider id, for
-example a third-party plugin and your own copy of it. One of them serves
-that id: the one you picked, or else the one added last. Both plugins stay
-listed, and each row in Plugins › Installed says which one serves the
-provider. The other row has **Use for <provider>**, which switches the
-provider to it. `magpie plugin` prints the same thing, and
+谷歌的 [Priority PayGo](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/priority-paygo) 和 [Flex PayGo](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/flex-paygo) 用请求头来指定。编辑器的 **Headers** 里两者都提供，可以添加：`X-Vertex-AI-LLM-Request-Type` 和 `X-Vertex-AI-LLM-Shared-Request-Type`；它们的取值就是谷歌那些页面给的。在 CLI 上是：`chongyun provider set google-vertex header.<Name>=<value>`。[关于 Priority PayGo 观察到的行为](subsystems/providers-accounts.md#constraints-and-failure-behavior)。
+
+请求失败时：
+
+- `no Google credentials at <file>`：那个位置上没有凭据文件。如果它就是 provider 自己那个，就把 `credentials=` 改对，或者只写 `credentials=` 把它清掉；否则运行 `gcloud auth application-default login`，或者设置 `credentials=`。
+- `GOOGLE_APPLICATION_CREDENTIALS names <file>, which isn't there`，或者 `GOOGLE_APPLICATION_CREDENTIALS is "…", not a full path`（`CLOUDSDK_CONFIG` 也一样）：这个变量指名的文件崇云科技读不了，而 gcloud 自己那份也不会替它来读。给出完整路径（开头是 `~/` 就是家目录）、把它取消设置，或者设置 `credentials=`。
+- `the Google credentials in <file>: the sign-in was refused`，并附带重新登录的建议：登录过期了或被吊销了。运行那条建议为该文件指名的命令：gcloud 的 Application Default Credentials 用 `gcloud auth application-default login`（文件里冒充了某个服务账号时加上 `--impersonate-service-account=`），gcloud 的 `legacy_credentials` 下的文件用 `gcloud auth login <account>`。你自己的文件就重新写一份，或者用 `credentials=` 给另一个。下一次请求就会读新文件，不用重启。
+- 一个点名 `aiplatform.endpoints.predict` 的 403 `PERMISSION_DENIED`：签名的那个账号，或者它冒充的服务账号，可能没有权限在该项目里使用 Vertex AI。给它在项目上授予 Agent Platform User（`roles/aiplatform.user`）（[这个角色](https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/general/access-control#aiplatform.user)）。
+- `impersonating …: the sign-in was refused (403)`：登录的账号需要在那个服务账号上有 Service Account Token Creator（`roles/iam.serviceAccountTokenCreator`）。
+
+### Plugin
+
+<a id="plugins"></a>
+
+崇云科技自己不签入的某个订阅，可以来自一个 [OpenCode](https://opencode.ai) provider plugin 或一个 [pi](https://github.com/earendil-works/pi) 包：OpenCode 用户为了签入某个套餐而安装的那些 npm 包（它们的 `auth` 钩子），以及注册 provider 的那些 pi 包（`pi.registerProvider`），在崇云科技里和在那边一样工作。崇云科技用 [Bun](https://bun.sh) 跑它们，插件第一次需要时才下载；插件负责签入、列出模型并发出每个请求；崇云科技像对待任何 provider 那样把它们提供给 agent。
 
 ```sh
-magpie plugin use ~/dev/my-acme-auth acme   # this plugin serves acme from now on
+chongyun plugin add opencode-gemini-auth # an npm package, or a path to a plugin of your own
+chongyun plugin add pi-antigravity       # a pi package, the same way
+chongyun plugin                         # the plugins, what each signs in to, and whether you are
+chongyun plugin login google-plugin     # its sign-in: the method, its questions, the browser or a key
+chongyun plugin logout google-plugin
+chongyun plugin off opencode-gemini-auth # on brings it back; rm removes it; update updates them all
 ```
 
-makes the pick. Each plugin can still be switched off or removed on its
-own.
+崇云科技已经有的 provider id（google、openai、anthropic）会变成 `<id>-plugin`。在应用里，设置 → Plugins 负责添加和移除它们，而它们签入的那些 provider 在「添加 provider → 来自 plugin」里。
 
-A package is pi's when its `package.json` has a `pi` manifest, the
-`pi-package` keyword, or depends on `@earendil-works/pi-coding-agent`.
-magpie installs pi beside it and loads it with pi's own loader; the
-providers it registers are what magpie uses, and its commands, tools and
-renderers are left alone. Its sign-in runs as in pi: an OAuth login's
-questions and pages, and the dialogs and pickers it shows (`ctx.ui`, its
-terminal components too), are asked in magpie's sign-in; an API key works
-as well. pi's own files (its `auth.json` and what a package keeps) are in
-`pi/` under magpie's config directory, not your `~/.pi`, unless
-`PI_CODING_AGENT_DIR` says otherwise. Requests reach the package as pi
-sends them, and its replies keep their thinking and tool calls.
+有时两个装好的 plugin 会签入同一个 provider id，比如一个第三方 plugin 和你自己那份副本。其中一个服务那个 id：你挑的那个，或者最后加上的那个。两个 plugin 都会留在列表里，Plugins › Installed 里每一行都写明是哪一个在服务这个 provider。另一行有 **Use for <provider>**，点它就把 provider 切过去。`chongyun plugin` 打印的也是同一件事，而
 
-#### For plugin authors
+```sh
+chongyun plugin use ~/dev/my-acme-auth acme # this plugin serves acme from now on
+```
 
-A plugin is an OpenCode plugin or a pi package; nothing magpie-specific is
-needed. For an OpenCode plugin magpie reads a few more fields, which
-OpenCode ignores:
+就完成了这次挑选。每个 plugin 仍然可以单独关掉或删除。
 
-- **The provider's icon**: `icon` on the `auth` hook, or `"magpie": {
-  "icon": "…" }` in the plugin's `package.json` (for every provider it
-  signs in to that names none). An `https://` URL of a picture on a public
-  host, which magpie fetches once and keeps, or a `data:image/…` URI;
-  PNG, JPEG, GIF, WebP, ICO or SVG, at most 1 MB. Anything else is ignored,
-  and the icon the plugin market lists for the plugin is shown instead.
-  The `package.json` icon is also the card's picture under Discover →
-  Unofficial, on GitHub for a repository tagged `magpie-plugin`.
-- **An API key's field**: a `type: "api"` method's `label` titles the key's
-  field, as OpenCode's dialog does (one that only says "API key" reads
-  "<provider> API key"), and its `placeholder` is the hint inside the field
-  (and after the question in `magpie plugin login`). The method's `prompts`
-  are asked first, as in OpenCode, and reach `authorize(inputs)`. A prompt of
-  `type: "password"` (magpie's own; OpenCode has `text` and `select`) is typed unseen:
-  a masked field in the app, no echo in `magpie plugin login` (#1982).
+一个包是不是 pi 的，看它的 `package.json` 里有没有 `pi` 清单、有没有 `pi-package` 关键字，或者它是否依赖 `@earendil-works/pi-coding-agent`。崇云科技把 pi 装在旁边，并用 pi 自己的加载器加载它；它注册的 provider 就是崇云科技使用的那些，而它的命令、工具和渲染器都不去动。它的签入按 pi 里的方式运行：OAuth 登录的提问和页面，以及它显示的对话框和选择器（`ctx.ui`，还有它的终端组件），都在崇云科技的签入流程里问；用 API key 也行。pi 自己的文件（它的 `auth.json` 以及一个包保存的东西）在崇云科技配置目录下的 `pi/` 里，而不是你的 `~/.pi`，除非 `PI_CODING_AGENT_DIR` 另有说法。请求按 pi 发送的样子到达这个包，它的回话保留自己的思考和工具调用。
+
+#### 给写 plugin 的人
+
+<a id="for-plugin-authors"></a>
+
+plugin 就是个 OpenCode plugin 或 pi 包；不需要任何崇云科技特有的东西。对 OpenCode plugin，崇云科技会多读几个字段，而 OpenCode 会忽略它们：
+
+- **provider 的图标**：`auth` 钩子上的 `icon`，或者 plugin 的 `package.json` 里的 `"magpie": { "icon": "…" }`（对它签入的每一个没有指名的 provider 都算）。一个 `https://` 的图片 URL，指向某个公开主机上的图片，崇云科技取一次并保存；或者一个 `data:image/…` URI；PNG、JPEG、GIF、WebP、ICO 或 SVG，最大 1 MB。别的都被忽略，改用 plugin 市场为这个 plugin 列出的图标。`package.json` 里的图标同时也是 Discover → Unofficial 下那张卡片上的图片，在 GitHub 上则对应打了 `magpie-plugin` 标签的仓库。
+- **API key 的输入框**：`type: "api"` 方法的 `label` 是那个 key 输入框的标题，就像 OpenCode 的对话框那样（只写「API key」的会读作「<provider> API key」），它的 `placeholder` 是输入框里的提示（也是 `chongyun plugin login` 里那条提问后面的提示）。方法的 `prompts` 会先被问出来，和在 OpenCode 里一样，然后送进 `authorize(inputs)`。`type: "password"` 的提问（崇云科技自己加的；OpenCode 有 `text` 和 `select`）是不回显输入的：在应用里是一个遮蔽的输入框，在 `chongyun plugin login` 里也不回显（#1982）。
 
 ```js
 export const LemonPlugin = async () => ({
@@ -958,25 +388,16 @@ export const LemonPlugin = async () => ({
 })
 ```
 
-In TypeScript, `icon` and `placeholder` aren't in OpenCode's types: build
-the hook as a variable (or cast it), or put the icon in `package.json`.
+在 TypeScript 里，`icon` 和 `placeholder` 不在 OpenCode 的类型中：把这个钩子建成一个变量（或者做一次类型断言），或者把图标放进 `package.json`。
 
-#### Gateway middleware
+#### 网关 middleware
 
-A plugin can also be gateway middleware: `onRequest(body, ctx)` sees each
-request an agent sends before it is routed, `onProvider(body, ctx)` the
-body each provider it is tried on is sent (`ctx.provider` has its `id`,
-`name`, `account` and `model`; each try starts from what `onRequest`
-left), `onEvent(event, ctx)` each
-event of a streamed reply and `onResponse(body, ctx)` a whole one, all in
-the agent's own API. A hook returns the changed object, or nothing to
-leave it; `onEvent` returns `null` to drop an event, and
-`ctx.reject(status, message)` turns a request away. Declare it with
-`"magpie": { "middleware": "./mw.js" }` in `package.json`, or add a single
-`*.middleware.js` file:
+<a id="gateway-middleware"></a>
+
+plugin 也可以充当网关 middleware：`onRequest(body, ctx)` 看到 agent 发出的每个请求（在路由之前），`onProvider(body, ctx)` 看到它在每个被尝试的 provider 上发出的请求体（`ctx.provider` 里有它的 `id`、`name`、`account` 和 `model`；每次尝试都从 `onRequest` 留下的内容开始），`onEvent(event, ctx)` 看到流式回话的每个事件，`onResponse(body, ctx)` 看到整个回话，全部都在 agent 自己的 API 里。钩子返回改过的对象，或者什么都不返回表示不改；`onEvent` 返回 `null` 表示丢掉这个事件，而 `ctx.reject(status, message)` 会把请求挡回去。在 `package.json` 里用 `"magpie": { "middleware": "./mw.js" }` 声明它，或者放一个单独的 `*.middleware.js` 文件：
 
 ```js
-// alias.middleware.js — magpie plugin add ./alias.middleware.js
+// alias.middleware.js — chongyun plugin add ./alias.middleware.js
 export const events = ["message_start"]
 export function onRequest(body, ctx) {
   ctx.state.asked = body.model
@@ -989,48 +410,26 @@ export function onEvent(ev, ctx) {
 }
 ```
 
-Middleware runs inside the gateway in [moejs](https://github.com/Calcium-Ion/moejs),
-a JavaScript engine written in Go (about a microsecond a streamed event),
-not on Bun: no timers, `fetch` or Node APIs, and imports only of files
-beside it. A hook that throws or takes too long (250 ms a request, 50 ms an
-event) leaves what it was given as it was. Settings → Plugins shows each
-middleware's calls, time and failures. The [plugin guide](https://usemagpie.ai/docs/plugins#middleware)
-has the rest.
+Middleware 在网关内部用 [moejs](https://github.com/Calcium-Ion/moejs) 运行，这是一个用 Go 写的 JavaScript 引擎（每个流式事件大约一微秒），而不是在 Bun 上：没有计时器、`fetch` 或 Node API，只能 import 旁边的文件。抛异常或耗时过久的 hook（一个请求 250 ms，一个事件 50 ms）会让它拿到的东西保持原样。设置 → Plugins 会显示每个 middleware 的调用次数、耗时和失败情况。剩下的内容见 [plugin 指南](subsystems/plugin-runtime.md)。
 
-Middleware runs through the built-in plugin `middleware` (Gateway
-middleware in Plugins › Built-in), which stays on while one is on. Turned
-off, no middleware runs and agents' requests go as they came. Privacy
-masking is the built-in plugin `redact` (Privacy masking), on while
-Settings → Privacy asks for any masking; if masking is asked for and it
-isn't serving, a request gets a 503 and nothing is sent.
+Middleware 通过内置 plugin `middleware`（Plugins › Built-in 里的「Gateway middleware」）运行，只要有一个 middleware 开着它就保持开启。关掉之后，没有任何 middleware 运行，agent 的请求按原样走。隐私脱敏是内置 plugin `redact`（Privacy masking），只要设置 → 隐私要求任何脱敏它就开着；如果要求了脱敏而它没有在服务，请求会得到 503，什么也不发出去。
 
-`ctx.options` is the middleware's entry's `options` in `plugins.json`: set
-them with its **Options** button in Plugins › Installed, or
+`ctx.options` 是 `plugins.json` 里 middleware 那一条的 `options`：用 Plugins › Installed 里的 **Options** 按钮设置，或者
 
 ```sh
-magpie plugin options model-map '{"mapping": {"fast": "deepseek/deepseek-chat"}}'
-magpie plugin options model-map off   # clears them
+chongyun plugin options model-map '{"mapping": {"fast": "deepseek/deepseek-chat"}}'
+chongyun plugin options model-map off # clears them
 ```
 
-The name can be a package's short name (`model-map` for
-`@magpie-community/middleware-model-map`). A package's
-`"magpie": { "options": {…} }` is the example the editor starts from.
+名字可以是包的短名（`@magpie-community/middleware-model-map` 就是 `model-map`）。一个包的 `"magpie": { "options": {…} }` 是编辑器起步时的示例。
 
-Ready-made middleware, under Plugins › Discover › Gateway middleware
-(`@magpie-community/middleware-<name>`), mostly New API's channel settings
-with the same JSON: `param-override` (`param_override`), `model-map`
-(`model_mapping`), `system-prompt`, `word-guard` (sensitive words) and
-`think-tags` (strip `<think>…</think>`, or `thinking_to_content`), and
-`antigravity-cloak`, which keeps the words Antigravity turns Claude Code's
-system prompt away for out of what it sends Antigravity alone. A
-middleware's entry in the community `registry.json` has
-`"kind": "middleware"` and no `providers`.
+现成的 middleware 在 Plugins › Discover › Gateway middleware 下（`@magpie-community/middleware-<name>`），多半是 New API 的渠道设置、只是用了同样的 JSON：`param-override`（`param_override`）、`model-map`（`model_mapping`）、`system-prompt`、`word-guard`（敏感词）和 `think-tags`（去掉 `<think>…</think>`，或 `thinking_to_content`），以及 `antigravity-cloak`，它把 Antigravity 用来挡掉 Claude Code 系统提示的那些词，从它单独发给 Antigravity 的内容里去掉。middleware 在社区 `registry.json` 里的那一条有 `"kind": "middleware"`，也没有 `providers`。
 
-#### Agent plugins
+#### Agent plugin
 
-A plugin can add an agent magpie has no setup of its own for. Its
-`package.json` names the module (`"magpie": { "agent": "./agent.js" }`), or
-it is a single `*.agent.js` file:
+<a id="agent-plugins"></a>
+
+plugin 可以增加一个崇云科技自己并没有接入的 agent。它的 `package.json` 指名那个模块（`"magpie": { "agent": "./agent.js" }`），或者它就是一个单独的 `*.agent.js` 文件：
 
 ```js
 export const agent = {
@@ -1045,885 +444,262 @@ export function connect({ gateway, model, models }) {
 }
 ```
 
-It is then on the Agents page like magpie's own: picking one of magpie's
-models writes the model and what `connect` returns, and its own model or
-Disconnect puts every key back as it was. It runs in moejs like middleware.
-An id magpie's own agents use is refused. In the market an agent's entry has
-`"kind": "agent"` (`@magpie-community/agent-<name>`). The full reference is
-on the site's Plugins page, under Agent plugins.
+之后它就和崇云科技自己的那些一样出现在 Agents 页面上：挑一个崇云科技的模型会写入模型和 `connect` 返回的东西，而选它自己的模型或断开连接会把每个键放回原样。它和 middleware 一样跑在 moejs 里。被崇云科技自己的 agent 用着的 id 会被拒绝。在市场里，agent 的那一条有 `"kind": "agent"`（`@magpie-community/agent-<name>`）。完整参考在本仓库的 plugin 文档里（docs/subsystems/plugin-runtime.md）的 Agent plugin 一节。
 
-### What a model costs
+### 一个模型花多少钱
 
-A call is counted at its **effective price**: what you set for that provider
-and model if you did, otherwise what the provider's own catalogue lists, and
-otherwise what models.dev lists for the model's maker. A provider you added by
-its address, with no catalogue named, has for its own the one models.dev
-lists at that address (its `api`), when exactly one does and it isn't a
-plan's: a provider at `https://developer.amd.com.cn/radeon/api/v1` is priced
-from models.dev's `amd`, whatever you called it. Out of the box that
-last one is the whole story, and it is the wrong number for any provider that
-does not charge list price — a relay reselling at a discount or a multiplier
-is counted at whatever the model's maker charges. Say what a provider
-actually charges, and the usage ledger and the session totals use that:
+<a id="what-a-model-costs"></a>
+
+一次调用按它的**有效价格**计入：如果你为那个 provider 和模型设了价格，就用你设的；否则用那个 provider 自己的目录列的；再否则用 models.dev 为这个模型的厂商列的。你只按地址添加、没指定目录的 provider，它自己的价格取 models.dev 在那个地址上列的那一个（它的 `api`），前提是恰好只有一个，而且它不是一个套餐的：位于 `https://developer.amd.com.cn/radeon/api/v1` 的 provider，价格取自 models.dev 的 `amd`，不管你叫它什么。开箱即用的情况下，最后这一条就是全部故事，而对任何不按目录价收费的 provider 来说它是错的数字——一个打折转售或按倍数转售的中继，会按这个模型的厂商收的价来计。写下一个 provider 实际收多少，用量账本和会话汇总就会用它：
 
 ```sh
-magpie model price relay-a/gpt-5.5                        # what it is counted at, and where that came from
-magpie model price relay-a/gpt-5.5 0.12,0.60,0.01,0.15   # input,output,cache read,cache write
-magpie model price relay-a/gpt-5.5 --reset                # take your price off this model
-magpie model prices                                       # every model you priced
+chongyun model price relay-a/gpt-5.5                      # what it is counted at, and where that came from
+chongyun model price relay-a/gpt-5.5 0.12,0.60,0.01,0.15 # input,output,cache read,cache write
+chongyun model price relay-a/gpt-5.5 --reset              # take your price off this model
+chongyun model prices                                     # every model you priced
 ```
 
-The four numbers are USD per million tokens. All four are asked for, because
-a price missing one would understate the rest of every call; `0` is a model
-served at no cost, which is a price, not the absence of one. Decimals take a
-point or, in the app's boxes, a comma (`0,25`).
+这四个数字都是每百万 token 的美元价。四个都要填，因为少填一个会让每次调用的其余部分都被低估；`0` 表示这个模型不花钱地提供服务，那是一个价格，而不是没有价格。小数可以用点，或者在应用的输入框里用逗号（`0,25`）。
 
-A call to a model no price is known for is counted at the price of the model
-the reply said answered, at the same provider, when that one has a price: a
-relay that sells `kimi-k3` as `moonshot-kimi-k3` answers as `kimi-k3`, so its
-calls are counted at `relay-a/kimi-k3`'s price. A model with a price of its
-own, `0` included, keeps it whatever its reply says.
+对某个没有已知价格的模型的调用，会按回话声称作答的那个模型在同一 provider 上的价格来计，只要那个模型有价格：一个把 `kimi-k3` 当作 `moonshot-kimi-k3` 卖的中继，回话里写的是 `kimi-k3`，所以它的调用按 `relay-a/kimi-k3` 的价格计。一个自己就有价格的模型（包括 `0`），不管回话怎么说，都保留自己的价格。
 
-`magpie model price provider/model` says where a price came from, and for a
-model with none, the two commands that give it one.
+`chongyun model price provider/model` 会说明一个价格是从哪来的；对没有价格的模型，它也给出能给它一个价格的那两条命令。
 
-A call with no price at all is left out of a total's cost, never counted as
-free: the Usage page's sum says how many calls it couldn't price beside it
-("≈$1.20+", then "3 calls unpriced"; Sessions, which prices by model, says how
-many models), and `magpie usage` and the terminal app's Usage page say the
-same after their totals. magpie doesn't guess a variant's price from a
-similar name (`-auto`, `-max`, `-fast` can each cost differently); give it
-one with `magpie model price`, or in the provider's editor under the model.
+完全没有价格的调用会被排除在某个合计的成本之外，绝不会被当成免费：用量页面的合计旁边会写它没能定价多少次调用（"≈$1.20+"，接着是 "3 calls unpriced"；按模型定价的 Sessions 写的是多少个模型），而 `chongyun usage` 和终端应用的用量页面在各自合计之后说同样的话。崇云科技不会从一个相似的名字去猜某个变体的价格（`-auto`、`-max`、`-fast` 各自可能价格不同）；用 `chongyun model price` 给它一个，或者在 provider 的编辑器里那个模型下面填。
 
-A **Kimi Code** membership's models are counted at the Kimi API model each
-one is, not at the $0 models.dev lists them at for the plan: `k3` and
-`k3-256k` at `kimi-k3`, `kimi-for-coding-highspeed` at
-`kimi-k2.7-code-highspeed`. `kimi-for-coding` is K2.8 Preview, which the API
-doesn't sell, so it has no price until you give it one
-(`magpie model price kimi-code/kimi-for-coding …`).
+**Kimi Code** 会员的那些模型，按各自对应的 Kimi API 模型计，而不是按 models.dev 为这个套餐列的 $0 来计：`k3` 和 `k3-256k` 按 `kimi-k3` 计，`kimi-for-coding-highspeed` 按 `kimi-k2.7-code-highspeed` 计。`kimi-for-coding` 是 K2.8 Preview，API 不卖它，所以在你给它一个价格之前它没有价格（`chongyun model price kimi-code/kimi-for-coding …`）。
 
-A **fifth number** is a 1-hour cache write's price. Anthropic bills a cache
-write kept for 5 minutes at 1.25× input and one kept for an hour at 2× input,
-and its usage says which were which (`cache_creation.ephemeral_5m_input_tokens`
-/ `ephemeral_1h_input_tokens`, from the API and from Claude Code's
-transcripts). The fourth number is the 5-minute price; the fifth, when not
-given, is 2× input for a Claude model — Anthropic's rule. Any other model has
-no 1-hour price unless you give one: a 1-hour write it reports is counted at
-the 5-minute price, and neither `magpie model price` nor the app's boxes show
-a 1-hour price for it. A call recorded
-before magpie kept the split counts all its writes at the 5-minute price, as
-it did.
+**第五个数字**是 1 小时缓存写入的价格。Anthropic 对保留 5 分钟的缓存写入按输入价的 1.25× 计费，对保留一小时的按输入价的 2× 计费，而它的用量会说明哪些是哪一种（`cache_creation.ephemeral_5m_input_tokens` / `ephemeral_1h_input_tokens`，来自 API 和 Claude Code 的记录）。第四个数字是 5 分钟那档的价格；第五个没给时，对 Claude 模型就是输入价的 2×——Anthropic 的规则。其它模型除非你给了，否则没有 1 小时的价格：它报出的 1 小时写入按 5 分钟那档的价格计，而 `chongyun model price` 和应用的输入框都不会为它显示 1 小时价格。在崇云科技开始保留这个拆分之前记录的调用，所有写入都按 5 分钟那档的价格计，就像当时一样。
 
-A **long-context price** is what the whole request costs once its prompt is
-over a size, as OpenAI bills gpt-6-astra, gpt-6.1-sol and gpt-6-luna over
-272K input (2× input and cache, 1.5× output):
+**长上下文价格**是指请求的提示词超过某个大小之后，整个请求要付多少钱，就像 OpenAI 对超过 272K 输入的 gpt-6-astra、gpt-6.1-sol 和 gpt-6-luna 那样计费（输入和缓存 2×，输出 1.5×）：
 
 ```sh
-magpie model price openai/gpt-6-astra 10,50,1,12.5 --tier 272k 20,75,2,25
+chongyun model price openai/gpt-6-astra 10,50,1,12.5 --tier 272k 20,75,2,25
 ```
 
-The size counts the prompt the way OpenAI does: uncached input + cache reads
-+ cache writes, and the tier applies when that is **over** the size (272,000
-is not, 272,001 is). Then every part of the call — input, output, cache — is
-at the tier's price, not only the tokens past the size. `--tier` may be given
-again for another size. The built-in prices carry a tier only where
-models.dev lists one (`cost.tiers` of type `context`), as it does for those
-three. Session and day totals sum many calls, so they are counted at the base
-price; the ledger and each request are counted at the tier they reached. In
-the app, a model's price row has a quiet **Long-context price** row under it,
-shown with the list's tier greyed in, or behind a link where there is none.
+这个大小按 OpenAI 的算法算提示词：未缓存输入 + 缓存读取 + 缓存写入，而档位在它**超过**那个大小时才适用（272,000 不算，272,001 算）。这时调用的每一部分——输入、输出、缓存——都按该档位的价格，而不只是超出那个大小的那些 token。`--tier` 可以再给一次，换一个大小。内置价格只在 models.dev 列出了档位的地方才带档位（`cost.tiers` 里类型为 `context` 的），那三个模型就是如此。会话和按天的合计汇总很多次调用，所以它们按基础价格计；账本和每一次请求则按它们达到的那个档位计。在应用里，一个模型的价格行下面有一行安静的 **Long-context price**，列表里的档位会灰着显示出来，没有档位时则是一个链接。
 
-The order a price is looked for in is: **the price for this model → the price
-for `<provider id>/*`, which covers every model of that provider → what the
-provider's own catalogue lists → what models.dev lists for the maker →
-what models.dev lists for the maker of the model you said it is the same
-as.** The last is for a provider's own id that no list prices, as
-WorkBuddy's `kimi-k3-1` or a plugin's `qfmodel` (#2344): set **Same as**
-on the model in the provider's model editor (`"modelSameAs":
-{"workbuddy/kimi-k3-1": "kimi-k3"}` in settings.json) and its calls are
-costed at Kimi K3's list price, at the provider's price rate, never at
-another provider's tariff. A model with no Same as is never matched to
-another by its name. `magpie model price <provider/model>` says when a
-price came from it.
-`--reset` removes the first, and says so when a `<provider id>/*` price is
-still in force; reset that one by name to take it away too.
+查找价格的顺序是：**这个模型的价格 → `<provider id>/*` 的价格，它覆盖那个 provider 的每个模型 → 那个 provider 自己的目录列的 → models.dev 为厂商列的 → models.dev 为「你说它等同于」的那个模型的厂商列的。** 最后一条是给那些没有任何目录定价的 provider 自己的 id 用的，比如 WorkBuddy 的 `kimi-k3-1` 或某个 plugin 的 `qfmodel`（#2344）：在 provider 的模型编辑器里给这个模型设上 **Same as**（settings.json 里的 `"modelSameAs": {"workbuddy/kimi-k3-1": "kimi-k3"}`），它的调用就按 Kimi K3 的目录价计，用这个 provider 的价格率，绝不会用别的 provider 的资费。没有 Same as 的模型绝不会靠名字去匹配另一个。`chongyun model price <provider/model>` 会说明一个价格是不是来自它。`--reset` 会移除第一条，并在 `<provider id>/*` 的价格仍然生效时把这一点说出来；把那个按名字也重置掉就能一并去掉。
 
-A price is **one provider's tariff for one model**, not the model's own: the
-same model through two providers is two prices, and each keeps its own.
-Nothing an agent can see changes. The model list, the agents' own settings
-and the pickers that choose a model for a background task — an image, a web
-search, a description — all still work from the catalogue; only the cost
-reports read the effective price.
+价格是**一个 provider 对一个模型的资费**，不是模型自己的：同一个模型经过两个 provider 就是两个价格，各保留各的。agent 能看到的东西没有任何变化。模型清单、agent 自己的设置，以及为后台任务挑选模型的那些选择器——一张图片、一次联网搜索、一段描述——都照旧从目录里工作；只有成本报告会读那个有效价格。
 
-Two things worth knowing. The ledger and the session totals re-price when they
-are read, so adding or changing a price restates earlier figures: they are
-estimates at the effective price, not settled charges. And a price is per
-provider and model. Records now identify upstream API keys, but a provider
-charging different tariffs per key still cannot be costed exactly from a
-single provider-wide price.
+有两件事值得知道。账本和会话汇总是在被读取时重新定价，所以新增或改动一个价格会把先前的数字重述一遍：它们是按有效价格估的数，不是结清的账单。而且价格是按 provider 和模型定的。现在的记录会标出上游 API key，但一个按 key 收不同资费的 provider，仍然没法用一个 provider 级别的价格精确算出成本。
 
-### What a model takes
+### 一个模型要什么
 
-A provider that serves a model models.dev does not list, or lists at the
-wrong size, has a window and a reply limit magpie cannot know. Say what they
-are:
+<a id="what-a-model-takes"></a>
+
+一个提供了 models.dev 没有列、或列错了大小的模型的 provider，它的上下文窗口和回话上限是崇云科技无从得知的。说清它们是多少：
 
 ```sh
-magpie model context relay-a/gpt-5.5 262144    # the window a request may hold, or 1m
-magpie model output  relay-a/gpt-5.5 131072    # the most a reply may hold, or 128k
-magpie model context "relay-a/*" 200000        # every model of that provider
-magpie model output  relay-a/gpt-5.5 --reset   # take your limit off this model
+chongyun model context relay-a/gpt-5.5 262144  # the window a request may hold, or 1m
+chongyun model output  relay-a/gpt-5.5 131072  # the most a reply may hold, or 128k
+chongyun model context "relay-a/*" 200000      # every model of that provider
+chongyun model output  relay-a/gpt-5.5 --reset # take your limit off this model
 ```
 
-The `*` is quoted because zsh treats a name it cannot expand as a command
-that failed, rather than passing the name on as bash does.
+`*` 要加引号，因为 zsh 会把一个展开不了的名称当成一条失败的命令，而不是像 bash 那样把名称传下去。
 
-Both are looked for in this order: **this model → this provider's `*` → the
-provider's own list → models.dev.** `--reset` removes only the value this
-model has of its own.
+两者都按这个顺序查找：**这个模型 → 这个 provider 的 `*` → provider 自己的清单 → models.dev。** `--reset` 只移除这个模型自己那个值。
 
-A provider you keep unlisted, or switch off, takes them like any other: the
-numbers are kept, and are what its models take once it is serving again.
+你让它不列出、或关掉的 provider，和其它 provider 一样取这两个值：数字会保留下来，等它重新开始服务时，它的模型就按这些数字来。
 
-A window is a number agents are shown **and a routing input**: at 95% of the
-window a request held on a routing-group member moves to one that takes more,
-so overstating a window makes that move happen too late. A reply limit is
-advertised in `/models` and is what a group advertises the smallest of. The
-gateway doesn't lower a limit an agent sends by it. A request that names none
-and goes to Anthropic's Messages API, which needs one (Codex's Responses turns,
-a Chat client's), is sent it as `max_tokens`, within the window as agents are
-told it. Only a model whose limit nobody knows goes at 16384. A reply that
-runs into it ends with `stop_reason: max_tokens`, which a Responses client
-reads as `incomplete_details.reason: "max_output_tokens"` (#1792).
+上下文窗口既是给 agent 看的**数字，也是一个路由输入**：到窗口的 95% 时，一个卡在某个路由组成员上的请求会转到一个能吃下更多的成员，所以把窗口说大会让这次转移动得太晚。回话上限会在 `/models` 里声明，而一个组声明的是它里面最小的那个。网关不会因为 agent 发了某个上限就把它降低。一个没有指明上限、又发往 Anthropic Messages API（那个 API 需要一个上限，比如 Codex 的 Responses 轮次、Chat 客户端）的请求，会在 agent 被告知的那个窗口内，把它作为 `max_tokens` 发出去。只有上限谁都不知道的模型才按 16384 走。一个撞上它的回话以 `stop_reason: max_tokens` 结束，Responses 客户端把它读作 `incomplete_details.reason: "max_output_tokens"`（#1792）。
 
-Saving a window or a reply limit writes that number into the model lists magpie
-keeps in the agents' own files — Pi's `contextWindow` and `maxTokens`, OpenCode's
-`limit`, and Crush's, droid's, Cline's, Qoder's and Zcode's — which an agent reads
-at start-up. A session already running therefore keeps the window it began with,
-while the gateway's own `/models` and every request from then on are right at
-once.
+保存一个窗口或一个回话上限，会把那个数字写进崇云科技在各个 agent 自己的文件里保存的模型清单——Pi 的 `contextWindow` 和 `maxTokens`、OpenCode 的 `limit`，以及 Crush 的、droid 的、Cline 的、Qoder 的和 Zcode 的——agent 在启动时读它。所以一个已经在跑的会话会保持它开始时的那个窗口，而网关自己的 `/models` 以及从那之后的每个请求则立刻就是对的。
 
-### The name a vendor knows a model by
+### 厂商怎么称呼一个模型
 
-A relay often serves a model under an id of its own — a prefix it namespaces
-with, a dated name, a `-latest` that is not what models.dev calls it. Say
-which name to ask for:
+<a id="the-name-a-vendor-knows-a-model-by"></a>
+
+中继常常用它自己的 id 提供某个模型——一个用来做命名空间的前缀、一个带日期的名字、一个和 models.dev 的叫法不同的 `-latest`。说清该用哪个名字去要：
 
 ```sh
-magpie model wire relay-b/model-2                           # what the vendor is asked for
-magpie model wire relay-b/model-2 vendor-c/model-2-preview  # ask for it by this
-magpie model wire 'relay-b/*' 'vendor-c/*'                  # every model, * being the model
-magpie model wire relay-b/model-2 --reset                   # ask for it by its own name again
-magpie model wires                                          # every name your vendors are asked for models by
+chongyun model wire relay-b/model-2                         # what the vendor is asked for
+chongyun model wire relay-b/model-2 vendor-c/model-2-preview # ask for it by this
+chongyun model wire 'relay-b/*' 'vendor-c/*'                # every model, * being the model
+chongyun model wire relay-b/model-2 --reset                 # ask for it by its own name again
+chongyun model wires                                        # every name your vendors are asked for models by
 ```
 
-Quote the arguments with a `*` in them: zsh reads a bare `*` as a glob and
-answers `no matches found`. In the name, `*` stands for the model itself, so
-`'relay-b/*' 'vendor-c/*'` sends `vendor-c/model-3` for `model-3` and
-`vendor-c/model-2` for `model-2` — one name for a relay that namespaces its
-models, each still asked for by its own. A name with no `*` in it sends every
-model of that key under that one name, which is the right answer only for a
-relay that does serve them all alike. The model's own key wins over the
-provider's, and `--reset` takes away only the one it is given, so resetting
-`relay-b/model-2` while `'relay-b/*'` is set leaves the provider's name in
-force — the CLI says which of the two is in force after every change, naming
-the models a name for the whole provider leaves to their own, and
-`--reset` over a name that was never given says so rather than ticking a
-removal that took nothing away.
+带 `*` 的参数要加引号：zsh 会把裸的 `*` 当成 glob，并回答 `no matches found`。在名字里，`*` 代表模型本身，所以 `'relay-b/*' 'vendor-c/*'` 会为 `model-3` 发 `vendor-c/model-3`，为 `model-2` 发 `vendor-c/model-2`——给一个给模型加了命名空间的中继一个名字，而每个模型仍然按它自己的名字去要。不带 `*` 的名字会把那个 key 的每个模型都用这一个名字去发，这只有在那个中继确实把它们一视同仁地提供时才对。模型自己的 key 比 provider 的更优先，而 `--reset` 只拿走它被给到的那个，所以在 `'relay-b/*'` 生效时重置 `relay-b/model-2`，provider 的那个名字仍然生效——CLI 在每次改动之后都会说这两个里哪个生效，也会指出那些被「整个 provider 的一个名字」留给自身的模型；而对一个从未给过的名字做 `--reset`，它会照实说明，而不是勾掉一次什么都没去掉的删除。
 
-Only the request that goes out carries that name, in the model field of a
-chat, Responses or Anthropic Messages request and of an Anthropic token
-count; image requests are left with the name magpie knows the model by.
-Gemini CLI and Antigravity sign-ins go on Code Assist, and there the model
-an effort picks is a variant of the model magpie knows — `gemini-3.7-flash`
-at `high` is sent as `gemini-3.7-flash-high` — so a `*` in the name is that
-variant: `'antigravity/*' 'vendor-c/*'` asks for `vendor-c/gemini-3.7-flash-high`
-and `vendor-c/gemini-3.7-flash-low` each by its own, as it does everywhere
-else. A name with no `*` in it, or one given for `antigravity/gemini-3.7-flash`
-itself, is that one name at every level.
+只有发出去的那个请求会带上这个名字，它出现在 chat、Responses 或 Anthropic Messages 请求的 model 字段里，也出现在 Anthropic 的 token 计数里；图片请求仍然用崇云科技认识这个模型的那个名字。Gemini CLI 和 Antigravity 的登录走的是 Code Assist，在那里，一个 effort 挑中的模型是崇云科技所认识的那个模型的一个变体——`gemini-3.7-flash` 在 `high` 下会作为 `gemini-3.7-flash-high` 发出——所以名字里的 `*` 指的就是那个变体：`'antigravity/*' 'vendor-c/*'` 会分别按各自的名字去要 `vendor-c/gemini-3.7-flash-high` 和 `vendor-c/gemini-3.7-flash-low`，和别处一样。不带 `*` 的名字，或者给 `antigravity/gemini-3.7-flash` 本身起的名字，在每一层都是那一个名字。
 
-Everything else keeps the name magpie knows the model by: the catalog agents
-pick from, the routing groups' membership, `GET /models`, and what a call is
-recorded and priced as. What the vendor's own reply said answered is kept
-beside that, in the ledger's `served_model`, which is what it is for, and it
-is compared with the name the vendor was asked for — so a model answered
-under the relay's own id is not read as a swap. That is against the names
-in force when the ledger is read, since a record keeps what the vendor
-answered and not the name the request went out under: naming a model after
-the call re-judges that call, which is then left reading as a swap. What a
-provider *supports* — whether it takes a temperature, which reasoning levels
-fit — is still asked about the model magpie knows, so a rename upstream does
-not change how magpie behaves towards the model.
+其它一切都保留崇云科技认识这个模型的那个名字：agent 挑选用的目录、路由组的成员、`GET /models`，以及一次调用被记录和被定价时用的名字。厂商自己的回话声称作答的是什么，则并排保存在账本的 `served_model` 里——那正是它的用处——并且它会跟当时向厂商要的名字做比较，所以一个用中继自己的 id 作答的模型不会被读成换了模型。这个比较用的是读账本时生效的那些名字，因为一条记录保存的是厂商作答的东西，而不是请求发出时用的名字：事后给一个模型改名会重新评判那次调用，而它随后就被读成了换模型。某个 provider **支持**什么——它接不接受 temperature、哪些推理档位合适——仍然是按崇云科技所认识的那个模型来问的，所以上游改名不会改变崇云科技对这个模型的行为。
 
-An upstream name is **one provider's**, not the model's: another provider
-serving the same id is asked for it under its own name, or this one. The
-model it is given for has to be one that provider serves — `<provider>/*`
-is the way to say one for every model — because a name for a model magpie
-would never ask the provider for is not a name of its own: the model is
-asked for by the name magpie knows it by, and nothing anywhere would say the
-name given for it is not the one in force. A relay that serves a model under
-an id of its own *and* lists it does get the name; what is refused is a
-model the provider's list does not have at all. The model test uses the name
-too, so a relay that only knows its own ids does not report a working model
-as broken. An image model is the exception that follows the rule above: it is
-tested by the name magpie knows it by, on the images API and on the chat it
-falls back to, because that is how a drawing is asked for.
+上游名字是**某一个 provider 的**，不是模型自己的：另一个提供同样 id 的 provider，会用它自己的名字或者这个名字去要它。它被赋予的那个模型必须是那个 provider 提供的——`<provider>/*` 就是「每个模型都这样」的说法——因为给一个崇云科技绝不会向该 provider 去要的模型起名字，那不算它自己的名字：这个模型会按崇云科技认识它的名字去要，而且任何地方都不会说给它起的那个名字不是生效的那个。一个既用自己 id 提供某个模型、**又**把它列出来的中继，确实会得到这个名字；被拒绝的是 provider 的清单里根本没有的模型。模型测试也用这个名字，所以一个只认自己 id 的中继不会把一个好用的模型报成坏的。图片模型是遵循上面那条规则的例外：它按崇云科技认识它的名字来测试，在 images API 上，以及在它回退到的那个 chat 上，因为画图就是这么去要的。
 
-### Routing groups
+### 路由组
 
-A routing group is several models, from one provider or many, that an agent
-picks as one: `group/<id>`. The gateway routes each request over every
-member's keys and accounts together. A model two of your providers serve
-under the same name becomes a group on its own; the Routing view in the app
-and `magpie group` make any other:
+<a id="routing-groups"></a>
+
+路由组是若干个模型（来自一个 provider 或多个），agent 把它们当作一个来挑：`group/<id>`。网关会在每个成员的 key 和账号上一起路由每一次请求。两个 provider 用同一个名字提供的模型会自己变成一个组；应用里的路由视图和 `chongyun group` 可以组出别的：
 
 ```sh
-magpie groups                           # yours, then those magpie found
-magpie group add "Opus anywhere" models=claude/claude-opus-5-5,copilot/claude-opus-5.5 routing=order stays=session
-magpie group opus-anywhere              # one group, its models in order
-magpie group set opus-anywhere models+=openrouter/anthropic/claude-opus-5.5 routing=usage
-magpie group set opus-anywhere models-=copilot/claude-opus-5.5
-magpie group set opus-anywhere routing=weight weight=claude/claude-opus-5-5=3,copilot/claude-opus-5.5=1
-magpie group copy opus-anywhere "Opus test"  # the same models, routing and rules, to change on its own
-magpie group rm opus-anywhere           # one magpie found is hidden; magpie group restore <id> brings it back
-magpie claude group/opus-anywhere       # use it
+chongyun groups                           # yours, then those chongyun found
+chongyun group add "Opus anywhere" models=claude/claude-opus-5-5,copilot/claude-opus-5.5 routing=order stays=session
+chongyun group opus-anywhere              # one group, its models in order
+chongyun group set opus-anywhere models+=openrouter/anthropic/claude-opus-5.5 routing=usage
+chongyun group set opus-anywhere models-=copilot/claude-opus-5.5
+chongyun group set opus-anywhere routing=weight weight=claude/claude-opus-5-5=3,copilot/claude-opus-5.5=1
+chongyun group copy opus-anywhere "Opus test"  # the same models, routing and rules, to change on its own
+chongyun group rm opus-anywhere           # one chongyun found is hidden; chongyun group restore <id> brings it back
+chongyun claude group/opus-anywhere       # use it
 ```
 
-`routing=` is `smart` (the default: of the subscriptions with quota to
-spare, the one whose allowance renews soonest first), `order` (the first
-model until it can't answer, then the next), `rotate` (each turn to the next
-member), `usage` (least used first) or `pace` (weekly pace: the account with
-the most of its week left per hour until it renews first, so less of a week
-is lost at its reset) or `weight` (each model takes its share of the
-requests by its weight, smoothly interleaved: `weight=claude/claude-opus-5-5=3`
-gives it three requests for every one a model left at weight 1 takes; a
-weight is 1 to 1000, `weight=` alone clears them all, and a group in the
-group counts as one member, `weight=group/fast=2`). A key has no allowance to weigh, so it goes by its
-order or by what magpie sent it lately — except a sub2api key its owner gave
-a 5-hour, day or 7-day limit: with the provider's Balance URL set to the
-relay's `/v1/usage`, its card shows those windows and routing weighs it by
-them as it does a subscription, resting it till the window renews once the
-relay says `api key 7天限额已用完` — or till its windows are next read short
-of full, its limit raised or its usage reset. A key bought as a plan — Kimi Code, GLM Coding Plan
-or Z.ai, MiniMax Coding Plan, OpenCode Go, Command Code, Ollama Cloud — is weighed by its
-plan's windows the same way. With one key or account, the Routing page still
-shows what it has left. `stays=` is how long a conversation
-stays with the key or account that answered it: `auto` (the default, while
-the vendor's cache of it is worth keeping), `session`, `turn`, `off` or
-`strict` (never moved to another key or account, even past its usage cap:
-its errors go to the agent).
-`models=` replaces the whole list, in order; a bare model id works when only
-one provider serves it.
+`routing=` 可以是 `smart`（默认：在那些还有余额的订阅里，先用最早重置的那个）、`order`（先用第一个模型，直到它答不了再换下一个）、`rotate`（每一轮轮到下一个成员）、`usage`（先用得最少的）或 `pace`（按周节奏：在重置之前，优先用「每小时剩余本周额度最多」的那个账号，这样重置时损失的周更少），或者 `weight`（每个模型按自己的权重分摊请求，平滑交错：`weight=claude/claude-opus-5-5=3` 表示它每拿到三个请求，权重为 1 的模型才拿到一个；权重取值 1 到 1000，单独写 `weight=` 会清空全部，而组里的另一个组算一个成员，`weight=group/fast=2`）。一把 key 没有可衡量的额度，所以它按自己的顺序，或者按崇云科技最近发给它的量来走——但如果是它的主人给了 5 小时、按天或 7 天限额的 sub2api key：当 provider 的 Balance URL 设成中继的 `/v1/usage` 时，它的卡片会显示那些窗口，路由也像对待订阅那样按它们来衡量它，在中继说出 `api key 7天限额已用完` 之后让它休息——或者直到它的窗口下一次被读到还没满、它的限额被提高、或者它的用量被重置。按套餐买的 key——Kimi Code、GLM Coding Plan 或 Z.ai、MiniMax Coding Plan、OpenCode Go、Command Code、Ollama Cloud——同样按它那个套餐的窗口来衡量。只有一把 key 或一个账号时，路由页面仍然会显示它还剩多少。`stays=` 是一段对话留在应答它的那把 key 或那个账号上多久：`auto`（默认，只要厂商那边的缓存还值得留着）、`session`、`turn`、`off` 或 `strict`（绝不换到别的 key 或账号，哪怕已经超过用量上限：它的错误直接交给 agent）。`models=` 会按顺序替换整份清单；只有一个 provider 提供某个模型时，裸的模型 id 就够用。
 
-`listed=no` (the group editor's **Model lists: The group alone**) keeps the
-models a group names, and those its patterns match, out of `magpie models`,
-`/v1/models` and every agent's list, so a client offers the group alone.
-They are still served: the group routes over them, and a request naming one
-as `provider/model` is answered. A group in it keeps its own setting, and a
-group switched off keeps nothing out. `listed=yes` lists them again. To keep
-a whole provider for groups, use its **Only through routing groups** switch
-instead.
+`listed=no`（组编辑器里的 **Model lists: The group alone**）会把一个组点名的模型、以及它的模式匹配到的那些模型，挡在 `chongyun models`、`/v1/models` 和每个 agent 的清单之外，这样客户端只提供这个组。它们仍然会被服务：这个组在它们之上路由，而一个以 `provider/model` 点名其中某个的请求会被应答。里面的一个组保留它自己的设置，被关掉的组则什么都不挡。`listed=yes` 会把它们重新列出来。要把整个 provider 留给路由组，请改用它那个 **Only through routing groups** 开关。
 
-A group can also be of decision models alone (Jev and the like: TypeSafe's,
-Bailian's `decision-model-preview`, a plugin's marked models) — never mixed
-with models that hold a conversation. It is not offered to agents; it is asked
-at `POST /v1/systemone` with `"model":"group/<id>"` (or its id or name), and a
-chat group can take it as its classifier. Each of its models' keys and
-accounts is asked in the group's routing order: one that fails as a chat
-request would fail over (a 429, a 5xx, an unreachable host, an exhausted
-key) rests and the next is asked, and the Routing page's Requests list shows
-every try. It takes no patterns, rules, classifier, effort or fast mode.
+一个组也可以只由决策模型组成（Jev 之类：TypeSafe 的、百炼的 `decision-model-preview`、某个 plugin 标记的模型）——绝不与能对话的模型混在一起。它不会提供给 agent；它是在 `POST /v1/systemone` 处用 `"model":"group/<id>"`（或者它的 id 或名字）来问的，而一个对话组可以拿它当分类器。它每个模型的 key 和账号都按这个组的路由顺序去问：某个像对话请求那样失败的（一个 429、一个 5xx、一个连不上的主机、一把用尽的 key）会休息，然后问下一个，而路由页面的 Requests 列表会显示每一次尝试。它不接受模式、规则、分类器、effort 或快速模式。
 
 ```sh
-magpie group add Jevs models=typesafe/jev-latest,bailian-token-plan/decision-model-preview routing=order
+chongyun group add Jevs models=typesafe/jev-latest,bailian-token-plan/decision-model-preview routing=order
 curl -s localhost:3425/v1/systemone -H 'Authorization: Bearer magpie' \
   -d '{"model":"group/jevs","state":{"message":"fix the login bug"},"questions":{"intent":{"type":"choice","choices":["bug","feature"]}}}'
 ```
 
-The Routing page's Requests list defaults to the time-ordered By request view.
-Choose By session to group calls by the agent's session ID; the page remembers
-your choice across reloads.
-Codex title helpers with an explicit parent or fork source join their originating
-chat, retaining their title badge and contributing to its cost. Titles without
-ancestry and ordinary forked chats stay separate.
-Codex chat names come from its local name index and follow renames. Other
-agents' sessions (Claude Code and the rest the Sessions page reads) take the
-name the Sessions page shows for them, read from their own files on this
-computer. Unknown or remote-only names fall back to the ID; the full ID
-remains in the heading tooltip.
-Expand a session to see each request. Each request and session shows its estimated cost at the effective model
-prices, including cache reads and writes. Session totals cover the listed
-requests only (the live trace or the selected day's retained history), and a
-`+` marks a partial estimate. Calls without a session ID are listed separately;
-old history without token tiers, or a model without a known price, shows `—`.
+路由页面的 Requests 列表默认是按时间排序的「按请求」视图。选「按会话」就会按 agent 的会话 ID 把调用分组；这个选择会被页面记住，重新加载也还在。Codex 的标题助手如果带明确的父级或 fork 来源，会并入它原本的那段对话，保留它的标题徽标，并计入那段对话的成本。没有来源关系的标题，以及普通的分叉对话，仍各自独立。Codex 的对话名来自它的本地名称索引，并跟随改名。其它 agent 的会话（Claude Code 以及 Sessions 页面会读的那些）采用 Sessions 页面为它们显示的名字，这些名字是从它们自己在这台电脑上的文件里读出来的。未知或只有远端才有的名字会退回用 ID；完整 ID 仍然保留在标题的提示里。展开一个会话就能看到每一次请求。每次请求和每个会话都显示按有效模型价格估算的成本，包含缓存读写。会话合计只覆盖列出来的那些请求（实时追踪或所选那天保留下来的历史），一个 `+` 标记表示这是部分估算。没有会话 ID 的调用单独列出；没有 token 档位的老历史，或者没有已知价格的模型，显示 `—`。
 
-Opening the Providers page automatically checks Alma, CC Switch, Claude Code
-and Codex for local provider configurations that can be imported. With no
-providers yet, a hint shows how many were found and which apps they came from;
-otherwise a small **Import local configurations** link sits beside **Add
-provider**. Both open the existing picker with only the offered configurations
-selected; nothing is added until you confirm the selection. **Ignore** remembers
-the offered configurations on this device across window restarts; new or changed
-configurations can be offered again. **Add provider → Import…** still includes ignored configurations.
-Discovery runs in the background, at most once a minute when opening or
-refreshing the page, and refreshes after an import. Configurations already in
-magpie, entries that cannot be imported, providers turned off in their source
-app, and ID collisions that cannot join as another key are excluded from the
-hint. The latter two remain available through manual import. Counts refer to
-configurations in source apps, which may include the same provider
-in more than one app. Only app names and opaque configuration fingerprints
-reach the automatic hint; ignored fingerprints are kept in local browser storage.
+打开 Providers 页面**不会**再扫描本机其它应用里的 provider 配置：崇云版不检查 Alma、CC Switch、Claude Code 或 Codex，也没有「Import local configurations」提示。供应商请手工添加，或用 `chongyun://import?…` 导入链接添加。
 
-The app's Import from other apps dialog can copy providers from Claude Code's
-`settings.json` (`CLAUDE_CONFIG_DIR` when set) and Codex's `config.toml`
-(`CODEX_HOME` when set) into magpie. Codex imports custom
-`[model_providers.*]` entries with an inline `experimental_bearer_token`,
-including fixed headers for custom providers in
-`[model_providers.*.http_headers]` and models from
-`[profiles.*]` or `model_catalog_json`. Review the entries before importing;
-subsequent changes to agent settings are not automatically copied to magpie.
-Entries that point back to magpie or only name an `env_key` are skipped.
+「从其它应用导入」对话框**已随订阅复用功能一并移除**。Claude Code 的 `settings.json`（设了 `CLAUDE_CONFIG_DIR` 时用它）、Codex 的 `config.toml`（设了 `CODEX_HOME` 时用它）里的 provider 都不会再被读取进崇云科技。Codex 那边带内联 `experimental_bearer_token` 的自定义 `[model_providers.*]` 条目、`[model_providers.*.http_headers]` 里的 header，以及来自 `[profiles.*]` 或 `model_catalog_json` 的模型，同样不再被导入。供应商请手工添加。
 
-The same dialog reads OpenCode's own sign-ins, `auth.json` in
-`$XDG_DATA_HOME/opencode` (`~/.local/share/opencode` when unset, on Windows
-too), where `opencode auth login` keeps them. An API key comes in on the
-magpie preset at the same address: OpenCode Go's key on OpenCode Go, Zen's
-(`opencode`) on OpenCode Zen, and a vendor's (OpenAI, Anthropic, DeepSeek,
-OpenRouter and others) on its own. OpenCode keeps no address beside a key,
-so one of a provider magpie has no preset for is listed and skipped. Sign-ins
-(Claude Pro/Max, Copilot, an enterprise server's token) are listed and
-skipped; add the subscription in magpie instead. OpenCode is read only when
-you open the dialog: the Providers page's automatic check leaves it out, as
-the file holds every sign-in OpenCode has. magpie never writes to it.
+OpenCode 自己的登录信息（`$XDG_DATA_HOME/opencode` 下的 `auth.json`，没设时是 `~/.local/share/opencode`，Windows 上也一样）**也不再被读取**。OpenCode Go、OpenCode Zen 以及各个厂商预设下的 API key，请在崇云科技里手工添加。订阅账号（Claude Pro/Max、Copilot、企业服务器）请用崇云科技自己的登录流程获取。
 
-### How magpie picks an account
+### 崇云科技如何挑选账号
 
-When a subscription has several accounts on (Claude Code's or Codex's
-saved accounts, say), or a routing group has several members, the gateway
-orders them for each request in these steps. The Routing page shows the
-result for every request: who went first, and why.
+<a id="how-magpie-picks-an-account"></a>
 
-1. **Who can answer.** The account the agent is signed in to, unless it
-   is paused, and the other accounts that are ticked. An account set not
-   to serve the model, or held at its usage cap, is never tried. An account whose plan doesn't list the model (a Free one behind a
-   Plus) is tried only when no other lists it. A Claude account that has to
-   be signed in again stays in the list, but is passed over when its turn
-   comes, without resting.
-2. **The routing.** What is left is put in order by the routing the
-   subscription or group uses (below).
-3. **Rate limited ones last**, only with *Sink* on: an account a 429 rate
-   limited while it still had quota goes behind every one not rate limited
-   since.
-4. **The provider's fallback models** come after its own accounts.
-5. **Resting ones last.** An account resting after a failure goes to the
-   back, behind every fallback. It is never dropped: when it is the only
-   one, it is tried anyway.
-6. **The conversation's account first.** Once an account has answered a
-   conversation, it is moved to the front for the conversation's next
-   requests, as *Stays* says. In auto mode that is within a turn, and
-   across turns while the last request read from the vendor's cache and
-   wrote to it at least 1,024 tokens between them, and it answered in the
-   last 5 minutes. A first turn reads nothing and writes the whole prompt,
-    so the second stays to read it; a vendor that keeps a prompt cached
-    without reporting it (OpenAI's automatic prefix cache, Gemini) is taken
-    to have written what it was sent. This
-   never brings back an account that is resting, nor one that has used 98%
-   of a window (100% In order). *Stays: Strict* does, and asks no other:
-   the conversation stays on its account, resting, spent or past its cap,
-   and its errors go to the agent.
+当一个订阅开着好几个账号（比如 Claude Code 或 Codex 保存的那些账号），或者一个路由组有好几个成员时，网关会按下面这几步为每个请求把它们排好序。路由页面会显示每个请求的结果：谁排在了最前面，以及为什么。
 
-So routing decides who goes first only for a conversation nobody has
-answered yet. An account that has used 90% goes behind the others for new
-conversations, but a conversation already on it stays there until 98%.
+1. **谁能应答。** agent 当前登录的那个账号（除非它被暂停），以及其它被勾上的账号。被设成不提供这个模型的账号、或者停在用量上限上的账号，永远不会被尝试。套餐里没有列出这个模型的账号（比如排在 Plus 后面的 Free），只有在没有别的账号列出它时才会被尝试。一个需要重新登录的 Claude 账号仍留在列表里，但轮到它时会被跳过，而且不会因此休息。
+2. **路由方式。** 剩下的按那个订阅或组所用的路由方式排序（见下文）。
+3. **被限流的排最后**，而且只在 *Sink* 打开时如此：一个还有余额却被 429 限流的账号，会排在所有此后没有被限流的账号后面。
+4. **provider 的回退模型**排在它自己的账号之后。
+5. **在休息的排最后。** 失败后正在休息的账号排到最末尾，在所有回退之后。它永远不会被丢掉：只有它一个时，照样会尝试它。
+6. **对话所在的账号优先。** 一个账号一旦应答过一段对话，就会按照 *Stays* 的说法，被挪到这段对话接下来几次请求的最前面。在自动模式下，这是在一轮之内；而跨轮则要满足：上一个请求从厂商的缓存里读过、又写回了至少 1,024 个 token，并且是最近 5 分钟内应答的。第一轮不读任何东西，只写入整个提示词，所以第二轮会留下来读它；某个把提示词缓存住却不报告的厂商（OpenAI 的自动前缀缓存、Gemini）被视为写入了它收到的东西。这绝不会把正在休息的账号带回来，也不会带回来那个已经用掉某个窗口 98% 的账号（顺序模式下是 100%）。*Stays: Strict* 会带回来，而且不问别的账号：这段对话留在它那个账号上，无论它是在休息、已用尽还是已过上限，它的错误直接交给 agent。
 
-**The routings.** Smart, Least used first and Weekly pace go by the share
-used of the fullest window that counts the model, the 5-hour window
-included. Smart and Weekly pace put an account behind the others once a
-window is at 90% or more, and behind those once one is at 98% or more,
-each of these groups ordered by the share used.
+所以路由只对还没人应答过的对话决定谁先上。一个已经用到 90% 的账号，在新对话里会排在其它账号后面，但已经在它上面的一段对话会一直待到 98%。
 
-- **Smart** (the default): of the accounts under 90%, the one whose
-  allowance renews soonest goes first, because what it has left is lost at
-  the reset. The biggest window decides: the week, then the 5 hours only
-  when the weeks renew in the same hour. Reset times are compared to the
-  hour, by the clock: 13:55 and 14:05 are different hours, 14:05 and
-  14:55 the same. An account
-  with no week (Claude Enterprise) goes by its 5 hours. Credits that
-  run out before their window renews, or that have no reset at all
-  (WorkBuddy's packages, each ending on its own day), count as renewing
-  when they run out: of several WorkBuddy accounts, the one whose credits
-  left end first goes first. The daily Free Plan credits aren't counted,
-  since they end at the same midnight on every account. A Claude account
-  magpie knows nothing of yet goes first once, to learn what it has left
-  from the answer; any other unknown account goes after those known.
-  An account with a month beside its week (Factory) goes by its month:
-  when the month holds less than its weeks add up to (Factory's, by
-  one user's readings, about two weeks' worth), what a week leaves isn't
-  lost at the week's reset, as the
-  month still has it to spend later. Its row
-  on the Routing page says the fullest window's share with when that
-  window renews: "32% used · renews in 3 days" is the week's.
-- **In order**: the accounts in their order. The first takes every request
-  until it is used up (100%) or fails.
-- **In turn**: each turn of a conversation goes to the next account. A new
-  conversation goes to the account the fewest other conversations of the
-  last 30 minutes are on.
-- **Least used first**: the lowest share used first; then the account
-  magpie sent the fewest tokens lately (half of them stop counting after an
-  hour). An account not known counts as unused.
-- **Weekly pace**: the account with the highest pace first. Pace is the
-  share of the week left divided by the hours until the week renews (at
-  least 1): 60% left with 20 hours to go is 3 per hour. With two weekly
-  windows that count the model (Opus's own and the general one), the lower
-  pace counts. An account with no week goes by its 5 hours. Accounts whose
-  pace is within a tenth of the highest in their band count as alike, and
-  among them the one magpie sent the fewest tokens lately goes first. A
-  Claude account not known goes first once, as in Smart; another unknown
-  account counts as a fresh week.
+**这些路由方式。** Smart、Least used first 和 Weekly pace 都按「算上这个模型的最满的那个窗口」的已用份额来算，5 小时的窗口也算在内。Smart 和 Weekly pace 在某个窗口达到 90% 或以上时把一个账号排到其它账号后面，在某个窗口达到 98% 或以上时再排到那些账号后面，每一组内部按已用份额排序。
 
-The routings besides Smart are the built-in plugin `rotation` (Routing
-strategies in Plugins › Built-in). It stays on while a provider or group is
-routed by one of them. Turned off, the pickers offer Smart alone, and a
-provider or group still set to one of them is tried in its listed order.
+- **Smart**（默认）：在那些低于 90% 的账号里，最早重置额度的那个先上，因为它剩下的东西会在重置时作废。由最大的窗口决定：先是周，只有当几周在同一小时重置时才看 5 小时。重置时间按钟表比到小时：13:55 和 14:05 是不同的小时，14:05 和 14:55 是同一个。没有周的账号（Claude Enterprise）按它的 5 小时来算。在窗口重置之前就耗尽的额度，或者根本没有重置的额度（WorkBuddy 的那些套餐，各自在自己那天结束），算作在耗尽时重置：在几个 WorkBuddy 账号里，额度剩余最早结束的那个先上。Free 套餐的每日额度不计入，因为在每个账号上都是同一个午夜结束。崇云科技还一无所知的 Claude 账号会先上一次，好从应答里弄清它还剩多少；其它未知账号排在那些已知账号之后。既有一周又有一个月的账号（Factory）按它的月来算：当这个月里剩下的比它那几周加起来还少时（按某位用户的观察，Factory 大约是两周的量），一周剩下的东西不会在周重置时作废，因为这个月里还留着它可以之后花。它在路由页面上那一行写的是最满那个窗口的份额，以及那个窗口何时重置："32% used · renews in 3 days" 说的是那一周。
+- **In order**：按账号自己的顺序。第一个接下每一个请求，直到它用尽（100%）或失败。
+- **In turn**：一段对话的每一轮都轮到下一个账号。一段新对话会落到「最近 30 分钟里其它对话最少」的那个账号上。
+- **Least used first**：先用已用份额最低的；然后是崇云科技最近发得 token 最少的那个账号（发出去的一半在一小时后就不再计入）。未知的账号算作没被用过。
+- **Weekly pace**：先用节奏最高的那个账号。节奏是「本周剩余份额」除以「离本周重置还有多少小时」（至少按 1 小时算）：还剩 60%、离重置 20 小时，就是每小时 3。当有两周窗口都算上这个模型时（Opus 自己的那个和通用的那个），取节奏较低的那个。没有周的账号按它的 5 小时来算。节奏落在自己那一档最高值 0.1 以内的账号算作一样，而在它们之中，崇云科技最近发得 token 最少的那个先上。还不认识的 Claude 账号像在 Smart 里一样先上一次；其它未知账号算作一个全新的周。
 
-Your own routing groups are the built-in plugin `groups` (Routing groups in
-Plugins › Built-in), which stays on while you have one. The groups magpie
-finds for a model two providers serve don't need it. Turned off, the gateway
-doesn't list or serve a group of your own, and the Routing page has no New
-group button; `magpie groups` still lists them.
+除 Smart 之外的这些路由方式由内置 plugin `rotation` 提供（Plugins › Built-in 里的「Routing strategies」）。只要有 provider 或组用它们中的某个来路由，它就一直开着。关掉之后，选择器只提供 Smart，而仍被设成其中某个的 provider 或组会按它列出的顺序来尝试。
 
-**Make first** sets the accounts' order. How much that order counts
-depends on the routing:
+你自己的路由组由内置 plugin `groups` 提供（Plugins › Built-in 里的「Routing groups」），只要你有一个组它就一直开着。崇云科技为两个 provider 都提供的模型自动找到的那些组不需要它。关掉之后，网关不再列出也不提供你自己的组，路由页面上也没有「新建组」按钮；`chongyun groups` 仍然列出它们。
 
-| Routing | What the order decides |
+**Make first** 设定这些账号的顺序。这个顺序有多重要，取决于路由方式：
+
+| 路由方式 | 这个顺序决定什么 |
 | --- | --- |
-| In order | Everything: the first takes every request it can. |
-| In turn | Where the rotation goes next. |
-| Smart | Only between accounts whose windows all renew in the same hours, or whose shares used are equal. |
-| Least used first | Only between accounts with the same share used and the same tokens sent lately. |
-| Weekly pace | Only between accounts in the same pace band that magpie sent the same tokens lately, in practice none since magpie started. |
+| In order | 全部：第一个接下它能接的每一个请求。 |
+| In turn | 轮转接下来轮到谁。 |
+| Smart | 只在那些窗口都在同一批小时里重置的账号之间，或已用份额相等的账号之间。 |
+| Least used first | 只在已用份额相同、且最近发出的 token 也相同的账号之间。 |
+| Weekly pace | 只在同一节奏档里、且崇云科技最近发出的 token 相同的账号之间，实际上从崇云科技启动以来没有这种。 |
 
-For Claude Code and Codex, *Make first* also signs the agent in to that
-account, because the account the agent is signed in to is first. With
-*Keep … signed in to* on, *Make first* changes only the gateway's order,
-and the agent stays signed in where it is kept.
+对 Claude Code 和 Codex，*Make first* 还会把 agent 登录到那个账号上，因为 agent 登录着的那个账号排在最前。打开 *Keep … signed in to* 时，*Make first* 只改变网关的顺序，agent 仍然登录在它被留在的那个账号上。
 
-**When an account runs out.** A 429 that says the allowance is used up
-rests the account until it is back, and the same request goes to the next
-candidate at once, as long as none of the reply has been sent. How long it
-rests comes from the first of these that is known: the reset time in the
-refusal (Claude Code's `usage limit reached|<time>`, ChatGPT's
-`resets_at`), the reset of a window magpie last read as used up (98%, 100%
-In order), the vendor's `Retry-After` or rate-limit reset header (an hour
-at most), else 15 minutes. A key's provider can rest longer of its own:
-`magpie provider quota-rest <id> 6h`, or `until 08:00` for an allowance
-that comes back at a time of day (`until 00:00+08:00` on the vendor's
-clock). Its own rest stands over a `Retry-After` that asked for more than
-the hour. It is never longer than 8 days. The account's
-windows are read again right away, and once a reading finds the window it
-filled started again (for Claude, a new `/usage`; for any subscription,
-its reset gone by), it is back at once, not at the time the refusal
-named. A five hours started again while its week is still used up doesn't
-bring it back. A 429 that is a short rate limit rests
-the account for as long as the vendor asks (an hour at most), or a
-minute, doubled each time it comes back right after its rest, up to 30
-minutes. Out of credit rests half an hour. Any other failure rests a minute, longer each time it fails
-again, up to 10 minutes; a subscription that fails with a window used up
-rests until that window renews. `magpie provider rest-cap <id> 4h` moves
-both of those caps, 30 and 10 minutes, for one provider's keys and
-accounts, from 1 minute (every rest a minute) up to 8 days; `default` gives
-them back. `magpie provider rest-cap <id> off` is for a relay or an account
-pool whose unknown errors come now and then: a key or account of it that
-fails without saying why (a 5xx, a dropped connection) doesn't rest at all,
-and the next request asks it again. A refused key (401, 403), a model it
-doesn't serve, being out of quota or credit, or a rate limit still rests
-it as above.
+**当一个账号用尽时。** 一个说明额度已用完的 429 会让该账号休息到它恢复，而同一个请求会立刻转给下一个候选，只要回话还没发出任何内容。休息多久取自下面这些里第一个已知的：拒绝信息里的重置时间（Claude Code 的 `usage limit reached|<time>`、ChatGPT 的 `resets_at`）、崇云科技最后一次读到已用尽的某个窗口的重置时间（98%，顺序模式下是 100%）、厂商的 `Retry-After` 或限流重置响应头（最多一小时），否则 15 分钟。某个 key 的 provider 可以自己休息得更久：`chongyun provider quota-rest <id> 6h`，或者对一个在某个钟点回来的额度写 `until 08:00`（按厂商的时钟写就是 `until 00:00+08:00`）。它自己的休息时长压过要求超过一小时的 `Retry-After`。它永远不会超过 8 天。这个账号的窗口会立刻重新读一遍，一旦某次读到发现它填满的那个窗口又重新开始了（对 Claude 来说是一次新的 `/usage`；对任何订阅来说，是它的重置时间过去了），它就立刻恢复，而不是等到拒绝信息里说的那个时刻。五小时的窗口重新开始、但它那一周仍然用尽，并不会让它回来。一个只是短时限流的 429 会让账号休息厂商要求的时间（最多一小时），或者一分钟；如果它每次休息刚结束就又回来，这个时间就翻倍，最多 30 分钟。欠费会让它休息半小时。任何其它失败休息一分钟，每次再失败就加长一点，最多 10 分钟；一个因为窗口用尽而失败的订阅会一直休息到那个窗口重置。`chongyun provider rest-cap <id> 4h` 会把这两个上限（30 分钟和 10 分钟）对某个 provider 的 key 和账号一起调整，从 1 分钟（每次休息一分钟）到 8 天；`default` 把它们还原。`chongyun provider rest-cap <id> off` 是给那些偶尔冒出来的、原因不明的错误的中继或账号池用的：它某个失败却没有说明原因的 key 或账号（一个 5xx、一次连接掉线）完全不休息，下一个请求还会再问它。被拒绝的 key（401、403）、它不提供的模型、额度或余额用尽、或者限流，仍然按上面那样让它休息。
 
-**When the safety filter refuses.** A reply the vendor's safety filter
-refuses before any of it is said rests nobody: it is about what was asked,
-not the account. By default the same request is asked of the model's other
-accounts, then the routing group's other members, until one answers.
-Settings › Models › Replies › *Ask again after a refusal* sets how many more
-are asked: 1, 2 or 3, or *Never ask again*. When nobody else is asked, an
-agent on Anthropic's Messages API (Claude Code) gets the refusal as the
-vendor said it, `stop_reason` `refusal` with its category, which Claude Code
-answers by switching to its own fallback model, as it does on Anthropic's
-API. Codex and Chat clients get a 400 saying the model refused the request,
-which they don't ask again for. Any other 400 is never asked again.
+**当安全过滤器拒绝时。** 一个在说出任何内容之前就被厂商的安全过滤器拒绝的回话，不会让任何人休息：它关乎被问的是什么，而不是账号。默认情况下，同一个请求会问这个模型的其它账号，然后问路由组的其它成员，直到有一个应答。设置 › 模型 › 回话 › *拒绝后再问一次* 设定了还要再问多少个：1、2 或 3，或者 *永不再问*。当不再问别人时，走 Anthropic Messages API 的 agent（Claude Code）会收到厂商原样给出的那个拒绝，带上分类的 `stop_reason` `refusal`，而 Claude Code 会像在 Anthropic 的 API 上那样，切换到它自己的回退模型。Codex 和 Chat 客户端会收到一个 400，说明模型拒绝了这次请求，它们不会再问一次。任何其它 400 都不会再问。
 
-**Through the gateway, or on its own.** Everything above is the gateway's,
-for requests sent through magpie. Claude Code or Codex used on its own
-talks to the vendor with the account it is signed in to, and routing
-never sees it. For that, magpie looks at the account the agent is signed
-in to a minute after it starts and every 5 minutes after: once it has used
-98% of a window (100% In order), or reached its usage cap, magpie signs
-the agent in to the next ticked account, in their order, whose allowance
-is known and under that share. A saved Claude account magpie knows
-nothing of yet (see below) is not moved to. Once the account it moved the
-agent off has every window under 90% again, it signs the agent back in to
-it. *Keep … signed in to* turns this off: the agent stays on the first
-account, or on the account you picked, whatever it has left. It changes nothing in the gateway's routing.
+**走网关，还是自己单独用。** 上面这些全都是网关的事，针对经由崇云科技发出的请求。单独使用的 Claude Code 或 Codex 会用它登录着的那个账号直接和厂商说话，路由根本看不到。为此，崇云科技会在它启动一分钟后看一次 agent 登录着的那个账号，之后每 5 分钟看一次：一旦它用掉了某个窗口的 98%（顺序模式下是 100%），或者到达了它的用量上限，崇云科技就把 agent 登录到下一个被勾上的账号，按它们的顺序，挑那个额度已知且低于这个份额的。崇云科技还一无所知的已保存 Claude 账号（见下文）不会被换上去。等它把 agent 换下来的那个账号所有窗口又都低于 90% 了，它就把 agent 登录回那个账号。*Keep … signed in to* 会关掉这一套：agent 留在第一个账号上，或者你挑的那个账号上，不管它还剩多少。这对网关的路由没有任何影响。
 
-With more than one Codex account on, magpie also sets `openai_base_url`
-in Codex's config.toml, so a request the signed-in account has no
-allowance for goes on to the others through the gateway. *Only switch
-Codex's sign-in* under Providers › Codex (or `magpie accounts switch-only
-codex on`) leaves that out: magpie only moves Codex's own sign-in
-(`auth.json`) as above, and Codex's requests go straight to OpenAI, never
-through magpie (#1907). An `openai_base_url` you wrote yourself stays. The
-Codex app and a running `codex app-server` read the sign-in when they
-start, so one already open stays on its account until it is opened again;
-a new `codex` session takes the new one. Connected to magpie, Codex's
-requests go through it as before.
+开着不止一个 Codex 账号时，崇云科技还会在 Codex 的 config.toml 里设置 `openai_base_url`，这样登录着的那个账号没有额度的请求，就会通过网关转给其它账号。Providers › Codex 下的 *Only switch Codex's sign-in*（或者 `chongyun accounts switch-only codex on`）会把这一项排除掉：那样崇云科技只按上面说的移动 Codex 自己的登录态（`auth.json`），而 Codex 的请求直接发给 OpenAI，绝不经过崇云科技（#1907）。你自己写的 `openai_base_url` 会保留。Codex 应用和正在运行的 `codex app-server` 都在启动时读登录态，所以已经开着的那个会留在它那个账号上，直到再次打开；新的 `codex` 会话则用新的那个。接上崇云科技时，Codex 的请求照旧经过它。
 
-**How often an allowance is read.** Routing uses what was read last and
-never waits for a reading, except the first one after magpie starts (3
-seconds at most). A reading over a minute old is read again in the
-background as a request is routed, and an account that fails for its
-quota is read again at once; if a reading was already under way as it
-failed, the account is read again as soon as that reading is back. A
-reading the Usage page made counts as one, its age from when it was made.
-Codex and most other subscriptions read every
-account from the vendor this way. A Codex account is also known from each
-reply ChatGPT sends magpie for it, which says what the account has used:
-an account near its usage cap is held from the next turn on (#1295). A
-usage cap is set on the account's row for each of its windows, and a
-window can have one of its own, set from its meter: a five-hour window at
-50% and a weekly one at 40%, or no cap on one window. The account is held
-while any window is past its own. A
-usage cap is still a stop on what magpie has read, not a guarantee: a turn
-already under way can take an account past it, so a 99% cap doesn't
-promise 1% is left. Claude is different: magpie never asks
-Anthropic itself. It reads only the account Claude Code is signed in to,
-by running Claude Code's `/usage`:
+**额度多久读一次。** 路由用的是上一次读到的内容，绝不为一次读取而等待，崇云科技启动后的第一次除外（最多 3 秒）。超过一分钟的旧数据会在路由请求时于后台重新读一次，而因额度失败的账号会立刻重读；如果失败时已经有一次读取在进行，账号会在那次读取回来后立刻重读。用量页面做的读取也算一次，它的年龄从做完那一刻算起。Codex 和大多数其它订阅都用这种方式从厂商读每个账号。Codex 账号还可以从 ChatGPT 为它发给崇云科技的每个回话里得知，那个回话会说明这个账号用了多少：一个接近用量上限的账号从下一轮起就不再被使用（#1295）。用量上限设在账号那一行上，可以按它的每个窗口分别设；而一个窗口也可以有它自己的上限，从它的计量里取：五小时窗口 50%、按周的 40%，或者某个窗口不设上限。只要有任何一个窗口超过了它自己的上限，这个账号就被搁置。用量上限仍然只是对崇云科技已读内容的约束，不是保证：一轮已经在进行的对话可能把这个账号推过它，所以 99% 的上限并不承诺还剩 1%。Claude 不一样：崇云科技从不直接问 Anthropic。它只读 Claude Code 登录着的那个账号，做法是运行 Claude Code 的 `/usage`：
 
-- once after magpie starts;
-- when you open or refresh the Usage page (in the app or the TUI), or run
-  `magpie quota` or `magpie accounts`, at most every 30 seconds;
-- otherwise again after 5 to 15 minutes (drawn at random each time), and
-  only if Claude Code was used since.
+- 崇云科技启动后一次；
+- 你打开或刷新用量页面时（在应用里或 TUI 里），或者运行 `chongyun quota` 或 `chongyun accounts` 时，最多每 30 秒一次；
+- 否则在 5 到 15 分钟之后再来一次（每次随机取一个），而且只有这段时间里用过 Claude Code 才来。
 
-A saved Claude account that isn't signed in is never read. What it has
-left is known only from what Claude Code says as that account answers a
-request through the gateway, and its Usage card says so until then. So
-the windows routing goes by for such an account can be hours old; a window
-whose reset has passed counts as empty again.
+一个没有登录的已保存 Claude 账号永远不会被读。它还剩多少，只能从 Claude Code 以那个账号应答经由网关发出的请求时所说的话里知道，在那之前它的用量卡片也是这么说的。所以路由对这样一个账号所依据的窗口可能已经是几小时前的；一个重置时间已经过去的窗口算作又空了。
 
-### Signed-in agents as providers
+### 把已登录的 agent 当作 provider
 
-An agent you have signed in to is a subscription with models behind it, so
-magpie offers it as a provider too. Claude Code (an OAuth login in the macOS
-Keychain or `~/.claude/.credentials.json`), Codex (a ChatGPT login in
-`~/.codex/auth.json`), Copilot (a GitHub login in
-`~/.config/github-copilot/apps.json`), Devin (`devin auth login`, kept in
-`~/.local/share/devin/credentials.toml`) and Qoder (signed in from magpie with
-its OAuth device flow, kept in magpie's own config; Qoder CN is its own
-subscription beside it, for accounts on qoder.cn made with an Alibaba Cloud
-account or a phone number, which can't sign in on qoder.com) appear in `magpie providers` and in
-the Providers tab as *signed in as …*, with their models spelled
-`claude/claude-sonnet-5`, `codex/gpt-5.5`, `copilot/claude-sonnet-4.5` or
-`devin/swe-2-max` in every other agent's picker. magpie reads the agent's own credentials each
-time, refreshes tokens the way the agent does — writing a rotated token
-back where the agent will find it — and stores nothing but your model
-picks; sign out of the agent and the provider is gone. The model list is
-the vendor's own too: magpie asks Anthropic's, Copilot's or Codex's API with
-that same sign-in, so a model added upstream appears on the next refresh.
-The ChatGPT backend only streams and rejects a few parameters, so magpie
-translates non-streaming requests and drops what it would refuse.
-Claude subscriptions are different: Anthropic classifies another agent's
-system prompt as third-party traffic even when the OAuth request otherwise
-looks like Claude Code. magpie therefore drives the genuine local `claude`
-binary for every Claude subscription generation. The caller's tools are
-bridged into that live turn over MCP, and tool results resume the same Claude
-Code process; Pi, OpenCode and every other agent use this path automatically.
-The generated harness stays out of Anthropic's system-prompt classifier while
-its instructions remain part of the user context. This requires Claude Code
-to be installed and signed in.
-A Grok subscription (SuperGrok, signed in with Grok Build) talks straight
-to the Responses API the grok CLI uses, a Devin subscription to the API the
-devin CLI uses, and a Cursor subscription to the agent API cursor-agent
-uses, each with the CLI's sign-in and the caller's tools passed through
-(Cursor's model calls them as MCP tools; none of Cursor's own tools run).
-Google sign-ins — Gemini CLI's and Antigravity's — talk to Google's Code
-Assist API directly: magpie reads Gemini CLI's own login from `~/.gemini` or
-signs one in itself, and refreshes the token in memory. Google no longer
-serves Gemini CLI's sign-in to individual accounts, only to Gemini Code
-Assist Standard and Enterprise, which need a Google Cloud project named
-(`magpie accounts project gemini <email> <project-id>`, or
-`GOOGLE_CLOUD_PROJECT` in `~/.gemini/.env`). Google may suspend an
-Antigravity account it sees used outside Antigravity, so magpie asks before
-adding one; use an account you can afford to lose.
+<a id="signed-in-agents-as-providers"></a>
 
-Accounts signed in elsewhere can be imported from their files instead of
-signed in again: *Import accounts from a file…* under a subscription's
-accounts, or `magpie accounts import <codex|claude|antigravity|factory>
-<file>... [--yes]`. For ChatGPT that takes Codex's `auth.json`, codexbar's
-`~/.codexbar/config.json` (every ChatGPT account it switches between) and
-the exports of Cockpit Tools, CLIProxyAPI and Sub2API, as many files as
-you like. Each ChatGPT sign-in is refreshed before it is added, which
-checks it and makes magpie its only holder: the tool the file came from
-(Codex on another computer, codexbar, Cockpit Tools, CLIProxyAPI) is
-signed out of that account and has to sign in again. A backup carries no
-sign-in, so this is also how accounts move to a new computer: import the
-file from the old one there. The files are only read. An account
-magpie has already is left as it is, two Team seats of one email stay two
-accounts, and an entry with only an access token (a ChatGPT web session)
-is refused, since it would stop working within days with nothing to renew
-it.
+**只有崇云科技自己签入的账号**才会被当作 provider 提供：Codex（PKCE 流程）、Copilot（设备码流程）、Google OAuth（Gemini CLI / Antigravity），以及插件提供的账号。崇云科技**不读取任何别家 Agent 已登录的凭据** —— Claude Code 在 macOS 钥匙串里的 OAuth 登录、Codex 的 `~/.codex/auth.json`、Copilot 的 `~/.config/github-copilot/apps.json`、Devin 的 `~/.local/share/devin/credentials.toml` 都不会再被读，也不再被服务。Qoder 由崇云科技用它的 OAuth 设备流程登录，保存在崇云科技自己的配置里；Qoder CN 是它旁边的另一个订阅，给那些用阿里云账号或手机号在 qoder.cn 上开的、没法在 qoder.com 上开的账号用。
 
-### Connecting anything else
+在别处登录的账号**不能再从它们的文件导入**：`chongyun accounts import` 及其全部入口已移除，窗口里对应的「从文件导入账号…」也没有了。账号只能通过崇云科技自己的登录流程获得。
 
-The gateway listens on `127.0.0.1:3425` (`MAGPIE_ADDR` changes it) and starts
-with the app; `magpie serve` runs it alone. For reverse-proxied or container
-deployments, set `MAGPIE_PUBLIC_URL=https://magpie.example.com` to the base
-URL shown in the console and CLI, including connection examples. While
-other machines are let in (Share on local network, or a `MAGPIE_ADDR` on
-the network), the Gateway page's Connect starts at it until you pick
-another address there, Settings › About lists it beside the local URL, and
-`magpie web` shows it as the gateway's address. Local agent configs still
-use the local gateway address.
+### 接入其他任何东西
 
-Building an app or agent that should use magpie, or get a row on the
-Agents page: see [Integrating your app or agent](integrating.md).
+<a id="connecting-anything-else"></a>
 
-External clients behind a reverse proxy need an enabled gateway key
-(Gateway → Gateway keys): with Settings → Share on local network on, or a
-`MAGPIE_ADDR` on the network, magpie asks for one; otherwise it refuses
-them, unless the proxy authenticates its clients itself
-(`MAGPIE_TRUST_PROXY=1`, below). A public URL with no port of
-its own — a reverse proxy's `https://magpie.example.com` — is the address
-`magpie web` prints for its own page too, so the proxy must forward `/v1`
-and `/v1beta` to the gateway's port and the rest to the page's. When the
-proxy and magpie run on the same machine, a request it forwards over
-loopback carries a forwarding header and needs a gateway key as one from
-the network does (see [Providers and the gateway](#providers-and-the-gateway)); a proxy that
-authenticates its clients itself can be trusted with `MAGPIE_TRUST_PROXY=1`.
+网关监听 `127.0.0.1:3425`（`MAGPIE_ADDR` 可以改它），并随应用启动；`chongyun serve` 则单独运行它。对于反向代理或容器部署，把 `MAGPIE_PUBLIC_URL=https://magpie.example.com` 设成控制台和 CLI 里显示的那个 base URL，连接示例也用它。在允许别的机器进来时（在局域网上共享，或者 `MAGPIE_ADDR` 在网络上），网关页面的「连接」一开始就是它，直到你在那里另选一个地址；设置 › 关于会把它列在本地 URL 旁边，而 `chongyun web` 会把它显示为网关的地址。本机 agent 的配置仍然用本地网关地址。
 
-It exposes:
+要做一个用上崇云科技、或想在 Agents 页面上有一行的应用或 agent：见[把应用或 Agent 接入崇云网关](integrating.md)。
 
-| Path                     | API                        |
+反向代理后面的外部客户端需要一把已启用的网关 key（网关 → 网关 key）：当设置 → 在局域网上共享开着、或者 `MAGPIE_ADDR` 在网络上时，崇云科技会问你要一把；否则它会拒绝它们——除非这个代理自己给客户端做认证（`MAGPIE_TRUST_PROXY=1`，见下文）。一个不带自己端口的公开 URL——比如反向代理的 `https://magpie.example.com`——也是 `chongyun web` 为它自己的页面打印的地址，所以这个代理必须把 `/v1` 和 `/v1beta` 转发到网关的端口，其余的转到页面的端口。当代理和崇云科技跑在同一台机器上时，它经回环转发过来的请求带着转发 header，因此也需要一把网关 key，和从网络上来的请求一样（见[Provider 与网关](#providers-and-the-gateway)）；一个自己给客户端做认证的代理可以用 `MAGPIE_TRUST_PROXY=1` 来信任。
+
+它暴露这些：
+
+| 路径 | API |
 | ------------------------ | -------------------------- |
 | `/v1/chat/completions`   | OpenAI chat completions    |
-| `/v1/responses`          | OpenAI Responses (HTTP, streamed as SSE; a WebSocket upgrade is answered 426) |
+| `/v1/responses`          | OpenAI Responses（HTTP，以 SSE 流式返回；WebSocket 升级请求会得到 426） |
 | `/v1/messages`           | Anthropic Messages         |
-| `/v1/messages/count_tokens` | Anthropic token counting |
-| `/v1beta/models/{model}:generateContent` | Google Gemini (also `:streamGenerateContent`, `:countTokens`) |
-| `/v1/audio/transcriptions`, `/v1/audio/translations` | OpenAI speech to text (multipart, passed through) |
-| `/v1/models`, `/v1beta/models` | the catalog            |
-| `/v1/codex/models`       | the catalog as Codex's `model_catalog_url` reads it ([Codex on another computer](#providers-and-the-gateway)) |
-| `/api/version`, `/api/tags`, `/api/show` | the catalog as an Ollama server lists it, for a client that takes a custom endpoint only as Ollama (below) |
+| `/v1/messages/count_tokens` | Anthropic token 计数 |
+| `/v1beta/models/{model}:generateContent` | Google Gemini（还有 `:streamGenerateContent`、`:countTokens`） |
+| `/v1/audio/transcriptions`、`/v1/audio/translations` | OpenAI 语音转文字（multipart，原样透传） |
+| `/v1/models`、`/v1beta/models` | 模型目录 |
+| `/v1/codex/models`       | 按 Codex 的 `model_catalog_url` 读取的模型目录（[另一台电脑上的 Codex](#providers-and-the-gateway)） |
+| `/api/version`、`/api/tags`、`/api/show` | 按 Ollama 服务器列出的模型目录，给那些只把自定义 endpoint 当作 Ollama 的客户端用（见下文） |
 
-Each `/v1/models` entry includes `reasoning` and `supported_reasoning_levels`
-(`[{"effort":"low"}, ...]`), and the same levels as plain names in
-`reasoning_levels` (`["low", ...]`, `[]` when there are none), which
-clients of the Catwalk schema (Crush and kin) read (#2576). A routing group is marked `reasoning` when any
-member thinks; `supported_reasoning_levels` lists the levels the members
-that think have in common. A member known not to think doesn't take them
-away (#2127), nor does one whose levels nothing knows (#597). A member magpie
-knows does not think is sent no reasoning ask when the group routes to it,
-so the effort the group is asked for reaches the members that take it and
-doesn't turn a vendor away as a 400; a member nothing speaks for is sent
-what the agent asked, as before. `native_endpoints`
-(`["/v1/messages"]`) names the APIs a request for the model is passed
-straight through on; it is left out of a routing group, and of a model every
-request to which is translated anyway.
+每个 `/v1/models` 条目都包含 `reasoning` 和 `supported_reasoning_levels`（`[{"effort":"low"}, ...]`），以及同样那些档位以纯名字形式出现在 `reasoning_levels`（`["low", ...]`，没有时是 `[]`），读它们的是采用 Catwalk schema 的客户端（Crush 及其同类）（#2576）。只要有一个成员会推理，一个路由组就标为 `reasoning`；`supported_reasoning_levels` 列出那些会推理的成员共有的档位。已知不会推理的成员不会把它们拿走（#2127），档位谁都不知道的成员也不会（#597）。当这个组路由到一个崇云科技确知不会推理的成员时，不会向它发送推理请求，于是这个组被要求的 effort 就能到达那些接受它的成员，而不会让厂商以 400 拒掉；谁都不代表的那个成员则照旧收到 agent 要的东西。`native_endpoints`（`["/v1/messages"]`）点名那些「对这个模型的请求会原样透传」的 API；路由组里不写它，对那种反正所有请求都会被翻译的模型也不写。
 
-A client that takes a custom endpoint only as an Ollama server (Visual
-Studio's and VS Code's Copilot: Manage Models, then Ollama) is given
-`http://127.0.0.1:3425` as the Ollama URL, no `/v1`. It reads the models
-from `/api/tags`, each one's tools, vision, thinking and window from
-`/api/show`, and chats on `/v1/chat/completions`. Ollama's own chat
-(`/api/chat`, `/api/generate`, so `ollama run`) isn't served. Copilot sends
-no key, so this works on this computer only; behind a reverse proxy with a
-single public URL, `/api` goes to `magpie web`'s page, so give the
-gateway's own port.
+只把自定义 endpoint 当作 Ollama 服务器的客户端（Visual Studio 和 VS Code 的 Copilot：Manage Models，然后 Ollama）会拿到 `http://127.0.0.1:3425` 作为 Ollama URL，不带 `/v1`。它从 `/api/tags` 读模型，从 `/api/show` 读每个模型的工具、视觉、思考和窗口，在 `/v1/chat/completions` 上对话。Ollama 自己的对话接口（`/api/chat`、`/api/generate`，也就是 `ollama run`）不提供。Copilot 不发 key，所以这只在这台电脑上有效；在只有一个公开 URL 的反向代理后面，`/api` 会转到 `chongyun web` 的页面，所以要给出网关自己的端口。
 
-Requests pass straight through when the vendor speaks the agent's API and
-are translated otherwise, streaming, tool calls and reasoning included. The
-key is `magpie` (any value works; the gateway only listens on loopback), and
-models are named `provider/model`.
+当厂商说的正是 agent 的那个 API 时，请求会原样透传，否则会被翻译，流式输出、工具调用和推理都一并处理。key 是 `magpie`（任何值都行；网关只监听回环地址），模型写成 `provider/model`。
 
-- A routing group is asked by its id (`group/<id>`) or its name.
-- A bare model id (`glm-5.3`) works too. When several providers serve it,
-  it goes to the routing group magpie found for it, which asks them in the
-  order of the Providers page and falls over to the next. With found
-  groups off, it goes to the first of them in that order alone.
-- Speech to text (`/v1/audio/transcriptions`, `/v1/audio/translations`)
-  takes OpenAI's multipart form, its `model` a magpie id such as
-  `openai/whisper-1`, `groq/whisper-large-v3` or a custom provider's own
-  (a vLLM `qwen3-asr`). The form goes to that provider's OpenAI-style base
-  as it was sent, the audio byte for byte; only the model is set to the
-  provider's own id, and a `prompt` masked as your redaction settings say.
-  The answer comes back in the vendor's own format (`json`, `text`, `srt`,
-  `vtt`). A provider with no OpenAI-style API is refused; one that has no
-  such endpoint answers its own 404. Text to speech is not served.
-- Every reply names who answered in `X-Magpie-Provider` (the provider)
-  and `X-Magpie-Model` (`provider/model`), and so does the usage log.
+- 路由组可以用它的 id（`group/<id>`）或它的名字来问。
+- 裸的模型 id（`glm-5.3`）也可以。当好几个 provider 都提供它时，它会走崇云科技为它找到的那个路由组，那个组按 Providers 页面上的顺序去问它们，失败就换下一个。关掉「自动找到的组」时，它只走那个顺序里的第一个。
+- 语音转文字（`/v1/audio/transcriptions`、`/v1/audio/translations`）接受 OpenAI 的 multipart 表单，它的 `model` 填一个崇云科技的 id，比如 `openai/whisper-1`、`groq/whisper-large-v3`，或某个自定义 provider 自己的（一个 vLLM 的 `qwen3-asr`）。这个表单会原样发到那个 provider 的 OpenAI 风格 base 上，音频一个字节都不改；只有 model 被改成该 provider 自己的 id，而 `prompt` 会按你的脱敏设置遮住。答案以厂商自己的格式回来（`json`、`text`、`srt`、`vtt`）。没有 OpenAI 风格 API 的 provider 会被拒绝；没有那个 endpoint 的 provider 会自己返回它的 404。文本转语音不提供。
+- 每个回话都在 `X-Magpie-Provider`（那个 provider）和 `X-Magpie-Model`（`provider/model`）里写明是谁应答的，用量日志也一样。
 
-Anything with a base-URL setting can use it:
+任何带 base URL 设置的工具都能用它：
 
-| Tool speaks | Base URL                   | Environment                                   |
+| 工具说的 | Base URL | 环境变量 |
 | ----------- | -------------------------- | --------------------------------------------- |
-| OpenAI      | `http://127.0.0.1:3425/v1` | `OPENAI_BASE_URL`, `OPENAI_API_KEY=magpie`      |
-| Anthropic   | `http://127.0.0.1:3425`    | `ANTHROPIC_BASE_URL`, `ANTHROPIC_API_KEY=magpie` |
-| Gemini      | `http://127.0.0.1:3425`    | `GOOGLE_GEMINI_BASE_URL`, `GEMINI_API_KEY=magpie` |
+| OpenAI      | `http://127.0.0.1:3425/v1` | `OPENAI_BASE_URL`、`OPENAI_API_KEY=magpie`      |
+| Anthropic   | `http://127.0.0.1:3425`    | `ANTHROPIC_BASE_URL`、`ANTHROPIC_API_KEY=magpie` |
+| Gemini      | `http://127.0.0.1:3425`    | `GOOGLE_GEMINI_BASE_URL`、`GEMINI_API_KEY=magpie` |
 
-An optional `X-Magpie-Account: <account>` header (the account's email
-or login, or its id on the Routing page) pins a request to one account of a
-subscription with several: only it is tried, and an unknown account, one
-whose plan lacks the model, or one resting is an error rather than another
-account's reply. The header is not sent on to the vendor.
+可选的 `X-Magpie-Account: <account>` 响应头（账号的邮箱或登录名，或它在路由页面上的 id）会把一个请求钉到某个有多个账号的订阅中的那一个上：只有它会被尝试，而未知的账号、套餐里没有这个模型的账号、或者正在休息的账号，会得到一个错误，而不是另一个账号的回话。这个响应头不会被转发给厂商。
 
-A status bar can show where a turn went before its first token arrives:
-send `X-Magpie-Session: <id>` with the requests (an agent's own session
-header, such as Pi's or Claude Code's, works too) and read
-`GET /v1/magpie/route?session=<id>`. It answers the session's latest
-request as routing has it so far — `asked` (the model the agent named),
-`group`, `rule` (the group's rule that matched, and `rule.pick`, the
-effort its decision model picked), `model` and `effort` (the member being
-tried now, as `provider/model`, and the reasoning it was sent at), and
-`tries`, one per member tried, each failed one a fallback with its `fail`
-— then `done`, `status` and `served` once the reply is over; `route` is
-`null` before the session has one. The route appears once routing has
-decided, before the vendor is asked. `after=<seq>&wait=<seconds>` (up to 60)
-holds the answer until the route changes past the `seq` of the last one,
-so a UI can follow a turn with one request at a time. Only the session
-named is told; like `/v1/magpie/quotas`, it answers this machine, and
-another only with the key of a gateway shared on the local network. A key
-held to a budget, to some models or to some accounts is told the routes of
-its own requests alone: another key's session answers `route: null`.
+状态栏可以在第一个 token 到达之前就显示一轮对话去了哪里：发请求时带上 `X-Magpie-Session: <id>`（agent 自己的会话头也可以，比如 Pi 的或 Claude Code 的），然后读 `GET /v1/magpie/route?session=<id>`。它给出这个会话最近一次请求在路由上目前的状态——`asked`（agent 点名的模型）、`group`、`rule`（匹配上的那个组的规则，以及 `rule.pick`，它的决策模型挑中的 effort）、`model` 和 `effort`（正在尝试的那个成员，写成 `provider/model`，以及它被发出去时的推理档位），以及 `tries`，每试一个成员一条，其中失败的每一个都带着它的 `fail` 标为回退——然后在回话结束后是 `done`、`status` 和 `served`；会话还没有路由时 `route` 是 `null`。路由一旦定下来就会出现，在问厂商之前。`after=<seq>&wait=<seconds>`（最多 60）会把回答挂住，直到路由的变化超过上一次那个 `seq`，这样 UI 可以一次一个请求地跟着走一轮对话。只有被点名的那个会话会被告知；和 `/v1/magpie/quotas` 一样，它回答这台电脑，而别的机器要用局域网上共享的那个网关的 key。一把受预算、受某些模型或受某些账号限制的 key，只会被告知它自己那些请求的路由：别的 key 的会话得到 `route: null`。
 
-To show the one in use without a session, `GET /v1/magpie/quotas` (and
-`magpie quota --json`, the same list) has `lastServedAt` on each
-subscription account, plan and key that answered a request through the
-gateway in the last 30 days, and `last: true` on the latest. It is kept
-in `served.json` beside `providers.json`, so a restart keeps it.
+要在没有会话的情况下显示当前在用的那个，`GET /v1/magpie/quotas`（以及 `chongyun quota --json`，同一份清单）在最近 30 天里经由网关应答过请求的每个订阅账号、套餐和 key 上都有 `lastServedAt`，最新那个还有 `last: true`。它保存在 `providers.json` 旁边的 `served.json` 里，所以重启后仍在。
 
-Each subscription window there also has the Usage page's whole-window
-estimate (#2333): `holds` (`tokens`, `cost` at API list prices, `priced`)
-reckoned from magpie's own calls through the account since the window
-began, over the share used. Where it can't be told honestly, `holdsWhy`
-says why instead: `low` (under 5% used), `clock` (no reset clock), `log`
-(the window began before magpie's log), `none` (nothing routed in it) or
-`credits` (a call in it may have been paid from credits). A window with
-neither is one no whole is told for: a pool, a family, money, or a card
-with a balance or read on another computer.
+那里每个订阅窗口还有用量页面的「整个窗口」估算（#2333）：`holds`（`tokens`、`cost`（按 API 目录价）、`priced`），它是根据崇云科技自己从窗口开始以来经由该账号发出的调用，按已用份额算出来的。在没法如实说明的情况下，`holdsWhy` 会改为说明原因：`low`（用得不足 5%）、`clock`（没有重置时钟）、`log`（这个窗口开始得比崇云科技的日志还早）、`none`（里面没有路由过任何东西）或 `credits`（里面某次调用可能是用额度付的）。两者都没有的窗口，就是不会给出整体数字的窗口：一个号池、一个家庭、一个金额，或者一张余额在别的电脑上读到的卡。
 
-`GET /v1/magpie/quotas?kept=1` answers the same list from what magpie last
-read, asking no vendor and never waiting for a read, for something that asks
-often. `magpie statusline` is built on it for Claude Code's status line
-(#1997): Claude Code runs it on every message with the session's JSON on
-stdin, and it prints one line, the model the session's latest turn went to
-(from `/v1/magpie/route`), then each subscription and plan with its windows'
-use, `*` on the one that answered last:
-`→ claude/claude-opus-5-5 | claude a@example.com* 5h 62% 7d 41% | claude B 5h 8% 7d 30%`.
-The accounts that answered through the gateway in the last 30 days are
-shown, every one when none has; `magpie statusline claude` (a provider, or
-an account's email, login or name) keeps only those. It works however Claude
-Code signs in to the gateway, unlike the `anthropic-ratelimit-*` headers,
-which Claude Code reads only while signed in to claude.ai. magpie doesn't
-write it into Claude Code's settings, where another status line may be;
-add it to `~/.claude/settings.json` yourself:
-`"statusLine": {"type": "command", "command": "magpie statusline"}`. With
-the gateway not running it prints an empty line.
+`GET /v1/magpie/quotas?kept=1` 用崇云科技上次读到的内容给出同一份清单，不问任何厂商，也绝不等待一次读取，适合那些经常来问的东西。Claude Code 的状态行就建立在它之上（#1997）：Claude Code 在每条消息上运行它，把会话的 JSON 从 stdin 送进来，它打印一行——这个会话最近一轮去了哪个模型（来自 `/v1/magpie/route`），然后是每个订阅和套餐以及它们各个窗口的使用量，最后应答的那个带 `*`：
+`→ claude/claude-opus-5-5 | claude a@example.com* 5h 62% 7d 41% | claude B 5h 8% 7d 30%`。
+最近 30 天里经由网关应答过的账号都会显示，一个都没有时全部显示；`chongyun statusline claude`（一个 provider，或者某个账号的邮箱、登录名或名字）只保留那些。它不管 Claude Code 是怎么登录网关的都有效，不像 `anthropic-ratelimit-*` 那些响应头——Claude Code 只有在登录 claude.ai 时才读它们。崇云科技不把它写进 Claude Code 的设置（那里可能有另一个状态行）；请自己把它加到 `~/.claude/settings.json`：
+`"statusLine": {"type": "command", "command": "chongyun statusline"}`。网关没在跑时，它打印一个空行。
 
-`magpie heap [<file>]` is for a report of magpie holding too much memory: a
-macOS `sample` of the app shows Go's frames as `???`. It asks the running
-magpie that serves the gateway (the app, the menu bar, `magpie serve` or
-`magpie web`) for `GET /v1/magpie/heap`, a Go heap profile taken after a
-collection (`runtime/pprof`'s `heap`, gzipped protobuf, which
-`go tool pprof` reads), and writes it to `<file>`, else
-`magpie-heap-<date>-<time>.pb.gz` in the working folder, never over a file
-there. It prints the file and the runtime's numbers the gateway sends in
-`X-Magpie-Heap-Stats`: the process, `HeapAlloc` (and what is live after the
-collection), `HeapInuse`, `HeapSys`, `StackSys`, `Sys` (all Go took from
-the system; a footprint far above it is outside Go, such as the webview),
-`NumGC` and the goroutine count. The route answers only a program on this
-computer calling it as `localhost` or a loopback address: another machine,
-a proxy's or tunnel's client, any request with a browser's marks (an
-Origin, listed or not, `null`, `Sec-Fetch-*`, a `Mozilla/` user agent) and
-any other `Host` are refused 403, with a gateway key too. With
-`MAGPIE_ADDR` on an address that isn't loopback, the call isn't from
-loopback, so it is refused as well.
+`chongyun heap [<file>]` 是用来写一份「崇云科技占了太多内存」的报告的：对应用做一次 macOS 的 `sample`，Go 的栈帧会显示成 `???`。它向那个正在跑、并在服务网关的崇云科技（应用、菜单栏、`chongyun serve` 或 `chongyun web`）请求 `GET /v1/magpie/heap`——一份在一次回收之后取的 Go 堆 profile（`runtime/pprof` 的 `heap`，gzip 过的 protobuf，`go tool pprof` 能读）——并把它写到 `<file>`，没给文件就写到工作目录下的 `chongyun-heap-<date>-<time>.pb.gz`，绝不会覆盖那里已有的文件。它打印这个文件，以及网关在 `X-Magpie-Heap-Stats` 里发来的运行时数字：进程、`HeapAlloc`（以及回收之后还活着的部分）、`HeapInuse`、`HeapSys`、`StackSys`、`Sys`（Go 从系统拿走的全部；远超这个数的占用是在 Go 之外的，比如 webview）、`NumGC` 和 goroutine 数量。这个路由只回答这台电脑上以 `localhost` 或某个回环地址调用它的程序：别的机器、某个代理或隧道的客户端、任何带着浏览器标记的请求（一个 Origin，无论是否在白名单里、`null`、`Sec-Fetch-*`、一个 `Mozilla/` 的 user agent）以及任何其它 `Host`，都被 403 拒绝，带着网关 key 也一样。当 `MAGPIE_ADDR` 设在一个不是回环的地址上时，这次调用就不是从回环来的，所以同样被拒绝。
 
-`magpie cpu [<file>] [--seconds N]` is for a report of magpie using too
-much CPU (@LeiCheng42 on X, while Codex ran). It asks the same running
-magpie for `GET /v1/magpie/cpu?seconds=N`, a Go CPU profile recorded for
-30 seconds, or N from 5 to 120 (`runtime/pprof`'s CPU profile, gzipped
-protobuf, which `go tool pprof` reads). While it records, use magpie as
-you do when it is busy, such as running Codex: the gateway goes on serving
-every other call, and the profile is of that. It writes the profile to
-`<file>`, else `magpie-cpu-<date>-<time>.pb.gz` in the working folder,
-and refuses a file that is there before it records, not after. It prints
-the file and the numbers the gateway sends in `X-Magpie-CPU-Stats`: the
-process, the CPU time it used over the seconds recorded (user and system,
-as the system counts it, with the share of one core) and since it started,
-its cores and `GOMAXPROCS`, and the goroutine count. Go records one CPU
-profile at a time, so a second `magpie cpu` while one records is refused
-409; one whose caller hangs up stops recording. The route answers the same
-callers as `/v1/magpie/heap`, and refuses the same ones 403.
+`chongyun cpu [<file>] [--seconds N]` 是用来写一份「崇云科技占了太多 CPU」的报告的（X 上的 @LeiCheng42 就遇到过，当时在跑 Codex）。它向同一个正在运行的崇云科技请求 `GET /v1/magpie/cpu?seconds=N`——一份记录 30 秒的 Go CPU profile，或者 N 取 5 到 120（`runtime/pprof` 的 CPU profile，gzip 过的 protobuf，`go tool pprof` 能读）。在它记录期间，照常使用崇云科技，哪怕它正忙着，比如在跑 Codex：网关会继续服务其它每一次调用，而这份 profile 记录的就是那段时间。它把 profile 写到 `<file>`，没给文件就写到工作目录下的 `chongyun-cpu-<date>-<time>.pb.gz`，并且在开始记录之前就拒绝那里已有的文件，而不是之后。它打印这个文件，以及网关在 `X-Magpie-CPU-Stats` 里发来的数字：进程、在记录的这些秒里用掉的 CPU 时间（用户态和系统态，按系统的算法，并带上占一个核心的比例）以及从启动到现在用掉的、它的核心数和 `GOMAXPROCS`，还有 goroutine 数量。Go 一次只记录一份 CPU profile，所以在一份正在记录时再跑一次 `chongyun cpu` 会被 409 拒绝；调用者挂断的那一份则停止记录。这个路由回答的调用者和 `/v1/magpie/heap` 一样，拒绝的那些也一样是 403。
 
-A gateway key held to a budget, to some models or to some accounts is told
-none of this magpie's accounts (#1981): `/v1/magpie/quotas`,
-`/v1/magpie/quotas/history`, `/v1/magpie/quotas/cards`,
-`POST /v1/magpie/quotas/refresh` and `/v1/magpie/concurrency` answer it
-403 with `"code": "gateway_key_held"`, from this machine or another. It
-reads its own limit from `GET /v1/magpie/limit`. Another magpie that uses
-such a key shows only that key's own card.
+一把受预算、受某些模型或受某些账号限制的网关 key，不会被告知崇云科技这些账号中的任何一个（#1981）：`/v1/magpie/quotas`、`/v1/magpie/quotas/history`、`/v1/magpie/quotas/cards`、`POST /v1/magpie/quotas/refresh` 和 `/v1/magpie/concurrency` 都会给它 403 和 `"code": "gateway_key_held"`，无论来自这台电脑还是别的机器。它从 `GET /v1/magpie/limit` 读自己的限额。另一个用到这样一把 key 的崇云科技只显示那把 key 自己的卡片。
 
-Its owner can let such a key be told the quotas of what it may use
-(#2216): the **Quotas** badge on the key's row (on hover; it reads
-*Quotas shown* while on), or `magpie gateway-key quotas <id> on` (`off`
-again, or no argument to see which). The four quota routes then tell it
-the cards of the providers whose every model it may use — a key held to
-some of a provider's models is told nothing of that provider, since the
-models it may not use spend the same quota — and of those only the
-accounts and keys it may use, account names and balances included. A
-card it isn't told is refused a refresh (403 `gateway_key_held`), and a
-refresh that names none reads again only the cards it is told. A key
-told none of the cards is answered `/v1/magpie/quotas/cards` 403
-`gateway_key_held` as before, so another magpie shows its own card, not
-that nothing was read. `/v1/magpie/concurrency` and `/v1/magpie/usage`
-still refuse it.
+它的持有者可以允许这样一把 key 被告知它可以使用的那些东西的额度（#2216）：key 那一行上的 **Quotas** 徽章（鼠标悬停可见；打开时它写着*Quotas shown*），或者 `chongyun gateway-key quotas <id> on`（再用 `off` 关掉，或不带参数看当前是哪种）。这四条额度路由随后会告诉它那些「每个模型它都能用」的 provider 的卡片——一把被限制在某个 provider 的一部分模型上的 key，不会被告知那个 provider 的任何东西，因为它不能用那些模型花的是同一份额度——而且只告诉其中它可以用的那些账号和 key，包含账号名和余额。它没被告知的卡片会被拒绝刷新（403 `gateway_key_held`），而一个不指名任何卡片的刷新只重读它被告知的那些卡片。一把一张卡片都没被告知的 key 得到的 `/v1/magpie/quotas/cards` 响应和之前一样是 403 `gateway_key_held`，这样另一个崇云科技显示的是它自己的卡片，而不是「什么都没读到」。`/v1/magpie/concurrency` 和 `/v1/magpie/usage` 仍然拒绝它。
 
-An app of your own can read the Usage page's numbers too.
-`GET /v1/magpie/usage?period=<today|week|month|all>` is the page's summary,
-the same JSON as the window's `/api/usage` (`path` is left out for another
-machine), with every session in `sessions` where the window's lists the
-top 100 by tokens; `sessionCount` is how many there are. `GET /v1/magpie/usage/requests` is its requests a page at a time
-(`offset`, `limit` up to 500), with the same filters as the Requests log:
-`period`, `day`, `agent`, `provider`, `model`, `account`, `callerKey`,
-`purpose`, `failed`, `retried`, `q`, `via`, `computer`. `callerKey=none`
-keeps the calls no gateway key made, and `by.callerKey` splits the page's
-calls by key, `none` among them (#2521). What was said in a call is not
-in either. Like `/v1/magpie/quotas`, they answer this machine, and another
-only with a gateway key. A key held to a budget, to some models or to some
-accounts is told its own calls alone: `/v1/magpie/usage` refuses it with a
-403, and `/v1/magpie/usage/requests` keeps only its rows, filter lists and
-share of the split by key.
+你自己的应用也能读到用量页面上的数字。`GET /v1/magpie/usage?period=<today|week|month|all>` 是这个页面的汇总，和那个窗口的 `/api/usage` 是同一份 JSON（给别的机器时 `path` 会被去掉），其中 `sessions` 里是这个窗口按 token 列出的前 100 个会话；`sessionCount` 是会话总数。`GET /v1/magpie/usage/requests` 一次给一页请求（`offset`、`limit` 最多 500），过滤器和 Requests 日志的一样：`period`、`day`、`agent`、`provider`、`model`、`account`、`callerKey`、`purpose`、`failed`、`retried`、`q`、`via`、`computer`。`callerKey=none` 保留那些没有任何网关 key 发出的调用，而 `by.callerKey` 按 key 把页面的调用分开，其中也包括 `none`（#2521）。一次调用里说了什么，这两处都没有。和 `/v1/magpie/quotas` 一样，它们回答这台电脑，别的机器要用网关 key。一把受预算、受某些模型或受某些账号限制的 key 只会被告知它自己的调用：`/v1/magpie/usage` 会用 403 拒绝它，而 `/v1/magpie/usage/requests` 只保留它的那些行、过滤列表，以及按 key 拆分时它的那一份。
 
-What is in flight now, for a status bar such as SketchyBar (#2132):
-`GET /v1/magpie/concurrency` answers `requests`, every agent request the
-gateway is working on, whether or not any limit is set (those waiting for a
-slot among them); `waiting`, how many of those wait for a slot under a
-provider's or account's limit; and `tools`, Claude Code turns run through a
-Claude subscription that wait on their caller's tool results, which are not
-requests. Each is `0` when idle. `data` is each limited key's or account's
-own count, empty when no limit is set. `active` lists those requests one
-by one, oldest first, `[]` when idle: `id`, `agent`, `model` and
-`provider` (once routed), `session` when the agent sends one, `started`
-and `ms` since, and `phase` only where the gateway knows it: `slot`
-waiting in a key's or account's queue, `rpm` waiting for room in the
-minute, `upstream` out at the vendor (sent, or its reply streaming). No
-prompt, reply or key is in it. The read asks no vendor and isn't counted
-itself, so it can be polled every second. It answers as
-`/v1/magpie/quotas` does: this machine, another only with a gateway key,
-and never a held key.
+现在正在飞的东西，给像 SketchyBar 这样的状态栏用（#2132）：`GET /v1/magpie/concurrency` 给出 `requests`，即网关正在处理的每一个 agent 请求，不管有没有设限额（等位置的也在其中）；`waiting`，其中有多少个在某个 provider 或账号的限额下等着位置；以及 `tools`，即经由 Claude 订阅运行的 Claude Code 轮次里那些在等调用方工具结果的（它们不是请求）。空闲时每一个都是 `0`。`data` 是每个受限 key 或账号各自的计数，没有设限额时为空。`active` 把那些请求一条条列出，最老的在前，空闲时是 `[]`：`id`、`agent`、`model` 和 `provider`（路由之后才有）、agent 发了会话时的 `session`、`started` 以及此后的 `ms`，还有只在网关知道时才有的 `phase`：`slot`（在某把 key 或某个账号的队列里等着）、`rpm`（等着这一分钟里的名额）、`upstream`（已经发到厂商，或者它的回话正在流式返回）。里面没有提示词、回话或 key。这次读取不问任何厂商，也不计入自身，所以可以每秒轮询一次。它像 `/v1/magpie/quotas` 那样作答：回答这台电脑，别的机器要用网关 key，而受限的 key 一律不答。
 
-An app that calls its vendor itself, not through magpie, can report those
-calls so the Usage page counts them: `POST /v1/magpie/usage/requests` with
-`Content-Type: application/json`. The body is one record or an array of up
-to 5000 (32 MiB at most), shaped like a `usage.jsonl` line:
+一个自己直接调用厂商、而不经过崇云科技的应用，可以把这些调用上报，好让用量页面把它们算进去：`POST /v1/magpie/usage/requests`，带 `Content-Type: application/json`。请求体是一条记录，或者最多 5000 条的数组（最多 32 MiB），形状和 `usage.jsonl` 里的一行一样：
 
 ```sh
 curl -s http://127.0.0.1:3425/v1/magpie/usage/requests \
@@ -1933,429 +709,181 @@ curl -s http://127.0.0.1:3425/v1/magpie/usage/requests \
         "cache_write":0,"ms":2400,"ttft_ms":610,"status":200,"rid":"req_01"}]'
 ```
 
-- **Fields:** `t` (RFC 3339), `agent`, `provider`, `model` and `rid` are
-  required. `in`, `out`, `cache_read`, `cache_write`, `cache_write_1h`,
-  `reasoning`, `ms`, `ttft_ms`, `first_text_ms`, `flow_ms`, `status`,
-  `cost` (USD), `effort`, `session` and `err` may be left out.
-- **Speed:** the Requests page tells a reply's speed from `out`, `ms` and
-  `ttft_ms` (ms from the request to the reply's first content: text,
-  reasoning or a tool call). A reply that reasoned (`reasoning` above 0)
-  is timed from its first text, so it tells a speed only with
-  `first_text_ms` (ms from the request to its first text), which may not
-  be before `ttft_ms` or after `ms`. `flow_ms` is how long the content
-  took to come, from where the speed is timed: the time from a tenth of
-  it to nine tenths, times 10/8 (at most `ms` × 10/8). A reply whose
-  content came in under a quarter of its window was held and let go in a
-  burst, and tells no speed. Leave out what you don't know.
-- **Pricing:** a record without `cost` is priced at magpie's prices for
-  its provider and model.
-- **Past times:** `t` is taken as given, however far back, so a history
-  can be backfilled; it may not be before 2000-01-01T00:00:00Z or more
-  than an hour ahead.
-- **Repeats:** a `rid` already reported is skipped, after a restart too,
-  so a batch can be sent again.
-- **Refusals:** a bad record refuses the whole post with a 400 naming it,
-  as `error.index` and `error.param` (`record 3: in: must not be
-  negative`), and nothing is written.
-- **The reply:** `{"accepted":1,"skipped":0,"records":[{"index":0,"rid":"req_01","status":"accepted"}]}`.
-- **Showing:** reported rows carry `source: "reported"`, count in every
-  total, and can be listed alone with `via=reported` (`reported` in the
-  GET's reply has their totals).
-- **Nothing live:** they never count against a gateway key's limit or a
-  budget, a subscription window, an alert, a rate limit or routing.
-- **Who may post:** the same as the GETs: this machine, or another with a
-  gateway key. A web page needs a key even on this machine.
+- **字段：** `t`（RFC 3339）、`agent`、`provider`、`model` 和 `rid` 是必填的。`in`、`out`、`cache_read`、`cache_write`、`cache_write_1h`、`reasoning`、`ms`、`ttft_ms`、`first_text_ms`、`flow_ms`、`status`、`cost`（美元）、`effort`、`session` 和 `err` 可以不填。
+- **速度：** Requests 页面根据 `out`、`ms` 和 `ttft_ms` 判断一个回话的速度（`ttft_ms` 是从请求到回话的第一段内容所用的毫秒数：文本、推理或一次工具调用）。一个推理过的回话（`reasoning` 大于 0）是从它的第一次文本开始计时的，所以只有配上 `first_text_ms`（从请求到它第一次文本的毫秒数）才能给出速度，而它可能早于 `ttft_ms`、也可能晚于 `ms`。`flow_ms` 是内容花了多久才到，从计时速度的那个点算起：从它十分之一到十分之九的那段时间，乘以 10/8（最多 `ms` × 10/8）。一个内容在它窗口的四分之一之内就到位的回话是被扣住后一下放出来的，它给不出速度。不知道的就别填。
+- **定价：** 没有 `cost` 的记录按崇云科技为它那个 provider 和模型的价格计价。
+- **过去的时间：** `t` 就按给定的来，不管多早，这样历史可以回填；但它不能早于 2000-01-01T00:00:00Z，也不能比现在晚出一个小时以上。
+- **重复：** 已经上报过的 `rid` 会被跳过，重启之后也一样，所以同一批可以再发一次。
+- **拒绝：** 一条坏记录会让整次提交被 400 拒绝，并指出是哪一条，写在 `error.index` 和 `error.param` 里（`record 3: in: must not be negative`），什么也不会被写入。
+- **应答：** `{"accepted":1,"skipped":0,"records":[{"index":0,"rid":"req_01","status":"accepted"}]}`。
+- **显示：** 上报的行带着 `source: "reported"`，计入每一个合计，也可以用 `via=reported` 单独列出（GET 应答里的 `reported` 是它们的合计）。
+- **不算进实时的东西：** 它们绝不会计入某把网关 key 的限额或预算、某个订阅窗口、某个提醒、某个限流或路由。
+- **谁能上报：** 和那些 GET 一样：这台电脑，或者带着网关 key 的别的机器。网页即使在这台电脑上也需要一把 key。
 
-A row's `session` is the conversation it belongs to. A Claude Code
-subagent's call keeps its parent conversation there and adds `subagent`,
-its agent id (the `agentId` of its lines and its
-`<session>/subagents/agent-<id>.jsonl` file), and `parent_agent`: the
-subagent that started it (Claude Code's `x-claude-code-parent-agent-id`, or
-the `parentAgentId` of the subagent's `.meta.json`); none when the main
-conversation did.
-Records written before these fields came have neither. Codex's sub-agents are told
-apart by `kind` only.
+某一行的 `session` 是它所属的那段对话。Claude Code 子 agent 的调用会保留它父对话的那一份，并加上 `subagent`（它的 agent id，即它那些行的 `agentId` 以及它的 `<session>/subagents/agent-<id>.jsonl` 文件），还有 `parent_agent`：启动它的那个子 agent（Claude Code 的 `x-claude-code-parent-agent-id`，或者那个子 agent 的 `.meta.json` 里的 `parentAgentId`）；主对话发起的则没有。这些字段出现之前写入的记录两者都没有。Codex 的子 agent 只靠 `kind` 区分。
 
-`magpie quota refresh <provider> [<account>]` reads that card again, as its
-refresh button on the Usage page does, and prints it alone; the other
-vendors aren't asked. Name the account by its login or its alias, or write
-`<provider>/<account>`. A second refresh of the same card within 30 seconds
-asks nobody and prints what was read, saying so on stderr, so a status line
-can run it in a loop. `--json` prints the card as `magpie quota --json` does,
-with `readAt` (when it was read) and `error` (why it couldn't be).
+`chongyun quota refresh <provider> [<account>]` 会再读一次那张卡片，就像用量页面上的刷新按钮那样，并单独打印它；其它厂商不会被问。账号可以用它的登录名或别名来指，也可以写成 `<provider>/<account>`。30 秒内对同一张卡片的第二次刷新不问任何人，只打印读到的内容，并在 stderr 上说明，所以状态行可以把它放在循环里跑。`--json` 像 `chongyun quota --json` 那样打印那张卡片，带上 `readAt`（什么时候读的）和 `error`（为什么读不到）。
 
-`magpie quota wait <provider|account>` blocks until that subscription (any
-of its accounts magpie has on) or that one account has allowance again — no
-window that stops it used up — then exits 0, so a long task stopped by its
-limit can go on unattended:
+`chongyun quota wait <provider|account>` 会一直阻塞，直到那个订阅（崇云科技手上的它任何一个账号）或那一个账号又有额度——没有任何挡住它的窗口处于用尽状态——然后以 0 退出，所以一个被自己的限额挡住的长任务可以无人值守地继续：
 
 ```sh
-until codex exec "…"; do magpie quota wait codex || break; done
+until codex exec "…"; do chongyun quota wait codex || break; done
 ```
 
-It reads the vendors itself, whether or not the gateway runs, and again
-shortly after the soonest reset it knows (every 1 to 10 minutes; an
-allowance it can't read is asked again less often each time), saying on
-stderr what it waits for and until when. Name an account by its email or
-login, or as `<provider>/<account>` when two subscriptions share it.
-`--timeout 6h` exits 1 if it passes first, `--quiet` says nothing; an
-unknown name exits 2 and Ctrl+C 130.
+它自己读厂商，不管网关在不在跑，并且会在它知道的最近一次重置之后不久再读一次（每 1 到 10 分钟；读不到的额度每次被问得更少），在 stderr 上说明它在等什么、等多久。账号可以用邮箱或登录名来指，两个订阅共用同一个账号时写成 `<provider>/<account>`。`--timeout 6h` 在超时先到时以 1 退出，`--quiet` 什么都不说；不认识的名字以 2 退出，Ctrl+C 则是 130。
 
-A ChatGPT account that holds credits keeps answering once a usage window is
-used up: the vendor spends the credits, so a task goes on. That is the
-default. `magpie quota credits <account> off` (or *Use credits* on the
-account's Usage card) turns it off for that account: once magpie's latest
-reading of its windows, refreshed about every minute, shows one used up,
-the gateway holds it as used up till the window renews, and requests go to
-the other accounts, groups and fallbacks; with none left, the request gets a
-429 saying why, unless the account spends its resets by itself and its week
-is used up, when a reset is spent first. `magpie quota credits` lists the
-accounts set not to spend them, `magpie quota credits <account>` says one's.
-It changes the gateway's routing only, never the account Codex is signed in
-to. The credits an account holds show beside its windows in `magpie quota`,
-`magpie accounts`, the Usage page and the menu bar panel.
+一个持有额度的 ChatGPT 账号，在一个用量窗口用尽之后仍会继续应答：厂商会花掉那些额度，所以任务能继续。这是默认行为。`chongyun quota credits <account> off`（或者该账号用量卡片上的 *Use credits*）会为那个账号关掉它：一旦崇云科技最近一次（大约每分钟刷新一次）对这些窗口的读取显示有一个用尽，网关就把它当作用尽，一直扣到那个窗口重置，请求则转给其它账号、组和回退；一个都不剩时，请求会得到一个说明原因的 429——除非这个账号自己花掉了它的重置、而它那一周又已用尽，这时会先花掉一个重置。`chongyun quota credits` 列出那些被设成不花额度的账号，`chongyun quota credits <account>` 说明某一个。它只改变网关的路由，绝不改变 Codex 登录着的那个账号。账号持有的额度会在 `chongyun quota`、`chongyun accounts`、用量页面和菜单栏面板里显示在它的窗口旁边。
 
-An account can have a name of your own, for telling apart seats the vendor
-names alike (a team's GLM seats under masked emails): click the account's
-name in its provider's editor, or `magpie accounts alias <agent> <email>
-<name>` (`--clear` takes it off). The name is magpie's, kept in
-providers.json; the vendor's or plugin's sign-in is never written to. It
-shows on the account's Usage card, in the menu bar, in `magpie accounts`,
-`magpie quota` and `GET /v1/magpie/quotas` (`alias`). A GLM Coding Plan
-seat added both as a key and as a signed-in ZCode account is shown once, on
-the account's card (two cards would count its allowance twice); that card
-is then named for the key's provider until you name it yourself, and says
-so (`seat`). Once the two are found to be one seat, a failed read of either
-doesn't bring the key's card back: only the account signed out, or windows
-that no longer agree, do.
+一个账号可以有一个你自己的名字，用来区分厂商起了同样名字的席位（比如一个团队里那些用遮蔽邮箱的 GLM 席位）：在它那个 provider 的编辑器里点账号的名字，或者用 `chongyun accounts alias <agent> <email> <name>`（`--clear` 把它去掉）。这个名字是崇云科技的，保存在 providers.json 里；厂商或 plugin 的登录态绝不会被写进去。它显示在该账号的用量卡片上、菜单栏里、`chongyun accounts`、`chongyun quota` 以及 `GET /v1/magpie/quotas`（`alias`）里。一个既以 key、又以已登录的 ZCode 账号两种方式加入的 GLM Coding Plan 席位只显示一次，在那个账号的卡片上（两张卡片会把它那份额度数两遍）；在你亲自给它起名之前，那张卡片会以那把 key 的 provider 来称呼它，并说明这一点（`seat`）。当两者被发现是同一个席位之后，任何一边读取失败都不会把 key 的那张卡片带回来：只有账号被登出，或者窗口不再一致，才会。
 
-The Usage page's cards and the menu bar panel's *Allowances* tab are in one
-order: drag a card's logo on the Usage page (or Alt+arrow keys on it), or
-press *Arrange* at the foot of the panel's tab and move the rows there. The
-same *Arrange* hides a subscription from the panel's tab (*Hide*, *Show*
-puts it back), and the tab's foot says how many are hidden. Hiding is the
-panel's only: routing, caps, the Usage page and the menu bar's own cells
-still have it, and a menu bar cell for it still opens its card. Both are
-kept in magpie's settings (`usageOrder`, `panelUsageHidden`). Which
-allowances the menu bar itself shows beside its icon is picked in Settings.
-The same list has *Tokens and cost today* and *Tokens and cost, last 7
-days*: every agent's requests as the Usage page's Requests tab sums them,
-the agents' own session-file calls among them, all their tokens (input,
-output and cache, marked Σ) over the cost in your currency (`usage:today`,
-`usage:7d` in `trayUsages`); the tooltip splits the tokens into in, out and
-cached. Clicked, one opens the Requests tab at that period.
+用量页面上的卡片和菜单栏面板的 *Allowances* 标签页用的是同一个顺序：在用量页面上拖某张卡片的图标（或者在它上面按 Alt+方向键），或者在面板那个标签页的底部点 *Arrange* 然后在那里移动各行。同一个 *Arrange* 还能把某个订阅从面板的标签页里隐藏（*Hide*，用 *Show* 放回来），标签页底部会写明藏了几个。隐藏只影响面板：路由、上限、用量页面和菜单栏自己的格子都照样有它，而菜单栏里它的那个格子仍然能打开它的卡片。两样都保存在崇云科技的设置里（`usageOrder`、`panelUsageHidden`）。菜单栏自己在图标旁边显示哪些额度，是在设置里挑的。同一份清单还有 *Tokens and cost today* 和 *Tokens and cost, last 7 days*：每个 agent 的请求按用量页面 Requests 标签页那样汇总，包括 agent 自己会话文件里的那些调用，它们的全部 token（输入、输出和缓存，标着 Σ）以及按你的货币折算的成本（`trayUsages` 里的 `usage:today`、`usage:7d`）；提示会把 token 拆成输入、输出和缓存。点一下就打开那个时段的 Requests 标签页。
 
-The *Gateway* tab in the app has this as copy buttons and ready-made
-snippets (shell, curl, Python, Node) for each API, the list of model ids,
-and the recent calls; `MAGPIE_DEBUG=1` logs every call to the terminal.
+应用里的 *Gateway* 标签页把这些做成复制按钮和现成的代码片段（shell、curl、Python、Node），每个 API 一份，外加模型 id 清单和最近的调用；`MAGPIE_DEBUG=1` 会把每一次调用都记到终端。
 
-**Claude Code** gets `ANTHROPIC_BASE_URL`, `ANTHROPIC_AUTH_TOKEN` and the
-model variables in the `env` block of `settings.json`; picking a native
-model (`opus`, `sonnet`…) removes them and restores whatever was there.
-A key in `ANTHROPIC_AUTH_TOKEN` signs Claude Code out of claude.ai while it
-runs through magpie: claude.ai's plan limits in `/usage`, its connectors,
-voice and `/teleport` are off. Set its sign-in to claude.ai to keep that
-login: magpie writes the token empty, Claude Code sends magpie its claude.ai
-sign-in, and magpie never passes it on (nor its `oauth-2025-04-20` beta). A
-provider that refuses magpie's own key is then reported to Claude Code as
-a 502, not as its sign-in refused, so Claude Code doesn't log out. Remote
-Control and ultrareview stay off: Claude Code has them only on Anthropic's
-own address. The choice is offered where the gateway takes any key, so not
-from a WSL distro under NAT while magpie is shared on the network.
+**Claude Code** 会得到 `ANTHROPIC_BASE_URL`、`ANTHROPIC_AUTH_TOKEN` 以及 `settings.json` 的 `env` 块里的模型相关变量；挑一个原生模型（`opus`、`sonnet`……）会把它们移除，并还原原来那里的内容。`ANTHROPIC_AUTH_TOKEN` 里的一把 key 会让 Claude Code 在经由崇云科技运行时退出 claude.ai：claude.ai 套餐在 `/usage` 里的限制、它的连接器、语音和 `/teleport` 都会关掉。把它的登录设成 claude.ai 就能保住那个登录：崇云科技会把 token 写成空的，Claude Code 把它的 claude.ai 登录发给崇云科技，而崇云科技绝不转发出去（连它的 `oauth-2025-04-20` beta 也不）。这时一个拒绝崇云科技自己那把 key 的 provider 会被报给 Claude Code 一个 502，而不是「你的登录被拒」，所以 Claude Code 不会登出。Remote Control 和 ultrareview 一直关着：Claude Code 只在 Anthropic 自己的地址上才有它们。这个选项出现在网关接受任何 key 的地方，所以当崇云科技在网络上共享时，NAT 下的 WSL 发行版里不会提供它。
 
-**Codex** gets a `[model_providers.magpie]` table, `model_catalog_json`
-pointing at `~/.codex/magpie-models.json` (written from the catalog, so the
-models show in Codex's own list) and a valid `model`/`effort`; picking a
-native model or disconnecting removes `model_provider` and the catalog. The
-`[model_providers.magpie]` table stays, so a thread started on magpie can
-still be opened. Codex won't load its config at all when `model_provider =
-"magpie"` has no table ("Model provider `magpie` not found"). If another
-tool leaves that state behind, magpie writes the table back the next time
-it syncs. Signed in to ChatGPT (the sign-in field's default), Codex keeps
-its own provider and sign-in, and magpie's models join its list through
-`openai_base_url`. magpie becomes Codex's provider then only while the
-Codex app holds the account: OpenAI no longer allows it and it has no
-credits left, except a workspace account still within its overage. The
-app sends nothing for a held account, so magpie steps in, and it steps
-back once the account has room again. A window at 100% with credits left
-doesn't count: Codex stays signed in and keeps sending on those. Your
-ChatGPT sign-in is never touched.
-Codex reads its model list at start-up, so restart it after a switch.
+**Codex** 会得到一张 `[model_providers.magpie]` 表、一个指向 `~/.codex/magpie-models.json` 的 `model_catalog_json`（由目录写出，所以模型会出现在 Codex 自己的清单里），以及一个有效的 `model`/`effort`；挑一个原生模型或断开连接会移除 `model_provider` 和那份目录。`[model_providers.magpie]` 这张表会留着，所以在崇云科技上开起来的一个线程仍然能打开。当 `model_provider = "magpie"` 没有对应的表时，Codex 干脆不加载自己的配置（"Model provider `magpie` not found"）。如果别的工具留下了这种状态，崇云科技会在下一次同步时把那张表写回去。登录在 ChatGPT 上时（登录字段的默认值），Codex 保留自己的 provider 和登录态，崇云科技的模型则通过 `openai_base_url` 加入它的清单。这时崇云科技只有在 Codex 应用还占着那个账号期间才成为 Codex 的 provider：OpenAI 已经不允许了，而它也没有额度了，除非是一个还在超额范围内的 workspace 账号。被搁置的账号应用不发出任何请求，于是崇云科技顶上，等那个账号又有空间了就退回去。一个用尽 100% 但还有额度的窗口不算：Codex 保持登录，继续在那些窗口上发送。你的 ChatGPT 登录态绝不会被动。Codex 在启动时读它的模型清单，所以切换之后要重启它。
 
-**OpenCode, Pi, Crush** get a `magpie` provider entry and `magpie/provider/model`.
+**OpenCode、Pi、Crush** 会得到一个 `magpie` provider 条目和 `magpie/provider/model`。
 
-**Gemini CLI** switches `auth` between API key, Google account and Vertex;
-the API key goes to `~/.gemini/.env`. Picking a catalog model points
-`GOOGLE_GEMINI_BASE_URL` at the gateway (which speaks the Gemini API), sets
-`auth` to API key with the gateway token, and names the model in
-`settings.json`; a native model puts the previous auth back.
+**Gemini CLI** 在 API key、Google 账号和 Vertex 之间切换 `auth`；那个 API key 写到 `~/.gemini/.env`。挑一个目录里的模型会把 `GOOGLE_GEMINI_BASE_URL` 指向网关（它说 Gemini API），把 `auth` 设成用网关 token 的 API key，并在 `settings.json` 里指明模型；挑一个原生模型会把原来的 auth 放回去。
 
-### Import links
+### 导入链接
 
-A vendor or relay can hand its users a ready-made provider as a link:
+<a id="import-links"></a>
+
+某个厂商或中继可以把一个现成的 provider 以链接的形式交给它的用户：
 
 ```
-magpie://import?preset=deepseek&key=sk-…
-magpie://import?name=Acme%20Relay&chat=https://api.acme.example/v1&anthropic=https://api.acme.example&key=sk-…&models=gpt-5.5,claude-sonnet-5
+chongyun://import?preset=deepseek&key=sk-…
+chongyun://import?name=Acme%20Relay&chat=https://api.acme.example/v1&anthropic=https://api.acme.example&key=sk-…&models=gpt-5.5,claude-sonnet-5
 ```
 
-Opening one brings up magpie with what the link would add: the name, the
-hosts your prompts and key would go to, the models. Nothing is saved until
-you press *Add*. `magpie import <link>` does the same in a terminal.
+打开一个链接会唤起崇云科技，并显示这个链接会添加什么：名字、你的提示词和 key 会发往的主机、模型。在你按 *Add* 之前什么都不会被保存。`chongyun import <link>` 在终端里做同样的事。
 
-| Parameter   | Meaning                                                            |
+| 参数 | 含义 |
 | ----------- | ------------------------------------------------------------------ |
-| `preset`    | a preset id (`magpie presets`); its endpoints are used. Not `google-vertex`, which is asked at your own Google Cloud project |
-| `region`    | with a preset that has regions, which one                          |
-| `name`      | the provider's name; required without a preset                     |
-| `id`        | its id; derived from the name when absent                          |
-| `key`       | the API key; the user pastes one when absent                       |
-| `chat`      | OpenAI Chat Completions base URL (`…/v1`)                          |
-| `responses` | OpenAI Responses base URL (`…/v1`)                                 |
-| `anthropic` | Anthropic Messages base URL (the root, without `/v1`)              |
-| `gemini`    | Google Gemini API base URL (`…/v1beta`), as the app's editor and the TUI take one |
-| `models`    | model ids to expose, comma separated                               |
-| `catalog`   | models.dev provider id, for model names and reasoning levels       |
-| `website`, `keys` | the vendor's site and its API-key page (https)               |
-| `icon`      | an https picture of the vendor's own (PNG, JPEG, GIF, WebP, ICO, SVG, at most 1 MB). magpie downloads it once, after you confirm the import, into its icons folder; without one it falls back to the catalog's logo or a plain mark |
+| `preset` | 一个预设 id（`chongyun presets`）；用它那些 endpoint。不是 `google-vertex`，那个是在你自己的 Google Cloud 项目上问的 |
+| `region` | 对于有区域的预设，指哪一个 |
+| `name` | provider 的名字；没有预设时必填 |
+| `id` | 它的 id；没给时由名字推导 |
+| `key` | 那把 API key；没给时由用户粘贴 |
+| `chat` | OpenAI Chat Completions 的 base URL（`…/v1`） |
+| `responses` | OpenAI Responses 的 base URL（`…/v1`） |
+| `anthropic` | Anthropic Messages 的 base URL（根地址，不带 `/v1`） |
+| `gemini` | Google Gemini API 的 base URL（`…/v1beta`），应用的编辑器和 TUI 就是这样取的 |
+| `models` | 要暴露的模型 id，逗号分隔 |
+| `catalog` | models.dev 的 provider id，用来取模型名字和推理档位 |
+| `website`、`keys` | 厂商的站点和它的 API key 页面（https） |
+| `icon` | 厂商自己的一张 https 图片（PNG、JPEG、GIF、WebP、ICO、SVG，最大 1 MB）。在你确认导入之后，崇云科技会把它下载一次，放进它的图标目录；没有的话就用目录里的 logo 或者一个普通标记 |
 
-Base URLs must be https (plain http only to this machine or the local
-network). Web pages and GitHub don't link custom schemes reliably, so link
-to `https://usemagpie.ai/import#<same parameters>` instead: it opens
-magpie, and offers the download when it is not installed. The parameters
-stay in the fragment, which browsers never send to a server. The full guide,
-with a link builder: <https://usemagpie.ai/docs/import>.
+Base URL 必须是 https（明文的 http 只允许指向这台电脑或局域网）。网页和 GitHub 对自定义 scheme 的链接并不可靠，所以在那样的地方请把 `chongyun://import?<同样的参数>` 作为纯文本给出，让用户自己复制粘贴。参数留在 fragment 里，而浏览器从不会把 fragment 发给服务器。完整的参数说明见上面那张表。
 
-## Install
+## 安装
 
-Download the app for macOS, Windows or Linux from
-[usemagpie.ai](https://usemagpie.ai), or install it from a terminal (on
-Linux, the desktop app when WebKitGTK 4.1 is installed, the command
-otherwise):
+<a id="install"></a>
+
+崇云版没有官网下载页。macOS、Windows 或 Linux 的构建可以从[仓库的 releases](https://github.com/lulu58588/chongyun-releases/releases) 下载，或者在终端里从源码安装（Linux 上装了 WebKitGTK 4.1 就是桌面应用，否则是命令行版）：
 
 ```sh
-curl -fsSL https://usemagpie.ai/install.sh | sh
+go install github.com/lulu58588/chongyun@latest
 ```
 
-Behind a firewall, or without access to GitHub, both the installer and
-`magpie update` take `--proxy <url>` (http, https, socks5, socks5h; or
-`MAGPIE_PROXY`, and `HTTPS_PROXY` / `ALL_PROXY` as usual) and
-`--mirror <prefix>`, a GitHub download mirror of your choosing put before
-the release's github.com URL (or `MAGPIE_MIRROR`; `magpie update mirror
-<prefix>|off` keeps one for every update, the app's too):
+在防火墙后面、或者访问不了 GitHub 时，`chongyun update` 接受 `--proxy <url>`（http、https、socks5、socks5h；或者 `MAGPIE_PROXY`，以及通常的 `HTTPS_PROXY` / `ALL_PROXY`）和 `--mirror <prefix>`——一个你自己挑的 GitHub 下载镜像，会放在 release 的 github.com URL 前面（或者 `MAGPIE_MIRROR`；`chongyun update mirror <prefix>|off` 为每次更新保留一个，应用程序自己的那次也算）：
 
 ```sh
-curl -fsSL https://usemagpie.ai/install.sh | sh -s -- --proxy http://127.0.0.1:7890
-magpie update --mirror https://mirror.example/
+chongyun update --proxy http://127.0.0.1:7890
+chongyun update --mirror https://mirror.example/
 ```
 
-No mirror is used unless you give one, and the SHA-256 every download is
-checked against still comes from usemagpie.ai, never from the mirror.
+除非你给一个，否则不会用镜像；而每次下载都要比对的 SHA-256 来自更新源本身，绝不来自镜像。
 
-Mac releases are signed and notarised; the Windows and Linux builds are not
-signed yet (Windows SmartScreen may ask before the first run). Every build
-keeps itself current: the app
-downloads a new version in the background and installs it when you restart
-(*Restart to Update* in the menu) or quit; `magpie update` does the same from
-a terminal. Every release is on
-[yetone/magpie-releases](https://github.com/yetone/magpie-releases/releases).
+Mac 的发布版是签名并公证过的；Windows 和 Linux 的构建目前还没签名（Windows SmartScreen 可能在第一次运行前问一次）。崇云版不内置官方更新源，所以不会自己去找新版本：把 `MAGPIE_UPDATE_FEED` 指向你自己的更新源之后，应用程序就会在后台下载新版本，并在你重启（菜单里的 *Restart to Update*）或退出时安装它；`chongyun update` 则在终端里做同样的事。每个发布版都在 [lulu58588/chongyun-releases](https://github.com/lulu58588/chongyun-releases/releases) 上。
 
-From source:
+从源码：
 
 ```sh
-go install github.com/yetone/magpie@latest
+go install github.com/lulu58588/chongyun@latest
 ```
 
-or build locally:
+或者在本地构建：
 
 ```sh
-make build            # ./magpie with the desktop app (needs cgo + the platform webview)
-make app              # macOS: magpie.app, a menu bar app with no Dock icon
+make build            # ./chongyun with the desktop app (needs cgo + the platform webview)
+make app              # macOS: chongyun.app, a menu bar app with no Dock icon
 make cli              # terminal-only build, no cgo, cross-compiles anywhere
 make release          # dist/: native app build + cli builds for every platform
 make release-windows  # dist/: the Windows app, amd64 and arm64 (cross-compiles)
 make release-linux    # dist/: the Linux app for this machine's arch
 ```
 
-Linux needs `libgtk-3-dev` and `libwebkit2gtk-4.1-dev` for the app build
-(the Makefile adds the `gtk3` tag; with plain `go build`, pass `-tags gtk3`);
-Windows uses the WebView2 runtime that ships with the OS.
+Linux 上构建应用需要 `libgtk-3-dev` 和 `libwebkit2gtk-4.1-dev`（Makefile 会加上 `gtk3` tag；直接用 `go build` 时请传 `-tags gtk3`）；Windows 用的是系统自带的 WebView2 运行时。
 
-Termux uses the Android terminal build: the installer puts it in
-`$PREFIX/bin`, and `make build` selects it automatically. With plain
-`go build` or `go install`, pass `-tags nogui`; use `magpie web` or
-`magpie tui` for the interface. `magpie autostart on` requires Termux:Boot.
+Termux 用的是 Android 的终端构建：go install 会把它装进 Go 的 bin 目录（GOBIN 或 GOPATH/bin），而 `make build` 会自动选它。直接用 `go build` 或 `go install` 时请传 `-tags nogui`；界面用 `chongyun web` 或 `chongyun tui`。`chongyun autostart on` 需要 Termux:Boot。
 
-### As a background service
+### 作为后台服务
 
-`magpie daemon install` runs `magpie serve` as a service of your own, with
-no window and no desktop session: a server, or a machine you reach over
-SSH. The system starts it at login (and at boot, see below) and starts it
-again when it stops with a failure.
+<a id="as-a-background-service"></a>
+
+`chongyun daemon install` 会把 `chongyun serve` 作为你自己的一个服务来跑，没有窗口也没有桌面会话：一台服务器，或者一台你通过 SSH 访问的机器。系统会在登录时启动它（开机启动见下文），并在它以失败告终时再把它启动起来。
 
 ```sh
-magpie daemon install    # write the service and start it; again, to take a new PATH or proxy
-magpie daemon status     # running or not, its pid, file and logs, whether the gateway answers
-magpie daemon restart    # after updating magpie
-magpie daemon stop|start
-magpie daemon uninstall  # stop it and remove the file
-magpie daemon web on     # the service serves the browser page too; off stops it, no word shows it
+chongyun daemon install    # write the service and start it; again, to take a new PATH or proxy
+chongyun daemon status     # running or not, its pid, file and logs, whether the gateway answers
+chongyun daemon restart    # after updating chongyun
+chongyun daemon stop|start
+chongyun daemon uninstall  # stop it and remove the file
+chongyun daemon web on     # the service serves the browser page too; off stops it, no word shows it
 ```
 
-The service serves only the gateway unless asked for the page:
-`magpie daemon install --web` (or `magpie daemon web on` once installed)
-runs `magpie serve --web`, which serves the gateway and `magpie web`'s
-page from one process, so the page shows the service's own gateway,
-providers and accounts. It listens on `127.0.0.1:3430`; `--lan` puts it on
-`0.0.0.0:3430` and `--addr host:port` anywhere, with the same warning as
-`magpie web --lan`: anyone with the link can change your settings. Its key
-is made once and kept in the service file (as `MAGPIE_WEB_KEY`, readable by
-you alone), so the link stays the same across restarts and reinstalls;
-`daemon web off` drops it, and the next `on` makes a new one.
-`magpie daemon status` prints the link. `--no-web` installs without it.
+这个服务默认只提供网关，除非你要求它也提供那个页面：`chongyun daemon install --web`（或者装好之后用 `chongyun daemon web on`）会运行 `chongyun serve --web`，由一个进程同时提供网关和 `chongyun web` 的页面，于是那个页面显示的是这个服务自己的网关、provider 和账号。它监听 `127.0.0.1:3430`；`--lan` 把它放到 `0.0.0.0:3430`，`--addr host:port` 放到任意位置，警告和 `chongyun web --lan` 的一样：任何拿到这个链接的人都能改你的设置。它的 key 只生成一次，并保存在服务文件里（作为 `MAGPIE_WEB_KEY`，只有你能读），所以这个链接在重启和重装之后都不变；`daemon web off` 会丢掉它，下一次 `on` 会生成一个新的。`chongyun daemon status` 会打印这个链接。`--no-web` 表示不带它安装。
 
-`magpie web` beside a running service doesn't take the gateway's port:
-when the service serves the page it prints that page's link and exits, and
-otherwise its own page uses the service's gateway and says so. A magpie
-holding the port but slow to answer (a busy server, or one still starting)
-is waited for, not raced: the new one serves the gateway only once the
-port is free.
+在运行着的服务旁边跑 `chongyun web` 不会占走网关的端口：当服务本身提供那个页面时，它打印那个页面的链接然后退出；否则它自己的页面会使用服务的网关，并说明这一点。一个占着端口却应答很慢的崇云科技（忙的服务器，或者还在启动中的那个）会被等待，而不是去争抢：新来的那个只有在端口空出来之后才提供网关。
 
-- **Linux:** a systemd user unit, `~/.config/systemd/user/magpie.service`
-  (`$XDG_CONFIG_HOME/systemd/user` when set), run with `systemctl --user`,
-  no root. Its log: `journalctl --user -u magpie -f`. systemd starts a
-  user's units at their first login and stops them at their last, so for
-  the gateway to run from boot with no one logged in, run
-  `sudo loginctl enable-linger $USER` once; `magpie daemon status` says so
-  when it isn't on. From `su` or `sudo -u`, `systemctl --user` can't reach
-  your session: log in as the user, or set
-  `XDG_RUNTIME_DIR=/run/user/$(id -u)`. On WSL, turn systemd on first
-  (`[boot] systemd=true` in `/etc/wsl.conf`). A system without systemd is
-  told so; run `magpie serve` under the manager it has.
-- **macOS:** a launch agent, `~/Library/LaunchAgents/com.yetone.magpie.serve.plist`,
-  loaded with `launchctl bootstrap gui/$UID`. Its log:
-  `~/Library/Logs/magpie/serve.log`.
-- **Windows:** not a service; `magpie autostart on` opens magpie, which
-  serves the gateway, when you log in. Inside WSL, `magpie daemon` works as
-  on Linux.
+- **Linux：** 一个 systemd 用户单元，`~/.config/systemd/user/chongyun.service`（若设置了 XDG_CONFIG_HOME，则在 `$XDG_CONFIG_HOME/systemd/user`），用 `systemctl --user` 运行，不需要 root。它的日志：`journalctl --user -u chongyun -f`。systemd 在用户第一次登录时启动他的单元、在他最后一次登出时停止它们，所以要让网关在没人登录时也能开机运行，就执行一次 `sudo loginctl enable-linger $USER`；没开时 `chongyun daemon status` 会说明这一点。从 `su` 或 `sudo -u` 过来的话，`systemctl --user` 够不着你的会话：请以那个用户登录，或者设置 `XDG_RUNTIME_DIR=/run/user/$(id -u)`。在 WSL 上，先把 systemd 打开（`/etc/wsl.conf` 里的 `[boot] systemd=true`）。没有 systemd 的系统会被告知这一点；请用它自己有的那个管理器来跑 `chongyun serve`。
+- **macOS：** 一个 launch agent，`~/Library/LaunchAgents/com.chongyun.ai.gateway.plist`，用 `launchctl bootstrap gui/$UID` 加载。它的日志：`~/Library/Logs/magpie/serve.log`。
+- **Windows：** 不做成服务；`chongyun autostart on` 会在你登录时打开崇云科技，由它提供网关。在 WSL 里面，`chongyun daemon` 的行为和 Linux 上一样。
 
-The service gets the environment `magpie daemon install` ran in: `PATH`
-(where it finds the agents' CLIs and bun), the proxy variables, `MAGPIE_*`
-settings such as `MAGPIE_ADDR` (and the `--tls-cert`/`--tls-key` pair, as
-`MAGPIE_TLS_CERT` and `MAGPIE_TLS_KEY`), the XDG folders and the agents' own folder
-variables (`CODEX_HOME`, `CLAUDE_CONFIG_DIR`…). To that `PATH` it adds
-what a terminal of yours has and the shell may not: nvm's default Node
-(not its newest), the other version managers' and npm's folders, and your
-login shell's own `PATH`, so plugins and the MCP servers they start find
-`node` with nvm loaded lazily or over SSH. When no `node` is found even
-then, the install says so. The file is readable by you
-alone, since a proxy's address can hold a password. Run the install again
-after changing any of them. It runs magpie by the name it has on `PATH`
-when that is the same file (Homebrew's link stays right across updates),
-and refuses a `go run` build. It is refused while `magpie autostart` is on:
-the app opened at login serves the gateway too, and the two would take
-turns failing on the port. The app opened by hand while the service runs
-uses the service's gateway.
+这个服务会拿到运行 `chongyun daemon install` 时的环境：`PATH`（它在那里找各个 agent 的 CLI 和 bun）、代理相关的变量、`MAGPIE_*` 设置（比如 `MAGPIE_ADDR`，以及 `--tls-cert`/`--tls-key` 这一对，对应 `MAGPIE_TLS_CERT` 和 `MAGPIE_TLS_KEY`）、XDG 目录，以及各个 agent 自己的目录变量（`CODEX_HOME`、`CLAUDE_CONFIG_DIR`……）。它还会给这个 `PATH` 加上你终端里有、而 shell 里可能没有的东西：nvm 的默认 Node（不是它最新的那个）、其它版本管理器以及 npm 的目录，还有你登录 shell 自己的 `PATH`，这样 plugin 和它们启动的 MCP server 就能找到 `node`，不管是 nvm 懒加载还是通过 SSH。连这样都找不到 `node` 时，安装会说明这一点。这个文件只有你能读，因为代理的地址里可能带着密码。改了其中任何一项之后，请重新安装一次。它会用 `PATH` 上那个名字来运行崇云科技——只要那是同一个文件（Homebrew 的链接在更新之后依然正确）——并且拒绝 `go run` 构建出来的版本。`chongyun autostart` 开着时它会被拒绝：登录时打开的应用同样提供网关，两者会轮流在端口上失败。服务在跑时手动打开的那个应用会使用服务的网关。
 
 ### Docker
 
-`docker build` makes a server image: the terminal-only binary on Debian 12
-slim, with bash and curl, so a vendor's `curl … | bash` installer runs and
-the CLI it installs (Cursor's, Devin's, Grok Build) finds the glibc it links,
-as the plugins' Bun does, and a terminal opens in the container (`docker exec -it magpie bash`, or a
-NAS panel's terminal; `magpie` is on its PATH), run as nonroot,
-with everything it keeps in a volume at `/config`: magpie's own files
-(`/config/magpie`), the sign-ins kept where their agent keeps them (HOME is
-`/config/home`, so `~/.codex`, `~/.claude`… are in it) and the cache with the
-Bun plugins run on (`/config/cache`, downloaded once). A volume made by an
-older image keeps working: magpie adds these folders to it on start, and only
-sign-ins made with that older image, which lived outside the volume, have to
-be made again.
+<a id="docker"></a>
+
+`docker build` 会做一个服务器镜像：Debian 12 slim 上的纯终端二进制，带上 bash 和 curl，这样某个厂商的 `curl … | bash` 安装脚本能跑起来，它装的那些 CLI（Cursor 的、Devin 的、Grok Build）也能找到它们链接的 glibc，plugin 用的 Bun 同理；还可以在容器里开一个终端（`docker exec -it chongyun bash`，或者用 NAS 面板的终端；`chongyun` 在它的 PATH 上）。它以 nonroot 运行，把它保存的一切都放在 `/config` 上的一个卷里：崇云科技自己的文件（`/config/magpie`）、各自 agent 保存位置的登录态（HOME 是 `/config/home`，所以 `~/.codex`、`~/.claude`……都在里面），以及跑 Bun plugin 的缓存（`/config/cache`，只下载一次）。用旧镜像做的卷依然能用：崇云科技启动时会把这些目录加进它，只有用那个旧镜像做的登录态（当时在卷外面）需要重新做一次。
 
 ```sh
-docker build -t magpie .
-docker run -d --name magpie -p 127.0.0.1:3425:3425 -p 127.0.0.1:3430:3430 -v magpie-config:/config magpie
+docker build -t chongyun .
+docker run -d --name chongyun -p 127.0.0.1:3425:3425 -p 127.0.0.1:3430:3430 -v chongyun-config:/config chongyun
 ```
 
-3425 is the gateway for agents. Inside the container it takes any key; a
-request from outside it, the host's own included, must carry an enabled
-gateway key as its API key, and one without gets 401. Make one in the
-browser UI (Gateway → Gateway keys) or with
-`docker exec magpie magpie gateway-key add "Docker client"`. Sharing
-(Settings → Share on local network) isn't needed for this; turning it on
-also creates a key named **Magpie**. The ports above are published on the
-host's loopback; Docker's `-p 3425:3425` puts the gateway on every interface
-of the host, for other machines to reach. Upgrading from an earlier image:
-an agent outside the container that sends `magpie`, or another key that
-isn't an enabled gateway key, now gets 401 ("the API key sent is not an
-enabled magpie gateway key"); give it a gateway key.
-Inside the container
-magpie only sees the container's own address (Docker's 172.17.x), so set
-`-e MAGPIE_PUBLIC_URL=http://<the host's or NAS's address>:3425` (the port
-published on the host) for the address it shows and prints to be the one
-other machines use; behind a reverse proxy, set it to that external base URL
-and follow the [authentication requirements above](#connecting-anything-else),
-especially when the proxy reaches magpie over loopback.
+3425 是给 agent 用的网关。在容器内部它接受任何 key；从容器外面来的请求（主机自己发来的也算）必须带一把已启用的网关 key 当作 API key，不带就得到 401。在浏览器界面里（网关 → 网关 key）或者用 `docker exec chongyun chongyun gateway-key add "Docker client"` 建一把。共享（在局域网上共享）在这里并不需要；打开它还会额外创建一把名为 **Chongyun** 的 key。上面那些端口发布在主机的回环地址上；Docker 的 `-p 3425:3425` 会把网关放到主机的每一个网卡上，供其它机器访问。从旧镜像升级过来时：容器外那个发 `magpie` 的 agent，或者别的什么不是已启用网关 key 的 key，现在会得到 401（"the API key sent is not an enabled chongyun gateway key"）；请给它配一把网关 key。
+在容器里崇云科技只能看到容器自己的地址（Docker 的 172.17.x），所以要设 `-e MAGPIE_PUBLIC_URL=http://<主机或 NAS 的地址>:3425`（在主机上发布的那个端口），这样它显示和打印出来的地址才是别的机器会用的那个；在反向代理后面，把它设成那个对外的 base URL，并遵循[上面的认证要求](#connecting-anything-else)，尤其是在代理经回环访问崇云科技的时候。
 
-For the browser UI run the image with `magpie web --addr 0.0.0.0:3430 --no-open`
-in place of the default `serve`, and open
-`http://localhost:3430/?k=<key from docker logs magpie>` (set `MAGPIE_WEB_KEY`
-to keep one key across restarts; a browser then stays signed in for 400
-days). A browser keeps cookies per host, not per port, so another service on
-the same address can take the sign-in away: by clearing its site data, or by
-filling the host's cookie limit (the sign-in is the last Chrome drops). A page
-opened without it, such as a bookmark, says why it was turned away and takes
-the key in a field, then comes back to the same page. There you add providers, sign in to
-subscriptions and import sign-ins from a file. The vendor sends a sign-in's
-browser back to `localhost` (ChatGPT to `http://localhost:1455/auth/callback?code=…`),
-which is your own machine, not the container, so that page won't load: copy
-its whole address from the address bar and paste it into the sign-in's
-*Callback URL* field. `docker exec -it magpie /magpie accounts add codex`
-does the same in a terminal: open the link it prints, then paste the address
-the browser ended on. Keys, sign-ins and plugins live in the volume, so a
-restart, or a new container on the same volume, keeps them.
+要用浏览器界面，就用 `chongyun web --addr 0.0.0.0:3430 --no-open` 代替默认的 `serve` 来运行镜像，然后打开 `http://localhost:3430/?k=<docker logs chongyun 里的 key>`（设 `MAGPIE_WEB_KEY` 可以让一个 key 在重启之后保持不变；这样浏览器会在 400 天里保持登录）。浏览器是按主机而不是按端口保存 cookie 的，所以同一个地址上的另一个服务可能把这个登录抢走：清掉它的站点数据，或者把主机的 cookie 上限填满（这个登录是 Chrome 最后才丢的那个）。没有带这个 key 打开的页面（比如一个书签）会说明自己为什么被挡回来，并在某个字段里收下这个 key，然后回到同一个页面。在那里你添加 provider、登录订阅，并从文件导入登录态。厂商会把登录的浏览器送回 `localhost`（ChatGPT 送到 `http://localhost:1455/auth/callback?code=…`），那是你自己的机器，不是容器，所以那个页面加载不出来：把地址栏里的整个地址复制下来，粘进登录的 *Callback URL* 字段。`docker exec -it chongyun /chongyun accounts add codex` 在终端里做同样的事：打开它打印的链接，然后把浏览器最后停下的那个地址粘进去。key、登录态和 plugin 都住在那个卷里，所以重启、或者在同一个卷上起一个新容器，都会保留它们。
 
-The image has a `HEALTHCHECK`: `magpie healthcheck` exits 0 while the gateway
-answers on `MAGPIE_ADDR`, under `serve` and `web` alike, so `docker ps` shows
-the container as healthy (Compose: `depends_on: condition: service_healthy`)
-with no curl in the image. Bind-mounting a folder at `/config` in place of a
-named volume works too; it has to be writable by uid 65532.
+镜像里带一个 `HEALTHCHECK`：`chongyun healthcheck` 会在网关于 `MAGPIE_ADDR` 上应答时以 0 退出，`serve` 和 `web` 都一样，于是 `docker ps` 会把容器显示为 healthy（Compose：`depends_on: condition: service_healthy`），而镜像里不需要 curl。用 bind mount 把一个文件夹挂到 `/config` 来代替具名卷也可以；它必须能被 uid 65532 写入。
 
-#### NAS with agents on other machines
+#### NAS 上跑着别的机器上的 agent
 
-Magpie can run on a headless NAS as a shared gateway even when the agents that
-use it (Claude Code, Codex, OpenCode, and so on) run on other computers. The
-container does not discover agent installations on the NAS host or on remote
-machines: configure those agents to use the NAS address and an enabled gateway
-key. See [Connecting anything else](#connecting-anything-else) for the
-protocol-specific base URLs. Keep `3425` behind a firewall or VPN and do not
-expose it publicly without gateway-key authentication.
+<a id="nas-with-agents-on-other-machines"></a>
 
-Such a page is in **gateway mode**: it shows Providers, Gateway, Routing,
-Usage, Plugins and Settings, with no Agents, Sessions or Library tab, and
-Settings leaves out what is written into this machine's agents (provider in
-model names) and the desktop's alerts and tray. Codex's and Claude Code's own
-settings (Codex subagents, long conversations, Codex thread titles and the
-rest) are on the Agents page, in the agent's opened row, so a gateway has
-none of them. `magpie web` is in it by itself when it finds
-no agents on its machine, as in the container, and with
-`magpie web --gateway`. *Settings › General › Gateway mode* picks Automatic,
-On or Off for this machine (it wins over both); Off brings every page back.
-The app's own window is never in gateway mode.
+即使使用它的 agent（Claude Code、Codex、OpenCode 等等）跑在别的电脑上，崇云科技也可以在一台无头的 NAS 上作为共享网关运行。容器不会去发现 NAS 主机或远端机器上装的 agent：请把那些 agent 配置成使用 NAS 的地址和一把已启用的网关 key。各协议对应的 base URL 见[接入其他任何东西](#connecting-anything-else)。请把 `3425` 放在防火墙或 VPN 后面，不要在没有网关 key 认证的情况下把它暴露到公网。
 
-For a bind-mounted configuration directory, the directory must be writable by
-the non-root container user (uid 65532):
+这样的页面处于**网关模式**：它显示 Providers、Gateway、Routing、Usage、Plugins 和 Settings，没有 Agents、Sessions 和 Library 标签页，而 Settings 里省掉了写入本机各个 agent 的东西（模型名里的 provider）以及桌面的提醒和托盘。Codex 和 Claude Code 自己的设置（Codex 子 agent、长对话、Codex 线程标题等等）在 Agents 页面上那个 agent 展开的行里，所以网关没有这些。当 `chongyun web` 在它那台机器上找不到任何 agent 时（比如在容器里），或者用 `chongyun web --gateway` 时，它就自己处于这种模式。*设置 › 通用 › 网关模式* 为这台机器挑选自动、开启或关闭（它比前面两种都优先）；关闭会把每一个页面都带回来。应用自己的窗口永远不会处于网关模式。
+
+对于 bind mount 的配置目录，该目录必须能被非 root 的容器用户写入（uid 65532）：
 
 ```sh
-sudo chown -R 65532:65532 /volume1/docker/magpie/config
+sudo chown -R 65532:65532 /volume1/docker/chongyun/config
 ```
 
-An example Docker Compose project is:
+一个 Docker Compose 项目示例是：
 
 ```yaml
 services:
-  magpie:
-    image: ghcr.io/yetone/magpie:latest
+  chongyun:
+    image: ghcr.io/lulu58588/chongyun:latest
     restart: unless-stopped
     ports:
       # 127.0.0.1: the host alone; every caller outside the container needs a gateway key.
@@ -2370,581 +898,290 @@ services:
     command: [web, --addr, 0.0.0.0:3430, --no-open]
 ```
 
-Open `http://127.0.0.1:3430/?k=<random-key>` through an SSH tunnel to
-configure providers, then create a gateway key for each remote agent host.
-To let remote agents reach it, change the gateway mapping to `3425:3425` (or
-bind it only to the NAS interface or VPN address) and recreate the
-container. For Internet access, prefer a
-VPN such as Tailscale or WireGuard; a reverse proxy or tunnel forwarding to
-Magpie over loopback needs a gateway key from its clients, as the network does.
+通过 SSH 隧道打开 `http://127.0.0.1:3430/?k=<random-key>` 来配置 provider，然后为每一台远端 agent 主机创建一把网关 key。要让远端 agent 能访问，就把网关的映射改成 `3425:3425`（或者只绑定到 NAS 的那个网卡或 VPN 地址），并重建容器。要接入互联网，请优先用 VPN，比如 Tailscale 或 WireGuard；经回环转发到崇云科技的反向代理或隧道，它的客户端同样需要一把网关 key，就像从网络上来的那样。
 
-### Developing
+### 开发
+
+<a id="developing"></a>
 
 ```sh
 make dev
 ```
 
-builds with `-tags dev` and opens the app with the UI served straight from
-`internal/gui/assets`: save `app.css`, `app.js` or `index.html` and the window
-reloads itself. With `fswatch` installed (`brew install fswatch`), a change to a
-Go file rebuilds and relaunches the app too. The dev build uses its own gateway
-port (`DEV_ADDR`, default 127.0.0.1:3426), so a magpie you already run keeps
-serving your agents. Point it at a scratch home to keep your real agent
-configs out of it:
+它用 `-tags dev` 构建，并打开应用，UI 直接从 `internal/gui/assets` 提供：保存 `app.css`、`app.js` 或 `index.html`，窗口会自己重载。装了 `fswatch` 的话（`brew install fswatch`），改动 Go 文件也会重新构建并重启应用。开发版用自己那个网关端口（`DEV_ADDR`，默认 127.0.0.1:3426），所以你已经跑着的那个崇云科技会继续为你的 agent 服务。把它指向一个临时的家目录，就能把你真正的 agent 配置挡在外面：
 
 ```sh
-HOME=/tmp/magpie-home XDG_CONFIG_HOME=/tmp/magpie-home/.config make dev
+HOME=/tmp/chongyun-home XDG_CONFIG_HOME=/tmp/chongyun-home/.config make dev
 ```
 
-`MAGPIE_THEME=light|dark` forces the palette and `MAGPIE_DEBUG=1` prints what the
-gateway translates.
+`MAGPIE_THEME=light|dark` 强制指定配色，`MAGPIE_DEBUG=1` 会打印网关做的是哪些翻译。
 
-## Use
+## 使用
+
+<a id="use"></a>
 
 ```sh
-magpie                          # open the app: a window plus the menu bar icon
-magpie tray                     # menu bar icon only (use this in your login items)
-magpie tui                      # the same thing, in the terminal; serves the gateway while open when no other magpie does
-magpie web                      # the app's window in a browser (WSL, a server over SSH); --lan, --addr, --no-open, --gateway, --tls-cert/--tls-key
+chongyun                        # open the app: a window plus the menu bar icon
+chongyun tray                   # menu bar icon only (use this in your login items)
+chongyun tui                    # the same thing, in the terminal; serves the gateway while open when no other chongyun does
+chongyun web                    # the app's window in a browser (WSL, a server over SSH); --lan, --addr, --no-open, --gateway, --tls-cert/--tls-key
                                 # (a new key each run; MAGPIE_WEB_KEY keeps one, for a page run as a service)
                                 # (behind a reverse proxy, MAGPIE_WEB_URL=https://<the page there> prints the link through it)
-magpie serve                    # the gateway alone, no window; --web[=host:port] serves the page too, from the same process
+chongyun serve                  # the gateway alone, no window; --web[=host:port] serves the page too, from the same process
                                 # --tls-cert <file> --tls-key <file>: https:// for other computers (see HTTPS under sharing)
-magpie daemon install           # run magpie serve as a service (systemd, launchd); --web, --lan, --addr serve the page too; --tls-cert/--tls-key, --no-tls
-magpie ls                       # list every agent and its current settings
-magpie claude opus              # set a model (agent names accept prefixes: cc, oc, gem …)
-magpie codex gpt-5.6-sol
-magpie codex effort high        # other fields
-magpie codex effort             # one field, as it is now
-magpie codex xhigh              # bare effort levels are recognised too
-magpie codex deepseek/deepseek-chat   # any catalog model, through the gateway
-magpie claude moonshot/kimi-k2.5
-magpie claude haiku deepseek/deepseek-v4-flash   # one tier on its own model
-magpie claude haiku ""          # back to the main model
-magpie gemini auth api-key
-magpie opencode anthropic/claude-sonnet-5
-magpie oc small anthropic/claude-haiku-4-5
-magpie mimo anthropic/claude-sonnet-5
+chongyun daemon install         # run chongyun serve as a service (systemd, launchd); --web, --lan, --addr serve the page too; --tls-cert/--tls-key, --no-tls
+chongyun ls                     # list every agent and its current settings
+chongyun claude opus            # set a model (agent names accept prefixes: cc, oc, gem …)
+chongyun codex gpt-5.6-sol
+chongyun codex effort high      # other fields
+chongyun codex effort           # one field, as it is now
+chongyun codex xhigh            # bare effort levels are recognised too
+chongyun codex deepseek/deepseek-chat # any catalog model, through the gateway
+chongyun claude moonshot/kimi-k2.5
+chongyun claude haiku deepseek/deepseek-v4-flash # one tier on its own model
+chongyun claude haiku ""        # back to the main model
+chongyun gemini auth api-key
+chongyun opencode anthropic/claude-sonnet-5
+chongyun oc small anthropic/claude-haiku-4-5
+chongyun mimo anthropic/claude-sonnet-5
 
-magpie save work                # snapshot everything as a profile
-magpie use work                 # switch back
-magpie profiles
-magpie rm work
+chongyun save work              # snapshot everything as a profile
+chongyun use work               # switch back
+chongyun profiles
+chongyun rm work
 
-magpie sync                     # refresh the models.dev catalog and every live model list
+chongyun sync                   # refresh the models.dev catalog and every live model list
 
-magpie quota                    # what is left of every subscription, plan and key balance
-magpie quota refresh codex      # read Codex's cards again now (once per 30s)
-magpie quota wait codex         # block until a Codex account has allowance again
-magpie quota credits me@example.com off   # hold a ChatGPT account at its limit instead of spending credits
+chongyun quota                  # what is left of every subscription, plan and key balance
+chongyun quota refresh codex    # read Codex's cards again now (once per 30s)
+chongyun quota wait codex       # block until a Codex account has allowance again
+chongyun quota credits me@example.com off # hold a ChatGPT account at its limit instead of spending credits
 ```
 
-In the app, click any value to open a filtered list; type to search or to
-enter something that is not listed; `esc` closes the panel. Profiles are the
-chips at the bottom: click to apply, `×` to delete, *+ save current* to add.
-The *Providers* tab of the window lists your providers with the agents on
-each; click a row to change the key or the exposed models, *Test* it, or
-click an agent icon to point that agent at one of its models. *Add
-provider* shows the presets as tiles: pick one, paste the key.
+在应用里，点任何一个值就会打开一个带过滤的清单；输入可以搜索，也可以输入一个没列出来的东西；`esc` 关闭这个面板。配置档是底部那些小标签：点一下套用，点 `×` 删除，*+ save current* 新增。窗口的 *Providers* 标签页列出你的 provider 以及每个上面挂着哪些 agent；点某一行可以改它的 key 或暴露的模型、*Test* 它，或者点某个 agent 图标，把那个 agent 指向它的一个模型。*Add provider* 把预设摆成一块块磁贴：挑一个，粘贴 key。
 
-In *Usage → Requests* and the tray's *Usage* tab, click a daily bar to see
-that day's totals and details. Other days turn gray; click the selected day
-again to return to the whole period. Changing the period clears the selection.
+在*用量 → 请求*和托盘的*用量*标签页里，点某一天的柱子就能看那天的合计和明细。其它天会变灰；再点一次选中的那天就回到整个时段。换了时段，选择会被清掉。
 
-On macOS, *Settings → Preferences → Session terminal* chooses which installed
-app opens a session from the terminal button in *Usage → Sessions*. The list
-contains apps registered to open `.command` files, with the current system
-default listed once. With no saved choice, magpie follows that default, or
-Terminal when the default is not a terminal. The *Resume* button still copies
-the command.
+在 macOS 上，*设置 → 偏好设置 → 会话终端*决定在*用量 → 会话*里按终端按钮时用哪个已安装的应用打开会话。这份清单包含那些注册为能打开 `.command` 文件的应用，当前系统默认的那个只列一次。没有保存过选择时，崇云科技跟随那个默认值；如果默认值不是终端，就用 Terminal。*Resume* 按钮仍然会复制那条命令。
 
-Keys in the terminal version:
+终端版里的按键：
 
-| Key        | Action                                |
+| 按键 | 动作 |
 | ---------- | ------------------------------------- |
-| `↑` `↓`    | choose agent                          |
-| `←` `→`    | choose field (model, effort, small …) |
-| `↵`        | open the picker                       |
-| type       | filter; enter accepts custom values   |
-| `s`        | save current setup as a profile       |
-| `p`        | apply or delete (`ctrl+d`) a profile  |
-| `S`        | sync the model catalog                |
-| `q`        | quit                                  |
+| `↑` `↓`    | 选择 agent |
+| `←` `→`    | 选择字段（model、effort、small……） |
+| `↵`        | 打开选择器 |
+| 输入 | 过滤；回车接受自定义的值 |
+| `s`        | 把当前设置存成一个配置档 |
+| `p`        | 套用或删除（`ctrl+d`）一个配置档 |
+| `S`        | 同步模型目录 |
+| `q`        | 退出 |
 
-Agents read their config at startup, so a running session keeps its model
-until you start a new one.
+agent 在启动时读自己的配置，所以一个正在跑的会话会保持它的模型，直到你开一个新的。
 
-### Moving to another machine
+### 迁移到另一台机器
 
-```sh
-magpie backup                   # writes magpie.magpie-backup, asks for a passphrase twice
-magpie backup --no-keys ~/b.magpie-backup   # the same with no API keys in it
-magpie restore magpie.magpie-backup         # on the other machine
-magpie restore --no-agents b.magpie-backup  # providers, settings, profiles; agents left as they are
-magpie restore --no-library b.magpie-backup # the library here left as it is
-```
-
-A backup holds your providers (with their keys, unless `--no-keys`), the
-pictures picked for them, the settings, the profiles, every agent's model and
-the library (unless `--no-library`): the instruction sets, the MCP servers and
-the skills with their files, templates and other binaries included (a file
-over 16 MB is left out, and so are the biggest once the skills' files come to
-32 MB; restoring keeps the copy of such a file the other machine already
-has). Without keys, a
-server's environment variables and headers that look like a key go empty.
-Gateway credentials, their names, ids and disabled state travel encrypted
-with Settings too. Restoring Settings replaces the gateway-key store with
-the backed-up one. `--no-keys` leaves gateway credentials and their legacy
-mirror out; restoring it preserves the destination's existing keys instead.
-Restoring the library replaces the one there — what it replaces is kept with
-the library's backups — and writes it into the agents on that machine.
-It is encrypted on your machine (AES-256-GCM, the key derived from the
-passphrase with PBKDF2-SHA256); nothing in it can be read without the
-passphrase. Restoring replaces providers with the same id and adds the rest;
-one that came without a key keeps the key already there. Agent models are set
-only for agents installed on that machine. Subscriptions are not in it: sign
-in to them on each machine. Their model picks and settings come along, and
-show once signed in; the restore, and a sync's status on the other machine,
-name the ones still to sign in to. The plugins added from npm or git come
-along too and are installed where it is put back (one added from a folder
-stays on its machine; without keys, an option whose name looks like a key
-is left out); a plugin's sign-in is not carried, a plugin already there is
-left as it is, and one removed on one machine stays on the others. Piped
-in, the passphrase is the first line of stdin.
-
-### Keeping machines in sync
-
-*Settings → Sync and backup → WebDAV, S3 or GitHub sync* keeps the same backup
-on a server and brings every machine up to date with it, every 3 minutes while
-the gateway runs. Choose one of these:
-
-- **WebDAV**: a folder on a WebDAV server such as 坚果云, Nextcloud or a
-  Synology.
-- **S3**: a bucket on AWS S3, Cloudflare R2, Backblaze B2, MinIO, Garage, a
-  NAS or any other S3-compatible server.
-- **GitHub**: an existing repository, using a fine-grained token
-  with Contents read and write permission. The repository must be private:
-  sync refuses a public one, whose history would give anyone every sealed version.
-  The address can include a folder, such as `github://owner/repo/magpie-sync`.
-  Each update is a commit to that branch, so the repository also provides a
-  history of the encrypted backup.
-
-The file is sealed on your machine with the passphrase, so the server only
-ever stores ciphertext. Each machine writes only over the version it read (a
-conditional write), so an update that another machine made in between is
-merged rather than lost.
+<a id="moving-to-another-machine"></a>
 
 ```sh
-magpie webdav on https://dav.jianguoyun.com/dav/ user=me@example.com
-magpie s3 on s3://my-bucket/magpie endpoint=https://<account>.r2.cloudflarestorage.com access-key-id=…
-magpie s3 on s3://backups endpoint=http://nas.local:9000 path-style=yes access-key-id=…
-magpie s3                       # where it syncs to and how the last sync went; magpie s3 now, off
-magpie github on github://owner/private-backups/settings branch=main
-magpie github                   # where it syncs to and how the last sync went; magpie github now, off
+chongyun backup                   # writes magpie.magpie-backup, asks for a passphrase twice
+chongyun backup --no-keys ~/b.magpie-backup   # the same with no API keys in it
+chongyun restore magpie.magpie-backup         # on the other machine
+chongyun restore --no-agents b.magpie-backup  # providers, settings, profiles; agents left as they are
+chongyun restore --no-library b.magpie-backup # the library here left as it is
 ```
 
-For S3:
+一份备份里有你的 provider（带它们的 key，除非 `--no-keys`）、为它们挑的图片、设置、配置档、每个 agent 的模型，以及资源库（除非 `--no-library`）：指令集、MCP server，以及带自己文件、模板和其它二进制的 skills（超过 16 MB 的文件会被排除，skills 的文件加起来超过 32 MB 后最大的那些也会被排除；恢复时那台机器已有的那种文件会保留它自己的副本）。不带 key 时，某个服务器那些看起来像 key 的环境变量和 header 会变成空的。网关凭据、它们的名字、id 和禁用状态也随设置一起加密带过去。恢复设置会把网关 key 仓库换成备份里的那一个。`--no-keys` 会把网关凭据和它们的旧版镜像排除在外；这样恢复时会保留目标机器上已有的 key。恢复资源库会替换掉原来那份——被替换的会随资源库的备份留下——并把它写进那台机器上的各个 agent。它在你的机器上加密（AES-256-GCM，密钥用 PBKDF2-SHA256 从口令派生）；没有口令，里面任何东西都读不出来。恢复会替换 id 相同的 provider，并加上其余的；其中一个没带 key 来的，会保留那里已有的 key。agent 的模型只为装在那台机器上的 agent 设置。订阅不在里面：请在每台机器上分别登录。它们挑的模型和设置会跟着来，登录后就会显示出来；恢复过程、以及另一台机器上同步的状态，会点名还有哪些没登录。从 npm 或 git 添加的 plugin 也会跟着来，并装在它被放回的地方（从文件夹添加的那个留在它自己那台机器上；不带 key 时，名字看起来像 key 的选项会被排除）；plugin 的登录态不会带过去，已经在那里的 plugin 保持原样，而在一台机器上被删掉的 plugin 在其它机器上仍然留着。用管道传进去时，口令是 stdin 的第一行。
 
-- `endpoint` is empty for AWS.
-- `region` defaults to `us-east-1`, or to `auto` on R2.
-- `path-style=yes` puts the bucket in the path, which MinIO and most servers
-  you run yourself need.
-- The secret is asked for and saved like the WebDAV password. It is used only
-  with the endpoint and access key it was given for.
-- The bucket must already exist.
-- The access key needs to read and write `<prefix>/magpie/`. On AWS it also
-  needs to list the bucket.
-- A server without conditional writes is supported. There magpie checks the
-  object's ETag just before each write. Two computers that write in the
-  same moment can both pass that check (Aliyun OSS, #1776), and the later
-  write is the one kept. The other computer notices at its next sync, a
-  few minutes later. It finds a file other than the one it wrote, so it
-  merges again from before its own write: what it changed goes back up
-  beside the other computer's change. It never takes the other's file as
-  having seen its own.
-- Shared usage is reconciled only after a complete S3 listing. A missing or
-  repeated continuation token, or a listing still truncated after 100 pages,
-  reports a sync error and keeps previously downloaded usage days in place.
+### 让多台机器保持同步
 
-For GitHub:
+<a id="keeping-machines-in-sync"></a>
 
-- Create the repository before enabling sync. Leaving Branch empty uses its
-  default branch. For an empty repository, the first encrypted backup creates
-  the initial commit on that default branch. A selected branch other than the
-  default must already exist.
-- Give a fine-grained token access to this repository with Contents read and
-  write permission. It is asked for by the CLI, never accepted in a command
-  line, and is saved separately from the library's GitHub token.
-- Folder is optional. Files go in `<folder>/magpie/`; every changed backup
-  creates a commit. Unchanged setup creates no backup commit.
-- Use the same encryption passphrase on every computer. It must differ from
-  the GitHub token. The token and sync connection settings stay on each computer.
-- The file limit is 64 MiB. Repository history retains encrypted old versions,
-  including usage files if sharing is enabled.
-- Switching between WebDAV, S3 and GitHub keeps the other services' settings
-  and credentials for switching back; one service syncs at a time.
+*设置 → 同步与备份 → WebDAV、S3 或 GitHub 同步*把同一份备份放在服务器上，并让每台机器都与它保持最新，网关运行期间每 3 分钟一次。挑其中一种：
 
-## OTLP export
+- **WebDAV**：一个 WebDAV 服务器上的文件夹，比如坚果云、Nextcloud 或群晖。
+- **S3**：AWS S3、Cloudflare R2、Backblaze B2、MinIO、Garage、NAS 或任何其它兼容 S3 的服务器上的一个存储桶。
+- **GitHub**：一个已有的仓库，用一把带 Contents 读写权限的细粒度 token。仓库必须是私有的：同步会拒绝公开的仓库，因为它的历史会让任何人拿到每一个封存的版本。地址里可以带一个文件夹，比如 `github://owner/repo/chongyun-sync`。每次更新都是往那个分支的一次提交，所以这个仓库也提供了加密备份的历史。
 
-Settings → Observability can export gateway request metadata over OTLP/HTTP
-(JSON). Export is off by default. Set the collector's base URL and optional
-headers, then enable **OTLP export**. **Export metrics** is separately off by
-default; enable it for a collector that accepts duration and token histograms.
-No restart is needed for saved settings. The export is the built-in plugin
-`otel` (Observability in Plugins › Built-in), which stays on while settings
-or the environment say to export.
-
-For `magpie serve`, environment variables override the saved preferences:
+这个文件在你的机器上用口令封好，所以服务器存的永远只有密文。每台机器只覆盖它读到的那一版（一次条件写入），所以中间被别的机器做过的更新会被合并，而不会丢失。
 
 ```sh
-MAGPIE_OTEL_ENABLED=true MAGPIE_OTEL_ENDPOINT=http://localhost:4318 magpie serve
+chongyun webdav on https://dav.jianguoyun.com/dav/ user=me@example.com
+chongyun s3 on s3://my-bucket/magpie endpoint=https://<account>.r2.cloudflarestorage.com access-key-id=…
+chongyun s3 on s3://backups endpoint=http://nas.local:9000 path-style=yes access-key-id=…
+chongyun s3                       # where it syncs to and how the last sync went; chongyun s3 now, off
+chongyun github on github://owner/private-backups/settings branch=main
+chongyun github                   # where it syncs to and how the last sync went; chongyun github now, off
 ```
 
-- `MAGPIE_OTEL_ENABLED`: `true` or `false`; an endpoint alone does not enable export.
-- `MAGPIE_OTEL_ENDPOINT`: an HTTP(S) base URL; `/v1/traces` and `/v1/metrics` are appended.
-- `MAGPIE_OTEL_HEADERS`: comma-separated `name=value` pairs, for example
-  `Authorization=Bearer%20token`. Percent-encode spaces and commas in values.
-- `MAGPIE_OTEL_METRICS`: `true` or `false`, off by default.
-- `MAGPIE_OTEL_SESSIONS`: `true` or `false`, off by default; trace supported local
-  agent interactions from newly recorded session events.
-- `MAGPIE_OTEL_BODIES`: `true` or `false`, off by default; sends each call's
-  request and reply as the trace's Langfuse input and output.
-- `MAGPIE_OTEL_BODIES_WHOLE`: `true` or `false`, off by default; with bodies on,
-  keeps them entire rather than cut at 256 KB. A long reply is written to a
-  temporary file; a body too large for the collector is still refused.
+关于 S3：
 
-For Langfuse, use `https://<your-langfuse-host>/api/public/otel` as the base
-URL and `Authorization=Basic%20<base64(public-key:secret-key)>` as the header.
-Leave metrics off. This uses Langfuse's OTLP ingestion endpoint. For Langfuse
-v4, add the header `x-langfuse-ingestion-version=4` for real-time ingestion.
+- `endpoint` 对 AWS 是空的。
+- `region` 默认是 `us-east-1`，在 R2 上默认是 `auto`。
+- `path-style=yes` 把桶名放进路径里，MinIO 和大多数自己搭的服务器都需要这样。
+- 那个密钥像 WebDAV 密码一样被问出来并保存。它只用在它被给予的那组 endpoint 和 access key 上。
+- 这个存储桶必须已经存在。
+- 这把 access key 需要能读写 `<prefix>/magpie/`。在 AWS 上它还需要能列出这个桶。
+- 没有条件写入的服务器也支持。在那里崇云科技会在每次写入之前检查那个对象的 ETag。两台在同一时刻写入的电脑可能都通过这个检查（阿里云 OSS，#1776），而较晚的那次写入会被保留。另一台电脑在几分钟后的下一次同步时才会发现。它发现的文件不是自己写的那一个，于是它从自己写入之前的状态重新合并：它改动的东西会和另一台电脑的改动并排放回去。它绝不会把对方的文件当成已经见过自己的。
+- 共享的用量只有在一份完整的 S3 清单之后才会对账。续传 token 缺失或重复，或者列了 100 页之后清单仍被截断，都会报一个同步错误，并把之前下载过的那些用量天原样保留。
 
-Traces include agent, provider, model, token counts (including cache and
-reasoning), HTTP status, timing, and route ID. Attempts with the same route ID
-share a trace ID. Chat, Responses, Anthropic and Gemini gateway requests
-also export a parent request span and child spans for every routing attempt,
-including unbilled failures, retries and fallbacks, so Langfuse can render a
-waterfall. A valid incoming W3C version-00 `traceparent` connects these spans
-to the caller's trace. Attempt spans carry token usage; the parent does not
-duplicate it. Attempt timings include any wait for a concurrency slot, while
-routing and retry delays remain visible as gaps inside the parent span.
-Tool execution inside the caller is outside the gateway's trace.
+关于 GitHub：
 
-Model-call spans also send estimated USD input, output and total costs to
-Langfuse via `langfuse.observation.cost_details`, using the same effective
-prices as Magpie's usage ledger (custom prices first, then catalog prices).
-Input cost includes cache reads and writes; reasoning tokens are already
-included in output cost. Explicit zero prices are exported too. Unknown
-prices are omitted so Langfuse can use its own model pricing. Parent and tool
-spans carry no costs, avoiding duplicate counting. Subscription costs at
-catalog prices are API-equivalent estimates, not subscription charges.
+- 在启用同步之前先创建仓库。Branch 留空就用它的默认分支。对一个空仓库，第一次加密备份会在那个默认分支上创建第一个提交。选了默认分支以外的某个分支时，那个分支必须已经存在。
+- 给一把细粒度 token 这个仓库的访问权，带 Contents 读写权限。它由 CLI 问出来，绝不在命令行里接收，并且和资源库的那个 GitHub token 分开保存。
+- Folder 是可选的。文件放在 `<folder>/magpie/` 里；每次有变化的备份都会创建一次提交。没有变化的设置不会创建备份提交。
+- 在每台电脑上用同一个加密口令。它必须和那个 GitHub token 不同。token 和同步的连接设置留在各自的电脑上。
+- 文件上限是 64 MiB。仓库的历史会保留加密的旧版本，开启共享时也包括用量文件。
+- 在 WebDAV、S3 和 GitHub 之间切换时，会保留其它服务的设置和凭据，方便再切回去；同一时间只有一个服务在同步。
 
-Enable **Trace agent conversations** to instead export one trace per
-user interaction, grouping model calls and tool executions under an agent
-root. Conversation IDs group those traces into Langfuse sessions. Gateway traces
-remain available until a visible local store covers that exact agent/session.
-For Codex and Pi, a readable session header establishes readiness without
-waiting for a model/tool span. The first request checks a header bounded to
-256 KiB when needed (including Codex base instructions); subsequent polls keep
-idle sessions ready while their files remain among the reader's 200 newest main
-files. Claude children have a separate 200-file quota and share the same 8 MiB
-polling read budget. Header checks never upload history or bodies. Discovery is shared across
-request IDs for two seconds. The request that refreshes discovery waits for the
-scan; other unresolved concurrent requests retain gateway traces without waiting.
-Polling reuses headers by path, size and mtime.
-Other adapters still use recent observations (five minutes).
-Only loopback requests without a gateway key can be deduplicated. The native
-client session ID takes precedence over a Magpie routing override; unknown
-sessions retain gateway traces, including WSL mirrored and Docker Desktop
-clients whose sessions are not visible locally. Requests without a session ID
-fall back to recent observations for that agent.
-Claude Code/Cowork readers also follow `<session>/subagents/*.jsonl` and a
-workflow's (ultracode) `<session>/subagents/workflows/<run>/agent-*.jsonl`
-(not its `journal.jsonl`). Child
-interactions share their parent session and use separate trace/span IDs, even
-when a user UUID is copied. Child final responses are combined across content
-blocks and exported when the transcript is unchanged for two seconds; no
-`turn_duration` is required.
-Their start times remain inferred; a parent tool link is not guessed. Main-thread calls can therefore be deduplicated. Claude
-tool-less small requests (`max_tokens` at most 4096), including title/haiku
-helpers, retain gateway traces because they may not enter a transcript. This
-conservative rule can retain a short tool-less main request as well. Explicitly
-classified auxiliary calls also retain gateway traces for other agents. This
-includes Codex calls with an explicit kind (subagent, review, memgen, title or
-compact): even if a child has a readable rollout, these can appear twice. Only
-its unclassified calls use local-session deduplication; a rollout alone does not
-prove every auxiliary request was recorded. Keyed and non-loopback clients
-always retain gateway traces. Magpie reads new events from local session stores
-every two seconds; it does not upload
-completed history when enabled. Restarting or changing the destination starts
-an observation window. Span IDs remain stable across repeated records.
+## OTLP 导出
 
-Pi and Codex have been tested end to end with real clients. The other adapters
-are covered by format fixtures but have **not been tested end to end**.
+<a id="otlp-export"></a>
 
-Supported clients and formats:
+设置 → 可观测性可以把网关请求的元数据通过 OTLP/HTTP（JSON）导出。导出默认关闭。先设好采集器的 base URL 和可选的响应头，再打开 **OTLP 导出**。**导出指标**是另外单独关闭的；采集器接受时长和 token 直方图时才打开它。保存的设置不需要重启。这个导出由内置 plugin `otel` 提供（Plugins › Built-in 里的「Observability」），只要设置或环境变量要求导出它就保持开启。
 
-| Client | Local store | Timing |
+对 `chongyun serve`，环境变量会覆盖保存下来的偏好：
+
+```sh
+MAGPIE_OTEL_ENABLED=true MAGPIE_OTEL_ENDPOINT=http://localhost:4318 chongyun serve
+```
+
+- `MAGPIE_OTEL_ENABLED`：`true` 或 `false`；只给一个 endpoint 并不会开启导出。
+- `MAGPIE_OTEL_ENDPOINT`：一个 HTTP(S) 的 base URL；`/v1/traces` 和 `/v1/metrics` 会被附加在后面。
+- `MAGPIE_OTEL_HEADERS`：逗号分隔的 `name=value` 对，比如 `Authorization=Bearer%20token`。值里的空格和逗号要做百分号编码。
+- `MAGPIE_OTEL_METRICS`：`true` 或 `false`，默认关闭。
+- `MAGPIE_OTEL_SESSIONS`：`true` 或 `false`，默认关闭；从新记录的会话事件里追踪受支持的本地 agent 交互。
+- `MAGPIE_OTEL_BODIES`：`true` 或 `false`，默认关闭；把每次调用的请求和回话作为该 trace 的 Langfuse 输入与输出发送。
+- `MAGPIE_OTEL_BODIES_WHOLE`：`true` 或 `false`，默认关闭；开启正文时保留完整正文，而不是在 256 KB 处截断。较长的回话会写进一个临时文件；正文对采集器来说仍然太大时照样被拒绝。
+
+对 Langfuse，用 `https://<your-langfuse-host>/api/public/otel` 作为 base URL，用 `Authorization=Basic%20<base64(public-key:secret-key)>` 作为响应头。指标保持关闭。这用的是 Langfuse 的 OTLP 摄入端点。Langfuse v4 还要加上响应头 `x-langfuse-ingestion-version=4` 以启用实时摄入。
+
+Trace 里包含 agent、provider、模型、token 数（含缓存和推理）、HTTP 状态、耗时和路由 ID。路由 ID 相同的几次尝试共用一个 trace ID。Chat、Responses、Anthropic 和 Gemini 的网关请求还会导出一个父请求 span，以及每一次路由尝试的子 span，包括不计费的失败、重试和回退，这样 Langfuse 就能画出一张瀑布图。一个有效的、来自调用方的 W3C version-00 `traceparent` 会把这些 span 接到调用方那条 trace 上。尝试的 span 带着 token 用量；父 span 不重复它。尝试的耗时包含等待并发位置的任何时间，而路由和重试的延迟则作为父 span 内部的空隙保留下来。调用方内部的工具执行不在网关这条 trace 里。
+
+模型调用的 span 还会通过 `langfuse.observation.cost_details` 把估算的美元输入成本、输出成本和总成本发给 Langfuse，用的是和崇云科技用量账本相同的有效价格（先自定义价格，再目录价格）。输入成本包含缓存读取和写入；推理 token 已经计入输出成本。明确为零的价格也会导出。不知道的价格会被省略，这样 Langfuse 可以用它自己的模型定价。父 span 和工具 span 不带任何成本，避免重复计数。按目录价算的订阅成本是等价于 API 的估算，不是订阅账单。
+
+打开 **Trace agent conversations** 可以改为每次用户交互导出一条 trace，把模型调用和工具执行归在一个 agent 根之下。会话 ID 把这些 trace 归成 Langfuse 的会话。在一个可见的本地存储覆盖了那个确切的 agent/会话之前，网关 trace 仍然可用。对 Codex 和 Pi，一个可读的会话头就足以表明已就绪，不必等模型或工具的 span。第一次请求在需要时会检查一个上限 256 KiB 的头（包括 Codex 的基础指令）；之后的轮询会在文件仍属于读取器最新的 200 个主文件之列时，让空闲的会话保持就绪。Claude 的子进程有单独的 200 文件配额，共用同一个 8 MiB 的轮询读取预算。头部检查从不上传历史或正文。发现在各个请求 ID 之间共享两秒。刷新发现的那个请求会等这次扫描；其它并发的、尚未解决的请求则保留网关 trace，不等待。轮询按路径、大小和 mtime 复用头部。其它适配器仍然使用近期的观测（五分钟）。只有不带网关 key 的回环请求才能被去重。客户端原生的会话 ID 优先于崇云科技的路由覆盖；未知的会话保留网关 trace，其中包括 WSL 镜像客户端和 Docker Desktop 客户端那些在本地看不见的会话。没有会话 ID 的请求会退回使用那个 agent 近期的观测。Claude Code/Cowork 的读取器还会跟随 `<session>/subagents/*.jsonl`，以及某个工作流（ultracode）的 `<session>/subagents/workflows/<run>/agent-*.jsonl`（不是它的 `journal.jsonl`）。子交互与父会话共用会话，但使用各自的 trace/span ID，即使复制了同一个用户 UUID 也一样。子进程的最终回话会跨内容块合并，并在记录两秒不变之后导出；不需要 `turn_duration`。它们的开始时间仍然是推断出来的；父工具链接不会被猜测。因此主线程的调用可以去重。Claude 那些不带工具的小请求（`max_tokens` 最多 4096），包括标题和 haiku 的助手，保留网关 trace，因为它们可能不会进入记录。这条保守规则也可能保留一个短的、不带工具的主请求。被明确归类的辅助调用，在其它 agent 上同样保留网关 trace。这包括带明确 kind 的 Codex 调用（subagent、review、memgen、title 或 compact）：即使子进程有一份可读的 rollout，这些也可能出现两次。只有它那些未归类的调用才使用本地会话去重；单凭一份 rollout 并不能证明每个辅助请求都被记录过。带 key 的和不在回环上的客户端始终保留网关 trace。崇云科技每两秒从本地会话存储里读一次新事件；开启时它不会上传已完成的历史。重启或改了目的地会开启一个观测窗口。Span ID 在反复记录之间保持稳定。
+
+Pi 和 Codex 已经用真实客户端端到端测试过。其它适配器只有格式 fixture 覆盖，**没有做过端到端测试**。
+
+受支持的客户端和格式：
+
+| 客户端 | 本地存储 | 计时 |
 | --- | --- | --- |
-| Codex | JSONL rollouts (`token_usage_record`, `item_completed`, `response_item`) | Recorded operations and paired native tools; inferred model/native-tool intervals |
-| Pi | Version-3 JSONL; optional `timing-final` | Recorded model times; inferred tool intervals |
-| Oh My Pi | Pi-compatible JSONL, including `model_usage` | Pi timing; auxiliary calls have inferred zero duration |
-| Claude Code / Cowork | `projects/*/*.jsonl`, `<session>/subagents/*.jsonl` and `<session>/subagents/workflows/*/agent-*.jsonl`, repeated assistant blocks and paired tool results | Inferred model/tool starts; recorded transcript boundaries |
-| OpenCode | SQLite V1/V2 (`message`/`part` or `session_message`); legacy JSON storage | Recorded model and tool timestamps |
-| Gemini CLI | `~/.gemini/tmp/*/chats/session-*.json[l]`, including patches and rewinds | Inferred intervals from message/tool event boundaries |
+| Codex | JSONL rollout（`token_usage_record`、`item_completed`、`response_item`） | 记录下来的操作和配对的原生工具；推断出的模型/原生工具区间 |
+| Pi | Version-3 JSONL；可选的 `timing-final` | 记录下来的模型时间；推断出的工具区间 |
+| Oh My Pi | 兼容 Pi 的 JSONL，含 `model_usage` | Pi 的计时；辅助调用的时长是推断出来的零 |
+| Claude Code / Cowork | `projects/*/*.jsonl`、`<session>/subagents/*.jsonl` 和 `<session>/subagents/workflows/*/agent-*.jsonl`，重复的 assistant 块和配对的工具结果 | 推断出的模型/工具开始时间；记录下来的记录边界 |
+| OpenCode | SQLite V1/V2（`message`/`part` 或 `session_message`）；旧版 JSON 存储 | 记录下来的模型和工具时间戳 |
+| Gemini CLI | `~/.gemini/tmp/*/chats/session-*.json[l]`，含补丁和回退 | 从消息/工具事件边界推断出的区间 |
 
-The adapters follow upstream schemas:
-[OpenCode V1](https://github.com/anomalyco/opencode/blob/dev/packages/schema/src/v1/session.ts),
-[OpenCode V2](https://github.com/anomalyco/opencode/blob/dev/packages/schema/src/session-message.ts),
-[Gemini CLI](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/services/chatRecordingTypes.ts),
-[Oh My Pi](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/session/session-manager.ts).
-Claude transcript records are checked against local Claude Code sessions;
-its [hook documentation](https://code.claude.com/docs/en/hooks) describes
-transcript locations. Separate subagent transcripts are not joined: the parent
-agent's task/delegation tool is included, but its children's internal work is
-not yet linked. No hooks or client changes are required.
+这些适配器遵循上游的 schema：
+[OpenCode V1](https://github.com/anomalyco/opencode/blob/dev/packages/schema/src/v1/session.ts)、
+[OpenCode V2](https://github.com/anomalyco/opencode/blob/dev/packages/schema/src/session-message.ts)、
+[Gemini CLI](https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/services/chatRecordingTypes.ts)、
+[Oh My Pi](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/session/session-manager.ts)。
+Claude 的记录条目是拿本地的 Claude Code 会话比对的；它的 [hook 文档](https://code.claude.com/docs/en/hooks) 描述了记录的位置。独立的子 agent 记录不会被合并进来：父 agent 的 task/delegation 工具会被包含，但子进程内部的工作目前还没有被链接。不需要任何 hook 或客户端改动。
 
-Polling uses a soft 8 MiB reading budget and up to 200 recent files per store.
-JSONL files are read incrementally; incomplete lines wait for the next poll.
-OpenCode SQLite is opened read-only, including WAL changes, and unchanged
-stores are skipped. SQLite message/part updates are read incrementally in bounded
-batches on separate read-only connections; oversized conversations resume on the
-next poll. OpenCode retains up to 256 messages and an 8 MiB body window per
-session; individual rows above 8 MiB export metadata only. Legacy JSON and
-Gemini snapshot reads cap at 32 MiB; Gemini retains the current prompt plus
-255 recent messages.
-Completed observations are deduplicated with bounded metadata. Claude's final
-response and Gemini's final token records may take one extra poll to settle.
+轮询使用一个软性的 8 MiB 读取预算，每个存储最多 200 个近期文件。JSONL 文件是增量读取的；没写完的行留到下一次轮询。OpenCode 的 SQLite 以只读方式打开，包含 WAL 里的改动，没有变化的存储会被跳过。SQLite 的 message/part 更新在各自独立的只读连接上按有界的批次增量读取；过大的对话在下次轮询时继续。OpenCode 每个会话最多保留 256 条消息和一个 8 MiB 的正文窗口；单条超过 8 MiB 的记录只导出元数据。旧版 JSON 和 Gemini 的快照读取上限是 32 MiB；Gemini 保留当前提示词加上最近 255 条消息。已完成的观测会在有界的元数据范围内去重。Claude 的最终回话和 Gemini 的最终 token 记录可能要多一轮轮询才落定。
 
-Inferred timings carry `magpie.timing.source=inferred`. Tool arguments/results
-and user input/output follow **Include request and response bodies**, masking
-secrets and respecting the whole-body preference. Session directory/title
-metadata, credentials and account names are not exported.
+推断出的计时带着 `magpie.timing.source=inferred`。工具的参数/结果和用户的输入/输出遵循**包含请求与回话正文**这一项，会遮住机密，并遵守完整正文的偏好。会话的目录/标题元数据、凭据和账号名不会被导出。
 
-Conversation tracing replaces standalone gateway traces for these local
-clients to avoid duplicate token usage. Unsupported clients and remote
-forwarded requests retain gateway tracing; the local usage ledger is unchanged.
-This mode shows agent activity rather than gateway retries or provider-routing
-details. It reads this computer's local sessions, including calls made without
-Magpie as the proxy.
+会话追踪会取代这些本地客户端的独立网关 trace，以免 token 用量重复。不受支持的客户端和远端转发的请求保留网关追踪；本地的用量账本不变。这种模式展示的是 agent 的活动，而不是网关的重试或 provider 路由的细节。它读的是这台电脑上的本地会话，包括那些没有把崇云科技当代理发出的调用。
 
-Metrics group duration and input/output token histograms by agent, provider,
-model, operation and error status. Prompt/reply text is exported only when
-**Include request and response bodies** is enabled (`MAGPIE_OTEL_BODIES=true`);
-secrets are masked and each body is limited to 256 KiB unless **Include the
-whole bodies** is enabled. Conversation IDs are exported only with
-conversation tracing; provider account names/keys are never exported.
+指标按 agent、provider、模型、操作和错误状态分组，给出时长和输入/输出 token 的直方图。只有开启**包含请求与回话正文**时才导出提示词/回话文本（`MAGPIE_OTEL_BODIES=true`）；机密会被遮住，每份正文上限 256 KiB，除非开启**包含完整正文**。会话 ID 只在会话追踪开启时导出；provider 的账号名/key 永远不导出。
 
-Whole bodies increase transient memory and allocation costs during read-back,
-secret scrubbing and JSON encoding; a 32 MiB request and reply can roughly
-double total allocations compared with truncated export. The export limits
-queued bodies to 128 MiB, but this does not bound in-flight processing memory.
-Recent calls retain only the first 256 KiB of each body.
+完整正文会在读回、清除机密和 JSON 编码时增加临时的内存和分配开销；一份 32 MiB 的请求和回话相比截断导出，总分配大约会翻倍。导出把排队的正文限制在 128 MiB，但这并不限制处理中的内存。最近的调用只保留每份正文的前 256 KiB。
 
-Export runs in the background with a bounded queue (128 records) and batches
-of up to 32 records, flushed every five seconds. A full queue drops telemetry
-without delaying gateway requests. Network errors and HTTP 429/502/503/504
-are retried up to two times, with retry delays capped at 60 seconds; other
-errors and partial rejection are logged
-without the collector's response body. Each HTTP attempt times out after
-three seconds. Graceful gateway shutdown allows at most three seconds to
-drain; `magpie serve` currently exits on SIGTERM without draining, so its last
-batch may be lost. This is best-effort export; local usage records remain
-available if it fails.
-Requests follow magpie's proxy setting, with loopback collectors going direct.
-Queued records are discarded if export is disabled or the destination or
-credentials change before sending. Redirects are not followed.
-Backups without keys omit OTLP headers; restoring one preserves this machine's
-headers only when the collector endpoint is unchanged.
+导出在后台运行，用一个有界的队列（128 条记录）和每批最多 32 条记录的批次，每五秒冲刷一次。队列满了就丢掉遥测数据，不会拖慢网关的请求。网络错误和 HTTP 429/502/503/504 最多重试两次，重试延迟上限 60 秒；其它错误和部分拒绝会被记下，但不带采集器的响应正文。每次 HTTP 尝试三秒后超时。网关优雅关闭最多给三秒排空；`chongyun serve` 目前收到 SIGTERM 就退出，不做排空，所以它最后一批可能会丢。这是尽力而为的导出；失败时本地用量记录仍然可用。请求遵循崇云科技的代理设置，回环上的采集器则直连。排队的记录会在导出被关闭、或者在发送前目的地或凭据变了时被丢弃。不跟随重定向。不带 key 的备份会省略 OTLP 响应头；恢复这样一份备份时，只有采集器 endpoint 没变才会保留这台机器的响应头。
 
-## Mirrors
+## 镜像
 
-The Plugins page's **Mirrors in China** (国内镜像) switch has what that page
-downloads asked of a mirror in China first and of its official address
-after: npm's registry (plugin packages, their versions and search) at
-`registry.npmmirror.com`, Bun's releases at npmmirror's binary mirror, and
-the plugin list at jsDelivr (`cdn.jsdelivr.net/gh/magpie-community/plugins`).
-Each is a copy of the very file — Bun's zip is still checked against Bun's
-SHA-256s, and a package against the integrity npm gave — and what the
-mirror hasn't copied yet is asked of the official address. npm's weekly
-download counts stay npmjs's own. `bun add` is pointed at npmmirror too,
-unless `BUN_CONFIG_REGISTRY` or `NPM_CONFIG_REGISTRY` names a registry
-already. The switch never sends anything through a proxy such as
-gh-proxy.
+<a id="mirrors"></a>
 
-Mirror fallback is off by default. Set `MAGPIE_MIRRORS=on` to use it. When
-it is on, the official source is tried first; a mirror is only tried after
-a network error, HTTP 429, HTTP 5xx, or GitHub's rate-limit 403. The
-defaults are `registry.npmmirror.com` for npm and `gh-proxy.com` for
-GitHub. `MAGPIE_NPM_REGISTRY` and `MAGPIE_GITHUB_MIRROR` replace them.
+Plugins 页面的 **Mirrors in China**（国内镜像）开关，会让那个页面要下载的东西先问国内的镜像、再问它的官方地址：npm 的 registry（plugin 包、它们的版本和搜索）在 `registry.npmmirror.com`，Bun 的发布版在 npmmirror 的二进制镜像上，plugin 清单在 jsDelivr（`cdn.jsdelivr.net/gh/magpie-community/plugins`）。每一个都是同一个文件的副本——Bun 的 zip 仍然要对着 Bun 的 SHA-256 校验，包也要对着 npm 给的完整性值校验——而镜像还没复制过来的东西就去问官方地址。npm 的每周下载量仍然取 npmjs 自己的。`bun add` 也被指向 npmmirror，除非 `BUN_CONFIG_REGISTRY` 或 `NPM_CONFIG_REGISTRY` 已经指了某个 registry。这个开关绝不会把任何东西经由 gh-proxy 之类的代理发送。
 
-Only two downloads are checked against a checksum that does not come from
-the mirror: Magpie's own update assets (their SHA-256 comes from the
-unmirrored update feed) and Bun's zip. Bun's default version carries its
-SHA-256s in the code, so it can be downloaded through a mirror even when
-Bun's official `SHASUMS256.txt` is unreachable; a newer Bun still needs
-that official file. Skill tarballs always use the official source, and the plugin-market
-registry does unless the Mirrors in China switch is on (jsDelivr, above). npm metadata, plugin README/search results and
-version checks are not checksummed; a mirror can report a different
-version.
+镜像回退默认关闭。设 `MAGPIE_MIRRORS=on` 来启用它。开启时先试官方来源；只有发生网络错误、HTTP 429、HTTP 5xx 或 GitHub 的限流 403 之后才会去试镜像。默认是 npm 用 `registry.npmmirror.com`，GitHub 用 `gh-proxy.com`。`MAGPIE_NPM_REGISTRY` 和 `MAGPIE_GITHUB_MIRROR` 可以替换它们。
 
-The official source and a mirror share one request budget, so a hanging
-official source doesn't make the whole wait twice as long.
+只有两处下载会用不来自镜像的校验和来检查：崇云科技自己的更新产物（它们的 SHA-256 来自未经镜像的更新源）和 Bun 的 zip。Bun 的默认版本把它的 SHA-256 写在代码里，所以即使 Bun 官方的 `SHASUMS256.txt` 够不着，它也能通过镜像下载；更新的 Bun 仍然需要那个官方文件。Skill 的 tar 包总是用官方来源，plugin 市场的 registry 也是，除非打开 Mirrors in China 开关（上面说的 jsDelivr）。npm 的元数据、plugin 的 README/搜索结果和版本检查都不做校验和；镜像可以报一个不同的版本。
 
-Requests that carry credentials, such as an `Authorization`, `Cookie`,
-API key, or URL userinfo/query token, never use a mirror; they go to the
-official source alone.
+官方来源和镜像共用一份请求预算，所以官方来源卡住不会让整个等待时间翻倍。
+
+带凭据的请求，比如带 `Authorization`、`Cookie`、API key，或 URL 里的 userinfo/查询 token，绝不使用镜像；它们只去官方来源。
 
 ```sh
 MAGPIE_MIRRORS=on \
 MAGPIE_NPM_REGISTRY=https://registry.example.com \
-MAGPIE_GITHUB_MIRROR=https://gh.example magpie serve
+MAGPIE_GITHUB_MIRROR=https://gh.example chongyun serve
 ```
 
-## Files
+## 文件
 
-magpie's folder, `~/.config/magpie`, is kept flat on purpose: backups,
-sync, Docker volume mounts and older magpies all find each file by its
-name there (#2028). Below, each file says what it is for. A `.lock`
-beside a file is held while it is written, across magpies; a `.bak` is
-the copy made before a write.
+<a id="files"></a>
 
-What you set:
+崇云科技的目录 `~/.config/magpie` 是刻意保持扁平的：备份、同步、Docker 的卷挂载和旧版崇云科技都在那里按名字找到每个文件（#2028）。下面每个文件都会说明它是干什么的。文件旁边的 `.lock` 在它被写入期间被持有，跨各个崇云科技实例；`.bak` 是写入之前做的那份副本。
 
-- `settings.json` — Settings
-- `providers.json` — your providers, keys included (0600); `pluginLeft` in it
-  keeps a removed plugin's model picks until it is added again
-- `profiles.json` — saved profiles
-- `library.json`, `library/` — the library: its instructions, skills, MCP
-  servers and hooks, and the agents each goes to
-- `plugins.json`, `plugins/` — the plugins added, and their packages
-- `plugins.yml` — which built-in plugins are on, and each one's config
-- `caller-keys.json` — the gateway keys you made for other callers (0600)
+你设置的：
 
-Accounts and sign-ins:
+- `settings.json` — 设置
+- `providers.json` — 你的 provider，包含它们的 key（0600）；里面的 `pluginLeft` 会保留被移除的 plugin 的模型选择，直到它被再次添加
+- `profiles.json` — 保存的配置档
+- `library.json`、`library/` — 资源库：它的指令、skills、MCP server 和 hooks，以及每一项要去往哪些 agent
+- `plugins.json`、`plugins/` — 添加的 plugin，以及它们的包
+- `plugins.yml` — 哪些内置 plugin 是开的，以及每个的配置
+- `caller-keys.json` — 你为其它调用方建的网关 key（0600）
 
-- `logins.json` — the subscription accounts signed in through magpie
-  (0600)
-- `plugin-auth.json` — the plugins' sign-ins (0600)
-- `mcp-signins.json` — sign-ins to MCP servers (0600)
-- `cli-identity.json` — who an agent's own CLI last said was signed in
-  (`cursor-agent about`), so a start doesn't wait for the CLIs
-- `redact.key` — the key behind the placeholders privacy masking puts in
-  place of what it hides
+账号与登录：
 
-What magpie set on your agents:
+- `logins.json` — 通过崇云科技登录的订阅账号（0600）
+- `plugin-auth.json` — plugin 的登录态（0600）
+- `mcp-signins.json` — 到 MCP server 的登录态（0600）
+- `cli-identity.json` — 某个 agent 自己的 CLI 上次说登录着的是谁（`cursor-agent about`），这样启动时不必等那些 CLI
+- `redact.key` — 隐私脱敏用来替换被遮内容的那些占位符背后的 key
 
-- `stash.json` — values magpie replaced, restored on switch-back
-- `applied.json` — what magpie last set on each agent, and when
-- `migrations.json` — which subscriptions moved to their plugin
-  ([Built-in subscriptions that a plugin serves](../AGENTS.md))
+崇云科技在你的 agent 上设置的：
 
-The gateway and usage:
+- `stash.json` — 崇云科技替换掉的那些值，切回去时还原
+- `applied.json` — 崇云科技最后在每个 agent 上设了什么，以及什么时候
+- `migrations.json` — 哪些订阅迁到了它们的 plugin（[内置订阅迁到 plugin](../AGENTS.md)）
 
-- `usage.jsonl` — one line per request: the Usage page's numbers
-- `routing/` — each day's routing attempts (`<date>.jsonl`), the Routing
-  page's history
-- `affinity.json` — which key or account answered each conversation, so a
-  restart keeps it there while the vendor has it cached
-- `served.json` — when each account and key last answered
-- `quotas.json` — the last allowance each account reported
-- `quota-history.json`, `balance-history.json` — allowance and balance
-  readings over time, for the Usage page's charts
-- `usage-alerts.json` — the usage alerts already shown, so a restart
-  doesn't show them again
-- `client-shapes.json` — the headers the gateway last let through for each
-  client, for a test from the CLI
-- `gateway-sessions-hidden.json` — gateway sessions you deleted
+网关与用量：
 
-Kept for the window:
+- `usage.jsonl` — 每个请求一行：用量页面上的那些数字
+- `routing/` — 每天的路由尝试（`<date>.jsonl`），路由页面的历史
+- `affinity.json` — 每段对话是由哪把 key 或哪个账号应答的，这样重启之后它还在那里，而厂商那边也还缓存着
+- `served.json` — 每个账号和 key 上次应答的时间
+- `quotas.json` — 每个账号上一次报出的额度
+- `quota-history.json`、`balance-history.json` — 一段时间里的额度和余额读数，给用量页面的图表用
+- `usage-alerts.json` — 已经显示过的用量提醒，这样重启后不会再显示一次
+- `client-shapes.json` — 网关最后为每个客户端放行的那些 header，供 CLI 那边测试用
+- `gateway-sessions-hidden.json` — 你删掉的网关会话
 
-- `icons/` — providers' icons, fetched once
-- `plugin-icons.json`, `plugin-providers.json`, `plugin-updates.json` —
-  plugins' icons, the providers each serves, and what the last look at
-  npm found for them (updates waiting, and the ones made)
-- `trash/` — deleted sessions, until you empty it or restore them
-- `last-version`, `whatsnew-quiet-day` — the version that ran last, for
-  What's new, and the day you said not to show it again
-- `start-menu-shortcut` — the Start menu shortcut was made (Windows)
-- `install-id`, `stats-sent` — the [user count](#counting-users)'s
-  random id and the last day it went
+为窗口保留的：
 
-In `~/.cache/magpie`:
+- `icons/` — provider 的图标，只取一次
+- `plugin-icons.json`、`plugin-providers.json`、`plugin-updates.json` — plugin 的图标、每个提供的 provider，以及最近一次查看 npm 得到的结果（等着更新的，和已经做好的）
+- `trash/` — 删掉的会话，直到你清空它或者把它们恢复
+- `last-version`、`whatsnew-quiet-day` — 上一次运行的版本，供「更新了什么」用，以及你说不要再显示它的那一天
+- `start-menu-shortcut` — 开始菜单的快捷方式已经建好（Windows）
 
-- `bun/<version>/magpie-bun` — the Bun plugins run on, named
-  so that a proxy app's PROCESS-NAME rule can match it (`magpie-bun.exe` on
-  Windows)
-- `models.json` — models.dev catalog (OpenCode's cache at
-  `~/.cache/opencode/models.json` is used when present)
-- `models/<provider>.json` — model lists fetched from vendors
-- `partner-counts.json` — partner counts not yet sent (at most
-  14 days)
+在 `~/.cache/magpie` 里：
 
-`XDG_CONFIG_HOME` and `XDG_CACHE_HOME` are respected.
+- `bun/<version>/magpie-bun` — 跑 Bun plugin 用的那个东西，名字起成这样，好让某个代理应用的 PROCESS-NAME 规则能匹配到它（Windows 上是 `magpie-bun.exe`）
+- `models.json` — models.dev 目录（存在 OpenCode 的那份缓存 `~/.cache/opencode/models.json` 时用它）
+- `models/<provider>.json` — 从各个厂商取回的模型清单
 
-## Counting users
+`XDG_CONFIG_HOME` 和 `XDG_CACHE_HOME` 都会被尊重。
 
-Once a day, a running magpie (the app, or `magpie serve`) sends one event to
-PostHog so we know how many people use it: a random id made up on your
-computer (`~/.config/magpie/install-id`, made the first time the event is
-sent), magpie's version, and your system and architecture. The day it last
-went is in `~/.config/magpie/stats-sent`, so a day is sent once; the
-event is tried at start and then every hour.
+**图标从哪来。** plugin、导入链接和资源库的图标都放在各自作者挑的主机上。崇云版不内置图标代理：图片直接从图标所在的那台主机取，不经过任何第三方代理，因此那台主机会看到取图者的地址。相关代码在 [`internal/iconproxy`](../internal/iconproxy/iconproxy.go)：它的默认代理地址是空的，也就是直连；把 `MAGPIE_ICON_PROXY` 设成自己的代理，才会改从那里取。
 
-With it goes what magpie is used with, so we know which agents, providers
-and models to look after first, by magpie's own ids only:
+## 社区
 
-- the agents connected to magpie (`claude`, `codex`); an omp profile is
-  only `omp`;
-- the providers that are on: a preset's id (`deepseek`), a subscription's
-  (`codex`, `copilot`), a community plugin's (`plugin:kiro`); a provider you
-  added yourself is only `custom`, another plugin only `plugin`;
-- the models the connected agents are set to, as the provider's id and the
-  vendor's model id (`deepseek/deepseek-v4`); on a key's provider, a model
-  id that [models.dev](https://models.dev) doesn't list (a local model, a
-  fine-tune) is only `<provider>/other`; one on a provider of your own is
-  only `custom`, a routing group only `group`;
-- how many of each, and how many routing groups you have.
-- for each partner (a sponsor listed first in the add sheet), by its id, how
-  many times a day the add sheet showed it, its row was opened, its key
-  page was opened and a provider was added from it (at most 20 of each,
-  5 adds), kept in `~/.cache/magpie/partner-counts.json` for at most 14
-  days and sent the day after as `magpie partner` events.
+<a id="community"></a>
 
-No names, base URLs, accounts, keys, prompts or usage go. Turn that part off
-in Settings → Privacy → Share the agents, providers and models I use; the
-day's event then has the id, version and system only. Turn it all off in
-Settings → Privacy → Count me as a user, or with `DO_NOT_TRACK=1` or
-`MAGPIE_NO_STATS=1`. Builds from source never send it. The code is
-[internal/stats](../internal/stats/stats.go). Deleting `install-id` makes a
-new one at the next send. The [Privacy page](https://usemagpie.ai/docs/privacy)
-shows a whole batch and everything else magpie sends by itself.
+问题、值得分享的配置、想法、bug：请在本仓库的 [issues](https://github.com/lulu58588/chongyun/issues) 和讨论里聊聊。Issue 和 PR 都欢迎。
 
-Partners are also counted where usemagpie.ai sees them, whatever these
-settings say, as any website sees its visits. The partner list
-(`/api/partners`) gives each partner's website and key page as a
-`https://usemagpie.ai/go/<id>/site|keys[/<region>]` link, which sends a
-`magpie partner go` event (the partner, which link, the region, and the
-country Cloudflare gives) before sending the browser on; and one in ten
-fetches of the list sends a `magpie partners fetch` event with weight 10
-and the country, while a partner is listed. Each event has an id of its
-own: no install id, address or account goes with it. The code is
-[site/worker.js](../site/worker.js).
+## 许可
 
-A plugin's, an import link's and the library's icons sit on hosts their
-authors picked. magpie fetches each through
-`https://usemagpie.ai/api/icon?url=<https URL>`, so the host sees
-Cloudflare's address and never the user's. The worker sends only
-`Accept: image/*` and its own User-Agent, passes on a PNG, JPEG, GIF, WebP,
-ICO or SVG of at most 1 MB and refuses anything else, and counts and keeps
-nothing. The code is [internal/iconproxy](../internal/iconproxy/iconproxy.go)
-and `icon` in [site/worker.js](../site/worker.js).
+<a id="license"></a>
 
-## Community
-
-Questions, setups worth sharing, ideas, bugs: come talk to us and other
-magpie users on [Discord](https://discord.gg/vGSnD3ZKQF). Issues and pull
-requests are welcome here too.
-
-## License
-
-MIT. See [LICENSE](../LICENSE).
+MIT。见 [LICENSE](../LICENSE)。

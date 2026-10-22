@@ -1,121 +1,936 @@
-# Agent wiring
+# Agent 接线
 
-magpie connects a coding agent to its gateway by editing the agent's own
-config. That covers the endpoint, the key `magpie-<agent>` and the model,
-in the agent's own format. When the agent is disconnected, magpie puts back
-what the agent had before. Package `internal/agent` describes every
-supported agent: where its config lives, which fields matter and which
-values to offer. It also records what magpie set, so a later change made by
-something else shows up as drift.
+<a id="agent-wiring"></a>
 
-## Responsibilities and sources of truth
+崇云科技把一个 coding agent 连到自己的网关上，方式是改这个 agent 自己的配置。
+这覆盖了 endpoint、key `magpie-<agent>` 和模型，用 agent 自己的格式。当 agent
+处于断开状态时，崇云科技把它原先的样子放回去。包 `internal/agent` 描述了每个
+受支持的 agent：它的配置在哪里、哪些字段重要、要提供哪些取值。它还记下崇云
+科技写过什么，这样之后由别的东西做出的改动就会显示为 drift。
 
-| Part | Responsibility | Source |
+## 职责与事实来源
+
+<a id="responsibilities-and-sources-of-truth"></a>
+
+| 部分 | 职责 | 来源 |
 | --- | --- | --- |
-| Agent description | `Agent` has an id, name, icon, `Bin` and `Dir` for detection, `Path`, `Fields` and `Native`. It also has optional hooks: `Notice`, `UA`, `ListsModels`, `Sync`, `Unwire`, `Join`/`Joined`, `Routed`, `Follow`, `RenameRefs`, `Check`, `LastUsed`, `Reached`, `Import`/`Added`, `Launch`, `SplitSuffix`, `Spelled` and `ModelAliases`. Each hook's comment says which agents need it. | [`agent.go`](../../internal/agent/agent.go) |
-| Fields and options | A `Field` has `Get`, `Set` and `Options`. `Set("")` returns the field to the agent's default and takes magpie's wiring out. `Quiet` fields follow another field until set (`Follows`, such as Claude Code's tiers). An `Option` carries the picker's facts: `Direct`, `Via`, `Same`, `Alias`, `Rate` and `Context`. The GUI's and TUI's pickers list `Agent.Picks`: with the agent in settings' `ownModelsHidden` (the switch at the top of its model list, #1642), a field that offers catalog models (`Ref`) leaves out the agent's own (no `Ref`), but for its default and the value it is set to. The CLI still takes an own model by name. | [`agent.go`](../../internal/agent/agent.go), [`route.go`](../../internal/agent/route.go) |
-| The list of agents | `All` lists every agent magpie knows, then the WSL agents (`wslAgents`). `Clients` lists every agent whose requests the gateway knows by name, which `usage.Agents` reads. One file per agent: `claude.go`, `codex.go`, `opencode` in `agents.go`, and so on. | [`agents.go`](../../internal/agent/agents.go) |
-| Connect | `ConnectHow` picks the model an agent starts on and reports how. `How` is one of: `kept`, `again`, `joined`, `magpie`, `same`, `alike`, `default` or `first` (#726). With no models to give, it returns `NoModelsError` (code `no_models`). | [`applied.go`](../../internal/agent/applied.go) |
-| What magpie set | `Apply` sets a field and records it in `applied.json`. `Wired` says whether magpie is in the config. `Drift` reports `unwired`, `replaced`, `unreachable`, `proxied` or `bypassed`. `Reapply` sets the record again. `Keep` accepts the config as it is now. | [`applied.go`](../../internal/agent/applied.go) |
-| What came before | The stash (`stash.json`) remembers what the config said before magpie pointed it at the gateway, so Disconnect restores it rather than guessing. | [`stash.go`](../../internal/agent/stash.go) |
-| Disconnect and preview | `Disconnect` runs `Unwire`, then returns each field still on magpie to its default. Last it runs `Restore`: Pi and its kin (`piLike`: Pi, OmO, Prime Agent; and MothX, its one `settings.json`) copy `settings.json` and `models.json` aside (`*.before-magpie`, `beforeMagpie`) before magpie's first write, and put that copy back byte for byte where what Disconnect left is the same JSON; a file that wasn't there goes again when only empty objects are left in it. `DisconnectPreview` runs the real Disconnect on a copy under a temporary home, in a subprocess (`DryRunArg`), and diffs the files. The preview is never a second account of what Disconnect does. | [`applied.go`](../../internal/agent/applied.go), [`preview.go`](../../internal/agent/preview.go) |
-| Keeping configs current | `Reseat` moves agents off a model magpie no longer serves (#200). `OnGateway` and `Rewire` write the new gateway address into every connected agent when the port changes. `Source` and `Stale` say what an unconnected agent runs on, and whether running copies still use the old list. | [`reseat.go`](../../internal/agent/reseat.go), [`rewire.go`](../../internal/agent/rewire.go), [`connectinfo.go`](../../internal/agent/connectinfo.go) |
-| Codex background compaction | Long conversations' Codex background compaction, in Codex's opened row on the Agents page (`CodexAsyncCompact`, `CodexAsyncCompactPercent`, #2490) writes `[features.async_compaction]` `enabled = true` and `model_async_compact_threshold_percent` (Codex 0.163 reads it only in that table) into each Codex config magpie routes, on every `Sync`. Codex starts a background compaction only on a provider whose `capabilities.remote_compaction` is `"v2"`, which it gives OpenAI and Azure alone, so `[model_providers.magpie]` gets `capabilities = { remote_compaction = "v2" }` too, also when the user turned the feature on by hand (#2493); `putProvider` carries the table's capabilities over when it writes it again. What magpie wrote is in the stash under `codex.async`: a value the user set, or changed since, is never written over and stays when the switch goes off; a bare `async_compaction = true`, an inline or dotted table is the user's as written. | [`codex_async.go`](../../internal/agent/codex_async.go) |
-| Named omp profiles | omp keeps a profile's settings under `~/.omp/profiles/<name>` (or under `PI_CONFIG_DIR`), each with its own `config.yml` and `models.yml`. Every such profile is an agent of its own — `omp#<name>` on Windows, `omp#<name>@wsl:<distro>` in a distro — so each can be connected, drifted and disconnected on its own. They share omp's model lists (`ListsFor`), and the default `omp` row is the folder `ompDir`/`ompIn` already pick, so an `OMP_PROFILE` that row is already pointed at is not listed twice. A name omp refuses is not a row: `default`, a trailing dot, or a Windows reserved device name (`aux`, `nul`, `com1`, `lpt9.x`, `con.work`), on every platform (`ompProfileOK`). A distro's profile names come from its probe and are kept in `wsl.json`; a stopped distro is never started to list them, its profile rows showing what was last seen (`asleep`). | [`omp.go`](../../internal/agent/omp.go), [`wsl.go`](../../internal/agent/wsl.go) |
-| WSL twins | On Windows each running distro is probed once, without starting a stopped one. The `wslKinds` agents found there become agents of their own, `<id>@wsl:<distro>`, edited through `\\wsl.localhost\<distro>`. A kind is found by its folder under the distro's home or by its command there (not one on a Windows drive). Where another tool shares one of them, the kind leaves it out: Gemini CLI is found by its command alone, because Antigravity keeps `~/.gemini` too. Goose is found by its folder alone, because a `goose` command can be pressly's migration tool. Reasonix also needs the version its command gives (`accept`), because the old npm client is named `reasonix` too. The gateway address and key follow the distro's networking: mirrored or NAT (`place`, `keyAt`). `ListsFor` keeps a twin's model picks under the Windows twin's id (#927). | [`wsl.go`](../../internal/agent/wsl.go), [`gatewaykey.go`](../../internal/agent/gatewaykey.go) |
-| Settings tuned from use | Usage › Context's "Tuned for you" advises, per agent, the settings that would have spent the fewest tokens on the user's own calls of the range, and puts one in on a click. Package `tune` replays the calls `sessions.Calls` reads from the agents' session files under each candidate value (`Compact`, `CacheTTL`); `tuneOf` picks the agents and models (Claude Code per model, Codex pooled). `TuneRead`, `TuneApply` and `TuneUndo` know where each setting lives: Claude Code's `modelSettings.<model>.autoCompactWindow` (where its `/autocompact` saves), `promptCacheTtl` and `subagentPromptCacheTtl` in `~/.claude/settings.json`; Codex's top-level `model_auto_compact_token_limit`. The advice is weighed by tokens alone: it is labelled "Fewest tokens", and a compaction window it would change says it doesn't measure how well the agent keeps the task after a compaction, and that a lower window compacts more often (#1854, `context-tune.test.cjs`). A compaction row's "Other window…" opens the app menu with every value of the curve, each with its estimated extra tokens over the fewest and about how many compactions it would have made (`Point.compacts`, from the same replay), and puts the one picked in like Use (#1860). An agent whose files time its compactions also has their wait weighed (HirotaNagai on X): Claude Code's `compact_boundary` line says `compactMetadata.durationMs`, which `sessions` puts on the first call after it, and Codex compacts by a call of its own (the record a `compacted` line names, in rollouts since 2026-09), whose time is the compaction's (`Call.Compact`; an older rollout's compaction has no call and stays untimed). With 3 or more timed for a model (`minTimed`), `Facts.took` is their median seconds, each window says its wait (`Point.wait`, its compactions × `took`), and the row says what a compaction took, the wait at the advice against the window now, and the cheaper window the advice passed over for waiting longer (`Compaction.cheapest`, `wait_cheapest`) when it saves 3% or more; the advice is labelled "Tokens + wait", its caveat says tokens and waiting only, and the picker says each window's wait with "Fewest tokens" on the cheapest (`context-tune.test.cjs`). An agent or model with fewer timed reads and is advised as before. | [`internal/tune`](../../internal/tune/tune.go), [`tune.go`](../../internal/agent/tune.go), [`internal/gui/tune.go`](../../internal/gui/tune.go) |
-| Agents a plugin adds | A plugin's `magpie.agent` module (or a `*.agent.js` file) says where an agent magpie has no setup of its own keeps its model (`config`, `format`, `model`, `prefix`), and its `connect` returns the other keys to write. One with no `model` is connect only (#2374): its one field is `provider`, magpie or nothing, as an app whose one setting is magpie as its provider; `connect` is called without a model, must return keys, and is called again on a catalog change (`Sync`); `ListsModels` is set, so its list is the models picked for it. `agentplug` compiles each in moejs (via `jsmod`, as gateway middleware is), reloads it when plugins.json or the file changes, and keeps why one didn't load. `plugged` makes each an `Agent` with `Plugin` set, listed after magpie's own; an id one of magpie's own agents has is refused (`PluginErrors`). | [`agentplug.go`](../../internal/agentplug/agentplug.go), [`plugged.go`](../../internal/agent/plugged.go) |
-| Environment-only agents | Agents that read the gateway only from the environment get a `Launch` command. Cursor Private Inference instead gets user-level variables (`cursorLocalOn`, `KeepCursorLocalEnv`), and magpie writes none of Cursor's own files. It is found by its product.json in the apps folders, in the folder Windows' list of installed programs names (`cursorLocalInstalls`, any folder picked in its installer), or as its Linux AppImage (`Cursor_Private_Inference-…AppImage`) in the folders downloads are kept in (#1254). Its effort field is kept in magpie (`provider.AgentEffort`) and asked by the gateway, its levels those of the models it lists (`cursorLocalEfforts`, #1003). | [`cursorlocal.go`](../../internal/agent/cursorlocal.go) |
-| Claude Science | Its daemon (`claude-science`) reads the API's address only from its environment's `ANTHROPIC_BASE_URL` and has no setting for it. Connect restarts the daemon with that variable set to the gateway (`scienceOn`: `stop`, then `serve --detached --no-browser` on the port `status` said it was on) and notes the daemon in `claude-science.json` (url, pid, port); Disconnect restarts it without the variable, one in magpie's own environment taken out too. No variable is set for the user and no file of the app's is written. Setting it again while magpie's daemon runs on this gateway does nothing (`Pick` sets the field after `connect`). `KeepClaudeScience` starts it again on the gateway, on its port, when it isn't running (a restart of the computer), each minute while magpie serves; it never stops one running. `Check` reads the daemon's `operon.lock`, not `status` (seconds for a 130 MB Bun program), and calls a daemon with another pid drift: the app's window, opened while none ran, starts its own without the variable. It is found in the Mac app's bundle (`Claude Science.app/Contents/Resources/bin`), `%LOCALAPPDATA%\Programs\ClaudeScience` on Windows, `~/.local/bin`, else on PATH. The app still needs its own Claude sign-in; the gateway never passes it on (see gateway-routing). | [`claudescience.go`](../../internal/agent/claudescience.go), [`science.go`](../../internal/gateway/science.go) |
+| Agent 描述 | `Agent` 有一个 id、name、icon，用于检测的 `Bin` 和 `Dir`，以及 `Path`、`Fields` 和 `Native`。它还有一些可选的 hook：`Notice`、`UA`、`ListsModels`、`Sync`、`Unwire`、`Join`/`Joined`、`Routed`、`Follow`、`RenameRefs`、`Check`、`LastUsed`、`Reached`、`Import`/`Added`、`Launch`、`SplitSuffix`、`Spelled` 和 `ModelAliases`。每个 hook 的注释说明哪些 agent 需要它。 | [`agent.go`](../../internal/agent/agent.go) |
+| 字段和选项 | 一个 `Field` 有 `Get`、`Set` 和 `Options`。`Set("")` 把字段恢复成 agent 的默认值，并把崇云科技的接线撤掉。`Quiet` 字段在被设置之前跟随另一个字段（`Follows`，比如 Claude Code 的 tier）。一个 `Option` 带着选择器所需的事实：`Direct`、`Via`、`Same`、`Alias`、`Rate` 和 `Context`。GUI 和 TUI 的选择器列出 `Agent.Picks`：当该 agent 在设置的 `ownModelsHidden` 里时（模型列表顶部的开关，#1642），一个提供目录模型的字段（`Ref`）会把 agent 自己的模型排除（没有 `Ref`），但它自己的默认值和当前被设成的值除外。CLI 仍然可以按名字取 agent 自己的模型。 | [`agent.go`](../../internal/agent/agent.go), [`route.go`](../../internal/agent/route.go) |
+| agent 列表 | `All` 列出崇云科技知道的每个 agent，然后是 WSL agent（`wslAgents`）。`Clients` 列出网关按名字知道的每个 agent，也就是 `usage.Agents` 读的那份。每个 agent 一个文件：`claude.go`、`codex.go`、`agents.go` 里的 `opencode`，等等。 | [`agents.go`](../../internal/agent/agents.go) |
+| 连接 | `ConnectHow` 选出一个 agent 启动时用的模型并说明是怎么选的。`How` 是其中之一：`kept`、`again`、`joined`、`magpie`、`same`、`alike`、`default` 或 `first`（#726）。没有模型可给时，它返回 `NoModelsError`（错误码 `no_models`）。 | [`applied.go`](../../internal/agent/applied.go) |
+| 崇云科技写了什么 | `Apply` 设置一个字段并把它记进 `applied.json`。`Wired` 说明崇云科技是否在配置里。`Drift` 报告 `unwired`、`replaced`、`unreachable`、`proxied` 或 `bypassed`。`Reapply` 再写一次那份记录。`Keep` 接受现在的配置原样。 | [`applied.go`](../../internal/agent/applied.go) |
+| 之前是什么样 | stash（`stash.json`）记着在崇云科技把配置指向网关之前它是什么样子，这样断开时是恢复而不是猜测。 | [`stash.go`](../../internal/agent/stash.go) |
+| 断开与预览 | `Disconnect` 先跑 `Unwire`，再把每个仍然指向崇云科技的字段恢复成默认值。最后它跑 `Restore`：Pi 及其同类（`piLike`：Pi、OmO、Prime Agent；以及 MothX，它只有一份 `settings.json`）会在崇云科技第一次写入之前把 `settings.json` 和 `models.json` 复制一份（`*.before-magpie`、`beforeMagpie`），并在断开留下的内容与那份 JSON 相同时逐字节放回；原本不存在的文件在只剩下空对象时也重新删掉。`DisconnectPreview` 在一个临时 home 下的副本上、在一个子进程里（`DryRunArg`）跑真正的 Disconnect，然后对文件做 diff。预览绝不是对 Disconnect 行为的第二份记账。 | [`applied.go`](../../internal/agent/applied.go), [`preview.go`](../../internal/agent/preview.go) |
+| 让配置保持最新 | `Reseat` 把 agent 从崇云科技不再提供的模型上挪走（#200）。`OnGateway` 和 `Rewire` 在端口变化时把新的网关地址写进每个已连接的 agent。`Source` 和 `Stale` 说明未连接的 agent 跑在什么上，以及正在运行的副本是否还在用旧列表。 | [`reseat.go`](../../internal/agent/reseat.go), [`rewire.go`](../../internal/agent/rewire.go), [`connectinfo.go`](../../internal/agent/connectinfo.go) |
+| Codex 后台压缩 | 长对话的 Codex 后台压缩，在 Agents 页面 Codex 打开的那一行里（`CodexAsyncCompact`、`CodexAsyncCompactPercent`，#2490），会在每次 `Sync` 时把 `[features.async_compaction]` 的 `enabled = true` 和 `model_async_compact_threshold_percent`（Codex 0.163 只在那张表里读它）写进崇云科技路由到的每个 Codex 配置。Codex 只会在 `capabilities.remote_compaction` 为 `"v2"` 的 provider 上启动后台压缩，而它只给 OpenAI 和 Azure 这个能力，所以 `[model_providers.magpie]` 也要拿到 `capabilities = { remote_compaction = "v2" }`，即使用户是手动打开这个功能的（#2493）；`putProvider` 再次写入那张表时会把它的 capabilities 带过去。崇云科技写了什么记在 stash 的 `codex.async` 下：用户设过的值，或者之后改过的值，绝不会被覆盖写，切换关闭时也留着；一个单纯的 `async_compaction = true`、内联表或点号表是用户自己写的原样保留。 | [`codex_async.go`](../../internal/agent/codex_async.go) |
+| 具名的 omp profile | omp 把一个 profile 的设置放在 `~/.omp/profiles/<name>` 下（或者 `PI_CONFIG_DIR` 下），每个都有自己的 `config.yml` 和 `models.yml`。每个这样的 profile 都是一个独立的 agent —— 在 Windows 上是 `omp#<name>`，在发行版里是 `omp#<name>@wsl:<distro>` —— 所以每个都能单独连接、单独看 drift、单独断开。它们共用 omp 的模型列表（`ListsFor`），而默认的 `omp` 行就是 `ompDir`/`ompIn` 已经选中的那个目录，所以一个该行已经指向的 `OMP_PROFILE` 不会被列两次。omp 拒绝的名字不成行：`default`、以点结尾，或是 Windows 保留设备名（`aux`、`nul`、`com1`、`lpt9.x`、`con.work`），在所有平台上都一样（`ompProfileOK`）。一个发行版的 profile 名字来自它的探测，保存在 `wsl.json` 里；一个停着的发行版绝不会被启动来列这些名字，它的 profile 行显示上次看到的东西（`asleep`）。 | [`omp.go`](../../internal/agent/omp.go), [`wsl.go`](../../internal/agent/wsl.go) |
+| WSL 孪生 | 在 Windows 上，每个运行中的发行版被探测一次，不会启动停着的那个。在那里找到的 `wslKinds` agent 会变成各自的 agent `<id>@wsl:<distro>`，通过 `\\wsl.localhost\<distro>` 编辑。一种 kind 通过它在发行版 home 下的目录、或通过它在那里的命令来找到（不是 Windows 盘上的命令）。当另一个工具共用其中某个目录时，这种 kind 会被排除：Gemini CLI 只通过它的命令找到，因为 Antigravity 也占着 `~/.gemini`。Goose 只通过它的目录找到，因为 `goose` 命令可能是 pressly 的迁移工具。Reasonix 还需要它的命令给出的版本号（`accept`），因为旧的 npm 客户端也叫 `reasonix`。网关地址和 key 跟着发行版的网络走：镜像或 NAT（`place`、`keyAt`）。`ListsFor` 把孪生体的模型选择保存在 Windows 孪生体的 id 下（#927）。 | [`wsl.go`](../../internal/agent/wsl.go), [`gatewaykey.go`](../../internal/agent/gatewaykey.go) |
+| 按使用情况调优的设置 | Usage › Context 的 "Tuned for you" 会按 agent 给出建议：在该范围内，用户自己的调用里哪些设置能花最少的 token，点一下就应用其中一个。包 `tune` 会用每个候选值（`Compact`、`CacheTTL`）重放 `sessions.Calls` 从各 agent 的 session 文件里读到的调用；`tuneOf` 挑选 agent 和模型（Claude Code 按模型，Codex 合并计算）。`TuneRead`、`TuneApply` 和 `TuneUndo` 知道每项设置放在哪里：Claude Code 的 `modelSettings.<model>.autoCompactWindow`（它的 `/autocompact` 存在那里）、`~/.claude/settings.json` 里的 `promptCacheTtl` 和 `subagentPromptCacheTtl`；Codex 的顶层 `model_auto_compact_token_limit`。建议只按 token 权衡：它被标注为 "Fewest tokens"，而它会改动的压缩窗口会说明它并不衡量 agent 在压缩之后把任务保持得有多好，以及更低的窗口会压缩得更频繁（#1854，`context-tune.test.cjs`）。一个压缩行的 "Other window…" 会打开应用菜单，里面是曲线上的每个取值，每个都带上相对最少者估算出的额外 token，以及它大概会造成多少次压缩（`Point.compacts`，来自同一次重放），并像 Use 那样把选中的那个应用上（#1860）。一个其文件给压缩计时的 agent，它的等待时间也被纳入权衡（HirotaNagai 报告）：Claude Code 的 `compact_boundary` 行给出 `compactMetadata.durationMs`，`sessions` 把它放在其后的第一次调用上，而 Codex 是用它自己的一次调用来压缩的（`compacted` 行指名的记录，2026-09 之后的 rollout），那次调用的时间就是压缩的时间（`Call.Compact`；更老 rollout 的压缩没有对应调用，就不计时间）。当一个模型有 3 个或更多计过时的（`minTimed`），`Facts.took` 是它们的中位数秒数，每个窗口给出自己的等待（`Point.wait`，它的压缩次数 × `took`），这一行会说明一次压缩花了多久、建议相对于当前窗口的等待，以及建议为了少等一会儿而跳过的那个更便宜的窗口（`Compaction.cheapest`、`wait_cheapest`），当它能省下 3% 或更多时；建议被标注为 "Tokens + wait"，它的注意事项说明只涉及 token 和等待，而选择器给出每个窗口的等待，最便宜的那个标着 "Fewest tokens"（`context-tune.test.cjs`）。计时读数更少的 agent 或模型则像以前一样给建议。 | [`internal/tune`](../../internal/tune/tune.go), [`tune.go`](../../internal/agent/tune.go), [`internal/gui/tune.go`](../../internal/gui/tune.go) |
+| plugin 添加的 agent | 一个 plugin 的 `magpie.agent` 模块（或一个 `*.agent.js` 文件）说明崇云科技自己没有设置的 agent 把模型放在哪里（`config`、`format`、`model`、`prefix`），它的 `connect` 返回要写的其他键。没有 `model` 的只用于连接（#2374）：它唯一的字段是 `provider`，要么是崇云科技要么为空，就像一个只有"provider 是崇云科技"这一项设置的应用；`connect` 在没有模型的情况下被调用，必须返回键，并且目录变化时会再被调用一次（`Sync`）；`ListsModels` 被设置了，所以它的列表就是为它挑的模型。`agentplug` 用 moejs 编译每一个（通过 `jsmod`，和网关 middleware 一样），在 plugins.json 或该文件变化时重新加载它，并保留某个没能加载的原因。`plugged` 把每一个做成一个 `Agent` 并设好 `Plugin`，列在崇云科技自己的 agent 之后；一个与崇云科技自己某个 agent 同名的 id 会被拒绝（`PluginErrors`）。 | [`agentplug.go`](../../internal/agentplug/agentplug.go), [`plugged.go`](../../internal/agent/plugged.go) |
+| 只靠环境的 agent | 只从环境里读网关的 agent 会得到一条 `Launch` 命令。Cursor Private Inference 则得到用户级变量（`cursorLocalOn`、`KeepCursorLocalEnv`），而崇云科技不写 Cursor 自己的任何文件。它通过 apps 文件夹里的 product.json 找到，通过 Windows 已安装程序列表点名的那个目录找到（`cursorLocalInstalls`，安装器里选的任意目录），或者作为它的 Linux AppImage（`Cursor_Private_Inference-…AppImage`）在下载目录里找到（#1254）。它的 effort 字段保存在崇云科技里（`provider.AgentEffort`）并由网关来问，它的等级就是它列出的那些模型的等级（`cursorLocalEfforts`，#1003）。 | [`cursorlocal.go`](../../internal/agent/cursorlocal.go) |
+| Claude Science | 它的守护进程（`claude-science`）只从自己环境的 `ANTHROPIC_BASE_URL` 读 API 地址，没有对应的设置项。连接会用该变量指向网关来重启守护进程（`scienceOn`：先 `stop`，然后在 `status` 说它所在的端口上跑 `serve --detached --no-browser`），并把守护进程记在 `claude-science.json` 里（url、pid、port）；断开则不带该变量重启它，崇云科技自己环境里的那个变量也会被去掉。不会为用户设置任何变量，也不会写这个 app 的任何文件。在崇云科技的守护进程跑在这个网关上时再设置一次没有任何效果（`Pick` 在 `connect` 之后设置字段）。`KeepClaudeScience` 在它没在运行时，在网关上、按它自己的端口把它重新启动（电脑重启之后），并在崇云科技提供服务期间每分钟做一次；它从不停掉正在跑的那个。`Check` 读守护进程的 `operon.lock`，而不是 `status`（一个 130 MB 的 Bun 程序要好几秒），并把 pid 不同的守护进程调用算作 drift：那个 app 的窗口在没有守护进程运行时打开，会自己启动一个不带该变量的。它在 Mac app 的 bundle 里（`Claude Science.app/Contents/Resources/bin`）、Windows 上的 `%LOCALAPPDATA%\Programs\ClaudeScience`、`~/.local/bin` 里找到，否则在 PATH 上找。这个 app 仍然需要它自己的 Claude 登录；网关从不把登录转交出去（见 gateway-routing）。 | [`claudescience.go`](../../internal/agent/claudescience.go), [`science.go`](../../internal/gateway/science.go) |
 
-## Runtime path
+## 运行时路径
 
-1. **Connect.** The Agents page's switch calls `ConnectHow` (`POST /api/agents/{action}/{id}` in [`internal/gui/api.go`](../../internal/gui/api.go)). It stashes the current values (`<id>.connect.was`). It brings back the models used before a switch-off (`reconnect`), or calls `Join` where the agent keeps its own model (Codex signed in with ChatGPT). Otherwise it picks a model by the order `ConnectHow` documents and sets it through `Apply`.
-2. **Pick.** `Pick` sets a field from the model picker. Picking one of magpie's models on an agent that isn't connected connects it first.
-3. **Notice.** After a change the page shows `Notice` when the agent reads its config only at start-up and needs a restart. A field that is `Live` (`Field.Live`: magpie's own setting, which the gateway reads on each request, Claude Desktop's `subagent_model` and `subagent_effort`) needs no restart, so `POST /api/set` and `magpie <agent> <field> <value>` leave the Notice out after it, unless the pick connected the agent too (`Pick` on an agent not connected). A stopped WSL distro's copy of a field keeps the flag (`asleep`).
-4. **Drift.** As the Agents page is drawn, `Drift` compares the config with `applied.json`. It runs `Check` first, then each field. An agent pointed at magpie through a reverse proxy is still on magpie (#1985, davisjiahao: a company's nginx at `https://ai.corp.example/magpie`). `wiringOff`, where most agents' `Check` compares a URL, and the checks of their own (Claude Code's managed settings, Reasonix's provider) take a URL that isn't magpie's when it ends with magpie's path, the rest is an http or https address on another machine (`onAnotherMachine`) or one on this machine's loopback with a path of its own (`loopbackWithPath`: the reporter's compliance proxy at `http://127.0.0.1:8788/claude-code-anthropic/<route>`; `proxyBase`), and `GET <rest>/` there answers as the gateway's own `GET /` does (`{"name":"magpie"}`, `magpieAt` in [`reach.go`](../../internal/agent/reach.go), tried in the background like `reachProbe`). Something else there (a relay CC Switch put in) is `unwired`, as is an address on this machine's loopback without a path, which is magpie's on an older port and is never tried. Until the answer is known it isn't drift, so Reconnect isn't offered and doesn't write the proxy away; port moves (`OnGateway`, `Rewire`) re-set only `unwired` agents, so they leave it too. Codex keeps such an address by magpie's key, as for #816 (`codexKeptGateway`: http or https, any port, a path before magpie's, loopback with a path). A model picked in Claude Code keeps it too once magpie has answered there (`surelyMagpie`; `routed` and `gwAt` in `claude.go`), so a proxy every request must go through isn't bypassed; before that, or at a relay, a pick points Claude Code at this magpie. Tests stub `magpieAt` in `TestMain` as known and not magpie. When the config is right and points at an address off loopback (a WSL twin under NAT, or this machine's Codex at an address the user kept, #816), it tries that address ([`reach.go`](../../internal/agent/reach.go)): in the background, at most every 20 s, never waited for. When nothing answers there while the gateway answers on loopback, the drift is `unreachable` (#1013), with what has to listen there: Share on local network, the user's portproxy, Windows' firewall. Then it checks whether the agent's latest use (`LastUsed`, `Reached`) reached the gateway: a request Codex's log says went to the host its config keeps magpie at, or one the gateway saw from it after (`lastSeen`), reached it.
-5. **Disconnect.** `Disconnect` puts back what the stash kept and forgets the record. It also marks the agent disconnected (`<id>.disconnected` in the stash, `Disconnected`) until the user connects it again (`connect`, or an `Apply` that leaves it wired): nothing magpie does by itself puts magpie back in meanwhile, neither a start's `Sync` nor Codex's account failover nor #701's magpie API wiring (paynezhuang on Discord: Codex had `openai_base_url` back after every update).
+<a id="runtime-path"></a>
 
-## Constraints and failure behavior
+1. **连接。** Agents 页面的开关调用 `ConnectHow`（`POST /api/agents/{action}/{id}`，
+   在 [`internal/gui/api.go`](../../internal/gui/api.go)）。它把当前的值存起来
+   （`<id>.connect.was`）。它把关闭之前用过的模型拿回来（`reconnect`），或者在
+   agent 保留自己模型的地方调用 `Join`（用 ChatGPT 登录的 Codex）。否则它按
+   `ConnectHow` 规定的顺序挑一个模型，并通过 `Apply` 设置它。
+2. **挑选。** `Pick` 用模型选择器设置一个字段。在一个还没连接的 agent 上挑选
+   崇云科技自己的模型，会先把它连接上。
+3. **提示。** 改动之后，如果该 agent 只在启动时读自己的配置、需要重启，页面就
+   显示 `Notice`。标着 `Live` 的字段（`Field.Live`：崇云科技自己的设置，网关
+   在每次请求时读；Claude Desktop 的 `subagent_model` 和 `subagent_effort`）不
+   需要重启，所以 `POST /api/set` 和 `chongyun <agent> <field> <value>` 在它
+   之后就不给提示了，除非这次挑选同时把 agent 连上了（在未连接的 agent 上
+   `Pick`）。一个停着的 WSL 发行版里某个字段的副本保留这个标记（`asleep`）。
+4. **Drift。** 在 Agents 页面绘制时，`Drift` 把配置和 `applied.json` 做比较。它
+   先跑 `Check`，然后逐个字段。通过反向代理指向崇云科技的 agent 仍然算在崇云
+   科技上（#1985，davisjiahao：某公司的 nginx 在
+   `https://ai.corp.example/magpie`）。`wiringOff`——大多数 agent 的 `Check`
+   用比较 URL 的方式，而它们自己的检查（Claude Code 的托管设置、Reasonix 的
+   provider）在 URL 以崇云科技的路径结尾时取的不是崇云科技那个，剩下的要么是
+   另一台机器上的 http 或 https 地址（`onAnotherMachine`），要么是本机回环上
+   带自己路径的一个（`loopbackWithPath`：报告者的合规代理在
+   `http://127.0.0.1:8788/claude-code-anthropic/<route>`；`proxyBase`），而那里
+   的 `GET <rest>/` 像网关自己的 `GET /` 那样回答（`{"name":"magpie"}`，
+   `magpieAt` 在 [`reach.go`](../../internal/agent/reach.go) 里，和 `reachProbe`
+   一样在后台尝试）。那里是别的东西（CC Switch 放进去的一个中转）就是
+   `unwired`，本机回环上一个不带路径的地址也一样——那是旧端口上的崇云科技，
+   永远不会被尝试。在答案已知之前它不算 drift，所以不会提供 Reconnect，也不会
+   把代理写掉；端口迁移（`OnGateway`、`Rewire`）只重新设置 `unwired` 的 agent，
+   所以它们也保留它。Codex 靠崇云科技的 key 保留这样一个地址，和 #816 一样
+   （`codexKeptGateway`：http 或 https、任意端口、崇云科技路径之前有路径、
+   带路径的回环）。在 Claude Code 里挑选的模型在崇云科技在那里回答过之后也会
+   保留它（`surelyMagpie`；`claude.go` 里的 `routed` 和 `gwAt`），所以每个请求
+   都必须走的代理不会被绕过；在那之前，或者在中转上，一次挑选会把 Claude Code
+   指向这个崇云科技。测试在 `TestMain` 里把 `magpieAt` 打桩成"已知且不是崇云
+   科技"。当配置正确且指向一个回环之外的地址（NAT 下的 WSL 孪生体，或者用户
+   保留的地址上的本机 Codex，#816）时，它会尝试那个地址
+   （[`reach.go`](../../internal/agent/reach.go)）：在后台，最多每 20 秒一次，
+   从不等待。当那里没有回答而网关在回环上有回答时，drift 是 `unreachable`
+   （#1013），并说明那里必须有什么在监听：在局域网上共享、用户的 portproxy、
+   Windows 的防火墙。然后它检查该 agent 最近一次使用（`LastUsed`、`Reached`）
+   是否到达了网关：一次 Codex 日志里说发去了它配置中崇云科技所在主机的请求，
+   或者网关在之后从它那里看到的（`lastSeen`），都算到达了。
+5. **断开。** `Disconnect` 放回 stash 存着的配置，并忘掉那份记录。它还把这个
+   agent 标记为已断开（stash 里的 `<id>.disconnected`，`Disconnected`），直到
+   用户再次连接它（`connect`，或一个让它保持接线的 `Apply`）：崇云科技自己做的
+   任何事都不会在此期间把崇云科技放回去，启动时的 `Sync` 不是，Codex 的账号
+   故障转移不是，#701 的崇云科技 API 接线也不是（paynezhuang 报告：Codex
+   每次更新后 `openai_base_url` 都回来了）。
 
-- magpie only removes what it wrote. Anything else in an agent's config stays as it was.
-- A sync brings magpie's models up to date, not where the agent reaches magpie. Every `Sync` that `SyncCatalog` runs (each start and update of magpie, a provider added, and a plugin signed in to, out of or renewed, or listing other models than the last time: `plugin.OnChange` and `plugin.OnListed` call `catalog.Touched`, #2373) goes through `synced`, which passes each file written through `kept.away` (`edit.Filtered`, [`keptaway.go`](../../internal/agent/keptaway.go)). The filter sees every file written through `edit` while it is on, from any goroutine and under whatever lock the writer holds, so it takes none a writer may hold: the gateway's address and the LAN key are read before it is on (`keeping`), and magpie's own files (`magpieFile`: its folder as named or where its links lead, such as a `~/.config` linked into a dotfiles repo) are left as they are (ylorn on Discord: `settings.Save` under the settings' lock reached a filter that read the settings, and the app hung ~10s after every start; `TestOwnWritesDuringASyncWithALinkedConfig`). In a file without the gateway's own address, whose magpie the user pointed at an address on another machine (a NAS's, or this machine's LAN address), and with no address a WSL distro was seen at, that address stays in place of `gateway.URL()`, with the path before magpie's every URL at it had (`awayPath`: a reverse proxy's `/magpie`; on loopback, a local proxy's route where magpie answered or hasn't been asked), and so does the key that went with it in place of magpie's own (coeo91 on Discord: the base URL went back to 127.0.0.1 after an update or restart). An address on this machine's loopback follows the gateway; with more than one address or key gone, the write is left as it is. Picking a model in magpie still points the agent at this magpie, but for Claude Code at a proxy to it (above). ZCode and WorkBuddy keep such an address in their own writers too (`zcodeAddress`, `buddyWriteAt`).
-- `SyncCatalog` holds the catalog it builds (`provider.Hold`), the plugins' providers and sign-ins among it, for up to a second. Those `catalog.Touched` drops are told in the background, so a plugin change also drops what is held at once (`plugin.OnChangeNow`, [`hold.go`](../../internal/provider/hold.go)): the host's "auth" event is read before its reply to the sign-in that saved it, and a look at the accounts once the sign-in returns sees it (#2449: `magpie plugin login` found no account while a sync ran; `TestHeldGoesWithAPluginChange`).
-- JetBrains Air's `magpie-opencode.json` keeps user-added fields in `provider.magpie`, including nested options, on sync and model picks (`air` in [`air.go`](../../internal/agent/air.go), using `theirsKept` in [`sync.go`](../../internal/agent/sync.go)). The gateway fields and complete model list are still replaced, so removed models leave the list.
-- In every OpenCode-shaped config (OpenCode, DevEco, Air, OpenChamber; `openCodeKept` in [`agents.go`](../../internal/agent/agents.go)), a variant the user put on one of magpie's models stays through a sync, and so does one they wrote over under a name of magpie's. A variant exactly as magpie writes it under its name (`openCodeVariant`) is magpie's, so one the model no longer has goes (#2379, `TestOpenCodeCodexFastVariants`).
-- OpenCode has no `/fast`. A ChatGPT account's own `gpt-*` model, not a routing group (`catalog.Model.CodexFast`, set in `magpieModels`), gets each reasoning level again as `<level>-fast` (or `fast` alone with no levels), asking `service_tier: "priority"` as Codex's `/fast` does. The tier is written twice: as an option, which OpenCode 1's `@ai-sdk/openai-compatible` sends as it is, and in `extraBody`, which OpenCode 2 sends while it drops an option it doesn't know (checked with OpenCode 2.0.25 against a fake server). The gateway drops OpenCode 1's stray `extraBody` field when it rebuilds the request as Responses for the ChatGPT backend (`TestOpenCodeFastVariantReachesCodex`).
-- Every sync and pick that writes magpie's own block into an agent's config lays it over what is there, so keys magpie doesn't write stay (#2030, then its siblings). Each block was checked against the app's own schema or source. magpie's parts are named; a key it no longer writes goes with them.
-  - Qoder's `providers.magpie` keeps `routing`, the timeouts, `type`, `authType`, `anthropic` and a non-empty `displayName` (`qoderKept`).
-  - fx keeps `reviewer_model` and a `tool_choice_mode` of `omit`. Its `auth` is magpie's whole, since fx refuses an `env` beside `type: none` (`fxKept`).
-  - Hermes keeps the `default_model` that `hermes model` writes there, `key_cmd`, the timeouts, `extra_body`, a name and headers beside magpie's (`hermesKept`). This holds in every profile.
-  - Hermes's `api_key` may be a reference, `${VAR}` or `${env:VAR}`, which Hermes expands from the `.env` beside the config (its own or a profile's) and then the environment. `Check` and a sync read the key it names (`hermesKey`): one that holds (`keyHolds`) stays and isn't drift, and so does one naming a variable magpie can't see (only a shell profile sets it), which is unknown. One naming a key the gateway doesn't take is drift, and a sync keeps the reference and writes magpie's key into that `.env` under the variable, made `0600` when there is none (`hermesKeptKey`; PaulT on Discord, `TestHermesWithAKeyInItsEnvFile`). A value with more than the one reference in it is replaced by magpie's key, as before.
-  - omp's `models.yml` keeps `modelOverrides`, `discovery`, `disableStrictTools`, headers and compat flags (`ompKept`). Its `auth` and `apiKey` are magpie's, or gone.
-  - Kimi Code's `[providers.magpie]` has magpie's three keys set in place, so `custom_headers`, `env` and `default_model` stay (`kimiProvider`).
-  - Cline's `models.json` keeps the provider's other keys, and on each model magpie lists what magpie doesn't write, such as a VS Code override (`clineKept`).
-  - Goose's custom provider file keeps a name, `timeout_seconds`, `toolshim`, headers and the like (`gooseProviderKept`).
-  - ZCode's provider rule keeps its name, logo, visibility, API headers and the key's management link (`zcodeRules`).
-  - Each model magpie writes into ZCode's `providerModelRules` has native web search (`properties.supportsNativeWebSearch`, "原生联网搜索") on while the provider's format is Anthropic Messages, the only format ZCode sends it on (`zcodeWebSearch`). The models magpie turned it on for are kept in the stash under `zcode.web_search`, so a model the user unticked in ZCode (which takes the key out of the rule) stays off, a value in the rule stays, a manual rule is left alone, and a stash that can't be read turns nothing on. On another format magpie's own on is taken out. Disconnect forgets the list.
-  - The YAML ones go through `yamlKept` and `mergeKept` in [`sync.go`](../../internal/agent/sync.go). Each is tested by a `Test<Agent>KeepsTheUsersSettings`.
-- Copilot in JetBrains IDEs keeps its Bring Your Own Key providers in the Copilot language server's `byok.json`, shared with Xcode's and Eclipse's Copilot (`copilotJetBrains` in [`copilotjetbrains.go`](../../internal/agent/copilotjetbrains.go)). magpie writes its own three keys there, `magpie-provider-config`, `magpie-api-key` and `magpie-models-config`, in the bytes the server itself writes, and only when they differ; the user's providers and keys stay. A magpie model the user hid in Manage Models (`isRegistered: false`) stays hidden through a sync. A new file is made 0600 in a 0700 folder, as the server makes it.
-- dsh (DeepSeek Harness) sets one API per llm-pi-ai route, so magpie writes a route per protocol (`dshKinds` in [`dsh.go`](../../internal/agent/dsh.go); 01huadalang on Discord): `magpie` (Chat Completions) for most models, `magpie-responses` (`openai-responses`) for a model served on Responses, `magpie-anthropic` (`anthropic-messages`, the gateway root, `forceAdaptiveThinking` where `AdaptiveThinking`) for one served on Messages, by the model's `APIs` (`dshRouteOf`). A model's `APIs` is the one its provider serves it on best (`Provider.Native`, in `magpieModels`, [`route.go`](../../internal/agent/route.go)), and Pi, omp and droid read it the same way. A routing group has `responses` when every member is best on Responses (`allResponses`, #1594), so its tool-call arguments are relayed as they stream; any other group has none and stays on Chat, a Messages-only group too, as a Claude member's thinking is known by its own model. A route with no models is taken out. An api the user picked for a route in dsh's Models page is kept, and so are keys they added there. The start (`agent-default-model`) names its model's route, and Sync moves a start on one of magpie's routes to the route its model is now on (`dshStartOnItsRoute`), its effort and marks kept. Check asks the route the start names to list its model. A dsh session resumed on a model that has since moved routes asks for the model to be picked again, since dsh finds a model by route and id.
-- dsh takes a model's listed `maxTokens` as every request's output and reserves it, with 65536 of headroom, out of `contextWindow` before deciding when to compact (compaction-basic's `resolveCompactSpec`: the smaller of 80% of the window and window − maxTokens − 65536). A vendor's reply limit near its window had dsh compact at 41248 of a 500000 group (#2823) or fail with no budget (524288/524288, LoKi on Discord; 131072/65536), so magpie lists it held to a quarter of the window on every route and in the older `llm-deepseek` entry (`dshMaxTokens`), as VS Code and Copilot in JetBrains do. A Max output the user set stays as they set it (`outputOr`), even one that leaves dsh no budget. `TestDshOutputLeavesCompactionRoom`.
-- While magpie serves, `KeepDshWired` writes the routes again every 30 seconds, since dsh writes over its patch list. A round that writes nothing is kept (`dshRounds`), and the next round does nothing when nothing it reads has changed since. It checks the bytes of dsh's files (every profile's `cordis.patch.yml`, the home layer, `settings.yaml`, `.env`, `.credentials.yaml`, `config.yaml`) and the gateway's address. It also checks `provider.StampNow`: no Changed, plugin change or `filememo.Forget`, the same environment, and the providers', settings' and catalog's files unchanged. The models are built again when that stamp moves, and at least every `dshModelsFor` (5 minutes) for what no stamp sees, such as another app's account file or a date-retired model. Building the whole catalog and every route each round allocated 12 GB of a user's 35.7 GB in 48 minutes (`TestDshRoundWithNothingChangedBuildsNothing`, `TestDshRoundAfterAChangeWritesAgain`).
-- DeepSeek Harness Desktop (macOS arm64 and Windows x64; no Linux build) reads the same `$DSH_HOME` or `~/.dsh` as the CLI, as its own profile `profiles/desktop` (`resolveDshHome` and `resolveDesktopPaths` in the app's `lib/main.js`), so it takes magpie's routes with no wiring of its own (#2279, liangjinyuan-sihan). It is found by `/Applications/DeepSeek Harness.app`, by `%LOCALAPPDATA%\Programs\DeepSeek Harness`, or by the folder its current-user installer records under `HKCU\Software\1bf39983-50d0-5fe0-9ef4-cece76f67c5e` (`InstallLocation`), whose Uninstall key gives the version (`registered` in [`desktopapp.go`](../../internal/agent/desktopapp.go)), so a user who picked another folder is found. With the app installed but never opened there is no `~/.dsh`: the row is still listed, and connecting writes `profiles/desktop/cordis.patch.yml` from dsh's own template (`dshProfileTemplate`) with magpie's routes, which the app keeps on its first start, since it writes only the files that are missing. The notice says the app starts on it the first time it opens (`noticeDsh5`). Disconnect before that first start removes the profile magpie made when nothing else is in it (`dshTidyUnopened`); once the app has opened it, the profile stays and only magpie's entries go (`TestDshDesktopNeverOpened`, `TestDshDesktopRegisteredFolder`).
-- Ante's `catalog.json` keeps user-added fields in `providers.magpie` the same way (`ante` in [`ante.go`](../../internal/agent/ante.go)); its `auth`, `http_headers`, `extra_body` and `stream_idle_timeout_secs` are what a gateway shared on the local network or reached from WSL needs to send a key. Ante starts a session on the `provider` and `model` of `settings.json`, not on what its catalog holds (#1210), so magpie sets that pair and puts back what it found there; a pick the user makes in Ante while magpie is wired is theirs and stands.
-- AstrBot keeps its providers in `data/cmd_config.json` under its root (`$ASTRBOT_ROOT`, else `~/.astrbot`, the desktop app's, else `~/astrbot`), written with a UTF-8 BOM, which magpie keeps (`astrbot` in [`astrbot.go`](../../internal/agent/astrbot.go)). magpie adds a `magpie` entry to `provider_sources` and one `magpie/<model>` entry per model to `provider`, keeps the user's own entries byte for byte and keeps what the user changes in magpie's (timeout, proxy, enable), and sets the default chat model (`agent_runner.config.model.provider_id`, or `provider_settings.default_provider_id` before the agent runner), putting back what it found there. A pick the user makes while magpie is wired is theirs and stands. The first connect copies the file to `cmd_config.json.before-magpie`. AstrBot reads the file only at start-up and its WebUI writes it back whole on save, so the agent's notice says to restart AstrBot before saving in the WebUI. A Docker install's root is inside its container, which magpie doesn't reach.
-- jcode keeps its settings in `config.toml` in `$JCODE_HOME`, else `~/.jcode` (`jcode` in [`jcode.go`](../../internal/agent/jcode.go)). magpie adds a named profile, `[providers.magpie]`, as `jcode provider add` writes one: `type = "openai-compatible"`, the gateway's `/v1`, an inline `api_key` naming jcode (jcode sends nothing else that tells it apart) and `requires_api_key = true`, since jcode sends no key to a loopback URL without it. Its `models` list has one entry per model, with `context_window`, `input` and `reasoning` for a model with effort levels. A `reasoning_effort` the user set on one stays while the model has that level. The model jcode starts on is `[provider] default_provider = "magpie"` and `default_model`. What was there is stashed and put back on Disconnect. A model of jcode's own picked while it is on magpie takes magpie out. Each key is set alone, so the user's other keys and tables stay, and the `[[providers.magpie.models]]` tables jcode writes when it saves the file itself are replaced by the one list. A sync with nothing to change doesn't write. Disconnect drops the profile whole, its sub-tables included. jcode reads the file when it starts, so the notice says to restart open sessions.
-- Raycast AI reads Custom Providers from `~/.config/raycast/ai/providers.yaml` in the user's folder, on Mac and Windows alike (`raycast` in [`raycast.go`](../../internal/agent/raycast.go); manual.raycast.com/ai/custom-providers). magpie adds one entry to its `providers` list, `id: magpie`, at the gateway's `/v1` with an `api_keys` alias holding a key that names Raycast (its User-Agent isn't known), and one model per catalog model with `context` and all five `abilities` said, since Raycast assumes tools and vision off when one isn't. The list is edited as a node (`EditYAMLNode`), so the user's other entries, the `tools` block (anchors too) and comments stay. A key the user adds to magpie's entry or to one of its models (`include_user_email`, a `description`) is kept on a sync (`mergeYAMLKept`), and a sync with nothing to change doesn't write. Disconnect takes the entry out, the list when it was the only one, and a file left with nothing in it. Raycast watches the file, so there is no restart notice. The model is picked in Raycast, so the field is whether magpie is in its picker (`ListsModels`). Detected by `Raycast.app` on a Mac or the `~/.config/raycast` folder.
-- OpenPencil (ZSeven-W/openpencil, the `openpencil-desktop` app) keeps the builtin agents its chat runs on in `settings.json` in Rust's `dirs::config_dir()` joined with `openpencil`: `~/Library/Application Support/openpencil` on a Mac, `$XDG_CONFIG_HOME` or `~/.config` on Linux, `%APPDATA%` on Windows (`openPencil` in [`openpencil.go`](../../internal/agent/openpencil.go); its `settings_io.rs` and `settings_payload.rs`). magpie adds one entry to `builtin_agents`, `id: magpie`, `kind: openai-compat` at the gateway's `/v1` with a key naming OpenPencil (its User-Agent isn't known), `preset: custom`, the picked models as OpenPencil writes a list: the first as `model`, `models` only for two or more, at most 64 (v0.8.4 reads `model` alone). The user's other entries and settings stay, and so do the `display_name` and `enabled` they give magpie's entry; a sync with nothing to change doesn't write. OpenPencil needs `"version": 1` (a file without it is set aside as corrupt and saving stops), so magpie writes it in a file it makes and leaves a file with any other version, or none, alone. Disconnect takes the entry out, and the file when only the version and an empty list are left. OpenPencil reads the file once at start and writes it back whole when it quits, so a change is refused while `openpencil-desktop` runs (Windows can't be asked, so the notice says to quit it first). The model is picked in OpenPencil's chat, so the field is whether magpie is in its picker (`ListsModels`). Detected by its settings folder, `~/.openpencil` (its CLI's), `OpenPencil.app` (`com.zseven-w.openpencil`), or `%ProgramFiles%\OpenPencil`. open-pencil/open-pencil, the other app of the name, keeps its providers in its webview's localStorage, so it is not a row: it reaches magpie through Pi or an ACP agent magpie wires.
-- DevEco Code (Huawei's OpenCode fork, #1885) is wired as OpenCode is (`deveco` in [`agents.go`](../../internal/agent/agents.go)): magpie's provider goes into the first of `deveco.jsonc`, `deveco.json` and `config.json` in `~/.config/deveco` (the one DevEco merges last, so the one that wins), or in `$DEVECO_CONFIG_DIR` when that is absolute, read after them. 0.2.3 sends `deveco/0.2.3 ai-sdk/…` to a provider of its config, but much of the OpenCode code it keeps still sends OpenCode's own User-Agent (`opencode/<version>`), so its provider's key is `magpie-deveco` (`openCodeKeyAt`), not the plain `magpie` OpenCode and MiMo Code send, and Check asks for that key. Its npm package has no Linux binary, so no install command is offered there (`cliSpec.only`).
-- Grok App (RongleCat/grok-app, a desktop front end that starts Grok Build over ACP) keeps its provider channels in `agent-home/config.toml` under its data folder: `$GROK_APP_HOME`, else where its `directories` crate puts it, or its `~/.grok-app` fallback when that is the one there (`grokApp` in [`grokapp.go`](../../internal/agent/grokapp.go)). Its composer lists only Grok Build's official catalog, never the `[model."magpie/…"]` tables of Grok Build's row, so magpie adds itself as a channel, `[model.magpie]`, with the keys the App's Providers page writes: the gateway's `/v1`, a key naming Grok App, `api_backend = "chat_completions"`, `app_provider_mode = "generic"`, and `app_models`, a JSON list of magpie's models with `contextWindow`, `supportsVision` and their effort levels (no `none`; a default the user marks in the App stays, else medium). The picked model's `context_window` (a bare integer) and `supports_reasoning_effort` (a bare bool, Grok Build's gate for `--reasoning-effort`) are on the channel, as the App puts them there when a model is picked in its composer. `[models] default` is the route, and magpie does not set it: setting it to `"magpie"` makes the App drop its own sign-in (`ensure_independent_for_custom_route`). The route stays whatever the App had. Pressing Use on magpie under Accounts is what switches it. A magpie that already set the route puts the old one back once, on the next sync or connect (`grokAppReleased`); a Use after that stays. Disconnect drops only the channel, and puts the route back only when it is still `"magpie"`: the one stashed at connect, else the one `connect.was` holds. One of the App's own routes picked in magpie's model field is written as the route and takes magpie's channel out, as picking another provider does elsewhere. A sync with no channel and a route other than `"magpie"` writes nothing, magpie's stash included, and Check says so when the route is `"magpie"` with the channel gone. A model picked in the App's composer since is the user's and stays through a sync, and a sync with nothing to change doesn't write. Shared mode keeps `GROK_HOME` at `~/.grok` (Grok Build's library row). Independent mode, which Use turns on, reads agent-home: the Library writes `AGENTS.md`, `[mcp_servers]` in the same `config.toml`, and `skills/` there, and Grok App also reads `~/.agents/skills`. RTK has no Grok hook, so the Library lists Grok App with the switch off. The notice, while the App runs, says magpie is a custom provider in Settings › Account, a chat can pick its models in the model picker, and the App stays on its current route until Use.
-- JSON/JSONC config edits and their previews reject malformed input rather than editing a partially parsed document. Object edits and VS Code's model-group array edits leave the original file untouched on a parse error; valid comments and trailing commas remain supported (`internal/edit`).
-- A config that starts with a UTF-8 byte order mark (a Windows `settings.json` or `config.toml` saved by PowerShell, Notepad or a channel switcher, #1534) is read without it (`edit.Read`), and a write keeps it (`keepBOM` in `WriteAtomic`): the user's file keeps the encoding it was saved in. That covers every format `internal/edit` writes (JSON/JSONC and its arrays, TOML, YAML, env); Codex reads a TOML file through a BOM too, so magpie no longer refuses one. A file read some other way trims it with `edit.TrimBOM` (the Claude Code and CC Switch imports). A line an edit takes out of a CRLF file goes with its `\r\n`.
-- Codex signed in to ChatGPT stays beside its sign-in (`openai_base_url`) unless the user picks magpie API. magpie becomes its provider only while the Codex app holds the active account, which it sends nothing for: `/wham/usage` says it isn't allowed, and it has no credits and isn't a workspace still within its overage (`codexHeld`, read by `provider.CodexUsedUp`). Where the app goes by what usage can't show (an experiment's gate, a reserve, a Team plan's overage under the reserve experiment), it counts as held: a wrong move costs ChatGPT extras, a missed one every turn. A saved reading kept through a failed read stops saying held once its used-up window has started again; a hold with no window used up stays till a fresh read. The app then loses its ChatGPT state (durable threads, remote control), so a window at 100% alone, which credits get past, doesn't move it (`codex.out` marks the move, and Sync undoes it once the account has room).
-- Moving a field from one of magpie's models to another (the agent's own picker) is not drift. Moving it off magpie is.
-- A field that follows another while empty (`Follows`: Claude Code's tiers and subagents on its main model) is read by `Drift` as on that field's model. The main model moved, in Claude Code's own `/model`, onto the model magpie had set a tier to is not drift (#1050). The tier keeps that model as its own through the move and the next one (`tier_own` in the stash), whatever it would follow on the new main model: fable, which follows no model that is no Fable, and haiku, which follows a Claude model on its Haiku, read as following and lost their model on the next move (#2257).
-- A Claude Code tier or its subagents given a model of their own keep it when the main model moves onto that model and on again (`ownKey` in `claudeIn`), whether the main model is picked in magpie or in Claude Code's `/model`. Same as model, picked for them, has them follow again.
-- While this machine's Claude Desktop is on magpie, Claude Code's shared settings get `CLAUDE_CODE_DISABLE_EXPLORE_INHERIT_CAP="1"` (`writeExplore` in `claudeIn`, [`claude.go`](../../internal/agent/claude.go)). Claude Code 2.1.295's Explore inherit cap can otherwise replace Desktop's `mythos-magpie` compatibility alias with Opus. This disables that cap, not the model choices of all subagents. It applies with Desktop alone or beside a connected Claude Code, including model picks and Sync; WSL twins do not get it. A user's existing value, including an empty string, stays. The stash (`claude.explore_inherit_cap`) marks only magpie's value: taking Claude Code off magpie leaves it while Desktop is on, and taking Desktop off removes it only if the user has not changed it. Since the settings file is shared, other Claude Code sessions reading it see the flag while Desktop is connected too.
-- Claude Code's tier and subagent models the user had set for their own endpoint (`claudeOwnEnv`) are stashed with that endpoint and token when magpie is wired in, and come back with them when magpie steps out, by Disconnect or by Claude Code's own model (#1050). So does their main model in the env (`ANTHROPIC_MODEL`, a Bedrock model id beside `CLAUDE_CODE_USE_BEDROCK` for one), which magpie takes out while wired in because it outranks a pick in `/model`.
-- Claude Code's auto mode field (`auto_mode`, `claudeAutoModeEnv` in [`claude.go`](../../internal/agent/claude.go)) is `CLAUDE_CODE_AUTO_MODE_MODEL`, the model Claude Code 2.1.302's client-side auto mode classifier judges each action with (Linka on Discord). It changes nothing about server-side auto mode, and a classifier model Anthropic configures for the account comes before it. Unset, Claude Code picks its own (the sonnet tier's model, else Sonnet), so it follows no field and isn't `Follows`. It is set only while Claude Code is routed through magpie, only to one of magpie's models, dashed as the other model keys are, and never to Sonnet 5.5, Opus 5.5 or Opus 5 (`claudeNoClassifier`), which Claude Code 2.1.303 refuses there and replaces with its own pick. A value the user had before magpie routed Claude Code is stashed and taken out with their tiers (`claudeOwnEnv`), and comes back when magpie steps out, unless they set one again since; magpie's own value (`claude.auto_mode_model` in the stash, or any of magpie's models) goes then, and one the user set while wired in is left alone. Claude Code reads it as it goes, so it is Quiet and needs no restart.
-- Claude Code's provider switches (`agentenv.ClaudeProviders`: `CLAUDE_CODE_USE_BEDROCK`, `_VERTEX`, `_FOUNDRY`, `_ANTHROPIC_AWS`, `_ANTHROPIC_GOOGLE_CLOUD`, `_MANTLE`, Claude Code 2.1.300) send it to that cloud's own endpoint and pass `ANTHROPIC_BASE_URL` over, so with one on it never reaches magpie (jw1dev on X: Bedrock refused magpie's model, and magpie showed nothing). Claude Code reads 1, true, yes and on as on (`claudeSwitchOn`). One that is on in the settings magpie writes is taken out on every route that writes the wiring (`dropClouds` in `writeTiers` and `Sync`), its raw value stashed (`claude.cloud.<var>`, under the distro's id for a WSL twin), and put back as written when magpie steps out (`putClouds` in `unroute`), unless the user set it again since. The cloud's own variables (`AWS_*`, `ANTHROPIC_VERTEX_PROJECT_ID`, …) and a switch that is off stay. Where magpie doesn't write it, Check says so, naming the variable, the cloud and where (`claudeCloud`): the managed settings, which win over the user's; `~/.claude.json`'s env, under the user's settings; and, for this machine's Claude Code, the login shell's environment (`proc.LoginEnv`, read but never set in magpie's), under every settings file. A project's `.claude/settings.json` isn't read: magpie doesn't know which folders Claude Code runs in. T3 Code's Check says the same of the user's `~/.claude` settings, which are put over its magpie instance's environment, and a switch put on that instance goes at its next write; that Check first says when the instance's `ANTHROPIC_BASE_URL` no longer reaches the gateway (`t3EnvOf`), as every agent's Check does, so a port move rewrites it too. The drift's detail is shown in the row's line and its pill through `tNotice` (`claude-cloud-drift.test.cjs`). Claude Desktop's Code tab runs with `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST`, under which Claude Code ignores a switch in settings files, so Desktop needs neither.
-- Claude Code's sign-in (`login`) is magpie's key (`""`, the default) or claude.ai (`claudeai`). claude.ai writes `ANTHROPIC_AUTH_TOKEN` empty, which Claude Code reads as no key: it keeps its claude.ai login and sends that to magpie, which never passes it on (`claudeSignIn` in the gateway). Every later write keeps the token empty (`wiredKey`), and a caller key of the gateway's own put there by hand is taken for magpie's, by Check and a model pick alike, kept as the user left it (`keyHolds`, #2545); a key the gateway would refuse is reported by Check and wired over, and so is the sharing key magpie itself made (`access.Default`), once sharing is off — magpie's own, however well the gateway still takes it. It's offered only where the gateway takes any key (`gwKey() == gateway.Token`: loopback, a WSL distro mirrored), not from a distro under NAT while magpie is shared on the network, where only the sharing key gets in. The choice is stashed, so it survives Disconnect and a port move. An empty token counts as magpie's only beside the address magpie last wrote (`claude.wired_at` in the stash, which Rewire carries to the new port, `keyOurs`): an endpoint of the user's own with an empty token stays theirs when the model goes back to Claude Code's own.
-- Claude Code's auto mode review (`CLAUDE_CODE_AUTO_MODE_SERVER`, `claudeReviewEnv` in [`claude.go`](../../internal/agent/claude.go)) is written `"0"` while Claude Code is routed through magpie and none of the models it can reach there is one Anthropic reviews (`claudeReviewed`, by `gateway.AutoModeReviewed`): those it is shown (and Claude Desktop's while Desktop is on magpie), a shown group's members, those providers' fallbacks, and the models it is set to, each judged on the provider (or group, or fallback) it resolves to, as the gateway judges its requests, so a Claude model on Copilot or Kiro alone writes `"0"` and a name magpie doesn't know is judged by the name (`TestClaudeReviewedJudgesTheSetModelWhereItGoes`). Off, it classifies locally from the start, as it does anyway behind a gateway that doesn't answer, without the "isn't eligible because your requests go through 127.0.0.1:3425" notice (1EFLOPS on X). Any reviewed model leaves it unset, since `/model` can take the session there; a model hidden from Claude Code doesn't count. It is rewritten on every model set and `Sync`, so adding a Claude provider turns the review back on. magpie's value is kept apart in the stash (`claude.auto_mode_server`), a user's own is left alone, and it goes when Claude Code is taken off magpie (`desktopOnly`, `unroute`). T3 Code's magpie instance, which runs Claude Code on the gateway through its own environment, carries the same `"0"` there by the models it lists (`t3InstanceJSON` in [`t3code.go`](../../internal/agent/t3code.go)); a value in the user's `~/.claude` settings comes after it.
-- Claude Code takes one window (`CLAUDE_CODE_MAX_CONTEXT_TOKENS`, `claudeContextEnv` in [`claude.go`](../../internal/agent/claude.go)) for every model it doesn't know. Claude Code alone on magpie is told its main model's (`claudeWindow`). While Claude Desktop is on magpie too, its Code tab runs Claude Code on the same `~/.claude/settings.json` with every model Desktop lists, so magpie tells it the largest window of those and of Claude Code's own models, and holds each model below it to its own with `modelSettings.<id>.autoCompactWindow` (`claudePlan` in [`claude_budget.go`](../../internal/agent/claude_budget.go), #2025: the least held a 1M model to 131K). A model handed by a `[1m]` id (Desktop's under `DesktopLongest`, or Claude Code's own) counts by its 1M too, so it still runs at 1M when Claude Code stops taking the id for 1M (the 1M beta turned away once, `CLAUDE_CODE_DISABLE_1M_CONTEXT`); left out, a 1M model beside a 272K GPT was told 272K (dumplings on Discord). Claude Code 2.1.296 matches that key by the id it was handed, lowercased and without `[1m]`; it comes before the top-level `autoCompactWindow`, which serves a model without one. `CLAUDE_CODE_AUTO_COMPACT_WINDOW` would take precedence over both, so in this mode magpie's working window goes in the top-level `autoCompactWindow` instead, and an entry is written only where a model's window or its own threshold differs from what it would run at without one. magpie's entries and top-level value are stashed (`claude.model_budgets`, `claude.compact_default`) and go when Desktop leaves magpie; the user's own entries, top-level value and variables stay, a user's entry past its model's window (or `auto`) holds the largest to that window, and with a `CLAUDE_CODE_AUTO_COMPACT_WINDOW` of the user's the least window is told as before.
-- Claude Code is told what each of magpie's models can do in `CLAUDE_CODE_MODEL_CAPABILITIES` (`claudeCapsEnv`, `claudeCapabilities` in [`claude.go`](../../internal/agent/claude.go)): `<model>=effort[,xhigh_effort][,max_effort]` for those it is shown, and, while Claude Desktop is on magpie, for Desktop's `mythos-magpie-<number>` ids its Code tab hands it. A Claude model Claude Code knows gets no more than Claude Code gives it (Opus and Sonnet 4.6: no xhigh), and one with no known levels isn't named. A model that reaches max without xhigh (GLM-5.3 at low/high/max, DeepSeek V4 at high/max) is said to have xhigh too: the gateway runs xhigh at max for it (`fitEffort`), and Claude Code 2.1.299 turns Ultracode down without `xhigh_effort` ("Ultracode isn't available on …"), which in Desktop is the Ultracode level and dynamic workflows (leesunrise2364 on Discord; `TestClaudeModelCapabilities`). A value of the user's is left alone.
-- MiniMax Code takes a model ref with one slash in the whole (a SubAgent's `model` must match `^[^/\s]+\/[^/\s]+$`, #1387), and magpie's refs there are `custom_provider:magpie/<model>`. So a model under `custom_provider.magpie` is written with `~` for each slash of its catalog id (`bb-codex~gpt-6.1-sol`, `provider.FlatID`), only when that spelling stands for one served id (`provider.Flattened`); the gateway takes it back. A config an older magpie wrote moves over on the next sync: the user's keys on a model go to its new key, `defaultModel`, `defaultLightModel` and `memory.captureModel`/`consolidationModel` follow (`mcodeRefs`), and the slashed key stays, switched off (`enabled: false`), so a session begun on it still resumes. magpie never edits the user's own `agents/<name>/agent.md`. No other agent was found with this limit ([`minimax.go`](../../internal/agent/minimax.go)).
-- Claude Code's `/model` list (`modelPicker` in its settings.json) is magpie's while it is marked in the stash (`claude.model_picker`, `claude@wsl:<distro>.model_picker` for a WSL distro) or while every row's description ends "via magpie", as every row magpie writes does (`magpiesPicker` in [`claude.go`](../../internal/agent/claude.go)). magpie keeps its own list up to date on every model set and `Sync`, and removes it when Claude Code is taken off magpie; a list the user wrote is left alone. The fingerprint covers a list whose mark an older magpie's stash lost, which otherwise stayed without every model added since (#2046).
-- Claude Code 2.1.296 reads a Claude model whose version has a dot (`relay/claude-opus-4.6-us`) as Claude Opus 4: a retired warning, budget thinking, 32000 output tokens, no effort. With dashes (`relay/claude-opus-4-6-us`) it knows the model (misteer_ti. on Discord). So every model magpie writes into its settings (`model`, the tier envs, `ANTHROPIC_SMALL_FAST_MODEL`, `CLAUDE_CODE_SUBAGENT_MODEL`, `CLAUDE_CODE_AUTO_MODE_MODEL`, `modelPicker`), T3 Code's Claude slugs and Claude Desktop's Code-tab ids (`claudeLooking`) spell a dotted Claude version with dashes (`provider.ClaudeSpelled`), only when that spelling stands for one served id. A Claude model listed to Desktop with reasoning levels is given as `magpie-<n>.anthropic.<model>`, its dotted version dashed as well (`claudeModel`: Copilot's `claude-opus-5.5` is `…anthropic.claude-opus-5-5`, which Claude Code knows; it was `mythos-magpie-<n>`, an unknown model, and Haiku 4.5 got an effort Copilot refuses, #1819); a request for it is served by `<n>` alone (`aliased`), so that spelling needn't be unique. Mythos counts as Claude here too: Claude Code matches `claude-mythos-5-1` by substring, so `claude-mythos-5.1` would read as Mythos 5. Every read of those keys takes it back (`provider.ClaudeRead`: `claudeIn`'s `env`, `claudeMain`, `claudeStandInAt`), so magpie's fields, applied state and Drift keep the dotted id. The user's own values are stashed and given back as written. Values an older magpie wrote dotted are rewritten on the next Sync. Other vendors' ids are never respelled ([`claudedash.go`](../../internal/provider/claudedash.go)).
-- Codex's "subagents" field is `[agents] default_subagent_model`: only the model a subagent starts on when its lead names none in `spawn_agent` (codex-rs `core/src/agent/child_config.rs`). Unset, it isn't "same as model": the lead may still name another, so the GUI calls it the lead's pick, else the model (`leadPicks` in app.js), and its title points at the "subagent model" field.
-- Codex's "subagent model" field writes nothing to Codex's config: its lead names each subagent's model in `spawn_agent`, which `[agents]` can't overrule. It is magpie's setting (`settings.CodexSubagentModel`, [`codex_subagent.go`](../../internal/provider/codex_subagent.go)), and the gateway moves the subagent's request onto it (see [gateway routing](gateway-routing.md)). Its options are every model and routing group Codex's own lists show (`CatalogFor("codex")`, so a model taken out of them or not picked is left out here too), ChatGPT accounts' first (#1633: a lead on a chat provider wants its subagents there too). A task a ChatGPT-backed lead sealed opens only on a ChatGPT account, so the gateway keeps such a subagent on its own model when the one set is another provider's. Its setter takes any `provider/model` or `group/<id>`, also one magpie doesn't serve now, so a profile or backup put back on another computer still applies (`ApplyFields` stops at the first failed Set), and refuses one of Codex's own bare names.
-- Claude Desktop's "subagent model" field (`subagent_model`, `desktopSubagentField` in [`claudedesktop.go`](../../internal/agent/claudedesktop.go)) writes nothing to Desktop's config: Desktop runs its Code tab's Claude Code with `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST=1`, under which Claude Code ignores `CLAUDE_CODE_SUBAGENT_MODEL`, `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` and the tier variables in its settings files' `env` ("Ignoring … this session's provider routing is managed by the host", Claude Code 2.1.295), and the env Desktop builds for the Code tab has no key for it (Desktop 2.31226). It is magpie's setting (`settings.DesktopSubagentModel`, [`desktop_subagent.go`](../../internal/provider/desktop_subagent.go)), and the gateway moves each subagent's turn onto it (see [gateway routing](gateway-routing.md)). It is labelled as Codex's, so the Agents page gives it the same square. Its options are magpie's models and groups as Desktop's list shows them (`viaMagpie("claude-desktop")`), while Desktop is on magpie, as for the tiers. A Desktop alias picked is kept by its catalog id (`DesktopCatalogID`). Like Codex's, its setter takes any `provider/model` or `group/<id>`, also one magpie doesn't serve now, so a profile or backup still applies, and refuses a bare name. It is `Live`: the gateway reads it on each request.
-- Claude Desktop's "subagent effort" (`desktopSubagentEffortField`, `settings.DesktopSubagentEffort`) is also Quiet and Live. Default keeps the effort the request asks for, including disabled thinking; it never selects a new default. A picked level works independently of the subagent model: no model pick, the same model and an unavailable model pick all still take the effort. While wired, the field offers the selected model's levels, or the standard levels when its model is inherited or unavailable; a model marked reasonless offers none. The stored pick survives model changes. A disconnected preference can be saved or cleared without connecting Desktop or showing restart advice, so profile restoration and Disconnect can restore a value saved before connecting; reconnect returns to the last live pick. `subEffortTitle` gives Desktop the Claude Code default explanation; Codex's default meaning is unchanged. The gateway fits each attempt to its actual model and preserves fixed group-member efforts (see [gateway routing](gateway-routing.md)).
-- Claude Desktop's 3p mode runs in a userData of its own (`Claude-3p`), whose `config.json` (Desktop's own settings, not `claude_desktop_config.json`) starts with no `locale`, so Desktop on magpie came up in the system's language rather than the one picked signed in with Anthropic (memory and Osal on Discord). Turning Desktop onto magpie copies that one key, `locale`, from the signed-in userData's `config.json` (`Claude`, `%APPDATA%\Claude` on Windows, the first set's before the others) into `Claude-3p/config.json` when that file is missing or a JSON object without one (`desktopCarryLocale` in [`claudedesktop.go`](../../internal/agent/claudedesktop.go)); only a name Desktop takes for a catalog is carried. A `locale` already in `Claude-3p`, Desktop's or set by hand, is never written over, and no other key of that file is ever written. Off removes the file only when magpie made it and it still holds nothing but the language carried (`TestClaudeDesktopCarriesTheLanguage`, `TestClaudeDesktopKeepsThe3pLanguage`, `TestClaudeDesktopUserEditsThenReapply`). Desktop shows the language only where its build bundles that catalog (2.7032 has 11, no Chinese).
-- Claude Desktop names a Claude model with reasoning levels after its own catalog ("Opus 5.5"), not by the `display_name` magpie lists, because magpie lists it as `magpie-<number>.anthropic.<model>` to keep its effort picker (`claudeLooking` in [`desktop.go`](../../internal/gateway/desktop.go)). Two providers' rows of one model then differ in Desktop's menu only by that number, so the provider editor shows it on the model's chip (`gateway.DesktopNumber`, `desktopNumbers` in [`providers.go`](../../internal/gui/providers.go), #2578). The chip shows it only while Claude Desktop is installed and is shown that model. Every other model Desktop is shown carries no number on the chip: Desktop names it by `display_name`, which already says the provider, or by its own id.
-- Codex's `spawn_agent` tool names only the first five models of its catalog to the lead (codex-rs `MAX_SPAWN_AGENT_MODEL_OVERRIDES` in `child_config.rs`, `spawn_agent_models_description`), Codex's own ahead of magpie's, though it takes any catalog model by name (`find_spawn_agent_model_name`). So a lead could put its subagents on none of magpie's models (Gearclickist on Discord). The gateway adds the rest of the catalog Codex was handed to that tool's description, after Codex's own list, at most 200 (`spawnAgentModels` in [`codex_spawn_models.go`](../../internal/gateway/codex_spawn_models.go)). A model that can search tools (`supports_search_tool`) isn't handed it in the request's tools: Codex defers its multi-agent V1 tools behind `tool_search` (codex-rs `core/src/tools/spec_plan.rs`), and the lead gets `spawn_agent` in the `tool_search_output` Codex puts in the conversation and sends again every turn, so that one is widened too. That text goes upstream with the prompt, to OpenAI too for a ChatGPT lead, so its header (`spawnMore`) stays neutral: it names neither magpie nor Codex's limit. At `CodexPath` that is Codex's own listed models less the hidden ones, then `CodexListed` unless Codex is held to its own. At `/v1` it is `CodexCatalog` under the key's allowance. A lead the ChatGPT backend answers in multi-agent V2 seals its subagents' tasks for a ChatGPT account (#619), so it gets Codex's own only. The model catalog Codex puts in context under `model_catalog_in_context` (under development, off by default) is capped at five too, and isn't widened.
-- Snow CLI runs on one profile at a time (`profiles/<name>.json` in `~/.snow` or `$SNOW_CONFIG_DIR`, named in `active-profile.json`) and copies the active one over `config.json` at every start, `snow --ask` too ([`snow.go`](../../internal/agent/snow.go)). magpie writes a `magpie` profile, makes it the active one, and copies it to `config.json` itself, so a Snow already running and Snow App's "Sync Snow CLI API config" see the same. It is made from the profile the user was on, their settings kept and its OAuth sign-in left out. A vision model of that profile comes along only with an endpoint and key of its own (`snowOwnVision`), since one on the profile's would now go to the gateway. `maxContextTokens`, `maxTokens` and `supportsVision` follow the model from the catalog (`snowSynced`; `supportsVision` as every agent is told, true while magpie's Vision describes images); what magpie last wrote of them is stashed, and one the user changed since in Snow's own settings is kept through later picks and syncs. The small field is magpie's profile's `basicModel`, Snow's light model for summaries, compaction and file search: empty while it follows the main model, a model through magpie of its own kept through new main models and syncs; on a profile of the user's it offers nothing and is hidden. The thinking field is magpie's profile's `chatThinking` (`{enabled: true, reasoning_effort}`), the only thinking setting Snow reads on the chat protocol; empty deletes it, Snow's default, which sends thinking disabled. A chatThinking the user brought from their profile is shown, not written over. The profile they were on (or that there was no `active-profile.json`) and a `magpie.json` of their own are stashed and put back by Disconnect. A Snow from before profiles (`config.json` alone) gets the `default.json` Snow itself would have made of it, so its next start doesn't take magpie's for the user's. Picking a model of another of the user's profiles switches Snow to that profile. On magpie's profile, a value that is neither a model through magpie nor the model of one of the user's profiles is refused and changes nothing (#1457: `magpie snow --help` used to take magpie out and write `--help` as the model of the profile it went back to). Gemini CLI's auth field refuses an auth it doesn't know before it unroutes, for the same reason. On the CLI, `-h`/`--help` after any command or agent only prints its usage, before `run` reads or moves anything, and any other flag given to `magpie <agent> …` is refused (`help_cli.go`; `TestHelpOnEveryCommandDoesNothing` walks `run`'s switch and every agent).
-- omp's `enabledModels` in `config.yml` is the list it holds its default role to: a model left out of it isn't used, whatever `modelRoles.default` says (#1769). So a model picked for the default role is added to a list that is there and doesn't take it in already, by name or by one of omp's globs (`*` not crossing `/`, as `Bun.Glob`), and once nothing in `config.yml` is on magpie its plain `magpie/…` entries are taken out (a list left empty goes, never `[]`); a renamed provider's entries are renamed once, and folder-scoped entries are left alone (`ompScope*` in [`omp_scope.go`](../../internal/agent/omp_scope.go)). No list, no change: omp then takes every model. A list that leaves the default role's model out is drift, which Reapply mends.
-- Pi's `enabledModels` in `settings.json` (and OmO's and Prime Agent's, `piLike`) is the Ctrl+P list a new session starts from. A picked model the list doesn't take in is added (`piScopeWith` in [`pi.go`](../../internal/agent/pi.go)), and a renamed provider's `magpie/<old>/` entries are renamed with it, a glob or a thinking level included, the copy the pick just added dropped (`renameRefList` in [`rename.go`](../../internal/agent/rename.go), #1919, `TestPiEnabledModelsFollowRename`). The user's other entries stay; a list naming none of the provider's models isn't rewritten.
-- After the catalog sync, an entry in Pi's (and its forks'), StepCode's or omp's `enabledModels` that names one of magpie's models outright (no glob; a thinking level read off) whose model magpie no longer gives the agent is taken out: Pi warned "No models match pattern" for each one at every start (#2055). It may be the user's own, so it is remembered in `stash.json` (`<agent>.scope.gone`) and goes back on the list's end when the model is offered again; a rename moves the remembered entries too, and a disconnect forgets them. Globs, other providers' entries and omp's folder-scoped entries stay. A list left empty is removed and made again when its entries come back, with the model picked meanwhile; one the user removed isn't. When magpie's model list in the agent's file can't be read, nothing is taken out ([`scope_gone.go`](../../internal/agent/scope_gone.go), `TestPiEnabledModelsLoseDeselected`). For StepCode, the wiring state's last-written scope follows, so a disconnect still puts the user's own list back.
-- A value an agent spells as its own provider's model is never taken for one of magpie's, even when magpie has a provider of the same name (`Spelled`, #835).
-- The other way round, a value that names one of magpie's models the agent isn't shown (kept from it by `magpie visible` or a model not ticked for it), a model of one of magpie's providers that isn't on its list (a remote magpie's group added there since the list was fetched), or a `group/…` magpie has no group for, is refused by `Spell` (`notOffered`), and nothing changes. It used to be written as the agent's own: Pi read `remote/group/smart` as its own provider `remote` and model `group/smart`, and was taken out of magpie (#2376). A model shown the agent that a field offers fewer of (Claude Desktop's tiers) is still taken, and so is a value whose provider part one of the agent's own models goes by (`openai/…` in Pi) ([`agent.go`](../../internal/agent/agent.go), `TestSpellRefusesMagpieModelNotOffered`).
-- `Reapply` on `unwired` sets again every field on one of magpie's models and every field set to magpie itself (`magpieID`, as `Wired` takes it): Claude Desktop's drift shows on a tier, and its `provider` field is what writes the gateway back (dumplings on Discord). Claude Desktop's `Check` judges only the set of folders whose Claude-3p it ran in last (`desktopRead`, by `desktopdir.LastRun`), every set when it ran in none: magpie writes both of an MSIX install's sets, and 2.31226 reads the real `%LOCALAPPDATA%\Claude-3p`, so the package's copy being emptied is not Desktop off magpie.
-- `unreachable` never sets anything: the config is right, and the page's pill only says what has to listen. The exception is an address a WSL distro reached Windows at before (`distro.Was`, kept in `wsl.json`) while it reaches Windows at another now: the pill offers that one, and `Reapply` moves the config there (`Agent.move`, Codex's `codexMoveGateway`). An address no distro was seen at is the user's own and is never moved. An unknown answer (no probe yet) and a gateway down on loopback too are not drift. Tests stub `reachProbe` in `TestMain`.
-- `proxied` (Muma102kMichael on X: every project and every new chat 502 after magpie took Codex over) is this machine's Codex sending its requests for the gateway through a proxy that doesn't pass them on, while the gateway answers here ([`codex_proxy.go`](../../internal/agent/codex_proxy.go)). Codex's reqwest takes `HTTP_PROXY`, else the system's proxy for `http://` (macOS' HTTP entry alone, never its HTTPS or SOCKS one; Windows' `ProxyServer` only when it is one address for every protocol), else `ALL_PROXY`, and lets only an exact IP or a CIDR in `NO_PROXY` (on Windows, with no `NO_PROXY`, the bypass list with `*.` taken out) keep 127.0.0.1 off it: `127.*` and `localhost` don't, and macOS' exceptions aren't read. With `[features] respect_system_proxy` it asks the system alone, matching its list itself, wildcards and `<local>` included, and goes direct when no proxy is set there; a macOS SOCKS entry alone it can't use, and takes `HTTP_PROXY`/`ALL_PROXY` then (codex-rs `outbound_proxy`; tried with codex-cli 0.162.1). Its reqwest has no SOCKS, so a `socks5://` proxy is spoken to as an HTTP one, and the probe does the same. The environment is Codex's: the login shell's `*_PROXY` (`proc.LoginEnv`, which a terminal's Codex and the ChatGPT app's both have; only exported ones, as the probe asks a child `/bin/sh` for them, so fish's unexported universal `http_proxy` doesn't count, #2627) over magpie's own, which a magpie opened from the Dock lacks (liu_dyj on X: a `NO_PROXY=127.0.0.1` in the profile, or a macOS proxy with no HTTP entry, warned while Codex went direct). `codexProxyFor` works out that proxy the same way, and a `GET /` through it must come back as magpie's (`proxyProbe`), tried as `reachable` is. Its pill says how to fix it, as `unreachable`'s does, naming the proxy and the variable it was read from, `http_proxy` or `HTTP_PROXY` as it is (`Addr`, `Detail`), through `netproxy.Redact`, without its user and password (#1886), while the probe goes through it whole, and the dialog has Disconnect from magpie. Account failover, which magpie writes uninvited, waits for that probe (`codexProxyOK`) and isn't written while the proxy doesn't pass Codex on, and one it wrote goes again. Tests stub the env, the system proxy and `proxyProbe` in `TestMain`.
-- Listing never starts a stopped WSL distro. A stopped distro's agent shows what was last seen there (`asleep`, `wsl.json`); setting one of its fields writes its files, which starts the distro.
-- Codex's sign-in (`login`) is ChatGPT (`""`, the default), Always ChatGPT (`chatgpt`) or magpie API (`api`). With ChatGPT, magpie's models join Codex's own beside the sign-in (`openai_base_url`), and while the Codex app holds the ChatGPT account Codex is signed in to (`codexUsedUp`, `provider.CodexUsedUp`: OpenAI no longer allows the account and it has no credits left, a workspace still within its overage excepted), magpie is made Codex's provider (`codex.out`): the Codex app sends nothing at all on an account it holds, a magpie model's turn included (#540), and as a provider of its own magpie is past that. A window at 100% with credits left doesn't count, and Codex stays signed in. Sync puts it back beside the sign-in once the account has room. Always ChatGPT never does that: Codex stays in its ChatGPT state, and the Codex app may send nothing till the account has room, while Codex CLI's turns still reach magpie by the base URL, and its routing and other accounts serve them. With magpie API, Codex's `getAuthStatus` returns no token (its provider has no `requires_openai_auth`), so its Chrome control turns away; the option's note says to pick ChatGPT to keep it (#1824). While magpie is Codex's provider (magpie API, or `codex.out`), `Joined` reports false although the `codex.joined` mark stays for Sync's way back: the Agents row said Codex's own models stay in `/model` beside magpie's, the ChatGPT state the Codex app blocks sending in, and the app only leaves that state once it is restarted (#2267, `TestCodexProviderIsNotJoined`). A Codex that reaches the gateway from another machine (a WSL distro under NAT, or `MAGPIE_ADDR` pinned beyond loopback, `onAnotherMachine(at.gw())`) is wired as one with no ChatGPT sign-in (`chatGPT()` is false there): never joined or beside, since beside its sign-in it would send its ChatGPT token to `/backend-api/codex`, and from there the gateway takes a named key alone, so every request was a 401 (#2145, `TestCodexBeyondLoopbackNotJoined`). magpie is its provider and it sends `gwKey()`, the LAN sharing key; one of its own models picked goes straight to OpenAI on its sign-in.
-- Codex signed in to ChatGPT and not connected still gets `openai_base_url` while more of its ChatGPT accounts are on in magpie (`failover`, stash `codex.failover`; with a CC Switch mirror as its provider, the mirror's `base_url` and `codex.mirror_failover`), so a turn its own account has no allowance for goes on to the next — never for a Codex that reaches the gateway from another machine, where that path takes a named key alone and the failed-over turn came back a 401 (#2145, `TestCodexFailoverBeyondLoopbackNotWritten`); Sync takes one it wrote before off again. That Codex is `FailingOver`: not `Wired`, yet its requests go through magpie. The Agents row says so and what turns it off (`FailoverSaid` in the CLI and TUI, `failover` in `/api/state`, a button to Providers › Codex in the GUI), and the gateway hands it only its own models from `/backend-api/codex/models` (`CodexOwnOnly`, set on `gateway.CodexOwnOnly` by main; its ETag carries `provider.CodexOwnListTag`, and Sync ages a `models_cache.json` without it). A connected WSL Codex shares the gateway path, so while one is connected every Codex gets magpie's models (#1385). A base URL the user wrote by hand (#856) isn't failover's and stays a plain not-connected row. A Codex the user disconnected gets no failover till they connect it again. The app serving the gateway takes failover out as it quits (`EndFailover`, `EndCodexFailover` in `OnShutdown`), so a Codex left on its own goes straight to OpenAI rather than retrying a gateway that's gone (Leon920717 on X); the next start's Sync writes it again. Codex's app-server read the old base URL as it started and keeps it, and `KeepCodexDaemonCurrent` ends with magpie, so `EndCodexFailover` restarts it there when no codex session is on it (`codexDaemonCheck`); with one on it, it stays on the gone gateway until the user restarts it (thisisvainxx on X: "several restarts"). A connected Codex keeps magpie as it quits: its model is one of magpie's, and Disconnect is what puts its own config back. A magpie that ends without quitting (killed, a crash, `magpie serve`) leaves failover in place.
-- A Codex thread keeps the provider it was started on. While a magpie model is on, CC Switch's provider tables go through magpie too (`takeTables`), and get their own base URL back when Codex steps off magpie (`giveTables`, stash `codex.tables`). CC Switch's OpenAI mirror (a table of another id, `name = "OpenAI"`, `requires_openai_auth`, no `base_url`) isn't reached by `openai_base_url`, which takes only the built-in provider to magpie: a thread started on it and reopened went straight to ChatGPT, which refused the magpie model picked in it, and magpie never saw the request (#1796). While Codex goes to magpie by the base URL, `takeMirrors` gives each such mirror magpie's ChatGPT backend as its `base_url` (stash `codex.mirrors`), and `giveMirrors` takes it off again; a mirror a profile names, or one whose `base_url` was changed since, stays as it is. Moving the threads onto another provider is the Sessions page's Move (#887).
-- An agent's config is written in the form the installed version reads, taken from what that version declares, not the latest one. VSCodium has no Copilot Chat of its own, and the Marketplace's last one (0.48.1) has no Custom Endpoint provider, only OpenAI Compatible (`customoai`, #1014). magpie reads the provider list in the package.json of the `github.copilot-chat` installed under `~/.vscode-oss/extensions` (`vscodeChatOf`). It writes its group for `customendpoint` when that is declared, for `customoai` when only that is, with each model's window as `maxInputTokens` + `maxOutputTokens` and the token as `x-api-key` (that version drops an Authorization in `requestHeaders`). A missing or unreadable extension keeps `customendpoint`. Sync rewrites a group written for the other provider, and Check reports it, as it does a Copilot Chat declaring neither. That Copilot Chat registers its providers only while signed in to GitHub with a personal Copilot plan, which the Notice says.
-- Tuned settings are written only on the user's click, never by Sync or Connect. The value there before is stashed once (`tune.<agent>.<knob>[.<model>]` in `stash.json`), so Undo puts it back, or takes the key out (and a `modelSettings` entry left empty). A value the user changed after the click is theirs: Undo then only forgets the stash. A variable that comes before the setting (`CLAUDE_CODE_AUTO_COMPACT_WINDOW`, `FORCE_PROMPT_CACHING_5M`, `CLAUDE_CODE_PROMPT_CACHE_TTL`, `CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL`, in settings.json's `env` or magpie's own) is shown as `locked` and Apply refuses, since the setting would change nothing. Claude Code compacts at the smaller of the window set and the model's own (its `/autocompact` says "capped to 200k by model"), so advice starts from that, and a model that isn't Claude's has no window here (magpie's own compact wiring serves it). Codex's window is the one magpie's catalog lists for each model it ran (typed, or the vendor's), and with none in config.toml it runs now at what magpie tells Codex (`provider.CompactFor`, else Long conversations in the agent's opened row, as `codexcat` writes it); a model of magpie's whose window isn't known caps nothing short of 1M (or the user's own larger value), never the largest prompt seen (zhemu on Discord: a 1M model at 750K was offered up to 410K), and only Codex's own models, outside the catalog, keep 272K or the largest prompt (`codexWindow`, `TestTuneWindowsAreTheUsers`). Advice changes a value only when the replay saves 3% or more, and of the windows within 1% of the cheapest takes the largest; with the compactions timed, it never advises a window that compacts more often than the one now, so never a longer wait: of the windows that compact no more often it takes the cheapest, and of those within 3% of that (`sameCost`, the same bar as changing at all) the one that compacts least, the larger of two that compact as often. Tokens and seconds share no unit the files measure, so the advice doesn't trade one for the other at a guessed rate; a cheaper window that waits longer is said with its wait in the row and the picker, for the user to choose. The wait per compaction is taken as the same at every window: the files time compactions only near the window the user ran with, too narrow to fit how it grows with the prompt. Tokens are weighed as billed: cache reads 0.1, 5-minute writes 1.25, hour writes 2, output 5 for Claude; reads 0.1, writes 1, output 8 otherwise.
-- A plugin's agent writes each key in place (JSON, YAML or env), the user's comments and other keys kept. An object or array `connect` returns is taken as its JSON text (`agentplug.keys`), so it is written in the order the plugin gave it, not sorted as a Go map would be: Kilo lists its effort variants in key order (#1890, `TestPluggedKeepsPluginOrder`). What each key held before the first write is stashed under `plugin:<id>:<path>`, typed, and its own model or Disconnect puts every key back and takes out the ones that weren't there; the file is never written whole. A `connect` that throws or takes over a second writes nothing and says why. Its gateway key is `magpie-<id>` (`agentKeyAt`), and usage names its requests by that key or by its `ua` words (`usage.PluginAgents`). Its `agent.library` (instructions, `mcp` with `mcpFormat`, skills) gives it the Library's three as well, written by `internal/library` as any agent's are ([library](library.md)); a `mcpFormat` outside `agentplug.MCPFormats`, or an `mcp` without one, keeps the plugin from loading.
-- StepCode config root resolves to the parent of an absolute `STEP_CODING_AGENT_DIR` (agent resources directory differs from config root; relative values ignored), or `STEPCODE_CONFIG_DIR` under home when native, defaulting to `~/.stepcode` ([`stepcode.go`](../../internal/agent/stepcode.go)). Project configs override global configs in StepCode, but magpie manages global configuration only (`config.toml` and `models.json`). Detection is strictly directory-only via `agentDir`, avoiding collision with Smallstep's bare `step` command on `PATH`. Wiring performs an atomic two-file edit (`models.json` provider block and `config.toml` top-level defaults/scope) backed by `stash.json`. Custom fields within `providers.magpie` are preserved during sync, and the original provider block is restored on disconnect. A renamed provider's `magpie/<old>/` entries in `enabledModels` follow it, a glob or a thinking level included, and the scope remembered for disconnect follows too; the user's other entries stay. Disconnect restores original defaults, preserves user native changes and custom scope edits, and removes newly created files only when empty.
-- MothX's folder is `$MOTHX_DIR` as it is (no `~`), else `%APPDATA%\mothx` on Windows, else `~/.mothx`; a WSL distro's is its `~/.mothx` ([`mothx.go`](../../internal/agent/mothx.go)). Its `thinkingFormat` is `openai` unless the user set one: with it empty, MothX picks Qwen's `enable_thinking`, DeepSeek's `thinking` or Doubao's levels by the model id, which for magpie's ids says nothing of the vendor that serves them. MothX's `/model` and `/statusline … global` rewrite the whole file, so Disconnect after one takes out magpie's provider, the pick and a `providers` left empty (MothX omits an empty one), and keeps the rest.
-- Zoo Code's provider profiles are in VS Code's secret storage, so magpie writes a settings file for it (`magpie-import.json` in Zoo Code's `globalStorage/zoocodeorganization.zoo-code/settings`, not magpie's folder, so a sync keeps an address the user moved it to) and points Zoo Code's `zoo-code.autoImportSettingsPath` at it in VS Code's `settings.json` and each profile's, a user's own path stashed and put back ([`zoocode.go`](../../internal/agent/zoocode.go)). Zoo Code imports it on each start (`importSettingsFromPath`), merging it over the user's profiles and making `magpie` the current one. Disconnect stops the import and deletes the file; the profile already imported stays in Zoo Code, where magpie can't reach it.
-- An agent is detected by its config file, its folder, or its command on magpie's PATH (`Detected`). That PATH is the login shell's plus the folders users' tools go in (`proc.UserPath`: `~/.local/bin`, npm's prefixes, the Node nvm's default alias resolves to (the highest installed when it names none), bun, Homebrew, ...), so a CLI a terminal doesn't find can still be found and listed: an npm install under a Node the terminal no longer uses. `/api/agents/cli` then gives where it is (`path`) and `offPath` when the login shell's PATH (`proc.LoginPath`) lacks its folder, and the Agents row says "Not on your terminal's PATH", its tip naming the file (悠悠哥 on Discord: Codex 0.162.1 listed with no codex on PATH and no `~/.codex`). An unknown login PATH says nothing. A folder another tool writes too doesn't count (`dirShared`): Pi's for omp, `~/.copilot` for the Copilot CLI, which GitHub Copilot's JetBrains and VS Code plugins also write, and Qoder's and Qoder CN's, which Qoder's JetBrains plugin fills, and `~/.cursor` for Cursor CLI, which the Cursor editor makes on its own (`TestCursorFolderFromTheEditorIsNotTheCLI`, @G_Z_Y on X); only `cli-config.json` or `cursor-agent` finds Cursor CLI. A config file another tool writes first counts only when `pathOwn` says it is the agent's: Qoder's `settings.json` holding `enabledPlugins` alone is the plugin's (`qoderPluginOnly`; #1495, `TestCopilotFolderFromAnIDEPluginIsNotTheCLI`, `TestQoderSettingsFromAnIDEPluginIsNotTheCLI`). The Qoder app (the desktop app, which runs Qoder's CLI as its agent with the same folder) is found by the `.qoder-app-status.json` it writes there (`sign`, `qoderApp`; #2138, `TestQoderAppIsQoder`), as its `settings.json` can be its bundled plugin's `enabledPlugins` alone. Only the GUI and `daemon install` widen the PATH so; `magpie serve`, `web`, `tui` and the CLI keep the one they were started with, so an agent's CLI (`cliBin`, which its version and `omp`'s max effort are read from) is looked for in those folders (`proc.FindTool`) on every system when it isn't on the PATH, not only on Windows (whqtian on Discord: omp under `~/.bun/bin` on Ubuntu read as no version and offered xhigh in place of max; `TestOmpVersionOffPath`).
-- Detection goes by an agent's folder, which an uninstall leaves behind, so an agent found by that alone is shown as gone (`CLIMissing`; #843, #2177, #2173): its CLI is on no PATH and in none of `proc.FindTool`'s folders nor where its own installer puts it (`~/.claude/local`, `~/.codex/packages/standalone`, `~/.opencode/bin`, Hermes' `hermes-agent` checkout), and nothing else that reads the folder is here (`cliHeld`): its desktop app (`HasApp`), an editor's extension (`~/.<editor>/extensions/<id>-*`: `anthropic.claude-code`, `openai.chatgpt`, `saoudrizwan.claude-dev`), Claude.app, OpenCode.app and Goose.app on a Mac, a JetBrains IDE's settings (its AI Assistant's agents and Cline's plugin) or Zed's `external_agents` (its Claude Code and Codex adapters). Where magpie can't tell (every shared folder, `cliShared`, on Windows, whose readers can be a Store app, a portable editor or a PATH only a shell profile sets, #1482, and there too one a desktop app of the agent's reads, `desktopApps`: DeepSeek Harness Desktop installs to any folder and puts its `dsh.cmd` in one the user picks, #2300, #2304; OpenCode and Goose off a Mac, Gemini, an agent detected its own way or by a command name other tools share, one with no install command but `cliOnly`'s Hermes), it is never gone. A gone row in the GUI shows "CLI not found" and none of its settings, nor Apply again; while connected it keeps its switch and Disconnect, and it folds under Not set up once not. Get started never offers it (`connectKind` is "no"). The TUI leaves it out and `magpie ls` says "CLI not found" (`TestCLIMissing*`, `agent-cli-missing.test.cjs`, `getting-started.test.cjs`).
-- Tests never touch the real machine. `TestMain` uses `testenv`, which points HOME, USERPROFILE, the XDG folders and APPDATA into a temporary folder, clears `agentenv.Vars` and puts failing stand-ins for keychain tools and agent CLIs on PATH. Agent-specific side effects (Aside, the Zed keychain, Codex's usage check) are also stubbed in `TestMain`.
+## 约束与失败行为
 
-## Verification
+<a id="constraints-and-failure-behavior"></a>
+
+- 崇云科技只删除它自己写过的东西。agent 配置里的其他一切保持原样。
+- 一次 sync 是把崇云科技的模型更新到位，而不是更新 agent 在哪里连崇云科技。
+  `SyncCatalog` 跑的每一次 `Sync`（崇云科技每次启动和更新、新增一个 provider，
+  以及一个 plugin 登录、登出或续期，或列出的模型和上次不同：`plugin.OnChange`
+  和 `plugin.OnListed` 会调用 `catalog.Touched`，#2373）都走 `synced`，它把
+  每个写出的文件过一遍 `kept.away`（`edit.Filtered`，
+  [`keptaway.go`](../../internal/agent/keptaway.go)）。这个过滤器在开启期间会
+  看到任何通过 `edit` 写出的文件，来自任何 goroutine、在写者持有的任何锁下，
+  所以它不持有写者可能持有的任何锁：网关地址和局域网 key 在它开启之前就被
+  读走（`keeping`），崇云科技自己的文件（`magpieFile`：它原样的目录，或者它
+  的链接指向的目录，比如被链进一个 dotfiles 仓库的 `~/.config`）保持原样
+  （ylorn 报告：`settings.Save` 在设置锁下去到了一个会读设置的过滤器，
+  于是 app 每次启动后卡住约 10 秒；`TestOwnWritesDuringASyncWithALinkedConfig`）。
+  在一个不含网关自己地址的文件里，如果用户把崇云科技指向了另一台机器上的地址
+  （NAS 的，或本机的局域网地址），并且没有 WSL 发行版被看到过的地址，那个地址
+  就会留在 `gateway.URL()` 的位置上，连同崇云科技每个 URL 在它前面的那段路径
+  （`awayPath`：反向代理的 `/magpie`；在回环上，是本地代理的路由，那里崇云
+  科技回答过或还没被问过），以及和它一起的 key 留在崇云科技自己 key 的位置上
+  （coeo91 报告：base URL 在更新或重启后回到了 127.0.0.1）。本机回环上
+  的地址跟随网关；地址多于一个或 key 已经没了时，这次写入保持原样。在崇云科技
+  里挑选模型仍然会把 agent 指向这个崇云科技，但对 Claude Code 来说是指向它的
+  代理（见上）。ZCode 和 WorkBuddy 在它们自己的写入器里也保留这样的地址
+  （`zcodeAddress`、`buddyWriteAt`）。
+- `SyncCatalog` 会持有它构建出来的目录（`provider.Hold`），最多一秒钟，连带
+  plugin 的 provider 和登录。那些 `catalog.Touched` 的丢弃在后台告知，所以
+  一次 plugin 变化也会立刻丢掉被持有的东西（`plugin.OnChangeNow`，
+  [`hold.go`](../../internal/provider/hold.go)）：宿主的 "auth" 事件在它对保存
+  登录的回复之前就被读到，而登录返回之后再看账号就看得见它了（#2449：
+  `chongyun plugin login` 在一次 sync 运行时找不到账号；
+  `TestHeldGoesWithAPluginChange`）。
+- JetBrains Air 的 `magpie-opencode.json` 在 sync 和挑模型时会保留
+  `provider.magpie` 里用户加的字段，包括嵌套的选项（`air` 在
+  [`air.go`](../../internal/agent/air.go) 里，用
+  [`sync.go`](../../internal/agent/sync.go) 里的 `theirsKept`）。网关字段和
+  完整的模型列表仍会被替换，所以被移除的模型会从列表里消失。
+- 在每一个 OpenCode 形状的配置里（OpenCode、DevEco、Air、OpenChamber；
+  [`agents.go`](../../internal/agent/agents.go) 里的 `openCodeKept`），用户放在
+  崇云科技某个模型上的变体在一次 sync 后依然保留，用户用崇云科技的名字改写
+  出来的也一样。一个完全按崇云科技写法写在它名字下的变体（`openCodeVariant`）
+  是崇云科技的，所以模型不再有的那个会被移除（#2379，
+  `TestOpenCodeCodexFastVariants`）。
+- OpenCode 没有 `/fast`。一个 ChatGPT 账号自己的 `gpt-*` 模型（不是路由组，
+  `catalog.Model.CodexFast`，在 `magpieModels` 里设置）会再次拿到每个推理
+  等级，作为 `<level>-fast`（没有等级时就是单独的 `fast`），并像 Codex 的
+  `/fast` 那样请求 `service_tier: "priority"`。这个等级被写两次：作为选项，
+  OpenCode 1 的 `@ai-sdk/openai-compatible` 会原样发送；以及在 `extraBody` 里，
+  OpenCode 2 会发送它并丢掉自己不认识的选项（用 OpenCode 2.0.25 对一个假服务器
+  验证过）。当网关把请求重建为发给 ChatGPT 后端的 Responses 时，它会丢掉
+  OpenCode 1 多余的 `extraBody` 字段（`TestOpenCodeFastVariantReachesCodex`）。
+- 每一次把崇云科技自己的块写进 agent 配置的 sync 和挑选，都会把它铺在现有内容
+  上面，所以崇云科技不写的键会保留（#2030，以及它的同类）。每个块都对照过该
+  app 自己的 schema 或源码。崇云科技的部分是有名字的；它不再写的键跟着它们一起
+  走。
+  - Qoder 的 `providers.magpie` 保留 `routing`、各种超时、`type`、`authType`、
+    `anthropic` 和一个非空的 `displayName`（`qoderKept`）。
+  - fx 保留 `reviewer_model` 和一个值为 `omit` 的 `tool_choice_mode`。它的 `auth`
+    整体是崇云科技的，因为 fx 在 `type: none` 旁边拒绝 `env`（`fxKept`）。
+  - Hermes 保留 `hermes model` 写在那里的 `default_model`、`key_cmd`、各种超时、
+    `extra_body`，以及崇云科技旁边的 name 和 headers（`hermesKept`）。这在每个
+    profile 里都成立。
+  - Hermes 的 `api_key` 可能是一个引用、`${VAR}` 或 `${env:VAR}`，Hermes 从配置
+    旁边的 `.env`（它自己的或某个 profile 的）再从环境里展开它。`Check` 和一次
+    sync 读它指名的 key（`hermesKey`）：一个"持有"的（`keyHolds`）保留下来且不算
+    drift，指名一个崇云科技看不到的变量的也一样（只有 shell profile 会设置它），
+    那是未知。指名一个网关不接受的 key 则是 drift，一次 sync 保留那个引用，并
+    把崇云科技的 key 写进那个 `.env` 里对应的变量下，没有 `.env` 时就新建一个
+    并设为 `0600`（`hermesKeptKey`；PaulT 报告，
+    `TestHermesWithAKeyInItsEnvFile`）。一个里面含有不止那一个引用的值，会像
+    以前一样被崇云科技的 key 替换掉。
+  - omp 的 `models.yml` 保留 `modelOverrides`、`discovery`、`disableStrictTools`、
+    headers 和兼容标志（`ompKept`）。它的 `auth` 和 `apiKey` 是崇云科技的，或者
+    被删掉。
+  - Kimi Code 的 `[providers.magpie]` 就地设置崇云科技的那三个键，所以
+    `custom_headers`、`env` 和 `default_model` 保留（`kimiProvider`）。
+  - Cline 的 `models.json` 保留 provider 的其他键，并且在每个模型上列出崇云科技
+    不写的东西，比如一个 VS Code 覆盖（`clineKept`）。
+  - Goose 的自定义 provider 文件保留 name、`timeout_seconds`、`toolshim`、
+    headers 之类（`gooseProviderKept`）。
+  - ZCode 的 provider 规则保留它的 name、logo、可见性、API headers 和 key 的
+    管理链接（`zcodeRules`）。
+  - 崇云科技写进 ZCode `providerModelRules` 的每个模型，在 provider 的格式是
+    Anthropic Messages（ZCode 唯一会发送的格式）时，都打开原生联网搜索
+    （`properties.supportsNativeWebSearch`，"原生联网搜索"）（`zcodeWebSearch`）。
+    崇云科技为哪些模型打开过它，记在 stash 的 `zcode.web_search` 下，所以用户在
+    ZCode 里取消勾选的模型（ZCode 会把那个键从规则里去掉）保持关闭，规则里已有的
+    值保持，手工建的规则不动，而读不出来的 stash 不会打开任何东西。换一种格式时，
+    崇云科技自己打开的会被去掉。断开会忘掉这份列表。
+  - 那些 YAML 的走 [`sync.go`](../../internal/agent/sync.go) 里的 `yamlKept` 和
+    `mergeKept`。每一个都有 `Test<Agent>KeepsTheUsersSettings` 这样的测试。
+- JetBrains IDE 里的 Copilot 在 Copilot 语言服务器的 `byok.json` 里保留它的
+  Bring Your Own Key provider，这份文件与 Xcode 和 Eclipse 的 Copilot 共用
+  （[`copilotjetbrains.go`](../../internal/agent/copilotjetbrains.go) 里的
+  `copilotJetBrains`）。崇云科技在那里写自己的三个键——`magpie-provider-config`、
+  `magpie-api-key` 和 `magpie-models-config`——用服务器自己写的那种字节，而且
+  只在它们不同时才写；用户的 provider 和 key 保留。用户 Manage Models 里隐藏的
+  某个崇云科技模型（`isRegistered: false`）在一次 sync 后依然隐藏。新建的文件放在
+  0700 的目录里并设为 0600，和服务器的做法一样。
+- dsh（DeepSeek Harness）为每条 llm-pi-ai 路由设置一种 API，所以崇云科技按
+  协议写一条路由（[`dsh.go`](../../internal/agent/dsh.go) 里的 `dshKinds`；
+  01huadalang 报告）：大多数模型用 `magpie`（Chat Completions），在
+  Responses 上提供的模型用 `magpie-responses`（`openai-responses`），在
+  Messages 上提供的用 `magpie-anthropic`（`anthropic-messages`，网关根路径，
+  `forceAdaptiveThinking` 对应 `AdaptiveThinking`），由模型的 `APIs` 决定
+  （`dshRouteOf`）。一个模型的 `APIs` 是它的 provider 最好地提供它的那种
+  （`Provider.Native`，在 `magpieModels` 里，
+  [`route.go`](../../internal/agent/route.go)），Pi、omp 和 droid 也同样读它。
+  一个路由组在每个成员都最适合 Responses 时有 `responses`（`allResponses`，
+  #1594），于是它的工具调用参数会边流边转发；其他任何组都没有，仍然留在 Chat
+  上，只有 Messages 的组也一样，因为一个 Claude 成员的思考由它自己的模型决定。
+  没有模型的路由会被去掉。用户为 dsh 的 Models 页面里的某条路由挑选的 api 会
+  保留，他们在那里加的键也保留。启动项（`agent-default-model`）点名它模型的
+  路由，Sync 会把一个位于崇云科技某条路由上的启动项挪到它模型现在所在的路由
+  （`dshStartOnItsRoute`），它的 effort 和标记也保留。Check 会请启动项点名的
+  那条路由列出它的模型。一个在后来换了路由的模型上恢复的 dsh session，会要求
+  重新挑选模型，因为 dsh 是按路由和 id 找模型的。
+- dsh 把一个模型列出的 `maxTokens` 当作每次请求的输出并预留它，从
+  `contextWindow` 里再留出 65536 的余量，然后才决定何时压缩
+  （compaction-basic 的 `resolveCompactSpec`：窗口的 80% 和窗口 − maxTokens −
+  65536 中较小的那个）。厂商的回复上限接近它的窗口时，dsh 曾在一个 500000 的
+  组里于 41248 处压缩（#2823），或者在没有预算的情况下失败（524288/524288，
+  LoKi 报告；131072/65536），所以崇云科技把它在每条路由上以及在更老的
+  `llm-deepseek` 条目里都列为限制到窗口的四分之一（`dshMaxTokens`），正如
+  JetBrains 里的 VS Code 和 Copilot 所做。用户设的 Max 输出保持他们设的样子
+  （`outputOr`），即使那会让 dsh 没有预算。`TestDshOutputLeavesCompactionRoom`。
+- 在崇云科技提供服务期间，`KeepDshWired` 每 30 秒重写一遍这些路由，因为 dsh
+  会把它的 patch 列表覆盖掉。一轮什么都没写的结果会被记住（`dshRounds`），当
+  它读的东西自那以后都没变时，下一轮就什么也不做。它检查 dsh 各文件的字节
+  （每个 profile 的 `cordis.patch.yml`、home 层、`settings.yaml`、`.env`、
+  `.credentials.yaml`、`config.yaml`）和网关地址。它还检查 `provider.StampNow`：
+  没有 Changed、没有 plugin 变化、没有 `filememo.Forget`、环境相同，且 provider、
+  设置和目录的文件都没变。当那个标记移动时模型会重新构建，并且至少每
+  `dshModelsFor`（5 分钟）一次，以覆盖标记看不到的东西，比如另一个 app 的账号
+  文件或一个按日期退役的模型。每一轮都构建整个目录和每条路由，在一个用户的
+  35.7 GB 里 48 分钟分配掉了 12 GB（`TestDshRoundWithNothingChangedBuildsNothing`、
+  `TestDshRoundAfterAChangeWritesAgain`）。
+- DeepSeek Harness Desktop（macOS arm64 和 Windows x64；没有 Linux 构建）读的
+  是与 CLI 相同的 `$DSH_HOME` 或 `~/.dsh`，作为它自己的 profile
+  `profiles/desktop`（app 的 `lib/main.js` 里的 `resolveDshHome` 和
+  `resolveDesktopPaths`），所以它不需要自己的接线就拿到了崇云科技的路由
+  （#2279，liangjinyuan-sihan）。它通过 `/Applications/DeepSeek Harness.app`、
+  `%LOCALAPPDATA%\Programs\DeepSeek Harness`，或通过它当前用户安装器记录在
+  `HKCU\Software\1bf39983-50d0-5fe0-9ef4-cece76f67c5e` 下的目录
+  （`InstallLocation`）找到，其 Uninstall 键给出版本号
+  （[`desktopapp.go`](../../internal/agent/desktopapp.go) 里的 `registered`），所以
+  选了别的目录的用户也能找到它。app 装了但从未打开过时还没有 `~/.dsh`：这一行
+  仍然会被列出，连接时会用 dsh 自己的模板（`dshProfileTemplate`）把带崇云科技
+  路由的 `profiles/desktop/cordis.patch.yml` 写进去，app 第一次启动时会保留它，
+  因为它只写缺失的文件。提示说该 app 第一次打开时会在它上面启动
+  （`noticeDsh5`）。在那次首次启动之前断开，会移除崇云科技建的那个 profile
+  （里面没有别的东西时）（`dshTidyUnopened`）；一旦 app 已经打开过它，这个 profile
+  保留，只有崇云科技的条目被移除（`TestDshDesktopNeverOpened`、
+  `TestDshDesktopRegisteredFolder`）。
+- Ante 的 `catalog.json` 以同样方式保留 `providers.magpie` 里用户加的字段
+  （[`ante.go`](../../internal/agent/ante.go) 里的 `ante`）；它的 `auth`、
+  `http_headers`、`extra_body` 和 `stream_idle_timeout_secs`，是一个在局域网上
+  共享、或从 WSL 访问的网关要发送一个 key 所需要的。Ante 按 `settings.json` 里的
+  `provider` 和 `model` 启动一个 session，而不是按它的目录里存的东西（#1210），
+  所以崇云科技设置这一对，并把它在那里找到的放回去；用户在崇云科技接线期间在
+  Ante 里做的挑选归用户，保留。
+- AstrBot 把它的 provider 放在它根目录下的 `data/cmd_config.json`
+  （`$ASTRBOT_ROOT`，否则 `~/.astrbot`，否则桌面 app 的，否则 `~/astrbot`），
+  用 UTF-8 BOM 写入，崇云科技保留它（[`astrbot.go`](../../internal/agent/astrbot.go)
+  里的 `astrbot`）。崇云科技给 `provider_sources` 加一个 `magpie` 条目，给
+  `provider` 每个模型加一个 `magpie/<model>` 条目，用户自己的条目逐字节保留，
+  用户在崇云科技条目里改的东西（超时、代理、启用）也保留，并设置默认对话模型
+  （`agent_runner.config.model.provider_id`，或者在 agent runner 之前的
+  `provider_settings.default_provider_id`），把它在那里找到的放回去。用户在崇云
+  科技接线期间做的挑选归用户，保留。第一次连接会把该文件复制为
+  `cmd_config.json.before-magpie`。AstrBot 只在启动时读该文件，它的 WebUI 保存时
+  会把它整体写回去，所以 agent 的提示说在 WebUI 里保存之前要重启 AstrBot。Docker
+  安装的根目录在它的容器里，崇云科技到不了。
+- jcode 把它的设置放在 `$JCODE_HOME` 里的 `config.toml`，否则 `~/.jcode`
+  （[`jcode.go`](../../internal/agent/jcode.go) 里的 `jcode`）。崇云科技按
+  `jcode provider add` 写一个的方式添加一个具名 profile `[providers.magpie]`：
+  `type = "openai-compatible"`、网关的 `/v1`、一个点名 jcode 的内联 `api_key`
+  （jcode 不发别的能区分它的东西）和 `requires_api_key = true`，因为 jcode 在没有
+  key 时不会向回环 URL 发送 key。它的 `models` 列表每个模型一条，带上
+  `context_window`、`input`，以及有 effort 等级的模型的 `reasoning`。用户在某个
+  模型上设的 `reasoning_effort` 在该模型还有这个等级时保留。jcode 启动时用的
+  模型是 `[provider] default_provider = "magpie"` 和 `default_model`。原来在那里
+  的东西被 stash 起来，在断开时放回去。在 jcode 位于崇云科技上时挑中它自己的
+  模型，会把崇云科技摘掉。每个键都是单独设置的，所以用户的其他键和表保留，
+  而 jcode 自己保存文件时写的 `[[providers.magpie.models]]` 表会被那一份列表
+  替换。没有任何要改的 sync 不会写文件。断开会整个丢掉这个 profile，包括它的
+  子表。jcode 在启动时读该文件，所以提示说要重启打开的 session。
+- Raycast AI 在 Mac 和 Windows 上都从用户目录下的
+  `~/.config/raycast/ai/providers.yaml` 读 Custom Providers
+  （[`raycast.go`](../../internal/agent/raycast.go) 里的 `raycast`；
+  manual.raycast.com/ai/custom-providers）。崇云科技给它的 `providers` 列表加
+  一个条目，`id: magpie`，在网关的 `/v1` 上，用一个 `api_keys` 别名装着一个
+  点名 Raycast 的 key（它的 User-Agent 未知），并为目录里的每个模型加一个模型，
+  写明 `context` 和全部五项 `abilities`，因为 Raycast 在某项没写时会假设工具
+  和视觉是关的。这个列表以节点方式编辑（`EditYAMLNode`），所以用户的其他条目、
+  `tools` 块（还有锚点）和注释都保留。用户加到崇云科技条目或它某个模型上的键
+  （`include_user_email`、一个 `description`）在一次 sync 后保留
+  （`mergeYAMLKept`），而没有任何要改的 sync 不会写文件。断开会把条目拿走，如果
+  它是列表里唯一一个就把列表拿走，并把只剩一个空壳的文件拿走。Raycast 会监视
+  该文件，所以没有重启提示。模型是在 Raycast 里挑的，所以这个字段就是崇云科技
+  是否在它的选择器里（`ListsModels`）。在 Mac 上通过 `Raycast.app` 或
+  `~/.config/raycast` 目录检测到。
+- OpenPencil（ZSeven-W/openpencil，`openpencil-desktop` app）把它对话运行在内置
+  agent 上的设置放在 Rust 的 `dirs::config_dir()` 加上 `openpencil` 得到的
+  `settings.json` 里：Mac 上是 `~/Library/Application Support/openpencil`，Linux
+  上是 `$XDG_CONFIG_HOME` 或 `~/.config`，Windows 上是 `%APPDATA%`
+  （[`openpencil.go`](../../internal/agent/openpencil.go) 里的 `openPencil`；它
+  的 `settings_io.rs` 和 `settings_payload.rs`）。崇云科技给 `builtin_agents` 加
+  一个条目，`id: magpie`，`kind: openai-compat`，在网关的 `/v1` 上，带一个点名
+  OpenPencil 的 key（它的 User-Agent 未知），`preset: custom`，以及按 OpenPencil
+  写列表的方式给出的被挑模型：第一个写作 `model`，`models` 只有两个及以上才有，
+  最多 64 个（v0.8.4 只读 `model`）。用户的其他条目和设置保留，用户给崇云科技
+  条目的 `display_name` 和 `enabled` 也保留；没有任何要改的 sync 不会写文件。
+  OpenPencil 需要 `"version": 1`（没有它的文件会被当作损坏放到一边，保存也会停），
+  所以崇云科技在它自己新建的文件里写上它，而对版本是别的值或没有版本的文件不动。
+  断开会把条目拿走，当只剩版本号和一个空列表时把文件也拿走。OpenPencil 启动时
+  读一次文件，退出时把它整体写回，所以在 `openpencil-desktop` 运行期间改动会被
+  拒绝（Windows 上问不到，所以提示说要先退出它）。模型是在 OpenPencil 的对话里
+  挑的，所以这个字段就是崇云科技是否在它的选择器里（`ListsModels`）。通过它的
+  设置目录、`~/.openpencil`（它 CLI 的）、`OpenPencil.app`
+  （`com.zseven-w.openpencil`）或 `%ProgramFiles%\OpenPencil` 检测到。同名的另一个
+  app open-pencil/open-pencil 把它的 provider 放在 webview 的 localStorage 里，
+  所以它不成行：它通过 Pi 或一个崇云科技接线的 ACP agent 访问崇云科技。
+- DevEco Code（华为的 OpenCode 分支，#1885）按 OpenCode 的方式接线
+  （[`agents.go`](../../internal/agent/agents.go) 里的 `deveco`）：崇云科技的
+  provider 进到 `~/.config/deveco` 下 `deveco.jsonc`、`deveco.json` 和
+  `config.json` 里的第一个（DevEco 最后合并的那个，也就是生效的那个），或者在
+  `$DEVECO_CONFIG_DIR` 是绝对路径时进到那里，在它们之后读。0.2.3 会把
+  `deveco/0.2.3 ai-sdk/…` 发给它配置里的某个 provider，但它保留的 OpenCode 代码
+  里有很大一部分仍会发送 OpenCode 自己的 User-Agent（`opencode/<version>`），
+  所以它 provider 的 key 是 `magpie-deveco`（`openCodeKeyAt`），不是 OpenCode 和
+  MiMo Code 发的那个普通的 `magpie`，而 Check 要的就是那个 key。它的 npm 包没有
+  Linux 二进制，所以那里不提供安装命令（`cliSpec.only`）。
+- Grok App（RongleCat/grok-app，一个通过 ACP 启动 Grok Build 的桌面前端）把它的
+  provider 通道放在它数据目录下的 `agent-home/config.toml`：`$GROK_APP_HOME`，
+  否则是它的 `directories` crate 放的位置，否则是那里正好存在的 `~/.grok-app`
+  回退（[`grokapp.go`](../../internal/agent/grokapp.go) 里的 `grokApp`）。它的
+  编辑器只列 Grok Build 的官方目录，从不列 Grok Build 那一行的
+  `[model."magpie/…"]` 表，所以崇云科技把自己加成一个通道 `[model.magpie]`，带上
+  该 app 的 Providers 页面所写的那些键：网关的 `/v1`、一个点名 Grok App 的 key、
+  `api_backend = "chat_completions"`、`app_provider_mode = "generic"`，以及
+  `app_models`——一个 JSON 列表，列出崇云科技模型及它们的 `contextWindow`、
+  `supportsVision` 和 effort 等级（没有 `none`；用户在 app 里标出的默认值保留，
+  否则是 medium）。被挑模型的 `context_window`（一个裸整数）和
+  `supports_reasoning_effort`（一个裸 bool，Grok Build 用它把守
+  `--reasoning-effort`）写在通道上，就像该 app 在编辑器里挑模型时那样放。
+  `[models] default` 是路由，而崇云科技不设置它：把它设成 `"magpie"` 会让该 app
+  丢掉自己的登录（`ensure_independent_for_custom_route`）。路由保持该 app 原来
+  的样子。在 Accounts 下对崇云科技按 Use 才会切换它。一个已经设过路由的崇云科技
+  会在下一次 sync 或连接时把旧路由放回去一次（`grokAppReleased`）；那之后的 Use
+  保留。断开只丢掉通道，并且只在路由仍然是 `"magpie"` 时才放回路由：连接时 stash
+  的那个，否则是 `connect.was` 持有的那个。在崇云科技的模型字段里挑了该 app 自己
+  的某条路由，就会把它写成路由并摘掉崇云科技的通道，就像在别处挑另一个 provider
+  一样。一次 sync 在没有通道且路由不是 `"magpie"` 时什么都不写，崇云科技的 stash
+  也不例外，而在路由是 `"magpie"` 但通道没了时 Check 会这么说。此后在该 app 的
+  编辑器里挑的模型归用户，在一次 sync 后仍然保留，而没有任何要改的 sync 不会写
+  文件。共享模式把 `GROK_HOME` 保持在 `~/.grok`（Grok Build 的库那一行）。独立
+  模式（Use 会打开它）读 agent-home：Library 把 `AGENTS.md`、同一个 `config.toml`
+  里的 `[mcp_servers]` 和那里的 `skills/` 写出来，Grok App 也读
+  `~/.agents/skills`。RTK 没有 Grok 钩子，所以 Library 把 Grok App 列出来但开关是
+  关的。该 app 运行期间，提示说明在 Settings › Account 里崇云科技是一个自定义
+  provider，对话可以在模型选择器里挑模型，并且该 app 在 Use 之前会留在它当前的
+  路由上。
+- JSON/JSONC 配置编辑及其预览会拒绝格式错误的输入，而不是去编辑一个只解析了一
+  部分的文档。对象编辑和 VS Code 的模型组数组编辑在解析出错时不会改动原文件；
+  合法的注释和尾随逗号仍然受支持（`internal/edit`）。
+- 一个以 UTF-8 字节序标记开头的配置（PowerShell、记事本或某个通道切换器保存的
+  Windows `settings.json` 或 `config.toml`，#1534）会被不带这个标记地读取
+  （`edit.Read`），写入时则保留它（`WriteAtomic` 里的 `keepBOM`）：用户的文件
+  保留它被保存时的编码。这涵盖 `internal/edit` 写的每种格式（JSON/JSONC 及其
+  数组、TOML、YAML、env）；Codex 也能透过 BOM 读 TOML 文件，所以崇云科技不再拒绝
+  这样的文件。以别的方式读的文件用 `edit.TrimBOM` 去掉它（Claude Code 和 CC
+  Switch 的导入）。从 CRLF 文件里移除的一行会连同它的 `\r\n` 一起移除。
+- 用 ChatGPT 登录的 Codex 会留在它的登录旁边（`openai_base_url`），除非用户挑
+  崇云科技 API。崇云科技只有在 Codex app 持有那个活跃账号时才会成为它的
+  provider，而它对一个被持有的账号什么都不发：`/wham/usage` 说它不被允许，
+  而且它没有额度、也不在工作区超额之内（`codexHeld`，由 `provider.CodexUsedUp`
+  读）。在用量看不出这件事的地方（一个实验的门禁、一份预留、保留实验下 Team
+  套餐的超额），它也算被持有：动错了要花 ChatGPT 的钱，漏掉了每一轮都受影响。
+  一次失败读取后保留下来的读数，在它用完的窗口重新开始后就不再说被持有了；一个
+  没有窗口用完的持有会一直持续到下一次全新的读取。于是该 app 会失去它的
+  ChatGPT 状态（持久 thread、远程控制），所以仅仅一个 100% 的窗口（额度还能
+  过去的那种）不会移动它（`codex.out` 标记这次移动，而 Sync 会在账号有空间后
+  撤销它）。
+- 把一个字段从崇云科技的某个模型挪到另一个模型（agent 自己的选择器）不算 drift。
+  把它挪离崇云科技才算。
+- 一个在为空时跟随另一个字段的字段（`Follows`：Claude Code 的 tier，以及它主
+  模型上的 subagent）被 `Drift` 读成在那个字段的模型上。主模型在 Claude Code
+  自己的 `/model` 里被挪到崇云科技曾为某个 tier 设定的那个模型上，不算 drift
+  （#1050）。这个 tier 在这次移动和下一次移动中都保留那个模型作为它自己的
+  （stash 里的 `tier_own`），无论在新主模型上它本会跟随什么：fable 不跟随任何
+  不是 Fable 的模型，haiku 跟随 Haiku 上的 Claude 模型，被读成在跟随，并在下一次
+  移动时失去它们的模型（#2257）。
+- 一个被给了自己模型的 Claude Code tier 或它的 subagent，在主模型挪到那个模型
+  上、再挪走时都保留它（`claudeIn` 里的 `ownKey`），无论主模型是在崇云科技里挑的
+  还是在 Claude Code 的 `/model` 里挑的。为它们挑的"与模型相同"会让它们重新跟随。
+- 在本机的 Claude Desktop 位于崇云科技上时，Claude Code 的共享设置会得到
+  `CLAUDE_CODE_DISABLE_EXPLORE_INHERIT_CAP="1"`（`claudeIn` 里的 `writeExplore`，
+  [`claude.go`](../../internal/agent/claude.go)）。否则 Claude Code 2.1.295 的
+  Explore 继承上限会把 Desktop 的 `mythos-magpie` 兼容别名换成 Opus。这禁用的是
+  那个上限，不是所有 subagent 的模型选择。它在只有 Desktop 或旁边有已连接的
+  Claude Code 时生效，包括模型挑选和 Sync；WSL 孪生体不会得到它。用户已有的
+  值，包括空字符串，保留。stash（`claude.explore_inherit_cap`）只标记崇云科技的
+  值：把 Claude Code 挪离崇云科技时，在 Desktop 还在的情况下它留着；把 Desktop
+  挪走时，只有在用户没改过它的情况下才移除。由于这个设置文件是共享的，其他
+  读到它的 Claude Code session 在 Desktop 连接期间也会看到这个标记。
+- Claude Code 的 tier 和 subagent 模型（用户为自己的 endpoint 设置的，
+  `claudeOwnEnv`）在崇云科技接线时连同那个 endpoint 和 token 一起被 stash，
+  在崇云科技退出时（通过断开或通过 Claude Code 自己的模型）一起回来（#1050）。
+  它们在环境里的主模型也一样（`ANTHROPIC_MODEL`，在
+  `CLAUDE_CODE_USE_BEDROCK` 旁边对应一个 Bedrock 模型 id），崇云科技在接线期间会
+  把它摘掉，因为它比 `/model` 里的挑选优先。
+- Claude Code 的 auto mode 字段（`auto_mode`，
+  [`claude.go`](../../internal/agent/claude.go) 里的 `claudeAutoModeEnv`）是
+  `CLAUDE_CODE_AUTO_MODE_MODEL`，也就是 Claude Code 2.1.302 用来判定每个动作的
+  客户端 auto mode 分类器模型（Linka 报告）。它对服务端的 auto mode 毫无
+  影响，而 Anthropic 为账号配置的分类器模型排在它前面。没有设置时，Claude Code
+  挑自己的（sonnet tier 的模型，否则是 Sonnet），所以它不跟随任何字段，也不是
+  `Follows`。它只在 Claude Code 路由经过崇云科技时被设置，只会设成崇云科技的
+  某个模型，像其他模型键那样写成短横线形式，而且绝不会设成 Sonnet 5.5、Opus 5.5
+  或 Opus 5（`claudeNoClassifier`）——Claude Code 2.1.303 在那里会拒绝并换成它
+  自己挑的。崇云科技路由 Claude Code 之前用户就有的值被 stash 起来，并随它们的
+  tier 一起摘掉（`claudeOwnEnv`），在崇云科技退出时回来，除非他们之后又设了
+  一个；崇云科技自己的值（stash 里的 `claude.auto_mode_model`，或崇云科技任意
+  一个模型）那时会被移除，而接线期间用户设的值不动。Claude Code 边走边读它，
+  所以它是 Quiet 的，不需要重启。
+- Claude Code 的 provider 开关（`agentenv.ClaudeProviders`：
+  `CLAUDE_CODE_USE_BEDROCK`、`_VERTEX`、`_FOUNDRY`、`_ANTHROPIC_AWS`、
+  `_ANTHROPIC_GOOGLE_CLOUD`、`_MANTLE`，Claude Code 2.1.300）把它送到那个云
+  自己的 endpoint 并把 `ANTHROPIC_BASE_URL` 传过去，所以只要有一个开着，它就
+  永远到不了崇云科技（jw1dev 报告：Bedrock 拒绝了崇云科技的模型，而崇云科技什么
+  都没显示）。Claude Code 把 1、true、yes 和 on 都读成开（`claudeSwitchOn`）。在
+  崇云科技所写的设置里开着的那个，会在每个写入接线的路径上被摘掉
+  （`writeTiers` 和 `Sync` 里的 `dropClouds`），它的原始值被 stash
+  （`claude.cloud.<var>`，WSL 孪生体则在该发行版的 id 下），在崇云科技退出时按
+  原样放回（`unroute` 里的 `putClouds`），除非用户之后又设过。那个云自己的变量
+  （`AWS_*`、`ANTHROPIC_VERTEX_PROJECT_ID` 等）和关着的开关保留。在崇云科技不写
+  它的地方，Check 会点名那个变量、那个云和它的位置（`claudeCloud`）：托管设置
+  （它们胜过用户的）；`~/.claude.json` 的 env，在用户设置之下；以及对本机的
+  Claude Code 来说，登录 shell 的环境（`proc.LoginEnv`，只读，从不在崇云科技里
+  设置），在每个设置文件之下。项目的 `.claude/settings.json` 不读：崇云科技不知道
+  Claude Code 在哪些目录里运行。T3 Code 的 Check 对用户的 `~/.claude` 设置也
+  说同样的事，那些设置会被盖在它的崇云科技实例的环境之上，而开在这个实例上的
+  开关会在它下一次写入时生效；那个 Check 首先说明该实例的 `ANTHROPIC_BASE_URL`
+  是否还连得到网关（`t3EnvOf`），就像每个 agent 的 Check 一样，所以端口迁移也会
+  重写它。drift 的细节通过 `tNotice` 显示在这一行的小字和它的标签上
+  （`claude-cloud-drift.test.cjs`）。Claude Desktop 的 Code 标签页带着
+  `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 运行，在它之下 Claude Code 忽略设置
+  文件里的开关，所以 Desktop 两者都不需要。
+- Claude Code 的登录（`login`）是崇云科技的 key（`""`，默认）或 claude.ai
+  （`claudeai`）。claude.ai 会把 `ANTHROPIC_AUTH_TOKEN` 写成空，Claude Code 把它
+  读成没有 key：它保留自己的 claude.ai 登录并把它发给崇云科技，而崇云科技从不
+  把它转交出去（网关里的 `claudeSignIn`）。之后每次写入都让 token 保持为空
+  （`wiredKey`），而手动放在那里的网关自己的 caller key 会被当成崇云科技的，
+  Check 和模型挑选都一样，并按用户留下的样子保留（`keyHolds`，#2545）；网关会
+  拒绝的 key 会被 Check 报告出来并被接线覆盖，崇云科技自己造出来的共享 key
+  （`access.Default`）也一样，在共享关闭之后——崇云科技自己的 key，尽管网关还
+  接受它。它只在网关接受任何 key 的地方被提供（`gwKey() == gateway.Token`：
+  回环、镜像过来的 WSL 发行版），而在崇云科技在网络上共享时从 NAT 下的发行版
+  则不提供，那里只有共享 key 进得来。这个选择被 stash，所以它能活过断开和端口
+  迁移。只有紧挨着崇云科技最后写入的地址时，一个空 token 才算崇云科技的
+  （stash 里的 `claude.wired_at`，Rewire 会把它带到新端口，`keyOurs`）：模型回到
+  Claude Code 自己的模型时，用户自己那个带空 token 的 endpoint 仍然归用户。
+- Claude Code 的 auto mode 评审（`CLAUDE_CODE_AUTO_MODE_SERVER`，
+  [`claude.go`](../../internal/agent/claude.go) 里的 `claudeReviewEnv`）在 Claude
+  Code 路由经过崇云科技、且它在那里能到达的模型没有一个是 Anthropic 评审的对象
+  时写成 `"0"`（`claudeReviewed`，由 `gateway.AutoModeReviewed` 判定）：被展示
+  给它的那些模型（以及 Desktop 在崇云科技上时展示给它的）、一个被展示的组的
+  成员、那些 provider 的 fallback，以及它被设成的那些模型，每一个都按它解析到
+  的 provider（或组，或 fallback）来判定，就像网关判定它的请求那样，所以一个
+  单独位于 Copilot 或 Kiro 上的 Claude 模型会写成 `"0"`，而一个崇云科技不知道的
+  名字按名字判定（`TestClaudeReviewedJudgesTheSetModelWhereItGoes`）。关掉时，它
+  从一开始就本地分类，就像在一个不回答的网关后面本来那样，也不会出现"因为你的
+  请求走 127.0.0.1:3425 所以不符合条件"的提示（1EFLOPS 报告）。任何被评审的模型
+  都让它保持未设置，因为 `/model` 可以把 session 带过去；对 Claude Code 隐藏的
+  模型不算。它在每次设置模型和每次 `Sync` 时被重写，所以新增一个 Claude
+  provider 会把评审重新打开。崇云科技的值单独存在 stash 里
+  （`claude.auto_mode_server`），用户自己的值不动，并在 Claude Code 被挪离崇云
+  科技时移除（`desktopOnly`、`unroute`）。T3 Code 的崇云科技实例通过自己的环境
+  在网关上运行 Claude Code，它在那里按自己列出的模型带着同样的 `"0"`
+  （[`t3code.go`](../../internal/agent/t3code.go) 里的 `t3InstanceJSON`）；用户
+  `~/.claude` 设置里的值排在它后面。
+- Claude Code 对每个它不认识的模型采用同一个窗口（`CLAUDE_CODE_MAX_CONTEXT_TOKENS`，
+  [`claude.go`](../../internal/agent/claude.go) 里的 `claudeContextEnv`）。只有
+  Claude Code 位于崇云科技上时，它被告知自己主模型的窗口（`claudeWindow`）。在
+  Claude Desktop 也位于崇云科技上时，它的 Code 标签页用同一份
+  `~/.claude/settings.json` 运行 Claude Code，带着 Desktop 列出的每个模型，所以
+  崇云科技把那些模型和 Claude Code 自己模型里最大的窗口告诉它，并用
+  `modelSettings.<id>.autoCompactWindow` 把每个低于它的模型限制在自己的窗口
+  （[`claude_budget.go`](../../internal/agent/claude_budget.go) 里的 `claudePlan`，
+  #2025：最少的那个把一个 1M 模型限制到 131K）。一个以 `[1m]` id 传进来的模型
+  （Desktop 的，在 `DesktopLongest` 下，或 Claude Code 自己的）也按它的 1M 计，
+  所以当 Claude Code 不再接受这个 id 表示 1M 时（1M beta 曾经被拒一次，
+  `CLAUDE_CODE_DISABLE_1M_CONTEXT`），它仍然跑在 1M 上；而如果不算，一个 1M 模型
+  旁边有 272K 的 GPT 时会被告知 272K（dumplings 报告）。Claude Code 2.1.296
+  按它拿到的 id（转小写且不含 `[1m]`）匹配那个键；它排在顶层 `autoCompactWindow`
+  之前，后者服务于没有专属项的模型。`CLAUDE_CODE_AUTO_COMPACT_WINDOW` 会优先于
+  两者，所以在这个模式下崇云科技的工作窗口改放进顶层 `autoCompactWindow`，而
+  只有当某个模型的窗口或它自己的阈值与没有它时会跑的值不同，才写一个条目。
+  崇云科技的条目和顶层值被 stash（`claude.model_budgets`、
+  `claude.compact_default`），并在 Desktop 离开崇云科技时移除；用户自己的条目、
+  顶层值和变量保留，用户越过其模型窗口的条目（或 `auto`）会把最大的限制到那个
+  窗口，而用户自己的 `CLAUDE_CODE_AUTO_COMPACT_WINDOW` 存在时，最小的窗口像
+  以前一样被告知。
+- Claude Code 通过 `CLAUDE_CODE_MODEL_CAPABILITIES` 得知崇云科技每个模型能做什么
+  （[`claude.go`](../../internal/agent/claude.go) 里的 `claudeCapsEnv`、
+  `claudeCapabilities`）：对展示给它的那些模型是
+  `<model>=effort[,xhigh_effort][,max_effort]`，而在 Claude Desktop 位于崇云科技
+  上时，也包括 Desktop 的 Code 标签页递给它的 `mythos-magpie-<number>` id。
+  Claude Code 认识的 Claude 模型不会得到比 Claude Code 自己给的更多（Opus 和
+  Sonnet 4.6：没有 xhigh），没有已知等级的模型根本不会被点名。一个在没有 xhigh
+  时就能到 max 的模型（GLM-5.3 的 low/high/max、DeepSeek V4 的 high/max）也会被
+  说成有 xhigh：网关为它在 max 上跑 xhigh（`fitEffort`），而 Claude Code 2.1.299
+  没有 `xhigh_effort` 就会把 Ultracode 关掉（"Ultracode isn't available on …"），
+  在 Desktop 里那就是 Ultracode 等级和动态 workflow（leesunrise2364 报告；
+  `TestClaudeModelCapabilities`）。用户自己的值不动。
+- MiniMax Code 的模型 ref 整体只允许一个斜杠（一个 SubAgent 的 `model` 必须匹配
+  `^[^/\s]+\/[^/\s]+$`，#1387），而崇云科技在那里的 ref 是
+  `custom_provider:magpie/<model>`。所以 `custom_provider.magpie` 下的模型在写入时
+  用 `~` 代替它目录 id 里的每个斜杠（`bb-codex~gpt-6.1-sol`，
+  `provider.FlatID`），但只在这种写法恰好对应一个被提供的 id 时
+  （`provider.Flattened`）；网关会把它还原。一个更老的崇云科技写过的配置会在下一次
+  sync 时迁移过来：用户在某个模型上的键转到它的新键，`defaultModel`、
+  `defaultLightModel` 和 `memory.captureModel`/`consolidationModel` 跟着走
+  （`mcodeRefs`），而带斜杠的那个键保留但被关掉（`enabled: false`），这样在它上面
+  开始的 session 仍能恢复。崇云科技绝不改用户自己的 `agents/<name>/agent.md`。
+  没有发现别的 agent 有这个限制（[`minimax.go`](../../internal/agent/minimax.go)）。
+- Claude Code 的 `/model` 列表（它 settings.json 里的 `modelPicker`）是崇云科技的，
+  只要它在 stash 里有标记（`claude.model_picker`，WSL 发行版则是
+  `claude@wsl:<distro>.model_picker`），或者每一行的描述都以 "via magpie" 结尾
+  ——崇云科技写的每一行都是这样（[`claude.go`](../../internal/agent/claude.go) 里的
+  `magpiesPicker`）。崇云科技在每次设置模型和每次 `Sync` 时把自己的列表保持最新，
+  并在 Claude Code 被挪离崇云科技时把它移除；用户自己写的列表不动。这个指纹
+  也覆盖那些标记被更老的崇云科技的 stash 弄丢了的列表，否则它们会一直缺少此后
+  新增的每个模型（#2046）。
+- Claude Code 2.1.296 把版本号里带点的 Claude 模型（`relay/claude-opus-4.6-us`）
+  读成 Claude Opus 4：一条退役警告、预算思考、32000 输出 token、没有 effort。
+  用短横线（`relay/claude-opus-4-6-us`）它就认识这个模型（misteer_ti 报告）。
+  所以崇云科技写进它设置的每个模型（`model`、各个 tier 的 env、
+  `ANTHROPIC_SMALL_FAST_MODEL`、`CLAUDE_CODE_SUBAGENT_MODEL`、
+  `CLAUDE_CODE_AUTO_MODE_MODEL`、`modelPicker`）、T3 Code 的 Claude slug 和 Claude
+  Desktop 的 Code 标签页 id（`claudeLooking`）都把带点的 Claude 版本号写成短横线
+  形式（`provider.ClaudeSpelled`），但只在这种写法恰好对应一个被提供的 id 时。
+  一个带推理等级列给 Desktop 的 Claude 模型给出的形式是
+  `magpie-<n>.anthropic.<model>`，它的带点版本号也写成短横线（`claudeModel`：
+  Copilot 的 `claude-opus-5.5` 是 `…anthropic.claude-opus-5-5`，Claude Code 认识它；
+  它以前是 `mythos-magpie-<n>`，一个未知模型，而 Haiku 4.5 得到了 Copilot 拒绝的
+  一个 effort，#1819）；对它的请求由 `<n>` 单独提供（`aliased`），所以这种写法
+  不必唯一。Mythos 在这里也算 Claude：Claude Code 用子串匹配 `claude-mythos-5-1`，
+  所以 `claude-mythos-5.1` 会被读成 Mythos 5。对那些键的每次读取都会把它取回
+  （`provider.ClaudeRead`：`claudeIn` 的 `env`、`claudeMain`、`claudeStandInAt`），
+  所以崇云科技的字段、应用状态和 Drift 都保持那个带点的 id。用户自己的值被
+  stash 起来并按原样还给用户。更老的崇云科技写成带点形式的值会在下一次 Sync 时
+  被重写。别的厂商的 id 永远不会被改写（[`claudedash.go`](../../internal/provider/claudedash.go)）。
+- Codex 的 "subagents" 字段是 `[agents] default_subagent_model`：只有当一个
+  subagent 的 lead 在 `spawn_agent` 里没有点名模型时，subagent 才从这个模型启动
+  （codex-rs `core/src/agent/child_config.rs`）。没有设置时，它不是"与模型相同"：
+  lead 仍可能点名另一个，所以 GUI 把它叫作 lead 的挑选，否则就是模型
+  （app.js 里的 `leadPicks`），它的标题指向 "subagent model" 字段。
+- Codex 的 "subagent model" 字段不往 Codex 的配置里写任何东西：它的 lead 在
+  `spawn_agent` 里点名每个 subagent 的模型，而 `[agents]` 无法推翻它。它是崇云
+  科技的设置（`settings.CodexSubagentModel`，
+  [`codex_subagent.go`](../../internal/provider/codex_subagent.go)），网关会把
+  subagent 的请求挪到它上面（见 [gateway routing](gateway-routing.md)）。它的选项
+  是 Codex 自己列表里显示的每个模型和路由组（`CatalogFor("codex")`，所以从它们
+  中移除或没被挑中的模型在这里也被排除），ChatGPT 账号排在前面（#1633：一个位于
+  chat provider 上的 lead 也希望它的 subagent 在那里）。一个由 ChatGPT 支撑的 lead
+  封存的 task 只能在 ChatGPT 账号上打开，所以当所设的那个模型属于另一个 provider
+  时，网关会让这样的 subagent 留在它自己的模型上。它的 setter 接受任何
+  `provider/model` 或 `group/<id>`，也接受崇云科技现在不提供的，所以放到另一台
+  电脑上的 profile 或备份仍然生效（`ApplyFields` 在第一个失败的 Set 处停下），并且
+  拒绝 Codex 自己的裸名字。
+- Claude Desktop 的 "subagent model" 字段（`subagent_model`，
+  [`claudedesktop.go`](../../internal/agent/claudedesktop.go) 里的
+  `desktopSubagentField`）不往 Desktop 的配置里写任何东西：Desktop 用
+  `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST=1` 运行它 Code 标签页的 Claude Code，
+  在它之下 Claude Code 会忽略设置文件 `env` 里的 `CLAUDE_CODE_SUBAGENT_MODEL`、
+  `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` 和各个 tier 变量（"Ignoring … this session's
+  provider routing is managed by the host"，Claude Code 2.1.295），而 Desktop 为
+  Code 标签页构建的环境里没有它的键（Desktop 2.31226）。它是崇云科技的设置
+  （`settings.DesktopSubagentModel`，
+  [`desktop_subagent.go`](../../internal/provider/desktop_subagent.go)），网关会
+  把每个 subagent 的一轮挪到它上面（见 [gateway routing](gateway-routing.md)）。
+  它被标成和 Codex 的一样，所以 Agents 页面给它同样的方块。它的选项是 Desktop
+  列表显示的崇云科技模型和组（`viaMagpie("claude-desktop")`），在 Desktop 位于
+  崇云科技上时如此，和 tier 一样。被挑中的 Desktop 别名按它的目录 id 保留
+  （`DesktopCatalogID`）。和 Codex 的一样，它的 setter 接受任何 `provider/model`
+  或 `group/<id>`，也接受崇云科技现在不提供的，所以 profile 或备份仍然生效，并且
+  拒绝裸名字。它是 `Live` 的：网关在每次请求时读它。
+- Claude Desktop 的 "subagent effort"（`desktopSubagentEffortField`，
+  `settings.DesktopSubagentEffort`）同样是 Quiet 且 Live 的。默认值保留请求所要的
+  effort，包括关闭的思考；它绝不会另选一个默认值。被挑的等级与 subagent 模型
+  无关：没有挑模型、挑了同一个模型、挑了一个不可用的模型，都仍然采用那个
+  effort。接线期间，该字段提供所选模型的等级，或在它的模型是继承来的或不可用时
+  提供标准等级；被标成无推理的模型不提供任何等级。存下来的挑选能活过模型变更。
+  一个断开状态下的偏好可以在不连接 Desktop、也不显示重启建议的情况下保存或清除，
+  这样 profile 恢复和断开就能恢复连接前保存的值；重新连接会回到最后一次生效的
+  挑选。`subEffortTitle` 给 Desktop 一个和 Claude Code 相同的默认说明；Codex 的
+  默认含义不变。网关把每次尝试适配到它实际的模型上，并保留固定的组成员 effort
+  （见 [gateway routing](gateway-routing.md)）。
+- Claude Desktop 的 3p 模式跑在它自己的 userData 里（`Claude-3p`），那里的
+  `config.json`（Desktop 自己的设置，不是 `claude_desktop_config.json`）开头没有
+  `locale`，所以位于崇云科技上的 Desktop 用的是系统语言，而不是用 Anthropic 登录
+  时挑的语言（memory 和 Osal 报告）。把 Desktop 切到崇云科技时，会从登录
+  用户的 userData 的 `config.json`（`Claude`，Windows 上是 `%APPDATA%\Claude`，
+  取第一套而不是其他）里把那一个键 `locale` 复制到 `Claude-3p/config.json`，
+  当那个文件缺失或是一个不含它的 JSON 对象时（[`claudedesktop.go`](../../internal/agent/claudedesktop.go)
+  里的 `desktopCarryLocale`）；只有 Desktop 为一个目录项取的名字会被带过去。
+  `Claude-3p` 里已有的、Desktop 自己的或手动设置的 `locale` 绝不会被覆盖写，
+  而那个文件的其他键也永远不会被写。关闭时，只有当该文件是崇云科技建的、且里面
+  除了带过来的语言什么都没有时才移除它（`TestClaudeDesktopCarriesTheLanguage`、
+  `TestClaudeDesktopKeepsThe3pLanguage`、`TestClaudeDesktopUserEditsThenReapply`）。
+  Desktop 只在它的构建打包了那个目录项时才显示该语言（2.7032 有 11 个，没有中文）。
+- Claude Desktop 按它自己的目录（"Opus 5.5"）给带推理等级的 Claude 模型命名，
+  而不是按崇云科技列出的 `display_name`，因为崇云科技把它列成
+  `magpie-<number>.anthropic.<model>` 以保住它的 effort 选择器
+  （[`desktop.go`](../../internal/gateway/desktop.go) 里的 `claudeLooking`）。于是
+  同一个模型来自两个 provider 的行，在 Desktop 菜单里只差那个编号，所以 provider
+  编辑器把它显示在模型的小标签上（[`providers.go`](../../internal/gui/providers.go)
+  里的 `gateway.DesktopNumber`、`desktopNumbers`，#2578）。这个小标签只在 Claude
+  Desktop 已安装且展示了该模型时才显示它。Desktop 展示的每个其他模型在小标签上
+  都没有编号：Desktop 按 `display_name` 命名它，而那个名字已经说明了 provider，
+  或者按它自己的 id 命名。
+- Codex 的 `spawn_agent` 工具只把它目录里的前五个模型告诉 lead（codex-rs
+  `MAX_SPAWN_AGENT_MODEL_OVERRIDES` in `child_config.rs`，
+  `spawn_agent_models_description`），Codex 自己的排在崇云科技之前，尽管它按名字
+  接受任何目录模型（`find_spawn_agent_model_name`）。所以一个 lead 可能把它的
+  subagent 放在崇云科技的模型之外（Gearclickist 报告）。网关把交给那个工具的
+  目录里其余的模型补进它的描述，放在 Codex 自己列表之后，最多 200 个
+  （[`codex_spawn_models.go`](../../internal/gateway/codex_spawn_models.go) 里的
+  `spawnAgentModels`）。一个能搜索工具的模型（`supports_search_tool`）不会在请求的
+  tools 里收到它：Codex 把它的多 agent V1 工具放在 `tool_search` 后面（codex-rs
+  `core/src/tools/spec_plan.rs`），而 lead 得到的是 Codex 放进对话并在每一轮重发的
+  `tool_search_output` 里的 `spawn_agent`，所以那一份也被加宽了。这段文本会随
+  prompt 一起送到上游，对 ChatGPT lead 连 OpenAI 也会送到，所以它的头部
+  （`spawnMore`）保持中立：既不提崇云科技，也不提 Codex 的上限。在 `CodexPath`
+  处它是 Codex 自己列出的模型减去隐藏的那些，然后是 `CodexListed`，除非 Codex 被
+  限制为自己。在 `/v1` 处它是该 key 的额度下的 `CodexCatalog`。一个由 ChatGPT
+  后端以多 agent V2 回答的 lead 会为 ChatGPT 账号封存它的 subagent 的 task
+  （#619），所以它只得到 Codex 自己的模型。Codex 放进上下文的模型目录
+  （`model_catalog_in_context`，开发中，默认关闭）同样上限五个，也不加宽。
+- Snow CLI 一次只跑一个 profile（`~/.snow` 或 `$SNOW_CONFIG_DIR` 下的
+  `profiles/<name>.json`，名字记在 `active-profile.json` 里），并在每次启动时把
+  当前那个复制成 `config.json`，`snow --ask` 也一样
+  （[`snow.go`](../../internal/agent/snow.go)）。崇云科技写一个 `magpie` profile、
+  把它设为当前那个，并自己把它复制成 `config.json`，这样已经在跑的 Snow 和 Snow
+  App 的 "Sync Snow CLI API config" 看到的是同一个。它由用户当时所在的 profile
+  生成，保留他们的设置，去掉它的 OAuth 登录。那个 profile 的一个视觉模型只有在
+  带着自己的 endpoint 和 key 时才一起带上（`snowOwnVision`），因为用 profile 上的
+  那个现在会走网关。`maxContextTokens`、`maxTokens` 和 `supportsVision` 跟着目录里
+  的模型走（`snowSynced`；`supportsVision` 像给每个 agent 一样给出，在崇云科技的
+  Vision 描述图片期间为真）；崇云科技最后写入的这些值被 stash，而用户此后在 Snow
+  自己的设置里改过的那个，在后续的挑选和 sync 中保留。小模型字段是崇云科技
+  profile 的 `basicModel`，Snow 用于摘要、压缩和文件搜索的轻量模型：跟随主模型时
+  为空，一个经由崇云科技的自有模型在换主模型和 sync 之后仍然保留；在用户自己的
+  profile 上它什么都不提供并被隐藏。思考字段是崇云科技 profile 的 `chatThinking`
+  （`{enabled: true, reasoning_effort}`），是 Snow 在对话协议上唯一读的思考设置；
+  为空表示删除它，即 Snow 的默认，也就是发送关闭的思考。用户从自己的 profile
+  带过来的 chatThinking 会被展示，不会被覆盖写。他们当时所在的 profile（或者没有
+  `active-profile.json` 的情况）以及他们自己的一个 `magpie.json` 被 stash 起来，
+  并在断开时放回。profile 出现之前的 Snow（只有 `config.json`）会得到 Snow 自己
+  会为它生成的 `default.json`，这样它下次启动就不会拿崇云科技的去替代用户的。挑中
+  用户另一个 profile 的模型会把 Snow 切到那个 profile。在崇云科技的 profile 上，
+  一个既不是经由崇云科技的模型、也不是用户某个 profile 的模型的值会被拒绝并且
+  什么也不改（#1457：`chongyun snow --help` 过去会把崇云科技摘掉，并把 `--help`
+  写成它退回的那个 profile 的模型）。出于同样的理由，Gemini CLI 的 auth 字段会在
+  取消路由之前拒绝一个它不认识的 auth。在 CLI 上，任何命令或 agent 之后的 `-h`/
+  `--help` 只打印用法，在 `run` 读取或移动任何东西之前，而且给 `chongyun <agent> …`
+  的任何其他 flag 都会被拒绝（`help_cli.go`；`TestHelpOnEveryCommandDoesNothing`
+  遍历 `run` 的 switch 和每个 agent）。
+- omp 的 `config.yml` 里的 `enabledModels` 是它把默认角色绑定的列表：不在其中的
+  模型不会被使用，无论 `modelRoles.default` 怎么说（#1769）。所以为默认角色挑的
+  模型会被加进那个存在的、且还没有按名字或按 omp 的某个 glob（`*` 不跨 `/`，如同
+  `Bun.Glob`）收进它的列表；一旦 `config.yml` 里没有任何东西在崇云科技上，它那些
+  普通的 `magpie/…` 条目就会被摘掉（空掉的列表被删除，绝不留下 `[]`）；一个被
+  改名的 provider 的条目会被改名一次，目录限定的条目不动
+  （[`omp_scope.go`](../../internal/agent/omp_scope.go) 里的 `ompScope*`）。没有
+  列表就没有变化：omp 于是使用每个模型。一个把默认角色的模型排除在外的列表就是
+  drift，Reapply 会修好它。
+- Pi 的 `settings.json`（以及 OmO 和 Prime Agent 的，`piLike`）里的
+  `enabledModels` 是新 session 开始时用的 Ctrl+P 列表。一个被挑了但列表没收进去
+  的模型会被加上（[`pi.go`](../../internal/agent/pi.go) 里的 `piScopeWith`），而
+  一个被改名的 provider 的 `magpie/<old>/` 条目会跟着改名，glob 或思考等级也包括
+  在内，刚被这次挑选加进去的那份副本被丢掉（[`rename.go`](../../internal/agent/rename.go)
+  里的 `renameRefList`，#1919，`TestPiEnabledModelsFollowRename`）。用户的其他条目
+  保留；一个没有提到该 provider 任何模型的列表不会被重写。
+- 在目录同步之后，Pi 的（以及它各分支的）、StepCode 的或 omp 的 `enabledModels`
+  里，一个直接点名崇云科技某个模型（不是 glob；思考等级会被读掉）而该模型崇云
+  科技已不再提供给该 agent 的条目会被摘掉：Pi 过去在每次启动时为每一条警告
+  "No models match pattern"（#2055）。它可能是用户自己的，所以它被记在
+  `stash.json`（`<agent>.scope.gone`）里，并在该模型重新被提供时回到列表末尾；
+  一次改名也会移动这些被记下的条目，而断开会忘掉它们。glob、其他 provider 的条目
+  和 omp 的目录限定条目保留。一个被留空的列表会被删除，并在它的条目回来时带着
+  这期间挑的模型重新建好；用户自己删掉的列表不会。当 agent 文件里崇云科技的模型
+  列表读不出来时，什么都不会被摘掉（[`scope_gone.go`](../../internal/agent/scope_gone.go)，
+  `TestPiEnabledModelsLoseDeselected`）。对 StepCode 来说，接线状态里最后写入的
+  范围会跟着走，所以断开时仍会把用户自己的列表放回去。
+- 一个 agent 写成本是它自己 provider 的模型的值，绝不会被当成崇云科技的一个，
+  即使崇云科技有同名的 provider（`Spelled`，#835）。
+- 反过来，一个点名崇云科技某个模型而该 agent 并没有被展示它（因为
+  `chongyun visible` 把它藏起来了，或某个模型没为它勾选）、或者点名崇云科技某个
+  provider 的一个不在它列表上的模型（一个远端崇云科技的组在列表取回之后加进去
+  的），或者点名一个崇云科技没有对应组的 `group/…`，都会被 `Spell` 拒绝
+  （`notOffered`），什么都不会变。它过去会被写成 agent 自己的：Pi 把
+  `remote/group/smart` 读成它自己的 provider `remote` 和模型 `group/smart`，
+  于是被从崇云科技里摘了出去（#2376）。一个被展示给该 agent、但某个字段提供的
+  比它少的模型（Claude Desktop 的 tier）仍然会被采用，一个其 provider 部分是该
+  agent 自己的某个模型所走的值也一样（Pi 里的 `openai/…`）
+  （[`agent.go`](../../internal/agent/agent.go)，
+  `TestSpellRefusesMagpieModelNotOffered`）。
+- 对 `unwired` 执行 `Reapply` 会重新设置每个位于崇云科技某个模型上的字段，以及
+  每个被设成崇云科技本身的字段（`magpieID`，`Wired` 也按它判断）：Claude Desktop
+  的 drift 会显示在某个 tier 上，而它的 `provider` 字段负责把网关写回去
+  （dumplings 报告）。Claude Desktop 的 `Check` 只判断它上次运行所在的那套
+  目录（`desktopRead`，由 `desktopdir.LastRun` 给出），一次都没运行时判断所有套：
+  崇云科技会写 MSIX 安装的两套，而 2.31226 读的是真正的
+  `%LOCALAPPDATA%\Claude-3p`，所以包里那份被清空并不表示 Desktop 离开了崇云科技。
+- `unreachable` 从不设置任何东西：配置是对的，而页面上的小标签只说明那里必须
+  有什么在监听。例外是一个 WSL 发行版以前到达 Windows 的地址（`distro.Was`，
+  保存在 `wsl.json` 里），而它现在到达 Windows 用的是另一个地址：小标签会给出
+  前一个，而 `Reapply` 会把配置挪到那里（`Agent.move`，Codex 的
+  `codexMoveGateway`）。没有任何发行版被看到过的地址是用户自己的，永远不会被移动。
+  未知答案（还没探测过）和网关在回环上也停掉的情况都不是 drift。测试在
+  `TestMain` 里给 `reachProbe` 打桩。
+- `proxied`（Muma102kMichael 报告：崇云科技接管 Codex 之后每个项目、每个新对话
+  都是 502）指的是本机的 Codex 把它的请求发给网关时经过了一个不转发它们的代理，
+  而网关在这里是有回答的（[`codex_proxy.go`](../../internal/agent/codex_proxy.go)）。
+  Codex 的 reqwest 取 `HTTP_PROXY`，否则取系统对 `http://` 的代理（只有 macOS 的
+  HTTP 条目，绝不是它的 HTTPS 或 SOCKS 那个；Windows 的 `ProxyServer` 只有在它
+  对所有协议都是同一个地址时），否则取 `ALL_PROXY`，并且只让 `NO_PROXY` 里一个
+  精确的 IP 或一段 CIDR 把 127.0.0.1 排除在外（在 Windows 上，没有 `NO_PROXY` 时
+  用去掉了 `*.` 的旁路列表）：`127.*` 和 `localhost` 不行，macOS 的例外也不被
+  读取。带上 `[features] respect_system_proxy` 时它只问系统，自行匹配它的列表，
+  通配符和 `<local>` 也包括在内，并在那里没有设代理时直连；只有一个 macOS SOCKS
+  条目时它用不了，于是改取 `HTTP_PROXY`/`ALL_PROXY`（codex-rs `outbound_proxy`；
+  用 codex-cli 0.162.1 试过）。它的 reqwest 没有 SOCKS，所以一个 `socks5://` 代理
+  会被当成 HTTP 代理来说话，探测也一样。环境是 Codex 的：登录 shell 的 `*_PROXY`
+  （`proc.LoginEnv`，终端里的 Codex 和 ChatGPT app 都有；只有导出的那些，因为探测
+  是向一个子 `/bin/sh` 问它们的，所以 fish 里没导出的通用 `http_proxy` 不算，
+  #2627）优先于崇云科技自己的，而从 Dock 启动的崇云科技没有那些（liu_dyj 报告：
+  profile 里的 `NO_PROXY=127.0.0.1`，或者一个没有 HTTP 条目的 macOS 代理，会在
+  Codex 直连时发出警告）。`codexProxyFor` 用同样的方式算出那个代理，而穿过它的
+  `GET /` 必须以崇云科技的样子返回（`proxyProbe`），像 `reachable` 那样被尝试。
+  它的小标签像 `unreachable` 的那样说明怎么修，点名那个代理以及它是从哪个变量读
+  来的，`http_proxy` 或 `HTTP_PROXY` 照原样（`Addr`、`Detail`），通过
+  `netproxy.Redact` 处理，不带它的用户名和密码（#1886），而探测是整个穿过去的，
+  那个对话框里有从崇云科技断开。崇云科技不请自写就写入的账号故障转移会等那次
+  探测（`codexProxyOK`），在代理不转发 Codex 时不会被写入，已经写入的会被移除。
+  测试在 `TestMain` 里给环境、系统代理和 `proxyProbe` 打桩。
+- 列举从不会启动一个停着的 WSL 发行版。一个停着的发行版的 agent 显示上次在那里
+  看到的东西（`asleep`，`wsl.json`）；设置它的一个字段会写入它的文件，这会启动
+  那个发行版。
+- Codex 的登录（`login`）是 ChatGPT（`""`，默认）、Always ChatGPT（`chatgpt`）或
+  崇云科技 API（`api`）。用 ChatGPT 时，崇云科技的模型会加入 Codex 自己的模型，
+  就在登录旁边（`openai_base_url`）；而在 Codex app 持有 Codex 登录的那个 ChatGPT
+  账号时（`codexUsedUp`，`provider.CodexUsedUp`：OpenAI 不再允许该账号且它没有
+  剩余额度，仍在超额之内的工作区除外），崇云科技会取代成为 Codex 的 provider
+  （`codex.out`）：Codex app 在它持有的账号上什么都不发，包括一个崇云科技模型的
+  轮次（#540），而作为它自己的 provider，崇云科技已经越过了那条线。一个 100%
+  但还有额度的窗口不算，Codex 保持登录。Sync 会在账号有空间后把它放回登录旁边。
+  Always ChatGPT 永不这样：Codex 留在它的 ChatGPT 状态里，Codex app 可能一直不
+  发东西直到账号有空间，而 Codex CLI 的轮次仍通过 base URL 到达崇云科技，由它的
+  路由和其他账号来服务它们。用崇云科技 API 时，Codex 的 `getAuthStatus` 不返回
+  token（它的 provider 没有 `requires_openai_auth`），于是它的 Chrome 控制会拒绝；
+  这个选项的说明说请选 ChatGPT 以保留它（#1824）。在崇云科技是 Codex 的 provider
+  时（崇云科技 API，或 `codex.out`），`Joined` 报告 false，尽管 `codex.joined` 标记
+  还在，为 Sync 保留回头的路：Agents 那一行说 Codex 自己的模型会留在 `/model` 里
+  崇云科技模型旁边，而 ChatGPT 状态会阻止 Codex app 发送东西，只有 app 重启后
+  才离开那个状态（#2267，`TestCodexProviderIsNotJoined`）。一个从另一台机器到达
+  网关的 Codex（NAT 下的 WSL 发行版，或 `MAGPIE_ADDR` 固定在回环之外，
+  `onAnotherMachine(at.gw())`）被接成没有 ChatGPT 登录的那种（那里 `chatGPT()`
+  是 false）：绝不 joined 也不在登录旁边，因为在登录旁边它会把 ChatGPT token 发到
+  `/backend-api/codex`，而从那里网关只接受一个具名 key，于是每个请求都是 401
+  （#2145，`TestCodexBeyondLoopbackNotJoined`）。崇云科技是它的 provider，它发送
+  `gwKey()`，也就是局域网共享 key；挑中它自己某个模型的请求会直接按它的登录走
+  到 OpenAI。
+- 用 ChatGPT 登录但没连接的 Codex，只要在崇云科技里启用了更多它的 ChatGPT 账号，
+  仍然会拿到 `openai_base_url`（`failover`，stash `codex.failover`；以 CC Switch
+  镜像为 provider 时则是镜像的 `base_url` 和 `codex.mirror_failover`），这样它自己
+  账号没有额度的轮次就继续走到下一个——但对那种从另一台机器到达网关的 Codex 绝不
+  这样，在那条路上它只接受一个具名 key，故障转移过去的轮次会回来一个 401
+  （#2145，`TestCodexFailoverBeyondLoopbackNotWritten`）；Sync 会把它之前写过的移除。
+  那个 Codex 处于 `FailingOver`：不是 `Wired`，但它的请求经过崇云科技。Agents
+  那一行会说明这一点以及怎么关掉它（CLI 和 TUI 里的 `FailoverSaid`、
+  `/api/state` 里的 `failover`、GUI 里通往 Providers › Codex 的一个按钮），网关只
+  从 `/backend-api/codex/models` 把它自己的模型给它（`CodexOwnOnly`，由 main 设置
+  在 `gateway.CodexOwnOnly` 上；它的 ETag 带着 `provider.CodexOwnListTag`，而 Sync
+  会让一个没有它的 `models_cache.json` 变旧）。一个已连接的 WSL Codex 共用网关
+  这条路，所以只要有一个连着，每个 Codex 都拿到崇云科技的模型（#1385）。用户
+  手写的 base URL（#856）不是故障转移的，保持一个普通的未连接行。用户断开过的
+  Codex 在他们再次连接之前得不到故障转移。提供网关的那个 app 退出时会把故障转移
+  移除（`OnShutdown` 里的 `EndFailover`、`EndCodexFailover`），所以一个被留在自己
+  那边的 Codex 会直接去 OpenAI，而不是去重试一个已经没了的网关（Leon920717 报告）；
+  下次启动时的 Sync 会再写一次。Codex 的 app-server 在启动时读到了旧的 base URL
+  并保留它，而 `KeepCodexDaemonCurrent` 以崇云科技结束，所以在没有 codex session
+  用着它时 `EndCodexFailover` 会在那里重启它（`codexDaemonCheck`）；有 session 用着
+  时，它会留在那个已经没了的网关上，直到用户重启它（thisisvainxx 报告："重启动了好
+  几次"）。一个已连接的 Codex 在退出时保留崇云科技：它的模型是崇云科技的某个模型，
+  而把它自己的配置放回去是断开做的事。一个不以退出方式结束的崇云科技（被杀、崩溃、
+  `chongyun serve`）会把故障转移留在原处。
+- 一个 Codex thread 保留它启动时所在的 provider。当一个崇云科技模型在上面时，CC
+  Switch 的 provider 表也经过崇云科技（`takeTables`），并在 Codex 离开崇云科技时
+  拿回它们自己的 base URL（`giveTables`，stash `codex.tables`）。CC Switch 的
+  OpenAI 镜像（另一个 id 的表，`name = "OpenAI"`，`requires_openai_auth`，没有
+  `base_url`）不是被 `openai_base_url` 到达的，后者只把内置 provider 指向崇云
+  科技：在它上面开始又被重新打开的 thread 会直接去 ChatGPT，而 ChatGPT 拒绝了里面
+  挑的崇云科技模型，崇云科技从没看到这个请求（#1796）。当 Codex 通过 base URL
+  走向崇云科技时，`takeMirrors` 给每个这样的镜像把崇云科技的 ChatGPT 后端作为
+  它的 `base_url`（stash `codex.mirrors`），而 `giveMirrors` 又把它摘掉；一个被
+  某个 profile 点名的镜像，或者一个 `base_url` 之后被改过的镜像，保持原样。把
+  这些 thread 挪到另一个 provider 上是 Sessions 页面的 Move（#887）。
+- 一个 agent 的配置按已安装的那个版本能读的形式写，取自那个版本声明的东西，而不
+  是最新的。VSCodium 没有自己的 Copilot Chat，而 Marketplace 上最后一个
+  （0.48.1）没有 Custom Endpoint provider，只有 OpenAI Compatible（`customoai`，
+  #1014）。崇云科技从 `~/.vscode-oss/extensions` 下安装的 `github.copilot-chat`
+  包的 package.json 里读 provider 列表（`vscodeChatOf`）。当声明了
+  `customendpoint` 时它为自己的组写 `customendpoint`，只有 `customoai` 时就为
+  `customoai` 写，并把每个模型的窗口写成 `maxInputTokens` + `maxOutputTokens`，
+  把 token 写成 `x-api-key`（那个版本会丢掉 `requestHeaders` 里的 Authorization）。
+  扩展缺失或读不出来时保留 `customendpoint`。Sync 会重写为另一个 provider 写的
+  组，Check 也会报告它，正如它对一个既没声明 Copilot Chat 也没声明 provider 的
+  情况的处理。那个 Copilot Chat 只有在用个人 Copilot 套餐登录 GitHub 时才注册它的
+  provider，Notice 会说明这一点。
+- 调优过的设置只在用户点击时写入，绝不由 Sync 或 Connect 写入。那里的原值会被
+  stash 一次（`stash.json` 里的 `tune.<agent>.<knob>[.<model>]`），这样 Undo 能把
+  它放回去，或者把这个键拿掉（以及留空的 `modelSettings` 条目）。用户在点击之后
+  改过的值归用户：这时 Undo 只是忘掉这份 stash。一个排在设置之前的变量
+  （`CLAUDE_CODE_AUTO_COMPACT_WINDOW`、`FORCE_PROMPT_CACHING_5M`、
+  `CLAUDE_CODE_PROMPT_CACHE_TTL`、`CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL`，在
+  settings.json 的 `env` 里或崇云科技自己的 env 里）会被显示为 `locked`，Apply 会
+  拒绝，因为那样设置根本不会改变什么。Claude Code 在所设窗口和模型自己的窗口
+  中较小的那个上压缩（它的 `/autocompact` 写着 "capped to 200k by model"），所以
+  建议从那个开始，而一个不是 Claude 的模型在这里没有窗口（由崇云科技自己的压缩
+  接线为它服务）。Codex 的窗口是崇云科技的目录为它跑过的每个模型列出的那个
+  （标注的，或厂商的），而当 config.toml 里没有时，它现在按崇云科技告诉 Codex 的
+  那个跑（`provider.CompactFor`，否则是 agent 打开那一行里的 Long conversations，
+  由 `codexcat` 写入）；崇云科技某个窗口未知的模型，除了 1M（或用户自己更大的
+  值）之外不限制任何东西，绝不会按见过的最大 prompt 来限制（zhemu 报告：一个
+  1M 模型在 750K 时被提供了最多到 410K），而只有 Codex 自己的模型（在目录之外）
+  才保留 272K 或见过的最大 prompt（`codexWindow`，`TestTuneWindowsAreTheUsers`）。
+  建议只在重放能省下 3% 或更多时才改变一个值，而在最便宜的 1% 之内的窗口里取
+  最大的那个；有压缩计时的情况下，它绝不建议一个比现在压缩得更频繁的窗口，也就是
+  绝不让等待变长：在那些压缩不更频繁的窗口里取最便宜的，并在那些与它相差 3%
+  以内的（`sameCost`，与"完全改变"同一个门槛）里取压缩得最少的那个，两个压缩
+  一样频繁的取较大的。token 和秒数没有文件所测量的共同单位，所以建议不会按猜
+  出来的比率把一个换另一个；一个更便宜但等待更长的窗口会在这一行和选择器里带上
+  它的等待，由用户来选。每次压缩的等待按每个窗口都一样来取：文件只在你用的那个
+  窗口附近给压缩计时，太窄了，容不下它如何随 prompt 增长。token 按计费来权衡：
+  对 Claude 是缓存读 0.1、5 分钟写 1.25、小时写 2、输出 5；其他是读 0.1、写 1、
+  输出 8。
+- 一个 plugin 的 agent 就地写每个键（JSON、YAML 或 env），用户的注释和其他键保留。
+  `connect` 返回的一个对象或数组被当作它的 JSON 文本（`agentplug.keys`），所以它
+  按 plugin 给的顺序写入，而不是像 Go map 那样排序：Kilo 按键顺序列出它的 effort
+  变体（#1890，`TestPluggedKeepsPluginOrder`）。每个键在第一次写入前的内容被 stash
+  在 `plugin:<id>:<path>` 下，带着类型，而它自己的模型或断开会放回每个键并拿走
+  那些原本不存在的；文件绝不会被整体写入。一个抛异常或接管的 `connect` 什么都不
+  写，并说明原因。它的网关 key 是 `magpie-<id>`（`agentKeyAt`），用量按那个 key 或
+  按它的 `ua` 词来称呼它的请求（`usage.PluginAgents`）。它的 `agent.library`
+  （说明、`mcp` 连同 `mcpFormat`、skills）也给了它 Library 的那三样，由
+  `internal/library` 写，和任何 agent 的一样（[library](library.md)）；一个在
+  `agentplug.MCPFormats` 之外的 `mcpFormat`，或者一个没有 `mcpFormat` 的 `mcp`，
+  会让这个 plugin 无法加载。
+- StepCode 的配置根解析为一个绝对 `STEP_CODING_AGENT_DIR` 的父目录（agent 资源
+  目录与配置根不同；相对值被忽略），或者在原生环境下 home 下的
+  `STEPCODE_CONFIG_DIR`，默认是 `~/.stepcode`
+  （[`stepcode.go`](../../internal/agent/stepcode.go)）。在 StepCode 里项目配置覆盖
+  全局配置，但崇云科技只管理全局配置（`config.toml` 和 `models.json`）。检测
+  严格只用目录，通过 `agentDir`，以避免和 `PATH` 上 Smallstep 的裸 `step` 命令
+  冲突。接线做一次原子的双文件编辑（`models.json` 的 provider 块和 `config.toml`
+  的顶层默认值/范围），由 `stash.json` 兜底。`providers.magpie` 里的自定义字段
+  在 sync 期间保留，断开时原来的 provider 块会被恢复。一个被改名的 provider 的
+  `enabledModels` 里 `magpie/<old>/` 条目跟着它，glob 或思考等级也包括在内，为
+  断开记住的范围也跟着；用户的其他条目保留。断开恢复原来的默认值，保留用户自己的
+  原生改动和自定义范围编辑，并且只在为空时移除新建的文件。
+- MothX 的目录就是 `$MOTHX_DIR`（没有 `~`），否则 Windows 上是
+  `%APPDATA%\mothx`，否则是 `~/.mothx`；一个 WSL 发行版的是它的 `~/.mothx`
+  （[`mothx.go`](../../internal/agent/mothx.go)）。它的 `thinkingFormat` 默认是
+  `openai`，除非用户设了别的：为时，MothX 按模型 id 挑 Qwen 的
+  `enable_thinking`、DeepSeek 的 `thinking` 或 Doubao 的等级，而这些 id 对崇云科技
+  来说并不说明提供它们的厂商。MothX 的 `/model` 和 `/statusline … global` 会重写
+  整个文件，所以在那之后断开要拿走崇云科技的 provider、这次挑选，以及一个被留空
+  的 `providers`（MothX 会省略空的），其余保留。
+- Zoo Code 的 provider profile 存在 VS Code 的 secret storage 里，所以崇云科技为它
+  写一个设置文件（`magpie-import.json`，在 Zoo Code 的
+  `globalStorage/zoocodeorganization.zoo-code/settings` 里，不在崇云科技的目录里，
+  这样一次 sync 会保留用户挪过去的地址），并在 VS Code 的 `settings.json` 和每个
+  profile 的设置里把 Zoo Code 的 `zoo-code.autoImportSettingsPath` 指向它，用户自己
+  的路径被 stash 并在断开时放回（[`zoocode.go`](../../internal/agent/zoocode.go)）。
+  Zoo Code 每次启动都会导入它（`importSettingsFromPath`），把它合并到用户的 profile
+  之上，并让 `magpie` 成为当前那个。断开停止导入并删除该文件；已经导入的 profile
+  仍留在 Zoo Code 里，崇云科技到不了那里。
+- 一个 agent 通过它的配置文件、它的目录，或它在崇云科技 PATH 上的命令被检测到
+  （`Detected`）。那个 PATH 是登录 shell 的加上用户工具所在的目录
+  （`proc.UserPath`：`~/.local/bin`、npm 的各 prefix、Node nvm 的默认 alias 解析到的
+  位置（没指定时是装得最高的那个）、bun、Homebrew、……），所以一个终端找不到的
+  CLI 仍然能被找到并列出：装在一个终端已经不再使用的 Node 下的 npm 包。
+  `/api/agents/cli` 随后给出它在哪里（`path`），以及当登录 shell 的 PATH
+  （`proc.LoginPath`）缺它的目录时的 `offPath`，Agents 那一行会说 "Not on your
+  terminal's PATH"，它的提示会点名那个文件（悠悠哥 报告：Codex 0.162.1 被列出
+  时 PATH 上没有 codex，也没有 `~/.codex`）。未知的登录 PATH 什么都不说。另一个工具
+  也写的目录不算（`dirShared`）：Pi 的那个被 omp 用，`~/.copilot` 被 Copilot CLI 用
+  （GitHub Copilot 的 JetBrains 和 VS Code 插件也写它），Qoder 和 Qoder CN 的那个被
+  Qoder 的 JetBrains 插件填充，`~/.cursor` 被 Cursor CLI 用（Cursor 编辑器自己会
+  建它）（`TestCursorFolderFromTheEditorIsNotTheCLI`，@G_Z_Y 报告）；只有
+  `cli-config.json` 或 `cursor-agent` 才算 Cursor CLI。一个别的工具先写的配置文件，
+  只有在 `pathOwn` 说它是该 agent 的自己的时候才算：只装着 `enabledPlugins` 的
+  Qoder `settings.json` 是插件的（`qoderPluginOnly`；#1495，
+  `TestCopilotFolderFromAnIDEPluginIsNotTheCLI`、
+  `TestQoderSettingsFromAnIDEPluginIsNotTheCLI`）。Qoder app（桌面 app，它把
+  Qoder 的 CLI 作为自己的 agent 用同一个目录）通过它写在那里的
+  `.qoder-app-status.json` 找到（`sign`，`qoderApp`；#2138，`TestQoderAppIsQoder`），
+  因为它的 `settings.json` 也可能只是它自带的插件的 `enabledPlugins`。只有 GUI 和
+  `daemon install` 会这样扩大 PATH；`chongyun serve`、`web`、`tui` 和 CLI 保持它们
+  启动时的那个，所以一个 agent 的 CLI（`cliBin`，它的版本和 `omp` 的最大 effort 都
+  从那里读）在每个系统上都会在这些目录里找（`proc.FindTool`），而不只在 Windows
+  上（whqtian 报告：Ubuntu 上 `~/.bun/bin` 里的 omp 被读成没有版本，于是提供
+  了 xhigh 而不是 max；`TestOmpVersionOffPath`）。
+- 检测是按一个 agent 的目录走的，而卸载会留下那个目录，所以只靠它找到的 agent 会
+  显示为已不在（`CLIMissing`；#843、#2177、#2173）：它的 CLI 不在任何 PATH 上，
+  也不在 `proc.FindTool` 的任何目录里，更不在它自己的安装器放的地方
+  （`~/.claude/local`、`~/.codex/packages/standalone`、`~/.opencode/bin`、
+  Hermes 的 `hermes-agent` 检出目录），而且这里没有别的东西会读那个目录
+  （`cliHeld`）：它的桌面 app（`HasApp`）、编辑器的扩展
+  （`~/.<editor>/extensions/<id>-*`：`anthropic.claude-code`、`openai.chatgpt`、
+  `saoudrizwan.claude-dev`）、Mac 上的 Claude.app、OpenCode.app 和 Goose.app、
+  JetBrains IDE 的设置（它的 AI Assistant 的 agent 和 Cline 的插件）或 Zed 的
+  `external_agents`（它的 Claude Code 和 Codex 适配器）。在崇云科技分不清的地方
+  （每个共享目录，`cliShared`，在 Windows 上，那里的读者可能是 Store app、便携
+  编辑器，或者只有 shell profile 才设置的 PATH，#1482；以及那里一个被该 agent 的
+  某个桌面 app 读到的，`desktopApps`：DeepSeek Harness Desktop 可以装到任意目录
+  并把它的 `dsh.cmd` 放在用户挑的某个目录里，#2300、#2304；不在 Mac 上的 OpenCode
+  和 Goose、Gemini、一个用自己方式或用其他工具共享的命令名检测到的 agent、一个
+  没有安装命令但有 `cliOnly` 的 Hermes），它就从来不是"不在了"。GUI 里一个
+  "不在了"的行显示 "CLI not found" 并且不显示它的任何设置，也没有 Apply；而在连接
+  状态下它保留自己的开关和 Disconnect，并且在没有设置之后它折叠在 Not set up
+  下面。Get started 永远不提供它（`connectKind` 是 "no"）。TUI 把它排除，而
+  `chongyun ls` 说 "CLI not found"（`TestCLIMissing*`、
+  `agent-cli-missing.test.cjs`、`getting-started.test.cjs`）。
+- 测试从不碰真实机器。`TestMain` 使用 `testenv`，它把 HOME、USERPROFILE、XDG 目录
+  和 APPDATA 指向一个临时目录，清空 `agentenv.Vars`，并把钥匙串工具和 agent CLI 的
+  失败替身放到 PATH 上。agent 特有的副作用（Aside、Zed 钥匙串、Codex 的用量检查）
+  也在 `TestMain` 里被打桩。
+
+## 验证
+
+<a id="verification"></a>
 
 ```sh
 go test -tags nogui ./internal/agent -run '^TestStepCode'
@@ -144,30 +959,28 @@ node --test internal/gui/tests/context-tune.test.cjs
 node --test internal/gui/tests/agent-connect.test.cjs internal/gui/tests/agent-disconnect-preview.test.cjs internal/gui/tests/claude-signin.test.cjs internal/gui/tests/agent-failover.test.cjs internal/gui/tests/agent-proxied.test.cjs internal/gui/tests/plugin-agent.test.cjs
 ```
 
-## Lody import handoff
+## Lody 导入交接
 
-[`lody.go`](../../internal/agent/lody.go) detects Lody by its home folder
-(`~/.lody`, `~/.lody-oss`) only when it holds an entry Lody makes there
-(`workspace-catalog.json`, `loro-repo`, `agent-binaries` or
-`code-collab-v2`), so a bare folder of that name another tool made isn't
-Lody; by its Electron data folder under the OS's config folder (Lody, Lody
-OSS, Lody Nightly: `~/Library/Application Support`, `%APPDATA%`,
-`~/.config`); or by a macOS bundle whose id starts `ai.lody.` (the real app
-is `ai.lody.desktop`). A Windows or Linux install that has never been
-opened has no data folder yet and isn't shown. Its row opens
-`lody://provider/import?v=1&data=<base64url JSON>` with the Magpie envelope
-and seven runtime targets. Only loopback HTTP gateways are offered; the key
-is always the public attribution token `magpie-lody`, never a LAN secret.
-With `MAGPIE_ADDR` pinned beyond loopback there is no link: the row has no
-button, and `magpie lody add` says why and opens nothing
-(`TestLodyLinkCarriesNoSecret`). The OS chooses the installed Lody handler. A compatible Lody build must
-implement this import route.
+<a id="lody-import-handoff"></a>
 
-Lody asks which Providers to add, names them with `-magpie`, and writes only
-to the current desktop's local machine after confirmation. Magpie does not
-read or write Lody's private document store, select models there, or claim
-that opening the link completed the import. Lody exposes no public status
-reader: `Agent.Added` remains nil and the JSON row omits `added`. The GUI
-shows a confirmation hint for this unknown state; Cindy still reports its
-known true/false status. Reopening the link lets Lody handle duplicates.
-Bub requires its separately installed ACP plugin.
+[`lody.go`](../../internal/agent/lody.go) 通过它的 home 目录检测 Lody
+（`~/.lody`、`~/.lody-oss`），但只在那个目录里放着 Lody 建的某个条目时才这样
+（`workspace-catalog.json`、`loro-repo`、`agent-binaries` 或 `code-collab-v2`），
+所以另一个工具建的同名空目录不是 Lody；也可以通过 OS 配置目录下的 Electron 数据
+目录检测（Lody、Lody OSS、Lody Nightly：`~/Library/Application Support`、
+`%APPDATA%`、`~/.config`）；或者通过一个 id 以 `ai.lody.` 开头的 macOS bundle
+（真正的 app 是 `ai.lody.desktop`）。一个从未打开过的 Windows 或 Linux 安装还没有
+数据目录，不会被显示。它那一行打开
+`lody://provider/import?v=1&data=<base64url JSON>`，带着崇云科技的信封和七个
+运行时目标。只提供回环 HTTP 网关；key 始终是公开的归因 token `magpie-lody`，
+绝不会是局域网的机密。当 `MAGPIE_ADDR` 固定在回环之外时没有链接：那一行没有
+按钮，`chongyun lody add` 会说明原因并且什么都不打开
+（`TestLodyLinkCarriesNoSecret`）。由操作系统选择已安装的 Lody 处理器。一个兼容的
+Lody 构建必须实现这条导入路由。
+
+Lody 会问要添加哪些 Providers，用 `-magpie` 命名它们，并且只在用户确认之后才写到
+当前桌面版的本地机器上。崇云科技不读写 Lody 的私有文档存储，不在那里选择模型，
+也不声称打开链接就完成了导入。Lody 没有公开的状态读取器：`Agent.Added` 保持为
+nil，JSON 那一行省略 `added`。GUI 对这个未知状态显示一条确认提示；Cindy 仍会
+报告它已知的真/假状态。重新打开链接能让 Lody 处理重复项。Bub 需要它单独安装的
+ACP plugin。
