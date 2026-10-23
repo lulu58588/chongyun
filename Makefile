@@ -62,7 +62,11 @@ app: build
 	@mkdir -p starling.app/Contents/MacOS starling.app/Contents/Resources
 	@cp starling starling.app/Contents/MacOS/starling
 	@cp build/darwin/starling.icns starling.app/Contents/Resources/starling.icns
-	@cp build/darwin/Assets.car starling.app/Contents/Resources/Assets.car
+	@if [ -f build/darwin/Assets.car ]; then \
+		cp build/darwin/Assets.car starling.app/Contents/Resources/Assets.car; \
+	else \
+		echo "  (no Assets.car: macOS 26 falls back to starling.icns; build it with the full Xcode's actool)"; \
+	fi
 	@sed 's/@VERSION@/$(VERSION)/' build/darwin/Info.plist > starling.app/Contents/Info.plist
 	@echo "  starling.app"
 

@@ -599,8 +599,14 @@ func linuxOptions() application.LinuxOptions {
 // not the executable: two copies of starling on one config (one autostarted
 // from where it was first run, another from where it was put later) would
 // share the gateway's port and put two icons in the tray.
+//
+// The Mac used to be left out of this (it had its own reason to), which
+// showed: a copy in /Applications and the one autostarted at login both
+// ran, and the menu bar carried two of starling's icons. Wails does keep a
+// lock on the Mac, so the second launch hands over here as it does
+// elsewhere.
 func singleInstance(h *host) *application.SingleInstanceOptions {
-	if runtime.GOOS == "darwin" || !sessionBus() {
+	if !sessionBus() {
 		return nil
 	}
 	sum := sha256.Sum256([]byte(settings.Dir()))

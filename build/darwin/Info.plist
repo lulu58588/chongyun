@@ -21,6 +21,6 @@
 			<key>CFBundleURLSchemes</key><array><string>starling</string></array>
 		</dict>
 	</array>
-	<key>NSHumanReadableCopyright</key><string>yetone</string>
+	<key>NSHumanReadableCopyright</key><string>yetone · 崇云科技 (Chongyun Technology)</string>
 </dict>
 </plist>
