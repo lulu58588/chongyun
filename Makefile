@@ -46,6 +46,7 @@ cli:
 
 install:
 	go install -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" .
+	@sh scripts/sign_darwin.sh "$$(sh scripts/gobin_dir.sh)/starling"
 
 test:
 	go vet -tags "$(TAGS)" ./... && go test -tags "$(TAGS)" ./...
@@ -73,6 +74,7 @@ app: build
 	fi
 	@sed -e 's/@PLIST_VERSION@/$(PLIST_VERSION)/' -e 's/@BUILD_VERSION@/$(VERSION)/' \
 		build/darwin/Info.plist > starling.app/Contents/Info.plist
+	@sh scripts/sign_darwin.sh starling.app
 	@echo "  starling.app"
 
 icons:
