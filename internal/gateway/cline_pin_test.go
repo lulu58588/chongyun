@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
+	"github.com/tidwall/gjson"
 )
 
 // ClinePass's DeepSeek models are served by DeepSeek's own API alone when

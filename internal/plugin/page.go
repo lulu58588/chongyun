@@ -141,9 +141,9 @@ func Window(target string) (w *WindowSpec, only bool) {
 		Menu     string          `json:"menu"`
 	}
 	var pkg struct {
-		Main    string          `json:"main"`
-		Exports json.RawMessage `json:"exports"`
-		Starling  struct {
+		Main     string          `json:"main"`
+		Exports  json.RawMessage `json:"exports"`
+		Starling struct {
 			Page        *part    `json:"page"`
 			Panels      []part   `json:"panels"`
 			Actions     []part   `json:"actions"`

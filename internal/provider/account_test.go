@@ -489,7 +489,6 @@ func TestCopilotModelsWithoutEndpointsOnChat(t *testing.T) {
 	}
 }
 
-
 func TestLastRole(t *testing.T) {
 	for body, want := range map[string]string{
 		`{"messages":[{"role":"system"},{"role":"user"}]}`: "user",

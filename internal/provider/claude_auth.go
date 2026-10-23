@@ -105,4 +105,3 @@ func NoteClaudeSignInFailure(user, version, message string) {
 		}
 	}
 }
-

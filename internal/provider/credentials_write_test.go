@@ -52,7 +52,6 @@ func dueCodexAuth(t *testing.T) (path string, was []byte) {
 	return path, was
 }
 
-
 // The same for Claude Code's own .credentials.json, written when starling
 // switches the sign-in Claude Code is on: a write whose flush failed is
 // an error and leaves the file as it was.

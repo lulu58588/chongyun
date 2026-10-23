@@ -135,8 +135,8 @@ type pluginEntryJSON struct {
 	// listed; IsAgent is whether its package has one, said of one switched
 	// off too; InStarlingOnly is whether all it has runs in starling itself,
 	// middleware and an agent, no provider to sign in to
-	Agent        *pluginAgentJSON `json:"agent,omitempty"`
-	IsAgent      bool             `json:"isAgent,omitempty"`
+	Agent          *pluginAgentJSON `json:"agent,omitempty"`
+	IsAgent        bool             `json:"isAgent,omitempty"`
 	InStarlingOnly bool             `json:"inStarlingOnly,omitempty"`
 	// Page is the page it adds to the window (starling.page), said of one
 	// switched off too: what the row shows before it is turned on, with

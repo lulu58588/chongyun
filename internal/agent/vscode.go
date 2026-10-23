@@ -36,10 +36,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/appdir"
 	"github.com/lulu58588/starling/internal/edit"
 	"github.com/lulu58588/starling/internal/proc"
+	"github.com/tidwall/gjson"
 )
 
 // vscodeDefault is chat.defaultModel, a key with a dot in it, escaped for

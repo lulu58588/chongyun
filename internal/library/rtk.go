@@ -15,12 +15,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/pelletier/go-toml/v2"
 	"github.com/lulu58588/starling/internal/agent"
 	"github.com/lulu58588/starling/internal/appdir"
 	"github.com/lulu58588/starling/internal/edit"
 	"github.com/lulu58588/starling/internal/filememo"
 	"github.com/lulu58588/starling/internal/proc"
+	"github.com/pelletier/go-toml/v2"
 	"gopkg.in/yaml.v3"
 )
 

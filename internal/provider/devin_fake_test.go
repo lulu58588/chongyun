@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"testing"
-
 )
 
 // devinSigned is the CLI's own report, as `devin auth status` prints it.

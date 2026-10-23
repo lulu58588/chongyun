@@ -58,7 +58,7 @@ func TestAirAddsStarlingAgent(t *testing.T) {
 	}
 	cfg := filepath.Join(dir, "starling-opencode.json")
 	for k, v := range map[string]string{
-		"agent_servers.Goose.command":              "goose",
+		"agent_servers.Goose.command":                "goose",
 		"agent_servers.Starling.command":             "/opt/bin/opencode",
 		"agent_servers.Starling.args.0":              "acp",
 		"agent_servers.Starling.env.OPENCODE_CONFIG": cfg,
@@ -68,9 +68,9 @@ func TestAirAddsStarlingAgent(t *testing.T) {
 		}
 	}
 	for k, v := range map[string]string{
-		"model":                           "starling/fake/m1",
-		"small_model":                     "starling/fake/m1",
-		"enabled_providers":               `["starling"]`,
+		"model":                             "starling/fake/m1",
+		"small_model":                       "starling/fake/m1",
+		"enabled_providers":                 `["starling"]`,
 		"provider.starling.options.baseURL": gatewayV1(),
 		"provider.starling.options.apiKey":  "starling",
 		"provider.starling.npm":             "@ai-sdk/openai-compatible",

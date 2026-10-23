@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tidwall/gjson"
-	"github.com/tidwall/jsonc"
 	"github.com/lulu58588/starling/internal/edit"
 	"github.com/lulu58588/starling/internal/provider"
 	"github.com/lulu58588/starling/internal/usage"
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/jsonc"
 )
 
 // VS Code's chat: switched on, starling's group joins the user's in

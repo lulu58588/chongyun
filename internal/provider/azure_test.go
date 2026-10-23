@@ -169,4 +169,3 @@ func TestAzureModels(t *testing.T) {
 		t.Errorf("refused: %v", err)
 	}
 }
-

@@ -42,9 +42,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/catalog"
 	"github.com/lulu58588/starling/internal/edit"
+	"github.com/tidwall/gjson"
 )
 
 // zooImport is the setting naming the file Zoo Code imports at start-up,

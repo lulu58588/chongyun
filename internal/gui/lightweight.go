@@ -43,7 +43,7 @@ func (h *host) makeMain(url string) *application.WebviewWindow {
 	winOpts, winBg := windowChrome(cmp.Or(os.Getenv("STARLING_THEME"), settings.Load().Theme))
 	w := h.app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Name:             "main",
-		Title: "星鸣",
+		Title:            "星鸣",
 		URL:              url,
 		Width:            width,
 		Height:           height,

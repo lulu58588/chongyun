@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/edit"
 	"github.com/lulu58588/starling/internal/provider"
 	"github.com/lulu58588/starling/internal/usage"
+	"github.com/tidwall/gjson"
 )
 
 // zooCodeHere is Zoo Code in a VS Code User folder under home, the
@@ -63,7 +63,7 @@ func TestZooCode(t *testing.T) {
 	// a current profile that is one of apiConfigs, and a modelInfo with
 	// contextWindow and supportsPromptCache
 	for k, want := range map[string]string{
-		"providerProfiles.currentApiConfigName":                                        "starling",
+		"providerProfiles.currentApiConfigName":                                          "starling",
 		"providerProfiles.apiConfigs.starling.apiProvider":                               "openai",
 		"providerProfiles.apiConfigs.starling.openAiBaseUrl":                             gatewayV1(),
 		"providerProfiles.apiConfigs.starling.openAiApiKey":                              agentKey("zoo-code"),

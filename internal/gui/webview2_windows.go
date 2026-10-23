@@ -6,8 +6,8 @@ import (
 	"log"
 	"unsafe"
 
-	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/lulu58588/starling/internal/settings"
+	"github.com/wailsapp/wails/v3/pkg/application"
 	"golang.org/x/sys/windows"
 )
 

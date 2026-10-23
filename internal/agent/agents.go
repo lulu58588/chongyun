@@ -1559,4 +1559,3 @@ func crushAt(at place, path, data string) *Agent {
 var (
 	noticeGoose = newNotice("Goose loads its providers at start-up — quit and reopen Goose (and open goose sessions) to use starling's models.")
 )
-

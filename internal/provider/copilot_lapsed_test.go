@@ -193,8 +193,6 @@ func TestCopilotServedAgainClearsTheMark(t *testing.T) {
 	}
 }
 
-
-
 // The account's allowance read is GitHub's answer too: 401 there, nothing
 // in its place, signs it out and says so on its row; a 503 doesn't; read
 // again, it is signed in again.
@@ -238,4 +236,3 @@ func TestCopilotUsageRefusedSignsOut(t *testing.T) {
 		t.Fatalf("read again, the account reads %q", l)
 	}
 }
-

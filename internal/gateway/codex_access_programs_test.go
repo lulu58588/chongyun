@@ -11,8 +11,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
+	"github.com/tidwall/gjson"
 )
 
 // daybreakBackend stands in for the ChatGPT backend as OpenAI's Daybreak

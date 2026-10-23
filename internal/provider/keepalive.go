@@ -18,7 +18,6 @@ import (
 	"log"
 	"strings"
 	"time"
-
 )
 
 // keepAliveEvery is how long a saved sign-in goes before it is renewed.

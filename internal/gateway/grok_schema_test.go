@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
+	"github.com/tidwall/gjson"
 )
 
 func TestECMAClassForRust(t *testing.T) {

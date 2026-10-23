@@ -1,9 +1,9 @@
 package provider
 
 import (
-	"github.com/lulu58588/starling/internal/appdir"
 	"context"
 	"errors"
+	"github.com/lulu58588/starling/internal/appdir"
 	"os"
 	"path/filepath"
 	"runtime"

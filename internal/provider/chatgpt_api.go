@@ -190,15 +190,17 @@ func siwcAuthorize(redirect, state, nonce, challenge, hostID string) string {
 }
 
 // siwcDone finishes a sign-in whose browser came back with q.
-func (s *signInFlow) siwcDone(ctx context.Context, w http.ResponseWriter, q url.Values) {
+func (s *signInFlow) siwcDone(ctx context.Context, w http.ResponseWriter, lang string, q url.Values) {
+	tr := signInText(lang)
+	trf := signInTextf(lang)
 	user, plan, err := siwcSignedIn(ctx, q.Get("code"), strings.TrimSpace(q.Get("client_id")), s.verifier, s.redirect, s.nonce, s.hostID)
 	if err != nil {
 		s.finish(SignInState{State: "failed", Error: err.Error()})
-		signInPage(w, false, "Sign-in didn't finish", err.Error())
+		signInPage(w, false, tr("Sign-in didn't finish"), err.Error())
 		return
 	}
 	s.finish(SignInState{State: "done", User: user, Plan: plan, Using: strings.EqualFold(activeOf(siwcSide()), user)})
-	signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to starling. You can close this tab.", user))
+	signInPage(w, true, tr("You're signed in"), trf("%s is added to starling. You can close this tab.", user))
 }
 
 // siwcSignedIn trades the code for the account's tokens and keeps it.

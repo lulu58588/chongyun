@@ -7,7 +7,6 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
-
 )
 
 func countsLine(cs []PartnerCount) string {

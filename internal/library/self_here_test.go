@@ -127,7 +127,7 @@ func TestUsersOwnServerStaysAsItIs(t *testing.T) {
 	write(t, otherBuild, "")
 	mine := map[string]string{
 		"gone-tool":    `C:\Users\me\tools\imagetool.exe`, // mcp image, but not starling
-		"starling-cli":   `C:\Users\me\tools\starling-helper.exe`,
+		"starling-cli": `C:\Users\me\tools\starling-helper.exe`,
 		"pinned-build": otherBuild,
 		"npx-server":   "npx",
 	}

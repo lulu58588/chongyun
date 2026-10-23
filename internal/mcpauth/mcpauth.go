@@ -37,6 +37,7 @@ import (
 
 	"github.com/lulu58588/starling/internal/edit"
 	"github.com/lulu58588/starling/internal/filelock"
+	"github.com/lulu58588/starling/internal/i18ntext"
 	"github.com/lulu58588/starling/internal/lastgood"
 	"github.com/lulu58588/starling/internal/netproxy"
 	"github.com/lulu58588/starling/internal/settings"
@@ -869,15 +870,18 @@ func StartWith(ctx context.Context, name, serverURL string, app *App) (State, er
 	rec := Record{URL: serverURL, Resource: m.Resource, Issuer: m.Issuer, TokenURL: m.TokenURL, ClientID: id, Secret: secret, AuthMethod: method, Scope: m.Scope}
 	mux := http.NewServeMux()
 	mux.HandleFunc("/callback", func(w http.ResponseWriter, r *http.Request) {
+		lang := i18ntext.Lang(r)
+		tr := mcpAuthText(lang)
+		trf := mcpAuthTextf(lang)
 		v := r.URL.Query()
 		if v.Get("state") != state {
-			page(w, http.StatusBadRequest, "This sign-in link is out of date. Start the sign-in again from Starling.")
+			page(w, http.StatusBadRequest, lang, tr("This sign-in link is out of date. Start the sign-in again from Starling."))
 			return
 		}
 		f.mu.Lock()
 		if f.claimed || f.finished {
 			f.mu.Unlock()
-			page(w, http.StatusOK, "Starling has this sign-in already. You can close this tab.")
+			page(w, http.StatusOK, lang, tr("Starling has this sign-in already. You can close this tab."))
 			return
 		}
 		f.claimed = true
@@ -888,7 +892,7 @@ func StartWith(ctx context.Context, name, serverURL string, app *App) (State, er
 				msg += ": " + d
 			}
 			f.finish(State{State: "failed", Error: "the sign-in was refused (" + msg + ")"})
-			page(w, http.StatusOK, "The sign-in was refused: "+msg)
+			page(w, http.StatusOK, lang, trf("The sign-in was refused: %s", msg))
 			return
 		}
 		cctx, ccancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -900,7 +904,7 @@ func StartWith(ctx context.Context, name, serverURL string, app *App) (State, er
 		t, err := tokenRequest(cctx, rec, form)
 		if err != nil {
 			f.finish(State{State: "failed", Error: err.Error()})
-			page(w, http.StatusOK, "Starling couldn't finish the sign-in: "+err.Error())
+			page(w, http.StatusOK, lang, trf("Starling couldn't finish the sign-in: %s", err.Error()))
 			return
 		}
 		r2 := rec
@@ -909,10 +913,10 @@ func StartWith(ctx context.Context, name, serverURL string, app *App) (State, er
 			r2.Scope = t.Scope
 		}
 		if err := f.keep(name, r2); err != nil {
-			page(w, http.StatusOK, "Starling couldn't keep the sign-in: "+err.Error())
+			page(w, http.StatusOK, lang, trf("Starling couldn't keep the sign-in: %s", err.Error()))
 			return
 		}
-		page(w, http.StatusOK, "Starling is signed in to "+name+". Every agent given it in the Library uses this sign-in. You can close this tab.")
+		page(w, http.StatusOK, lang, trf("Starling is signed in to %s. Every agent given it in the Library uses this sign-in. You can close this tab.", name))
 	})
 	f.srv = &http.Server{Handler: mux, ReadHeaderTimeout: 10 * time.Second}
 	go f.srv.Serve(ln)
@@ -1011,7 +1015,7 @@ func Cancel(id string) {
 	}
 }
 
-func page(w http.ResponseWriter, status int, msg string) {
+func page(w http.ResponseWriter, status int, lang, msg string) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(status)
 	fmt.Fprintf(w, `<!doctype html><meta charset="utf-8"><title>Starling</title><body style="font:15px -apple-system,system-ui,sans-serif;max-width:32em;margin:4em auto;padding:0 1em;color:#222">%s</body>`, html.EscapeString(msg))

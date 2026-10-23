@@ -8,8 +8,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
+	"github.com/tidwall/gjson"
 )
 
 // openCodeGeminiCatalog is models.dev's opencode-go and opencode as they

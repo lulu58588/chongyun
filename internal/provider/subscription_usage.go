@@ -453,7 +453,9 @@ func fetchSubscriptionUsage(ctx context.Context) []SubscriptionQuota {
 			if ls := accountsOf("codex"); len(ls) > 1 {
 				fetches = append(fetches, perLogin(via("codex"), ls, accountCard("codex"))...)
 			} else {
-				fetches = append(fetches, withUser(ctx, p.Account.User, func() SubscriptionQuota { return codexSubscriptionUsage(viaLogin("codex", p.Account.User), p.Account.User) }))
+				fetches = append(fetches, withUser(ctx, p.Account.User, func() SubscriptionQuota {
+					return codexSubscriptionUsage(viaLogin("codex", p.Account.User), p.Account.User)
+				}))
 			}
 		}
 		// Every Copilot account starling knows, the editors' or the CLI's own

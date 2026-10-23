@@ -22,9 +22,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
 	"github.com/lulu58588/starling/internal/settings"
+	"github.com/tidwall/gjson"
 )
 
 const (

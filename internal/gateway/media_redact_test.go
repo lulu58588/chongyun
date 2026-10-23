@@ -12,10 +12,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
 	"github.com/lulu58588/starling/internal/redact"
 	"github.com/lulu58588/starling/internal/settings"
+	"github.com/tidwall/gjson"
 )
 
 const mediaSecret = "sk-proj-abcdEFGH1234ijklMNOP5678qrst"

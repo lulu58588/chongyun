@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/access"
 	"github.com/lulu58588/starling/internal/provider"
 	"github.com/lulu58588/starling/internal/settings"
+	"github.com/tidwall/gjson"
 )
 
 // ollamaPlan is a provider with a model that sees, thinks and has a

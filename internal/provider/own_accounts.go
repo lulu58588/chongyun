@@ -13,7 +13,6 @@ import (
 	"strings"
 )
 
-
 // rememberAccounts brings the accounts the agents are signed in to into
 // logins.json.
 //

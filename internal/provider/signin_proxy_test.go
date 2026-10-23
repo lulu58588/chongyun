@@ -340,4 +340,3 @@ func TestChatGPTSignOutGoesThroughItsProxy(t *testing.T) {
 		t.Fatalf("dialed %v past the proxy", d)
 	}
 }
-

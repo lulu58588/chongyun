@@ -484,7 +484,9 @@ func TestZCodeKeepsUserFormat(t *testing.T) {
 
 	// a format ZCode doesn't have isn't kept
 	edited(rules, func(doc map[string]any) { rule(doc)["type"] = "grpc" })
-	edited(path, func(doc map[string]any) { doc["provider"].(map[string]any)["starling"].(map[string]any)["kind"] = "grpc" })
+	edited(path, func(doc map[string]any) {
+		doc["provider"].(map[string]any)["starling"].(map[string]any)["kind"] = "grpc"
+	})
 	if err := a.Sync(); err != nil {
 		t.Fatal(err)
 	}

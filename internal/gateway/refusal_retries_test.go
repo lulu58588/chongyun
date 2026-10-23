@@ -185,7 +185,7 @@ func claudeOwnToken(t *testing.T, user string) string {
 	}
 	var saved []struct {
 		Agent, User string
-		Auth       struct {
+		Auth        struct {
 			OAuth struct {
 				AccessToken string `json:"accessToken"`
 			} `json:"claudeAiOauth"`

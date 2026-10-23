@@ -298,7 +298,9 @@ func TestTOMLTableParseErrorLeavesFileUntouched(t *testing.T) {
 				return SetTOMLTables(p, []string{"model_providers."}, []Table{{Name: "model_providers.starling", KVs: []KV{{Path: "name", Value: "new"}}}})
 			},
 			func(p string) error { return SetTOMLTables(p, []string{"model_providers."}, nil) },
-			func(p string) error { return SetTOMLTable(p, "model_providers.starling", KV{Path: "name", Value: "new"}) },
+			func(p string) error {
+				return SetTOMLTable(p, "model_providers.starling", KV{Path: "name", Value: "new"})
+			},
 			func(p string) error { return DelTOMLTable(p, "model_providers.starling") },
 			func(p string) error { return SetTOMLKey(p, "model_providers.starling", "name", "new") },
 			func(p string) error { return DelTOMLKey(p, "model_providers.starling", "name") },

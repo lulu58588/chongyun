@@ -140,7 +140,7 @@ func trayFlap(dir string, S int) error {
 						}
 					}
 				}
-				img.SetNRGBA(px, py, color.NRGBA{0, 0, 0, uint8(float64(on) / float64(ss*ss) * 255 + 0.5)})
+				img.SetNRGBA(px, py, color.NRGBA{0, 0, 0, uint8(float64(on)/float64(ss*ss)*255 + 0.5)})
 			}
 		}
 		out, err := os.Create(fmt.Sprintf("%s/flap-%02d.png", dir, f))

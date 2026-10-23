@@ -67,7 +67,10 @@ var codexRewrites = func() []codexRewrite {
 		for _, native := range []bool{false, true} {
 			rs = append(rs, codexRewrite{fmt.Sprintf("codexInputAs(%v,%v)", starling, native),
 				func(b []byte) []byte { b, c := codexInputAs(b, starling, native); return append(b, fmt.Sprint(c)...) },
-				func(b []byte) []byte { b, c := wasCodexInputAs(b, starling, native); return append(b, fmt.Sprint(c)...) }})
+				func(b []byte) []byte {
+					b, c := wasCodexInputAs(b, starling, native)
+					return append(b, fmt.Sprint(c)...)
+				}})
 		}
 	}
 	return rs

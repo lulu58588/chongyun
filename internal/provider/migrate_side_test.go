@@ -93,7 +93,6 @@ func loginsOfAgent(ls []savedLogin, agent string) []savedLogin {
 	return slices.DeleteFunc(slices.Clone(ls), func(l savedLogin) bool { return l.Agent != agent })
 }
 
-
 func TestMoveGrok(t *testing.T) {
 	home := signIn(t)
 	t.Setenv("GROK_HOME", filepath.Join(home, ".grok"))
@@ -179,4 +178,3 @@ func TestMoveCommandCode(t *testing.T) {
 		t.Fatalf("the move installs commandcode-auth %q, which marks every model text-only", movers[CommandCodePlanID].min)
 	}
 }
-

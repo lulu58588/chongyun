@@ -28,9 +28,9 @@ func Agent(target string) (file string, only bool) {
 		return "", false
 	}
 	var pkg struct {
-		Main    string          `json:"main"`
-		Exports json.RawMessage `json:"exports"`
-		Starling  struct {
+		Main     string          `json:"main"`
+		Exports  json.RawMessage `json:"exports"`
+		Starling struct {
 			Agent string `json:"agent"`
 		} `json:"starling"`
 	}

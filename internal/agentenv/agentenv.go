@@ -118,7 +118,7 @@ var NotPaths = map[string]bool{
 	"WINDSURF_API_SERVER_URL": true, "ZCODE_CREDENTIAL_SECRET": true,
 	"PI_CONFIG_DIR": true, "OPENCODE_DB": true,
 	"STEPCODE_CONFIG_DIR": true,
-	"STARLING_ZED_BIN":      true, "STARLING_ZED_PROCESS_NAMES": true,
+	"STARLING_ZED_BIN":    true, "STARLING_ZED_PROCESS_NAMES": true,
 }
 
 // ClaudeProviders are Claude Code's switches that send its requests to a

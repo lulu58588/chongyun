@@ -71,9 +71,9 @@ type dshPatches struct {
 
 // dshRow is an mcp-client row an insert adds: its item, and its lines in it.
 type dshRow struct {
-	item, from, to int
-	alone, starling  bool
-	config         map[string]any
+	item, from, to  int
+	alone, starling bool
+	config          map[string]any
 }
 
 func dshRead(path string) (*dshPatches, error) {

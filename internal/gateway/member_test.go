@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
 	"github.com/lulu58588/starling/internal/settings"
+	"github.com/tidwall/gjson"
 )
 
 // A reply from a group says which member answered it (#822): its

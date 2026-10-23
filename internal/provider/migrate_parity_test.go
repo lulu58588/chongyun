@@ -67,4 +67,3 @@ func TestMovedOwnRowNotWritten(t *testing.T) {
 		}
 	}
 }
-

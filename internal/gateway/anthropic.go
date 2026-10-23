@@ -15,8 +15,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
+	"github.com/tidwall/gjson"
 )
 
 // ---- Anthropic Messages -----------------------------------------------------

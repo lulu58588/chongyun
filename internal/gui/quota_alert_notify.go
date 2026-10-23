@@ -12,11 +12,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/wailsapp/wails/v3/pkg/application"
-	"github.com/wailsapp/wails/v3/pkg/services/notifications"
 	"github.com/lulu58588/starling/internal/gateway"
 	"github.com/lulu58588/starling/internal/provider"
 	"github.com/lulu58588/starling/internal/settings"
+	"github.com/wailsapp/wails/v3/pkg/application"
+	"github.com/wailsapp/wails/v3/pkg/services/notifications"
 )
 
 // notifier is the system's notifications, started the first time an alert

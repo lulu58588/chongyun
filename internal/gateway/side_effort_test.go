@@ -11,10 +11,10 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/catalog"
 	"github.com/lulu58588/starling/internal/provider"
 	"github.com/lulu58588/starling/internal/settings"
+	"github.com/tidwall/gjson"
 )
 
 // pickEfforts saves the levels picked in Settings for Image recognition's

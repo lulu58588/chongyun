@@ -62,7 +62,7 @@ func kimiSessions() string { return filepath.Join(KimiCodeDir(), "sessions") }
 
 // kimiGateway is how the model of a call to starling's entry begins.
 const (
-	kimiGateway    = "starling/"
+	kimiGateway = "starling/"
 	// the name before the rename: a call in the user's history from
 	// before still carries the model it was sent under then
 	kimiGatewayOld = "magpie/"

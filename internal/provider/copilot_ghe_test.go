@@ -184,4 +184,3 @@ func TestCopilotGHESignIn(t *testing.T) {
 		t.Fatal("an account at evil.example.com was taken")
 	}
 }
-

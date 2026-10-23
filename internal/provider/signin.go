@@ -30,6 +30,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/lulu58588/starling/internal/i18ntext"
 	"github.com/lulu58588/starling/internal/netproxy"
 	"github.com/lulu58588/starling/internal/settings"
 )
@@ -671,9 +672,12 @@ func (s *signInFlow) callback(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
+	lang := i18ntext.Lang(r)
+	tr := signInText(lang)
+	trf := signInTextf(lang)
 	q := r.URL.Query()
 	if s.status().State != "waiting" {
-		signInPage(w, false, "This sign-in is over", "Start it again from starling.")
+		signInPage(w, false, tr("This sign-in is over"), tr("Start it again from starling."))
 		return
 	}
 	if e := q.Get("error"); e != "" {
@@ -682,27 +686,27 @@ func (s *signInFlow) callback(w http.ResponseWriter, r *http.Request) {
 			msg = e
 		}
 		s.finish(SignInState{State: "failed", Error: msg})
-		signInPage(w, false, "Sign-in didn't finish", msg)
+		signInPage(w, false, tr("Sign-in didn't finish"), msg)
 		return
 	}
 	if q.Get("state") != s.state || q.Get("code") == "" {
 		// not ours: someone else's page, or a stale tab
-		signInPage(w, false, "This link isn't from starling's sign-in", "Start it again from starling.")
+		signInPage(w, false, tr("This link isn't from starling's sign-in"), tr("Start it again from starling."))
 		return
 	}
 	if !s.claim() {
 		// its address was pasted too, and that one is being finished
-		signInPage(w, false, "This sign-in is already finishing", "starling shows the account when it's done.")
+		signInPage(w, false, tr("This sign-in is already finishing"), tr("starling shows the account when it's done."))
 		return
 	}
 	ctx, cancel := context.WithTimeout(s.via(r.Context()), 30*time.Second)
 	defer cancel()
 	if app, ok := googleAppOf(s.st.Agent); ok {
-		s.googleDone(ctx, w, app, q.Get("code"))
+		s.googleDone(ctx, w, lang, app, q.Get("code"))
 		return
 	}
 	if s.st.Agent == ChatGPTAPIID {
-		s.siwcDone(ctx, w, q)
+		s.siwcDone(ctx, w, lang, q)
 		return
 	}
 	l, err := s.exchange(ctx, q.Get("code"))
@@ -710,30 +714,32 @@ func (s *signInFlow) callback(w http.ResponseWriter, r *http.Request) {
 		var using bool
 		if err = keepLogin(ctx, func() (err error) { using, err = addLogin(l); return err }); err == nil {
 			s.finish(SignInState{State: "done", User: l.User, Plan: l.Plan, Using: using})
-			signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to starling. You can close this tab.", l.User))
+			signInPage(w, true, tr("You're signed in"), trf("%s is added to starling. You can close this tab.", l.User))
 			return
 		}
 	}
 	s.finish(SignInState{State: "failed", Error: err.Error()})
-	signInPage(w, false, "Sign-in didn't finish", err.Error())
+	signInPage(w, false, tr("Sign-in didn't finish"), err.Error())
 }
 
 // googleDone finishes a Gemini CLI or Antigravity sign-in: the account is
 // kept beside the others, in use at once.
-func (s *signInFlow) googleDone(ctx context.Context, w http.ResponseWriter, app googleApp, code string) {
+func (s *signInFlow) googleDone(ctx context.Context, w http.ResponseWriter, lang string, app googleApp, code string) {
+	tr := signInText(lang)
+	trf := signInTextf(lang)
 	g, plan, err := googleExchange(ctx, app, code, s.verifier, s.redirect)
 	if err == nil {
 		err = keepLogin(ctx, func() error { return addGoogleLogin(app.agent, g.user, plan, g.auth) })
 	}
 	if err != nil {
 		s.finish(SignInState{State: "failed", Error: err.Error()})
-		signInPage(w, false, "Sign-in didn't finish", err.Error())
+		signInPage(w, false, tr("Sign-in didn't finish"), err.Error())
 		return
 	}
 	// the account just signed in is the one starling serves first now
 	using := true
 	s.finish(SignInState{State: "done", User: g.user, Plan: plan, Using: using})
-	signInPage(w, true, "You're signed in", fmt.Sprintf("%s is added to starling. You can close this tab.", g.user))
+	signInPage(w, true, tr("You're signed in"), trf("%s is added to starling. You can close this tab.", g.user))
 }
 
 // exchange trades the code for tokens and makes them into a login.

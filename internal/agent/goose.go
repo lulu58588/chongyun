@@ -128,7 +128,7 @@ func gooseProviderJSON(at place) map[string]any {
 	p := map[string]any{
 		"name":                     gooseProviderID,
 		"engine":                   "openai",
-		"display_name": "星鸣",
+		"display_name":             "星鸣",
 		"description":              "Every model starling has, through its local gateway",
 		"api_key_env":              "",
 		"base_url":                 at.v1(),

@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
+	"github.com/tidwall/gjson"
 )
 
 // piRetryable is Pi's isRetryableError (agent-session.ts, 1.2.0), as

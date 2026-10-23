@@ -18,10 +18,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/pelletier/go-toml/v2"
 	"github.com/lulu58588/starling/internal/catalog"
 	"github.com/lulu58588/starling/internal/edit"
 	"github.com/lulu58588/starling/internal/provider"
+	"github.com/pelletier/go-toml/v2"
 )
 
 const reasonixKey = "STARLING_REASONIX_API_KEY"

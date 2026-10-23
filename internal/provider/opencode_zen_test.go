@@ -17,8 +17,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/tidwall/gjson"
 )
 
 // OpenCode Zen's free models are listed: starling asks them as OpenCode does

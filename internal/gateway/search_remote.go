@@ -28,7 +28,7 @@ const SearchingHeader = "X-Starling-Searching"
 
 // Web search as a Remote starling's list says it.
 const (
-	searchNative = "native"
+	searchNative   = "native"
 	searchStarling = "starling"
 )
 

@@ -31,9 +31,9 @@ func Middleware(target string) (file string, only bool) {
 		return "", false
 	}
 	var pkg struct {
-		Main    string          `json:"main"`
-		Exports json.RawMessage `json:"exports"`
-		Starling  struct {
+		Main     string          `json:"main"`
+		Exports  json.RawMessage `json:"exports"`
+		Starling struct {
 			Middleware string `json:"middleware"`
 			Gateway    string `json:"gateway"`
 		} `json:"starling"`

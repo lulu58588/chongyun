@@ -99,7 +99,7 @@ func TestLinkRefused(t *testing.T) {
 		"a folder":          filepath.Join(h, ".agents"),
 		"an agent's own":    filepath.Join(h, ".codex/AGENTS.md"),
 		"the library's":     filepath.Join(Dir(), "instructions.md"),
-		"starling's part":     marked,
+		"starling's part":   marked,
 		"another set's":     "~/.agents/AGENTS.md",
 		"another set's too": filepath.Join(h, ".agents/../.agents/AGENTS.md"),
 	} {

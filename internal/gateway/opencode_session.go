@@ -6,8 +6,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/tidwall/gjson"
 	"github.com/lulu58588/starling/internal/provider"
+	"github.com/tidwall/gjson"
 )
 
 // openCodeSeed names the conversation a request to OpenCode's gateway is a

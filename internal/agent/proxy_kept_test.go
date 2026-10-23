@@ -242,9 +242,9 @@ func TestStarlingProbe(t *testing.T) {
 	for base, want := range map[string]bool{
 		srv.URL + "/starling":  true,
 		srv.URL + "/starling/": true,
-		srv.URL + "/relay":   false,
-		srv.URL + "/broken":  false,
-		"http://127.0.0.1:1": false,
+		srv.URL + "/relay":     false,
+		srv.URL + "/broken":    false,
+		"http://127.0.0.1:1":   false,
 	} {
 		if got := realStarlingProbe(base); got != want {
 			t.Errorf("%s: %v, want %v", base, got, want)

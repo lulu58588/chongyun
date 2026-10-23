@@ -20,6 +20,7 @@ import (
 	"github.com/klauspost/compress/gzhttp"
 
 	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/i18ntext"
 	"github.com/lulu58588/starling/internal/update"
 )
 
@@ -230,7 +231,7 @@ func webGuard(cookie, key string, keep time.Duration, next http.Handler) http.Ha
 			r.Body = http.MaxBytesReader(rw, r.Body, 4096)
 			back := localPath(r.PostFormValue("back"))
 			if !same(r.PostFormValue("key")) {
-				webTurnedAway(rw, r, back, "That key is not this starling web's.")
+				webTurnedAway(rw, r, back, webText(r, "That key is not this starling web's."))
 				return
 			}
 			signIn(rw, r, back)
@@ -246,12 +247,12 @@ func webGuard(cookie, key string, keep time.Duration, next http.Handler) http.Ha
 				return
 			}
 		}
-		why, short := "This browser sent no sign-in cookie for this address. A browser keeps cookies per host, not per port, so another service on this host's other ports can take it away: by clearing its site data (a sign-out often does), or by filling the host's cookie limit. A page opened at another address than the one signed in at (an IP instead of a name) has none either.", "no cookie sent"
+		why, short := webText(r, "This browser sent no sign-in cookie for this address. A browser keeps cookies per host, not per port, so another service on this host's other ports can take it away: by clearing its site data (a sign-out often does), or by filling the host's cookie limit. A page opened at another address than the one signed in at (an IP instead of a name) has none either."), "no cookie sent"
 		if len(sent) > 0 {
-			why, short = "This browser's sign-in cookie holds a key that isn't this starling web's: the key changed after it signed in (STARLING_WEB_KEY changed, or a start without it made a new one).", "its cookie holds another key"
+			why, short = webText(r, "This browser's sign-in cookie holds a key that isn't this starling web's: the key changed after it signed in (STARLING_WEB_KEY changed, or a start without it made a new one)."), "its cookie holds another key"
 		}
 		if r.Method != http.MethodGet || !strings.Contains(r.Header.Get("Accept"), "text/html") {
-			http.Error(rw, "open the link starling web printed when it started: it carries the key. "+why, http.StatusUnauthorized)
+			http.Error(rw, webText(r, "open the link starling web printed when it started: it carries the key. ")+why, http.StatusUnauthorized)
 			return
 		}
 		log.Printf("starling web: turned away %s from %s: %s", r.URL.Path, r.RemoteAddr, short)
@@ -281,9 +282,50 @@ func webTurnedAway(rw http.ResponseWriter, r *http.Request, back, why string) {
 	rw.WriteHeader(http.StatusUnauthorized)
 	fmt.Fprintf(rw, `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>starling web</title>
 <style>body{font:15px/1.5 system-ui,sans-serif;max-width:32em;margin:12vh auto;padding:0 16px;color:#222;background:#fafafa}@media(prefers-color-scheme:dark){body{color:#ddd;background:#1c1c1e}}input,button{font:inherit;padding:.4em .6em}input{width:100%%;box-sizing:border-box;margin:.5em 0}</style></head>
-<body><h1>starling web</h1><p>%s</p><p>Paste the key (STARLING_WEB_KEY, or the k= in the link starling web printed when it started):</p>
-<form method="post" action="%s"><input type="hidden" name="back" value="%s"><input type="password" name="key" autocomplete="current-password" autofocus required><button type="submit">Sign in</button></form></body></html>`,
-		html.EscapeString(why), webSignInPath, html.EscapeString(back))
+<body><h1>starling web</h1><p>%s</p><p>%s</p>
+<form method="post" action="%s"><input type="hidden" name="back" value="%s"><input type="password" name="key" autocomplete="current-password" autofocus required><button type="submit">%s</button></form></body></html>`,
+		html.EscapeString(why),
+		html.EscapeString(webText(r, "Paste the key (STARLING_WEB_KEY, or the k= in the link starling web printed when it started):")),
+		webSignInPath, html.EscapeString(back),
+		html.EscapeString(webText(r, "Sign in")))
+}
+
+// webText is the text of a page starling web serves itself, in the language
+// the browser asks for or the one the user set. The pages the app serves are
+// translated by the front end (assets/i18n.js); these ones are plain HTML
+// with no script, so their text is here.
+func webText(r *http.Request, en string) string {
+	return webTextIn(i18ntext.Lang(r), en)
+}
+
+// webTextIn is webText for a language already decided, so the fallback order
+// can be tried without a request.
+func webTextIn(lang, en string) string {
+	return i18ntext.Pick(lang, en, webTextZh, webTextZhTW, webTextJa, webTextDe)
+}
+
+// The text of starling web's own pages, in Chinese. The key is the English
+// as written in the code, so a page that says something new falls back to
+// English rather than to nothing.
+var webTextZh = map[string]string{
+	"This browser sent no sign-in cookie for this address. A browser keeps cookies per host, not per port, so another service on this host's other ports can take it away: by clearing its site data (a sign-out often does), or by filling the host's cookie limit. A page opened at another address than the one signed in at (an IP instead of a name) has none either.": "这个浏览器没有为当前地址发送登录 Cookie。浏览器的 Cookie 是按主机名保存的、不区分端口，所以本机其他端口上的服务可能把它挤掉：清理本站数据（退出登录常会这样），或者占满了该主机的 Cookie 额度。用另一个地址打开页面（用 IP 而不是域名）也不会有。",
+	"This browser's sign-in cookie holds a key that isn't this starling web's: the key changed after it signed in (STARLING_WEB_KEY changed, or a start without it made a new one).":                                                                                                                                                                                        "这个浏览器的登录 Cookie 里装的不是本次 starling web 的密钥：登录之后密钥变了（STARLING_WEB_KEY 改了，或者某次启动没带上它、生成了新的）。",
+	"That key is not this starling web's.":                                                          "这个密钥不是本次 starling web 的。",
+	"open the link starling web printed when it started: it carries the key. ":                      "请打开 starling web 启动时打印的链接：里面带着密钥。",
+	"Paste the key (STARLING_WEB_KEY, or the k= in the link starling web printed when it started):": "粘贴密钥（STARLING_WEB_KEY，或 starling web 启动时打印的链接里的 k=）：",
+	"Sign in": "登录",
+	"this link's key is not this starling web's: use the link it printed when it started": "这个链接里的密钥不是本次 starling web 的：请用它启动时打印的链接",
+}
+
+// The same, in Traditional Chinese.
+var webTextZhTW = map[string]string{
+	"this link's key is not this starling web's: use the link it printed when it started": "這個連結裡的密鑰不是本次 starling web 的：請用它啟動時列印的連結",
+	"This browser sent no sign-in cookie for this address. A browser keeps cookies per host, not per port, so another service on this host's other ports can take it away: by clearing its site data (a sign-out often does), or by filling the host's cookie limit. A page opened at another address than the one signed in at (an IP instead of a name) has none either.": "這個瀏覽器沒有為目前位址傳送登入 Cookie。瀏覽器的 Cookie 是依主機名儲存的、不分埠號，所以本機其他埠號上的服務可能把它擠掉：清除本站資料（登出常會這樣），或者佔滿了該主機的 Cookie 額度。用另一個位址開啟頁面（用 IP 而不是網域名稱）也不會有。",
+	"This browser's sign-in cookie holds a key that isn't this starling web's: the key changed after it signed in (STARLING_WEB_KEY changed, or a start without it made a new one).":                                                                                                                                                                                        "這個瀏覽器的登入 Cookie 裡裝的不是本次 starling web 的密鑰：登入之後密鑰變了（STARLING_WEB_KEY 改了，或某次啟動沒帶上它、產生了新的）。",
+	"That key is not this starling web's.":                                                          "這個密鑰不是本次 starling web 的。",
+	"open the link starling web printed when it started: it carries the key. ":                      "請開啟 starling web 啟動時列印的連結：裡面帶著密鑰。",
+	"Paste the key (STARLING_WEB_KEY, or the k= in the link starling web printed when it started):": "貼上密鑰（STARLING_WEB_KEY，或 starling web 啟動時列印的連結裡的 k=）：",
+	"Sign in": "登入",
 }
 
 // NetworkLinks are the links to the page, served on port, that other
@@ -375,3 +417,25 @@ func compressible(ct string) bool {
 
 // isWeb: the page is served to a browser by `starling web`.
 func isWeb(w Windows) bool { _, ok := w.(webHost); return ok }
+
+// The same, in Japanese.
+var webTextJa = map[string]string{
+	"this link's key is not this starling web's: use the link it printed when it started": "このリンクのキーは今回の starling web のものではありません：起動時に表示されたリンクを使用してください",
+	"This browser sent no sign-in cookie for this address. A browser keeps cookies per host, not per port, so another service on this host's other ports can take it away: by clearing its site data (a sign-out often does), or by filling the host's cookie limit. A page opened at another address than the one signed in at (an IP instead of a name) has none either.": "このブラウザは、このアドレスのサインイン用 Cookie を送っていません。ブラウザの Cookie はポートではなくホスト単位で保存されるため、このホストの別ポートのサービスが/sites データを消去したり（サインアウトでもそうなります）、Cookie の上限に達したりすると、提示されなくなることがあります。サインインしたアドレスとは別のアドレス（名前ではなく IP）で開いたページにもありません。",
+	"This browser's sign-in cookie holds a key that isn't this starling web's: the key changed after it signed in (STARLING_WEB_KEY changed, or a start without it made a new one).":                                                                                                                                                                                        "このブラウザのサインイン用 Cookie に入っているのは、今回の starling web のキーではありません：サインイン後にキーが変わりました（STARLING_WEB_KEY が変わった、あるいはそれを指定せずに起動して新しいキーが作られました）。",
+	"That key is not this starling web's.":                                                          "そのキーは今回の starling web のものではありません。",
+	"open the link starling web printed when it started: it carries the key. ":                      "starling web が起動時に表示したリンクを開いてください：キーが入っています。",
+	"Paste the key (STARLING_WEB_KEY, or the k= in the link starling web printed when it started):": "キーを貼り付けてください（STARLING_WEB_KEY、または starling web が起動時に表示したリンクの k=）：",
+	"Sign in": "サインイン",
+}
+
+// The same, in German.
+var webTextDe = map[string]string{
+	"this link's key is not this starling web's: use the link it printed when it started": "Der Schlüssel in diesem Link ist nicht der dieses starling-Webs: Verwenden Sie den Link, der beim Start angezeigt wurde",
+	"This browser sent no sign-in cookie for this address. A browser keeps cookies per host, not per port, so another service on this host's other ports can take it away: by clearing its site data (a sign-out often does), or by filling the host's cookie limit. A page opened at another address than the one signed in at (an IP instead of a name) has none either.": "Dieser Browser hat kein Anmelde-Cookie für diese Adresse gesendet. Browser speichern Cookies pro Host, nicht pro Port; ein anderer Dienst auf den anderen Ports dieses Hosts kann es wegnehmen: durch Löschen der Website-Daten (das Abmelden tut das oft) oder weil das Cookie-Limit des Hosts gefüllt ist. Eine Seite, die unter einer anderen Adresse geöffnet wurde (eine IP statt eines Namens), hat ebenfalls keines.",
+	"This browser's sign-in cookie holds a key that isn't this starling web's: the key changed after it signed in (STARLING_WEB_KEY changed, or a start without it made a new one).":                                                                                                                                                                                        "Das Anmelde-Cookie dieses Browsers enthält einen Schlüssel, der nicht zu diesem starling web gehört: Der Schlüssel hat sich nach der Anmeldung geändert (STARLING_WEB_KEY wurde geändert, oder ein Start ohne ihn hat einen neuen erzeugt).",
+	"That key is not this starling web's.":                                                          "Dieser Schlüssel gehört nicht zu diesem starling web.",
+	"open the link starling web printed when it started: it carries the key. ":                      "Öffnen Sie den Link, den starling web beim Start ausgegeben hat: Er enthält den Schlüssel. ",
+	"Paste the key (STARLING_WEB_KEY, or the k= in the link starling web printed when it started):": "Schlüssel einfügen (STARLING_WEB_KEY oder das k= im Link, den starling web beim Start ausgegeben hat):",
+	"Sign in": "Anmelden",
+}
