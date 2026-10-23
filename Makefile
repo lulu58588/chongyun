@@ -8,9 +8,13 @@ ifneq ($(shell sed -n 's/^module //p' go.mod 2>/dev/null),github.com/lulu58588/s
 endif
 
 # A tag may hold $, ( or `, which the shell lines below would run: the
-# version keeps only what a version is spelled with.
-VERSION ?= $(or $(shell git describe --tags --always --dirty 2>/dev/null | tr -cd 'A-Za-z0-9._+-'),dev)
+# version keeps only what a version is spelled with. The version is starling's
+# own line (from 0.2.0 on), not upstream's 0.1.x tags; scripts/version.sh says
+# which.
+VERSION ?= $(shell sh scripts/version.sh)
 LDFLAGS  = -s -w -X main.version=$(VERSION)
+# macOS takes three numbers and nothing else for the version it shows.
+PLIST_VERSION = $(shell sh scripts/version_plist.sh)
 TAGS     = production
 TARGETS  = darwin/arm64 darwin/amd64 linux/amd64 linux/arm64 windows/amd64 windows/arm64 android/arm64
 
@@ -67,7 +71,8 @@ app: build
 	else \
 		echo "  (no Assets.car: macOS 26 falls back to starling.icns; build it with the full Xcode's actool)"; \
 	fi
-	@sed 's/@VERSION@/$(VERSION)/' build/darwin/Info.plist > starling.app/Contents/Info.plist
+	@sed -e 's/@PLIST_VERSION@/$(PLIST_VERSION)/' -e 's/@BUILD_VERSION@/$(VERSION)/' \
+		build/darwin/Info.plist > starling.app/Contents/Info.plist
 	@echo "  starling.app"
 
 icons:
