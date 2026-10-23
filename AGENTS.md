@@ -24,6 +24,11 @@ so dispatching a second run on a feature branch cancels the first one — wait
 for a run to finish before starting another. A `cancelled` macos-latest job
 usually means it never got a runner, not that a test failed.
 
+Pushing through a proxy that rewrites the ref through the REST API updates the
+branch but raises no push event, so `on: push` never runs. Push to
+`github.com` directly when the commit should start CI, and check
+`repos/{owner}/{repo}/events` for a `PushEvent` if a push seems to be ignored.
+
 ## Subsystem design and review
 
 Before changing a documented subsystem, read its
