@@ -1,5 +1,29 @@
 # Notes for coding agents
 
+## Brand rename (starling)
+
+This fork renamed "magpie" to "starling" (6 characters to 8) everywhere. Where
+the old name's *length* was baked into code, the rename changed the result
+without changing any code near it. `internal/plugin/testdata/fake/index.js`
+had `k.slice(9)` for the "x-magpie-" prefix; after the rename it cut to
+"g-work-dir" and the gateway told vendors "X-Saw-G-Work-Dir" instead of
+"X-Saw-Work-Dir". Take the prefix from a constant or a regex, never from a
+literal offset, and grep for length-sensitive uses of a renamed string
+(`slice(N)`, `[N:]`, `indexOf(...) + N`) before trusting a green build.
+
+Two names stay as they are on purpose: `magpie-community/*` (the plugin
+publisher) and `magpie-x-search` / `magpie-gemini-web` (real upstream npm
+packages). Changing those breaks plugin installs.
+
+## CI on this fork
+
+The workflows only ran on `main`, so the fork's own branch had no CI at all;
+`test.yml` and `docker.yml` now run on `[main, "feat/**"]`. Note that
+`test.yml` sets `cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}`,
+so dispatching a second run on a feature branch cancels the first one — wait
+for a run to finish before starting another. A `cancelled` macos-latest job
+usually means it never got a runner, not that a test failed.
+
 ## Subsystem design and review
 
 Before changing a documented subsystem, read its
