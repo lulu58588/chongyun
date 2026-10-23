@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/budget"
-	"github.com/lulu58588/chongyun/internal/gwbudget"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/budget"
+	"github.com/lulu58588/starling/internal/gwbudget"
 )
 
 // The budget point with plugins/budget on and off, for a key held to a

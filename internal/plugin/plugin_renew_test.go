@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-// A plugin with auth.refresh leaves renewing its sign-ins to magpie: a
+// A plugin with auth.refresh leaves renewing its sign-ins to starling: a
 // token close to its end is renewed once however many requests find it
 // so, each of them sent with the new one; one with time left, or no
 // expiry, isn't renewed; one the vendor turns away is marked expired and

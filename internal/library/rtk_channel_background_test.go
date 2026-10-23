@@ -19,7 +19,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // forgetChannels clears what each package manager was found to have, and any

@@ -7,13 +7,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Settings' Codex thread titles (#705) is set on its own: off, a model
-// magpie serves (one it doesn't is refused), or back to Codex's own; the
+// starling serves (one it doesn't is refused), or back to Codex's own; the
 // Settings page's other saves, which never send it, keep it; and the page
 // is told the models it may name.
 func TestCodexTitlesSetting(t *testing.T) {
@@ -56,7 +56,7 @@ func TestCodexTitlesSetting(t *testing.T) {
 		t.Errorf("another save (%d) lost the setting: %q", code, settings.Load().CodexTitles)
 	}
 	if code, _ := call("/api/settings/codex-titles", `{"model":"nope/x"}`); code < 400 || settings.Load().CodexTitles != "off" {
-		t.Errorf("a model chongyun doesn't serve: %d, %q", code, settings.Load().CodexTitles)
+		t.Errorf("a model starling doesn't serve: %d, %q", code, settings.Load().CodexTitles)
 	}
 	if code, out := call("/api/settings/codex-titles", `{"model":"fake/m1"}`); code != 200 || out["codexTitles"] != "fake/m1" {
 		t.Errorf("a model: %d %v", code, out["codexTitles"])

@@ -1,6 +1,6 @@
 package gateway
 
-import "github.com/lulu58588/chongyun/internal/provider"
+import "github.com/lulu58588/starling/internal/provider"
 
 // usageEncoder reads the encoder's chosen ID after it starts writing. Upstream
 // IDs can be absent or acquire a protocol prefix, so KStart.MsgID is not enough.

@@ -7,14 +7,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 func TestBootScript(t *testing.T) {
 	home := t.TempDir()
 	testenv.SetHome(t, home)
 	// Spaces, quotes and shell expansions must stay part of the file name.
-	exe := filepath.Join(home, "chongyun ' $not_a_variable")
+	exe := filepath.Join(home, "starling ' $not_a_variable")
 	out := filepath.Join(home, "args")
 	if err := os.WriteFile(exe, []byte("#!/system/bin/sh\nprintf '%s' \"$1\" > \"$HOME/args\"\n"), 0o700); err != nil {
 		t.Fatal(err)

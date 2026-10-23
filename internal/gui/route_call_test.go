@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A request on the Routing page opens to its own request and response

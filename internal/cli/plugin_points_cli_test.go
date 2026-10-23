@@ -8,18 +8,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// magpie plugin says the tools a plugin gives agents, by their names on
+// starling plugin says the tools a plugin gives agents, by their names on
 // the plugin tools MCP server, and the page it adds to the window with
 // what that page may read: the list had neither, so a plugin with only
 // tools or a page had nothing under it.
 func TestPluginListSaysToolsAndPage(t *testing.T) {
 	bun := testenv.Bun(t)
 	groupsHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	dir := t.TempDir()
 	tools, page := filepath.Join(dir, "tools"), filepath.Join(dir, "page")

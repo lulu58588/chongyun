@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 func aside(home string) *Agent { return asideIn(here(home)) }
@@ -55,11 +55,11 @@ func asideIn(at place) *Agent {
 				}
 				return opts
 			}
-			return append(asideOwnOptions(c.models, cur[key]), viaMagpie("aside", "magpie/")...)
+			return append(asideOwnOptions(c.models, cur[key]), viaStarling("aside", "starling/")...)
 		}
 		a.Fields = append(a.Fields, f)
 	}
-	// which of Aside's accounts magpie configures: empty follows the one
+	// which of Aside's accounts starling configures: empty follows the one
 	// Aside has active (#1499)
 	a.Fields = append(a.Fields, Field{Key: "account", Label: "account", Quiet: true,
 		Get: func() string {
@@ -78,13 +78,13 @@ var asideRoles = []string{"fast", "standard", "deep", "visual"}
 
 const asideImageKey = "imageGenerationModel"
 
-// asideDir is the folder of the Aside account magpie configures
+// asideDir is the folder of the Aside account starling configures
 // (asideChoice).
 func asideDir(at place) string { return asideAccountDir(at, asideChoice(at)) }
 
 var asideTimeout = 10 * time.Second
 
-const asideOK = "MAGPIE_ASIDE_OK"
+const asideOK = "STARLING_ASIDE_OK"
 
 var asideSet = func(account, expr string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), asideTimeout)

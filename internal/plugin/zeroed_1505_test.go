@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/starling/internal/lastgood"
 )
 
 // zeroedAuth is plugin-auth.json as #1505's Windows crash left it: its full
@@ -35,7 +35,7 @@ func importRenew(t *testing.T, ctx context.Context, who string) string {
 }
 
 // The host reads a zeroed plugin-auth.json from its last good generation,
-// tells magpie, which tells the user, and a sign-in added keeps the
+// tells starling, which tells the user, and a sign-in added keeps the
 // accounts and the zeroed file aside.
 func TestZeroedPluginAuthReadFromBackup(t *testing.T) {
 	sandbox(t)
@@ -54,14 +54,14 @@ func TestZeroedPluginAuthReadFromBackup(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// magpie's own reads: the .bak lags one write, so it holds a
+	// starling's own reads: the .bak lags one write, so it holds a
 	if got := Auths("renewco"); len(got) != 1 || got[a] == nil {
 		t.Fatalf("a zeroed plugin-auth.json read as %v", got)
 	}
 	if len(lastgood.Recovered()) != 1 {
-		t.Fatalf("chongyun's read not noted: %+v", lastgood.Recovered())
+		t.Fatalf("starling's read not noted: %+v", lastgood.Recovered())
 	}
-	lastgood.Reset() // the host's own read is told magpie too
+	lastgood.Reset() // the host's own read is told starling too
 
 	// the host's
 	c := importRenew(t, ctx, "c@renew")
@@ -86,7 +86,7 @@ func TestZeroedPluginAuthReadFromBackup(t *testing.T) {
 }
 
 // With no backup, a zeroed plugin-auth.json is unknown, never none: a
-// sign-out doesn't write none over it, magpie's or the host's.
+// sign-out doesn't write none over it, starling's or the host's.
 func TestZeroedPluginAuthWithoutBackupNotWrittenOver(t *testing.T) {
 	sandbox(t)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
@@ -108,10 +108,10 @@ func TestZeroedPluginAuthWithoutBackupNotWrittenOver(t *testing.T) {
 	}
 	Restart()
 	if err := SignOut(ctx, "renewco", ""); err == nil {
-		t.Fatal("chongyun's sign-out of sign-ins that don't read said done")
+		t.Fatal("starling's sign-out of sign-ins that don't read said done")
 	}
 	if got, _ := os.ReadFile(AuthPath()); !bytes.Equal(got, zeroedAuth) {
-		t.Fatalf("chongyun's sign-out wrote %q over sign-ins that don't read", got)
+		t.Fatalf("starling's sign-out wrote %q over sign-ins that don't read", got)
 	}
 	// a sign-in added writes, the zeroed file kept aside first
 	k := importRenew(t, ctx, "new@renew")

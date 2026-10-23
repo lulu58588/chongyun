@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 )
 
 // Cline's CLI (3, on the Cline SDK) keeps a session in a folder of its own

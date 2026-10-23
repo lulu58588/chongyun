@@ -8,9 +8,9 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 func TestDsh(t *testing.T) {
@@ -40,11 +40,11 @@ func TestDsh(t *testing.T) {
 	os.MkdirAll(filepath.Dir(path), 0o755)
 	os.WriteFile(path, []byte(own), 0o644)
 
-	if err := f.Set("magpie/deepseek/pro"); err != nil {
+	if err := f.Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	s := read()
-	for _, want := range []string{"# mine", "- id: tools", "- id: llm-deepseek # chongyun", `baseURL: "http://`, `apiKey: "magpie"`, `- id: "deepseek/flash"`, "- id: agent-loop # chongyun", `model: "deepseek/pro"`, "cwd: !!js process.cwd()", "- id: api-gateway # chongyun"} {
+	for _, want := range []string{"# mine", "- id: tools", "- id: llm-deepseek # starling", `baseURL: "http://`, `apiKey: "starling"`, `- id: "deepseek/flash"`, "- id: agent-loop # starling", `model: "deepseek/pro"`, "cwd: !!js process.cwd()", "- id: api-gateway # starling"} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q in\n%s", want, s)
 		}
@@ -52,7 +52,7 @@ func TestDsh(t *testing.T) {
 	if strings.Contains(s, "thinking: disabled") || strings.Count(s, "id: llm-deepseek") != 1 {
 		t.Fatalf("the user's entry should be replaced:\n%s", s)
 	}
-	if f.Get() != "magpie/deepseek/pro" {
+	if f.Get() != "starling/deepseek/pro" {
 		t.Fatalf("get: %q", f.Get())
 	}
 
@@ -61,12 +61,12 @@ func TestDsh(t *testing.T) {
 		t.Fatal(err)
 	}
 	s = read()
-	if f.Get() != "deepseek-v4-flash" || !strings.Contains(s, "thinking: disabled") || strings.Contains(s, "llm-deepseek # chongyun") || strings.Contains(s, "api-gateway") {
+	if f.Get() != "deepseek-v4-flash" || !strings.Contains(s, "thinking: disabled") || strings.Contains(s, "llm-deepseek # starling") || strings.Contains(s, "api-gateway") {
 		t.Fatalf("own model: %q\n%s", f.Get(), s)
 	}
 
-	// through magpie again, then back to dsh as it ships
-	if err := f.Set("magpie/deepseek/flash"); err != nil {
+	// through starling again, then back to dsh as it ships
+	if err := f.Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	if err := f.Set(""); err != nil {
@@ -76,13 +76,13 @@ func TestDsh(t *testing.T) {
 		t.Fatalf("reset should leave the user's file as it was:\n%s", got)
 	}
 
-	if err := f.Set("magpie/nope/x"); err == nil {
+	if err := f.Set("starling/nope/x"); err == nil {
 		t.Fatal("unknown catalog model accepted")
 	}
 
-	// a file magpie cannot read as a list is left alone
+	// a file starling cannot read as a list is left alone
 	os.WriteFile(path, []byte("llm-deepseek:\n  x: 1\n"), 0o644)
-	if err := f.Set("magpie/deepseek/pro"); err == nil {
+	if err := f.Set("starling/deepseek/pro"); err == nil {
 		t.Fatal("a mapping was edited as a list")
 	}
 }
@@ -107,7 +107,7 @@ func TestDshProfiles(t *testing.T) {
 		os.WriteFile(p, []byte(template), 0o644)
 	}
 	legacy := filepath.Join(dir, "config.yaml")
-	os.WriteFile(legacy, []byte("- id: agent-loop # chongyun\n  config:\n    agents: []\n"), 0o644)
+	os.WriteFile(legacy, []byte("- id: agent-loop # starling\n  config:\n    agents: []\n"), 0o644)
 	settings := filepath.Join(dir, "settings.yaml")
 	os.WriteFile(settings, []byte("ui:\n  theme: dark\nagent-default-model:\n  provider: deepseek-official\n  model: deepseek-flash\n"), 0o644)
 	read := func(p string) string { b, _ := os.ReadFile(p); return string(b) }
@@ -116,12 +116,12 @@ func TestDshProfiles(t *testing.T) {
 	if f.Get() != "deepseek-flash" {
 		t.Fatalf("the model picked in dsh: %q", f.Get())
 	}
-	if err := f.Set("magpie/deepseek/pro"); err != nil {
+	if err := f.Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	for _, p := range []string{web, desktop} {
 		s := read(p)
-		for _, want := range []string{"# Your patch layer", "- id: llm-pi-ai # chongyun", "    providers:\n      magpie:\n", "apiKeyEnv: " + dshKeyRef, "baseURL: http://", "- id: agent-default-model # chongyun", "provider: magpie", `model: "deepseek/pro"`} {
+		for _, want := range []string{"# Your patch layer", "- id: llm-pi-ai # starling", "    providers:\n      starling:\n", "apiKeyEnv: " + dshKeyRef, "baseURL: http://", "- id: agent-default-model # starling", "provider: starling", `model: "deepseek/pro"`} {
 			if !strings.Contains(s, want) {
 				t.Fatalf("missing %q in %s:\n%s", want, p, s)
 			}
@@ -131,15 +131,15 @@ func TestDshProfiles(t *testing.T) {
 		}
 	}
 	if got := read(legacy); got != "[]\n" {
-		t.Fatalf("config.yaml should lose chongyun's entries: %q", got)
+		t.Fatalf("config.yaml should lose starling's entries: %q", got)
 	}
-	if !strings.Contains(read(filepath.Join(dir, ".env")), dshKeyRef+"=magpie") {
+	if !strings.Contains(read(filepath.Join(dir, ".env")), dshKeyRef+"=starling") {
 		t.Fatal("no key for the gateway")
 	}
 	if s := read(settings); strings.Contains(s, "agent-default-model") || !strings.Contains(s, "theme: dark") {
 		t.Fatalf("settings:\n%s", s)
 	}
-	if f.Get() != "magpie/deepseek/pro" {
+	if f.Get() != "starling/deepseek/pro" {
 		t.Fatalf("get: %q", f.Get())
 	}
 
@@ -192,7 +192,7 @@ func TestDshModelLimits(t *testing.T) {
 	}); err != nil {
 		t.Fatal(err)
 	}
-	b, _ := yaml.Marshal(dshRouteConfig(magpieModels("dsh"), "", gateway.URL()))
+	b, _ := yaml.Marshal(dshRouteConfig(starlingModels("dsh"), "", gateway.URL()))
 	s := string(b)
 	want := `    - id: v/see
       name: see · V
@@ -208,7 +208,7 @@ func TestDshModelLimits(t *testing.T) {
 }
 
 // The desktop app's profile made after the web's was set up (Discord 莫:
-// the web version lists magpie's models, the desktop one DeepSeek's alone)
+// the web version lists starling's models, the desktop one DeepSeek's alone)
 // is reported and, on the next sync, given the model the web's has.
 func TestDshProfileMadeLater(t *testing.T) {
 	home := t.TempDir()
@@ -226,7 +226,7 @@ func TestDshProfileMadeLater(t *testing.T) {
 	os.MkdirAll(filepath.Dir(web), 0o755)
 	os.WriteFile(web, []byte(template), 0o644)
 	a := dsh(home)
-	if err := a.Field("model").Set("magpie/deepseek/pro"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	if d := a.Check(); d != "" {
@@ -246,15 +246,15 @@ func TestDshProfileMadeLater(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(desktop)
-	for _, want := range []string{"- id: llm-pi-ai # chongyun", "apiKeyEnv: " + dshKeyRef, "- id: agent-default-model # chongyun", `model: "deepseek/pro"`} {
+	for _, want := range []string{"- id: llm-pi-ai # starling", "apiKeyEnv: " + dshKeyRef, "- id: agent-default-model # starling", `model: "deepseek/pro"`} {
 		if !strings.Contains(string(b), want) {
 			t.Fatalf("missing %q in the desktop profile:\n%s", want, b)
 		}
 	}
 	// dsh's own DeepSeek row, pointed elsewhere by the user, is no longer
-	// magpie's to take: the profile gets magpie's route beside it
+	// starling's to take: the profile gets starling's route beside it
 	b, _ = os.ReadFile(mine)
-	if !strings.HasPrefix(string(b), own) || !strings.Contains(string(b), "- id: llm-pi-ai # chongyun") {
+	if !strings.HasPrefix(string(b), own) || !strings.Contains(string(b), "- id: llm-pi-ai # starling") {
 		t.Fatalf("the user's own entry was changed:\n%s", b)
 	}
 	if d := a.Check(); d != "" {
@@ -264,7 +264,7 @@ func TestDshProfileMadeLater(t *testing.T) {
 
 // A dsh before 0.1.5 keeps its endpoint in config.yaml. With no catalog there
 // is nothing to write into that entry, so the effort change is refused rather
-// than blanking the models magpie put there.
+// than blanking the models starling put there.
 func TestDshSetEffortLeavesALegacyEntryWithNoCatalogAlone(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
@@ -272,12 +272,12 @@ func TestDshSetEffortLeavesALegacyEntryWithNoCatalogAlone(t *testing.T) {
 	t.Setenv("DSH_HOME", "")
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
-	if n := len(magpieModels("dsh")); n != 0 {
+	if n := len(starlingModels("dsh")); n != 0 {
 		t.Fatalf("a catalog to write from: %d models", n)
 	}
 	dir := filepath.Join(home, ".dsh")
 	path := filepath.Join(dir, "config.yaml")
-	own := "# mine\n- id: llm-deepseek # chongyun\n  config:\n    models:\n      - id: \"deepseek/pro\"\n"
+	own := "# mine\n- id: llm-deepseek # starling\n  config:\n    models:\n      - id: \"deepseek/pro\"\n"
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -308,7 +308,7 @@ func TestDshSetEffortWritesALegacyEntryWithTheCatalog(t *testing.T) {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(path, []byte("# mine\n- id: llm-deepseek # chongyun\n  config:\n    models:\n      - id: \"deepseek/pro\"\n"), 0o644); err != nil {
+	if err := os.WriteFile(path, []byte("# mine\n- id: llm-deepseek # starling\n  config:\n    models:\n      - id: \"deepseek/pro\"\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	if err := dshSetEffort(dir, "high", gateway.URL()); err != nil {
@@ -316,7 +316,7 @@ func TestDshSetEffortWritesALegacyEntryWithTheCatalog(t *testing.T) {
 	}
 	b, _ := os.ReadFile(path)
 	s := string(b)
-	for _, want := range []string{"# mine", "- id: llm-deepseek # chongyun", "reasoningEffort: high", `- id: "deepseek/pro"`, `- id: "deepseek/flash"`} {
+	for _, want := range []string{"# mine", "- id: llm-deepseek # starling", "reasoningEffort: high", `- id: "deepseek/pro"`, `- id: "deepseek/flash"`} {
 		if !strings.Contains(s, want) {
 			t.Fatalf("missing %q in\n%s", want, s)
 		}

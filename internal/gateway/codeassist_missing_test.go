@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Packing1 报告: a Google AI Pro account's model list names Argon,

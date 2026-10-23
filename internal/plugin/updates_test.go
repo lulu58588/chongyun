@@ -85,7 +85,7 @@ func TestCheckUpdates(t *testing.T) {
 		t.Fatal("an update older than asked for was told")
 	}
 
-	// the reader updates theirs: it waits no more, before magpie looks again
+	// the reader updates theirs: it waits no more, before starling looks again
 	installedAt(t, theirs, "1.0.0")
 	if p := PendingUpdates(); len(p.Waiting) != 1 || p.Waiting[0].Package != pinned {
 		t.Fatalf("after updating %s, Waiting = %+v", theirs, p.Waiting)

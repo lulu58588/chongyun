@@ -18,10 +18,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/mcpauth"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/mcpauth"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // The Library page says of each server whether it works, found the only
@@ -42,15 +42,15 @@ type ServerHealth struct {
 	ToolList []Tool `json:"toolList,omitempty"`
 	// Why is the kind of error, for the page to put in its own words:
 	// notfound, start, exited, timeout, http, refused, unreachable,
-	// protocol, novar (a ${NAME} magpie's environment hasn't: Detail names
+	// protocol, novar (a ${NAME} starling's environment hasn't: Detail names
 	// them)
 	Why    string `json:"why,omitempty"`
 	Code   int    `json:"code,omitempty"`   // the exit code, or the HTTP status
 	Detail string `json:"detail,omitempty"` // the last line it wrote to stderr, or the error's text
 	// OAuth is a refusal that named a sign-in (WWW-Authenticate), which
-	// magpie can do itself for a streamable HTTP server
+	// starling can do itself for a streamable HTTP server
 	OAuth bool `json:"oauth,omitempty"`
-	// SignIn is magpie's sign-in to a streamable HTTP server as the check
+	// SignIn is starling's sign-in to a streamable HTTP server as the check
 	// left it: one whose renewed token the server refused has run out
 	// since, and the page's tag says so (新v学员 报告)
 	SignIn *mcpauth.Status `json:"signIn,omitempty"`
@@ -196,7 +196,7 @@ func CheckServer(ctx context.Context, s *Server) ServerHealth {
 	}
 	h.At = time.Now().UnixMilli()
 	if s.Transport == "http" {
-		// only a server magpie is signed in to has one to report
+		// only a server starling is signed in to has one to report
 		if st := mcpauth.StatusOf(s.Name, s.URL); st.SignedIn || st.Dead {
 			h.SignIn = &st
 		}
@@ -269,7 +269,7 @@ func initializeReq() []byte {
 	return request(1, "initialize", map[string]any{
 		"protocolVersion": mcpProtocol,
 		"capabilities":    map[string]any{},
-		"clientInfo":      map[string]any{"name": "崇云科技", "version": gateway.Version},
+		"clientInfo":      map[string]any{"name": "星鸣", "version": gateway.Version},
 	})
 }
 
@@ -424,14 +424,14 @@ func (t *tail) last() string {
 }
 
 func checkStdio(ctx context.Context, s *Server) ServerHealth {
-	// started as the agents start it: in the environment magpie has, with
+	// started as the agents start it: in the environment starling has, with
 	// the server's own variables over it
 	env, unset := expandAll(s.Env)
 	if len(unset) > 0 {
 		return failed("novar", strings.Join(unset, ", "))
 	}
 	cmd := proc.Command(s.Command, s.Args...)
-	// Agents start MCP servers from a project or home directory. A magpie
+	// Agents start MCP servers from a project or home directory. A starling
 	// launched from a shortcut (Windows Start menu) often has C:\Windows\system32
 	// as its own cwd, which is not writable; inherit that and a server that
 	// writes into "." dies as "exited (1)" with no log. Pin the check to HOME.
@@ -439,7 +439,7 @@ func checkStdio(ctx context.Context, s *Server) ServerHealth {
 	if d := home(); d != "" {
 		cmd.Dir = d
 		// and PWD with it, as exec does itself only when Env is nil: a
-		// shell-script server that reads $PWD would otherwise see magpie's
+		// shell-script server that reads $PWD would otherwise see starling's
 		// own folder while it runs in home (Windows doesn't use PWD)
 		if runtime.GOOS != "windows" {
 			cmd.Env = append(cmd.Env, "PWD="+d)
@@ -564,7 +564,7 @@ func exitHealth(err error, errs *tail) ServerHealth {
 
 // ---- a URL -------------------------------------------------------------------
 
-// remoteHeaders are the server's own headers, with magpie's token when it
+// remoteHeaders are the server's own headers, with starling's token when it
 // is signed in to it: the agents reach it with that too.
 func remoteHeaders(ctx context.Context, s *Server) (http.Header, *ServerHealth) {
 	h := http.Header{}
@@ -622,7 +622,7 @@ func checkHTTP(ctx context.Context, s *Server) ServerHealth {
 	if bad != nil {
 		return *bad
 	}
-	// magpie's own token, when it is signed in: one the server refuses is
+	// starling's own token, when it is signed in: one the server refuses is
 	// renewed once and asked again with, as the gateway's relay does, and
 	// one refused just after it was renewed is a sign-in that has run out
 	tok := ""

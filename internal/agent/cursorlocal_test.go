@@ -9,15 +9,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // Cursor Private Inference (#299) is found by its product.json among the
 // apps, beside a regular Cursor of the same app name that isn't it, and its
-// row gives the command that starts it on magpie, with its own key; its
+// row gives the command that starts it on starling, with its own key; its
 // requests are its own in the usage, not Cursor's.
 func TestCursorLocal(t *testing.T) {
 	root := t.TempDir()
@@ -82,7 +82,7 @@ func TestCursorLocal(t *testing.T) {
 }
 
 // Its row connects as other agents' do, with no command to run (mamba on
-// Discord): magpie sets CURSOR_LOCAL_AGENT_BASE_URL and _API_KEY for the
+// Discord): starling sets CURSOR_LOCAL_AGENT_BASE_URL and _API_KEY for the
 // user, which only this build reads, notes it, sets them again when the
 // gateway is served (the Mac's launchd forgets them at a restart, and the
 // port may change), and clears them on disconnect.
@@ -104,7 +104,7 @@ func TestCursorLocalConnects(t *testing.T) {
 		t.Fatalf("fields %d, wired %v before connecting", len(a.Fields), a.Wired())
 	}
 	how, err := a.ConnectHow()
-	if err != nil || how.How != "magpie" || !a.Wired() {
+	if err != nil || how.How != "starling" || !a.Wired() {
 		t.Fatalf("connect: %+v %v, wired %v", how, err, a.Wired())
 	}
 	want := map[string]string{"CURSOR_LOCAL_AGENT_BASE_URL": gateway.URL() + "/v1", "CURSOR_LOCAL_AGENT_API_KEY": gateway.TokenFor(CursorLocalID)}
@@ -136,7 +136,7 @@ func TestCursorLocalConnects(t *testing.T) {
 
 // Its effort (#1003), which neither its environment nor, for most models,
 // its app can say, is picked in its row among the levels the models it
-// lists have, the default first: kept in magpie for the gateway to ask, and
+// lists have, the default first: kept in starling for the gateway to ask, and
 // offered only while it is connected and something it lists reasons.
 func TestCursorLocalEffort(t *testing.T) {
 	syncHome(t)

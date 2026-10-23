@@ -13,8 +13,8 @@
 在 Windows 上，WSL 项目的目标路径会在同一个正在运行的发行版内解析。CLI 也可以直接在 WSL 里运行：
 
 ```sh
-chongyun sessions relocate-claude --from /home/me/old-project --to /home/me/new-project
-chongyun sessions relocate-claude --from /home/me/old-project --to /home/me/new-project --confirm <token-from-preview>
+starling sessions relocate-claude --from /home/me/old-project --to /home/me/new-project
+starling sessions relocate-claude --from /home/me/old-project --to /home/me/new-project --confirm <token-from-preview>
 ```
 
 第一条命令只做预览并打印 JSON。确认令牌把这次操作绑定到那些路径和源文件上；有改动就需要重新预览。为 CLI 设置 `CLAUDE_CONFIG_DIR` 时，它会选定 CLI 使用的 Claude Code 存储位置。
@@ -28,7 +28,7 @@ chongyun sessions relocate-claude --from /home/me/old-project --to /home/me/new-
 
 ## 恢复
 
-原始项目文件按字节原样保存在 `<Claude config>/magpie-relocations/project-*/original` 下，位于会话扫描范围之外。`manifest.json` 记录源路径、目标路径和备份路径。暂存文件在发布之前放在该备份旁边。
+原始项目文件按字节原样保存在 `<Claude config>/starling-relocations/project-*/original` 下，位于会话扫描范围之外。`manifest.json` 记录源路径、目标路径和备份路径。暂存文件在发布之前放在该备份旁边。
 
 要撤销一次已完成的迁移，关闭客户端，把目标项目存储挪到 `projects` 之外保留下来（尤其是对话还在继续的情况），然后把备份里的 `original` 目录移到清单的 `from` 路径。不要覆盖已存在的目录，也不要在 `projects` 下留下同一会话的两份副本。
 

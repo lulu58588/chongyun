@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/update"
 )
 
 // #2096: with Settings' AutoRestart on, a downloaded update is restarted

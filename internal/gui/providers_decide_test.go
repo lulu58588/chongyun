@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A Jev preset saved with the endpoint its gateway's docs give keeps it —

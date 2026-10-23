@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // effortTurns are a thread's requests as an agent sends them: the
@@ -72,10 +72,10 @@ func effortCodexAccount(t *testing.T, f *fake) {
 	auth := fmt.Sprintf(`{"auth_mode":"chatgpt","tokens":{"id_token":%q,"access_token":%q,"refresh_token":"r","account_id":"acct-1"}}`,
 		claims(map[string]any{"email": "me@example.com"}), claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}))
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), []byte(auth), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
-	chongyunLogins(t, chongyunCodexLogin("me@example.com", json.RawMessage(auth)))
+	starlingLogins(t, starlingCodexLogin("me@example.com", json.RawMessage(auth)))
 	up := httptest.NewServer(f)
 	t.Cleanup(up.Close)
 	old := provider.CodexBase
@@ -98,7 +98,7 @@ var effortReply = sse(
 // up a fraction of the reasoning asked; a thread that keeps its effort
 // goes as the agent sent it.
 func TestEffortChangeKeepsTheCache(t *testing.T) {
-	t.Setenv("MAGPIE_EFFORT_UPDATES", "on")
+	t.Setenv("STARLING_EFFORT_UPDATES", "on")
 	f := &fake{t: t, ctype: "none", reply: effortReply}
 	effortCodexAccount(t, f)
 
@@ -147,7 +147,7 @@ func TestEffortChangeKeepsTheCache(t *testing.T) {
 // #617: an upstream that turns the update away is asked again as the agent
 // sent it, and that account and model aren't sent updates again.
 func TestEffortUpdateRefused(t *testing.T) {
-	t.Setenv("MAGPIE_EFFORT_UPDATES", "on")
+	t.Setenv("STARLING_EFFORT_UPDATES", "on")
 	f := &fake{t: t, ctype: "none", reply: effortReply, refuse: func(b []byte) (int, string) {
 		if strings.Contains(string(b), "configuration_update") {
 			return 400, `{"error":{"message":"Invalid value: 'configuration_update'.","type":"invalid_request_error","param":"input[2].type"}}`
@@ -174,7 +174,7 @@ func TestEffortUpdateRefused(t *testing.T) {
 // #617: only a GPT-6 model through a ChatGPT account or OpenAI's API is
 // sent updates; another vendor's Responses API, and older models, never.
 func TestTakesEffortUpdates(t *testing.T) {
-	t.Setenv("MAGPIE_EFFORT_UPDATES", "on")
+	t.Setenv("STARLING_EFFORT_UPDATES", "on")
 	codex := provider.Provider{ID: "codex", Responses: provider.CodexBase, Account: &provider.Account{Agent: "codex"}}
 	openai := provider.Provider{ID: "openai", Responses: "https://api.openai.com/v1", Key: "k"}
 	other := provider.Provider{ID: "relay", Responses: "https://relay.example.com/v1", Key: "k"}
@@ -199,9 +199,9 @@ func TestTakesEffortUpdates(t *testing.T) {
 		}
 	}
 	for _, v := range []string{"", "off", "1"} {
-		t.Setenv("MAGPIE_EFFORT_UPDATES", v)
+		t.Setenv("STARLING_EFFORT_UPDATES", v)
 		if takesEffortUpdates(codex, "gpt-6-luna") {
-			t.Errorf("MAGPIE_EFFORT_UPDATES=%q still sends updates", v)
+			t.Errorf("STARLING_EFFORT_UPDATES=%q still sends updates", v)
 		}
 	}
 }
@@ -209,7 +209,7 @@ func TestTakesEffortUpdates(t *testing.T) {
 // #617: a Responses provider not OpenAI's gets a thread's effort change as
 // the agent sent it.
 func TestEffortChangeOtherVendor(t *testing.T) {
-	t.Setenv("MAGPIE_EFFORT_UPDATES", "on")
+	t.Setenv("STARLING_EFFORT_UPDATES", "on")
 	effortThreads.Lock()
 	effortThreads.m, effortThreads.no = map[string]*effortThread{}, map[string]time.Time{}
 	effortThreads.Unlock()

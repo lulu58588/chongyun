@@ -3,7 +3,7 @@ package provider
 import (
 	"context"
 	"errors"
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -14,7 +14,7 @@ import (
 )
 
 // fakeClaudeUsage has Claude Code's /usage print out (or fail with err),
-// counting its runs, and fails the test on any request magpie makes to
+// counting its runs, and fails the test on any request starling makes to
 // Anthropic itself.
 func fakeClaudeUsage(t *testing.T, out *atomic.Value, fail *atomic.Bool) *atomic.Int32 {
 	t.Helper()
@@ -31,7 +31,7 @@ func fakeClaudeUsage(t *testing.T, out *atomic.Value, fail *atomic.Bool) *atomic
 		return out.Load().(string), nil
 	})
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		t.Errorf("chongyun asked Anthropic itself: %s", r.URL)
+		t.Errorf("starling asked Anthropic itself: %s", r.URL)
 	}))
 	oldBase, oldWait, oldUsed := claudeBase, claudeUsageWait, claudeUsedSince
 	claudeBase = srv.URL

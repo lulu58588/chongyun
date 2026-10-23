@@ -18,7 +18,7 @@ const agent = (id, name) => ({ id, name, icon: "", skills: `${HOME}/.${id}/skill
 const HTTPS = "https://gitlab.corp.example/team/skills/-/tree/HEAD/skills/pdf";
 const SSH = "git@gitlab.corp.example:team/private.git";
 const lib = () => ({
-  dir: `${HOME}/.magpie/library`, backups: `${HOME}/.magpie/backups`, home: HOME,
+  dir: `${HOME}/.starling/library`, backups: `${HOME}/.starling/backups`, home: HOME,
   agents: [agent("claude", "Claude Code")],
   instructions: { agents: [] }, servers: [], foundServers: [], projects: [], foundSkills: [], newSkills: [],
   checkDue: false,
@@ -69,12 +69,12 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       await t.test(`${lang} at ${width}px`, async () => {
         const w = words[lang], posts = [];
         const ctx = await browser.newContext({ viewport: { width, height: 900 } });
-        await ctx.addInitScript(() => { try { localStorage.setItem("magpie.libTab", "skills"); } catch {} });
+        await ctx.addInitScript(() => { try { localStorage.setItem("starling.libTab", "skills"); } catch {} });
         const page = await ctx.newPage();
         page.setDefaultTimeout(5000);
         page.on("pageerror", (e) => errors.push(e.message));
         await page.route("**/*", server(lang, posts));
-        await page.goto("http://magpie.test/");
+        await page.goto("http://starling.test/");
         await page.locator('button[data-view="library"]').click();
         const v = page.locator("#view-library");
         const src = v.locator('input[data-lib="source"]');

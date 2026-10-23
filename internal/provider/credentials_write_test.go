@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
 // fakeCodexRefresh answers a refresh with a fresh access token and the
@@ -53,7 +53,7 @@ func dueCodexAuth(t *testing.T) (path string, was []byte) {
 }
 
 
-// The same for Claude Code's own .credentials.json, written when magpie
+// The same for Claude Code's own .credentials.json, written when starling
 // switches the sign-in Claude Code is on: a write whose flush failed is
 // an error and leaves the file as it was.
 func TestClaudeCredentialFlushesBeforeReplacing(t *testing.T) {

@@ -20,7 +20,7 @@ const assets = path.resolve(__dirname, "../assets");
 
 function serve(lang, sync, imported) {
   const settings = {
-    theme: "light", lang, tray: "panel", version: "test", dir: "/tmp/magpie",
+    theme: "light", lang, tray: "panel", version: "test", dir: "/tmp/starling",
     gateway: "http://127.0.0.1:3425", visionModels: [], imageGenModels: [],
     fx: { rate: 7.2, stale: false },
   };
@@ -68,7 +68,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           page.on("pageerror", (e) => errors.push(e.message));
           await page.route("**/*", serve(lang, { ...base, signIn }, imported));
           page.setDefaultTimeout(5000);
-          await page.goto("http://magpie.test/");
+          await page.goto("http://starling.test/");
           await page.locator("#prefs").click();
           await openPart(page, "sync");
           const first = page.locator("#syncList .row.pref").first();
@@ -92,7 +92,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           await reach(page, open);
           await open.click();
           const form = page.locator("#syncList .sync-form");
-          await form.locator("input[type=file]").setInputFiles({ name: "magpie.magpie-backup", mimeType: "application/octet-stream", buffer: Buffer.from("sealed") });
+          await form.locator("input[type=file]").setInputFiles({ name: "starling.starling-backup", mimeType: "application/octet-stream", buffer: Buffer.from("sealed") });
           await form.locator("input[type=password]").fill("correct horse");
           // at 440px in German the form's foot is under the window's
           const go = form.locator("button.primary");

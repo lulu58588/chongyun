@@ -5,16 +5,16 @@ import (
 	"testing"
 )
 
-// A ChatGPT account that runs out of its allowance after a magpie model was
-// picked beside its sign-in leaves the Codex app sending nothing, a magpie
-// model's turn included (#540): Sync makes magpie Codex's provider then, as
-// a pick does for an account already out, and puts magpie back beside the
+// A ChatGPT account that runs out of its allowance after a starling model was
+// picked beside its sign-in leaves the Codex app sending nothing, a starling
+// model's turn included (#540): Sync makes starling Codex's provider then, as
+// a pick does for an account already out, and puts starling back beside the
 // sign-in once the allowance is back. A provider the user asked for (api)
 // or one for a Codex not signed in to ChatGPT stays.
 func TestCodexRunsOutAfterPick(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "")
-	// chongyun never reads the agent's own sign-in: a Codex signed in to
-	// ChatGPT is one chongyun wired beside that sign-in.
+	// starling never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one starling wired beside that sign-in.
 	codexBeside(t, home, "joined")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
@@ -27,14 +27,14 @@ func TestCodexRunsOutAfterPick(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) || !strings.Contains(cfg, "model_catalog_json") ||
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "starling"`) || !strings.Contains(cfg, "model_catalog_json") ||
 		!strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model = "fake/m1"`) {
 		t.Fatalf("used up:\n%s", cfg)
 	}
 	if err := cx.Sync(); err != nil { // still out: stays
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "starling"`) {
 		t.Fatalf("used up, synced again:\n%s", cfg)
 	}
 	codexUsedUp = func() bool { return false }
@@ -46,29 +46,29 @@ func TestCodexRunsOutAfterPick(t *testing.T) {
 		t.Fatalf("allowance back:\n%s", cfg)
 	}
 
-	// magpie as the provider because the user asked for it stays so
+	// starling as the provider because the user asked for it stays so
 	if err := cx.Field("login").Set("api"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "starling"`) {
 		t.Fatalf("api:\n%s", cfg)
 	}
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "starling"`) {
 		t.Fatalf("api, allowance there, synced:\n%s", cfg)
 	}
 }
 
 // Kept on ChatGPT (Always ChatGPT), a ChatGPT account that runs out leaves
-// magpie beside the sign-in: Codex isn't moved to magpie as its provider,
+// starling beside the sign-in: Codex isn't moved to starling as its provider,
 // by a pick or by Sync, and one moved before the user chose it is put back
 // beside it at once.
 func TestCodexKeptOnChatGPT(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "")
-	// chongyun never reads the agent's own sign-in: a Codex signed in to
-	// ChatGPT is one chongyun wired beside that sign-in.
+	// starling never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one starling wired beside that sign-in.
 	codexBeside(t, home, "joined")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
@@ -79,8 +79,8 @@ func TestCodexKeptOnChatGPT(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
-		t.Fatalf("ChatGPT, used up: chongyun its provider:\n%s", cfg)
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "starling"`) {
+		t.Fatalf("ChatGPT, used up: starling its provider:\n%s", cfg)
 	}
 
 	beside := func(when string) {
@@ -110,7 +110,7 @@ func TestCodexKeptOnChatGPT(t *testing.T) {
 	if err := cx.Field("login").Set(""); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "starling"`) {
 		t.Fatalf("ChatGPT again, used up:\n%s", cfg)
 	}
 }

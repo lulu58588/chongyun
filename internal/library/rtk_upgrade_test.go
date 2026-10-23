@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // versionedRTK is an rtk whose version is in the file VERSION names, with

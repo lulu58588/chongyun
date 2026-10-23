@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // #2379 (jiz4oh): OpenCode's fast variant of a Codex account's GPT model

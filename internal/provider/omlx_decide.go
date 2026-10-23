@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // OMLXPreset is the oMLX preset's id.

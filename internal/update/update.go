@@ -1,5 +1,5 @@
-// Package update keeps chongyun current. This build names no update feed
-// of its own: the newest release is described by the feed MAGPIE_UPDATE_FEED
+// Package update keeps starling current. This build names no update feed
+// of its own: the newest release is described by the feed STARLING_UPDATE_FEED
 // points at (none by default), with its version, notes, and every file with
 // its SHA-256.
 //
@@ -31,22 +31,22 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/source"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/source"
 )
 
 // Site is where this build's own releases live; its /api/latest is the
 // update feed. It is empty in this build: nothing is published there, and
-// the app never goes looking for a newer version. Point MAGPIE_UPDATE_FEED
+// the app never goes looking for a newer version. Point STARLING_UPDATE_FEED
 // at a feed of your own to have one.
 const Site = ""
 
-// Feed is where the newest release is described. MAGPIE_UPDATE_FEED points
+// Feed is where the newest release is described. STARLING_UPDATE_FEED points
 // it elsewhere, for testing an update against a local server.
 func Feed() string {
-	if f := os.Getenv("MAGPIE_UPDATE_FEED"); f != "" {
+	if f := os.Getenv("STARLING_UPDATE_FEED"); f != "" {
 		return f
 	}
 	if Site == "" {
@@ -71,7 +71,7 @@ type Asset struct {
 }
 
 // client asks the feed and downloads a release through the proxy the rest
-// of magpie's requests take — Settings' Proxy, else the environment's, else
+// of starling's requests take — Settings' Proxy, else the environment's, else
 // the system's (#294) — on a transport of its own, whatever the process has
 // done to http.DefaultTransport.
 var client = &http.Client{Timeout: 10 * time.Minute, Transport: proxied()}
@@ -207,11 +207,11 @@ func parse(v string) *semver {
 var GUI bool
 
 // AppAsset and BinaryAsset name the files this machine would install.
-func AppAsset() string { return "magpie-darwin-" + runtime.GOARCH + ".zip" }
+func AppAsset() string { return "starling-darwin-" + runtime.GOARCH + ".zip" }
 func BinaryAsset() string {
-	name := "magpie-cli-" + runtime.GOOS + "-" + runtime.GOARCH
+	name := "starling-cli-" + runtime.GOOS + "-" + runtime.GOARCH
 	if GUI && runtime.GOOS != "darwin" {
-		name = "magpie-" + runtime.GOOS + "-" + runtime.GOARCH
+		name = "starling-" + runtime.GOOS + "-" + runtime.GOARCH
 	}
 	if runtime.GOOS == "windows" {
 		name += ".exe"
@@ -229,7 +229,7 @@ func Bundle() string {
 	if err != nil {
 		return ""
 	}
-	// …/magpie.app/Contents/MacOS/magpie
+	// …/starling.app/Contents/MacOS/starling
 	app := filepath.Dir(filepath.Dir(filepath.Dir(exe)))
 	if filepath.Ext(app) != ".app" || filepath.Base(filepath.Dir(exe)) != "MacOS" {
 		return ""
@@ -237,11 +237,11 @@ func Bundle() string {
 	return app
 }
 
-// Homebrew is whether exe was installed by Homebrew (brew install magpie),
+// Homebrew is whether exe was installed by Homebrew (brew install starling),
 // which keeps it in its Cellar and has to be the one to upgrade it: a
 // binary replaced under it leaves brew thinking the old version is there.
 func Homebrew(exe string) bool {
-	return strings.Contains(filepath.ToSlash(exe), "/Cellar/magpie/")
+	return strings.Contains(filepath.ToSlash(exe), "/Cellar/starling/")
 }
 
 // Executable is the running binary, symlinks resolved.
@@ -253,9 +253,9 @@ func Executable() (string, error) {
 	return filepath.EvalSymlinks(exe)
 }
 
-// Writable reports whether magpie may replace what lives in dir.
+// Writable reports whether starling may replace what lives in dir.
 func Writable(dir string) bool {
-	f, err := os.CreateTemp(dir, ".magpie-update-*")
+	f, err := os.CreateTemp(dir, ".starling-update-*")
 	if err != nil {
 		return false
 	}
@@ -287,7 +287,7 @@ func Stage(ctx context.Context, rel *Release, bundle string) (string, error) {
 		return "", fmt.Errorf("unzip: %v: %s", err, b)
 	}
 	os.Remove(zip)
-	app := filepath.Join(out, "magpie.app")
+	app := filepath.Join(out, "starling.app")
 	if err := sameSigner(ctx, bundle, app); err != nil {
 		os.RemoveAll(dir)
 		return "", err
@@ -319,7 +319,7 @@ func team(ctx context.Context, app string) string {
 }
 
 // stageDir is where an update is unpacked: beside what it replaces, so
-// installing it is a rename on one volume, or, where magpie may not write,
+// installing it is a rename on one volume, or, where starling may not write,
 // in its cache, to be moved in with the administrator's password.
 func stageDir(dir string) string {
 	if !Writable(dir) {
@@ -327,12 +327,12 @@ func stageDir(dir string) string {
 			return filepath.Join(cache, "update")
 		}
 	}
-	return filepath.Join(dir, ".magpie-update")
+	return filepath.Join(dir, ".starling-update")
 }
 
 // Install swaps the staged app in for bundle. The running copy keeps going
 // until it quits; the next launch is the new one. Where the folder is not
-// magpie's to change the error is a permission one (NeedsAdmin), and
+// starling's to change the error is a permission one (NeedsAdmin), and
 // InstallAsAdmin can do it instead.
 func Install(staged, bundle string) error {
 	old := filepath.Join(filepath.Dir(staged), "old.app")
@@ -344,7 +344,7 @@ func Install(staged, bundle string) error {
 		os.Rename(old, bundle) // put it back
 		return err
 	}
-	os.RemoveAll(filepath.Dir(filepath.Dir(staged))) // .magpie-update
+	os.RemoveAll(filepath.Dir(filepath.Dir(staged))) // .starling-update
 	return nil
 }
 
@@ -368,11 +368,11 @@ func Relaunch(bundle string, window bool) error {
 
 // runAfterExit starts a shell that runs command once pid has exited. The
 // shell is in a session of its own: launchd ends the process group of a
-// job whose process exits, so one left in magpie's group was killed as
-// magpie quit and the new version never opened. That is the launch agent
+// job whose process exits, so one left in starling's group was killed as
+// starling quit and the new version never opened. That is the launch agent
 // of Open at login without AbandonProcessGroup (ee16c657), and, on macOS
 // 13 at least, the job LaunchServices runs an app in when it is opened from
-// the Dock or Finder, which magpie can't set that key on (#2362).
+// the Dock or Finder, which starling can't set that key on (#2362).
 func runAfterExit(pid int, command string) error {
 	script := fmt.Sprintf(`while kill -0 %d 2>/dev/null; do sleep 0.2; done; %s`, pid, command)
 	cmd := proc.Command("/bin/sh", "-c", script)
@@ -408,7 +408,7 @@ func ReplaceBinary(ctx context.Context, rel *Release) error {
 }
 
 // StageBinary downloads the release's build for this binary next to it (or
-// to the cache, where magpie may not write there), ready for InstallBinary.
+// to the cache, where starling may not write there), ready for InstallBinary.
 func StageBinary(ctx context.Context, rel *Release) (string, error) {
 	a, ok := rel.Assets[BinaryAsset()]
 	if !ok {
@@ -463,7 +463,7 @@ func InstallBinaryAside(staged, exe string) (string, error) {
 		}
 		// A running .exe cannot be overwritten, but it can be moved aside.
 		// What the last update moved aside may still be running too (a
-		// `chongyun serve` started before it), and can't be removed or
+		// `starling serve` started before it), and can't be removed or
 		// replaced then: this one goes beside it, under a name of its own.
 		// The download is kept, for another try.
 		RemoveOld(exe)
@@ -476,7 +476,7 @@ func InstallBinaryAside(staged, exe string) (string, error) {
 		if heldOpen(err) {
 			// the reason and what to do, shown as is in the version row
 			// and the Update pill's tooltip, without the paths
-			err = &saidError{fmt.Sprintf("couldn't put the new version in place of %s: another program still has the download open (often an antivirus checking it): let chongyun through it and restart to update again, or download the new version and put it in place of this one", filepath.Base(exe)), err}
+			err = &saidError{fmt.Sprintf("couldn't put the new version in place of %s: another program still has the download open (often an antivirus checking it): let starling through it and restart to update again, or download the new version and put it in place of this one", filepath.Base(exe)), err}
 		}
 		if old != "" {
 			if restoreErr := moveIn(old, exe); restoreErr != nil {
@@ -628,9 +628,9 @@ func moveAside(exe string) (string, error) {
 	var hint string
 	switch {
 	case heldOpen(err):
-		hint = "another program has it open (often an antivirus or OneDrive): let chongyun through it and restart to update again, or download the new version and put it in place of this one"
+		hint = "another program has it open (often an antivirus or OneDrive): let starling through it and restart to update again, or download the new version and put it in place of this one"
 	case errors.Is(err, fs.ErrPermission):
-		hint = "Windows doesn't let chongyun change files in " + filepath.Dir(exe) + " (an antivirus' folder protection, or the folder's permissions): let chongyun through, or download the new version and put it in place of this one"
+		hint = "Windows doesn't let starling change files in " + filepath.Dir(exe) + " (an antivirus' folder protection, or the folder's permissions): let starling through, or download the new version and put it in place of this one"
 	default:
 		hint = "download the new version and put it in place of this one"
 	}
@@ -660,7 +660,7 @@ func RemoveOld(exe string) {
 }
 
 // Replaced reports whether exe is no longer the binary that was there when
-// this process looked (started, from os.Stat): another magpie installed an
+// this process looked (started, from os.Stat): another starling installed an
 // update over it, and this one runs from where it was moved aside.
 func Replaced(exe string, started os.FileInfo) bool {
 	now, err := os.Stat(exe)
@@ -668,7 +668,7 @@ func Replaced(exe string, started os.FileInfo) bool {
 }
 
 // RemoveStaleNew removes exe.new when it is exe over again: the update a
-// magpie left running from before it downloaded once more.
+// starling left running from before it downloaded once more.
 func RemoveStaleNew(exe string) {
 	staged := exe + ".new"
 	a, err1 := os.Stat(exe)
@@ -712,7 +712,7 @@ func InstallBinaryAsAdmin(staged, exe string) error {
 // one then runs on rather than quitting.
 func RelaunchBinary(exe, old string, window bool, view string) error {
 	args := RelaunchArgs(window, view)
-	env := append(os.Environ(), "MAGPIE_REPLACES="+strconv.Itoa(os.Getpid()))
+	env := append(os.Environ(), "STARLING_REPLACES="+strconv.Itoa(os.Getpid()))
 	if old != "" {
 		return startChecked(exe, old, args, env)
 	}
@@ -720,7 +720,7 @@ func RelaunchBinary(exe, old string, window bool, view string) error {
 	return err
 }
 
-// RelaunchArgs is what RelaunchBinary starts magpie with: `gui [view]` for
+// RelaunchArgs is what RelaunchBinary starts starling with: `gui [view]` for
 // the window, `tray` for the tray icon alone.
 func RelaunchArgs(window bool, view string) []string {
 	switch {
@@ -732,12 +732,12 @@ func RelaunchArgs(window bool, view string) []string {
 	return []string{"gui"}
 }
 
-// AwaitPredecessor blocks, for a while at most, until the magpie that
+// AwaitPredecessor blocks, for a while at most, until the starling that
 // relaunched this one has exited.
 func AwaitPredecessor() {
 	reportStarted() // first: the one that started this waits for it
-	pid, err := strconv.Atoi(os.Getenv("MAGPIE_REPLACES"))
-	os.Unsetenv("MAGPIE_REPLACES")
+	pid, err := strconv.Atoi(os.Getenv("STARLING_REPLACES"))
+	os.Unsetenv("STARLING_REPLACES")
 	if err != nil || pid <= 0 {
 		return
 	}

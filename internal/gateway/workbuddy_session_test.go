@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // WorkBuddy 5.8.2's bundled ModelProvider sends the session as
@@ -136,7 +136,7 @@ func TestWorkBuddySessionThroughGateway(t *testing.T) {
 			t.Errorf("session %s captured %d turns, want %d: %v", id, transcript.Captured, want, err)
 		}
 	}
-	get := httptest.NewRequest("GET", "/v1/magpie/route", nil)
+	get := httptest.NewRequest("GET", "/v1/starling/route", nil)
 	get.RemoteAddr = "127.0.0.1:5000"
 	get.Header.Set("X-Conversation-ID", "chat-a")
 	rec := httptest.NewRecorder()

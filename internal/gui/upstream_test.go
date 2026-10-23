@@ -7,8 +7,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/upstream"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/upstream"
 )
 
 // /api/upstream says what the vendor's page says for the providers that

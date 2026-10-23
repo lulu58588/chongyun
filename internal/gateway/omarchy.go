@@ -4,26 +4,26 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/lulu58588/chongyun/internal/omarchy"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/omarchy"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // siteOrigins are the pages that may read the Omarchy theme. This build
-// names none; MAGPIE_SITE_ORIGIN adds one (a site served on this machine
+// names none; STARLING_SITE_ORIGIN adds one (a site served on this machine
 // to try it).
 var siteOrigins = map[string]bool{}
 
 func siteOrigin(o string) bool {
-	return siteOrigins[o] || o != "" && o == os.Getenv("MAGPIE_SITE_ORIGIN")
+	return siteOrigins[o] || o != "" && o == os.Getenv("STARLING_SITE_ORIGIN")
 }
 
-// onOmarchy is whether this magpie runs on Omarchy, asked once.
+// onOmarchy is whether this starling runs on Omarchy, asked once.
 var onOmarchy = omarchy.Detect()
 
-// omarchyTheme is Omarchy's current theme as magpie's own windows draw it
+// omarchyTheme is Omarchy's current theme as starling's own windows draw it
 // (name, mode, stamp, CSS variables: palette, font, corners, border), for
 // a site served on the same machine. It answers this machine only,
-// and the browser lets only that site read it; a chongyun elsewhere says
+// and the browser lets only that site read it; a starling elsewhere says
 // 404.
 func (s *Server) omarchyTheme(w http.ResponseWriter, r *http.Request) {
 	if o := r.Header.Get("Origin"); siteOrigin(o) {
@@ -39,7 +39,7 @@ func (s *Server) omarchyTheme(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !local(r) {
-		writeError(w, provider.Chat, http.StatusForbidden, "chongyun tells its Omarchy theme to this machine only")
+		writeError(w, provider.Chat, http.StatusForbidden, "starling tells its Omarchy theme to this machine only")
 		return
 	}
 	th, ok := omarchy.Theme{}, false
@@ -47,7 +47,7 @@ func (s *Server) omarchyTheme(w http.ResponseWriter, r *http.Request) {
 		th, ok = omarchy.Current()
 	}
 	if !ok {
-		writeError(w, provider.Chat, http.StatusNotFound, "chongyun isn't running on Omarchy")
+		writeError(w, provider.Chat, http.StatusNotFound, "starling isn't running on Omarchy")
 		return
 	}
 	w.Header().Set("Cache-Control", "no-store")

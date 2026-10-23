@@ -6,7 +6,7 @@ package provider
 // providers.json beside the account's other settings (AccountNames), by
 // the account's name in lower case; the vendor's or plugin's sign-in is
 // never written to. It is shown wherever the account is: the Usage page,
-// the menu bar, magpie accounts, magpie quota and /v1/magpie/quotas
+// the menu bar, starling accounts, starling quota and /v1/starling/quotas
 // (SubscriptionQuota.Alias, Quota.Alias).
 
 import (

@@ -13,9 +13,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // wbExhausted is WorkBuddy's 429 for credits used up, as the WorkBuddy
@@ -51,7 +51,7 @@ func TestCreditsExhaustedIsOutOfCredit(t *testing.T) {
 func TestOutOfCreditLeavesFreeModels(t *testing.T) {
 	bun := testenv.Bun(t)
 	fresh(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Setenv("FAKE_DEEPSEEK", "1")
 	t.Cleanup(plugin.Settle)
 	old := allowances

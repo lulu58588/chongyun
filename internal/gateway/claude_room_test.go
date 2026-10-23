@@ -16,9 +16,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // freshRoom gives the test a claudeRoom of its own, at most runs at once
@@ -245,13 +245,13 @@ func memFixture(t *testing.T, files map[string]string) string {
 }
 
 // The reporter's service (#2956): systemd's MemoryMax=512M on
-// magpie.service, cgroup v2, on a machine of 987728 kB. It holds 2.
+// starling.service, cgroup v2, on a machine of 987728 kB. It holds 2.
 func TestClaudeMemRunsFromTheCgroup(t *testing.T) {
 	root := memFixture(t, map[string]string{
 		"proc/meminfo":     "MemTotal:         987728 kB\nMemFree:           81200 kB\n",
-		"proc/self/cgroup": "0::/system.slice/magpie.service\n",
-		"sys/fs/cgroup/system.slice/magpie.service/memory.max":  "536870912\n",
-		"sys/fs/cgroup/system.slice/magpie.service/memory.high": "max\n",
+		"proc/self/cgroup": "0::/system.slice/starling.service\n",
+		"sys/fs/cgroup/system.slice/starling.service/memory.max":  "536870912\n",
+		"sys/fs/cgroup/system.slice/starling.service/memory.high": "max\n",
 		"sys/fs/cgroup/system.slice/memory.max":                 "max\n",
 	})
 	limit, why := memLimit("linux", root)
@@ -328,8 +328,8 @@ func TestClaudeRunsMostTheUsersOwn(t *testing.T) {
 	oldGOOS, oldRoot := memGOOS, memRoot
 	memGOOS, memRoot = "linux", memFixture(t, map[string]string{
 		"proc/meminfo":     "MemTotal:         987728 kB\n",
-		"proc/self/cgroup": "0::/system.slice/magpie.service\n",
-		"sys/fs/cgroup/system.slice/magpie.service/memory.max": "536870912\n",
+		"proc/self/cgroup": "0::/system.slice/starling.service\n",
+		"sys/fs/cgroup/system.slice/starling.service/memory.max": "536870912\n",
 	})
 	t.Cleanup(func() { memGOOS, memRoot = oldGOOS, oldRoot })
 	if n, why := claudeRunsMost(); n != 2 || !strings.Contains(why, "512 MiB") {

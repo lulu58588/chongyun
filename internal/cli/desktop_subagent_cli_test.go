@@ -4,11 +4,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/starling/internal/agent"
 )
 
-// magpie claude-desktop subagent_model prints no restart advice once
-// Desktop is on magpie; the pick that connects it, and a tier, do.
+// starling claude-desktop subagent_model prints no restart advice once
+// Desktop is on starling; the pick that connects it, and a tier, do.
 func TestDesktopSubagentModelNotice(t *testing.T) {
 	cliHome(t)
 	a, err := agent.Find("claude-desktop")

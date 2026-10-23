@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 // The warm-up's garbage goes back to the system when it ends, not over the
-// scavenger's next minutes: an idle magpie that just started read ~470 MB.
+// scavenger's next minutes: an idle starling that just started read ~470 MB.
 func TestWarmUpReturnsItsGarbage(t *testing.T) {
 	var keep [][]byte
 	warmUp(func() {

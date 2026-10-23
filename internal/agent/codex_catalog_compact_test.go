@@ -5,16 +5,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Codex is told where to compact a long conversation (#876) both from the
 // gateway's /models (provider.CodexListed, which sets catalog.Model.Compact)
-// and from the list magpie writes for it on disk (chongyun-models.json,
-// codex.go:593 -> codexcat.Catalog(magpieModels("codex"))).
+// and from the list starling writes for it on disk (starling-models.json,
+// codex.go:593 -> codexcat.Catalog(starlingModels("codex"))).
 //
-// magpieModels left Compact unset, so codexcat fell back to the one for
+// starlingModels left Compact unset, so codexcat fell back to the one for
 // every model: a threshold the user set on a model or on its provider
 // reached the gateway's list but not the one Codex reads from disk.
 //
@@ -27,7 +27,7 @@ func TestCodexCatalogCompactAtReachesDisk(t *testing.T) {
 	if err := provider.SetModelCompacts("relay", map[string]int{"*": 100000}); err != nil {
 		t.Fatalf("SetModelCompacts: %v", err)
 	}
-	// connect Codex to magpie on a magpie model, as the app does: it writes
+	// connect Codex to starling on a starling model, as the app does: it writes
 	// the catalog it reads from disk
 	cx := codex(home)
 	if err := cx.Fields[0].Set("relay/glm-4.6"); err != nil {
@@ -43,7 +43,7 @@ func TestCodexCatalogCompactAtReachesDisk(t *testing.T) {
 				MaxContext    int    `json:"max_context_window"`
 			} `json:"models"`
 		}
-		raw := readFile(filepath.Join(home, ".codex", "chongyun-models.json"))
+		raw := readFile(filepath.Join(home, ".codex", "starling-models.json"))
 		if err := json.Unmarshal([]byte(raw), &got); err != nil {
 			t.Fatalf("%v: %s", err, raw)
 		}

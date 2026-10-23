@@ -54,14 +54,14 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     for (const lang of ["en", "zh"]) {
       await t.test(lang, async () => {
         const ctx = await browser.newContext({ viewport: { width: 900, height: 560 }, reducedMotion: "reduce" });
-        await ctx.addInitScript(() => { try { localStorage.setItem("magpie.pluginTab", "installed"); } catch {} });
+        await ctx.addInitScript(() => { try { localStorage.setItem("starling.pluginTab", "installed"); } catch {} });
         const page = await ctx.newPage();
         t.after(() => ctx.close());
         page.setDefaultTimeout(15000); // a busy machine takes seconds over a click
         const errors = [];
         page.on("pageerror", (e) => errors.push(e.message));
         await page.route("**/*", server(lang));
-        await page.goto("http://magpie.test/?view=plugins");
+        await page.goto("http://starling.test/?view=plugins");
         const row = page.locator("#view-plugins .pm-row", { hasText: LAST });
         const button = row.locator("button", { hasText: new RegExp(`^${words[lang].signIn}$`) });
         await button.waitFor();

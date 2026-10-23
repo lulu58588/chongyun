@@ -10,8 +10,8 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // A provider whose protocols are served at bases of their own is asked

@@ -10,12 +10,12 @@ import (
 
 // Import links let a vendor or a relay hand its users a ready-made provider:
 //
-//	chongyun://import?preset=deepseek&key=sk-…
-//	chongyun://import?name=My%20Relay&chat=https://relay.example/v1&key=sk-…
+//	starling://import?preset=deepseek&key=sk-…
+//	starling://import?name=My%20Relay&chat=https://relay.example/v1&key=sk-…
 //
 // Parameters (every value URL-encoded):
 //
-//	preset     a preset id (magpie presets); the preset's endpoints are used.
+//	preset     a preset id (starling presets); the preset's endpoints are used.
 //	           Not google-vertex, asked at the user's own Google Cloud project
 //	region     with a preset that has regions, which one
 //	name       the provider's name; required without a preset
@@ -35,21 +35,21 @@ import (
 // A link never saves anything by itself: the app shows what it would add
 // and the user says yes.
 
-// Scheme is the URL scheme magpie registers with the system.
-const Scheme = "chongyun"
+// Scheme is the URL scheme starling registers with the system.
+const Scheme = "starling"
 
 // ParseImport reads an import link into the provider it describes.
 func ParseImport(link string) (Provider, error) {
 	u, err := url.Parse(strings.TrimSpace(link))
 	if err != nil || !strings.EqualFold(u.Scheme, Scheme) {
-		return Provider{}, errors.New("not a chongyun:// link")
+		return Provider{}, errors.New("not a starling:// link")
 	}
 	action := u.Host
-	if action == "" { // chongyun:import?… or chongyun:///import?…
+	if action == "" { // starling:import?… or starling:///import?…
 		action = strings.Trim(u.Opaque+u.Path, "/")
 	}
 	if action != "import" {
-		return Provider{}, errorf("chongyun://%s is not something chongyun knows; links start chongyun://import?", action)
+		return Provider{}, errorf("starling://%s is not something starling knows; links start starling://import?", action)
 	}
 	q := u.Query()
 	get := func(k string) string { return strings.TrimSpace(q.Get(k)) }
@@ -62,7 +62,7 @@ func ParseImport(link string) (Provider, error) {
 		if p.IsVertex() {
 			// asked at the user's own Google Cloud project, with their
 			// own credentials: nothing a link could hand over
-			return Provider{}, errorf("%s is added with your own Google Cloud project, not from a link: chongyun provider add %s project=<id>, or Add in the app", p.Name, VertexPreset)
+			return Provider{}, errorf("%s is added with your own Google Cloud project, not from a link: starling provider add %s project=<id>, or Add in the app", p.Name, VertexPreset)
 		}
 		if r := get("region"); r != "" {
 			found := false
@@ -121,8 +121,8 @@ func ParseImport(link string) (Provider, error) {
 	if p.ID == "" {
 		return Provider{}, errors.New("the link's name has no letters or digits to make an id from")
 	}
-	if p.ID == "magpie" {
-		return Provider{}, errors.New(`"magpie" is what agents call the gateway itself; the link needs another id`)
+	if p.ID == "starling" {
+		return Provider{}, errors.New(`"starling" is what agents call the gateway itself; the link needs another id`)
 	}
 	if subscriptionID(p.ID) {
 		// named as a subscription is (claude, kiro): a provider of its own
@@ -194,7 +194,7 @@ func page(raw string) string {
 // iconURL accepts the picture a link names: an https URL on a public host,
 // which the app fetches only after the user confirms the import. A plain
 // http or a bare host is rejected rather than guessed at, since this is the
-// one parameter that makes magpie reach out on the link's behalf.
+// one parameter that makes starling reach out on the link's behalf.
 func iconURL(raw string) (string, error) {
 	u, err := url.Parse(raw)
 	if err != nil || u.Host == "" || u.User != nil || u.Fragment != "" {

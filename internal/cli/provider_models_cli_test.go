@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// magpie provider models <id> +m adds a model to those exposed and -m takes
+// starling provider models <id> +m adds a model to those exposed and -m takes
 // one out, keeping the rest; the whole-list form still replaces the list,
 // and says it did and how many there were before (MOMO 报告: 35
 // exposed became 8 with nothing said).
@@ -105,10 +105,10 @@ func TestProviderModelsAddsRemovesAndSaysWhatItReplaced(t *testing.T) {
 	}
 }
 
-// magpie models and magpie provider <id> name the models a provider's list
+// starling models and starling provider <id> name the models a provider's list
 // has that it doesn't expose, and why, so a group naming one ("no member
 // ready (not served)") can be put right (MOMO 报告: 35 exposed of 37,
-// opencode-go/deepseek-flash not in magpie models).
+// opencode-go/deepseek-flash not in starling models).
 func TestModelsSayWhatIsNotExposed(t *testing.T) {
 	groupsHome(t)
 	catalog.Changed = nil
@@ -132,7 +132,7 @@ func TestModelsSayWhatIsNotExposed(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !strings.Contains(out, "deepseek-flash") || !strings.Contains(out, "not picked") || !strings.Contains(out, "chongyun provider models og +<model>") {
+		if !strings.Contains(out, "deepseek-flash") || !strings.Contains(out, "not picked") || !strings.Contains(out, "starling provider models og +<model>") {
 			t.Errorf("%s said %q; want deepseek-flash named as not picked, and how to expose it", name, out)
 		}
 	}
@@ -146,7 +146,7 @@ func TestModelsSayWhatIsNotExposed(t *testing.T) {
 }
 
 // A group's member its provider lists but doesn't expose says so, and how
-// to expose it, in magpie groups and magpie group show <id>.
+// to expose it, in starling groups and starling group show <id>.
 func TestGroupMemberNotExposedSaysHow(t *testing.T) {
 	groupsHome(t)
 	catalog.Changed = nil
@@ -172,7 +172,7 @@ func TestGroupMemberNotExposedSaysHow(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !strings.Contains(out, "not exposed · chongyun provider models og +deepseek-flash") {
+		if !strings.Contains(out, "not exposed · starling provider models og +deepseek-flash") {
 			t.Errorf("%s said %q; want how to expose og/deepseek-flash", name, out)
 		}
 	}

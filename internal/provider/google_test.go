@@ -15,10 +15,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
-// fakeGoogle is Google's token endpoint and Code Assist, as far as magpie
+// fakeGoogle is Google's token endpoint and Code Assist, as far as starling
 // uses them.
 type fakeGoogle struct {
 	mu        sync.Mutex
@@ -116,7 +116,7 @@ func resetGoogleState() {
 }
 
 // Google turns individuals away from Gemini CLI's sign-in; the account
-// then needs a project, and chongyun says how to name one.
+// then needs a project, and starling says how to name one.
 func TestGeminiNeedsAProject(t *testing.T) {
 	f := &fakeGoogle{load: `{"allowedTiers":[{"id":"standard-tier","name":"Gemini Code Assist","userDefinedCloudaicompanionProject":true,"isDefault":true}],
 		"ineligibleTiers":[{"reasonCode":"UNSUPPORTED_CLIENT","reasonMessage":"This client is no longer supported","tierId":"free-tier"}]}`}
@@ -127,9 +127,9 @@ func TestGeminiNeedsAProject(t *testing.T) {
 	}
 	g := googleLogins("gemini")[0].acct
 	_, err := g.project(context.Background())
-	if err == nil || !strings.Contains(err.Error(), "chongyun accounts project gemini me@example.com") ||
+	if err == nil || !strings.Contains(err.Error(), "starling accounts project gemini me@example.com") ||
 		!strings.Contains(err.Error(), "no longer supported") ||
-		!strings.Contains(err.Error(), "add it under Antigravity in chongyun") {
+		!strings.Contains(err.Error(), "add it under Antigravity in starling") {
 		t.Fatalf("err = %v", err)
 	}
 	if len(f.onboards) != 0 {
@@ -137,7 +137,7 @@ func TestGeminiNeedsAProject(t *testing.T) {
 	}
 }
 
-// An account chongyun signed in is onboarded to the project named for it,
+// An account starling signed in is onboarded to the project named for it,
 // as Gemini CLI does.
 func TestGeminiProjectFromAccount(t *testing.T) {
 	f := &fakeGoogle{
@@ -164,7 +164,7 @@ func TestGeminiProjectFromAccount(t *testing.T) {
 	}
 }
 
-// An account named in magpie gets its project from `chongyun accounts project`.
+// An account named in starling gets its project from `starling accounts project`.
 func TestSetGoogleProject(t *testing.T) {
 	f := &fakeGoogle{load: `{"currentTier":{"id":"standard-tier","name":"Gemini Code Assist Standard"}}`}
 	googleSandbox(t, f)
@@ -530,7 +530,7 @@ func TestPooledWindowsPartialAggregateKeepsModelFallback(t *testing.T) {
 }
 
 // Antigravity's list is taken as Antigravity gives it (0000FF 报告:
-// Claude Opus 5.5 and Sonnet 5.5 in Antigravity, not in magpie): in its
+// Claude Opus 5.5 and Sonnet 5.5 in Antigravity, not in starling): in its
 // picker's order, so a model it adds comes where it puts it, not after
 // older ones by id; with the context, output and images it says, so a
 // model it adds isn't given those of a model of that name elsewhere
@@ -572,7 +572,7 @@ func TestAntigravityModelsAsItListsThem(t *testing.T) {
 	if strings.Join(got, "\n") != strings.Join(want, "\n") {
 		t.Fatalf("models\n%s\nwant\n%s", strings.Join(got, "\n"), strings.Join(want, "\n"))
 	}
-	// what magpie offers: the family first, Claude 5.5 before 4.6, Antigravity's 250k kept
+	// what starling offers: the family first, Claude 5.5 before 4.6, Antigravity's 250k kept
 	var offered []string
 	for _, m := range collapseAntigravityModels(catalog.Decorate(ms, []catalog.Model{{ID: "claude-opus-5-5", Context: 1000000, Output: 128000}})) {
 		offered = append(offered, fmt.Sprintf("%s|%d", m.ID, m.Context))

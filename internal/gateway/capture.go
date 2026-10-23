@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/lulu58588/chongyun/internal/redact"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/redact"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // Recent-call bodies are diagnostics, not an unbounded traffic log. Keeping the
@@ -90,7 +90,7 @@ func (s *spool) add(p []byte) {
 	if s.f == nil {
 		pattern := s.pattern
 		if pattern == "" {
-			pattern = "magpie-archive-*"
+			pattern = "starling-archive-*"
 		}
 		f, err := os.CreateTemp("", pattern)
 		if err != nil {

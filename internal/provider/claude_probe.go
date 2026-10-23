@@ -1,7 +1,7 @@
 package provider
 
 // A Claude account is tested as it is used: by Claude Code itself, never
-// by a request magpie makes to Anthropic's API with the account's sign-in.
+// by a request starling makes to Anthropic's API with the account's sign-in.
 
 import (
 	"context"

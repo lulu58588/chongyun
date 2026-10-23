@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/backup"
-	"github.com/lulu58588/chongyun/internal/profile"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/backup"
+	"github.com/lulu58588/starling/internal/profile"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Sync turned off and on again to the same server is not a new computer
@@ -61,7 +61,7 @@ func TestOffAndOnAgainKeepsChangesHere(t *testing.T) {
 	if ps, _ := provider.Stored(); len(ps) != 1 || ps[0].Name != "DeepSeek 2" {
 		t.Fatalf("the provider went back: %+v", ps)
 	}
-	remote, err := backup.Open(fake.files["/dav/magpie/magpie.magpie-backup"], "correct horse")
+	remote, err := backup.Open(fake.files["/dav/starling/starling.starling-backup"], "correct horse")
 	if err != nil {
 		t.Fatal(err)
 	}

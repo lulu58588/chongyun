@@ -1,7 +1,7 @@
 package provider
 
 import (
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 	"context"
 	"errors"
 	"os"
@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 func TestIsManagedDaemon(t *testing.T) {
@@ -205,10 +205,10 @@ func TestRestartCodexDaemon(t *testing.T) {
 	if got := read(".args"); got != "app-server daemon restart" {
 		t.Errorf("args %q", got)
 	}
-	// the daemon of the CODEX_HOME magpie writes auth.json in, which is the
+	// the daemon of the CODEX_HOME starling writes auth.json in, which is the
 	// user's own CODEX_HOME when that is set
 	if got, want := read(".home"), "/somewhere/else"; got != want || filepath.Clean(got) != appdir.CodexHome() {
-		t.Errorf("CODEX_HOME %q, want %q (where chongyun writes auth.json)", got, want)
+		t.Errorf("CODEX_HOME %q, want %q (where starling writes auth.json)", got, want)
 	}
 	if got := read(".stdin"); got != "other" {
 		t.Errorf("stdin is a %s, want the null device", got)
@@ -311,8 +311,8 @@ func writeDaemonPID(t *testing.T, home, body string, at time.Time) string {
 }
 
 // luci (Discord, Codex 0.162): the daemon codex sessions attach to was
-// started on Codex's own models; wired to magpie after, every new codex
-// showed the official list. magpie restarts a daemon started before the
+// started on Codex's own models; wired to starling after, every new codex
+// showed the official list. starling restarts a daemon started before the
 // change while no codex session is on it, and only then.
 func TestKeepCodexDaemonCurrent(t *testing.T) {
 	pid := fakeDaemon(t)
@@ -386,7 +386,7 @@ func TestKeepCodexDaemonCurrent(t *testing.T) {
 
 // The processes are listed only when a pid file says a daemon started
 // before the change: listing them is a PowerShell run on Windows, which
-// the look every 15s made for as long as magpie ran (#2341).
+// the look every 15s made for as long as starling ran (#2341).
 func TestKeepCodexDaemonCurrentListsOnlyWhenBehind(t *testing.T) {
 	pid := fakeDaemon(t)
 	fakeCodex(t, 0)
@@ -452,7 +452,7 @@ func TestFindCodexApp(t *testing.T) {
 
 // The Codex app reads the sign-in once, as it opens: switched while it
 // runs, it stays on the account before, shows that account's limits and,
-// once they are spent, sends in no thread (CavillZhang 报告). magpie says
+// once they are spent, sends in no thread (CavillZhang 报告). starling says
 // so until the app is opened again.
 func TestCodexAppStale(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())

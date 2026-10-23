@@ -18,7 +18,7 @@ const CUT = "the WebDAV server kept 0 of 6869 bytes of 5f0c-2026-08-29.magpie-us
 
 function serve(lang, sync) {
   const settings = {
-    theme: "light", lang, tray: "panel", version: "test", dir: "/tmp/magpie",
+    theme: "light", lang, tray: "panel", version: "test", dir: "/tmp/starling",
     gateway: "http://127.0.0.1:3425", visionModels: [], imageGenModels: [],
     fx: { rate: 7.2, stale: false },
   };
@@ -67,7 +67,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           page.on("pageerror", (e) => errors.push(e.message));
           await page.route("**/*", serve(lang, c.sync));
           page.setDefaultTimeout(5000);
-          await page.goto("http://magpie.test/");
+          await page.goto("http://starling.test/");
           await page.locator("#prefs").click();
           await openPart(page, "sync");
           const first = page.locator("#syncList .row.pref").first();

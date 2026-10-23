@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // pluginCheckinSandbox is the fake plugin with its own check-in, signed in
@@ -21,7 +21,7 @@ func pluginCheckinSandbox(t *testing.T, keys ...string) string {
 	t.Helper()
 	bun := testenv.Bun(t)
 	home := claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	presses := filepath.Join(home, "presses")
 	t.Setenv("FAKE_CHECKIN", presses)
 	t.Cleanup(plugin.Settle)
@@ -55,7 +55,7 @@ func pressed(t *testing.T, file string) []string {
 	return strings.Fields(string(b))
 }
 
-// A plugin's own check-in (auth.checkin; Lemon 报告) runs as magpie's
+// A plugin's own check-in (auth.checkin; Lemon 报告) runs as starling's
 // own do: each account once a Beijing day while it is on, a failure asked
 // again after wbCheckinRetry, a captcha left for the user (never retried
 // that day), and what came of each kept, on its card and in Settings.
@@ -169,13 +169,13 @@ func TestPluginCheckinRunsAsTheBuiltinsDo(t *testing.T) {
 	}
 }
 
-// A plugin that checks in itself takes over from magpie's own check-in
+// A plugin that checks in itself takes over from starling's own check-in
 // through its fetch, so an account isn't checked in twice; and its switch
 // follows the vendor's, which it took over, until set on its own.
 func TestPluginCheckinTakesOverTheVendors(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Setenv("FAKE_ID", "qoder")
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
@@ -193,11 +193,11 @@ func TestPluginCheckinTakesOverTheVendors(t *testing.T) {
 	if _, err := plugin.Providers(ctx); err != nil {
 		t.Fatal(err)
 	}
-	// a plugin without auth.checkin: magpie claims Qoder's credits itself
+	// a plugin without auth.checkin: starling claims Qoder's credits itself
 	if n := len(qoderCheckinAccounts()); n != 1 || HasPluginCheckin() {
 		t.Fatalf("without the hook: %d Qoder accounts, plugins that check in %v", n, HasPluginCheckin())
 	}
-	// with it, the plugin does, and magpie's own lists none
+	// with it, the plugin does, and starling's own lists none
 	t.Setenv("FAKE_CHECKIN", filepath.Join(t.TempDir(), "presses"))
 	plugin.Restart()
 	if _, err := plugin.Providers(ctx); err != nil {

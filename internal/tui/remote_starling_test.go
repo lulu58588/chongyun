@@ -8,55 +8,55 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// A remote magpie is added from the TUI with its address, as the app's
-// editor and magpie provider add remote-magpie … url=… add it, and its
+// A remote starling is added from the TUI with its address, as the app's
+// editor and starling provider add remote-starling … url=… add it, and its
 // address is changed there later (akic404 报告: the TUI had no place
 // for it, only the key).
-func TestTUIAddsARemoteMagpieWithItsAddress(t *testing.T) {
+func TestTUIAddsARemoteStarlingWithItsAddress(t *testing.T) {
 	home(t)
 	m := press(t, model{w: 120, h: 40}, "2", "a")
 	if m.mode != modePick {
 		t.Fatalf("a opened mode %v, not the vendors", m.mode)
 	}
-	m = typeIn(m, "remote-magpie")
+	m = typeIn(m, "remote-starling")
 	m = press(t, m, "enter")
 	if m.mode != modeAsk || m.ask.input.Placeholder != "http://192.168.1.20:3425" {
-		t.Fatalf("picking Remote chongyun asked %q (mode %v), not its address", m.ask.input.Placeholder, m.mode)
+		t.Fatalf("picking Remote starling asked %q (mode %v), not its address", m.ask.input.Placeholder, m.mode)
 	}
 	// nothing typed: said to be needed, nothing added
 	m = press(t, m, "enter")
-	wantFlash(t, m, false, "The other chongyun's address is needed")
-	if _, err := provider.Find("remote-magpie"); err == nil {
+	wantFlash(t, m, false, "The other starling's address is needed")
+	if _, err := provider.Find("remote-starling"); err == nil {
 		t.Fatal("added without an address")
 	}
 
 	m = press(t, m, "a")
-	m = typeIn(m, "remote-magpie")
+	m = typeIn(m, "remote-starling")
 	m = press(t, m, "enter")
 	m = typeIn(m, "127.0.0.1:1")
 	m = press(t, m, "enter")
 	if m.mode != modeAsk || m.ask.input.Placeholder != "the API key" {
 		t.Fatalf("after the address it asked %q (mode %v), not the key", m.ask.input.Placeholder, m.mode)
 	}
-	m = typeIn(m, "sk-magpie-test")
+	m = typeIn(m, "sk-starling-test")
 	m = press(t, m, "enter")
 	// nothing answers there: added, and said why it has no models
-	wantFlash(t, m, false, "added Remote chongyun · no model list")
-	p, err := provider.Find("remote-magpie")
+	wantFlash(t, m, false, "added Remote starling · no model list")
+	p, err := provider.Find("remote-starling")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if p.Chat != "http://127.0.0.1:1/v1" || p.Responses != "http://127.0.0.1:1/v1" || p.Anthropic != "http://127.0.0.1:1" || p.Key != "sk-magpie-test" {
+	if p.Chat != "http://127.0.0.1:1/v1" || p.Responses != "http://127.0.0.1:1/v1" || p.Anthropic != "http://127.0.0.1:1" || p.Key != "sk-starling-test" {
 		t.Fatalf("saved %q %q %q key %q", p.Chat, p.Responses, p.Anthropic, p.Key)
 	}
 
 	// w changes its address, the one there now in the line
 	m.reloadProviders()
 	for i, q := range m.provs {
-		if q.ID == "remote-magpie" {
+		if q.ID == "remote-starling" {
 			m.prow = i
 		}
 	}
@@ -68,8 +68,8 @@ func TestTUIAddsARemoteMagpieWithItsAddress(t *testing.T) {
 	m = typeIn(m, "http://127.0.0.1:2/v1")
 	m = press(t, m, "enter")
 	wantFlash(t, m, true, "address")
-	p, _ = provider.Find("remote-magpie")
-	if p.Chat != "http://127.0.0.1:2/v1" || p.Anthropic != "http://127.0.0.1:2" || p.Key != "sk-magpie-test" {
+	p, _ = provider.Find("remote-starling")
+	if p.Chat != "http://127.0.0.1:2/v1" || p.Anthropic != "http://127.0.0.1:2" || p.Key != "sk-starling-test" {
 		t.Fatalf("after w: %q %q key %q", p.Chat, p.Anthropic, p.Key)
 	}
 
@@ -93,24 +93,24 @@ func TestTUIAddsARemoteMagpieWithItsAddress(t *testing.T) {
 // Adding a provider fetches its list and says what came of it — how many
 // models, or why none — and m on the Providers page fetches it again, as
 // the app editor's Fetch models does (akic404 报告: added from the TUI,
-// a remote magpie had 0 models, with nothing said and no way to fetch
+// a remote starling had 0 models, with nothing said and no way to fetch
 // them).
-// The add list says what Remote magpie is, another computer's magpie, and
+// The add list says what Remote starling is, another computer's starling, and
 // doesn't file it under the relays (Avalon 报告: "供应商添加中没有
-// Remote magpie 的选项").
-func TestTUIAddListSaysRemoteMagpieIsAnotherComputers(t *testing.T) {
+// Remote starling 的选项").
+func TestTUIAddListSaysRemoteStarlingIsAnotherComputers(t *testing.T) {
 	home(t)
 	m := press(t, model{w: 120, h: 40}, "2", "a")
 	for _, o := range m.pk.items {
-		if o.Value != provider.RemoteMagpiePreset {
+		if o.Value != provider.RemoteStarlingPreset {
 			continue
 		}
-		if o.Note != "Remote chongyun · another computer's chongyun, shared on its network" {
-			t.Fatalf("Remote chongyun is listed as %q", o.Note)
+		if o.Note != "Remote starling · another computer's starling, shared on its network" {
+			t.Fatalf("Remote starling is listed as %q", o.Note)
 		}
 		return
 	}
-	t.Fatal("Remote chongyun is not in the add list")
+	t.Fatal("Remote starling is not in the add list")
 }
 
 func TestTUIFetchesAProvidersModels(t *testing.T) {
@@ -131,7 +131,7 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 		}
 		var data []map[string]any
 		for _, id := range ids {
-			data = append(data, map[string]any{"id": id, "object": "model", "display_name": id, "magpie_label": id + " · 中转站"})
+			data = append(data, map[string]any{"id": id, "object": "model", "display_name": id, "starling_label": id + " · 中转站"})
 		}
 		json.NewEncoder(w).Encode(map[string]any{"object": "list", "data": data})
 	}))
@@ -155,14 +155,14 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 	}
 
 	m := press(t, model{w: 160, h: 40}, "2", "a")
-	m = typeIn(m, "remote-magpie")
+	m = typeIn(m, "remote-starling")
 	m = press(t, m, "enter")
 	m = typeIn(m, strings.TrimPrefix(srv.URL, "http://"))
 	m = press(t, m, "enter")
-	m = typeIn(m, "sk-magpie-test")
+	m = typeIn(m, "sk-starling-test")
 	m = press(t, m, "enter")
-	wantFlash(t, m, true, "added Remote chongyun · 2 models from its list · 2 for agents")
-	p, err := provider.Find("remote-magpie")
+	wantFlash(t, m, true, "added Remote starling · 2 models from its list · 2 for agents")
+	p, err := provider.Find("remote-starling")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -174,11 +174,11 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 		t.Fatalf("exposed %v", got)
 	}
 
-	// the other magpie's list grows: m fetches it again
+	// the other starling's list grows: m fetches it again
 	set(false, "custom/qwen3.6-max", "custom/glm-5.3", "custom/kimi-k3")
-	m = at(m, "remote-magpie")
+	m = at(m, "remote-starling")
 	m = press(t, m, "m")
-	wantFlash(t, m, true, "Remote chongyun: 3 models from its list · 3 for agents")
+	wantFlash(t, m, true, "Remote starling: 3 models from its list · 3 for agents")
 	if !strings.Contains(m.View(), "3 models") {
 		t.Fatalf("the row doesn't say 3 models after m:\n%s", m.View())
 	}
@@ -188,14 +188,14 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 	m = press(t, m, "m")
 	wantFlash(t, m, false, "no model list")
 	wantFlash(t, m, false, "m asks again")
-	if p, _ := provider.Find("remote-magpie"); len(p.Exposed()) != 3 {
+	if p, _ := provider.Find("remote-starling"); len(p.Exposed()) != 3 {
 		t.Fatalf("a failed fetch left %d models", len(p.Exposed()))
 	}
 
 	// from the provider's models, where a free list is looked at, ctrl+r
 	// fetches it again and the list open shows it (#2113)
 	set(false, "custom/qwen3.6-max", "custom/glm-5.3", "custom/kimi-k3", "custom/ling-3.1-flash-free")
-	m = at(m, "remote-magpie")
+	m = at(m, "remote-starling")
 	m = press(t, m, "enter")
 	if m.mode != modePick || !strings.Contains(m.View(), "ctrl+r") {
 		t.Fatalf("the models view doesn't offer ctrl+r:\n%s", m.View())
@@ -204,7 +204,7 @@ func TestTUIFetchesAProvidersModels(t *testing.T) {
 		t.Fatalf("listed before it was fetched:\n%s", m.View())
 	}
 	m = press(t, m, "ctrl+r")
-	wantFlash(t, m, true, "Remote chongyun: 4 models from its list")
+	wantFlash(t, m, true, "Remote starling: 4 models from its list")
 	if m.mode != modePick || !strings.Contains(m.View(), "custom/ling-3.1-flash-free") {
 		t.Fatalf("the models view doesn't list what ctrl+r fetched:\n%s", m.View())
 	}

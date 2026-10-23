@@ -4,11 +4,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // YaCo 报告: Claude Code asks claude-opus-5-5 for its full 128000
-// (its own registry's max_output_tokens) and magpie writes no
+// (its own registry's max_output_tokens) and starling writes no
 // CLAUDE_CODE_MAX_OUTPUT_TOKENS for a claude-* model, so a key whose quota
 // is held per request as max_tokens times the price was turned away on
 // every turn. The Max output the user sets on the provider's model lowers

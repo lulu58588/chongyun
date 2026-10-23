@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/pluginrt"
-	"github.com/lulu58588/chongyun/internal/settings"
-	_ "github.com/lulu58588/chongyun/plugins/all"
+	"github.com/lulu58588/starling/internal/pluginrt"
+	"github.com/lulu58588/starling/internal/settings"
+	_ "github.com/lulu58588/starling/plugins/all"
 )
 
 func builtinHome(t *testing.T) http.Handler {
@@ -37,7 +37,7 @@ func TestBuiltinSwitch(t *testing.T) {
 	if _, err := pluginrt.Settle(); err != nil {
 		t.Fatal(err)
 	}
-	// a new install has every one on, so a new user sees all magpie does
+	// a new install has every one on, so a new user sees all starling does
 	for _, b := range builtinsState() {
 		if !b.On || b.State != pluginrt.Active {
 			t.Fatalf("a new install: %+v", b)

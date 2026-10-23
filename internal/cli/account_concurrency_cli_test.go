@@ -3,12 +3,12 @@ package cli
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// magpie provider account-concurrency gives a key its own limit on
+// starling provider account-concurrency gives a key its own limit on
 // requests at once (by its name or id), off for none, default for the
-// provider's again; magpie provider queue bounds the queue past it. A
+// provider's again; starling provider queue bounds the queue past it. A
 // key the provider hasn't, or a number out of range, is an error.
 func TestAccountConcurrencyCmd(t *testing.T) {
 	home := t.TempDir()
@@ -84,7 +84,7 @@ func TestAccountConcurrencyCmd(t *testing.T) {
 	}
 }
 
-// magpie provider rpm sets how many requests each key sends in a minute
+// starling provider rpm sets how many requests each key sends in a minute
 // (coeo91 报告), off for none; a number out of range is an error.
 func TestRPMCmd(t *testing.T) {
 	home := t.TempDir()

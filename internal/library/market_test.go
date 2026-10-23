@@ -28,12 +28,12 @@ func TestFromRegistry(t *testing.T) {
 		"remotes": [
 			{"type": "sse", "url": "https://acme.dev/sse"},
 			{"type": "streamable-http", "url": "https://acme.dev/mcp", "headers": [
-				{"name": "X-Client", "value": "magpie"},
+				{"name": "X-Client", "value": "starling"},
 				{"name": "Authorization", "value": "Bearer {token}", "isRequired": true, "isSecret": true}
 			]}
 		]}`))
 	if !ok || m.Name != "weather" || m.Title != "weather" || m.Publisher != "acme" || m.Homepage != "https://github.com/acme/weather" ||
-		m.Icon != gh("acme") || m.Transport != "http" || m.server.URL != "https://acme.dev/mcp" || m.server.Headers["X-Client"] != "magpie" {
+		m.Icon != gh("acme") || m.Transport != "http" || m.server.URL != "https://acme.dev/mcp" || m.server.Headers["X-Client"] != "starling" {
 		t.Fatalf("remote: %+v %v", m, ok)
 	}
 	if len(m.Inputs) != 1 || m.Inputs[0].Key != "Authorization" || m.Inputs[0].format != "Bearer {}" || !m.Inputs[0].Secret {
@@ -68,7 +68,7 @@ func TestFromRegistry(t *testing.T) {
 		t.Fatalf("oci: %+v %v", m, ok)
 	}
 
-	// what magpie can't start: a URL with a variable in it, a package over
+	// what starling can't start: a URL with a variable in it, a package over
 	// another transport, a named argument it would have to make up
 	for _, s := range []string{
 		`{"name": "a/b", "remotes": [{"type": "streamable-http", "url": "https://{tenant}.acme.dev/mcp"}]}`,
@@ -221,7 +221,7 @@ func TestSkillsShPages(t *testing.T) {
 	}
 }
 
-// magpie's own skills come first, marked official, and only where a
+// starling's own skills come first, marked official, and only where a
 // search names them (ttmouse 报告).
 func TestFeaturedSkills(t *testing.T) {
 	sandbox(t)
@@ -292,7 +292,7 @@ func TestInstallFromRegistry(t *testing.T) {
 	if s.Name != "acme" || s.URL != "https://acme.dev/mcp" || s.Headers["Authorization"] != "Bearer k-123" || !slices.Equal(s.Agents, []string{"claude"}) {
 		t.Fatalf("server: %+v", s)
 	}
-	// its icon stays with it, and stays one magpie will fetch, once the
+	// its icon stays with it, and stays one starling will fetch, once the
 	// market has forgotten it
 	seenServers.Lock()
 	clear(seenServers.m)
@@ -309,33 +309,33 @@ func TestInstallFromRegistry(t *testing.T) {
 	}
 }
 
-func TestMagpieImageIsOptIn(t *testing.T) {
+func TestStarlingImageIsOptIn(t *testing.T) {
 	sandbox(t)
-	ok(t)(InstallServer("magpie-image", nil, nil))
+	ok(t)(InstallServer("starling-image", nil, nil))
 	list, err := MarketServers("")
 	if err != nil {
 		t.Fatal(err)
 	}
-	i := slices.IndexFunc(list, func(m MarketServer) bool { return m.ID == "magpie-image" })
-	if i < 0 || !list[i].OptIn || list[i].Have != "magpie-image" {
+	i := slices.IndexFunc(list, func(m MarketServer) bool { return m.ID == "starling-image" })
+	if i < 0 || !list[i].OptIn || list[i].Have != "starling-image" {
 		t.Fatalf("market: %+v", list)
 	}
 	l, err := load()
 	if err != nil {
 		t.Fatal(err)
 	}
-	s := l.server("magpie-image")
+	s := l.server("starling-image")
 	if s == nil || len(s.Agents) != 0 || !filepath.IsAbs(s.Command) || strings.Join(s.Args, " ") != "mcp image" {
 		t.Fatalf("added as %+v", s)
 	}
 }
 
-// Magpie Image's card doesn't say videos need a Grok subscription: the
-// gateway also makes them with Seedance, another magpie and a provider whose
+// Starling Image's card doesn't say videos need a Grok subscription: the
+// gateway also makes them with Seedance, another starling and a provider whose
 // model list marks video models (#1399).
-func TestMagpieImageSaysVideoModels(t *testing.T) {
+func TestStarlingImageSaysVideoModels(t *testing.T) {
 	d := selfServer().Description
-	if strings.Contains(d, "Grok subscription") || !strings.Contains(d, "video model set up in Chongyun") {
+	if strings.Contains(d, "Grok subscription") || !strings.Contains(d, "video model set up in Starling") {
 		t.Fatalf("description %q", d)
 	}
 }

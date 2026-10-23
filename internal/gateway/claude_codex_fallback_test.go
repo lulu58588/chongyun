@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // Kai 报告 (0.1.1278): Claude Code asks claude/claude-opus-5-5 at
@@ -50,15 +50,15 @@ func TestClaudeAccountsSpentFallBackToCodex(t *testing.T) {
 		"access_token":  claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix(), "who": "acct-1"}),
 		"refresh_token": "r-acct-1", "account_id": "acct-1"}}
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(codexAuth), 0o600)
-	// chongyun keeps the accounts it signed the agents in to in its own
+	// starling keeps the accounts it signed the agents in to in its own
 	// logins.json, marking there the account each agent is on: it never
 	// reads the agents' own files to find out which account that is.
-	chongyunLogins(t,
+	starlingLogins(t,
 		map[string]any{"agent": "claude", "user": "me@example.com", "plan": "max", "active": true, "on": true, "seen": time.Now(),
 			"auth": oauth("tok-me", "max"), "profile": map[string]any{"emailAddress": "me@example.com", "accountUuid": "u-me"}},
 		map[string]any{"agent": "claude", "user": "pro@example.com", "plan": "pro", "on": true, "seen": time.Now().Add(-time.Minute),
 			"auth": oauth("tok-pro", "pro"), "profile": map[string]any{"emailAddress": "pro@example.com"}},
-		chongyunCodexLogin("me@example.com", codexAuth),
+		starlingCodexLogin("me@example.com", codexAuth),
 	)
 	dir := t.TempDir()
 	log := filepath.Join(dir, "log")

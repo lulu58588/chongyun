@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // A plugin's provider with several accounts fails over as a built-in's
@@ -26,7 +26,7 @@ import (
 func TestPluginFailover(t *testing.T) {
 	bun := testenv.Bun(t)
 	fresh(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	// the allowances the plugin tells, not routing_test's none
 	old := allowances
@@ -89,7 +89,7 @@ func TestPluginFailover(t *testing.T) {
 	if _, err := plugin.Providers(ctx); err != nil {
 		t.Fatal(err)
 	}
-	// three accounts signed in in magpie, as a built-in's are added
+	// three accounts signed in in starling, as a built-in's are added
 	for _, team := range []string{"full", "a", "b"} {
 		st, err := provider.StartPluginSignIn("fakeco", 1, map[string]string{"where": "work", "team": team})
 		if err != nil {
@@ -254,7 +254,7 @@ func contains(xs []string, x string) bool {
 func TestPluginSaysSignIn(t *testing.T) {
 	bun := testenv.Bun(t)
 	fresh(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 
 	var mu sync.Mutex

@@ -9,23 +9,23 @@ import (
 	"testing"
 )
 
-// a site served on an Omarchy machine asks the chongyun there for the theme
+// a site served on an Omarchy machine asks the starling there for the theme
 // it draws itself in: only from this machine, only readable by that site.
 func TestOmarchyThemeForTheSite(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	dir := t.TempDir()
 	if err := os.WriteFile(filepath.Join(dir, "colors.toml"), []byte("mode = \"light\"\naccent = \"#1e66f5\"\nbackground = \"#eff1f5\"\nforeground = \"#4c4f69\"\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("MAGPIE_OMARCHY_THEME", dir)
-	t.Setenv("MAGPIE_OMARCHY_FONT", "iA Writer Mono S")
+	t.Setenv("STARLING_OMARCHY_THEME", dir)
+	t.Setenv("STARLING_OMARCHY_FONT", "iA Writer Mono S")
 	t.Setenv("HYPRLAND_INSTANCE_SIGNATURE", "")
 	was := onOmarchy
 	t.Cleanup(func() { onOmarchy = was })
 	h := lanGuard(New().Handler())
 	call := func(method, from, origin string) *httptest.ResponseRecorder {
-		r := httptest.NewRequest(method, "/v1/magpie/omarchy", nil)
+		r := httptest.NewRequest(method, "/v1/starling/omarchy", nil)
 		r.RemoteAddr = from
 		r.Host = "127.0.0.1:3425"
 		if origin != "" {
@@ -41,8 +41,8 @@ func TestOmarchyThemeForTheSite(t *testing.T) {
 	}
 
 	// this build names no site of its own: the one that may read the theme
-	// is MAGPIE_SITE_ORIGIN
-	t.Setenv("MAGPIE_SITE_ORIGIN", "https://site.example")
+	// is STARLING_SITE_ORIGIN
+	t.Setenv("STARLING_SITE_ORIGIN", "https://site.example")
 
 	onOmarchy = false
 	if w := call("GET", "127.0.0.1:5000", "https://site.example"); w.Code != http.StatusNotFound {

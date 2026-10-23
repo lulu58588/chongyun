@@ -12,13 +12,13 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-func TestRemoteMagpieUnlistedDecisions(t *testing.T) {
+func TestRemoteStarlingUnlistedDecisions(t *testing.T) {
 	azureHome(t)
-	p := normalize(Provider{ID: "office", Preset: RemoteMagpiePreset, Chat: "http://127.0.0.1:1/typesafe"})
+	p := normalize(Provider{ID: "office", Preset: RemoteStarlingPreset, Chat: "http://127.0.0.1:1/typesafe"})
 	if err := Save(p); err != nil {
 		t.Fatal(err)
 	}
@@ -43,7 +43,7 @@ func TestRemoteMagpieUnlistedDecisions(t *testing.T) {
 
 // Entry formatting for other decision providers keeps its earlier behavior;
 // only a remote's entries inherit conversation model names and limits.
-func TestRemoteMagpieDecidersKeepOtherEntries(t *testing.T) {
+func TestRemoteStarlingDecidersKeepOtherEntries(t *testing.T) {
 	azureHome(t)
 	for _, p := range []Provider{
 		{ID: "openrouter", Key: "k", Decide: "https://openrouter.ai/api/v1", Models: []string{OpenRouterJev}},
@@ -73,7 +73,7 @@ func TestRemoteMagpieDecidersKeepOtherEntries(t *testing.T) {
 	}
 }
 
-func TestRemoteMagpieDecisionRefresh(t *testing.T) {
+func TestRemoteStarlingDecisionRefresh(t *testing.T) {
 	azureHome(t)
 	var mu sync.Mutex
 	list := `{"data":[{"id":"relay/typesafe/jev-router"},{"id":"judge/custom-image-decision","kind":"decision","context_length":65536,"modalities":{"input":["text","image"]}}]}`
@@ -86,7 +86,7 @@ func TestRemoteMagpieDecisionRefresh(t *testing.T) {
 		io.WriteString(w, list)
 	}))
 	t.Cleanup(up.Close)
-	if err := Save(Provider{ID: "office", Preset: RemoteMagpiePreset, Key: "remote-key", Chat: up.URL, Models: []string{"relay/typesafe/jev-router"}}); err != nil {
+	if err := Save(Provider{ID: "office", Preset: RemoteStarlingPreset, Key: "remote-key", Chat: up.URL, Models: []string{"relay/typesafe/jev-router"}}); err != nil {
 		t.Fatal(err)
 	}
 	p, _ := Find("office")
@@ -133,10 +133,10 @@ func TestRemoteMagpieDecisionRefresh(t *testing.T) {
 	// All URL fields can be the entry point; the remote itself always
 	// speaks System One even behind paths resembling a vendor's API.
 	for _, p := range []Provider{
-		{Preset: RemoteMagpiePreset, Responses: up.URL + "/v1"},
-		{Preset: RemoteMagpiePreset, Anthropic: up.URL},
-		{Preset: RemoteMagpiePreset, Decide: up.URL + "/v1/systemone"},
-		{Preset: RemoteMagpiePreset, Chat: up.URL + "/typesafe"},
+		{Preset: RemoteStarlingPreset, Responses: up.URL + "/v1"},
+		{Preset: RemoteStarlingPreset, Anthropic: up.URL},
+		{Preset: RemoteStarlingPreset, Decide: up.URL + "/v1/systemone"},
+		{Preset: RemoteStarlingPreset, Chat: up.URL + "/typesafe"},
 	} {
 		p = normalize(p)
 		u, err := p.DecideURL(context.Background())
@@ -146,7 +146,7 @@ func TestRemoteMagpieDecisionRefresh(t *testing.T) {
 	}
 }
 
-func TestRemoteMagpieEndpointTests(t *testing.T) {
+func TestRemoteStarlingEndpointTests(t *testing.T) {
 	for _, decisions := range []bool{false, true} {
 		t.Run(fmt.Sprint(decisions), func(t *testing.T) {
 			azureHome(t)
@@ -165,7 +165,7 @@ func TestRemoteMagpieEndpointTests(t *testing.T) {
 				io.WriteString(w, `{"choices":[{"message":{"content":"hello"}}]}`)
 			}))
 			t.Cleanup(up.Close)
-			if err := Save(Provider{ID: "office", Preset: RemoteMagpiePreset, Chat: up.URL, Key: "remote-key"}); err != nil {
+			if err := Save(Provider{ID: "office", Preset: RemoteStarlingPreset, Chat: up.URL, Key: "remote-key"}); err != nil {
 				t.Fatal(err)
 			}
 			p, _ := Find("office")

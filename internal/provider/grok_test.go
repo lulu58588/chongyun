@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // Codex's freeform apply_patch is left out: Grok's backend turns away a

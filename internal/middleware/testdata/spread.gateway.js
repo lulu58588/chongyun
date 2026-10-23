@@ -1,6 +1,6 @@
 // spread.gateway.js: the example from the project's docs (docs/plugins.md#gateway-points).
 // Routing "spread/fewest-tokens" tries the accounts or keys that used the
-// fewest tokens lately first, resting ones last; onUsage says in magpie's
+// fewest tokens lately first, resting ones last; onUsage says in starling's
 // log which requests were slow.
 
 export const strategies = {

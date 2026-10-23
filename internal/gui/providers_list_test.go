@@ -10,8 +10,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // The add form's Fetch models (#578) asks the vendor for its list with the

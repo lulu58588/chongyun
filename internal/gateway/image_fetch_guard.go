@@ -13,12 +13,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// A URL magpie didn't choose itself is downloaded only from public
+// A URL starling didn't choose itself is downloaded only from public
 // addresses: an image a caller names (an edit's, or one to draw from) for
 // a vendor that takes only the bytes, an image or video a vendor answers
 // with (its URL may come from what the model was steered to say), and a
@@ -26,10 +26,10 @@ import (
 // own network (RFC 1918, fc00::/7), link-local addresses (169.254/16 with
 // the cloud metadata service, fe80::/10), CGNAT (100.64/10, Tailscale's),
 // or the other special ranges below — through any redirect too. Otherwise
-// whoever can send magpie a request could have it read a service only
+// whoever can send starling a request could have it read a service only
 // this computer reaches and get its answer back as the "image".
 //
-// Where the request came from changes nothing: one that reaches magpie
+// Where the request came from changes nothing: one that reaches starling
 // on loopback may well be a reverse proxy's or a relay's on the same
 // machine, passing on someone else's. Two exceptions, both named by the
 // user rather than guessed:
@@ -46,7 +46,7 @@ import (
 //     nothing;
 //   - a direct connection is checked again on the address actually
 //     dialled (privateDialer's Control);
-//   - through a proxy (magpie's, the provider's, the system's) the proxy
+//   - through a proxy (starling's, the provider's, the system's) the proxy
 //     is dialled, and it is sent the pinned address, never the name, so
 //     it can't resolve it to another (an https:// CONNECT, SOCKS, or a
 //     plain http:// request whose Host is then the address too);
@@ -58,7 +58,7 @@ const imageRedirects = 5
 
 // errPrivateAddress is a URL that leads somewhere other than the public
 // internet.
-var errPrivateAddress = errors.New(`it is at a private address, which chongyun doesn't download from: send the image itself (a data: URL or a file) instead, or name the host in settings.json's "fetchPrivate"`)
+var errPrivateAddress = errors.New(`it is at a private address, which starling doesn't download from: send the image itself (a data: URL or a file) instead, or name the host in settings.json's "fetchPrivate"`)
 
 // fetchAllow is where a download may go beyond public addresses: the
 // user's fetchPrivate, and the hosts a transport was made for.
@@ -226,7 +226,7 @@ func (pt publicTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	if host == "" {
 		return nil, errors.New("the URL names no host")
 	}
-	// the proxy this request would take, as any other of magpie's: chosen
+	// the proxy this request would take, as any other of starling's: chosen
 	// by the name, before it is pinned to an address
 	proxy, err := netproxy.Func(req)
 	if err != nil {
@@ -289,13 +289,13 @@ func (pt publicTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	return t.RoundTrip(out)
 }
 
-// publicClient downloads a URL magpie didn't choose: from public
+// publicClient downloads a URL starling didn't choose: from public
 // addresses only (and fetchPrivate's), through at most imageRedirects
 // redirects, each checked the same.
 var publicClient = guardedClient()
 
 // PublicClient is publicClient, for a download outside the gateway of a
-// URL magpie didn't choose (generate_image's of a vendor's image).
+// URL starling didn't choose (generate_image's of a vendor's image).
 func PublicClient() *http.Client { return publicClient }
 
 // guardedClient is publicClient that also reaches also's hosts

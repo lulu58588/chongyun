@@ -10,14 +10,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // Run the public command in a fresh process, with only a fake account,
 // fake /usage and an on-disk snapshot in a temporary home.
 func TestAccountsCachedReading(t *testing.T) {
-	if mode := os.Getenv("MAGPIE_TEST_ACCOUNTS_READING"); mode != "" {
+	if mode := os.Getenv("STARLING_TEST_ACCOUNTS_READING"); mode != "" {
 		provider.UsageClaudeVia(func(context.Context, string) (string, error) {
 			if strings.HasPrefix(mode, "fresh") {
 				return "Current session: 25% used", nil
@@ -36,7 +36,7 @@ func TestAccountsCachedReading(t *testing.T) {
 	for _, mode := range []string{"cached-text", "cached-json", "fresh-text", "fresh-json"} {
 		t.Run(mode, func(t *testing.T) {
 			home := t.TempDir()
-			config := filepath.Join(home, ".config", "magpie")
+			config := filepath.Join(home, ".config", "starling")
 			at := time.Now().Add(-2 * time.Hour).UTC().Truncate(time.Second)
 			reset := at.Add(time.Hour)
 			write := func(path string, value any) {
@@ -57,7 +57,7 @@ func TestAccountsCachedReading(t *testing.T) {
 				"subscriptionType": "max", "scopes": []string{"user:inference", "user:profile"},
 			}})
 			write(filepath.Join(home, ".claude", ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "a@example.com"}})
-			// chongyun keeps the account it signed the agent in to in its own
+			// starling keeps the account it signed the agent in to in its own
 			// logins.json, marked as the one the agent is on: it never reads
 			// the agent's own file to find out which account that is.
 			write(filepath.Join(config, "logins.json"), []map[string]any{{"agent": "claude", "user": "a@example.com",
@@ -76,10 +76,10 @@ func TestAccountsCachedReading(t *testing.T) {
 			}
 			cmd := exec.Command(self, "-test.run=^TestAccountsCachedReading$")
 			// A minimal environment prevents discovering real sign-ins or tools.
-			cmd.Env = []string{"MAGPIE_TEST_ACCOUNTS_READING=" + mode, "HOME=" + home, "USERPROFILE=" + home,
+			cmd.Env = []string{"STARLING_TEST_ACCOUNTS_READING=" + mode, "HOME=" + home, "USERPROFILE=" + home,
 				"XDG_CONFIG_HOME=" + filepath.Dir(config), "XDG_CACHE_HOME=" + filepath.Join(home, ".cache"),
 				"CLAUDE_CONFIG_DIR=" + filepath.Join(home, ".claude"), "CODEX_HOME=" + filepath.Join(home, ".codex"), "PATH=" + home,
-				"SystemRoot=" + os.Getenv("SystemRoot"), "USER=magpie-test", "NO_COLOR=1",
+				"SystemRoot=" + os.Getenv("SystemRoot"), "USER=starling-test", "NO_COLOR=1",
 				// so that the binary keeps this home instead of a sandbox of its own
 				testenv.Marker + "=" + os.Getenv(testenv.Marker),
 				"TMP=" + os.Getenv("TMP"), "TEMP=" + os.Getenv("TEMP"), "TMPDIR=" + os.Getenv("TMPDIR")}
@@ -191,7 +191,7 @@ func TestAccountRowsPoolsAntigravity(t *testing.T) {
 }
 
 // A ChatGPT account's credits are in its row beside its windows, as on the
-// usage page and in magpie quota.
+// usage page and in starling quota.
 func TestAccountRowsTellCredits(t *testing.T) {
 	now := time.Date(2026, 10, 1, 9, 0, 0, 0, time.UTC)
 	provider.LoginUsageVia(func(context.Context, string) map[string]provider.SubscriptionQuota {

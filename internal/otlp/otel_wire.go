@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 type otelAttribute struct {
@@ -34,7 +34,7 @@ func otelAttributes(r Record) []otelAttribute {
 	if op == "" {
 		op = "chat"
 	}
-	a := []otelAttribute{otelString("gen_ai.operation.name", op), otelString("gen_ai.provider.name", r.Provider), otelString("gen_ai.request.model", r.Model), otelString("magpie.agent", r.Agent)}
+	a := []otelAttribute{otelString("gen_ai.operation.name", op), otelString("gen_ai.provider.name", r.Provider), otelString("gen_ai.request.model", r.Model), otelString("starling.agent", r.Agent)}
 	if r.Served != "" {
 		a = append(a, otelString("gen_ai.response.model", r.Served))
 	}
@@ -50,8 +50,8 @@ func otelAttributes(r Record) []otelAttribute {
 
 func otelEnvelope(signal string, data any) map[string]any {
 	return map[string]any{"resource" + signal: []any{map[string]any{
-		"resource":       map[string]any{"attributes": []otelAttribute{otelString("service.name", "magpie")}},
-		"scope" + signal: []any{map[string]any{"scope": map[string]any{"name": "github.com/lulu58588/chongyun"}, map[string]string{"Spans": "spans", "Metrics": "metrics"}[signal]: data}},
+		"resource":       map[string]any{"attributes": []otelAttribute{otelString("service.name", "starling")}},
+		"scope" + signal: []any{map[string]any{"scope": map[string]any{"name": "github.com/lulu58588/starling"}, map[string]string{"Spans": "spans", "Metrics": "metrics"}[signal]: data}},
 	}}}
 }
 
@@ -85,21 +85,21 @@ func (e *otelExporter) traces(items []otelItem) any {
 		a := append(otelAttributes(r), otelInt("http.response.status_code", int64(r.Status)),
 			otelInt("gen_ai.usage.input_tokens", int64(r.Input+r.CacheRead+r.CacheWrite)), otelInt("gen_ai.usage.output_tokens", int64(r.Output)),
 			otelInt("gen_ai.usage.cache_read.input_tokens", int64(r.CacheRead)), otelInt("gen_ai.usage.cache_creation.input_tokens", int64(r.CacheWrite)),
-			otelInt("gen_ai.usage.reasoning.output_tokens", int64(r.Reasoning)), otelInt("magpie.ttft_ms", r.TTFT), otelInt("magpie.first_text_ms", r.FirstText))
+			otelInt("gen_ai.usage.reasoning.output_tokens", int64(r.Reasoning)), otelInt("starling.ttft_ms", r.TTFT), otelInt("starling.first_text_ms", r.FirstText))
 		if r.FirstReasoning > 0 {
-			a = append(a, otelInt("magpie.first_reasoning_ms", r.FirstReasoning))
+			a = append(a, otelInt("starling.first_reasoning_ms", r.FirstReasoning))
 		}
 		if r.ReasoningHidden {
-			a = append(a, otelInt("magpie.reasoning_hidden", 1))
+			a = append(a, otelInt("starling.reasoning_hidden", 1))
 		}
 		if r.RouteID != 0 {
-			a = append(a, otelInt("magpie.route.id", r.RouteID))
+			a = append(a, otelInt("starling.route.id", r.RouteID))
 		}
 		if r.Requested != "" {
-			a = append(a, otelString("magpie.requested_model", r.Requested))
+			a = append(a, otelString("starling.requested_model", r.Requested))
 		}
 		if r.Effort != "" {
-			a = append(a, otelString("magpie.reasoning_effort", r.Effort))
+			a = append(a, otelString("starling.reasoning_effort", r.Effort))
 		}
 		if r.BodyIn != "" {
 			a = append(a, otelString("langfuse.observation.input", r.BodyIn))
@@ -129,9 +129,9 @@ func (e *otelExporter) traces(items []otelItem) any {
 			}
 			if sp.Root {
 				span["name"], span["kind"] = "gateway "+r.Model, 2
-				a = []otelAttribute{otelString("magpie.agent", r.Agent), otelString("magpie.requested_model", r.Model), otelInt("http.response.status_code", int64(r.Status))}
+				a = []otelAttribute{otelString("starling.agent", r.Agent), otelString("starling.requested_model", r.Model), otelInt("http.response.status_code", int64(r.Status))}
 				if r.RouteID != 0 {
-					a = append(a, otelInt("magpie.route.id", r.RouteID))
+					a = append(a, otelInt("starling.route.id", r.RouteID))
 				}
 				if r.Status >= 400 {
 					a = append(a, otelString("error.type", strconv.Itoa(r.Status)))
@@ -143,7 +143,7 @@ func (e *otelExporter) traces(items []otelItem) any {
 			if sp.Session {
 				span["name"], span["kind"] = sp.Name, 1
 				if sp.Type != "generation" {
-					a = []otelAttribute{otelString("magpie.agent", r.Agent)}
+					a = []otelAttribute{otelString("starling.agent", r.Agent)}
 					if r.Status >= 400 {
 						a = append(a, otelString("error.type", "agent_operation_failed"))
 					}
@@ -158,9 +158,9 @@ func (e *otelExporter) traces(items []otelItem) any {
 				}
 				a = append(filtered, otelString("langfuse.observation.type", sp.Type))
 				if sp.Inferred {
-					a = append(a, otelString("magpie.timing.source", "inferred"))
+					a = append(a, otelString("starling.timing.source", "inferred"))
 				} else {
-					a = append(a, otelString("magpie.timing.source", "recorded"))
+					a = append(a, otelString("starling.timing.source", "recorded"))
 				}
 				if sp.Type != "generation" {
 					if r.BodyIn != "" {

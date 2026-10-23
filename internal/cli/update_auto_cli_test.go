@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func TestUpdateAutoKeepsCorruptSettings(t *testing.T) {
@@ -71,7 +71,7 @@ func TestUpdateAutoWithBOMSettings(t *testing.T) {
 	}
 }
 
-// magpie update auto turns the app's own update checks off and on and sets
+// starling update auto turns the app's own update checks off and on and sets
 // how often they run, from the presets only (#472).
 func TestUpdateAutoCmd(t *testing.T) {
 	groupsHome(t)

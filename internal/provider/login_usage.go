@@ -108,8 +108,8 @@ func loginUsageAt(ctx context.Context, agent string) (map[string]SubscriptionQuo
 	usageRead(agent, out) // a window not started: the warm-up looks now
 	if len(out) > 0 {
 		// the batch's readings are points of each account's quota history
-		// too, as a Usage-page reading is: a magpie only ever serving
-		// other magpies has nobody on its Usage page, and its quota
+		// too, as a Usage-page reading is: a starling only ever serving
+		// other starlings has nobody on its Usage page, and its quota
 		// history stayed empty otherwise (#1313). One note for the whole
 		// batch: the file is read, parsed and written once for all
 		// accounts. The note runs after every reading of the batch has
@@ -150,7 +150,7 @@ var noteHistoryWrite = noteQuotaHistory
 func loginReading(ctx context.Context, l Login) loginUsageEntry {
 	e := cachedLoginReading(ctx, l)
 	if l.Agent == "codex" {
-		// what magpie spent of its resets, as of now: a reading kept from
+		// what starling spent of its resets, as of now: a reading kept from
 		// before one was spent still says it was
 		used := ResetsUsed(l.User)
 		e.q.ResetsUsed, e.read.ResetsUsed = used, used
@@ -190,7 +190,7 @@ func cachedLoginReading(ctx context.Context, l Login) loginUsageEntry {
 	}
 	r := c.pending[key]
 	if r == nil && held {
-		// nothing read since magpie started: the reading kept on disk,
+		// nothing read since starling started: the reading kept on disk,
 		// as of when it was made
 		c.Unlock()
 		return entry(keepLast(SubscriptionQuota{Provider: loginProvider(l), Plan: l.Plan, Windows: []QuotaWindow{}, Error: errNotAsked.Error()}, l.User))
@@ -419,7 +419,7 @@ func loginReadingKnown(l Login) (loginUsageEntry, bool) {
 	return e, ok
 }
 
-// codexLoginAuth is the auth.json of a ChatGPT account chongyun knows: the
+// codexLoginAuth is the auth.json of a ChatGPT account starling knows: the
 // sign-in it keeps for it.
 func codexLoginAuth(l Login) []byte {
 	loginsMu.Lock()

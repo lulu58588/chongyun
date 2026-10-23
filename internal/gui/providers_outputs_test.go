@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A provider's Save carries its editor's Max output, as it does its

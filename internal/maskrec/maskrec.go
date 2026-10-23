@@ -5,12 +5,12 @@
 // A value itself is never written down. A record holds each value's
 // placeholder, its kind, its finder, and a hint (its first character or a
 // key's prefix, and its length). The value behind a placeholder is known
-// only to the masker's memory while magpie runs (gwmw.Teller.Value), and
+// only to the masker's memory while starling runs (gwmw.Teller.Value), and
 // the text around it as the vendor saw it is kept in memory only, for the
 // latest records.
 //
 // A day is a file of its own, one request a line, under
-// ~/.config/magpie/masking, kept keepDays days and keepBytes in all.
+// ~/.config/starling/masking, kept keepDays days and keepBytes in all.
 package maskrec
 
 import (
@@ -24,7 +24,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 )
 
 const (
@@ -86,7 +86,7 @@ var store struct {
 // inTest says Add writes nothing: in a test binary testenv isolated, a
 // write still going as a test ends would put masking/ back into its
 // temporary HOME (see the gateway's keepsRoutes).
-func inTest() bool { return os.Getenv("MAGPIE_TEST_SANDBOX") != "" && !ownTest }
+func inTest() bool { return os.Getenv("STARLING_TEST_SANDBOX") != "" && !ownTest }
 
 // ownTest is set by this package's tests, which read what they write.
 var ownTest = false
@@ -216,7 +216,7 @@ func prune(dir string, now time.Time) {
 }
 
 // read calls each with the records of path, in the order written; a line
-// that doesn't parse, one half-written by another magpie, is skipped.
+// that doesn't parse, one half-written by another starling, is skipped.
 func read(path string, each func(Record)) int64 {
 	f, err := os.Open(path)
 	if err != nil {

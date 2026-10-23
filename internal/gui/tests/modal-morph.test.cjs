@@ -80,7 +80,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           return a;
         };
       });
-      await page.goto("http://magpie.test/?view=providers");
+      await page.goto("http://starling.test/?view=providers");
       const row = page.locator('.row.provider[data-id="delta"]');
       await row.waitFor();
       await page.evaluate(() => { window.__hold = true; });
@@ -158,7 +158,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     const page = await browser.newPage({ viewport: { width: 1240, height: 760 }, reducedMotion: "reduce" });
     page.setDefaultTimeout(5000);
     await page.route("**/*", serve());
-    await page.goto("http://magpie.test/?view=providers");
+    await page.goto("http://starling.test/?view=providers");
     const row = page.locator('.row.provider[data-id="delta"]');
     await row.locator(".name, .who").first().click();
     await page.locator("#modal:not([hidden]) > .dialog").waitFor();

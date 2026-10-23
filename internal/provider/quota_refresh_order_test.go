@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/starling/internal/agentenv"
 )
 
 func isolateRefreshes(t *testing.T) {

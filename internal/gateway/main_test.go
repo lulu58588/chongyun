@@ -7,21 +7,21 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/budget"
-	"github.com/lulu58588/chongyun/internal/gwbudget"
-	"github.com/lulu58588/chongyun/internal/gwmw"
-	"github.com/lulu58588/chongyun/internal/gwtool"
-	"github.com/lulu58588/chongyun/internal/masking"
-	"github.com/lulu58588/chongyun/internal/middleware"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/routes"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/budget"
+	"github.com/lulu58588/starling/internal/gwbudget"
+	"github.com/lulu58588/starling/internal/gwmw"
+	"github.com/lulu58588/starling/internal/gwtool"
+	"github.com/lulu58588/starling/internal/masking"
+	"github.com/lulu58588/starling/internal/middleware"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/routes"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // standInsEnv names the folder of a test binary's stand-in CLIs, for a
 // test binary it starts again.
-const standInsEnv = "MAGPIE_GATEWAY_TEST_STAND_INS"
+const standInsEnv = "STARLING_GATEWAY_TEST_STAND_INS"
 
 func TestMain(m *testing.M) {
 	serveRotation()
@@ -41,7 +41,7 @@ func TestMain(m *testing.M) {
 // alone does not isolate the macOS Keychain, and account caches eventually
 // expire: discovery must keep finding only the test's sign-ins and CLIs.
 func isolatedTests(m *testing.M) (int, error) {
-	home, err := os.MkdirTemp("", "magpie-gateway-test-")
+	home, err := os.MkdirTemp("", "starling-gateway-test-")
 	if err != nil {
 		return 1, err
 	}
@@ -187,7 +187,7 @@ func withoutGroups(t *testing.T) {
 }
 
 // searchOn is plugins/search on: the gateway's tests offer and answer
-// magpie's web search, as a user with it on has.
+// starling's web search, as a user with it on has.
 var searchOn func()
 
 // limitsOn is plugins/budget on: the gateway's tests hold gateway keys to
@@ -202,7 +202,7 @@ func withoutLimits(t *testing.T) {
 }
 
 // withoutSearch is plugins/search off for t, in a process serving the
-// gateway (gwtool.Gate): magpie's web search is neither offered nor
+// gateway (gwtool.Gate): starling's web search is neither offered nor
 // answered.
 func withoutSearch(t *testing.T) {
 	searchOn()

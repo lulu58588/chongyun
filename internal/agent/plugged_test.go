@@ -7,16 +7,16 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentplug"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/agentplug"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 	"gopkg.in/yaml.v3"
 )
 
-// pluggedHome is a home of its own with DeepSeek's two models in magpie
+// pluggedHome is a home of its own with DeepSeek's two models in starling
 // and the plugins whose agent modules are srcs, each in a folder with a
 // package.json naming it.
 func pluggedHome(t *testing.T, srcs ...string) string {
@@ -33,7 +33,7 @@ func pluggedHome(t *testing.T, srcs ...string) string {
 	for i, src := range srcs {
 		dir := filepath.Join(home, "plugins", "p"+string(rune('a'+i)))
 		os.MkdirAll(dir, 0o755)
-		os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"p`+string(rune('a'+i))+`","magpie":{"agent":"./agent.js"}}`), 0o644)
+		os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"p`+string(rune('a'+i))+`","starling":{"agent":"./agent.js"}}`), 0o644)
 		os.WriteFile(filepath.Join(dir, "agent.js"), []byte(src), 0o644)
 		l.Plugins = append(l.Plugins, plugin.Entry{Spec: dir})
 	}
@@ -77,10 +77,10 @@ func TestPluggedYAML(t *testing.T) {
 	if f.Get() != "gpt-5" || a.Check() != "" {
 		t.Fatalf("get %q, check %q", f.Get(), a.Check())
 	}
-	if !containsOption(f.Options(map[string]string{"model": f.Get()}), "magpie/deepseek/pro") {
-		t.Fatal("chongyun's models aren't offered")
+	if !containsOption(f.Options(map[string]string{"model": f.Get()}), "starling/deepseek/pro") {
+		t.Fatal("starling's models aren't offered")
 	}
-	if err := f.Set("magpie/deepseek/pro"); err != nil {
+	if err := f.Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	c, raw := read()
@@ -88,11 +88,11 @@ func TestPluggedYAML(t *testing.T) {
 		c["map-tokens"] != 2048 || c["dark-mode"] != true || !strings.Contains(raw, "# mine") {
 		t.Fatalf("wired:\n%s", raw)
 	}
-	if f.Get() != "magpie/deepseek/pro" || a.Check() != "" {
+	if f.Get() != "starling/deepseek/pro" || a.Check() != "" {
 		t.Fatalf("get %q, check %q", f.Get(), a.Check())
 	}
-	// another of magpie's models keeps what was stashed first
-	if err := f.Set("magpie/deepseek/flash"); err != nil {
+	// another of starling's models keeps what was stashed first
+	if err := f.Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	if c, raw := read(); c["model"] != "openai/deepseek/flash" || c["map-tokens"] != 4096 {
@@ -139,7 +139,7 @@ export default {
 		t.Fatal("found with no file")
 	}
 	f := a.Field("model")
-	if err := f.Set("magpie/deepseek/pro"); err != nil {
+	if err := f.Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	var c struct {
@@ -151,7 +151,7 @@ export default {
 	}
 	b, _ := os.ReadFile(path)
 	json.Unmarshal(b, &c)
-	if c.LLM.Model != "deepseek/pro" || c.LLM.Endpoint.URL != gateway.URL()+"/v1" || c.LLM.Count < 2 || f.Get() != "magpie/deepseek/pro" {
+	if c.LLM.Model != "deepseek/pro" || c.LLM.Endpoint.URL != gateway.URL()+"/v1" || c.LLM.Count < 2 || f.Get() != "starling/deepseek/pro" {
 		t.Fatalf("wired: %s", b)
 	}
 	// Disconnect takes every key out, as there was nothing before
@@ -180,7 +180,7 @@ export function connect() { throw new Error("no gateway for me"); }`,
 		got = append(got, e)
 	}
 	all := strings.Join(got, "\n")
-	if !strings.Contains(all, `"codex" is chongyun's own`) || !strings.Contains(all, "agent.format") || len(errs) != 3 {
+	if !strings.Contains(all, `"codex" is starling's own`) || !strings.Contains(all, "agent.format") || len(errs) != 3 {
 		t.Fatalf("errors: %v", errs)
 	}
 	codex, _ := Find("codex")
@@ -192,7 +192,7 @@ export function connect() { throw new Error("no gateway for me"); }`,
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := a.Field("model").Set("magpie/deepseek/pro"); err == nil || !strings.Contains(err.Error(), "no gateway for me") {
+	if err := a.Field("model").Set("starling/deepseek/pro"); err == nil || !strings.Contains(err.Error(), "no gateway for me") {
 		t.Fatalf("set: %v", err)
 	}
 	if _, err := os.Stat(a.Path); err == nil {

@@ -8,8 +8,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/codexcat"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/codexcat"
 )
 
 // A group reasons when a member does: a member that doesn't think is no
@@ -19,7 +19,7 @@ import (
 //
 // Before this, one member that didn't think made the whole group
 // 不支持推理, and the agent turned thinking off for it: a routing group of
-// deepseek-v4-flash-0731-max (a Trae plugin model magpie read as one that
+// deepseek-v4-flash-0731-max (a Trae plugin model starling read as one that
 // doesn't reason) with a DeepSeek that does lost reasoning for both.
 func TestGroupReasoningFromAMemberThatThinks(t *testing.T) {
 	groupReasoningHome(t)

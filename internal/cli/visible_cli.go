@@ -6,34 +6,34 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// Which models each agent is shown, from the terminal: magpie visible.
+// Which models each agent is shown, from the terminal: starling visible.
 
 const visibleUsage = `usage:
-  chongyun visible                          which models each agent is shown
-  chongyun visible <agent> <name>[,<name>…] show the agent only these: families (a tag set with
-                                          chongyun provider set <id> family=relay, or chongyun group set),
+  starling visible                          which models each agent is shown
+  starling visible <agent> <name>[,<name>…] show the agent only these: families (a tag set with
+                                          starling provider set <id> family=relay, or starling group set),
                                           provider ids and group ids
-  chongyun visible <agent> all              show the agent every model again
-  chongyun visible <agent> --only-picked    show the agent only the models ticked for it now; a model
+  starling visible <agent> all              show the agent every model again
+  starling visible <agent> --only-picked    show the agent only the models ticked for it now; a model
                                           that comes later, of any provider, stays off until it is
                                           ticked in its list on the Agents page
-  chongyun visible <agent> --show-new       show it the models that come later again (the default)
+  starling visible <agent> --show-new       show it the models that come later again (the default)
 
   An agent not narrowed is shown every model. The gateway's model list and the model lists
-  chongyun writes into the agents' files are narrowed alike; a model kept from an agent still
-  answers when the agent asks for it by name. chongyun models <agent> shows what it is shown,
+  starling writes into the agents' files are narrowed alike; a model kept from an agent still
+  answers when the agent asks for it by name. starling models <agent> shows what it is shown,
   and why the others aren't. --only-picked and --show-new keep the models shown as they are,
   and keep the providers, families and groups the agent is narrowed to.
 
-  e.g. chongyun provider set opencode-go family=ocgo
-       chongyun group set gpt-plus-auto family=relay
-       chongyun visible zcode relay,ocgo`
+  e.g. starling provider set opencode-go family=ocgo
+       starling group set gpt-plus-auto family=relay
+       starling visible zcode relay,ocgo`
 
 // names is every name a visibility can hold: the families, and the
 // providers' and groups' ids.
@@ -56,7 +56,7 @@ func visibleCmd(args []string) error {
 	s := settings.Load()
 	if len(args) == 0 {
 		if len(s.Visible) == 0 && len(s.PickedModels) == 0 {
-			fmt.Println(muted.Render("  every agent is shown every model · chongyun visible <agent> <family>,… narrows one"))
+			fmt.Println(muted.Render("  every agent is shown every model · starling visible <agent> <family>,… narrows one"))
 		}
 		ids := slices.Collect(maps.Keys(s.Visible))
 		for id := range s.PickedModels {
@@ -107,7 +107,7 @@ func visibleCmd(args []string) error {
 		for i, n := range list {
 			n = strings.TrimPrefix(provider.CanonicalRef(n), provider.GroupPrefix)
 			if !slices.ContainsFunc(known, func(k string) bool { return strings.EqualFold(k, n) }) {
-				return fmt.Errorf("%s is no family, provider or group (families: %s; chongyun provider set <id> family=%s makes one)",
+				return fmt.Errorf("%s is no family, provider or group (families: %s; starling provider set <id> family=%s makes one)",
 					n, orNone(provider.Families()), n)
 			}
 			list[i] = n
@@ -142,17 +142,17 @@ func explainHidden(id string, hidden []provider.Entry) {
 	_, kept := provider.ListedFor(id)
 	if n := len(hidden) - len(kept); n > 0 {
 		if _, only := provider.PickedModels(id); only {
-			fmt.Println(faint.Render("  " + id + " is shown only the models picked for it: " + fmt.Sprint(n) + " not picked, and a new one stays off until it is ticked · chongyun visible " + id + " --show-new shows new ones"))
+			fmt.Println(faint.Render("  " + id + " is shown only the models picked for it: " + fmt.Sprint(n) + " not picked, and a new one stays off until it is ticked · starling visible " + id + " --show-new shows new ones"))
 		} else {
 			fmt.Println(faint.Render("  " + fmt.Sprint(n) + " taken out of " + id + "'s list on the Agents page"))
 		}
 	} else if _, only := provider.PickedModels(id); only {
-		fmt.Println(faint.Render("  " + id + " is shown only the models picked for it; a new one stays off until it is ticked · chongyun visible " + id + " --show-new shows new ones"))
+		fmt.Println(faint.Render("  " + id + " is shown only the models picked for it; a new one stays off until it is ticked · starling visible " + id + " --show-new shows new ones"))
 	}
 	hidden = kept
 	names, ok := provider.VisibleTo(id)
 	if !ok {
-		fmt.Println(faint.Render("  " + id + " is shown every provider's models · chongyun visible " + id + " <family>,… narrows it"))
+		fmt.Println(faint.Render("  " + id + " is shown every provider's models · starling visible " + id + " <family>,… narrows it"))
 		return
 	}
 	fmt.Println(faint.Render("  " + id + " is shown " + strings.Join(names, ", ")))

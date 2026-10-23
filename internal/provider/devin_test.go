@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 func TestParseDevinModels(t *testing.T) {
@@ -78,7 +78,7 @@ func TestWithDevinContexts(t *testing.T) {
 	})
 	t.Cleanup(func() { devinFamiliesCached(nil) })
 	saved := withDevinContexts([]catalog.Model{
-		{ID: "glm-5-2", Context: 1000000, Output: 131072}, // an older magpie's models.dev numbers
+		{ID: "glm-5-2", Context: 1000000, Output: 131072}, // an older starling's models.dev numbers
 		{ID: "glm-5-2-1m"},
 		{ID: "swe-2-high"},
 		{ID: "glm-5.2"},

@@ -4,11 +4,11 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// magpie update takes --proxy and --mirror, as --flag value or
-// --flag=value, before or after check; magpie update mirror keeps one for
+// starling update takes --proxy and --mirror, as --flag value or
+// --flag=value, before or after check; starling update mirror keeps one for
 // every update, the app's too, and off clears it.
 func TestUpdateFlags(t *testing.T) {
 	rest, proxy, mirror, err := updateFlags([]string{"update", "--proxy", "socks5://127.0.0.1:1080", "check", "--mirror=https://mirror.example/"})
@@ -25,7 +25,7 @@ func TestUpdateFlags(t *testing.T) {
 		}
 	}
 	if err := updateCmd([]string{"update", "chek"}); err == nil {
-		t.Error("chongyun update chek ran an update")
+		t.Error("starling update chek ran an update")
 	}
 
 	groupsHome(t)

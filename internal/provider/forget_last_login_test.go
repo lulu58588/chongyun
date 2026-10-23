@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-// #874: a subscription signed in to one account of magpie's could never be
-// signed out — "chongyun uses … first; put another account first", with no
+// #874: a subscription signed in to one account of starling's could never be
+// signed out — "starling uses … first; put another account first", with no
 // other account to put first. The only one goes; with another there, the
 // first still waits for it to be put first.
 func TestForgetOnlyFirstLogin(t *testing.T) {
@@ -59,14 +59,14 @@ func TestForgetOnlyFirstLogin(t *testing.T) {
 	}
 }
 
-// 歧路亡羊 报告: Copilot with three accounts of chongyun's, one of them
+// 歧路亡羊 报告: Copilot with three accounts of starling's, one of them
 // first. Removing the first puts the next first, and Sign out… takes them
-// all, where it said "chongyun uses wwjxhy first; put another account
+// all, where it said "starling uses wwjxhy first; put another account
 // first".
 func TestForgetFirstCopilotLogin(t *testing.T) {
 	signIn(t)
 	tok := func(s string) json.RawMessage { return json.RawMessage(`{"oauth_token":"` + s + `"}`) }
-	// every account is one of chongyun's, with its sign-in: there is no
+	// every account is one of starling's, with its sign-in: there is no
 	// account of another tool's it only reads
 	saved := []savedLogin{
 		{Agent: "copilot", User: "octo", Auth: tok("gho_own")},

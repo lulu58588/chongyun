@@ -11,8 +11,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // codexModelInfo is what codex-rs's ModelInfo can't do without
@@ -35,14 +35,14 @@ type codexModelInfo struct {
 	Tools *[]string `json:"experimental_supported_tools"`
 }
 
-// A Codex on another computer that names magpie its model_provider, with a
-// gateway key (#1281), reads magpie's models from /v1/codex/models in
+// A Codex on another computer that names starling its model_provider, with a
+// gateway key (#1281), reads starling's models from /v1/codex/models in
 // Codex's own shape — through the server as it runs, lanGuard and all —
 // and sees only the models its key may use; another computer without a key
 // gets nothing, and /v1/models stays OpenAI's list.
 func TestCodexCatalogForAGatewayKey(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	plan := &fake{t: t, ctype: "application/json", reply: `{}`}
 	spare := &fake{t: t, ctype: "application/json", reply: `{}`}
 	twoProviders(t, plan, spare)
@@ -147,7 +147,7 @@ func TestCodexCatalogFitsCodexsLimit(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &list); err != nil {
 		t.Fatal(err)
 	}
-	out, _ := strconv.Atoi(w.Header().Get("X-Magpie-Left-Out"))
+	out, _ := strconv.Atoi(w.Header().Get("X-Starling-Left-Out"))
 	t.Logf("%d listed in %d bytes, %d left out", len(list.Models), w.Body.Len(), out)
 	if len(list.Models) < 100 || out == 0 || len(list.Models)+out != 300 {
 		t.Fatalf("%d listed, %d left out", len(list.Models), out)

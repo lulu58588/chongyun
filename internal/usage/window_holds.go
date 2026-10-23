@@ -2,10 +2,10 @@ package usage
 
 // What a whole subscription window holds (Chiao 报告): the Usage
 // page's account cards show each window's share used, as the vendor reads
-// it; magpie knows what it routed through the account since the window
+// it; starling knows what it routed through the account since the window
 // began, so the whole is about that over the share. It is told only where
 // that is honest: the window's start and the account's calls are known,
-// magpie's log reaches back to the start, and enough of it is used for a
+// starling's log reaches back to the start, and enough of it is used for a
 // rounded percent to scale up (provider.HoldsFloor).
 
 import (
@@ -14,12 +14,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// magpie quota --json and GET /v1/magpie/quotas tell the same whole as the
+// starling quota --json and GET /v1/starling/quotas tell the same whole as the
 // Usage page (#2333).
 func init() { provider.ReckonHolds = WithWindowHolds }
 
@@ -173,7 +173,7 @@ func dryRuns(qs []provider.SubscriptionQuota, hist []provider.QuotaHistory, now 
 // calls of the card's provider (by the id it has now) answered by its
 // account, to a model the window counts, from the window's start to when
 // its share was read. first is the log's first call: a window begun before
-// it has calls magpie can't see, and isn't reckoned. Nor is a window with a
+// it has calls starling can't see, and isn't reckoned. Nor is a window with a
 // call in one of its account's dry runs that may have been paid otherwise:
 // one where the vendor answered a call after a reading of none left, or
 // where no reading with some left is known before it.

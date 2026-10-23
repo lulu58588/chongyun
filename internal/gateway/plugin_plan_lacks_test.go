@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // A plugin's account whose plan lacks the model is tried after the ones
@@ -22,7 +22,7 @@ import (
 func TestPluginAccountLackingTheModelGoesLast(t *testing.T) {
 	bun := testenv.Bun(t)
 	fresh(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Setenv("FAKE_RESPONSES", "1")
 	t.Cleanup(plugin.Settle)
 	var mu sync.Mutex

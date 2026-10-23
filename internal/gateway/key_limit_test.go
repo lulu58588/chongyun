@@ -12,11 +12,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/budget"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/budget"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // limitedUpstream is a provider whose every call uses 300 input and 50
@@ -103,7 +103,7 @@ func TestKeyLimitRefusesBeforeUpstream(t *testing.T) {
 	}
 	// it resets at the next midnight after the check
 	_, reset := access.Window("day", now)
-	if ra := w.Header().Get("Retry-After"); ra != strconv.Itoa(int(reset.Sub(now).Seconds())) || w.Header().Get("X-Magpie-Limit-Reset") != reset.Format(time.RFC3339) || w.Header().Get("X-Should-Retry") != "false" {
+	if ra := w.Header().Get("Retry-After"); ra != strconv.Itoa(int(reset.Sub(now).Seconds())) || w.Header().Get("X-Starling-Limit-Reset") != reset.Format(time.RFC3339) || w.Header().Get("X-Should-Retry") != "false" {
 		t.Fatal("headers", w.Header())
 	}
 	rec := lastUsage(t)
@@ -145,7 +145,7 @@ func TestKeyLimitRefusesBeforeUpstream(t *testing.T) {
 	}
 	// the key asks after its own limit
 	setLimit(t, keys[0].ID, &access.Limit{Period: "week", Tokens: 5000})
-	r := httptest.NewRequest("GET", "/v1/magpie/limit", nil)
+	r := httptest.NewRequest("GET", "/v1/starling/limit", nil)
 	r.Header.Set("Authorization", "Bearer "+secrets[0])
 	lw := httptest.NewRecorder()
 	h.ServeHTTP(lw, r)
@@ -362,7 +362,7 @@ func TestKeyLimitDaysCycleAndReset(t *testing.T) {
 	if !strings.Contains(w.Body.String(), "this 1-day cycle") {
 		t.Fatal("refusal says", w.Body.String())
 	}
-	if got := w.Header().Get("X-Magpie-Limit-Reset"); got != set.Add(24*time.Hour).Format(time.RFC3339) {
+	if got := w.Header().Get("X-Starling-Limit-Reset"); got != set.Add(24*time.Hour).Format(time.RFC3339) {
 		t.Fatal("resets at", got, "not a day after", set)
 	}
 	stored := func() access.Key {
@@ -447,7 +447,7 @@ func TestKeyLimitCalendarReset(t *testing.T) {
 }
 
 // A key on a 5-hour cycle (#2102) is refused once spent, named so, until
-// 5 hours after the limit was set; /v1/magpie/limit tells the key its
+// 5 hours after the limit was set; /v1/starling/limit tells the key its
 // cycle; Reset lets it in again with a new 5 hours from then.
 func TestKeyLimitHoursCycle(t *testing.T) {
 	fresh(t)
@@ -485,12 +485,12 @@ func TestKeyLimitHoursCycle(t *testing.T) {
 	if w.Code != 429 || calls.Load() != 2 || !strings.Contains(w.Body.String(), "this 5-hour cycle") {
 		t.Fatal("spent key:", w.Code, calls.Load(), w.Body.String())
 	}
-	if got := w.Header().Get("X-Magpie-Limit-Reset"); got != set.Add(5*time.Hour).Format(time.RFC3339) {
+	if got := w.Header().Get("X-Starling-Limit-Reset"); got != set.Add(5*time.Hour).Format(time.RFC3339) {
 		t.Fatal("resets at", got, "not 5 hours after", set)
 	}
-	lim := call("GET", "/v1/magpie/limit", "")
+	lim := call("GET", "/v1/starling/limit", "")
 	if lim.Code != 200 || !strings.Contains(lim.Body.String(), `"period":"hours"`) || !strings.Contains(lim.Body.String(), `"hours":5`) {
-		t.Fatal("/v1/magpie/limit:", lim.Code, lim.Body.String())
+		t.Fatal("/v1/starling/limit:", lim.Code, lim.Body.String())
 	}
 	ks, _ := access.List()
 	who := access.Identity{KeyID: keys[0].ID, KeyName: "Family", Limit: ks[0].Limit}
@@ -518,7 +518,7 @@ func TestKeyLimitHoursCycle(t *testing.T) {
 // A key with several limits (#2227) is let in only while every one has
 // something left: any one spent refuses it, and the 429 names the spent
 // one that resets last, as the key is refused until then. A request held
-// in flight counts in each limit's window; /v1/magpie/limit reports each.
+// in flight counts in each limit's window; /v1/starling/limit reports each.
 func TestKeyLimitSeveralLimits(t *testing.T) {
 	fresh(t)
 	budget.Forget()
@@ -566,13 +566,13 @@ func TestKeyLimitSeveralLimits(t *testing.T) {
 	_, endOfDay := access.Window("day", now)
 	_, endOfWeek := access.Window("week", now)
 	w := call("POST", "/v1/chat/completions", chatReq)
-	if w.Code != 429 || calls.Load() != 2 || w.Header().Get("X-Magpie-Limit-Reset") != endOfDay.Format(time.RFC3339) {
+	if w.Code != 429 || calls.Load() != 2 || w.Header().Get("X-Starling-Limit-Reset") != endOfDay.Format(time.RFC3339) {
 		t.Fatal("day spent:", w.Code, calls.Load(), w.Header(), w.Body.String())
 	}
 	// both spent: the week is the one that holds it longest
 	at(1, &access.Limit{Period: "week", Tokens: 700})
 	w = call("POST", "/v1/chat/completions", chatReq)
-	if w.Code != 429 || w.Header().Get("X-Magpie-Limit-Reset") != endOfWeek.Format(time.RFC3339) ||
+	if w.Code != 429 || w.Header().Get("X-Starling-Limit-Reset") != endOfWeek.Format(time.RFC3339) ||
 		w.Header().Get("Retry-After") != strconv.Itoa(int(endOfWeek.Sub(now).Seconds())) {
 		t.Fatal("both spent:", w.Code, w.Header(), w.Body.String())
 	}
@@ -581,14 +581,14 @@ func TestKeyLimitSeveralLimits(t *testing.T) {
 		Limit   budget.Status
 		Limits  []budget.Status
 	}
-	lim := call("GET", "/v1/magpie/limit", "")
+	lim := call("GET", "/v1/starling/limit", "")
 	json.Unmarshal(lim.Body.Bytes(), &got)
 	if !got.Limited || len(got.Limits) != 2 || got.Limit.Period != "week" || !got.Limits[0].Spent || !got.Limits[1].Spent || got.Limits[0].Tokens != 700 {
-		t.Fatal("/v1/magpie/limit:", lim.Body.String())
+		t.Fatal("/v1/starling/limit:", lim.Body.String())
 	}
 	// the day's limit raised: the week still refuses
 	at(0, &access.Limit{Period: "day", Tokens: 5000})
-	if w := call("POST", "/v1/chat/completions", chatReq); w.Code != 429 || w.Header().Get("X-Magpie-Limit-Reset") != endOfWeek.Format(time.RFC3339) {
+	if w := call("POST", "/v1/chat/completions", chatReq); w.Code != 429 || w.Header().Get("X-Starling-Limit-Reset") != endOfWeek.Format(time.RFC3339) {
 		t.Fatal("week spent:", w.Code, w.Body.String())
 	}
 	// the week's taken off: in again

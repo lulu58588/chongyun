@@ -125,4 +125,4 @@ func TestCopilotEducationQuotaRefresh(t *testing.T) {
 	}
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。

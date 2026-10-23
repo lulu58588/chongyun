@@ -11,36 +11,36 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
-// The `chongyun` command in a terminal (PAMI 报告: a way in the app to
+// The `starling` command in a terminal (PAMI 报告: a way in the app to
 // put it there, and to see whether it is). install.sh links it, Homebrew
 // links it, but the app downloaded from the site — and every Windows one —
 // leaves a terminal without it. Settings' Command line says, for each shell
-// a terminal may open, which magpie its `chongyun` runs, and puts this app's
+// a terminal may open, which starling its `starling` runs, and puts this app's
 // there when the user asks: a link in a folder already on PATH (the one
-// whose magpie runs first, when that one is another copy, or ~/.local/bin
+// whose starling runs first, when that one is another copy, or ~/.local/bin
 // and the like), on Windows the app's folder put first in the user's PATH.
 // A shell profile is written only for the shell the user picks, and only
 // with one line that puts ~/.local/bin on its PATH.
 //
-// Another magpie's version is read from its .app's Info.plist or its
-// Homebrew Cellar folder, never by running it: `chongyun version` migrates
+// Another starling's version is read from its .app's Info.plist or its
+// Homebrew Cellar folder, never by running it: `starling version` migrates
 // the settings first (see StaleCLI).
 
-// CLIShell is one shell's `chongyun`.
+// CLIShell is one shell's `starling`.
 type CLIShell struct {
 	Name    string `json:"name"`              // zsh, bash, fish, PowerShell, cmd
 	Default bool   `json:"default,omitempty"` // the one a terminal opens
 	Known   bool   `json:"known"`             // its PATH could be read
-	Command string `json:"command,omitempty"` // the magpie it runs, "" none
+	Command string `json:"command,omitempty"` // the starling it runs, "" none
 	Ours    bool   `json:"ours"`              // and that is this app
 	Profile string `json:"profile,omitempty"` // the file a pick of it writes, ~ for the home; "" none
 	HasDir  bool   `json:"hasDir,omitempty"`  // its PATH has CLI.Dir, so Add reaches it without its profile
 }
 
-// CLI is what `chongyun` runs in a terminal opened now.
+// CLI is what `starling` runs in a terminal opened now.
 type CLI struct {
 	Exe     string     `json:"exe"`               // this app's program, which it should run
 	Command string     `json:"command,omitempty"` // the default shell's
@@ -50,7 +50,7 @@ type CLI struct {
 	Stuck   string     `json:"stuck,omitempty"`   // translocated, read-only: why it can't be linked from where it is
 	Shells  []CLIShell `json:"shells"`
 	Windows bool       `json:"windows,omitempty"`
-	Shim    string     `json:"shim,omitempty"` // Windows: the magpie.cmd Add writes beside an app not named magpie.exe, which runs it
+	Shim    string     `json:"shim,omitempty"` // Windows: the starling.cmd Add writes beside an app not named starling.exe, which runs it
 }
 
 // cliShell is a shell installed here.
@@ -68,7 +68,7 @@ var (
 
 var cliMu sync.Mutex
 
-// ReadCLI says what `chongyun` runs in each shell. It asks each shell for its
+// ReadCLI says what `starling` runs in each shell. It asks each shell for its
 // PATH, a few seconds at most.
 func ReadCLI() *CLI {
 	v := &CLI{Windows: runtime.GOOS == "windows", Shells: []CLIShell{}}
@@ -115,7 +115,7 @@ func ReadCLI() *CLI {
 	return v
 }
 
-// AddCLI puts this app's magpie on the PATH: of every shell whose PATH has
+// AddCLI puts this app's starling on the PATH: of every shell whose PATH has
 // the folder ReadCLI names (shell ""), or of the one shell named, by
 // linking it in ~/.local/bin and adding that folder to the shell's profile.
 func AddCLI(shell string) (*CLI, error) {
@@ -127,9 +127,9 @@ func AddCLI(shell string) (*CLI, error) {
 	}
 	switch cliStuck() {
 	case "translocated":
-		return nil, errors.New("macOS runs chongyun from a temporary copy until it is moved to Applications: move it there, open it again, then add the command")
+		return nil, errors.New("macOS runs starling from a temporary copy until it is moved to Applications: move it there, open it again, then add the command")
 	case "read-only":
-		return nil, errors.New("chongyun is running from its disk image: copy it to Applications, open it from there, then add the command")
+		return nil, errors.New("starling is running from its disk image: copy it to Applications, open it from there, then add the command")
 	}
 	if shell == "" {
 		v := ReadCLI()
@@ -137,14 +137,14 @@ func AddCLI(shell string) (*CLI, error) {
 			return v, nil
 		}
 		if v.Dir == "" {
-			return nil, errors.New("no folder on your PATH can take the chongyun command: add ~/.local/bin to a shell's profile below")
+			return nil, errors.New("no folder on your PATH can take the starling command: add ~/.local/bin to a shell's profile below")
 		}
 		if err := cliPlace(exe, v.Dir); err != nil {
 			return nil, err
 		}
 		v = ReadCLI()
 		if !v.Ours && v.Command != "" {
-			return v, fmt.Errorf("chongyun is in %s now, but a terminal still runs %s first", v.Dir, v.Command)
+			return v, fmt.Errorf("starling is in %s now, but a terminal still runs %s first", v.Dir, v.Command)
 		}
 		return v, nil
 	}
@@ -160,7 +160,7 @@ func AddCLI(shell string) (*CLI, error) {
 	}
 	prof := cliProfile(shell)
 	if sh == nil || prof == "" {
-		return nil, fmt.Errorf("%s isn't a shell chongyun can add the command to", shell)
+		return nil, fmt.Errorf("%s isn't a shell starling can add the command to", shell)
 	}
 	dir := filepath.Join(os.Getenv("HOME"), ".local", "bin")
 	if err := os.MkdirAll(dir, 0o755); err != nil {
@@ -175,8 +175,8 @@ func AddCLI(shell string) (*CLI, error) {
 	return ReadCLI(), nil
 }
 
-// Program is this magpie by a path that stays put: what a link, or an
-// agent's config that starts magpie, should name (cliProgram).
+// Program is this starling by a path that stays put: what a link, or an
+// agent's config that starts starling, should name (cliProgram).
 func Program() (string, error) { return cliProgram() }
 
 // cliProgram is the program a link should point at: the running one, or
@@ -190,8 +190,8 @@ func cliProgram() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if i := strings.Index(filepath.ToSlash(exe), "/Cellar/chongyun/"); i > 0 {
-		opt := filepath.Join(exe[:i], "opt", "chongyun", "bin", "chongyun")
+	if i := strings.Index(filepath.ToSlash(exe), "/Cellar/starling/"); i > 0 {
+		opt := filepath.Join(exe[:i], "opt", "starling", "bin", "starling")
 		if sameFile(opt, exe) {
 			return opt, nil
 		}
@@ -209,12 +209,12 @@ var cliStuck = func() string {
 
 func cliNames() []string {
 	if runtime.GOOS == "windows" {
-		return []string{"chongyun.exe", "chongyun.cmd", "chongyun.bat"}
+		return []string{"starling.exe", "starling.cmd", "starling.bat"}
 	}
-	return []string{"chongyun"}
+	return []string{"starling"}
 }
 
-// findCLI is the magpie a shell with PATH dirs runs, "" none.
+// findCLI is the starling a shell with PATH dirs runs, "" none.
 func findCLI(dirs []string) string {
 	for _, d := range dirs {
 		if d == "" || !filepath.IsAbs(d) {
@@ -241,10 +241,10 @@ func sameFile(a, b string) bool {
 
 var (
 	plistVersion = regexp.MustCompile(`<key>CFBundleShortVersionString</key>\s*<string>([^<]+)</string>`)
-	cellarVer    = regexp.MustCompile(`/Cellar/magpie/([^/]+)/`)
+	cellarVer    = regexp.MustCompile(`/Cellar/starling/([^/]+)/`)
 )
 
-// otherVersion is the version of the magpie at cmd, read from its .app's
+// otherVersion is the version of the starling at cmd, read from its .app's
 // Info.plist or its Cellar folder; "" when neither says.
 func otherVersion(cmd string) string {
 	p, err := filepath.EvalSymlinks(cmd)
@@ -272,7 +272,7 @@ func profileLine(shell string) string {
 	return `export PATH="$HOME/.local/bin:$PATH"`
 }
 
-const profileMark = "# added by chongyun (Settings › Command line)"
+const profileMark = "# added by starling (Settings › Command line)"
 
 // addToProfile adds line to the profile at path, unless it has it.
 func addToProfile(path, line string) error {
@@ -304,7 +304,7 @@ func addToProfile(path, line string) error {
 }
 
 // cliProfile is the file a shell reads as a terminal opens it, which a pick
-// of it writes; "" for a shell magpie doesn't write one for (Windows').
+// of it writes; "" for a shell starling doesn't write one for (Windows').
 func cliProfile(shell string) string {
 	if runtime.GOOS == "windows" {
 		return ""
@@ -343,28 +343,28 @@ func tildeHome(p string) string {
 	return p
 }
 
-// A Windows app not named chongyun.exe — the download is
-// chongyun-windows-amd64.exe — is given a chongyun.cmd beside it that
-// runs it, since a terminal looks for `chongyun` by that name only. It names
+// A Windows app not named starling.exe — the download is
+// starling-windows-amd64.exe — is given a starling.cmd beside it that
+// runs it, since a terminal looks for `starling` by that name only. It names
 // the program by its folder (%~dp0) and file name, which an update keeps:
 // it replaces the program where it is, under its name.
 
 // shimName is the file a shim is written to.
-const shimName = "chongyun.cmd"
+const shimName = "starling.cmd"
 
-// shimText is the chongyun.cmd that runs the program exe in its folder.
+// shimText is the starling.cmd that runs the program exe in its folder.
 func shimText(exe string) string {
 	name := filepath.Base(strings.ReplaceAll(exe, `\`, "/"))
-	return "@echo off\r\nrem added by chongyun (Settings > Command line): the chongyun command runs " + name + " in this folder\r\n\"%~dp0" + name + "\" %*\r\n"
+	return "@echo off\r\nrem added by starling (Settings > Command line): the starling command runs " + name + " in this folder\r\n\"%~dp0" + name + "\" %*\r\n"
 }
 
-// needsShim says whether the program exe can't be run as `chongyun` by its
+// needsShim says whether the program exe can't be run as `starling` by its
 // own name.
 func needsShim(exe string) bool {
-	return !strings.EqualFold(filepath.Base(strings.ReplaceAll(exe, `\`, "/")), "chongyun.exe")
+	return !strings.EqualFold(filepath.Base(strings.ReplaceAll(exe, `\`, "/")), "starling.exe")
 }
 
-// writeShim writes the magpie.cmd for exe beside it, when its name needs
+// writeShim writes the starling.cmd for exe beside it, when its name needs
 // one; it is the file's path, "" when none was needed.
 func writeShim(exe string) (string, error) {
 	if !needsShim(exe) {
@@ -375,12 +375,12 @@ func writeShim(exe string) (string, error) {
 		return p, nil
 	}
 	if err := os.WriteFile(p, []byte(shimText(exe)), 0o755); err != nil {
-		return "", fmt.Errorf("writing %s, which runs %s as chongyun: %w", p, filepath.Base(exe), err)
+		return "", fmt.Errorf("writing %s, which runs %s as starling: %w", p, filepath.Base(exe), err)
 	}
 	return p, nil
 }
 
-// shimRuns says whether cmd is the magpie.cmd magpie wrote for exe.
+// shimRuns says whether cmd is the starling.cmd starling wrote for exe.
 func shimRuns(cmd, exe string) bool {
 	if !strings.EqualFold(filepath.Base(cmd), shimName) || !strings.EqualFold(filepath.Dir(cmd), filepath.Dir(exe)) {
 		return false

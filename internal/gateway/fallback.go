@@ -30,8 +30,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 const fallbackCooldown = time.Minute
@@ -97,7 +97,7 @@ func (c candidate) label() string {
 }
 
 // restKey is what a candidate rests by: an account by its user, whether
-// or not the agent is signed in to it — magpie can sign Codex in to the
+// or not the agent is signed in to it — starling can sign Codex in to the
 // next account when the one it is on is out, and the one out stays out.
 func (c candidate) restKey() string {
 	if a := c.p.Account; a != nil && a.User != "" {
@@ -669,11 +669,11 @@ func cappedError(model string, ws []Weighed, now time.Time) (string, time.Time) 
 	capped, noCredits := heldBy(ws)
 	switch {
 	case !noCredits:
-		return fmt.Sprintf("usage cap reached: every account that serves %q is held at the usage cap set on it in chongyun — %s. chongyun uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
+		return fmt.Sprintf("usage cap reached: every account that serves %q is held at the usage cap set on it in starling — %s. starling uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
 	case !capped:
-		return fmt.Sprintf("usage limit reached: every account that serves %q has used up its allowance and is set in chongyun not to spend its credits — %s. chongyun uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
+		return fmt.Sprintf("usage limit reached: every account that serves %q has used up its allowance and is set in starling not to spend its credits — %s. starling uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
 	}
-	return fmt.Sprintf("usage limit reached: every account that serves %q is held by chongyun — %s. chongyun uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
+	return fmt.Sprintf("usage limit reached: every account that serves %q is held by starling — %s. starling uses it again once that window renews; %s", model, strings.Join(held, "; "), heldAdvice(capped, noCredits)), soonest
 }
 
 // checkpointCappedError is cappedError for a request whose native
@@ -683,7 +683,7 @@ func cappedError(model string, ws []Weighed, now time.Time) (string, time.Time) 
 func checkpointCappedError(model string, cp checkpointWriter, ws []Weighed, now time.Time) (string, time.Time) {
 	held, soonest := heldReasons(ws, now)
 	capped, noCredits := heldBy(ws)
-	return fmt.Sprintf("usage limit reached on the one account this conversation can go to — %s. The conversation was compacted natively by %s, and only that key or account can read the compaction it sealed, so chongyun doesn't send it to another account that serves %q, which would refuse it; the routing mode and how conversations stay don't change that. chongyun uses it again once that window renews; %s, or start a new conversation", strings.Join(held, "; "), cp.Who, model, heldAdvice(capped, noCredits)), soonest
+	return fmt.Sprintf("usage limit reached on the one account this conversation can go to — %s. The conversation was compacted natively by %s, and only that key or account can read the compaction it sealed, so starling doesn't send it to another account that serves %q, which would refuse it; the routing mode and how conversations stay don't change that. starling uses it again once that window renews; %s, or start a new conversation", strings.Join(held, "; "), cp.Who, model, heldAdvice(capped, noCredits)), soonest
 }
 
 // heldReasons is what holds each account of ws held at a share, and the
@@ -714,11 +714,11 @@ func heldReasons(ws []Weighed, now time.Time) ([]string, time.Time) {
 func heldAdvice(capped, noCredits bool) string {
 	switch {
 	case !noCredits:
-		return "raise or lift the cap in chongyun (Providers → the account's cap, or chongyun provider account-cap)"
+		return "raise or lift the cap in starling (Providers → the account's cap, or starling provider account-cap)"
 	case !capped:
-		return "to go on now, if an account holds credits, let it spend them (Usage → the account's Use credits, or chongyun quota credits <account> on)"
+		return "to go on now, if an account holds credits, let it spend them (Usage → the account's Use credits, or starling quota credits <account> on)"
 	}
-	return "to go on now, raise or lift a cap (Providers → the account's cap, or chongyun provider account-cap) or, if an account holds credits, let it spend them (Usage → the account's Use credits, or chongyun quota credits <account> on)"
+	return "to go on now, raise or lift a cap (Providers → the account's cap, or starling provider account-cap) or, if an account holds credits, let it spend them (Usage → the account's Use credits, or starling quota credits <account> on)"
 }
 
 // heldBy says what holds the accounts of ws held at a share: a usage cap
@@ -812,7 +812,7 @@ func barredError(model string, ws []Weighed) string {
 			names = append(names, w.Name)
 		}
 	}
-	return fmt.Sprintf("model %q is set not to be served by any account or key of %s: each one's own list of models leaves it out. Add it to an account's models in chongyun (Providers → the account's Models), or pick another model", model, strings.Join(names, ", "))
+	return fmt.Sprintf("model %q is set not to be served by any account or key of %s: each one's own list of models leaves it out. Add it to an account's models in starling (Providers → the account's Models), or pick another model", model, strings.Join(names, ", "))
 }
 
 // asideOf is how the trace tells the keys made for another protocol than
@@ -976,7 +976,7 @@ func spentAfter(cs []candidate) bool {
 // resting after the vendor said it is out of quota or credit (the
 // account's, or its model's own pool), or with a window that counts the
 // model used up. back is when the first of them is, zero when none says.
-// A model magpie picks for a call of its own (AutoVision, autoSearcher)
+// A model starling picks for a call of its own (AutoVision, autoSearcher)
 // is one routing would still try: a turn's own model goes to the one
 // candidate it has all the same, but the describer or searcher picked in
 // its place can be another (#1801). Unknown allowance, or a rest for a
@@ -1115,7 +1115,7 @@ func modelRetired(status int, body []byte) bool {
 // as it answered glm-5-free and kimi-k2.5-free on 2026-10-10 once they
 // left its free list: {"type":"error","error":{"type":"ModelError",
 // "message":"Model glm-5-free is not supported"}}. Read in the vendor's
-// body, or in the message magpie put it into ("OpenCode Zen Free: Model
+// body, or in the message starling put it into ("OpenCode Zen Free: Model
 // glm-5-free is not supported"). Not its "is not supported for format
 // anthropic", a model served on another API (wrongEndpoint), and not its
 // AuthError "Invalid API key." for a key it doesn't take.
@@ -1160,7 +1160,7 @@ var shapeWords = regexp.MustCompile(`(?i)failed to deserialize|unknown (item |co
 // once, as for shapeWords, and Command Code doesn't rest. Its overflow
 // that says so names the model's context length before the trace id, and
 // isn't one. The message may come after a provider's name ("Command Code:
-// "), as magpie tells it on.
+// "), as starling tells it on.
 var unsaidWords = regexp.MustCompile(`(?i)(^|"|\\"|: )invalid request error trace_id: [0-9a-f]{16,}(\\?"|\s*$)`)
 
 // shapeRefused says a request failed over its shape alone: the next
@@ -1236,7 +1236,7 @@ func zdrRefused(status int, body []byte) bool {
 // that a vendor's error was zdrRefused: the error the agent gets keeps
 // Command Code's words but, in Anthropic's shape or for the 400 whose
 // code is a number, not its code.
-const zdrHeader = "X-Magpie-ZDR-Refused"
+const zdrHeader = "X-Starling-ZDR-Refused"
 
 // notMates is, of the candidates left, those not c's model at c's
 // provider: its other accounts are sent the same Zero Data Retention
@@ -1627,7 +1627,7 @@ type holdWriter struct {
 	// reasoning keeps the agent from its idle timeout with SSE comments
 	// meanwhile (#751)
 	alive *keptAlive
-	// notes are the headers magpie says of the try (noteMember), set
+	// notes are the headers starling says of the try (noteMember), set
 	// under mu: all keepAlive sends of the try's before it has its status,
 	// as until then the try is still writing header, with no lock
 	notes http.Header
@@ -1710,7 +1710,7 @@ func newHoldWriter(w http.ResponseWriter, hold bool) *holdWriter {
 
 func (h *holdWriter) Header() http.Header { return h.header }
 
-// note sets a header magpie says of the try, which keepAlive may send
+// note sets a header starling says of the try, which keepAlive may send
 // from watch's goroutine before the try has its status.
 func (h *holdWriter) note(k, v string) {
 	h.mu.Lock()
@@ -1763,7 +1763,7 @@ func (h *holdWriter) pass() {
 	}
 	dst := h.w.Header()
 	for k, v := range h.header {
-		if k != resetsHeader && k != refusedHeader && k != zdrHeader { // magpie's own notes, for restAfter and settle
+		if k != resetsHeader && k != refusedHeader && k != zdrHeader { // starling's own notes, for restAfter and settle
 			dst[k] = v
 		}
 	}
@@ -2155,13 +2155,13 @@ func (h *holdWriter) keepAlive() {
 				return
 			}
 			a.cacheReportUntil = time.Time{}
-			h.header.Del("X-Magpie-Cache-Marks-Dropped")
-			h.notes.Del("X-Magpie-Cache-Marks-Dropped")
+			h.header.Del("X-Starling-Cache-Marks-Dropped")
+			h.notes.Del("X-Starling-Cache-Marks-Dropped")
 			log.Printf("claude: cache-mark report timed out before run selection; streaming without the dropped-mark header")
 		}
 		// the try's header is whole once it has its status (WriteHeader,
 		// under mu); before, the vendor's are still being copied into it
-		// from the try's goroutine, and only magpie's notes are read
+		// from the try's goroutine, and only starling's notes are read
 		src := h.header
 		if h.status == 0 {
 			src = h.notes
@@ -2527,7 +2527,7 @@ func (h *holdWriter) watch() func() {
 // vendor says nothing, every keepaliveEvery for up to keepaliveLongest
 // since it last did: a vendor that sent its 200 and response.created, then
 // nothing while it reasoned, had the stream held with none of it sent,
-// and Cloudflare in front of a remote magpie ended the request at 125s
+// and Cloudflare in front of a remote starling ended the request at 125s
 // (524) with the agent sent nothing at all; one quiet mid-reply was reset
 // by it as well (#947). Held, the agent is sent the stream's headers and
 // comments only (keepAlive), none of the try, which another account may

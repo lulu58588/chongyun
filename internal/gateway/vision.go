@@ -14,13 +14,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A model that can't see images is given what a model that can says of
 // them: each image in the request is described once by the vision model
-// (the Settings' Vision, or one magpie picks) and the description goes in
+// (the Settings' Vision, or one starling picks) and the description goes in
 // the image's place, in the current turn, older turns and tool results
 // alike. With Vision off, or no model that sees, such an image is turned
 // away as before (textOnlyBody).
@@ -34,8 +34,8 @@ func init() {
 	}
 }
 
-// VisionAgent is the User-Agent of the descriptions magpie asks for.
-const VisionAgent = "magpie-vision/1"
+// VisionAgent is the User-Agent of the descriptions starling asks for.
+const VisionAgent = "starling-vision/1"
 
 // visionTimeout is how long the vendor has to describe an image, from when
 // the request went out to it (each try's own), and visionWaitMost how long
@@ -61,7 +61,7 @@ const visionSystem = `You describe images for an AI model that cannot see them. 
 - For a photo or drawing: what it shows, with the details that matter.
 Describe only what is there. Don't guess at what can't be read, say it can't be read. Don't answer questions or give advice. No preamble.`
 
-// describingKey marks a description magpie asks for, which must not have
+// describingKey marks a description starling asks for, which must not have
 // its image described again.
 type describingKey struct{}
 
@@ -89,7 +89,7 @@ func describedFor(ctx context.Context) *CallFor {
 }
 
 // blindTo is whether a describer is to describe images for pid/model: its
-// list says it takes none (in), or says nothing and magpie counts it
+// list says it takes none (in), or says nothing and starling counts it
 // text-only — as agents were told before Vision had them told every model
 // takes images (provider.Described): models.dev doesn't say it sees either.
 func blindTo(pid, model string, in *bool) bool {
@@ -121,12 +121,12 @@ func seer() (string, bool) {
 }
 
 // VisionMissing is the model Settings › Models › Image recognition names
-// when magpie can't find it any more, so that AutoVision's describes in its
+// when starling can't find it any more, so that AutoVision's describes in its
 // place. "" when none is named, Vision is off, or it resolves.
 func VisionMissing() string { return pickedMissing(provider.HeldSettings().Vision) }
 
 // pickedMissing is a model the user picked in Settings (v) that doesn't
-// resolve: "" for none picked, off, or one magpie finds.
+// resolve: "" for none picked, off, or one starling finds.
 func pickedMissing(v string) string {
 	if v == "" || v == "off" {
 		return ""
@@ -141,29 +141,29 @@ func pickedMissing(v string) string {
 // described, says of a picked Image recognition model that is missing.
 func missingSeerNote() string {
 	if v := VisionMissing(); v != "" {
-		return fmt.Sprintf("; the Image recognition model picked in chongyun's Settings, %q, isn't set up any more: pick another in Settings → Models → Image recognition", v)
+		return fmt.Sprintf("; the Image recognition model picked in starling's Settings, %q, isn't set up any more: pick another in Settings → Models → Image recognition", v)
 	}
 	return ""
 }
 
 // textOnlyNote is what a request turned away for its image says of why
-// magpie takes the model for text-only and where that is changed, so the
+// starling takes the model for text-only and where that is changed, so the
 // reader turns on the model's switch rather than trying another model or
 // reinstalling the agent (KimYx0207 报告, over mark_li21's Codex paste): the
 // user's own answer, else what the provider's list says; for a group, that
 // none of its members is marked as taking images.
 func textOnlyNote(p provider.Provider, model string, group string) string {
 	if group != "" {
-		return fmt.Sprintf("; no model in the group %s is marked as taking images: turn on Accepts images for one that does, in its provider's Names & levels in chongyun", group)
+		return fmt.Sprintf("; no model in the group %s is marked as taking images: turn on Accepts images for one that does, in its provider's Names & levels in starling", group)
 	}
 	name := p.Name
 	if name == "" {
 		name = p.ID
 	}
 	if v, ok := provider.ImageOverride(p.ID, model); ok && !v {
-		return fmt.Sprintf("; Accepts images is turned off for it in chongyun, in Providers → %s → Names & levels", name)
+		return fmt.Sprintf("; Accepts images is turned off for it in starling, in Providers → %s → Names & levels", name)
 	}
-	return fmt.Sprintf("; %s's model list marks it as not taking images: if it does, turn on Accepts images for it in chongyun, in Providers → %s → Names & levels", name, name)
+	return fmt.Sprintf("; %s's model list marks it as not taking images: if it does, turn on Accepts images for it in starling, in Providers → %s → Names & levels", name, name)
 }
 
 // noSeerNote is what a request turned away for an image says of why no
@@ -174,24 +174,24 @@ func noSeerNote() string {
 		return n
 	}
 	if provider.HeldSettings().Vision == "off" {
-		return "; Image recognition is off in chongyun's Settings → Models"
+		return "; Image recognition is off in starling's Settings → Models"
 	}
 	if _, ok := seer(); !ok {
-		return "; none of the models enabled in chongyun can see images to describe it: enable one that can, or pick one in Settings → Models → Image recognition"
+		return "; none of the models enabled in starling can see images to describe it: enable one that can, or pick one in Settings → Models → Image recognition"
 	}
 	return ""
 }
 
 // autoSeerNote is what a request whose image wasn't described says of a
-// describer magpie picked itself, which the user may not know of.
+// describer starling picked itself, which the user may not know of.
 func autoSeerNote(see string) string {
 	if provider.HeldSettings().Vision != "" {
 		return ""
 	}
-	return fmt.Sprintf("; chongyun picked %s of the models you enabled: pick another in Settings → Models → Image recognition", see)
+	return fmt.Sprintf("; starling picked %s of the models you enabled: pick another in Settings → Models → Image recognition", see)
 }
 
-// AutoVision is the model magpie picks to describe images when the
+// AutoVision is the model starling picks to describe images when the
 // Settings name none: a small model that sees, of the models the user
 // enabled on the providers switched on (smallModel) — a
 // Claude account's, a Codex account's, the cheapest of an API key's,
@@ -264,7 +264,7 @@ func autoSpent(model string) error {
 	if !back.IsZero() {
 		when = " until " + heldClock(back, time.Now())
 	}
-	return fmt.Errorf("%s is out of its allowance%s, as is every other model chongyun could describe it with, and none is asked until one is back", model, when)
+	return fmt.Errorf("%s is out of its allowance%s, as is every other model starling could describe it with, and none is asked until one is back", model, when)
 }
 
 // autoDescribes is whether the model that describes images is
@@ -367,7 +367,7 @@ func (s *Server) askVisionWith(ctx context.Context, model, src, system, text str
 		}
 	}
 	body, _ := json.Marshal(req)
-	r, err := http.NewRequestWithContext(magpieChose(ctx), http.MethodPost, "http://magpie/v1/chat/completions", nil)
+	r, err := http.NewRequestWithContext(starlingChose(ctx), http.MethodPost, "http://starling/v1/chat/completions", nil)
 	if err != nil {
 		return "", err
 	}

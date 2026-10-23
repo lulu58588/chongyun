@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The tray menu is in the page's language: the setting, or the system's
@@ -47,7 +47,7 @@ func TestTrayMenuLabels(t *testing.T) {
 		}
 	}
 	de := trayMenuLabels("de", "0.1.500", "0.1.501")
-	if de != (trayLabels{"chongyun öffnen", "Version 0.1.500", "Zum Aktualisieren auf 0.1.501 neu starten", "chongyun beenden"}) {
+	if de != (trayLabels{"starling öffnen", "Version 0.1.500", "Zum Aktualisieren auf 0.1.501 neu starten", "starling beenden"}) {
 		t.Errorf("de: %+v", de)
 	}
 	for lang, want := range map[string]string{"de": "en", "en": "en", "zh": "zh", "zh-TW": "zh"} {
@@ -56,20 +56,20 @@ func TestTrayMenuLabels(t *testing.T) {
 		}
 	}
 	zh := trayMenuLabels("zh", "0.1.500", "")
-	if zh != (trayLabels{"打开 chongyun", "版本 0.1.500", "重启以更新", "退出 chongyun"}) {
+	if zh != (trayLabels{"打开 starling", "版本 0.1.500", "重启以更新", "退出 starling"}) {
 		t.Errorf("zh: %+v", zh)
 	}
-	if tw := trayMenuLabels("zh-TW", "0.1.500", "0.1.501"); tw != (trayLabels{"開啟 chongyun", "版本 0.1.500", "重新啟動以更新到 0.1.501", "結束 chongyun"}) {
+	if tw := trayMenuLabels("zh-TW", "0.1.500", "0.1.501"); tw != (trayLabels{"開啟 starling", "版本 0.1.500", "重新啟動以更新到 0.1.501", "結束 starling"}) {
 		t.Errorf("zh-TW: %+v", tw)
 	}
-	if ja := trayMenuLabels("ja", "0.1.500", ""); ja != (trayLabels{"chongyun を開く", "バージョン 0.1.500", "再起動してアップデート", "chongyun を終了"}) {
+	if ja := trayMenuLabels("ja", "0.1.500", ""); ja != (trayLabels{"starling を開く", "バージョン 0.1.500", "再起動してアップデート", "starling を終了"}) {
 		t.Errorf("ja: %+v", ja)
 	}
 	if l := trayMenuLabels("zh", "0.1.500", "0.1.501"); l.restart != "重启以更新到 0.1.501" {
 		t.Errorf("zh restart: %q", l.restart)
 	}
 	en := trayMenuLabels("en", "0.1.500", "0.1.501")
-	if en != (trayLabels{"Open chongyun", "Version 0.1.500", "Restart to Update to 0.1.501", "Quit chongyun"}) {
+	if en != (trayLabels{"Open starling", "Version 0.1.500", "Restart to Update to 0.1.501", "Quit starling"}) {
 		t.Errorf("en: %+v", en)
 	}
 	env := map[string]string{"LC_ALL": "C", "LANG": "zh_CN.UTF-8"}
@@ -113,7 +113,7 @@ func TestSettingsLangRelabelsTray(t *testing.T) {
 	if calls != 1 {
 		t.Fatalf("relabelled %d times after en → zh, want 1", calls)
 	}
-	if l := trayMenuLabels(trayLang(settings.Load().Lang, systemLang), "1", ""); l.quit != "退出 chongyun" {
+	if l := trayMenuLabels(trayLang(settings.Load().Lang, systemLang), "1", ""); l.quit != "退出 starling" {
 		t.Fatalf("after the change the menu reads %+v", l)
 	}
 }

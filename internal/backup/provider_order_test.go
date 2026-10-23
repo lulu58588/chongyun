@@ -9,7 +9,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Exporting and importing providers must keep the order the user chose,

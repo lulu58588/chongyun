@@ -11,12 +11,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/wslrun"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/wslrun"
 )
 
-// An agent pointed at magpie by an address other than this machine's
+// An agent pointed at starling by an address other than this machine's
 // loopback — this machine's Codex at Windows as WSL sees it or a forward of
 // the user's (#816), an agent in a WSL distro under NAT — is connected by
 // its config alone; whether anything answers there is another matter
@@ -44,22 +44,22 @@ func realReachProbe(base string) bool {
 	return true
 }
 
-// magpieProbe says whether base answers as a magpie gateway: GET base/ is
-// 200 with {"name": "崇云科技"} (the gateway's info), as it is through a
+// starlingProbe says whether base answers as a starling gateway: GET base/ is
+// 200 with {"name": "星鸣"} (the gateway's info), as it is through a
 // reverse proxy that forwards base to it. A var for tests.
-var magpieProbe = realMagpieProbe
+var starlingProbe = realStarlingProbe
 
-func realMagpieProbe(base string) bool {
+func realStarlingProbe(base string) bool {
 	c := &http.Client{Timeout: 3 * time.Second}
 	res, err := c.Get(strings.TrimSuffix(base, "/") + "/")
 	if err != nil {
 		return false
 	}
-	return answersAsMagpie(res)
+	return answersAsStarling(res)
 }
 
-// answersAsMagpie: res, closed here, is the gateway's info (GET /).
-func answersAsMagpie(res *http.Response) bool {
+// answersAsStarling: res, closed here, is the gateway's info (GET /).
+func answersAsStarling(res *http.Response) bool {
 	defer res.Body.Close()
 	var info struct {
 		Name string `json:"name"`
@@ -67,22 +67,22 @@ func answersAsMagpie(res *http.Response) bool {
 	return res.StatusCode == http.StatusOK && json.NewDecoder(res.Body).Decode(&info) == nil && info.Name == gateway.ProductName
 }
 
-// magpieAt is whether base answers as magpie (magpieProbe), and whether
+// starlingAt is whether base answers as starling (starlingProbe), and whether
 // that is known yet: the last probe's answer, a new one started in the
 // background as reachable does, never waited for. A var for tests, which
 // are told no without a probe.
-var magpieAt = func(base string) (ok, known bool) {
-	return probed("chongyun "+base, func() bool { return magpieProbe(base) })
+var starlingAt = func(base string) (ok, known bool) {
+	return probed("starling "+base, func() bool { return starlingProbe(base) })
 }
 
-// proxyBase is v, the address an agent's config names where magpie wrote
+// proxyBase is v, the address an agent's config names where starling wrote
 // want, with want's path (/v1 where want has it) cut off its end, when
-// that can be another way to magpie: a URL on another machine or a name,
+// that can be another way to starling: a URL on another machine or a name,
 // such as a company's reverse proxy in front of the gateway (davisjiahao,
-// #1985: https://ai.corp.example/magpie forwarding to 127.0.0.1:3425), or
-// one on this machine's loopback with a path of its own before magpie's (a
+// #1985: https://ai.corp.example/starling forwarding to 127.0.0.1:3425), or
+// one on this machine's loopback with a path of its own before starling's (a
 // compliance proxy's http://127.0.0.1:8788/claude-code-anthropic/<route>).
-// One on loopback with none is magpie's own on an older port, never
+// One on loopback with none is starling's own on an older port, never
 // another way to it.
 func proxyBase(v, want string) (string, bool) {
 	w, err := url.Parse(want)
@@ -110,28 +110,28 @@ func loopbackWithPath(base string) bool {
 	return strings.Trim(u.Path, "/") != ""
 }
 
-// reachesMagpie says v reaches magpie another way (proxyBase) whose root
-// answers as magpie. Until it has been tried it is taken as reaching
-// magpie, as an address not yet tried isn't unreachable either: telling
+// reachesStarling says v reaches starling another way (proxyBase) whose root
+// answers as starling. Until it has been tried it is taken as reaching
+// starling, as an address not yet tried isn't unreachable either: telling
 // drift first would offer Reconnect, which writes the proxy away.
-func reachesMagpie(v, want string) bool {
+func reachesStarling(v, want string) bool {
 	base, ok := proxyBase(v, want)
 	if !ok {
 		return false
 	}
-	ok, known := magpieAt(base)
+	ok, known := starlingAt(base)
 	return ok || !known
 }
 
-// surelyMagpie is reachesMagpie once magpie has answered there: what a
+// surelyStarling is reachesStarling once starling has answered there: what a
 // write that keeps the address waits for, so a relay not yet tried never
-// gets magpie's model or key.
-func surelyMagpie(v, want string) bool {
+// gets starling's model or key.
+func surelyStarling(v, want string) bool {
 	base, ok := proxyBase(v, want)
 	if !ok {
 		return false
 	}
-	ok, known := magpieAt(base)
+	ok, known := starlingAt(base)
 	return ok && known
 }
 
@@ -240,14 +240,14 @@ func (a *Agent) unreachable(on Field, now string) *Drift {
 	}
 	d := &Drift{Kind: "unreachable", Field: on.Key, Now: now, Want: now, Addr: addr}
 	host := strings.TrimPrefix(strings.TrimPrefix(addr, "http://"), "https://")
-	d.Detail = a.Name + " is pointed at chongyun at " + addr + ", where nothing answers from this computer, though chongyun answers at " + gateway.URL() + ". "
+	d.Detail = a.Name + " is pointed at starling at " + addr + ", where nothing answers from this computer, though starling answers at " + gateway.URL() + ". "
 	if a.WSL != "" || runtime.GOOS == "windows" {
-		d.Detail += "Under WSL's NAT networking, Windows as WSL sees it reaches chongyun only while something listens on " + host +
-			": chongyun itself with Settings › Share on local network on (it then listens on every address, and asks other computers for a gateway key), or a forward of your own (netsh interface portproxy, which may need setting up again after Windows restarts). " +
+		d.Detail += "Under WSL's NAT networking, Windows as WSL sees it reaches starling only while something listens on " + host +
+			": starling itself with Settings › Share on local network on (it then listens on every address, and asks other computers for a gateway key), or a forward of your own (netsh interface portproxy, which may need setting up again after Windows restarts). " +
 			"Once it answers here and WSL still can't connect, Windows' firewall may be keeping WSL out: allow the port " + gateway.Port() + " for the WSL network. " +
-			"On Windows 11, networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig lets WSL reach chongyun at 127.0.0.1 instead."
+			"On Windows 11, networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig lets WSL reach starling at 127.0.0.1 instead."
 	} else {
-		d.Detail += "Whatever forwarded " + host + " to chongyun isn't listening now; start it again, or point " + a.Name + " at " + gateway.URL() + "."
+		d.Detail += "Whatever forwarded " + host + " to starling isn't listening now; start it again, or point " + a.Name + " at " + gateway.URL() + "."
 	}
 	if to, distro := wslMovedFrom(addr); to != "" {
 		d.Move = to

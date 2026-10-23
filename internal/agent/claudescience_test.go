@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/starling/internal/gateway"
 )
 
 // fakeScience is claude-science's daemon as its CLI tells it: status,
@@ -67,7 +67,7 @@ func (f *fakeScience) base() (string, bool) {
 // Claude Science is connected by restarting its daemon with
 // ANTHROPIC_BASE_URL set to the gateway, on the port it was on, and by
 // nothing else; disconnected by restarting it without the variable, one
-// set in magpie's own environment too. A daemon magpie didn't start is
+// set in starling's own environment too. A daemon starling didn't start is
 // drift, never stopped behind the user's back; one not running is started
 // while it is connected.
 func TestClaudeScienceRestartsItsDaemon(t *testing.T) {
@@ -88,7 +88,7 @@ func TestClaudeScienceRestartsItsDaemon(t *testing.T) {
 		t.Fatal("connected before Connect")
 	}
 
-	if err := field.Set(magpieID); err != nil {
+	if err := field.Set(starlingID); err != nil {
 		t.Fatal(err)
 	}
 	if got, ok := f.base(); !ok || got != gateway.URL() {
@@ -97,12 +97,12 @@ func TestClaudeScienceRestartsItsDaemon(t *testing.T) {
 	if want := []string{"status", "stop", "serve --detached --no-browser --port 8123", "status"}; !slices.Equal(f.calls, want) {
 		t.Errorf("ran %q, want %q", f.calls, want)
 	}
-	if field.Get() != magpieID || a.Check() != "" || !strings.Contains(a.Notice(), "Claude account") {
+	if field.Get() != starlingID || a.Check() != "" || !strings.Contains(a.Notice(), "Claude account") {
 		t.Errorf("after Connect: %q, check %q, notice %q", field.Get(), a.Check(), a.Notice())
 	}
 	// set again, as Connect does after connecting (Pick): left running
 	f.calls = nil
-	if err := field.Set(magpieID); err != nil || !slices.Equal(f.calls, []string{"status"}) {
+	if err := field.Set(starlingID); err != nil || !slices.Equal(f.calls, []string{"status"}) {
 		t.Errorf("set again: %v, ran %q", err, f.calls)
 	}
 	if !strings.Contains(a.Launch(), scienceVar+"="+gateway.URL()) && !strings.Contains(a.Launch(), `$env:`+scienceVar+`="`+gateway.URL()) {
@@ -113,8 +113,8 @@ func TestClaudeScienceRestartsItsDaemon(t *testing.T) {
 	// keeper leaves it running
 	f.pid, f.env, f.calls = 77, nil, nil
 	f.lock()
-	if d := a.Check(); !strings.Contains(d, "without chongyun's gateway") {
-		t.Errorf("a daemon chongyun didn't start: check %q", d)
+	if d := a.Check(); !strings.Contains(d, "without starling's gateway") {
+		t.Errorf("a daemon starling didn't start: check %q", d)
 	}
 	f.calls = nil
 	keepScienceOnce()
@@ -133,7 +133,7 @@ func TestClaudeScienceRestartsItsDaemon(t *testing.T) {
 	}
 
 	// disconnected: running again, without the variable even where
-	// magpie's own environment has it
+	// starling's own environment has it
 	f.calls = nil
 	if err := field.Set(""); err != nil {
 		t.Fatal(err)
@@ -161,7 +161,7 @@ func TestClaudeScienceRestartsItsDaemon(t *testing.T) {
 	}
 	// and with none installed there is nothing to connect
 	scienceBin = func() string { return "" }
-	if err := field.Set(magpieID); err == nil || field.Get() != "" || a.detect() {
+	if err := field.Set(starlingID); err == nil || field.Get() != "" || a.detect() {
 		t.Errorf("connected with none installed: %v", err)
 	}
 }

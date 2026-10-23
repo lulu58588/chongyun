@@ -6,13 +6,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A model of DeepSeek's own picked in dsh's /model, which dsh saves in its
-// settings over the patch list, leaves dsh connected: magpie's route is
+// settings over the patch list, leaves dsh connected: starling's route is
 // still in its list, beside DeepSeek's (Fate 报告: DSH went back to
-// Not connected). Disconnect then takes the route, magpie's start and its
+// Not connected). Disconnect then takes the route, starling's start and its
 // key out, and the model picked in dsh stays.
 func TestDshOwnPickStaysConnected(t *testing.T) {
 	home := t.TempDir()
@@ -36,11 +36,11 @@ func TestDshOwnPickStaysConnected(t *testing.T) {
 	if a.Wired() {
 		t.Fatal("wired before anything")
 	}
-	if err := a.Pick("model", "magpie/glm/glm-5.3"); err != nil {
+	if err := a.Pick("model", "starling/glm/glm-5.3"); err != nil {
 		t.Fatal(err)
 	}
 	if !a.Wired() {
-		t.Fatal("not wired on chongyun's model")
+		t.Fatal("not wired on starling's model")
 	}
 
 	// picked in dsh: DeepSeek's own
@@ -49,7 +49,7 @@ func TestDshOwnPickStaysConnected(t *testing.T) {
 		t.Fatalf("model: %q", got)
 	}
 	if !a.Wired() {
-		t.Fatal("dsh went back to Not connected with chongyun's route still in its list")
+		t.Fatal("dsh went back to Not connected with starling's route still in its list")
 	}
 	if d := a.Drift(); d != nil {
 		t.Fatalf("drift: %+v", d)
@@ -77,12 +77,12 @@ func TestDshOwnPickStaysConnected(t *testing.T) {
 
 // Since 0.2 dsh keeps no pick in settings.yaml: its /model, and the one-time
 // import that renames a settings.yaml to settings.yaml.imported, write the
-// config of the profile's last agent-default-model entry — magpie's, mark
+// config of the profile's last agent-default-model entry — starling's, mark
 // and all (#1392). The entry below is as dsh 0.2.0-rc.2 left it after
 // importing a settings.yaml whose pick was DeepSeek's own. Disconnect takes
-// magpie's route and key out and leaves that pick, not the entry magpie
+// starling's route and key out and leaves that pick, not the entry starling
 // stashed from before it was connected.
-func TestDshPickSavedIntoMagpiesEntryOutlivesDisconnect(t *testing.T) {
+func TestDshPickSavedIntoStarlingsEntryOutlivesDisconnect(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
 	t.Setenv("USERPROFILE", home)
@@ -101,17 +101,17 @@ func TestDshPickSavedIntoMagpiesEntryOutlivesDisconnect(t *testing.T) {
 	read := func(p string) string { b, _ := os.ReadFile(p); return string(b) }
 
 	a := dsh(home)
-	if err := a.Pick("model", "magpie/deepseek/pro"); err != nil {
+	if err := a.Pick("model", "starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	// dsh 0.2.0-rc.2's ConfigEditor.edit: the last agent-default-model
-	// entry's config replaced, its id line (and magpie's mark) kept
+	// entry's config replaced, its id line (and starling's mark) kept
 	s := read(headless)
-	ours := "- id: agent-default-model # chongyun\n  config:\n    provider: magpie\n    model: \"deepseek/pro\"\n"
+	ours := "- id: agent-default-model # starling\n  config:\n    provider: starling\n    model: \"deepseek/pro\"\n"
 	if !strings.Contains(s, ours) {
-		t.Fatalf("chongyun's start:\n%s", s)
+		t.Fatalf("starling's start:\n%s", s)
 	}
-	s = strings.Replace(s, ours, "- id: agent-default-model # chongyun\n  config:\n    provider: deepseek-official\n    model: deepseek-v4-flash\n", 1)
+	s = strings.Replace(s, ours, "- id: agent-default-model # starling\n  config:\n    provider: deepseek-official\n    model: deepseek-v4-flash\n", 1)
 	os.WriteFile(headless, []byte(s), 0o600)
 	os.WriteFile(filepath.Join(dir, "settings.yaml.imported"), []byte("agent-default-model:\n  provider: deepseek-official\n  model: deepseek-v4-flash\n"), 0o600)
 
@@ -119,14 +119,14 @@ func TestDshPickSavedIntoMagpiesEntryOutlivesDisconnect(t *testing.T) {
 		t.Fatalf("model picked in dsh: %q", got)
 	}
 	if !a.Wired() {
-		t.Fatal("not connected with chongyun's route still in the list")
+		t.Fatal("not connected with starling's route still in the list")
 	}
 	if err := a.Disconnect(); err != nil {
 		t.Fatal(err)
 	}
 	s = read(headless)
 	if a.Wired() || strings.Contains(s, "llm-pi-ai") || strings.Contains(s, dshMark) {
-		t.Fatalf("chongyun's wiring outlived Disconnect:\n%s", s)
+		t.Fatalf("starling's wiring outlived Disconnect:\n%s", s)
 	}
 	if got := a.Field("model").Get(); got != "deepseek-v4-flash" || !strings.Contains(s, "model: deepseek-v4-flash") || strings.Contains(s, "deepseek-v4-pro") {
 		t.Fatalf("the pick made in dsh was lost (model %q):\n%s", got, s)
@@ -134,14 +134,14 @@ func TestDshPickSavedIntoMagpiesEntryOutlivesDisconnect(t *testing.T) {
 	if strings.Contains(read(filepath.Join(dir, ".env")), dshKeyRef) {
 		t.Fatal("the key outlived the route")
 	}
-	// the user back on magpie and out again: nothing of the old stash returns
-	if err := a.Pick("model", "magpie/deepseek/flash"); err != nil {
+	// the user back on starling and out again: nothing of the old stash returns
+	if err := a.Pick("model", "starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.Pick("model", ""); err != nil {
 		t.Fatal(err)
 	}
 	if s := read(headless); strings.Contains(s, dshMark) || !strings.Contains(s, "model: deepseek-v4-flash") {
-		t.Fatalf("after chongyun's model and back:\n%s", s)
+		t.Fatalf("after starling's model and back:\n%s", s)
 	}
 }

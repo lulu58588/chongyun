@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -67,11 +67,11 @@ func dshRouteModelIDs(r dshPiRoute) []string {
 }
 
 // Discord (01huadalang): 可以按不同协议分成组来注入，例如 chat 一个组，response
-// 一个组. llm-pi-ai sets the api for a route as a whole, so magpie's one
+// 一个组. llm-pi-ai sets the api for a route as a whole, so starling's one
 // route asked every model on Chat Completions, and a GPT served on
 // Responses or a Claude served on Messages was translated from Chat, its
 // sealed reasoning lost between tool calls. Each model now goes on a route
-// of magpie's for the API it is served on, and the start names that route.
+// of starling's for the API it is served on, and the start names that route.
 // The user's own route stays.
 func TestDshRoutesAModelOnItsNativeAPI(t *testing.T) {
 	home, dir, web := dshProtocolHome(t)
@@ -79,7 +79,7 @@ func TestDshRoutesAModelOnItsNativeAPI(t *testing.T) {
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"+dshMineRow), 0o644)
 	a := dsh(home)
 	f := a.Field("model")
-	if err := f.Set("magpie/resp/gpt-5.5"); err != nil {
+	if err := f.Set("starling/resp/gpt-5.5"); err != nil {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(web)
@@ -89,9 +89,9 @@ func TestDshRoutesAModelOnItsNativeAPI(t *testing.T) {
 		api, base, name string
 		models          []string
 	}{
-		"magpie":           {"openai-completions", gatewayV1(), "Chongyun", []string{"deepseek/pro", "deepseek/flash"}},
-		"magpie-responses": {"openai-responses", gatewayV1(), "Chongyun · Responses", []string{"resp/gpt-5.5"}},
-		"magpie-anthropic": {"anthropic-messages", gateway.URL(), "Chongyun · Anthropic", []string{"anth/claude-sonnet-5"}},
+		"starling":           {"openai-completions", gatewayV1(), "Starling", []string{"deepseek/pro", "deepseek/flash"}},
+		"starling-responses": {"openai-responses", gatewayV1(), "Starling · Responses", []string{"resp/gpt-5.5"}},
+		"starling-anthropic": {"anthropic-messages", gateway.URL(), "Starling · Anthropic", []string{"anth/claude-sonnet-5"}},
 	} {
 		r, ok := ps[key]
 		if !ok {
@@ -118,13 +118,13 @@ func TestDshRoutesAModelOnItsNativeAPI(t *testing.T) {
 			}
 		}
 	}
-	if m := ps["magpie-anthropic"].Models[0]; m.Compat == nil || !m.Compat.ForceAdaptiveThinking {
+	if m := ps["starling-anthropic"].Models[0]; m.Compat == nil || !m.Compat.ForceAdaptiveThinking {
 		t.Errorf("a Claude thinking adaptively on Messages isn't told so: %+v", m)
 	}
 	if _, ok := ps["mine"]; !ok {
 		t.Fatalf("the user's own route went:\n%s", s)
 	}
-	if !strings.Contains(s, "    provider: magpie-responses\n") || f.Get() != "magpie/resp/gpt-5.5" || a.Check() != "" {
+	if !strings.Contains(s, "    provider: starling-responses\n") || f.Get() != "starling/resp/gpt-5.5" || a.Check() != "" {
 		t.Fatalf("start: get %q, check %q\n%s", f.Get(), a.Check(), s)
 	}
 	// the effort is written beside the model on its route
@@ -132,40 +132,40 @@ func TestDshRoutesAModelOnItsNativeAPI(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, _ = os.ReadFile(web)
-	if !strings.Contains(string(b), "    provider: magpie-responses\n") || a.Field("effort").Get() != "high" || a.Check() != "" {
+	if !strings.Contains(string(b), "    provider: starling-responses\n") || a.Field("effort").Get() != "high" || a.Check() != "" {
 		t.Fatalf("effort moved the start off its route:\n%s", b)
 	}
-	if err := f.Set("magpie/anth/claude-sonnet-5"); err != nil {
+	if err := f.Set("starling/anth/claude-sonnet-5"); err != nil {
 		t.Fatal(err)
 	}
 	b, _ = os.ReadFile(web)
-	if !strings.Contains(string(b), "    provider: magpie-anthropic\n") || a.Check() != "" {
+	if !strings.Contains(string(b), "    provider: starling-anthropic\n") || a.Check() != "" {
 		t.Fatalf("Claude's start: check %q\n%s", a.Check(), b)
 	}
-	// Disconnect takes every route of magpie's out, the user's stays
+	// Disconnect takes every route of starling's out, the user's stays
 	if err := f.Set(""); err != nil {
 		t.Fatal(err)
 	}
 	b, _ = os.ReadFile(web)
-	if s := string(b); strings.Contains(s, "magpie") || !strings.Contains(s, "      mine:\n") {
+	if s := string(b); strings.Contains(s, "starling") || !strings.Contains(s, "      mine:\n") {
 		t.Fatalf("disconnect:\n%s", s)
 	}
 }
 
-// A dsh wired before the routes were split has every model on magpie's
+// A dsh wired before the routes were split has every model on starling's
 // one route and its start on it. A sync moves each model to its route and
 // the start with its model, its effort and what dsh's Models page added to
-// magpie's route kept, so the session started next still finds its model.
+// starling's route kept, so the session started next still finds its model.
 // A start the user picked on a route of their own stays where it is.
 func TestDshSyncMovesAStartToItsModelsRoute(t *testing.T) {
 	home, dir, web := dshProtocolHome(t)
 	dshKeyFixture(dir)
 	old := "# Your patch layer for this dsh profile.\n" +
-		"- id: llm-pi-ai # chongyun\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n" +
+		"- id: llm-pi-ai # starling\n  name: \"@deepseek-ai/dsh-llm-pi-ai\"\n  config:\n    providers:\n" +
 		"      mine:\n        displayName: Mine\n        apiKeyEnv: MINE_API_KEY\n        api: openai-completions\n        baseURL: https://mine.example/v1\n        models:\n          - id: m1\n" +
-		"      magpie:\n        displayName: Chongyun\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        reasoning: high\n        models:\n" +
+		"      starling:\n        displayName: Starling\n        apiKeyEnv: " + dshKeyRef + "\n        api: openai-completions\n        baseURL: " + gatewayV1() + "\n        reasoning: high\n        models:\n" +
 		"          - id: deepseek/pro\n          - id: deepseek/flash\n          - id: resp/gpt-5.5\n          - id: anth/claude-sonnet-5\n" +
-		"- id: agent-default-model # chongyun\n  config:\n    provider: magpie\n    model: \"resp/gpt-5.5\"\n    reasoningEffort: \"medium\"\n"
+		"- id: agent-default-model # starling\n  config:\n    provider: starling\n    model: \"resp/gpt-5.5\"\n    reasoningEffort: \"medium\"\n"
 	os.WriteFile(web, []byte(old), 0o644)
 	a := dsh(home)
 	if err := a.Sync(); err != nil {
@@ -173,17 +173,17 @@ func TestDshSyncMovesAStartToItsModelsRoute(t *testing.T) {
 	}
 	b, _ := os.ReadFile(web)
 	s := string(b)
-	if !strings.Contains(s, "    provider: magpie-responses\n") || !strings.Contains(s, "resp/gpt-5.5") || !strings.Contains(s, "reasoningEffort: \"medium\"") && !strings.Contains(s, "reasoningEffort: medium") {
+	if !strings.Contains(s, "    provider: starling-responses\n") || !strings.Contains(s, "resp/gpt-5.5") || !strings.Contains(s, "reasoningEffort: \"medium\"") && !strings.Contains(s, "reasoningEffort: medium") {
 		t.Fatalf("start not moved with its model:\n%s", s)
 	}
-	if !strings.Contains(s, "- id: agent-default-model # chongyun\n") {
-		t.Fatalf("the start lost chongyun's mark:\n%s", s)
+	if !strings.Contains(s, "- id: agent-default-model # starling\n") {
+		t.Fatalf("the start lost starling's mark:\n%s", s)
 	}
 	ps := dshPiProviders(t, web)
-	if contains(dshRouteModelIDs(ps["magpie"]), "resp/gpt-5.5") || !contains(dshRouteModelIDs(ps["magpie-responses"]), "resp/gpt-5.5") {
+	if contains(dshRouteModelIDs(ps["starling"]), "resp/gpt-5.5") || !contains(dshRouteModelIDs(ps["starling-responses"]), "resp/gpt-5.5") {
 		t.Fatalf("routes:\n%s", s)
 	}
-	if !strings.Contains(s, "reasoning: high") || a.Field("model").Get() != "magpie/resp/gpt-5.5" || a.Check() != "" {
+	if !strings.Contains(s, "reasoning: high") || a.Field("model").Get() != "starling/resp/gpt-5.5" || a.Check() != "" {
 		t.Fatalf("get %q, check %q:\n%s", a.Field("model").Get(), a.Check(), s)
 	}
 	// the round after leaves it as it is
@@ -193,9 +193,9 @@ func TestDshSyncMovesAStartToItsModelsRoute(t *testing.T) {
 	}
 
 	// a start on the user's own route is theirs
-	mine := strings.Replace(s, "    provider: magpie-responses\n    model: resp/gpt-5.5\n", "    provider: mine\n    model: m1\n", 1)
+	mine := strings.Replace(s, "    provider: starling-responses\n    model: resp/gpt-5.5\n", "    provider: mine\n    model: m1\n", 1)
 	if mine == s {
-		mine = strings.Replace(s, "    provider: magpie-responses\n    model: \"resp/gpt-5.5\"\n", "    provider: mine\n    model: m1\n", 1)
+		mine = strings.Replace(s, "    provider: starling-responses\n    model: \"resp/gpt-5.5\"\n", "    provider: mine\n    model: m1\n", 1)
 	}
 	if mine == s {
 		t.Fatalf("fixture:\n%s", s)
@@ -209,7 +209,7 @@ func TestDshSyncMovesAStartToItsModelsRoute(t *testing.T) {
 	}
 }
 
-// The check speaks for the route a start names: a start on magpie's first
+// The check speaks for the route a start names: a start on starling's first
 // route whose model is now on another is said (a session there fails with
 // no such configured model) until a sync moves it.
 func TestDshCheckSaysAStartOnAnotherRoutesModel(t *testing.T) {
@@ -217,11 +217,11 @@ func TestDshCheckSaysAStartOnAnotherRoutesModel(t *testing.T) {
 	dshKeyFixture(dir)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"), 0o644)
 	a := dsh(home)
-	if err := a.Field("model").Set("magpie/resp/gpt-5.5"); err != nil {
+	if err := a.Field("model").Set("starling/resp/gpt-5.5"); err != nil {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(web)
-	wrong := strings.Replace(string(b), "    provider: magpie-responses\n", "    provider: magpie\n", 1)
+	wrong := strings.Replace(string(b), "    provider: starling-responses\n", "    provider: starling\n", 1)
 	os.WriteFile(web, []byte(wrong), 0o644)
 	if d := a.Check(); !strings.Contains(d, "doesn't list") {
 		t.Fatalf("check: %q\n%s", d, wrong)

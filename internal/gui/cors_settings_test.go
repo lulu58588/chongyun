@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The web pages that may call the gateway (#1051) are saved as origins,

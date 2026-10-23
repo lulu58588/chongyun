@@ -8,15 +8,15 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A reply from a group says which member answered it (#822): its
-// X-Magpie-Provider and X-Magpie-Model headers always, relayed or
+// X-Starling-Provider and X-Starling-Model headers always, relayed or
 // translated, streamed or not, after a failover too; its body's model the
 // vendor's own name, unless MemberModel (or the request's
-// X-Magpie-Response-Model: member) asks for magpie's provider/model id
+// X-Starling-Response-Model: member) asks for starling's provider/model id
 // there — never for Claude Code or Codex, which read it themselves.
 func TestReplyNamesMember(t *testing.T) {
 	bodies := map[string]string{
@@ -42,7 +42,7 @@ func TestReplyNamesMember(t *testing.T) {
 			for _, c := range []struct {
 				name   string
 				on     bool   // MemberModel
-				header string // X-Magpie-Response-Model
+				header string // X-Starling-Response-Model
 				token  string // the agent's key
 				member bool   // the body names the member
 			}{

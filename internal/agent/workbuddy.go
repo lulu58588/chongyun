@@ -6,7 +6,7 @@ package agent
 // as CodeBuddy Code's CLI writes it. Its own "local models" are entries of
 // the same list (local: true).
 //
-//	[{"id":"deepseek/pro","name":…,"vendor": "magpie","apiKey":"magpie-workbuddy",
+//	[{"id":"deepseek/pro","name":…,"vendor": "starling","apiKey":"starling-workbuddy",
 //	  "url":"http://127.0.0.1:3425/v1/chat/completions",
 //	  "maxInputTokens":…,"maxOutputTokens":…,
 //	  "supportsToolCall":true,"supportsImages":…,"supportsReasoning":true,
@@ -15,7 +15,7 @@ package agent
 // WorkBuddy shows them in its picker as "custom-local:<id>", and asks url
 // for model <id>, with reasoning_effort, under Bearer apiKey. It watches the
 // file and picks a change up without a restart. The model is picked per
-// task in WorkBuddy's window, not in a file, so what magpie sets is whether
+// task in WorkBuddy's window, not in a file, so what starling sets is whether
 // its models are in that picker. Its requests say "CLI/<ver> WorkBuddy/<ver>",
 // so they are told apart by their key.
 //
@@ -23,7 +23,7 @@ package agent
 // com.workbuddy.workbuddy-ai), is the same app with its data in
 // ~/.workbuddy-ai: its cli/product.json sets dataFolderName ".workbuddy-ai",
 // which resolveWorkbuddyConfigDir (5.6.2's app.asar) takes when
-// WORKBUDDY_CONFIG_DIR isn't set. magpie wires it as its own agent, its
+// WORKBUDDY_CONFIG_DIR isn't set. starling wires it as its own agent, its
 // models under its own key, so each build's picker is written in its own
 // folder (#1494).
 
@@ -36,9 +36,9 @@ import (
 	"runtime"
 	"slices"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/gateway"
 )
 
 func workbuddy(home string) *Agent {
@@ -62,11 +62,11 @@ var workbuddyOnMac = func() bool { return runtime.GOOS == "darwin" }
 
 // workbuddyHere reports whether a WorkBuddy build is installed. On a Mac it
 // is its app bundle (app): its data folder is no sign of it. Dragging
-// WorkBuddy.app to the Trash leaves ~/.workbuddy behind, and magpie writes
+// WorkBuddy.app to the Trash leaves ~/.workbuddy behind, and starling writes
 // there itself (models.json when wired, mcp.json and skills/ from the
 // library), so the folder alone kept an uninstalled WorkBuddy on every
 // library row for good (@jiahao_jayden 报告: 没安装的 WorkBuddy 也在技能
-// 那一排). Elsewhere, where magpie doesn't know its install folder, the
+// 那一排). Elsewhere, where starling doesn't know its install folder, the
 // folder still counts, as before.
 func workbuddyHere(dir, path string, app desktopApp) bool {
 	if Taken(dir) {
@@ -103,13 +103,13 @@ func workbuddyBuild(id, name, dir string, aliases []string, app desktopApp) *Age
 			Key: "provider", Label: "provider",
 			Get: func() string {
 				if workbuddyWired(path) {
-					return magpieID
+					return starlingID
 				}
 				return ""
 			},
 			Set: func(v string) error { return write(v != "") },
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun", Note: "every chongyun model in " + name + "'s picker"}}
+				return []Option{{Value: starlingID, Label: "星鸣", Icon: "starling", Note: "every starling model in " + name + "'s picker"}}
 			},
 		}},
 	}
@@ -142,7 +142,7 @@ func workbuddyRead(path string) (workbuddyDoc, error) {
 	return d, nil
 }
 
-// workbuddyEntry is what magpie reads of an entry.
+// workbuddyEntry is what starling reads of an entry.
 type workbuddyEntry struct {
 	ID        string `json:"id"`
 	Vendor    string `json:"vendor"`
@@ -157,18 +157,18 @@ type workbuddyEntry struct {
 
 func workbuddyMine(raw json.RawMessage) (workbuddyEntry, bool) {
 	var e workbuddyEntry
-	return e, json.Unmarshal(raw, &e) == nil && e.Vendor == magpieID
+	return e, json.Unmarshal(raw, &e) == nil && e.Vendor == starlingID
 }
 
-// workbuddyWired reports whether models.json has magpie's models.
+// workbuddyWired reports whether models.json has starling's models.
 func workbuddyWired(path string) bool {
 	d, _ := workbuddyRead(path)
 	return slices.ContainsFunc(d.models, func(raw json.RawMessage) bool { _, ok := workbuddyMine(raw); return ok })
 }
 
-// workbuddyWrite puts magpie's models into models.json (on) or takes them
+// workbuddyWrite puts starling's models into models.json (on) or takes them
 // out, leaving every other entry and key as WorkBuddy wrote it. A model
-// turned off in WorkBuddy stays off, and models the user pointed at a magpie
+// turned off in WorkBuddy stays off, and models the user pointed at a starling
 // on another machine (a NAS's) stay there with its key, as ZCode's do
 // (zcodeAddress): a sync brings the models up to date, not the address.
 func workbuddyWrite(path string, on bool) error { return buddyWrite(path, "workbuddy", on) }
@@ -182,7 +182,7 @@ func buddyWrite(path, agent string, on bool) error { return buddyWriteAt(path, a
 // buddyWriteAt is buddyWrite for the agent at a place. One in a WSL distro
 // (where.base set) is written the gateway as the distro reaches it, with the
 // key it takes from there, at every write: its address is the distro's
-// view of Windows, which moves, so it is never kept as a magpie of the
+// view of Windows, which moves, so it is never kept as a starling of the
 // user's on another machine.
 func buddyWriteAt(path, agent string, on bool, where place) error {
 	away := where.base != nil
@@ -193,8 +193,8 @@ func buddyWriteAt(path, agent string, on bool, where place) error {
 	if d.rest == nil && d.models == nil && agent != "workbuddy" && agent != "workbuddy-ai" {
 		d.rest = map[string]json.RawMessage{}
 	}
-	// the keys magpie's models are asked with: the gateway's, or that of a
-	// magpie on another machine the user pointed them at
+	// the keys starling's models are asked with: the gateway's, or that of a
+	// starling on another machine the user pointed them at
 	keys := map[string]bool{gateway.TokenFor(agent): true, agentKey(agent): true}
 	if away {
 		keys[agentKeyAt(agent, where.gw())] = true
@@ -209,11 +209,11 @@ func buddyWriteAt(path, agent string, on bool, where place) error {
 	off := map[string]bool{}
 	effort := map[string]string{} // the default effort each model was given in WorkBuddy, "" for its Auto
 	var remote, remoteKey string
-	at := -1 // where magpie's were, which they keep
+	at := -1 // where starling's were, which they keep
 	for _, raw := range d.models {
 		e, ok := workbuddyMine(raw)
 		// WorkBuddy's model settings save an edited entry under the vendor
-		// of the provider it matches, "Custom" for magpie's: still magpie's
+		// of the provider it matches, "Custom" for starling's: still starling's
 		// model by its key, which a sync must not add a second time
 		if !ok && e.ID != "" && keys[e.APIKey] {
 			ok = true
@@ -242,7 +242,7 @@ func buddyWriteAt(path, agent string, on bool, where place) error {
 	var add []json.RawMessage
 	var ids []string
 	if on {
-		for _, m := range magpieModels(agent) {
+		for _, m := range starlingModels(agent) {
 			e := buddyModel(agent, m.ID, m.Name, m.Context, outputOr(m, zcodeOutput(maxTokens(m))), m.Images, m.Efforts)
 			if off[m.ID] {
 				e["disabled"] = true
@@ -285,7 +285,7 @@ func buddyWriteAt(path, agent string, on bool, where place) error {
 
 	var out any = models
 	if d.rest != nil {
-		// a list of the models to show keeps showing magpie's
+		// a list of the models to show keeps showing starling's
 		if raw, ok := d.rest["availableModels"]; ok {
 			var avail []string
 			if json.Unmarshal(raw, &avail) == nil && len(avail) > 0 {
@@ -309,14 +309,14 @@ func buddyWriteAt(path, agent string, on bool, where place) error {
 	return edit.WriteAtomic(path, append(b, '\n'))
 }
 
-// buddyModel is one of magpie's models as a models.json entry, under
+// buddyModel is one of starling's models as a models.json entry, under
 // agent's key.
 func buddyModel(agent, id, name string, context, output int, images bool, efforts []string) map[string]any {
 	if context == 0 {
 		context = 200000
 	}
 	e := map[string]any{
-		"id": id, "name": name, "vendor": magpieID,
+		"id": id, "name": name, "vendor": starlingID,
 		"apiKey": agentKey(agent), "url": gatewayV1() + "/chat/completions",
 		"maxInputTokens":   context,
 		"supportsToolCall": true, "supportsImages": images, "supportsReasoning": false,
@@ -340,9 +340,9 @@ func buddyModel(agent, id, name string, context, output int, images bool, effort
 	return e
 }
 
-// keptEffort is the default effort a sync leaves on one of magpie's models:
+// keptEffort is the default effort a sync leaves on one of starling's models:
 // the one the user set (in the agent's own settings, or by hand) while the
-// model still offers it, else magpie's def. magpie's default never
+// model still offers it, else starling's def. starling's default never
 // overrides the user's own.
 func keptEffort(was string, levels []string, def string) string {
 	if was != "" && slices.Contains(levels, was) {

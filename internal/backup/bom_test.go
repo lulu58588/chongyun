@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/starling/internal/edit"
 )
 
 // A backup file an editor saved over with a byte order mark (a Windows
@@ -42,8 +42,8 @@ func TestOpenReadsThroughABOM(t *testing.T) {
 	}
 }
 
-// magpie's own round trip: `chongyun backup f` writes through edit.WriteAtomic,
-// which keeps the mark of a file already at f, and `chongyun restore f` reads
+// starling's own round trip: `starling backup f` writes through edit.WriteAtomic,
+// which keeps the mark of a file already at f, and `starling restore f` reads
 // the file as it is on disk.
 func TestBackupSavedOverAMarkedFileRestores(t *testing.T) {
 	home(t)

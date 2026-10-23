@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // A gateway session whose agent keeps it too is one session, in the count

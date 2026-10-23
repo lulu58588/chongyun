@@ -13,7 +13,7 @@ package provider
 
 // Several Devin subscriptions. The devin CLI keeps one account, in its
 // credentials.toml. Each further account the built-in signed in got a home
-// of magpie's own, laid out as the
+// of starling's own, laid out as the
 // CLI's data folder, so the CLI itself answers for it (`devin auth status`
 // and `devin models list` run with that home as their data folder) and the
 // CLI's own sign-in is never touched. logins.json names those homes; the
@@ -27,15 +27,15 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
-// devinAccountsDir holds the homes of the Devin accounts magpie signed in.
+// devinAccountsDir holds the homes of the Devin accounts starling signed in.
 func devinAccountsDir() string { return filepath.Join(filepath.Dir(Path()), "devin") }
 
 // devinCredentialsAt is where an account's credentials.toml is: the CLI's
-// own for home "", else the one in magpie's home.
+// own for home "", else the one in starling's home.
 func devinCredentialsAt(home string) string {
 	if home == "" {
 		return DevinCredentialsPath()
@@ -44,7 +44,7 @@ func devinCredentialsAt(home string) string {
 }
 
 // devinCommand runs the devin CLI for an account: the CLI's own for home
-// "", else with magpie's home as its data folder. It goes through the
+// "", else with starling's home as its data folder. It goes through the
 // proxy ctx names (a sign-in's), else the account's own (devinProxy), as
 // the account's requests do, never always the global one (#1663).
 func devinCommand(ctx context.Context, home, path string, args ...string) *exec.Cmd {
@@ -90,7 +90,7 @@ type devinLogin struct {
 	Home string
 }
 
-// devinLogins lists the Devin accounts chongyun signed in itself, the
+// devinLogins lists the Devin accounts starling signed in itself, the
 // first in use first, then the rest as they were added. The CLI's own
 // sign-in is not read, so it is not among them.
 func devinLogins() []devinLogin {

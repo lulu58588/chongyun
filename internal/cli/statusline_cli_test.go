@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // What Claude Code hands a statusLine command on stdin (code.claude.com
@@ -42,15 +42,15 @@ func statuslineGateway(t *testing.T, now time.Time) *httptest.Server {
 		{Provider: "deepseek", Name: "DeepSeek", Kind: "balance", Balance: "¥12.00", LastServedAt: at(-time.Minute), Windows: []provider.QuotaSpan{}},
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /v1/magpie/quotas", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /v1/starling/quotas", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("kept") != "1" {
-			t.Errorf("statusline asked %s: that reads the vendors, not what chongyun kept", r.URL)
+			t.Errorf("statusline asked %s: that reads the vendors, not what starling kept", r.URL)
 			http.Error(w, "vendor read", 500)
 			return
 		}
 		json.NewEncoder(w).Encode(map[string]any{"object": "list", "data": quotas})
 	})
-	mux.HandleFunc("GET /v1/magpie/route", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /v1/starling/route", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("session") != "6f1d2c3a-9b8e-4a7f-8c1d-2e3f4a5b6c7d" {
 			json.NewEncoder(w).Encode(map[string]any{"route": nil})
 			return

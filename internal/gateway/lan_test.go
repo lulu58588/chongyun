@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Sharing gates remote access; each authorized remote call carries the same
@@ -41,7 +41,7 @@ func TestLANGuard(t *testing.T) {
 	}
 	keys, _ := access.List()
 	keyID := keys[0].ID
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	if c := call("192.168.1.9:5000", "x-api-key", secret); c != http.StatusForbidden {
 		t.Fatal("unshared remote", c)
 	}
@@ -56,12 +56,12 @@ func TestLANGuard(t *testing.T) {
 	if addr := listenAddr(); addr != "0.0.0.0:"+Port() {
 		t.Fatal(addr)
 	}
-	for _, hdr := range [][]string{nil, {"Authorization", "Bearer magpie"}, {"x-api-key", "wrong"}} {
+	for _, hdr := range [][]string{nil, {"Authorization", "Bearer starling"}, {"x-api-key", "wrong"}} {
 		if c := call("192.168.1.9:5000", hdr...); c != http.StatusUnauthorized {
 			t.Fatal("unauthorized remote", hdr, c)
 		}
 	}
-	if c := call("192.168.1.9:5000", "x-api-key", secret); c != 200 || id != keyID || got != "Bearer magpie|magpie" {
+	if c := call("192.168.1.9:5000", "x-api-key", secret); c != 200 || id != keyID || got != "Bearer starling|starling" {
 		t.Fatal(c, id, got)
 	}
 	if c := call("127.0.0.1:5000", "Authorization", "Bearer "+secret); c != 200 || id != keyID {
@@ -78,13 +78,13 @@ func TestLANGuard(t *testing.T) {
 	}
 	s.LAN = false
 	settings.Save(s)
-	// MAGPIE_ADDR on the network, not shared (the Docker image): another
+	// STARLING_ADDR on the network, not shared (the Docker image): another
 	// machine, a container's host among them, needs an enabled key too
-	t.Setenv("MAGPIE_ADDR", "0.0.0.0:3499")
-	for _, hdr := range [][]string{nil, {"Authorization", "Bearer magpie"}, {"x-api-key", "wrong"}} {
+	t.Setenv("STARLING_ADDR", "0.0.0.0:3499")
+	for _, hdr := range [][]string{nil, {"Authorization", "Bearer starling"}, {"x-api-key", "wrong"}} {
 		for _, from := range []string{"192.168.1.9:5000", "172.17.0.1:40312", "[fd00::1]:5000"} {
 			if c := call(from, hdr...); c != http.StatusUnauthorized || id != "" {
-				t.Fatal("MAGPIE_ADDR on the network, not shared:", from, hdr, c)
+				t.Fatal("STARLING_ADDR on the network, not shared:", from, hdr, c)
 			}
 		}
 	}
@@ -92,21 +92,21 @@ func TestLANGuard(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if c := call("172.17.0.1:40312", "Authorization", "Bearer "+secret); c != 200 || id == "" || got != "Bearer magpie|" {
-		t.Fatal("MAGPIE_ADDR on the network, with a key:", c, id, got)
+	if c := call("172.17.0.1:40312", "Authorization", "Bearer "+secret); c != 200 || id == "" || got != "Bearer starling|" {
+		t.Fatal("STARLING_ADDR on the network, with a key:", c, id, got)
 	}
 	if c := call("127.0.0.1:5000", "Authorization", "Bearer anything"); c != 200 {
-		t.Fatal("loopback, MAGPIE_ADDR on the network:", c)
+		t.Fatal("loopback, STARLING_ADDR on the network:", c)
 	}
 }
 
 // A gateway on every interface is reached here on loopback.
 func TestURLOfWildcard(t *testing.T) {
-	t.Setenv("MAGPIE_ADDR", "0.0.0.0:3499")
+	t.Setenv("STARLING_ADDR", "0.0.0.0:3499")
 	if u := URL(); u != "http://127.0.0.1:3499" {
 		t.Fatal(u)
 	}
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	if u := URL(); u != "http://127.0.0.1:3425" {
 		t.Fatal(u)
 	}
@@ -119,7 +119,7 @@ func TestAgentOf(t *testing.T) {
 		{"Bearer " + TokenFor("alma"), "", "ai-sdk/openai/2.0.52 ai-sdk/provider-utils/3.0.12 runtime/node.js/v22", "alma"},
 		// alma-server's (Alma 0.4's @ai-sdk/openai 4.0.15 under Node 22,
 		// whose navigator.userAgent the AI SDK appends): Alma's by the key
-		// magpie gives its provider, the AI SDK's without it (Lutra.x)
+		// starling gives its provider, the AI SDK's without it (Lutra.x)
 		{"Bearer " + TokenFor("alma"), "", "ai-sdk/openai/4.0.15 ai-sdk/provider-utils/5.0.10 runtime/node.js/22", "alma"},
 		{"Bearer " + Token, "", "ai-sdk/openai/4.0.15 ai-sdk/provider-utils/5.0.10 runtime/node.js/22", "ai-sdk"},
 		{"", TokenFor("alma"), "ai-sdk/anthropic/2.0.1", "alma"},
@@ -143,30 +143,30 @@ func TestAgentOf(t *testing.T) {
 	}
 }
 
-// In a container magpie's own addresses are the container's (Docker's
+// In a container starling's own addresses are the container's (Docker's
 // bridge, 172.17.x), which a NAS's other devices can't reach: set,
-// MAGPIE_PUBLIC_URL is the address shared, and its host the one printed
+// STARLING_PUBLIC_URL is the address shared, and its host the one printed
 // for the web page.
 func TestPublicURLShared(t *testing.T) {
-	t.Setenv("MAGPIE_ADDR", "0.0.0.0:3425")
+	t.Setenv("STARLING_ADDR", "0.0.0.0:3425")
 	for _, c := range []struct{ env, want, host string }{
 		{"http://192.168.1.20:3425", "http://192.168.1.20:3425", "192.168.1.20"},
-		{"https://nas.example.com/magpie/", "https://nas.example.com/magpie", "nas.example.com"},
+		{"https://nas.example.com/starling/", "https://nas.example.com/starling", "nas.example.com"},
 		{"nas.local:13425", "http://nas.local:13425", "nas.local"},
 		{"http://[fd00::20]:13425", "http://[fd00::20]:13425", "fd00::20"},
 	} {
-		t.Setenv("MAGPIE_PUBLIC_URL", c.env)
+		t.Setenv("STARLING_PUBLIC_URL", c.env)
 		if got := LANURLs(); len(got) != 1 || got[0] != c.want {
-			t.Errorf("MAGPIE_PUBLIC_URL=%q: %v, want %s", c.env, got, c.want)
+			t.Errorf("STARLING_PUBLIC_URL=%q: %v, want %s", c.env, got, c.want)
 		}
 		if got := PublicHost(); got != c.host {
-			t.Errorf("MAGPIE_PUBLIC_URL=%q: host %q, want %s", c.env, got, c.host)
+			t.Errorf("STARLING_PUBLIC_URL=%q: host %q, want %s", c.env, got, c.host)
 		}
 		if ContainerAddrs() {
-			t.Errorf("MAGPIE_PUBLIC_URL=%q still says the addresses are a container's", c.env)
+			t.Errorf("STARLING_PUBLIC_URL=%q still says the addresses are a container's", c.env)
 		}
 	}
-	t.Setenv("MAGPIE_PUBLIC_URL", "")
+	t.Setenv("STARLING_PUBLIC_URL", "")
 	if PublicHost() != "" {
 		t.Error("unset, a host:", PublicHost())
 	}
@@ -204,13 +204,13 @@ func TestInContainer(t *testing.T) {
 // Another computer lists the models with the key it was given whatever
 // else its client sends beside it: an empty or placeholder Authorization
 // with the key in x-api-key, a stale token there, "bearer" in lower case
-// (悠悠哥 报告: a client's model list from magpie shared on a NAS
-// failed, while from magpie on 127.0.0.1, which takes any token, it came).
+// (悠悠哥 报告: a client's model list from starling shared on a NAS
+// failed, while from starling on 127.0.0.1, which takes any token, it came).
 // The request comes as it would from the network: another address, the
 // NAS's address as its Host.
 func TestLANModelsWithKeyBesideAnotherToken(t *testing.T) {
 	setup(t, provider.Chat, &fake{t: t})
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	keys, secrets := newCaller(t, "PC")
 	key := secrets[0]
 	var who string
@@ -235,9 +235,9 @@ func TestLANModelsWithKeyBesideAnotherToken(t *testing.T) {
 		{"x-api-key", key, "Authorization", "Bearer "},
 		{"x-api-key", key, "Authorization", "Bearer"},
 		{"x-api-key", key, "Authorization", "Bearer undefined"},
-		{"x-api-key", key, "Authorization", "Bearer magpie"},
+		{"x-api-key", key, "Authorization", "Bearer starling"},
 		{"Authorization", "bearer " + key},
-		{"Authorization", "Bearer magpie", "x-goog-api-key", key},
+		{"Authorization", "Bearer starling", "x-goog-api-key", key},
 	} {
 		for _, path := range []string{"/v1/models", "/models", "/v1/models?limit=1000"} {
 			c, b := list("192.168.0.9:50123", path, hdr...)
@@ -251,7 +251,7 @@ func TestLANModelsWithKeyBesideAnotherToken(t *testing.T) {
 	}
 	// a key the gateway doesn't have is refused wherever it is sent
 	for _, hdr := range [][]string{
-		{"x-api-key", "sk-magpie-wrong", "Authorization", "Bearer magpie"},
+		{"x-api-key", "sk-starling-wrong", "Authorization", "Bearer starling"},
 		{"Authorization", "Bearer "},
 		{"x-api-key", key + "x"},
 	} {
@@ -266,14 +266,14 @@ func TestLANModelsWithKeyBesideAnotherToken(t *testing.T) {
 }
 
 // ZCode's custom provider asks no model list; its models are typed one a
-// line (悠悠哥 报告: from magpie on a NAS nothing filled it, while a
-// magpie on this computer writes its models into ZCode's own config).
+// line (悠悠哥 报告: from starling on a NAS nothing filled it, while a
+// starling on this computer writes its models into ZCode's own config).
 // /v1/models?format=text gives the ids one a line to paste there, opened
 // in a browser on another computer with the key as ?key=; without a key it
 // is refused as the list is.
 func TestLANModelsAsText(t *testing.T) {
 	setup(t, provider.Chat, &fake{t: t})
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	_, secrets := newCaller(t, "PC")
 	h := lanGuard(New().Handler())
 	get := func(path string) *httptest.ResponseRecorder {
@@ -313,13 +313,13 @@ func TestLANModelsAsText(t *testing.T) {
 // One, the Responses websocket, images, retrieval, videos, Gemini, the MCP
 // sign-ins, Codex's backend and catalog, the quotas, the route and the
 // rest — refuses another machine without an enabled gateway key, when
-// MAGPIE_ADDR puts the gateway on the network and it isn't shared (the
+// STARLING_ADDR puts the gateway on the network and it isn't shared (the
 // Docker image, whose host reaches it from Docker's bridge). Through the
 // whole server stack, lanGuard in front of Handler.
 func TestNetworkGatewayGuardsEveryRoute(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "0.0.0.0:3425")
-	t.Setenv("MAGPIE_TRUST_PROXY", "")
+	t.Setenv("STARLING_ADDR", "0.0.0.0:3425")
+	t.Setenv("STARLING_TRUST_PROXY", "")
 	if err := settings.Save(settings.Settings{LAN: false}); err != nil {
 		t.Fatal(err)
 	}
@@ -333,9 +333,9 @@ func TestNetworkGatewayGuardsEveryRoute(t *testing.T) {
 		{"GET", "/"}, {"GET", "/v1"}, {"GET", "/v1/models"}, {"GET", "/models"}, {"GET", "/v1/models/x"},
 		{"GET", "/muse-code/models"}, {"GET", "/api/hello"},
 		{"GET", "/api/version"}, {"GET", "/api/tags"}, {"POST", "/api/show"},
-		{"GET", "/v1/magpie/quotas"}, {"GET", "/v1/magpie/quotas/history"},
+		{"GET", "/v1/starling/quotas"}, {"GET", "/v1/starling/quotas/history"},
 		{"GET", provider.RemoteCardsPath}, {"POST", provider.RemoteRefreshPath},
-		{"GET", "/v1/magpie/route?session=s"}, {"GET", "/v1/magpie/concurrency"}, {"GET", "/v1/magpie/limit"},
+		{"GET", "/v1/starling/route?session=s"}, {"GET", "/v1/starling/concurrency"}, {"GET", "/v1/starling/limit"},
 		{"POST", "/v1/chat/completions"}, {"POST", "/chat/completions"},
 		{"POST", "/v1/responses"}, {"POST", "/responses"}, {"GET", "/v1/responses"}, {"GET", "/responses"},
 		{"POST", "/v1/messages"}, {"POST", "/messages"}, {"POST", "/v1/messages/count_tokens"},
@@ -344,7 +344,7 @@ func TestNetworkGatewayGuardsEveryRoute(t *testing.T) {
 		{"POST", "/v1/embeddings"}, {"POST", "/v1/rerank"},
 		{"POST", "/v1/audio/transcriptions"}, {"POST", "/v1/audio/translations"},
 		{"POST", "/v1/videos"}, {"GET", "/v1/videos/v1"}, {"GET", "/v1/videos/v1/content"},
-		{"POST", "/_magpie/claude-mcp/tok"}, {"POST", "/mcp/neon"},
+		{"POST", "/_starling/claude-mcp/tok"}, {"POST", "/mcp/neon"},
 		{"POST", CodexPath + "/responses"}, {"GET", CodexCatalogPath},
 		{"GET", "/v1beta/models"}, {"POST", "/v1beta/models/m:generateContent"},
 		{"GET", "/nowhere"},
@@ -367,7 +367,7 @@ func TestNetworkGatewayGuardsEveryRoute(t *testing.T) {
 	}
 	for _, rt := range routes {
 		for _, from := range []string{"172.17.0.1:40312", "192.168.1.9:5000"} {
-			for _, hdr := range [][]string{nil, {"Authorization", "Bearer magpie"}, {"x-api-key", "anything"}, {"x-goog-api-key", "magpie"}, {"Authorization", "Bearer " + live}} {
+			for _, hdr := range [][]string{nil, {"Authorization", "Bearer starling"}, {"x-api-key", "anything"}, {"x-goog-api-key", "starling"}, {"Authorization", "Bearer " + live}} {
 				resetAuthThrottle() // test each route's own guard, not the flood limiter that would 429 later tries
 				if c, b := call(rt[0], rt[1], from, hdr...); c != http.StatusUnauthorized || !strings.Contains(b, "gateway key") {
 					t.Errorf("%s %s from %s with %v: %d %.120s", rt[0], rt[1], from, hdr, c, b)
@@ -377,14 +377,14 @@ func TestNetworkGatewayGuardsEveryRoute(t *testing.T) {
 	}
 	// a gateway key gets past the guard; loopback still takes any token
 	_, secrets := newCaller(t, "Host")
-	settings.Save(settings.Settings{LAN: false}) // newCaller shares magpie
+	settings.Save(settings.Settings{LAN: false}) // newCaller shares starling
 	if c, b := call("GET", "/v1/models", "172.17.0.1:40312", "Authorization", "Bearer "+secrets[0]); c != 200 {
 		t.Fatal("with the key:", c, b)
 	}
-	if c, b := call("GET", "/v1/magpie/quotas", "172.17.0.1:40312", "x-api-key", secrets[0]); c != 200 {
+	if c, b := call("GET", "/v1/starling/quotas", "172.17.0.1:40312", "x-api-key", secrets[0]); c != 200 {
 		t.Fatal("quotas with the key:", c, b)
 	}
-	if c, b := call("GET", "/v1/models", "127.0.0.1:5000", "Authorization", "Bearer magpie"); c != 200 {
+	if c, b := call("GET", "/v1/models", "127.0.0.1:5000", "Authorization", "Bearer starling"); c != 200 {
 		t.Fatal("loopback:", c, b)
 	}
 }

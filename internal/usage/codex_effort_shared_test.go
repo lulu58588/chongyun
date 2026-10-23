@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 // effortFixture is one Codex thread's call in a sandbox home.

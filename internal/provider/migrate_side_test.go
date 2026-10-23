@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/update"
 )
 
 // moveAndBack does what Move, and putBack after a failed one, do with a
@@ -174,7 +174,7 @@ func TestMoveCommandCode(t *testing.T) {
 		t.Fatalf("cmd logins %+v", l)
 	}
 	// 0.1.7 and before said every model took no pictures (the list says
-	// nothing of them), which magpie takes over models.dev's answer
+	// nothing of them), which starling takes over models.dev's answer
 	if update.Newer("0.1.8", movers[CommandCodePlanID].min) {
 		t.Fatalf("the move installs commandcode-auth %q, which marks every model text-only", movers[CommandCodePlanID].min)
 	}

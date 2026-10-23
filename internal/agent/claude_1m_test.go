@@ -4,12 +4,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// TestClaude1MMarked: every name magpie hands Claude Code for a model of a
+// TestClaude1MMarked: every name starling hands Claude Code for a model of a
 // 1M window carries [1m], however it was set: Claude Code 2.1.284 and before
 // take "claude/claude-opus-5-5" unmarked for 200K, whatever
 // CLAUDE_CODE_MAX_CONTEXT_TOKENS says, and compact it again and again

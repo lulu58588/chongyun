@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 const (
@@ -110,13 +110,13 @@ func TestTencentCloud(t *testing.T) {
 	if IconForCatalog("tencent-tokenhub") != "tencentcloud-color" {
 		t.Fatal("tencent-tokenhub has no icon")
 	}
-	// a chongyun://import link: Tencent Cloud at a region, an old link by
+	// a starling://import link: Tencent Cloud at a region, an old link by
 	// its old id, and an old id at another region, each where it says
 	for _, c := range tcRegions {
 		for _, link := range []string{
-			"chongyun://import?preset=tencent-cloud&region=" + c.region,
-			"chongyun://import?preset=" + c.old,
-			"chongyun://import?preset=tencent-tokenhub&region=" + c.region,
+			"starling://import?preset=tencent-cloud&region=" + c.region,
+			"starling://import?preset=" + c.old,
+			"starling://import?preset=tencent-tokenhub&region=" + c.region,
 		} {
 			p, err := ParseImport(link)
 			if err != nil {
@@ -158,7 +158,7 @@ func TestTencentCloudEnterprisePlan(t *testing.T) {
 				t.Fatalf("%s: model ids are lowercase: %q", c.region, id)
 			}
 		}
-		p, err := ParseImport("chongyun://import?preset=tencent-cloud&region=" + c.region)
+		p, err := ParseImport("starling://import?preset=tencent-cloud&region=" + c.region)
 		if err != nil || p.Chat != r.Chat || p.Responses != r.Responses || p.Anthropic != r.Anthropic || p.KeysURL != c.keys {
 			t.Fatalf("link: %v %+v", err, p)
 		}
@@ -190,7 +190,7 @@ func TestTencentCloudOldPresetsKeepWorking(t *testing.T) {
 	t.Setenv("HOME", home)
 	t.Setenv("USERPROFILE", home)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
-	// providers.json as an older magpie wrote it
+	// providers.json as an older starling wrote it
 	old := `{"providers":[
 {"id":"tencent-token-plan","name":"Tencent Cloud Token Plan","icon":"tencentcloud-color","preset":"tencent-token-plan","key":"sk-tp-plan",
  "chat":"` + tcPlanChat + `","anthropic":"` + tcPlanMsgs + `","models":["glm-5.3","hy3"],"website":"` + tcPlanDocs + `","keysUrl":"` + tcPlanKeys + `"},

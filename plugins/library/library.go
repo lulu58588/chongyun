@@ -4,8 +4,8 @@
 package library
 
 import (
-	lib "github.com/lulu58588/chongyun/internal/library"
-	"github.com/lulu58588/chongyun/internal/pluginrt"
+	lib "github.com/lulu58588/starling/internal/library"
+	"github.com/lulu58588/starling/internal/pluginrt"
 )
 
 func init() {

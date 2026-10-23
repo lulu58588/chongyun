@@ -1,6 +1,6 @@
 package provider
 
-// A key's balance over time (TJHHHH 报告): each balance magpie reads
+// A key's balance over time (TJHHHH 报告): each balance starling reads
 // anyway (KeyBalances, a minute apart at most while something asks) is kept
 // as a point — when it was read and the amount — so the balance's card can
 // draw it, as the subscriptions' windows are (quota_history.go), and say
@@ -29,7 +29,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/starling/internal/lastgood"
 )
 
 const (

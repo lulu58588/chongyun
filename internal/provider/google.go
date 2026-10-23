@@ -3,7 +3,7 @@ package provider
 // Google's subscriptions: Gemini CLI's and Antigravity's Google sign-ins.
 // Both are served by Google's Code Assist backend (cloudcode-pa), which
 // speaks Gemini's API wrapped in an envelope of its own, under a Google
-// Cloud project Code Assist gives the account. magpie signs in with each
+// Cloud project Code Assist gives the account. starling signs in with each
 // app's own OAuth client, keeps the tokens in logins.json and refreshes
 // them in memory; Gemini CLI's own sign-in (~/.gemini/oauth_creds.json) is
 // read, never written. The gateway speaks the envelope (gateway/codeassist.go).
@@ -35,15 +35,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
-// CodeAssist is Google's Code Assist API, which magpie only speaks
+// CodeAssist is Google's Code Assist API, which starling only speaks
 // upstream, to a Gemini CLI or Antigravity account. Not in Protocols: no
 // other provider serves it.
 const CodeAssist Protocol = "codeassist"
 
-// googleApp is one of Google's apps whose sign-in magpie borrows.
+// googleApp is one of Google's apps whose sign-in starling borrows.
 type googleApp struct {
 	agent, name, icon, website string
 	clientID, clientSecret     string
@@ -99,15 +99,15 @@ func googleAppOf(agent string) (googleApp, bool) {
 	return googleApp{}, false
 }
 
-// AntigravityRisk is what magpie says before an Antigravity account is
+// AntigravityRisk is what starling says before an Antigravity account is
 // added.
 const AntigravityRisk = "Google may suspend an Antigravity account it sees used outside Antigravity. Use one you can afford to lose."
 
-// ClaudeRisk is what magpie says before a Claude account is added, as the
+// ClaudeRisk is what starling says before a Claude account is added, as the
 // window does.
-const ClaudeRisk = "Anthropic may suspend or ban a Claude account it sees used outside its own apps. chongyun sends requests through Claude Code, but Anthropic may still act on them; you use it at your own risk. Use an account you can afford to lose."
+const ClaudeRisk = "Anthropic may suspend or ban a Claude account it sees used outside its own apps. starling sends requests through Claude Code, but Anthropic may still act on them; you use it at your own risk. Use an account you can afford to lose."
 
-// geminiCLIVersion is the Gemini CLI magpie says it is.
+// geminiCLIVersion is the Gemini CLI starling says it is.
 const geminiCLIVersion = "0.61.0"
 
 // googleAuth is a Google sign-in as logins.json keeps it; Gemini CLI's
@@ -129,7 +129,7 @@ type googleAccount struct {
 	auth googleAuth
 }
 
-// googleSaved is the sign-in of an account chongyun keeps: its tokens as
+// googleSaved is the sign-in of an account starling keeps: its tokens as
 // logins.json holds them, with the project the account's requests are
 // billed to.
 func googleSaved(agent string, l savedLogin) (googleAccount, bool) {
@@ -185,7 +185,7 @@ func forgetGoogleLogin(agent, user string) error {
 	return forgetSideLogin(agent, user, googleSide(agent), nil)
 }
 
-// addGoogleLogin keeps an account magpie just signed in.
+// addGoogleLogin keeps an account starling just signed in.
 func addGoogleLogin(agent, user, plan string, a googleAuth) error {
 	auth, _ := json.Marshal(a)
 	return addSideLogin(savedLogin{Agent: agent, User: user, Plan: plan, Auth: auth, Project: a.Project}, "", func(savedLogin) {})
@@ -220,7 +220,7 @@ func SetGoogleProject(agent, user, project string) error {
 	})
 }
 
-// googleState is what magpie learned of each sign-in while it runs: the
+// googleState is what starling learned of each sign-in while it runs: the
 // access token, refreshed in memory (Google's refresh tokens don't turn
 // over, so nothing needs writing back), and the project and plan Code
 // Assist gave it.
@@ -278,7 +278,7 @@ func (g googleAccount) token(ctx context.Context) (string, error) {
 		if err != nil {
 			msg = err.Error()
 		}
-		return "", fmt.Errorf("%s is signed out (%s); sign in again from chongyun", g.app.name, msg)
+		return "", fmt.Errorf("%s is signed out (%s); sign in again from starling", g.app.name, msg)
 	}
 	t = googleAuth{AccessToken: fresh.AccessToken, RefreshToken: g.auth.RefreshToken,
 		Expiry: time.Now().Add(time.Duration(fresh.ExpiresIn) * time.Second).UnixMilli()}
@@ -559,8 +559,8 @@ func (g googleAccount) geminiProject(ctx context.Context) (googleProject, error)
 // needsProject says a Code Assist Standard or Enterprise account needs a
 // Google Cloud project named, with Google's reason when it gave one.
 func (g googleAccount) needsProject(why string) error {
-	msg := "Google serves Gemini CLI's sign-in only to Gemini Code Assist Standard and Enterprise, which bill a Google Cloud project: name it with `chongyun accounts project gemini " + g.user + " <project-id>`"
-	msg += ". A personal Google account is served to Antigravity instead: add it under Antigravity in chongyun"
+	msg := "Google serves Gemini CLI's sign-in only to Gemini Code Assist Standard and Enterprise, which bill a Google Cloud project: name it with `starling accounts project gemini " + g.user + " <project-id>`"
+	msg += ". A personal Google account is served to Antigravity instead: add it under Antigravity in starling"
 	if why != "" {
 		msg = why + " — " + msg
 	}
@@ -770,7 +770,7 @@ func (f geminiFlags) wire(model string) string {
 		return "gemini-3.5-flash-lite"
 	case !f.latestFlash && model == "gemini-3.8-flash":
 		// asked for by an account it isn't rolled out to (picked from the
-		// list magpie falls back on): Code Assist may not serve it that
+		// list starling falls back on): Code Assist may not serve it that
 		// account, so it goes as the Flash the account has (蒙面人: 502)
 		return "gemini-3-flash"
 	case !f.latestFlashLite && model == "gemini-3.5-flash-lite":
@@ -987,7 +987,7 @@ func (g googleAccount) modelInfo(ctx context.Context) ([]googleModelInfo, error)
 	return out, nil
 }
 
-// models is the account's models for the catalog, named as magpie knows
+// models is the account's models for the catalog, named as starling knows
 // them where Code Assist doesn't name them. Gemini CLI's are the ones the
 // CLI offers the account, not its quota's buckets: those name the models
 // it has an allowance of, by Code Assist's ids (gemini-3-flash is the

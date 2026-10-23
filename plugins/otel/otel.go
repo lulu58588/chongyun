@@ -9,10 +9,10 @@
 package otel
 
 import (
-	"github.com/lulu58588/chongyun/internal/otlp"
-	"github.com/lulu58588/chongyun/internal/pluginrt"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/otlp"
+	"github.com/lulu58588/starling/internal/pluginrt"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func init() {
@@ -20,7 +20,7 @@ func init() {
 		ID: "otel", API: "^1", Requires: []string{"window", "settings", "gateway"},
 		Name: "Observability", Sub: "Send each request's traces and metrics to an OpenTelemetry collector, such as Langfuse",
 		One: "Sending to a collector", Many: "Sending to a collector",
-		// on while settings.json or MAGPIE_OTEL_ENABLED says to send: off,
+		// on while settings.json or STARLING_OTEL_ENABLED says to send: off,
 		// nothing would
 		InUse: func() (int, error) {
 			if _, err := settings.LoadChecked(); err != nil {

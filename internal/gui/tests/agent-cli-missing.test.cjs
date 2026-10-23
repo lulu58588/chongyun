@@ -17,17 +17,17 @@ const { chromium, webkit } = require("playwright");
 
 const assets = path.resolve(__dirname, "../assets");
 const models = ["model-a", "model-b"].map((m) => ({ value: m, label: m }));
-const refs = ["magpie/relay/glm-4.6"].map((m) => ({ value: m, label: m, ref: m }));
+const refs = ["starling/relay/glm-4.6"].map((m) => ({ value: m, label: m, ref: m }));
 const agent = (id, name, more = {}) => ({
   id, name, path: "~/." + id + "/config.yaml", fields: [{ key: "model", label: "model", value: "model-a", options: models }], ...more,
 });
 const AGENTS = [
   agent("crush", "Crush"),
   agent("dsh", "DeepSeek Harness", { cliMissing: true }),
-  // left connected to magpie before it was uninstalled
+  // left connected to starling before it was uninstalled
   agent("hermes", "Hermes Agent", {
     cliMissing: true, wired: true,
-    fields: [{ key: "model", label: "model", value: "magpie/relay/glm-4.6", options: refs }, { key: "effort", label: "effort", value: "high", options: ["low", "high"].map((value) => ({ value })) }],
+    fields: [{ key: "model", label: "model", value: "starling/relay/glm-4.6", options: refs }, { key: "effort", label: "effort", value: "high", options: ["low", "high"].map((value) => ({ value })) }],
   }),
 ];
 const CLIS = { crush: { version: "0.3.0", latest: "0.3.0", via: "brew", command: "brew upgrade crush" } };
@@ -82,7 +82,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           page.setDefaultTimeout(5000);
           page.on("pageerror", (e) => errors.push(e.message));
           await page.route("**/*", server(lang));
-          await page.goto("http://magpie.test/");
+          await page.goto("http://starling.test/");
           await page.locator(`${row("crush")} .ag-ver`).waitFor();
           await page.locator("#agentsInstall .ag-install-head").waitFor();
           const gone = await said(page, lang, "CLI not found");
@@ -98,7 +98,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           assert.equal(await page.locator(`${row("crush")} .ag-missing`).count(), 0, "an installed one says nothing of it");
           assert(await page.locator(`${row("crush")} .field`).count() > 0, "an installed one lost its settings");
           // where it is installed again: Install another agent for dsh,
-          // nowhere magpie knows for Hermes
+          // nowhere starling knows for Hermes
           await page.locator(`${row("hermes")} .ag-missing`).hover();
           const tip = (id) => page.locator(`${row(id)} .ag-missing`).getAttribute("title");
           const dshTip = await said(page, lang, OFFERED, { agent: "DeepSeek Harness", path: "~/.dsh/config.yaml" });
@@ -120,7 +120,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           // its menu: Disconnect, no Apply again
           await page.locator(row("hermes")).click({ button: "right" });
           const items = await page.locator(".row-menu .rm-item .rm-name").allTextContents();
-          assert(items.includes(await said(page, lang, "Disconnect from magpie")), items.join(", "));
+          assert(items.includes(await said(page, lang, "Disconnect from starling")), items.join(", "));
           assert(!items.includes(await said(page, lang, "Apply again")), items.join(", "));
           await page.keyboard.press("Escape");
           // the one not connected folds under Not set up, the connected one stays up
@@ -150,7 +150,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         page.setDefaultTimeout(5000);
         page.on("pageerror", (e) => errors.push(e.message));
         await page.route("**/*", server(lang));
-        await page.goto("http://magpie.test/?mode=panel");
+        await page.goto("http://starling.test/?mode=panel");
         await page.locator(`${row("crush")} .ag-sum`).waitFor();
         const gone = await said(page, lang, "CLI not found");
         const sum = page.locator(`${row("hermes")} .ag-sum`);

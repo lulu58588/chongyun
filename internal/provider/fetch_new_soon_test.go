@@ -8,12 +8,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // An account whose list couldn't be had is asked again a minute on, and
 // opening the panel asks without the page waiting (#422: after an update
-// Kiro offered Auto alone until magpie was restarted by hand — its one try
+// Kiro offered Auto alone until starling was restarted by hand — its one try
 // had failed, and it wasn't asked again for ten minutes, and then only by
 // the Providers page).
 func TestFetchNewRetriedSoon(t *testing.T) {

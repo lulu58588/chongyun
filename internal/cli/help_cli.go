@@ -6,17 +6,17 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/starling/internal/agent"
 )
 
 // helpAsked is whether args ask for help rather than for the command to
 // run: -h or --help anywhere, or help as the word after the command. It
 // is looked at before run does anything, since a command that took
-// --help for a value acted on it: `chongyun snow --help` set Snow's model
-// to "--help", which took magpie out of it (#1457), and `chongyun serve
+// --help for a value acted on it: `starling snow --help` set Snow's model
+// to "--help", which took starling out of it (#1457), and `starling serve
 // --help` started a gateway.
 func helpAsked(args []string) bool {
-	// what magpie is started with by others (Claude Code's MCP helper, the
+	// what starling is started with by others (Claude Code's MCP helper, the
 	// Agents page's dry run, a link, Windows' -Embedding) never carries
 	// an exact -h, --help or help
 	for _, a := range args {
@@ -27,8 +27,8 @@ func helpAsked(args []string) bool {
 	return len(args) > 1 && args[1] == "help"
 }
 
-// helpFor is what `chongyun <command> --help` prints: the command's own
-// usage where it has one, its lines of magpie's usage otherwise, an
+// helpFor is what `starling <command> --help` prints: the command's own
+// usage where it has one, its lines of starling's usage otherwise, an
 // agent's forms and fields for an agent, and the whole usage for
 // anything else.
 func helpFor(args []string) string {
@@ -87,13 +87,13 @@ func helpFor(args []string) string {
 	return usage
 }
 
-// usageLines are the lines of magpie's usage for `chongyun <cmd>`, with the
+// usageLines are the lines of starling's usage for `starling <cmd>`, with the
 // lines that carry on from them.
 func usageLines(cmd string) string {
 	var b strings.Builder
 	in := false
 	for _, l := range strings.Split(usage, "\n") {
-		if rest, ok := strings.CutPrefix(l, "  chongyun "); ok {
+		if rest, ok := strings.CutPrefix(l, "  starling "); ok {
 			in = rest == cmd || strings.HasPrefix(rest, cmd+" ")
 		} else if !strings.HasPrefix(l, "          ") {
 			in = false
@@ -105,21 +105,21 @@ func usageLines(cmd string) string {
 	return b.String()
 }
 
-// agentHelp is `chongyun <agent> --help`: the forms that set it, and its
+// agentHelp is `starling <agent> --help`: the forms that set it, and its
 // fields.
 func agentHelp(a *agent.Agent) string {
 	var b strings.Builder
 	id := a.ID
 	fmt.Fprintf(&b, "%s\n\n", a.Name)
-	fmt.Fprintf(&b, "  chongyun %s                  show it\n", id)
+	fmt.Fprintf(&b, "  starling %s                  show it\n", id)
 	if len(a.Fields) == 0 {
 		return b.String()
 	}
-	fmt.Fprintf(&b, "  chongyun %s <model>          set its model   (chongyun models %s lists them)\n", id, id)
-	fmt.Fprintf(&b, "  chongyun %s <field>          show one field\n", id)
-	fmt.Fprintf(&b, "  chongyun %s <field> <value>  set another field\n", id)
-	fmt.Fprintf(&b, "  chongyun %s default          take chongyun out: back on what it had before\n", id)
-	fmt.Fprintf(&b, "  chongyun %s <field> default  that field back to its own default\n", id)
+	fmt.Fprintf(&b, "  starling %s <model>          set its model   (starling models %s lists them)\n", id, id)
+	fmt.Fprintf(&b, "  starling %s <field>          show one field\n", id)
+	fmt.Fprintf(&b, "  starling %s <field> <value>  set another field\n", id)
+	fmt.Fprintf(&b, "  starling %s default          take starling out: back on what it had before\n", id)
+	fmt.Fprintf(&b, "  starling %s <field> default  that field back to its own default\n", id)
 	var keys []string
 	for _, f := range a.Fields {
 		keys = append(keys, f.Key)
@@ -137,15 +137,15 @@ func agentHelp(a *agent.Agent) string {
 		if n > 1 {
 			names = strings.Join(both[:n-1], ", ") + " and " + both[n-1]
 		}
-		fmt.Fprintf(&b, "  %s alone name the %s: chongyun %s %s sets its %s to %s\n", names, a.Fields[0].Label, id, both[0], a.Fields[0].Label, both[0])
-		// they are the agent's own models, not magpie's: setting one takes
-		// magpie out (#2000, read as a query of the tier)
-		fmt.Fprintf(&b, "  they are %s's own models, not chongyun's: setting one takes chongyun out; chongyun %s alone shows each\n", a.Name, id)
+		fmt.Fprintf(&b, "  %s alone name the %s: starling %s %s sets its %s to %s\n", names, a.Fields[0].Label, id, both[0], a.Fields[0].Label, both[0])
+		// they are the agent's own models, not starling's: setting one takes
+		// starling out (#2000, read as a query of the tier)
+		fmt.Fprintf(&b, "  they are %s's own models, not starling's: setting one takes starling out; starling %s alone shows each\n", a.Name, id)
 	}
 	return b.String()
 }
 
-// flagArg is an argument to `chongyun <agent> …` that is a flag, which no
+// flagArg is an argument to `starling <agent> …` that is a flag, which no
 // agent form takes: it is said to be one, rather than set as a model or a
 // field's value. A negative number is a value.
 func flagArg(args []string) string {

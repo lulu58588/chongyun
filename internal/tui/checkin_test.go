@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // stubCheckin stands in for the WorkBuddy accounts signed in here: rs is
@@ -84,7 +84,7 @@ func stubQoder(t *testing.T, rs []provider.WorkBuddyCheckin) *int {
 }
 
 // c on the Usage page presses WorkBuddy's daily check-in (签到) for every
-// WorkBuddy (China) account signed in here at once, as the app's "Check in now" and magpie accounts
+// WorkBuddy (China) account signed in here at once, as the app's "Check in now" and starling accounts
 // checkin do, and says how each stands: the credits and streak, in already,
 // or why not (akic404 报告: the TUI had no way to check in).
 func TestTUIChecksWorkBuddyIn(t *testing.T) {

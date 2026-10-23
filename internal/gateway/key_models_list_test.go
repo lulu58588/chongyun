@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // listedBefore is keyAllowed as it was before #1762, every group read
@@ -205,7 +205,7 @@ func TestKeyListSeesChangesNextRequest(t *testing.T) {
 }
 
 // BenchmarkHeldKeyListsModels is #1762's catalog: two providers of 500
-// models each serving the same ids, so magpie finds 500 groups for them,
+// models each serving the same ids, so starling finds 500 groups for them,
 // listed for a key held to some models, one held to some accounts, and
 // one held to none.
 func BenchmarkHeldKeyListsModels(b *testing.B) {

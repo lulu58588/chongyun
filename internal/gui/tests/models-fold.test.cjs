@@ -66,7 +66,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const errors = [];
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", serve(lang));
-      await page.goto("http://magpie.test/?view=providers");
+      await page.goto("http://starling.test/?view=providers");
 
       const editor = page.locator("#modal:not([hidden]) .editor");
       const open = async (name) => {

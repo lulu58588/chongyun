@@ -1,14 +1,14 @@
 package davsync
 
 // Shared usage (#542): with Config.Usage on, each computer puts its calls on
-// the server beside the backup, at magpie/usage/<id>-<day>.magpie-usage, one
+// the server beside the backup, at starling/usage/<id>-<day>.magpie-usage, one
 // file a day, sealed with the passphrase, and brings the other computers'
 // down for the Usage page. Beside its days, a computer puts what it read
-// of its accounts' windows over time (#651), at magpie/usage/<id>.magpie-quotas,
+// of its accounts' windows over time (#651), at starling/usage/<id>.magpie-quotas,
 // sealed alike, and merges the others' into its own (provider.MergeQuotaHistory)
 // for the quota cards' curves. A computer writes and deletes its own files
 // alone, so none is ever written over by another; nothing of them is in the
-// backup, nor in what is hashed to tell whether it changed. A magpie
+// backup, nor in what is hashed to tell whether it changed. A starling
 // before them never looks in the folder.
 
 import (
@@ -26,12 +26,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/backup"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/backup"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
-// usageFolder is the folder the days go in, in magpie's.
+// usageFolder is the folder the days go in, in starling's.
 const (
 	usageFolder = "usage"
 	usageExt    = ".magpie-usage"
@@ -382,7 +382,7 @@ func (d *dav) write(ctx context.Context, name string, data []byte) error {
 			}
 			return nil
 		case try == 0 && (res.StatusCode == http.StatusNotFound || res.StatusCode == http.StatusConflict || res.StatusCode == http.StatusForbidden):
-			// the folder isn't there yet: magpie's, then usage in it
+			// the folder isn't there yet: starling's, then usage in it
 			if err := d.mkcol(ctx); err != nil {
 				return err
 			}

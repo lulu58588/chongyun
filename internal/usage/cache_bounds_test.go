@@ -372,7 +372,7 @@ func TestUsagePageAskedTwiceIsWorkedOutOnce(t *testing.T) {
 	}
 }
 
-// The TUI, magpie usage, the CSV export and sync read a period's ledger
+// The TUI, starling usage, the CSV export and sync read a period's ledger
 // from the gateway's index, not by parsing usage.jsonl again: over
 // Vantiboo1ean's ~750k requests each parse took seconds. What they read is
 // what Load reads, appends and an unfinished last line included.
@@ -382,7 +382,7 @@ func TestUsageLedgerReadsTheIndexNotTheFile(t *testing.T) {
 	settleLogClock(t)
 	historyLog(t, 1034)
 	Summaries(Today) // the index is read
-	Append(Record{Time: now.Add(-time.Hour), Agent: "claude-code", Provider: "anthropic", Model: "claude-x", Requested: "magpie/x", Served: "claude-x-1", Session: "s2", Subagent: "sub", Input: 5, Output: 7, CacheRead: 3, CacheWrite: 2, CacheWrite1h: 1, Reasoning: 4, Status: 500, Error: "boom", ErrType: "overloaded", ProviderAccount: "a@b", Effort: "high", TTFT: 30, Millis: 90, Archive: "2026-09-30/x", Via: "mini", CallerKeyID: "k1", Rejected: true})
+	Append(Record{Time: now.Add(-time.Hour), Agent: "claude-code", Provider: "anthropic", Model: "claude-x", Requested: "starling/x", Served: "claude-x-1", Session: "s2", Subagent: "sub", Input: 5, Output: 7, CacheRead: 3, CacheWrite: 2, CacheWrite1h: 1, Reasoning: 4, Status: 500, Error: "boom", ErrType: "overloaded", ProviderAccount: "a@b", Effort: "high", TTFT: 30, Millis: 90, Archive: "2026-09-30/x", Via: "mini", CallerKeyID: "k1", Rejected: true})
 	f, err := os.OpenFile(Path(), os.O_APPEND|os.O_WRONLY, 0)
 	if err != nil {
 		t.Fatal(err)

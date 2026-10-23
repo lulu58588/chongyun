@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
-// @NetRozee 报告: a custom endpoint given a thousand keys froze magpie.
+// @NetRozee 报告: a custom endpoint given a thousand keys froze starling.
 // What a page or a request asks of a provider's keys is counted here, not
 // timed: each is asked once for all of them, never once a key.
 

@@ -1,9 +1,9 @@
 package provider
 
 // Adding a Claude account is Claude Code's own `claude auth login`, run by
-// magpie in a config directory of its own: the sign-in page, the tokens and
-// who signed in are all Claude Code's, and magpie asks Anthropic nothing.
-// magpie takes the link Claude Code would open (it is the browser Claude
+// starling in a config directory of its own: the sign-in page, the tokens and
+// who signed in are all Claude Code's, and starling asks Anthropic nothing.
+// starling takes the link Claude Code would open (it is the browser Claude
 // Code is given), hands it to its window, and keeps the account Claude Code
 // signed in to once it is done.
 
@@ -24,22 +24,22 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/claudecode"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/wslrun"
+	"github.com/lulu58588/starling/internal/claudecode"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/wslrun"
 )
 
-// claudeCLISignIn is a `claude auth login` magpie is running.
+// claudeCLISignIn is a `claude auth login` starling is running.
 type claudeCLISignIn struct {
 	mu   sync.Mutex
 	in   io.WriteCloser // where the code its page shows is typed
 	port string         // where it waits for the browser, from the link it opened
 }
 
-// openedURLEnv names the file the browser Claude Code is given (magpie
+// openedURLEnv names the file the browser Claude Code is given (starling
 // itself, TookOpenedURL) writes the page it was asked to open to.
-const openedURLEnv = "MAGPIE_OPENED_URL"
+const openedURLEnv = "STARLING_OPENED_URL"
 
 // claudeURLOpener is the browser `claude auth login` is given; a var so
 // tests can give another.
@@ -48,8 +48,8 @@ var claudeURLOpener = func() string {
 	return exe
 }
 
-// TookOpenedURL is magpie run as the browser of a `claude auth login` it
-// started: the page is written down for magpie's window to open, and
+// TookOpenedURL is starling run as the browser of a `claude auth login` it
+// started: the page is written down for starling's window to open, and
 // nothing else runs.
 func TookOpenedURL(args []string) bool {
 	f := os.Getenv(openedURLEnv)
@@ -76,7 +76,7 @@ func claudeSignInEnv(env []string, dir string) []string {
 
 // claudeCLI is the Claude Code a sign-in runs: this machine's, or, on
 // Windows without one, the one installed in a running WSL distro, which
-// signs in to the config directory magpie gives it all the same (wslrun).
+// signs in to the config directory starling gives it all the same (wslrun).
 type claudeCLI struct {
 	path string
 	wsl  *wslrun.Tool
@@ -151,7 +151,7 @@ func (c claudeCLI) proxied(choice string, env []string) ([]string, error) {
 func startClaudeSignIn(s *signInFlow) error {
 	cli, ok := findClaudeCLI()
 	if !ok {
-		return errors.New("install Claude Code first, the `claude` command line (the Claude desktop app is not it): chongyun signs in to Claude through it; " + claudecode.InstallHint)
+		return errors.New("install Claude Code first, the `claude` command line (the Claude desktop app is not it): starling signs in to Claude through it; " + claudecode.InstallHint)
 	}
 	if err := os.MkdirAll(claudeDirsRoot(), 0o700); err != nil {
 		return err
@@ -337,12 +337,12 @@ func isLoopback(host string) bool {
 }
 
 // claudeSignedIn is the account `claude auth login` signed in to in config
-// directory dir, as magpie keeps it: the sign-in Claude Code kept, and who
+// directory dir, as starling keeps it: the sign-in Claude Code kept, and who
 // it says that is, asked through the sign-in's proxy.
 func claudeSignedIn(cli claudeCLI, dir, proxy string) (savedLogin, error) {
 	c, ok := readClaudeDir(dir)
 	if !ok {
-		return savedLogin{}, errors.New("Claude Code signed in, but kept no sign-in chongyun can read")
+		return savedLogin{}, errors.New("Claude Code signed in, but kept no sign-in starling can read")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
@@ -422,7 +422,7 @@ func (s *signInFlow) claudePaste(raw string) error {
 	select {
 	case <-s.done:
 	case <-time.After(time.Minute):
-		return errors.New("the sign-in is still finishing; chongyun shows the account when it's done")
+		return errors.New("the sign-in is still finishing; starling shows the account when it's done")
 	}
 	switch st := s.status(); st.State {
 	case "done":

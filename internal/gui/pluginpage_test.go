@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // pagePlugins writes plugins.json with the example page plugin
@@ -24,7 +24,7 @@ func pagePlugins(t *testing.T) (on, off string) {
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(h, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(h, ".cache"))
 	t.Setenv("XDG_DATA_HOME", filepath.Join(h, ".local", "share"))
-	t.Setenv("MAGPIE_BUN", "")
+	t.Setenv("STARLING_BUN", "")
 	t.Setenv("PATH", "")
 	copyDir := func(to string) {
 		t.Helper()
@@ -230,12 +230,12 @@ func TestPluginPageNoAPI(t *testing.T) {
 	}
 }
 
-// magpie web's guard lets a page's files through without the cookie a
+// starling web's guard lets a page's files through without the cookie a
 // sandboxed frame never sends, and only those: a made-up token is served
 // nothing, and the rest of the page still wants the key.
 func TestPluginPageWebGuard(t *testing.T) {
 	pagePlugins(t)
-	g := webGuard("chongyun_web_1", "key", 0, pageMux())
+	g := webGuard("starling_web_1", "key", 0, pageMux())
 	var pages []pluginPage
 	_ = json.Unmarshal(do(pageMux(), httptest.NewRequest("GET", "/api/plugin-pages", nil)).Body.Bytes(), &pages)
 	if len(pages) != 1 {
@@ -252,13 +252,13 @@ func TestPluginPageWebGuard(t *testing.T) {
 	}
 }
 
-// A page's actions (magpie.actions) come with it to the window, one that
+// A page's actions (starling.actions) come with it to the window, one that
 // names no title by the page's own in each language; a plugin switched
 // off adds no item to any menu.
 func TestPluginPageActions(t *testing.T) {
 	on, off := pagePlugins(t)
 	for _, dir := range []string{on, off} {
-		pkg := `{"name":"magpie-usage-glance","magpie":{"page":{"title":"Usage glance","titles":{"zh":"用量速览"},"file":"page/index.html"},
+		pkg := `{"name":"magpie-usage-glance","starling":{"page":{"title":"Usage glance","titles":{"zh":"用量速览"},"file":"page/index.html"},
 			"actions":[{"id":"check","menu":"provider","title":"Check balance","titles":{"ja":"残高を確認"}},{"id":"logs","menu":"agent"}]}}`
 		if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte(pkg), 0o644); err != nil {
 			t.Fatal(err)

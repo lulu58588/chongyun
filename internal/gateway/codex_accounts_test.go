@@ -13,12 +13,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // codexSignedIn signs a test's Codex in to ChatGPT (acct-1), with the
-// saved accounts spares (acct-2, …) on beside it in magpie.
+// saved accounts spares (acct-2, …) on beside it in starling.
 func codexSignedIn(t *testing.T, spares ...string) {
 	t.Helper()
 	fresh(t)
@@ -39,7 +39,7 @@ func codexSignedIn(t *testing.T, spares ...string) {
 	}
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("me@example.com", "acct-1")), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	saved := []map[string]any{{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(),
@@ -50,7 +50,7 @@ func codexSignedIn(t *testing.T, spares ...string) {
 	}
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON(saved), 0o600)
-	// signed in behind magpie's back: an earlier test's look at its own
+	// signed in behind starling's back: an earlier test's look at its own
 	// home within 30s would otherwise keep Codex's sign-in off the list
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)
@@ -81,7 +81,7 @@ func usedUp(t *testing.T, tried, models *[]string) {
 }
 
 // Codex on one of its own models, signed in to a ChatGPT account that has
-// used its allowance up, with another of its accounts on in magpie: the
+// used its allowance up, with another of its accounts on in starling: the
 // turn goes on to that one, asked for the model Codex asked for, and the
 // first sits out until ChatGPT says it is back — two hours, not an hour
 // at a time (#147).
@@ -143,7 +143,7 @@ func TestCodexOwnModelOneAccountRelayed(t *testing.T) {
 	}
 }
 
-// The account Codex is signed in to, paused in magpie while another is on
+// The account Codex is signed in to, paused in starling while another is on
 // (#263: the user's own Plus kept for Codex's remote control, a shared Pro
 // doing the work): no request goes to it, Codex staying signed in to it,
 // until it is resumed or the other is turned off.
@@ -197,7 +197,7 @@ func TestCodexPausedOwnAccountPassedOver(t *testing.T) {
 }
 
 // Native compaction of one of Codex's own models, with the account Codex
-// is signed in to paused in magpie while another is on (#263, the free
+// is signed in to paused in starling while another is on (#263, the free
 // ChatGPT account kept for Codex's remote control and Computer Use):
 // it goes to the account that is on, signed as that account, not relayed
 // on the paused one's sign-in as it came. With nothing else on, or not
@@ -351,7 +351,7 @@ func TestGatewayKeyAccountsHoldCodexOwnModel(t *testing.T) {
 // saying the two ways out; one held to the account in use, or naming no
 // Codex account at all (AllowsAccount's rule), compacts on it as it
 // always did, as a key that names no account does; and the gate fails
-// closed — Codex switched off in magpie, the sign-in nowhere magpie can
+// closed — Codex switched off in starling, the sign-in nowhere starling can
 // resolve, is refused as an account the key may not use is.
 func TestGatewayKeyAccountsHoldCodexCompact(t *testing.T) {
 	codexSignedIn(t, "spare@example.com")
@@ -427,7 +427,7 @@ func TestGatewayKeyAccountsHoldCodexCompact(t *testing.T) {
 	if code != 200 || !strings.Contains(body, `"id":"cmp_openai"`) || len(asked) != 3 {
 		t.Fatalf("a free key: %d %s, %d upstream requests", code, body, len(asked))
 	}
-	// Codex switched off in magpie, the sign-in still on it: the gate
+	// Codex switched off in starling, the sign-in still on it: the gate
 	// fails closed, refused as an account the key may not use is
 	setAccounts(t, keys[0].ID, "codex/spare@example.com")
 	if err := provider.SetOff("codex", true); err != nil {
@@ -458,7 +458,7 @@ func TestGatewayKeyCompactOnCodexAPIKey(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Codex signs back in with an API key: no ChatGPT account behind the
-	// sign-in, and no codex provider in chongyun at all. chongyun keeps
+	// sign-in, and no codex provider in starling at all. starling keeps
 	// what it signed the agent in to in its own logins.json, and never
 	// reads the agent's own auth.json to find out which account that is.
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"),
@@ -709,10 +709,10 @@ func TestCallKind(t *testing.T) {
 // The ChatGPT backend serves a model only to a Codex that knows it: a turn
 // signed by the pool says it comes from a Codex CLI at least as new as the
 // one that sent it, in the User-Agent and the version header alike, so a
-// model Codex CLI reaches on its own isn't refused through magpie
+// model Codex CLI reaches on its own isn't refused through starling
 // (Discord: "The 'gpt-6.1-sol' model is not supported when using Codex
 // with a ChatGPT account"). 0.161.0 is newer than any installed here or
-// magpie's own fallback, so only the client's own version can pass.
+// starling's own fallback, so only the client's own version can pass.
 func TestCodexPoolSaysTheClientsVersion(t *testing.T) {
 	codexSignedIn(t, "spare@example.com")
 	var uas, vers []string
@@ -777,7 +777,7 @@ func older(a, b string) bool {
 // models) reaches the ChatGPT backend when the pool of Codex's accounts
 // serves the turn, as it does on Codex's own sign-in, and Fast's
 // "priority" still does (yxinyu715 报告: two Pro accounts, Ultrafast
-// does nothing through magpie and works without it).
+// does nothing through starling and works without it).
 func TestCodexPoolKeepsUltrafast(t *testing.T) {
 	codexSignedIn(t, "spare@example.com")
 	var tiers []any
@@ -819,7 +819,7 @@ func TestCodexPoolKeepsUltrafast(t *testing.T) {
 }
 
 // Codex's auto-review of an approval (x-openai-subagent: guardian, on
-// codex-auto-review) while its own model calls go through magpie's
+// codex-auto-review) while its own model calls go through starling's
 // account failover: the account Codex is signed in to paused, the other
 // on with a list of models of its own, picked from the provider's, which
 // never shows codex-auto-review. The review is served by that account

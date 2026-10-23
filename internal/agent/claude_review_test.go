@@ -5,19 +5,19 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// TestClaudeAutoModeReview: Claude Code in auto mode behind magpie on a
+// TestClaudeAutoModeReview: Claude Code in auto mode behind starling on a
 // model Anthropic doesn't review (1EFLOPS 报告, on Codex's gpt-6.1-sol)
 // said "this session isn't eligible because your requests go through
 // 127.0.0.1:3425…". Anthropic's page says to turn the review off
-// (CLAUDE_CODE_AUTO_MODE_SERVER=0) for a gateway that can't run it: magpie
+// (CLAUDE_CODE_AUTO_MODE_SERVER=0) for a gateway that can't run it: starling
 // does while no model Claude Code can reach through it is reviewed, and
 // leaves it on while one is, shown or behind a group or a fallback. A
-// value of the user's is theirs, and magpie's goes when Claude Code is
-// taken off magpie.
+// value of the user's is theirs, and starling's goes when Claude Code is
+// taken off starling.
 func TestClaudeAutoModeReview(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
@@ -119,10 +119,10 @@ func TestClaudeAutoModeReview(t *testing.T) {
 		t.Fatalf("fallback gone: %q, want 0", review())
 	}
 
-	// off magpie, onto Claude Code's own model, and reset: magpie's goes
+	// off starling, onto Claude Code's own model, and reset: starling's goes
 	set("model", "claude-opus-4-8")
 	if review() != "" {
-		t.Fatalf("Claude's own model kept chongyun's value: %q", review())
+		t.Fatalf("Claude's own model kept starling's value: %q", review())
 	}
 	set("model", "v/gpt-x")
 	if review() != "0" {
@@ -130,7 +130,7 @@ func TestClaudeAutoModeReview(t *testing.T) {
 	}
 	set("model", "")
 	if review() != "" {
-		t.Fatalf("reset kept chongyun's value: %q", review())
+		t.Fatalf("reset kept starling's value: %q", review())
 	}
 
 	// the user's own value is theirs, through a switch, Sync and reset
@@ -166,7 +166,7 @@ func TestClaudeAutoModeReview(t *testing.T) {
 	}
 }
 
-// TestT3CodeAutoModeReview: T3 Code's magpie instance runs Claude Code on
+// TestT3CodeAutoModeReview: T3 Code's starling instance runs Claude Code on
 // the gateway through its own environment, so it is told the same: the
 // review off while none of the models it lists is reviewed, and on (not
 // set) once one is.
@@ -176,7 +176,7 @@ func TestT3CodeAutoModeReview(t *testing.T) {
 	path := filepath.Join(home, ".t3", "userdata", "settings.json")
 	writeFile(t, path, `{}`)
 	a := t3code(home)
-	if err := a.Field("provider").Set(magpieID); err != nil {
+	if err := a.Field("provider").Set(starlingID); err != nil {
 		t.Fatal(err)
 	}
 	review := func() (string, bool) {
@@ -185,7 +185,7 @@ func TestT3CodeAutoModeReview(t *testing.T) {
 		if err := json.Unmarshal([]byte(readFile(path)), &file); err != nil {
 			t.Fatal(err)
 		}
-		for _, v := range t3Format(t, file["providerInstances"][magpieID]).Environment {
+		for _, v := range t3Format(t, file["providerInstances"][starlingID]).Environment {
 			if v.Name == claudeReviewEnv {
 				return v.Value, true
 			}
@@ -210,7 +210,7 @@ func TestT3CodeAutoModeReview(t *testing.T) {
 // set to is judged on the provider it resolves to, as the gateway judges
 // its requests, not by its name alone. A Claude name on a provider that
 // falls back to Anthropic, or a group with a Claude member, keeps the
-// review on; a name magpie doesn't know is judged by the name.
+// review on; a name starling doesn't know is judged by the name.
 func TestClaudeReviewedJudgesTheSetModelWhereItGoes(t *testing.T) {
 	syncHome(t)
 	if err := provider.Save(provider.Provider{ID: "a", Name: "A", Anthropic: "http://127.0.0.1:1", Key: "k", Models: []string{"claude-sonnet-5"}}); err != nil {

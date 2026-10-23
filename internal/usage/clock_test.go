@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 // holdClock stops Clock at at for the test and gives at back, for the test

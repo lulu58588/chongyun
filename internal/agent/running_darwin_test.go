@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // /api/state asks StaleCopies for Claude and Codex on every call, and ps

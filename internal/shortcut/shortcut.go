@@ -1,10 +1,10 @@
-// Package shortcut puts magpie in the Start menu on Windows. There it is
+// Package shortcut puts starling in the Start menu on Windows. There it is
 // one exe with no installer, so nothing else would: the first start of the
-// desktop app makes a Magpie shortcut in the user's Start menu opening the
+// desktop app makes a Starling shortcut in the user's Start menu opening the
 // exe it runs as, and Windows search finds it by that. It is made once:
-// magpie remembers it did, and a shortcut the user deleted stays deleted
+// starling remembers it did, and a shortcut the user deleted stays deleted
 // (#508); one still there is pointed at the exe again when that was moved.
-// A portable magpie (a data folder beside it) makes none and registers
+// A portable starling (a data folder beside it) makes none and registers
 // nothing, leaving no trace on the machine. Elsewhere it does nothing —
 // the Mac has the app in Applications, Linux its own ways.
 package shortcut
@@ -17,35 +17,35 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 )
 
 // Name is what the shortcut is called, and what Windows search finds.
-const Name = "Chongyun"
+const Name = "Starling"
 
-// StateName is the file in magpie's folder recording that the shortcut was
+// StateName is the file in starling's folder recording that the shortcut was
 // made, and for which exe.
 const StateName = "start-menu-shortcut"
 
 // what Ensure asks of the system; the tests put fakes in
 var (
-	// startMenu is where the shortcut goes (…\Start Menu\Programs\Magpie.lnk)
+	// startMenu is where the shortcut goes (…\Start Menu\Programs\Starling.lnk)
 	startMenu = startMenuLink
 	// writeLink has the shortcut at lnk open exe, and reports whether it had to
 	writeLink = writeShortcut
-	// register has Win+R and `start chongyun` find exe
+	// register has Win+R and `start starling` find exe
 	register = registerAppPath
-	// registered reports whether a magpie registered itself there before
+	// registered reports whether a starling registered itself there before
 	registered = registeredAppPath
 )
 
 // Ensure makes the shortcut on the first start, keeps it pointed at this
-// magpie after that while it is there, and never makes it again once the
-// user deleted it. A portable magpie makes none. It fails quietly — magpie
-// runs the same without one — and is skipped with MAGPIE_NO_SHORTCUT=1
+// starling after that while it is there, and never makes it again once the
+// user deleted it. A portable starling makes none. It fails quietly — starling
+// runs the same without one — and is skipped with STARLING_NO_SHORTCUT=1
 // (tests, sandboxes).
 func Ensure() {
-	if os.Getenv("MAGPIE_NO_SHORTCUT") == "1" {
+	if os.Getenv("STARLING_NO_SHORTCUT") == "1" {
 		return
 	}
 	exe, err := os.Executable()
@@ -64,7 +64,7 @@ func Ensure() {
 var errNoStartMenu = errors.New("no Start menu here")
 
 // ensure is Ensure for exe, portable being the data folder of a portable
-// magpie ("" installed) and state the file remembering the shortcut was
+// starling ("" installed) and state the file remembering the shortcut was
 // made.
 func ensure(exe, portable, state string) error {
 	if portable != "" {
@@ -74,7 +74,7 @@ func ensure(exe, portable, state string) error {
 	if errors.Is(err, errNoStartMenu) {
 		return nil
 	}
-	// a magpie from before the state file registered itself at every start
+	// a starling from before the state file registered itself at every start
 	before := registered()
 	register(exe)
 	if err != nil {
@@ -87,7 +87,7 @@ func ensure(exe, portable, state string) error {
 			return nil
 		}
 		if before {
-			// an older magpie made it at its every start, and it is gone:
+			// an older starling made it at its every start, and it is gone:
 			// the user deleted it, so it isn't made again now either
 			return remember(state, exe)
 		}
@@ -107,10 +107,10 @@ func remember(state, exe string) error {
 }
 
 // aside is what an update moves the exe it replaces to, or stages the new
-// one as: magpie.exe.old, magpie.exe.old-2…, magpie.exe.new
+// one as: starling.exe.old, starling.exe.old-2…, starling.exe.new
 var aside = regexp.MustCompile(`(?i)(\.exe)\.(old(-\d+)?|new)$`)
 
-// Target is what the shortcut opens for exe: exe itself, but for a magpie
+// Target is what the shortcut opens for exe: exe itself, but for a starling
 // left running from where an update moved it aside, the exe in its place,
 // which is what the next start runs. An update replaces the exe where it
 // is, so the shortcut stays good through it.

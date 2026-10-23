@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/starling/internal/agentenv"
 )
 
 // noVendor answers no request and keeps what was asked: OpenCode tells

@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // liveModels writes the model list a provider's vendor would have answered,
@@ -26,7 +26,7 @@ func liveModels(t *testing.T, id, json string) {
 
 // A group set to Free first spends what costs nothing before what spends
 // the subscription: the member whose model its vendor serves at no cost
-// answers first, and the paid one only when that can't. magpie learns which
+// answers first, and the paid one only when that can't. starling learns which
 // is which from the vendor's own list (catalog.Model's Free), through
 // provider.FreeModel, filled into routes.Seat.Free only for a routing that
 // weighs by it (Strategy.ByFree).

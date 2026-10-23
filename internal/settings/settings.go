@@ -1,9 +1,9 @@
 // Package settings keeps the few preferences the desktop app has: which
 // palette to paint with, which language to speak, how the agents are
-// arranged. Everything else magpie knows is derived from the agents' own
+// arranged. Everything else starling knows is derived from the agents' own
 // files.
 //
-// The file is ~/.config/magpie/settings.json; a missing file means "follow
+// The file is ~/.config/starling/settings.json; a missing file means "follow
 // the system" for both.
 package settings
 
@@ -24,14 +24,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/fonts"
-	"github.com/lulu58588/chongyun/internal/lastgood"
-	"github.com/lulu58588/chongyun/internal/redact"
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/fonts"
+	"github.com/lulu58588/starling/internal/lastgood"
+	"github.com/lulu58588/starling/internal/redact"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
 // Settings is what the user chose. "" and "system" both mean "follow the OS".
@@ -53,21 +53,21 @@ type Settings struct {
 	// rate (see internal/fx). A vendor's own balance, already in its own
 	// currency (a Chinese relay's ¥), is never touched by this.
 	Currency string `json:"currency,omitempty"`
-	// ChineseUnits shortens a large count in 万 and 亿 when magpie speaks
+	// ChineseUnits shortens a large count in 万 and 亿 when starling speaks
 	// Chinese (8000 万 rather than 80M); otherwise it is in K, M and B, as
 	// prices per million tokens and context windows (200K, 1M) are, in
 	// Chinese too (#740). It means nothing in English. It replaces
 	// westernUnits, which asked for K/M/B: what that chose is now the
 	// default, so an old file's is left unread.
 	ChineseUnits bool `json:"chineseUnits,omitempty"`
-	// Dock keeps magpie in the Mac's Dock as well as the menu bar, for a
+	// Dock keeps starling in the Mac's Dock as well as the menu bar, for a
 	// menu bar too full to show its icon.
 	Dock bool `json:"dock,omitempty"`
 	// DockWindow shows it in the Dock only while its window is open, so
 	// Cmd-Tab reaches the window without an icon kept there the rest of
 	// the time. Dock wins over it.
 	DockWindow bool `json:"dockWindow,omitempty"`
-	// Proxy for magpie's own requests to vendors: "" follows the
+	// Proxy for starling's own requests to vendors: "" follows the
 	// environment and then the system, "direct" uses none, anything else
 	// is the proxy (http://, https:// or socks5://; host:port means http).
 	Proxy string `json:"proxy,omitempty"`
@@ -78,11 +78,11 @@ type Settings struct {
 	// backup or sync without keys leaves it out, as it does LANKey.
 	GitHubToken string `json:"githubToken,omitempty"`
 	// Redact keeps secrets in what agents send (API keys, private keys,
-	// tokens, passwords) from the vendors behind magpie: they go as
+	// tokens, passwords) from the vendors behind starling: they go as
 	// placeholders, and come back as they were. RedactPersonal does the same
 	// for emails, phone numbers and ID and bank card numbers, and
 	// RedactWords for the user's own words. RedactRules are the user's own
-	// rules for secrets magpie's don't know (a gateway's oc_sk_… key), a
+	// rules for secrets starling's don't know (a gateway's oc_sk_… key), a
 	// prefix or a pattern each, masked with the secrets while Redact is on.
 	// RedactKinds turns the other kinds of personal data on or off one by
 	// one, by redact.Categories' ids (ssn, ip, home…), under
@@ -105,7 +105,7 @@ type Settings struct {
 	RedactActions map[string]string `json:"redactActions,omitempty"`
 	RedactAllow   []string          `json:"redactAllow,omitempty"`
 	// LAN shares the gateway on the local network; remote callers must use
-	// named caller keys. LANKey is retained for older Magpie versions.
+	// named caller keys. LANKey is retained for older Starling versions.
 	// LAN is this computer's own (KeepOwn; Lullaby 报告: sharing
 	// turned on at home came on at work too). LANKey and LANKeyID name the
 	// default key, which rides the synced gateway-key store, so they follow
@@ -124,12 +124,12 @@ type Settings struct {
 	// AllowIPs are the addresses (IPs and CIDR ranges) other computers may
 	// reach the gateway from at all (lc 报告); any other is refused
 	// 403 even with a gateway key. None: every address, as before. This
-	// computer is always let in. MAGPIE_ALLOW_IPS, where set, is used in
+	// computer is always let in. STARLING_ALLOW_IPS, where set, is used in
 	// its place (gateway.AllowIPs). This computer's own (KeepOwn), as LAN
 	// is: the addresses are of the network this computer is on.
 	AllowIPs []string `json:"allowIPs,omitempty"`
 	// FetchPrivate are the private hosts and ranges (a name, name:port, an
-	// IP or a CIDR range) magpie may download a URL from that it didn't
+	// IP or a CIDR range) starling may download a URL from that it didn't
 	// choose itself: an image or video a request names or a vendor answers
 	// with, or a page web_fetch reads. None by default: such a URL is
 	// downloaded from public addresses only, whoever sent the request and
@@ -137,7 +137,7 @@ type Settings struct {
 	// this computer's own network, so it isn't synced (KeepOwn).
 	FetchPrivate []string `json:"fetchPrivate,omitempty"`
 	// Port is the gateway's port on this computer, 0 for DefaultPort.
-	// MAGPIE_ADDR, where it is set, comes first (GatewayAddr).
+	// STARLING_ADDR, where it is set, comes first (GatewayAddr).
 	Port int `json:"port,omitempty"`
 	// LANKeyID remembers the default named key created when sharing is enabled.
 	LANKeyID string `json:"lanKeyId,omitempty"`
@@ -165,9 +165,9 @@ type Settings struct {
 	// so the windows line up with the day (06:00 gives three by 21:00, where
 	// the first use at 9 gives two by the end of it); "" off. It works
 	// with CodexWarmup or without it. ClaudeWarmAt is the Claude accounts'.
-	// Each is CodexWarmAts' (ClaudeWarmAts') first, all a magpie before
+	// Each is CodexWarmAts' (ClaudeWarmAts') first, all a starling before
 	// them read: a file with it and no list has that one time, and it is
-	// kept written for an older magpie to go on starting the day's first.
+	// kept written for an older starling to go on starting the day's first.
 	CodexWarmAt  string `json:"codexWarmAt,omitempty"`
 	ClaudeWarmAt string `json:"claudeWarmAt,omitempty"`
 	// CodexWarmAts are the times of day CodexWarmAt's start is made at,
@@ -234,7 +234,7 @@ type Settings struct {
 	// carries over).
 	CheckinOff []string `json:"checkinOff,omitempty"`
 	// MemberModel has a reply's model name the routing group's member
-	// that answered, as magpie's provider/model id (workbuddy/glm-5.3-flash),
+	// that answered, as starling's provider/model id (workbuddy/glm-5.3-flash),
 	// rather than the vendor's own name for it, for agents that count
 	// usage by the reply's model (#822). Claude Code, Claude Desktop and
 	// Codex always get the vendor's name: they read it themselves.
@@ -253,7 +253,7 @@ type Settings struct {
 	// ClaudeRunsMost is how many Claude Code processes a Claude
 	// subscription may have running at once: conversations' runs, those
 	// waiting for a next turn or on tool results, and one-off tests and
-	// allowance reads alike. 0, as by default, has magpie size it from
+	// allowance reads alike. 0, as by default, has starling size it from
 	// this machine's memory on Linux (its cgroup's limit, else MemTotal),
 	// and leaves it unbounded elsewhere: each Claude Code holds about
 	// 100 MiB of its own, and a 512 MiB service was OOM-killed (#2956).
@@ -266,14 +266,14 @@ type Settings struct {
 	// the vendor's own reply, stop_reason "refusal", which Claude Code
 	// answers by switching to its fallback model itself (DD 报告).
 	RefusalRetries *int `json:"refusalRetries,omitempty"`
-	// NoUpdatePill keeps the header's Update pill away when a newer magpie
+	// NoUpdatePill keeps the header's Update pill away when a newer starling
 	// is out; UpdateSkip is the one version it was hidden for, and a newer
-	// one brings it back. Either way magpie still downloads the version and
+	// one brings it back. Either way starling still downloads the version and
 	// puts it in as it quits, and Settings' version row still offers it.
 	NoUpdatePill bool   `json:"noUpdatePill,omitempty"`
 	UpdateSkip   string `json:"updateSkip,omitempty"`
-	// NoAutoUpdate stops magpie asking for a newer version by itself, and
-	// so downloading one (#472): only Settings' Check, or magpie update,
+	// NoAutoUpdate stops starling asking for a newer version by itself, and
+	// so downloading one (#472): only Settings' Check, or starling update,
 	// asks then. UpdateEvery is how often it asks otherwise, in minutes:
 	// one of UpdateEveries, 0 for every six hours.
 	NoAutoUpdate bool `json:"noAutoUpdate,omitempty"`
@@ -282,7 +282,7 @@ type Settings struct {
 	// say a newer version is out (with its notes and size) rather than
 	// download it (#2296): a metered network or a proxy billed by traffic
 	// downloads it only on a click (Download update, the header's Update,
-	// magpie update). Off, as by default, a newer version is downloaded
+	// starling update). Off, as by default, a newer version is downloaded
 	// as soon as it is found.
 	NoAutoDownload bool `json:"noAutoDownload,omitempty"`
 	// AutoRestart has the app restart into an update it downloaded by
@@ -294,22 +294,22 @@ type Settings struct {
 	// UpdateMirror is a GitHub download mirror an update's file is fetched
 	// through, its prefix put before the release's github.com URL
 	// (https://mirror.example/https://github.com/…): "" for none, which is
-	// the default — magpie names no mirror of its own. The file is still
+	// the default — starling names no mirror of its own. The file is still
 	// checked against the SHA-256 the update feed gives,
-	// never one from the mirror. magpie update mirror sets it.
+	// never one from the mirror. starling update mirror sets it.
 	UpdateMirror string `json:"updateMirror,omitempty"`
 	// Vision is the model that describes an image to a model that can't see
 	// it: a model's id (provider/model, group/<id>), "off" to turn such an
-	// image away, or empty for one magpie picks (see gateway.seer).
+	// image away, or empty for one starling picks (see gateway.seer).
 	Vision string `json:"vision,omitempty"`
 	// VisionEffort is how hard the Image recognition model thinks as it
 	// reads an image (MOMO 报告): a level of catalog.EffortRank,
 	// fitted to the model's own levels when it is asked, or empty for
-	// magpie's choice, the least the model has (gateway.visionEffort).
+	// starling's choice, the least the model has (gateway.visionEffort).
 	VisionEffort string `json:"visionEffort,omitempty"`
-	// ImageGen is the model magpie's generate_image tool draws with (the
+	// ImageGen is the model starling's generate_image tool draws with (the
 	// gateway's /v1/images/generations when a request names no model): a
-	// model's id, "off", or empty for one magpie picks (gateway.drawer).
+	// model's id, "off", or empty for one starling picks (gateway.drawer).
 	// "off" turns the video a request that names no model gets off too
 	// (gateway.videomaker).
 	ImageGen string `json:"imageGen,omitempty"`
@@ -319,10 +319,10 @@ type Settings struct {
 	// ImageWait reads it.
 	ImageTimeout int `json:"imageTimeout,omitempty"`
 	// Searcher is the provider that searches the web for a model that
-	// can't: "<provider>" with the small model magpie picks of it,
-	// "<provider>/<model>", or empty for the one magpie picks
+	// can't: "<provider>" with the small model starling picks of it,
+	// "<provider>/<model>", or empty for the one starling picks
 	// (gateway.searcher). "off" allows only configured search APIs.
-	// One that is gone, off or can't search gives way to magpie's pick.
+	// One that is gone, off or can't search gives way to starling's pick.
 	Searcher string `json:"searcher,omitempty"`
 	// SearcherEffort is how hard the searcher's model thinks as it searches
 	// (MOMO 报告): a level of catalog.EffortRank, fitted to the
@@ -338,9 +338,9 @@ type Settings struct {
 	// beside the tray icon, in the order shown, each by its provider and
 	// account ("claude|a@b.c"); none when empty.
 	TrayUsages []string `json:"trayUsages,omitempty"`
-	// TrayUsage is TrayUsages' first, all a magpie before them read: a file
+	// TrayUsage is TrayUsages' first, all a starling before them read: a file
 	// with it and no TrayUsages shows that one, and it is kept written for
-	// an older magpie to go on showing it.
+	// an older starling to go on showing it.
 	TrayUsage string `json:"trayUsage,omitempty"`
 	// TrayUsageEvery is how often, in minutes, that text is brought up to
 	// date; 0 is every 3 (one of TrayEvery).
@@ -349,7 +349,7 @@ type Settings struct {
 	// is its windows stacked alone, a thin line between one card and the
 	// next.
 	TrayNoLogos bool `json:"trayNoLogos,omitempty"`
-	// TrayNoBird leaves magpie's bird out of the Mac menu bar while the
+	// TrayNoBird leaves starling's bird out of the Mac menu bar while the
 	// cards are there, the cards alone (KevinXC 报告); a click on one
 	// still opens the panel, and with no cards the bird is shown.
 	TrayNoBird bool `json:"trayNoBird,omitempty"`
@@ -357,7 +357,7 @@ type Settings struct {
 	// menu bar ("42% +12%"), as the Usage page's cards have it (fflake33
 	// 报告); off by default, as it widens every card.
 	TrayPace bool `json:"trayPace,omitempty"`
-	// TrayNoCost leaves money out of magpie's own totals in the menu bar:
+	// TrayNoCost leaves money out of starling's own totals in the menu bar:
 	// the today and last-7-days cards, their tooltips and the tooltip with
 	// no cards say the tokens alone (BussanQ 报告); off by default,
 	// the cost shown.
@@ -373,7 +373,7 @@ type Settings struct {
 	// agents work through the gateway and for a while after (xiao_wang24004
 	// 报告; internal/awake). This computer's own (KeepOwn).
 	KeepAwake bool `json:"keepAwake,omitempty"`
-	// NoWSLAgents stops magpie looking in WSL on its own, on Windows
+	// NoWSLAgents stops starling looking in WSL on its own, on Windows
 	// (#1264): no distro is listed or probed for agents, their sessions or
 	// Claude Code, and the agents found there before aren't shown.
 	NoWSLAgents bool `json:"noWSLAgents,omitempty"`
@@ -381,44 +381,44 @@ type Settings struct {
 	// computer awake (#975, Hu9956: an agent recording the screen to check
 	// its work found it locked). This computer's own (KeepOwn).
 	KeepAwakeDisplay bool `json:"keepAwakeDisplay,omitempty"`
-	// GatewayMode is whether `chongyun web` shows only what a gateway serving
+	// GatewayMode is whether `starling web` shows only what a gateway serving
 	// other machines needs (Player 报告): "on", "off", or "" to
-	// decide by itself — on for `chongyun web --gateway`, or with no agents
+	// decide by itself — on for `starling web --gateway`, or with no agents
 	// on this machine. This computer's own (KeepOwn).
 	GatewayMode string `json:"gatewayMode,omitempty"`
 	// QuotaLeft shows a subscription's windows by how much of each is left,
 	// not used: the Usage page, the tray panel and the menu bar alike.
 	QuotaLeft bool `json:"quotaLeft,omitempty"`
-	// QuotaReads is when magpie reads subscriptions' allowances and keys'
+	// QuotaReads is when starling reads subscriptions' allowances and keys'
 	// balances from their vendors (#1518, RooobinYe): "" whenever it needs
 	// them (the Usage page and tray, routing, alerts, the switch to an
 	// account with room), "asked" only when the user asks — the Usage page
-	// opened or refreshed, a card's refresh, `chongyun quota`/`accounts`.
+	// opened or refreshed, a card's refresh, `starling quota`/`accounts`.
 	// Otherwise the readings kept from the last time stand, marked as of
 	// then; an account the vendor turned away for its quota is still read.
-	// This computer's own (KeepOwn): magpie at login comes up before the
+	// This computer's own (KeepOwn): starling at login comes up before the
 	// proxy app, and its reads went out direct.
 	QuotaReads string `json:"quotaReads,omitempty"`
 	// UsageAlert is how much of a subscription's or plan's window, in
-	// percent, is used when magpie says so with a notification (#368):
+	// percent, is used when starling says so with a notification (#368):
 	// once for each time the window runs, for every window routing counts
 	// (not one set aside, as on-demand spending is); 0 is off.
 	UsageAlert int `json:"usageAlert,omitempty"`
 	// BalanceAlert is the balance a key or account has fallen to when
-	// magpie says so, in that balance's own currency or credits, once until
+	// starling says so, in that balance's own currency or credits, once until
 	// it is topped up past it again; 0 is off.
 	BalanceAlert float64 `json:"balanceAlert,omitempty"`
-	// ResetReminder is how many hours before a renewal magpie says what
+	// ResetReminder is how many hours before a renewal starling says what
 	// would be lost by it (#720): a weekly or monthly window with much of
 	// it left before it renews, a reset credit unspent before it runs out;
 	// once each. 0 is off.
 	ResetReminder int `json:"resetReminder,omitempty"`
 	// TurnDoneAlert is how many seconds an agent's turn runs, from the
-	// user's prompt to its last reply, before magpie says it is done with a
+	// user's prompt to its last reply, before starling says it is done with a
 	// notification (itieniu 报告): a long task set going while the user
 	// works elsewhere. Only turns the app's own gateway serves; 0 is off.
 	TurnDoneAlert int `json:"turnDoneAlert,omitempty"`
-	// PlainNames has the model lists magpie gives agents name each model
+	// PlainNames has the model lists starling gives agents name each model
 	// by its name alone, without its provider's or "routing group" after it
 	// (#335) — but for two in one list that would read the same, which keep
 	// it (see provider.Labels).
@@ -433,21 +433,21 @@ type Settings struct {
 	// "codex/gpt-5.6-sol"), for clients moved from another proxy that ask
 	// for bare ids (love1sbug 报告; provider.BareEntries). Off by default.
 	BareModelIDs bool `json:"bareModelIDs,omitempty"`
-	// CodexAgentsV1 has the OpenAI models magpie hands Codex — the ChatGPT
+	// CodexAgentsV1 has the OpenAI models starling hands Codex — the ChatGPT
 	// account's own, their codex/ ids and the groups one is in — say
 	// multi_agent_version "v1" (#141): their subagents are then handed
-	// their tasks as text, which a magpie-served subagent can read, where
+	// their tasks as text, which a starling-served subagent can read, where
 	// V2's are sealed by OpenAI's server, and it is V1 that a ChatGPT
-	// lead's subagent on a magpie-served model needs (a V2 task to a
+	// lead's subagent on a starling-served model needs (a V2 task to a
 	// non-ChatGPT model fails). Codex's own features.multi_agent_v2 would
-	// still win: where it is on in the config magpie routes, magpie says so
+	// still win: where it is on in the config starling routes, starling says so
 	// (internal/agent/codex.go, and the Settings row) and leaves it to the
 	// user to turn off. A thread keeps the version it started with.
 	CodexAgentsV1 bool `json:"codexAgentsV1,omitempty"`
 	// CodexTitles is where the requests Codex makes for a thread's title
 	// (thread_title, thread_title_reconsideration: a hidden turn of their
 	// own, on Codex's own model through its ChatGPT sign-in) go (#705): ""
-	// as Codex sends them, "off" answered by magpie with no title and sent
+	// as Codex sends them, "off" answered by starling with no title and sent
 	// nowhere, or a model's id (provider/model, group/<id>) that writes it.
 	CodexTitles string `json:"codexTitles,omitempty"`
 	// CodexDescriptions is where the request Codex makes for a thread's
@@ -460,13 +460,13 @@ type Settings struct {
 	// the user's next message for its composer (composer_predictions: a
 	// hidden turn on a fork of the whole conversation, on the thread's own
 	// model through its ChatGPT sign-in) goes (#1970, pluo): "" as Codex
-	// sends it, "off" answered by magpie with no prediction and sent
+	// sends it, "off" answered by starling with no prediction and sent
 	// nowhere, or a model's id (provider/model, group/<id>) that writes it.
 	CodexPredictions string `json:"codexPredictions,omitempty"`
 	// CodexAutoReview is the model Codex's auto-review (approvals_reviewer
 	// = "auto_review": the guardian that decides an approval in the user's
 	// place) runs on (#938): a model's id (provider/model, group/<id>) put
-	// in every entry of the list magpie hands Codex as
+	// in every entry of the list starling hands Codex as
 	// auto_review_model_override, which Codex takes before its own
 	// codex-auto-review or the conversation's model at low effort. ""
 	// leaves the list as it was.
@@ -474,7 +474,7 @@ type Settings struct {
 	// CodexSubagentModel is the model the gateway puts every subagent
 	// Codex spawns on (a request x-openai-subagent names collab_spawn),
 	// whatever model its lead asked for in spawn_agent: a model a ChatGPT
-	// account in magpie serves (provider/model), since a subagent's task
+	// account in starling serves (provider/model), since a subagent's task
 	// is sealed for one (willz 报告). "" leaves each on the model its
 	// lead asked for.
 	CodexSubagentModel string `json:"codexSubagentModel,omitempty"`
@@ -513,7 +513,7 @@ type Settings struct {
 	// CodexAsyncCompactPercent of the model's window (#2490, lantern2077
 	// 报告): [features.async_compaction] enabled in the config Codex
 	// is routed through, and capabilities.remote_compaction = "v2" on
-	// magpie's provider table, without which Codex never starts one on a
+	// starling's provider table, without which Codex never starts one on a
 	// provider other than OpenAI's. A value the user set there is theirs
 	// and stays (internal/agent/codex_async.go).
 	CodexAsyncCompact bool `json:"codexAsyncCompact,omitempty"`
@@ -534,14 +534,14 @@ type Settings struct {
 	CodeFont *fonts.Face `json:"codeFont,omitempty"`
 	// How the agents are listed, by agent id. AgentOrder comes first, as
 	// ordered; an agent it doesn't name (one installed since) follows in
-	// magpie's own order. A hidden agent is folded away at the bottom of the
+	// starling's own order. A hidden agent is folded away at the bottom of the
 	// list; a shown one stays in view even while nothing is set on it, which
 	// otherwise folds it away too. The agents' own files never hear of it.
 	AgentOrder   []string `json:"agentOrder,omitempty"`
 	AgentsHidden []string `json:"agentsHidden,omitempty"`
 	AgentsShown  []string `json:"agentsShown,omitempty"`
 	// UsageOrder is how the Usage page's cards are listed, by provider id,
-	// as they were dragged there; one it doesn't name follows in magpie's
+	// as they were dragged there; one it doesn't name follows in starling's
 	// own order. Only the page's: the order providers are tried in is the
 	// Providers page's.
 	UsageOrder []string `json:"usageOrder,omitempty"`
@@ -555,7 +555,7 @@ type Settings struct {
 	// Agents list leaves out (ikunbots 报告). It is that list's only: the
 	// ledger keeps their calls, and the totals and the chart count them.
 	UsageAgentsHidden []string `json:"usageAgentsHidden,omitempty"`
-	// ClientAgents counts a client magpie doesn't know as one of the agents
+	// ClientAgents counts a client starling doesn't know as one of the agents
 	// it does, on the Usage and Sessions pages (#1958, NorethSea): a bridge
 	// that starts Codex's app-server under a name of its own
 	// ("hermes-codex-thread-bridge") is counted as Codex. Keyed by the
@@ -572,7 +572,7 @@ type Settings struct {
 	// or a group's) taken out of an agent's lists one by one, by agent id,
 	// after Visible: a model not named here, a new one among them, is shown.
 	HiddenModels map[string][]string `json:"hiddenModels,omitempty"`
-	// DisabledModels are models turned off for every request through magpie
+	// DisabledModels are models turned off for every request through starling
 	// (#1867), each an exact id or a glob ("*fable*"), matched ignoring case
 	// against "<provider>/<model>" and the bare model id: they are left out
 	// of every list, and the gateway refuses them on every route.
@@ -584,8 +584,8 @@ type Settings struct {
 	// read for such an agent. An agent named with no entries is shown none.
 	PickedModels map[string][]string `json:"pickedModels,omitempty"`
 	// OwnModelsHidden are the agents, by id, whose pickers leave out the
-	// models the agent reaches on its own, not through magpie (DeepSeek
-	// Harness's own DeepSeek models, #1642): only magpie's are offered, and
+	// models the agent reaches on its own, not through starling (DeepSeek
+	// Harness's own DeepSeek models, #1642): only starling's are offered, and
 	// one the agent is set to stays.
 	OwnModelsHidden []string `json:"ownModelsHidden,omitempty"`
 	// AgentEfforts are the reasoning efforts the gateway asks for on an
@@ -619,15 +619,15 @@ type Settings struct {
 	// whose keys are not a model's is not one of these, and is not named
 	// Model* — Visible, which is by agent id, among them.
 	// ModelNames are the names the user gave models, by "<provider
-	// id>/<model id>": agents, the gateway's model list and magpie itself
+	// id>/<model id>": agents, the gateway's model list and starling itself
 	// show them for the vendor's (see provider.SetModelName).
 	ModelNames map[string]string `json:"modelNames,omitempty"`
 	// ModelEfforts are the reasoning levels the user keeps of a model's,
-	// by "<provider id>/<model id>": the lists magpie hands out offer only
+	// by "<provider id>/<model id>": the lists starling hands out offer only
 	// those (see provider.SetModelEfforts).
 	ModelEfforts map[string][]string `json:"modelEfforts,omitempty"`
 	// ModelReasonless are the models the user said take no reasoning ask,
-	// by "<provider id>/<model id>": magpie offers them no levels and
+	// by "<provider id>/<model id>": starling offers them no levels and
 	// sends them no reasoning field, on any API, though their list says
 	// they think (see provider.SetModelReasonless; yuexian7 报告: a
 	// model models.dev lists with reasoning answered reasoning_effort
@@ -658,14 +658,14 @@ type Settings struct {
 	// own is longer, over CompactAt and FullContext. One at or above the
 	// model's window is its whole window.
 	ModelCompacts map[string]int `json:"modelCompacts,omitempty"`
-	// ModelWires is the name to send a vendor for a model magpie knows by
+	// ModelWires is the name to send a vendor for a model starling knows by
 	// another, by "<provider id>/<model id>", and "*" for every model of that
 	// provider. A "*" in the name is the model itself, so one name covers a
 	// relay that namespaces its models — vendor-c/* asks for model-3 as
 	// vendor-c/model-3 — while a name with no "*" in it sends every model of
 	// that key under that one name. Everything else — the catalog agents see,
 	// the routing groups, the usage records and what a call is priced at —
-	// keeps the name magpie knows the model by.
+	// keeps the name starling knows the model by.
 	ModelWires map[string]string `json:"modelWires,omitempty"`
 	// ModelAPIs is the one API a model is asked on at its provider, by
 	// "<provider id>/<model id>": chat, responses or anthropic, for a relay
@@ -675,8 +675,8 @@ type Settings struct {
 	ModelAPIs map[string]string `json:"modelAPIs,omitempty"`
 	// ModelSameAs is the model another vendor sells under another name
 	// that a model is, by "<provider id>/<model id>": the routing groups
-	// magpie finds (provider's autoGroups) merge it with that one rather
-	// than by its own id, for an id no rule of magpie's matches up
+	// starling finds (provider's autoGroups) merge it with that one rather
+	// than by its own id, for an id no rule of starling's matches up
 	// (kyzhouxu, #583), and a call to it that no list prices is costed at
 	// that model's maker's price (provider.SamePriceIn, #2344). Absent
 	// leaves it to its id.
@@ -711,7 +711,7 @@ type ModelPrice struct {
 	// else at the 5-minute price (catalog.OneHourFor).
 	CacheWrite1h *float64 `json:"cache_write_1h,omitempty"`
 	// Tiers are the prices of a request whose input is over a size, each
-	// whole: "chongyun model price … --tier 272k …" (PAMI 报告).
+	// whole: "starling model price … --tier 272k …" (PAMI 报告).
 	Tiers []catalog.Tier `json:"tiers,omitempty"`
 }
 
@@ -763,7 +763,7 @@ func StatedPrice(p catalog.Price) ModelPrice {
 	return m
 }
 
-// CheckModelPrice is whether a price the user gives is one magpie will bill a
+// CheckModelPrice is whether a price the user gives is one starling will bill a
 // call at: the key names a model the way the per-model maps key one, and
 // every part of the price is a number a vendor could charge, naming the first
 // that is not. It is where a price is checked rather than in Save: one a hand
@@ -879,9 +879,9 @@ const (
 )
 
 // DefaultTextSize is the text size of settings that have never had one
-// saved. Windows' and Linux's body text is 14px against magpie's 13px at
+// saved. Windows' and Linux's body text is 14px against starling's 13px at
 // 100%, a size smaller than what is around it there, so they start at
-// 110% (#914); the Mac's is 13px, as magpie's. A size once saved, 100%
+// 110% (#914); the Mac's is 13px, as starling's. A size once saved, 100%
 // too, is kept as it is. A var so tests can be any system.
 var DefaultTextSize = func() int {
 	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
@@ -1000,7 +1000,7 @@ func (s Settings) Compact() int {
 // are read, when allowances are read, the terminal app a session resumes
 // in, whether the local masking model is on (it is downloaded on this
 // computer alone), how many Claude Code processes may run (its memory),
-// and what the menu bar or tray shows beside magpie's icon (yoooo on
+// and what the menu bar or tray shows beside starling's icon (yoooo on
 // Discord: usage turned off on a Mac came back from a Windows box that
 // shows it; Lullaby: sharing turned on at home came on at work).
 func (s *Settings) KeepOwn(cur Settings) {
@@ -1060,11 +1060,11 @@ func renameInMap(m reflect.Value, from, to string) bool {
 // Path is the settings file.
 func Path() string { return filepath.Join(Dir(), "settings.json") }
 
-// Dir is the folder every magpie file lives in: the data folder beside a
-// portable magpie (appdir.Portable), else ~/.config/magpie.
+// Dir is the folder every starling file lives in: the data folder beside a
+// portable starling (appdir.Portable), else ~/.config/starling.
 func Dir() string { return appdir.Config() }
 
-// Portable is the data folder of a portable magpie, or "" when installed.
+// Portable is the data folder of a portable starling, or "" when installed.
 func Portable() string { return appdir.Portable() }
 
 // Serialize reads with saves too: the editor preserves hard links by
@@ -1214,7 +1214,7 @@ func validSettings(b []byte) bool {
 	return json.Unmarshal(bytes.TrimPrefix(b, []byte("\xef\xbb\xbf")), &s) == nil
 }
 
-// CheckProxy says whether p is a proxy setting magpie takes: "" (follow),
+// CheckProxy says whether p is a proxy setting starling takes: "" (follow),
 // "direct", or an http://, https:// or socks5:// address (host:port
 // meaning http). The global Proxy and a provider's own are both checked
 // with it.
@@ -1234,7 +1234,7 @@ func CheckProxy(p string) error {
 	return nil
 }
 
-// DefaultPort is the gateway's port unless Settings or MAGPIE_ADDR say
+// DefaultPort is the gateway's port unless Settings or STARLING_ADDR say
 // another.
 const DefaultPort = 3425
 
@@ -1248,18 +1248,18 @@ func CheckPort(p int) error {
 	return nil
 }
 
-// GatewayAddr is where the gateway listens: MAGPIE_ADDR when it is set,
+// GatewayAddr is where the gateway listens: STARLING_ADDR when it is set,
 // else the port Settings has, on loopback (Magic_zero 报告: 3425 was
 // taken, and a port of one's own is easier to tell apart).
 func GatewayAddr() string {
-	if a := os.Getenv("MAGPIE_ADDR"); a != "" {
+	if a := os.Getenv("STARLING_ADDR"); a != "" {
 		return a
 	}
 	return SavedAddr()
 }
 
-// SavedAddr is GatewayAddr with MAGPIE_ADDR left aside: the address of the
-// magpie whose settings these are, which one the variable moves (magpie-dev,
+// SavedAddr is GatewayAddr with STARLING_ADDR left aside: the address of the
+// starling whose settings these are, which one the variable moves (starling-dev,
 // a sandbox) runs beside.
 func SavedAddr() string {
 	p := Load().Port
@@ -1358,7 +1358,7 @@ func save(s Settings, recording bool) error {
 		return fmt.Errorf("the menu bar's usage is refreshed every %v minutes, not %d", TrayEvery, s.TrayUsageEvery)
 	}
 	if !slices.Contains(UpdateEveries, s.UpdateEvery) {
-		return fmt.Errorf("chongyun checks for updates every %v minutes, not %d", UpdateEveries, s.UpdateEvery)
+		return fmt.Errorf("starling checks for updates every %v minutes, not %d", UpdateEveries, s.UpdateEvery)
 	}
 	if m := s.UpdateMirror; m != "" {
 		if u, err := url.Parse(m); err != nil || (u.Scheme != "https" && u.Scheme != "http") || u.Host == "" {
@@ -1381,7 +1381,7 @@ func save(s Settings, recording bool) error {
 		return fmt.Errorf("a balance alert is at an amount of 0 or more (0 for off), not %v", s.BalanceAlert)
 	}
 	if s.QuotaReads != "" && s.QuotaReads != "asked" {
-		return fmt.Errorf(`allowances are read "" (whenever chongyun needs them) or "asked" (only when asked), not %q`, s.QuotaReads)
+		return fmt.Errorf(`allowances are read "" (whenever starling needs them) or "asked" (only when asked), not %q`, s.QuotaReads)
 	}
 	if err := CheckPort(s.Port); err != nil {
 		return err
@@ -1574,15 +1574,15 @@ func (s Settings) normal() Settings {
 	if s.TextSize == 0 {
 		s.TextSize = DefaultTextSize()
 	}
-	// one card, as a magpie before TrayUsages kept it; an empty list
+	// one card, as a starling before TrayUsages kept it; an empty list
 	// sent on purpose (all of them turned off) stays empty
 	if s.TrayUsages == nil && s.TrayUsage != "" {
 		s.TrayUsages = []string{s.TrayUsage}
 	}
-	// the times of day: the one a magpie before the lists kept, when the
+	// the times of day: the one a starling before the lists kept, when the
 	// list isn't there (an empty one sent on purpose stays empty), each as
 	// 06:00 whichever way it came (6:00, 06:00:00), earliest first, once;
-	// and the first kept as the one for that older magpie
+	// and the first kept as the one for that older starling
 	for _, w := range []struct {
 		at  *string
 		ats *[]string

@@ -11,7 +11,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // toolsEffortChat is JJ-Lin's mock of a Chat-only relay (#2670): function

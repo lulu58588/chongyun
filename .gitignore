@@ -1,9 +1,9 @@
-/chongyun
-/chongyun.exe
-/chongyun.app/
+/starling
+/starling.exe
+/starling.app/
 /dist/
-/chongyun-dev
+/starling-dev
 /rsrc_windows_*.syso
-/chongyun-dev-backend
-/chongyun-dev.new
+/starling-dev-backend
+/starling-dev.new
 .DS_Store

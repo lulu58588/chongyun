@@ -15,9 +15,9 @@ import (
 // (resolveUserHomeDir: HOME, then USERPROFILE) and the skills and MCP
 // servers it reads. On a Mac or Linux that is Go's home too. On Windows
 // Go's is USERPROFILE and HOME is mostly unset, but one the user set (for
-// Git Bash, MSYS2 or Emacs) is where ZCode keeps everything, and magpie
+// Git Bash, MSYS2 or Emacs) is where ZCode keeps everything, and starling
 // wrote its provider under USERPROFILE, where ZCode never looked
-// (Gearclickist 报告: connected, no error, and no magpie in ZCode).
+// (Gearclickist 报告: connected, no error, and no starling in ZCode).
 func ZCodeHome(home string) string { return ZCodeHomeOn(runtime.GOOS, home) }
 
 // ZCodeHomeOn is ZCodeHome on goos, so a test can ask for Windows'. A

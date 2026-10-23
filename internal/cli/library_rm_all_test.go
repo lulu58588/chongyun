@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/library"
+	"github.com/lulu58588/starling/internal/library"
 )
 
-// magpie library skill rm --all (#449): with nobody at a terminal to ask,
+// starling library skill rm --all (#449): with nobody at a terminal to ask,
 // it takes nothing unless --yes says so; with --yes, every skill goes, a
 // folder of the user's only unlinked.
 func TestLibrarySkillRmAll(t *testing.T) {

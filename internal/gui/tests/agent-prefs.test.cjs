@@ -24,7 +24,7 @@ function settingsPayload(over) {
     dock: false, dockWindow: false, proxy: "", redact: false, redactPersonal: false, redactWords: [],
     codexWarmup: "", claudeWarmup: "", codexWarmAt: "", claudeWarmAt: "", workbuddyCheckin: false, noStats: false,
     trayUsage: "", trayUsageEvery: 3, vision: "", imageGen: "",
-    version: "0.1.400", dir: "~/.config/magpie", gateway: "http://127.0.0.1:3425",
+    version: "0.1.400", dir: "~/.config/starling", gateway: "http://127.0.0.1:3425",
     proxyNow: "none", proxySource: "none", login: false,
     visionModels: [], imageGenModels: [], workbuddyCheckins: [], lanURLs: [], titleModels: [],
     fx: { rate: 7.2, at: new Date().toISOString(), stale: false },
@@ -89,7 +89,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       test(`${engine} ${lang} ${width}: an agent's own settings are in its opened row, and Settings' search finds them there`, async (t) => {
         const { page, errors } = await newPage(engine, t, width, lang);
         const w = want[lang];
-        await page.goto("http://magpie.test/?view=agents");
+        await page.goto("http://starling.test/?view=agents");
         await openAgentSettings(page, "codex");
         const codexBox = '.row.agent[data-id="codex"] .ag-prefs';
         assert.deepEqual(await shownIn(page, codexBox), CODEX, `${lang} ${width}: Codex's eight`);
@@ -99,7 +99,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         assert.deepEqual(await shownIn(page, '.row.agent[data-id="claude"] .ag-prefs'), ["fullContextRow"], `${lang} ${width}: Claude Code's one`);
 
         // none in Settings; its search says where they are
-        await page.goto("http://magpie.test/?view=settings");
+        await page.goto("http://starling.test/?view=settings");
         await page.locator("#setQ").waitFor();
         for (const id of CODEX) assert.equal(await page.locator(`#view-settings #${id}`).count(), 0, `${lang}: ${id} not in Settings`);
         assert.equal(await page.locator(".agent-pref-link").first().isVisible(), false, "no link rows till searching");
@@ -123,7 +123,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     test(`${engine} ${lang}: in the panel a Settings line and the agent's menu open its sheet`, async (t) => {
       const { page, errors } = await newPage(engine, t, 360, lang);
       const w = want[lang];
-      await page.goto("http://magpie.test/?mode=panel&view=agents");
+      await page.goto("http://starling.test/?mode=panel&view=agents");
       // the panel shows a row's controls once it's opened
       await page.locator('.row.agent[data-id="codex"] .ag-sum').click();
       const line = page.locator('.row.agent[data-id="codex"] .agent-prefs-open');
@@ -152,11 +152,11 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
   test(`${engine}: gateway mode shows none of an agent's settings`, async (t) => {
     const { page, errors } = await newPage(engine, t, 1100, "en", { gateway: true });
     // it has no Agents page: asked for, the Providers page shows
-    await page.goto("http://magpie.test/?view=agents");
+    await page.goto("http://starling.test/?view=agents");
     await page.locator("#view-providers").waitFor();
     assert.equal(await page.locator("#view-agents").isVisible(), false, "no Agents page");
     assert.equal(await page.locator(".ag-prefs, .agent-prefs-open").count(), 0, "no rows, no line");
-    await page.goto("http://magpie.test/?view=settings");
+    await page.goto("http://starling.test/?view=settings");
     await page.locator("#setQ").fill("Codex");
     assert.equal(await page.locator(".agent-pref-link").count(), 0, "no link rows");
     assert.deepEqual(errors, []);

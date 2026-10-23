@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A gateway key held to some accounts (#905) is served by those alone:
@@ -265,7 +265,7 @@ func TestGatewayKeyAccountsDrawOnAllowedAccounts(t *testing.T) {
 		}
 	}
 	draw := func(secret string) *httptest.ResponseRecorder {
-		r := httptest.NewRequest("POST", "/v1/images/generations", strings.NewReader(`{"model":"codex/gpt-image-2","prompt":"a chongyun"}`))
+		r := httptest.NewRequest("POST", "/v1/images/generations", strings.NewReader(`{"model":"codex/gpt-image-2","prompt":"a starling"}`))
 		r.Header.Set("Authorization", "Bearer "+secret)
 		w := httptest.NewRecorder()
 		s.Handler().ServeHTTP(w, r)
@@ -291,7 +291,7 @@ func TestGatewayKeyAccountsDrawOnAllowedAccounts(t *testing.T) {
 	}
 	// a keyless request fans out to the next account, as before
 	drew = nil
-	r := httptest.NewRequest("POST", "/v1/images/generations", strings.NewReader(`{"model":"codex/gpt-image-2","prompt":"a chongyun"}`))
+	r := httptest.NewRequest("POST", "/v1/images/generations", strings.NewReader(`{"model":"codex/gpt-image-2","prompt":"a starling"}`))
 	r.RemoteAddr = "127.0.0.1:5000"
 	w := httptest.NewRecorder()
 	s.Handler().ServeHTTP(w, r)
@@ -364,7 +364,7 @@ func TestGatewayKeyAccountsCountTokens(t *testing.T) {
 	}
 }
 
-// magpie's own calls for a held key — a Codex title, of the model Settings
+// starling's own calls for a held key — a Codex title, of the model Settings
 // names — are of the models the user picked, so the models don't hold them,
 // but their spend lands on an account: the accounts hold them too (#905),
 // and the title is written by an account the key may use alone.
@@ -495,7 +495,7 @@ func TestGatewayKeyAccountsSystemOneOnAKey(t *testing.T) {
 	}
 }
 
-// A gateway key held to a later key of a remote magpie makes videos with
+// A gateway key held to a later key of a remote starling makes videos with
 // that key alone (#905): the videos API sent on the provider's first key,
 // refusing a key held to a later one though it may use it.
 func TestGatewayKeyAccountsVideoOnAnAllowedKey(t *testing.T) {
@@ -507,7 +507,7 @@ func TestGatewayKeyAccountsVideoOnAnAllowedKey(t *testing.T) {
 		io.WriteString(w, `{"id":"vid-1"}`)
 	}))
 	t.Cleanup(up.Close)
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset,
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset,
 		Chat: up.URL + "/v1", Key: "kA", Keys: []provider.KeyAccount{{Key: "kB"}}, Models: []string{"grok-imagine-video"}}); err != nil {
 		t.Fatal(err)
 	}
@@ -515,7 +515,7 @@ func TestGatewayKeyAccountsVideoOnAnAllowedKey(t *testing.T) {
 	if _, err := access.Update("accounts-key", access.Change{Key: keys[0].ID, Accounts: []string{"office/" + provider.KeyID("kB")}}); err != nil {
 		t.Fatal(err)
 	}
-	r := httptest.NewRequest("POST", "/v1/videos", strings.NewReader(`{"model":"office/grok-imagine-video","prompt":"a chongyun"}`))
+	r := httptest.NewRequest("POST", "/v1/videos", strings.NewReader(`{"model":"office/grok-imagine-video","prompt":"a starling"}`))
 	r.Header.Set("Authorization", "Bearer "+secrets[0])
 	w := httptest.NewRecorder()
 	New().Handler().ServeHTTP(w, r)
@@ -552,7 +552,7 @@ func TestGatewayKeyAccountsDrawOnAnAllowedKey(t *testing.T) {
 	if _, err := access.Update("accounts-key", access.Change{Key: keys[0].ID, Accounts: []string{"art/" + provider.KeyID("kB")}}); err != nil {
 		t.Fatal(err)
 	}
-	r := httptest.NewRequest("POST", "/v1/images/generations", strings.NewReader(`{"model":"art/gpt-image-1","prompt":"a chongyun"}`))
+	r := httptest.NewRequest("POST", "/v1/images/generations", strings.NewReader(`{"model":"art/gpt-image-1","prompt":"a starling"}`))
 	r.Header.Set("Authorization", "Bearer "+secrets[0])
 	w := httptest.NewRecorder()
 	New().Handler().ServeHTTP(w, r)

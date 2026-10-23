@@ -9,10 +9,10 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/lulu58588/chongyun/internal/pluginrt"
+	"github.com/lulu58588/starling/internal/pluginrt"
 )
 
-// builtinCmd: `chongyun plugin builtin [on|off <id>]` — magpie's built-in
+// builtinCmd: `starling plugin builtin [on|off <id>]` — starling's built-in
 // plugins (internal/pluginrt, plugins/), as Plugins › Built-in shows them.
 // One in use is refused off, as the window refuses it.
 func builtinCmd(rest []string) error {
@@ -58,7 +58,7 @@ func builtinCmd(rest []string) error {
 	return nil
 }
 
-// dumpPlugins: `chongyun plugin dump` — what plugins.yml comes to after its
+// dumpPlugins: `starling plugin dump` — what plugins.yml comes to after its
 // layers: each built-in plugin, on or off and why, its config and the
 // layer each value is from, and how it runs in this process.
 func dumpPlugins(asJSON bool) error {

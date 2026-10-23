@@ -9,17 +9,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // #1515: a plugin's signed-in account (ZCode's, through
-// opencode-zcode-auth) takes a name of the user's own. It is magpie's,
+// opencode-zcode-auth) takes a name of the user's own. It is starling's,
 // in providers.json: plugin-auth.json and logins.json are not written.
 func TestAccountNameOfAPluginAccount(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()

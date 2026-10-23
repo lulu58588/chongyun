@@ -69,7 +69,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const posted = [], st = {};
       await page.route("**/*", serve(lang, posted, st));
       await watchSettingsReads(page);
-      await page.goto("http://magpie.test/?view=settings&tab=general");
+      await page.goto("http://starling.test/?view=settings&tab=general");
       await settingsDrawn(page);
       await page.locator("#langPick span").waitFor();
 

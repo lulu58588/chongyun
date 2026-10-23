@@ -8,7 +8,7 @@ import (
 // This build has no icon proxy of its own: the picture is fetched where it
 // lives, so the host that made it sees the reader's address.
 func TestURLIsThePictureItself(t *testing.T) {
-	t.Setenv("MAGPIE_ICON_PROXY", "")
+	t.Setenv("STARLING_ICON_PROXY", "")
 	pic := "https://example.com/logo.png?size=96&x=a b#c"
 	if got := URL(pic); got != pic {
 		t.Fatalf("URL(%q) = %q, want it unchanged", pic, got)
@@ -17,7 +17,7 @@ func TestURLIsThePictureItself(t *testing.T) {
 
 // A proxy of the user's own, when one is named, is asked instead.
 func TestURLUsesTheProxyWhenNamed(t *testing.T) {
-	t.Setenv("MAGPIE_ICON_PROXY", "https://proxy.example/api/icon")
+	t.Setenv("STARLING_ICON_PROXY", "https://proxy.example/api/icon")
 	pic := "https://example.com/logo.png"
 	got := URL(pic)
 	u, err := url.Parse(got)

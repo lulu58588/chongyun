@@ -1,7 +1,7 @@
 package usage
 
 import (
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/sessions"
 	"math/rand"
 	"reflect"
 	"strconv"

@@ -8,15 +8,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // A key given its own value — one clients already send, from another
 // gateway (love1sbug 报告) — is that key from another computer and from
-// this one, as a sk-magpie- key is: counted as it, and never sent on.
+// this one, as a sk-starling- key is: counted as it, and never sent on.
 func TestOwnKeyValueIsTheKey(t *testing.T) {
 	fresh(t)
 	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

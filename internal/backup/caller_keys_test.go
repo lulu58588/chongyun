@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func TestGatewayKeysBackupRoundTrip(t *testing.T) {
@@ -114,7 +114,7 @@ func TestOlderBackupRecoversLegacyGatewayCredential(t *testing.T) {
 	if _, err := Restore(b, Parts{Settings: true}); err != nil {
 		t.Fatal(err)
 	}
-	if who, ok := access.Authenticate(b.Settings.LANKey); !ok || who.KeyName != "Chongyun" {
+	if who, ok := access.Authenticate(b.Settings.LANKey); !ok || who.KeyName != "Starling" {
 		t.Fatal("old backup's migration marker lost its credential", who, ok)
 	}
 }
@@ -169,7 +169,7 @@ func TestGatewayKeyRestoreFailureKeepsSettingsAndKeys(t *testing.T) {
 				t.Fatal(err)
 			}
 			incoming := cur
-			incoming.Theme, incoming.LANKeyID, incoming.LANKey = "dark", "restored", "sk-magpie-restored"
+			incoming.Theme, incoming.LANKeyID, incoming.LANKey = "dark", "restored", "sk-starling-restored"
 			keys := []access.Key{{ID: incoming.LANKeyID, Name: "Restored", Secret: incoming.LANKey, LAN: true}}
 			if failure == "invalid-settings" {
 				incoming.Theme = "invalid-theme"

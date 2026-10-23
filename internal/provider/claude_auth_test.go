@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 func claudeAuthFixture(t *testing.T, lapse string) (Provider, savedLogin) {
@@ -19,7 +19,7 @@ func claudeAuthFixture(t *testing.T, lapse string) (Provider, savedLogin) {
 	noAnthropic(t)
 	t.Setenv("CLAUDE_CONFIG_DIR", "")
 	// Claude Code's own sign-in is not read any more: the accounts are the
-	// ones chongyun keeps, each of them in logins.json.
+	// ones starling keeps, each of them in logins.json.
 	main := savedLogin{Agent: "claude", User: "main@example.com", On: true, Plan: "max", Seen: time.Now(),
 		Auth: mustJSONRaw(t, map[string]any{"claudeAiOauth": map[string]any{
 			"accessToken": "own-access", "refreshToken": "own-refresh",
@@ -102,7 +102,7 @@ func TestClaudeRefusalHoldsForItsCredentialOnly(t *testing.T) {
 }
 
 // Claude Code empties a sign-in Anthropic refused to refresh: the copy
-// magpie kept of it is the refused one, never put back for Claude Code.
+// starling kept of it is the refused one, never put back for Claude Code.
 func TestClaudeEmptiedSignInIsNotPutBack(t *testing.T) {
 	p, side := claudeAuthFixture(t, "")
 	dir, err := sideToken(t, p, side.User)
@@ -150,7 +150,7 @@ func TestClaudeClearedKeychainDoesNotFallBackToStaleFile(t *testing.T) {
 	}
 }
 
-// Claude Code's own sign-in is not read: the accounts chongyun serves are
+// Claude Code's own sign-in is not read: the accounts starling serves are
 // the ones it keeps, whatever Claude Code happens to be signed in to.
 func TestClaudeCodeOwnSignInIsNotRead(t *testing.T) {
 	p, side := claudeAuthFixture(t, "")
@@ -159,10 +159,10 @@ func TestClaudeCodeOwnSignInIsNotRead(t *testing.T) {
 		users[l.User] = true
 	}
 	if !users["main@example.com"] || !users[side.User] {
-		t.Fatalf("the accounts chongyun keeps: %v", users)
+		t.Fatalf("the accounts starling keeps: %v", users)
 	}
 	// Claude Code's own sign-in is none of them, and its going away changes
-	// nothing: the accounts are chongyun's own
+	// nothing: the accounts are starling's own
 	cred := filepath.Join(os.Getenv("HOME"), ".claude", ".credentials.json")
 	os.Remove(cred)
 	forgetAccountCaches()

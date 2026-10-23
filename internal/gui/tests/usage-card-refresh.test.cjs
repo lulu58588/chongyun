@@ -15,7 +15,7 @@ const { test } = require("node:test");
 const { chromium, webkit } = require("playwright");
 const { inView } = require("./reader.cjs");
 
-const assets = process.env.MAGPIE_QUOTA_ASSETS || path.resolve(__dirname, "../assets");
+const assets = process.env.STARLING_QUOTA_ASSETS || path.resolve(__dirname, "../assets");
 const H = 3600e3, M = 60e3;
 const iso = (ms) => new Date(ms).toISOString();
 
@@ -90,7 +90,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       state.quotas[0].asOf = state.quotas[0].readAt;
       state.quotas[0].readDeferred = true;
       await page.route("**/*", serve(lang, state));
-      await page.goto("http://magpie.test/?view=usage");
+      await page.goto("http://starling.test/?view=usage");
       const claude = page.locator(".subscription-card", { hasText: "Claude Code" });
       const read = claude.locator(".quota-read");
       await read.waitFor();
@@ -190,7 +190,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     const state = { quotas: fixtures(Date.now()), gets: 0, refreshes: [], gate: new Promise(r => { release = r; }) };
     t.after(() => { release(); releaseRead?.(); });
     await page.route("**/*", serve("zh", state));
-    await page.goto("http://magpie.test/?view=usage");
+    await page.goto("http://starling.test/?view=usage");
     const row = page.locator('.subscription-card[data-provider="codex"] .quota-read');
     await showRefresh(row);
     const started = new Promise(r => { readStarted = r; });
@@ -242,7 +242,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const now = Date.now();
       const state = layoutFixtures(now);
       await page.route("**/*", serve(lang, state));
-      await page.goto("http://magpie.test/?view=usage");
+      await page.goto("http://starling.test/?view=usage");
 
       // Fresh, stale and balance readings, plus a failed reading's first line.
       for (const name of ["Codex", "Claude Code", "Relay", "Volcengine Ark"]) {
@@ -279,7 +279,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       let open;
       const state = { quotas: fixtures(Date.now()), gets: 0, refreshes: [], gate: new Promise((r) => { open = r; }) };
       await page.route("**/*", serve(lang, state));
-      await page.goto("http://magpie.test/?view=usage");
+      await page.goto("http://starling.test/?view=usage");
 
       const claude = page.locator(".subscription-card", { hasText: "Claude Code" });
       const read = claude.locator(".quota-read");

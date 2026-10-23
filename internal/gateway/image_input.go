@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 const imageOmitted = "[Image omitted: this model accepts text only.]"

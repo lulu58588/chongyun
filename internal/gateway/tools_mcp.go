@@ -9,13 +9,13 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/gwtool"
-	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/gwtool"
+	"github.com/lulu58588/starling/internal/plugin"
 )
 
 // The tools the user's plugins give (OpenCode's tool hook: {tool: {name:
-// tool({description, args, execute})}}) are an MCP server of magpie's
+// tool({description, args, execute})}}) are an MCP server of starling's
 // own, so every agent that takes an MCP server can call them, not only
 // OpenCode: Streamable HTTP at ToolsMCPPath, guarded as the search MCP
 // server is (serveMCP), each call held to the calling gateway key's limit
@@ -28,7 +28,7 @@ import (
 // request is.
 
 // ToolsMCPPath is where the plugin tools MCP server is served.
-const ToolsMCPPath = "/mcp/magpie/tools"
+const ToolsMCPPath = "/mcp/starling/tools"
 
 // toolsMCPBody is the longest body the server takes: a tool's arguments
 // may carry a file's text.
@@ -42,10 +42,10 @@ var (
 )
 
 // errToolsOff is what a call is answered while plugins/tools is off.
-const errToolsOff = "chongyun's Plugin tools plugin is off, so no plugin's tool runs; turn it on in chongyun's Settings → Plugins"
+const errToolsOff = "starling's Plugin tools plugin is off, so no plugin's tool runs; turn it on in starling's Settings → Plugins"
 
 func (s *Server) toolsMCP(w http.ResponseWriter, r *http.Request) {
-	serveMCP(w, r, "chongyun's plugin tools", toolsMCPBody, s.toolsMCPCall)
+	serveMCP(w, r, "starling's plugin tools", toolsMCPBody, s.toolsMCPCall)
 }
 
 // mcpTool is one plugin tool as the server names it.
@@ -148,15 +148,15 @@ func (s *Server) toolsMCPCall(r *http.Request, m mcpMessage) (any, map[string]an
 		return map[string]any{
 			"protocolVersion": mcpVersion(m),
 			"capabilities":    map[string]any{"tools": map[string]any{}},
-			"serverInfo":      map[string]any{"name": "magpie-tools", "title": "Chongyun Plugin Tools", "version": Version},
-			"instructions":    "The tools the plugins added to chongyun give, each named <plugin>_<tool>. Add or switch plugins in chongyun's Settings → Plugins.",
+			"serverInfo":      map[string]any{"name": "starling-tools", "title": "Starling Plugin Tools", "version": Version},
+			"instructions":    "The tools the plugins added to starling give, each named <plugin>_<tool>. Add or switch plugins in starling's Settings → Plugins.",
 		}, nil
 	case "ping":
 		return map[string]any{}, nil
 	case "tools/list":
 		ts, err := servedTools(r.Context())
 		if err != nil {
-			return nil, map[string]any{"code": -32603, "message": "chongyun couldn't load its plugins: " + err.Error()}
+			return nil, map[string]any{"code": -32603, "message": "starling couldn't load its plugins: " + err.Error()}
 		}
 		list := make([]any, 0, len(ts))
 		for _, t := range ts {
@@ -184,7 +184,7 @@ func (s *Server) toolsMCPCall(r *http.Request, m mcpMessage) (any, map[string]an
 		}
 		ts, err := servedTools(r.Context())
 		if err != nil {
-			return toolResult("chongyun couldn't load its plugins: "+err.Error(), true), nil
+			return toolResult("starling couldn't load its plugins: "+err.Error(), true), nil
 		}
 		for _, t := range ts {
 			if t.name == p.Name {

@@ -8,16 +8,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// chongyunLogins writes chongyun's own logins.json: the accounts it holds,
-// each marked as the one its agent is on. chongyun signs the agents in
+// starlingLogins writes starling's own logins.json: the accounts it holds,
+// each marked as the one its agent is on. starling signs the agents in
 // itself and keeps what it signed in to there; it never reads another tool's
 // own file to find out which account that is, so a test that means "the
 // agent is signed in to this account" writes it here.
-func chongyunLogins(t *testing.T, entries ...map[string]any) {
+func starlingLogins(t *testing.T, entries ...map[string]any) {
 	t.Helper()
 	path := filepath.Join(filepath.Dir(provider.Path()), "logins.json")
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
@@ -56,10 +56,10 @@ func TestImageGenCodexOneEntry(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(h, ".codex", "auth.json"), auth, 0o600); err != nil {
 		t.Fatal(err)
 	}
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
-	chongyunLogins(t, map[string]any{"agent": "codex", "user": "me@example.com", "active": true,
+	starlingLogins(t, map[string]any{"agent": "codex", "user": "me@example.com", "active": true,
 		"seen": time.Now(), "auth": json.RawMessage(auth)})
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)

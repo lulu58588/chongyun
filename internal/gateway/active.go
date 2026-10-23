@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// Active is one agent request in flight, as /v1/magpie/concurrency lists
+// Active is one agent request in flight, as /v1/starling/concurrency lists
 // it for a status bar's hover (#2132, bigbitbox): which agent asked, for
 // which model, since when, and where it stands. It holds no prompt, reply
 // or key. Model and Provider are the routing trace's, once the request has
@@ -104,7 +104,7 @@ func noteRoute(ctx context.Context, rt *Route) {
 }
 
 // panicEnded is what a route ended by endBroken says.
-const panicEnded = "chongyun broke off this request: an internal error (in chongyun's log)"
+const panicEnded = "starling broke off this request: an internal error (in starling's log)"
 
 // endBroken ends every route begun for f that its handler left in flight
 // when it panicked, and each of their tries still out: net/http recovers

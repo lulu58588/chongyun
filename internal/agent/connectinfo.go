@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/starling/internal/edit"
 )
 
 // What the Agents page says beside an agent's 「接入」 switch (the owner's
@@ -22,35 +22,35 @@ import (
 // the list they started with.
 
 // FailoverSaid is, for an agent not connected whose requests still go
-// through magpie for account failover alone (FailingOver), what the CLI
+// through starling for account failover alone (FailingOver), what the CLI
 // and the TUI say of it, the Agents page's line in words of their own:
-// why it goes through magpie, and what turns that off (#1385). "" when it
+// why it goes through starling, and what turns that off (#1385). "" when it
 // doesn't.
 func (a *Agent) FailoverSaid() string {
 	if a.FailingOver == nil || !a.FailingOver() {
 		return ""
 	}
-	return "not connected · goes through chongyun only to fail over to your other ChatGPT accounts; tick Only switch Codex's sign-in under Providers › Codex (chongyun accounts switch-only codex on), or switch them off, to stop it"
+	return "not connected · goes through starling only to fail over to your other ChatGPT accounts; tick Only switch Codex's sign-in under Providers › Codex (starling accounts switch-only codex on), or switch them off, to stop it"
 }
 
-// startsWith is, for an agent that reads magpie's models only as it
+// startsWith is, for an agent that reads starling's models only as it
 // starts, how to find its processes (patterns for pgrep -f), the files it
-// reads them from, and the part of those files magpie writes for it. The
-// files' times alone don't say when magpie changed that part: the agent
+// reads them from, and the part of those files starling writes for it. The
+// files' times alone don't say when starling changed that part: the agent
 // writes the same files (Codex keeps each project's trust, a notice seen,
 // the model picked in its app in config.toml), and a copy started before
-// such a write has magpie's list all the same (#729).
+// such a write has starling's list all the same (#729).
 func (a *Agent) startsWith() (pats []string, files []string, reads func() string) {
 	switch a.ID {
 	case "codex":
-		list := filepath.Join(filepath.Dir(a.Path), "chongyun-models.json")
+		list := filepath.Join(filepath.Dir(a.Path), "starling-models.json")
 		return []string{`(^|/)codex( |$)`}, []string{a.Path, list}, func() string {
 			var b strings.Builder
 			for _, k := range []string{"model_provider", "model_catalog_json", "openai_base_url"} {
 				v, _ := edit.GetTOMLTop(a.Path, k)
 				b.WriteString(k + "=" + v + "\n")
 			}
-			t, _ := edit.GetTOMLTable(a.Path, "model_providers."+magpieID)
+			t, _ := edit.GetTOMLTable(a.Path, "model_providers."+starlingID)
 			j, _ := json.Marshal(t)
 			b.Write(j)
 			c, _ := os.ReadFile(list)
@@ -78,9 +78,9 @@ type runningProc struct {
 // can say.
 var running = listRunning
 
-// changedAt is when magpie last changed what the agent reads at start. It
+// changedAt is when starling last changed what the agent reads at start. It
 // is kept in the stash with a digest of what that was, so neither the
-// agent's own writes to the same files nor magpie starting again move it;
+// agent's own writes to the same files nor starling starting again move it;
 // a change first seen is put at the files' latest write. Zero when the
 // files aren't there.
 func (a *Agent) changedAt(files []string, reads func() string) time.Time {
@@ -106,7 +106,7 @@ func (a *Agent) changedAt(files []string, reads func() string) time.Time {
 }
 
 // Stale is how many copies of the agent are running that started before
-// magpie last changed what it reads at start: they still have the list
+// starling last changed what it reads at start: they still have the list
 // they started with until reopened. On Windows only the Codex daemon is
 // told.
 func (a *Agent) Stale() int { return len(a.StaleCopies()) }

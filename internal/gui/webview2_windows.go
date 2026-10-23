@@ -7,7 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 	"golang.org/x/sys/windows"
 )
 
@@ -21,11 +21,11 @@ func webView2Check(app *application.App) bool {
 	if !webView2Missing(app.Env.Info().PlatformInfo) {
 		return true
 	}
-	log.Printf("chongyun: no Microsoft Edge WebView2 Runtime, which chongyun's windows need; install it from %s, or use chongyun web / chongyun tui", webView2Page)
+	log.Printf("starling: no Microsoft Edge WebView2 Runtime, which starling's windows need; install it from %s, or use starling web / starling tui", webView2Page)
 	title, body := webView2Notice(trayLang(settings.Load().Lang, systemLang))
 	if webView2Box(title, body) == idYes {
 		if err := windows.ShellExecute(0, windows.StringToUTF16Ptr("open"), windows.StringToUTF16Ptr(webView2Page), nil, nil, windows.SW_SHOWNORMAL); err != nil {
-			log.Println("chongyun: opening the WebView2 page:", err)
+			log.Println("starling: opening the WebView2 page:", err)
 		}
 	}
 	return false

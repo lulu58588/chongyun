@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func TestUsageRequestAPIsReturnCodexCompactionStates(t *testing.T) {
@@ -42,7 +42,7 @@ func TestUsageRequestAPIsReturnCodexCompactionStates(t *testing.T) {
 		"gateway": httptest.NewRecorder(),
 	}
 	guiMux.ServeHTTP(responses["GUI"], httptest.NewRequest("GET", "/api/usage/requests?period=all", nil))
-	gatewayRequest := httptest.NewRequest("GET", "/v1/magpie/usage/requests?period=all", nil)
+	gatewayRequest := httptest.NewRequest("GET", "/v1/starling/usage/requests?period=all", nil)
 	gatewayRequest.RemoteAddr = "127.0.0.1:5000"
 	gateway.New().Handler().ServeHTTP(responses["gateway"], gatewayRequest)
 	for name, response := range responses {

@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/starling/internal/agent"
 )
 
 // helpHome points the home and every config, cache and data folder into
@@ -60,7 +60,7 @@ func tree(t *testing.T, root string) map[string]string {
 	return out
 }
 
-// runOut runs magpie with args and gives what it printed; a run that
+// runOut runs starling with args and gives what it printed; a run that
 // doesn't come back in time (a gateway started, a window waited on) fails
 // the test.
 func runOut(t *testing.T, args ...string) (string, error) {
@@ -84,7 +84,7 @@ func runOut(t *testing.T, args ...string) (string, error) {
 	case err = <-done:
 	case <-time.After(20 * time.Second):
 		os.Stdout = old
-		t.Fatalf("chongyun %s didn't come back: it ran", strings.Join(args, " "))
+		t.Fatalf("starling %s didn't come back: it ran", strings.Join(args, " "))
 	}
 	w.Close()
 	os.Stdout = old
@@ -143,8 +143,8 @@ func types(ix *ast.IndexExpr) string {
 
 // --help, -h or help after any command, and every agent, in any place,
 // prints its usage and does nothing else: no file under the home is
-// written and nothing is started. `chongyun snow --help` set Snow's model to
-// "--help" and took magpie out of it (#1457), and `chongyun serve --help`
+// written and nothing is started. `starling snow --help` set Snow's model to
+// "--help" and took starling out of it (#1457), and `starling serve --help`
 // ran a gateway.
 func TestHelpOnEveryCommandDoesNothing(t *testing.T) {
 	root := helpHome(t)
@@ -161,21 +161,21 @@ func TestHelpOnEveryCommandDoesNothing(t *testing.T) {
 			} {
 				out, err := runOut(t, args...)
 				if err != nil {
-					t.Errorf("chongyun %s: %v", strings.Join(args, " "), err)
+					t.Errorf("starling %s: %v", strings.Join(args, " "), err)
 				}
-				if !strings.Contains(out, "chongyun") && !strings.Contains(out, "usage") {
-					t.Errorf("chongyun %s printed no usage: %q", strings.Join(args, " "), out)
+				if !strings.Contains(out, "starling") && !strings.Contains(out, "usage") {
+					t.Errorf("starling %s printed no usage: %q", strings.Join(args, " "), out)
 				}
 				if got := tree(t, root); !reflect.DeepEqual(got, before) {
-					t.Fatalf("chongyun %s wrote under the home:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
+					t.Fatalf("starling %s wrote under the home:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
 				}
 			}
 		})
 	}
 }
 
-// The reporter's case (#1457, blackrion): Snow on magpie's profile, then
-// `chongyun snow --help` and its other forms. Each prints Snow's usage, a
+// The reporter's case (#1457, blackrion): Snow on starling's profile, then
+// `starling snow --help` and its other forms. Each prints Snow's usage, a
 // flag no agent form takes is refused, and Snow's files stay as they were.
 func TestAgentHelpLeavesSnowWired(t *testing.T) {
 	groupsHome(t)
@@ -204,18 +204,18 @@ func TestAgentHelpLeavesSnowWired(t *testing.T) {
 		t.Fatal(err)
 	}
 	before := tree(t, dir)
-	if _, ok := before[filepath.Join("profiles", "magpie.json")]; !ok {
+	if _, ok := before[filepath.Join("profiles", "starling.json")]; !ok {
 		t.Fatalf("not wired: %v", before)
 	}
 	for _, args := range [][]string{
 		{"snow", "--help"}, {"snow", "-h"}, {"snow", "help"}, {"snow", "model", "--help"}, {"snow-cli", "--help"},
 	} {
 		out, err := runOut(t, args...)
-		if err != nil || !strings.Contains(out, "chongyun snow <model>") {
-			t.Errorf("chongyun %s: %v %q", strings.Join(args, " "), err, out)
+		if err != nil || !strings.Contains(out, "starling snow <model>") {
+			t.Errorf("starling %s: %v %q", strings.Join(args, " "), err, out)
 		}
 		if got := tree(t, dir); !reflect.DeepEqual(got, before) {
-			t.Fatalf("chongyun %s changed Snow's files:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
+			t.Fatalf("starling %s changed Snow's files:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
 		}
 	}
 	for _, args := range [][]string{
@@ -223,18 +223,18 @@ func TestAgentHelpLeavesSnowWired(t *testing.T) {
 	} {
 		_, err := runOut(t, args...)
 		if err == nil || !strings.Contains(err.Error(), "nothing was changed") {
-			t.Errorf("chongyun %s: %v", strings.Join(args, " "), err)
+			t.Errorf("starling %s: %v", strings.Join(args, " "), err)
 		}
 		if got := tree(t, dir); !reflect.DeepEqual(got, before) {
-			t.Fatalf("chongyun %s changed Snow's files:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
+			t.Fatalf("starling %s changed Snow's files:\nbefore %v\nafter  %v", strings.Join(args, " "), before, got)
 		}
 	}
 	// a model no profile of the user's is on, typed without a flag, is
 	// refused by Snow itself the same way
 	if _, err := runOut(t, "snow", "nonsense"); err == nil {
-		t.Error("chongyun snow nonsense taken")
+		t.Error("starling snow nonsense taken")
 	}
 	if got := tree(t, dir); !reflect.DeepEqual(got, before) {
-		t.Fatalf("chongyun snow nonsense changed Snow's files:\nbefore %v\nafter  %v", before, got)
+		t.Fatalf("starling snow nonsense changed Snow's files:\nbefore %v\nafter  %v", before, got)
 	}
 }

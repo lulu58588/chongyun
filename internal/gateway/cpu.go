@@ -1,11 +1,11 @@
 package gateway
 
-// GET /v1/magpie/cpu: a Go CPU profile of the process serving the gateway,
-// recorded for some seconds while the user goes on using magpie, for a
-// report of magpie using too much CPU (@LeiCheng42 报告: the most CPU of
+// GET /v1/starling/cpu: a Go CPU profile of the process serving the gateway,
+// recorded for some seconds while the user goes on using starling, for a
+// report of starling using too much CPU (@LeiCheng42 报告: the most CPU of
 // anything while Codex runs). A macOS `sample` or Activity Monitor names
 // none of Go's frames, so this is the one way to see where the Go side
-// spends it; `chongyun cpu` asks for it and writes the file the user sends.
+// spends it; `starling cpu` asks for it and writes the file the user sends.
 
 import (
 	"bytes"
@@ -20,14 +20,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // CPUPath is where the gateway answers a CPU profile.
-const CPUPath = "/v1/magpie/cpu"
+const CPUPath = "/v1/starling/cpu"
 
 // CPUStatsHeader carries CPUStats, as JSON, beside the profile.
-const CPUStatsHeader = "X-Magpie-CPU-Stats"
+const CPUStatsHeader = "X-Starling-CPU-Stats"
 
 // The seconds a CPU profile records: CPUSeconds unless the caller asks
 // for others, from CPUMinSeconds to CPUMaxSeconds.
@@ -45,7 +45,7 @@ type CPUStats struct {
 	PID        int     `json:"pid"`
 	Program    string  `json:"program"`
 	Version    string  `json:"version"`
-	Window     bool    `json:"window"` // the app's window or magpie web serves the gateway
+	Window     bool    `json:"window"` // the app's window or starling web serves the gateway
 	Uptime     string  `json:"uptime"`
 	Seconds    float64 `json:"seconds"` // how long the profile recorded
 	CPUKnown   bool    `json:"cpuKnown"`
@@ -66,7 +66,7 @@ var cpuSecond = time.Second
 // cpuRefused says why r may not have the CPU profile, "" when it may: the
 // same callers as the heap profile (heapRefused).
 func cpuRefused(r *http.Request) string {
-	return profileRefused(r, "CPU profile", "chongyun cpu")
+	return profileRefused(r, "CPU profile", "starling cpu")
 }
 
 // cpuProfile answers CPUPath: the "cpu" profile (gzipped protobuf, as go
@@ -90,7 +90,7 @@ func (s *Server) cpuProfile(w http.ResponseWriter, r *http.Request) {
 		secs = n
 	}
 	if !cpuRecording.CompareAndSwap(false, true) {
-		writeError(w, provider.Chat, http.StatusConflict, "chongyun is recording a CPU profile already: wait for that one to finish, then run chongyun cpu again")
+		writeError(w, provider.Chat, http.StatusConflict, "starling is recording a CPU profile already: wait for that one to finish, then run starling cpu again")
 		return
 	}
 	defer cpuRecording.Store(false)
@@ -99,7 +99,7 @@ func (s *Server) cpuProfile(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	if err := pprof.StartCPUProfile(&buf); err != nil {
 		// another profiler of this process (a test's -cpuprofile)
-		writeError(w, provider.Chat, http.StatusConflict, "chongyun couldn't start a CPU profile: "+err.Error())
+		writeError(w, provider.Chat, http.StatusConflict, "starling couldn't start a CPU profile: "+err.Error())
 		return
 	}
 	t := time.NewTimer(time.Duration(secs) * cpuSecond)
@@ -136,7 +136,7 @@ func (s *Server) cpuProfile(w http.ResponseWriter, r *http.Request) {
 	stats, _ := json.Marshal(st)
 	h := w.Header()
 	h.Set("Content-Type", "application/octet-stream")
-	h.Set("Content-Disposition", `attachment; filename="magpie-cpu.pb.gz"`)
+	h.Set("Content-Disposition", `attachment; filename="starling-cpu.pb.gz"`)
 	h.Set("Cache-Control", "no-store")
 	h.Set(CPUStatsHeader, string(stats))
 	w.Write(buf.Bytes())

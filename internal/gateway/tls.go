@@ -15,14 +15,14 @@ import (
 	"time"
 )
 
-// TLS: `chongyun serve --tls-cert <file> --tls-key <file>` (or
-// MAGPIE_TLS_CERT and MAGPIE_TLS_KEY) serves the gateway, and `chongyun
-// web`'s page, over HTTPS to other computers (RoderickZH 报告: magpie
+// TLS: `starling serve --tls-cert <file> --tls-key <file>` (or
+// STARLING_TLS_CERT and STARLING_TLS_KEY) serves the gateway, and `starling
+// web`'s page, over HTTPS to other computers (RoderickZH 报告: starling
 // on a server as a relay, reached over the internet). The certificate is
 // read again when its files change, so a certbot renewal is served without
 // a restart. A connection from this computer itself (loopback, or this
 // computer calling its own address) may still speak plain HTTP on the same
-// port: the agents, MCP servers and status checks magpie wires here call
+// port: the agents, MCP servers and status checks starling wires here call
 // http://127.0.0.1, which no certificate for a server's name covers, and
 // their requests never leave the machine. Every other peer gets TLS alone;
 // plain HTTP from it is answered 400 by net/http.
@@ -30,8 +30,8 @@ import (
 // TLSCertEnv and TLSKeyEnv name the PEM certificate (its chain after it)
 // and private key files the flags set.
 const (
-	TLSCertEnv = "MAGPIE_TLS_CERT"
-	TLSKeyEnv  = "MAGPIE_TLS_KEY"
+	TLSCertEnv = "STARLING_TLS_CERT"
+	TLSKeyEnv  = "STARLING_TLS_KEY"
 )
 
 // TLSFiles are the certificate and key files set, "" for none.
@@ -202,7 +202,7 @@ func ServeTLS(ln net.Listener) (net.Listener, error) {
 
 // fromThisComputer: the connection's peer is this computer — loopback, or
 // this computer calling one of its own addresses, which the kernel answers
-// without the network (a MAGPIE_ADDR on one interface's address, which
+// without the network (a STARLING_ADDR on one interface's address, which
 // the agents wired here then call). A var for the tests, which have no
 // other computer to call from.
 var fromThisComputer = func(c net.Conn) bool {

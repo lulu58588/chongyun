@@ -3,10 +3,10 @@ package cli
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// #2008: `chongyun provider quota-rest <id> until 00:00+08:00` sets the time
+// #2008: `starling provider quota-rest <id> until 00:00+08:00` sets the time
 // of day the allowance comes back, a number of minutes after it takes its
 // place, and default lets both go.
 func TestQuotaRestUntil(t *testing.T) {
@@ -50,7 +50,7 @@ func TestQuotaRestUntil(t *testing.T) {
 	}
 }
 
-// #2008: `chongyun provider rest-cap <id> 4h` sets where its keys' rests stop
+// #2008: `starling provider rest-cap <id> 4h` sets where its keys' rests stop
 // doubling, and default gives it back to the gateway's own.
 func TestRestCapCmd(t *testing.T) {
 	home := t.TempDir()

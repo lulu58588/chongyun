@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-// loginsOnCodexLogin keeps a ChatGPT account in logins.json, as chongyun's
+// loginsOnCodexLogin keeps a ChatGPT account in logins.json, as starling's
 // own sign-in does: the account it signed in to is kept there, with the
 // sign-in it has.
 func loginsOnCodexLogin(t *testing.T, email, accountID, refresh string, expired bool) {
@@ -32,7 +32,7 @@ func loginsOnCodexLogin(t *testing.T, email, accountID, refresh string, expired 
 	codexOwnLogin(t, email, "plus", auth)
 }
 
-// loginsOnSaved is the account chongyun keeps for the codex user.
+// loginsOnSaved is the account starling keeps for the codex user.
 func loginsOnSaved(t *testing.T, user string) savedLogin {
 	t.Helper()
 	for _, l := range readLogins() {
@@ -98,13 +98,13 @@ func TestSubscriptionsOnAtOnce(t *testing.T) {
 			t.Fatalf("the refresh wasn't kept: %s", l.Auth)
 		}
 	}
-	// the account the agent is on keeps the sign-in chongyun has for it:
+	// the account the agent is on keeps the sign-in starling has for it:
 	// the other account's refresh did not touch it
 	if got := loginsOnSaved(t, "work@example.com"); !strings.Contains(string(got.Auth), "r-work") {
 		t.Fatalf("the agent's own sign-in changed: %s", got.Auth)
 	}
 	if _, ok, _ := p.Account.Token(context.Background()); ok {
-		t.Fatal("the agent's own account has a token of chongyun's")
+		t.Fatal("the agent's own account has a token of starling's")
 	}
 
 	// switching keeps the one it replaces in use

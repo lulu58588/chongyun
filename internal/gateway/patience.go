@@ -7,7 +7,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // didNotStream is in the error for an upstream that answered a stream

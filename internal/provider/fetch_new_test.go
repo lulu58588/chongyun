@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
-// An account signed in while magpie runs gets its vendor's list the next
+// An account signed in while starling runs gets its vendor's list the next
 // time the providers are listed, not only after Refresh (#204: WorkBuddy's
 // models incomplete when first added, all of them after Refresh; Codex is
 // the built-in signed in here). One whose list couldn't be had isn't asked
@@ -65,7 +65,7 @@ func TestFetchNewAccount(t *testing.T) {
 		t.Fatalf("asked %d times with no account", n)
 	}
 
-	// Codex signs itself in while magpie runs
+	// Codex signs itself in while starling runs
 	codexSignedIn(t, home)
 	if ids()["gpt-6-luna"] {
 		t.Fatal("the vendor's model listed before its list was fetched")
@@ -91,7 +91,7 @@ func TestFetchNewAccount(t *testing.T) {
 	newFetches.Unlock()
 	down.Store(true)
 	// missing both times: when it failed, and while it waits to ask again,
-	// so the terminal and magpie serve try once more later (#1789)
+	// so the terminal and starling serve try once more later (#1789)
 	if !FetchNew(5 * time.Second) {
 		t.Fatal("a list that failed not said missing")
 	}
@@ -113,10 +113,10 @@ func TestFetchNewAccount(t *testing.T) {
 	}
 }
 
-// codexSignedIn signs Codex in the way chongyun does: the account is kept
-// in chongyun's own logins.json, marked as the one the agent is on, and the
+// codexSignedIn signs Codex in the way starling does: the account is kept
+// in starling's own logins.json, marked as the one the agent is on, and the
 // agent's own file is written too, as the agent keeps its sign-in there.
-// No list of its own is kept: a built-in account whose list chongyun
+// No list of its own is kept: a built-in account whose list starling
 // fetches.
 func codexSignedIn(t *testing.T, home string) {
 	t.Helper()

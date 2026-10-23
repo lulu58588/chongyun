@@ -11,10 +11,10 @@ import (
 	"time"
 )
 
-// A second Copilot account, signed in from magpie with GitHub's device
-// code, is kept beside the one chongyun already had and can go first.
+// A second Copilot account, signed in from starling with GitHub's device
+// code, is kept beside the one starling already had and can go first.
 func TestCopilotAccounts(t *testing.T) {
-	signIn(t) // chongyun's own: octocat, gho_x
+	signIn(t) // starling's own: octocat, gho_x
 	var polls atomic.Int32
 	gh := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()

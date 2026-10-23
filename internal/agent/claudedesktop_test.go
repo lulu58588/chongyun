@@ -12,13 +12,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/desktopdir"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/desktopdir"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // desktopSandbox is a home of its own with nothing of this machine's in
-// reach: every variable Desktop's folders (and magpie's stash) follow.
+// reach: every variable Desktop's folders (and starling's stash) follow.
 func desktopSandbox(t *testing.T) (string, desktopPaths) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
@@ -114,7 +114,7 @@ func TestDesktopDirs(t *testing.T) {
 	}
 }
 
-// A fresh Claude Desktop: its folder and nothing magpie writes in it yet.
+// A fresh Claude Desktop: its folder and nothing starling writes in it yet.
 func TestClaudeDesktopFresh(t *testing.T) {
 	home, p := desktopSandbox(t)
 	a := claudeDesktop(home)
@@ -131,7 +131,7 @@ func TestClaudeDesktopFresh(t *testing.T) {
 		t.Fatalf("get: %q", f.Get())
 	}
 
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	for _, c := range []string{p.config, p.config3p} {
@@ -141,7 +141,7 @@ func TestClaudeDesktopFresh(t *testing.T) {
 	}
 	want := map[string]any{
 		"inferenceProvider": "gateway", "inferenceGatewayBaseUrl": gateway.URL(),
-		"inferenceGatewayApiKey": "magpie-claude-desktop", "inferenceGatewayAuthScheme": "bearer",
+		"inferenceGatewayApiKey": "starling-claude-desktop", "inferenceGatewayAuthScheme": "bearer",
 		"disableDeploymentModeChooser": true, "coworkEgressAllowedHosts": []any{"*"},
 	}
 	if prof := desktopJSON(t, p.prof); !reflect.DeepEqual(prof, want) {
@@ -151,10 +151,10 @@ func TestClaudeDesktopFresh(t *testing.T) {
 		t.Errorf("profile mode %v", st.Mode())
 	}
 	meta := desktopJSON(t, p.meta)
-	if meta["appliedId"] != desktopProfileID || !reflect.DeepEqual(meta["entries"], []any{map[string]any{"id": desktopProfileID, "name": "magpie"}}) {
+	if meta["appliedId"] != desktopProfileID || !reflect.DeepEqual(meta["entries"], []any{map[string]any{"id": desktopProfileID, "name": "starling"}}) {
 		t.Errorf("meta: %v", meta)
 	}
-	if f.Get() != "magpie" || a.Check() != "" {
+	if f.Get() != "starling" || a.Check() != "" {
 		t.Fatalf("get %q, check %q", f.Get(), a.Check())
 	}
 	if n := a.Notice(); n == "" {
@@ -191,7 +191,7 @@ func TestClaudeDesktopKeepsTheUsers(t *testing.T) {
 
 	a := claudeDesktop(home)
 	f := a.Field("provider")
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	cfg := desktopJSON(t, p.config)
@@ -213,7 +213,7 @@ func TestClaudeDesktopKeepsTheUsers(t *testing.T) {
 	on := desktopTree(t, p)
 
 	// on again changes nothing
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	if again := desktopTree(t, p); !reflect.DeepEqual(again, on) {
@@ -234,7 +234,7 @@ func TestClaudeDesktopKeepsTheUsers(t *testing.T) {
 	}
 
 	// on → off → on is the first on again
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	if again := desktopTree(t, p); !reflect.DeepEqual(again, on) {
@@ -242,7 +242,7 @@ func TestClaudeDesktopKeepsTheUsers(t *testing.T) {
 	}
 }
 
-// Desktop or the user changing things after magpie: Check says so, off
+// Desktop or the user changing things after starling: Check says so, off
 // leaves what they chose, and the profile the user's own settings in it.
 func TestClaudeDesktopChangedSince(t *testing.T) {
 	home, p := desktopSandbox(t)
@@ -250,7 +250,7 @@ func TestClaudeDesktopChangedSince(t *testing.T) {
 	desktopWrite(t, p.meta, `{"entries":[{"id":"mine","name":"Mine"}],"appliedId":"mine"}`)
 	a := claudeDesktop(home)
 	f := a.Field("provider")
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	// a setting made in Desktop's window stays through a second on
@@ -258,7 +258,7 @@ func TestClaudeDesktopChangedSince(t *testing.T) {
 	if c := a.Check(); c == "" {
 		t.Error("check: a profile pointing elsewhere is fine")
 	}
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	prof := desktopJSON(t, p.prof)
@@ -281,25 +281,25 @@ func TestClaudeDesktopChangedSince(t *testing.T) {
 		t.Errorf("config: %v", m)
 	}
 	if _, err := os.Stat(p.config3p); !os.IsNotExist(err) {
-		t.Error("the 3p config chongyun made is still there")
+		t.Error("the 3p config starling made is still there")
 	}
 	if meta := desktopJSON(t, p.meta); meta["appliedId"] != "mine" || len(meta["entries"].([]any)) != 1 {
 		t.Errorf("meta: %v", meta)
 	}
 	if _, err := os.Stat(p.prof); !os.IsNotExist(err) {
-		t.Error("chongyun's profile is still there")
+		t.Error("starling's profile is still there")
 	}
 }
 
 // #2035 (capiton0): settings the user made in Desktop's third-party window
-// live in magpie's profile. Switching Desktop off magpie and on again
+// live in starling's profile. Switching Desktop off starling and on again
 // brings them back, the gateway's address and key set anew.
 func TestClaudeDesktopOffOnKeepsTheUsersSettings(t *testing.T) {
 	home, p := desktopSandbox(t)
 	os.MkdirAll(p.dir, 0o755)
 	a := claudeDesktop(home)
 	f := a.Field("provider")
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	desktopWrite(t, p.prof, `{"inferenceProvider":"gateway","inferenceGatewayBaseUrl":"http://old:1","inferenceGatewayApiKey":"old","inferenceGatewayAuthScheme":"bearer",`+
@@ -308,36 +308,36 @@ func TestClaudeDesktopOffOnKeepsTheUsersSettings(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(p.prof); !os.IsNotExist(err) {
-		t.Fatal("chongyun's profile is still there after off")
+		t.Fatal("starling's profile is still there after off")
 	}
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	prof := desktopJSON(t, p.prof)
 	want := map[string]any{
 		"inferenceProvider": "gateway", "inferenceGatewayBaseUrl": gateway.URL(),
-		"inferenceGatewayApiKey": "magpie-claude-desktop", "inferenceGatewayAuthScheme": "bearer",
+		"inferenceGatewayApiKey": "starling-claude-desktop", "inferenceGatewayAuthScheme": "bearer",
 		"disableDeploymentModeChooser": false, "coworkEgressAllowedHosts": []any{"corp.example"},
 		"inferenceModels": []any{"claude-opus-4-7"}, "isClaudeCodeForDesktopEnabled": true,
 	}
 	if !reflect.DeepEqual(prof, want) {
 		t.Errorf("profile after off and on:\n%v\nwant\n%v", prof, want)
 	}
-	if f.Get() != "magpie" || a.Check() != "" {
+	if f.Get() != "starling" || a.Check() != "" {
 		t.Errorf("get %q, check %q", f.Get(), a.Check())
 	}
 }
 
 // #2035 (capiton0): a profile the user made in Desktop's window for
-// magpie's gateway, applied when magpie is switched on, starts magpie's
+// starling's gateway, applied when starling is switched on, starts starling's
 // profile: their settings (as they posted them) are kept, only the
 // gateway's address, key and auth scheme set. Their own profile is left
-// as it was and applied again when magpie is switched off.
+// as it was and applied again when starling is switched off.
 func TestClaudeDesktopOnKeepsTheUsersOwnGatewayProfile(t *testing.T) {
 	home, p := desktopSandbox(t)
 	const theirs = `{
   "inferenceGatewayBaseUrl": "` + "%s" + `",
-  "inferenceGatewayApiKey": "magpie",
+  "inferenceGatewayApiKey": "starling",
   "sshHostAllowlist": ["*"],
   "chatTabEnabled": true,
   "chatAdvancedFileAnalysisEnabled": true,
@@ -359,15 +359,15 @@ func TestClaudeDesktopOnKeepsTheUsersOwnGatewayProfile(t *testing.T) {
 	desktopWrite(t, p.meta, `{"appliedId":"5b0d0c6e-1f2a-4c3b-9d4e-0a1b2c3d4e5f","entries":[{"id":"5b0d0c6e-1f2a-4c3b-9d4e-0a1b2c3d4e5f","name":"mine"}]}`)
 	a := claudeDesktop(home)
 	f := a.Field("provider")
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	var want map[string]any
 	json.Unmarshal([]byte(body), &want)
-	want["inferenceGatewayApiKey"] = "magpie-claude-desktop"
+	want["inferenceGatewayApiKey"] = "starling-claude-desktop"
 	want["inferenceGatewayAuthScheme"] = "bearer"
 	if prof := desktopJSON(t, p.prof); !reflect.DeepEqual(prof, want) {
-		t.Errorf("chongyun's profile:\n%v\nwant\n%v", prof, want)
+		t.Errorf("starling's profile:\n%v\nwant\n%v", prof, want)
 	}
 	if b, _ := os.ReadFile(own); string(b) != body {
 		t.Errorf("their profile was changed:\n%s", b)
@@ -384,7 +384,7 @@ func TestClaudeDesktopOnKeepsTheUsersOwnGatewayProfile(t *testing.T) {
 }
 
 // A profile for somewhere else (another gateway, Bedrock) is not carried
-// into magpie's: its models and settings are for that place.
+// into starling's: its models and settings are for that place.
 func TestClaudeDesktopOnLeavesOtherProfilesOut(t *testing.T) {
 	for name, prof := range map[string]string{
 		"other gateway": `{"inferenceProvider":"gateway","inferenceGatewayBaseUrl":"https://llm.example.com","inferenceModels":["corp-model"],"chatTabEnabled":true}`,
@@ -394,23 +394,23 @@ func TestClaudeDesktopOnLeavesOtherProfilesOut(t *testing.T) {
 			home, p := desktopSandbox(t)
 			desktopWrite(t, filepath.Join(p.library, "abc.json"), prof)
 			desktopWrite(t, p.meta, `{"appliedId":"abc","entries":[{"id":"abc","name":"mine"}]}`)
-			if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
+			if err := claudeDesktop(home).Field("provider").Set("starling"); err != nil {
 				t.Fatal(err)
 			}
 			got := desktopJSON(t, p.prof)
 			if _, ok := got["chatTabEnabled"]; ok {
-				t.Errorf("chongyun's profile took another place's settings: %v", got)
+				t.Errorf("starling's profile took another place's settings: %v", got)
 			}
 		})
 	}
 }
 
-// A file magpie can't read as Desktop writes it is left alone, and so is
+// A file starling can't read as Desktop writes it is left alone, and so is
 // everything else.
 func TestClaudeDesktopRefusesOddFiles(t *testing.T) {
 	home, p := desktopSandbox(t)
 	desktopWrite(t, p.meta, `[]`)
-	if err := claudeDesktop(home).Field("provider").Set("magpie"); err == nil {
+	if err := claudeDesktop(home).Field("provider").Set("starling"); err == nil {
 		t.Fatal("a meta file that isn't an object was taken")
 	}
 	if b, _ := os.ReadFile(p.meta); string(b) != "[]" {
@@ -422,13 +422,13 @@ func TestClaudeDesktopRefusesOddFiles(t *testing.T) {
 		}
 	}
 	desktopWrite(t, p.meta, `{"entries":{}}`)
-	if err := claudeDesktop(home).Field("provider").Set("magpie"); err == nil {
+	if err := claudeDesktop(home).Field("provider").Set("starling"); err == nil {
 		t.Fatal("entries that aren't a list were taken")
 	}
 }
 
 // each of Claude Code's tiers in Desktop's Code tab can have a model of its
-// own (WilianWeng): offered once Desktop is on magpie, set by the catalog id
+// own (WilianWeng): offered once Desktop is on starling, set by the catalog id
 // or by the id Desktop is shown, and taken away with ""
 func TestClaudeDesktopTiers(t *testing.T) {
 	home, _ := desktopSandbox(t)
@@ -441,9 +441,9 @@ func TestClaudeDesktopTiers(t *testing.T) {
 		t.Fatal("no quiet sonnet field")
 	}
 	if len(f.Options(nil)) != 0 {
-		t.Fatal("tiers offered before Desktop is on chongyun")
+		t.Fatal("tiers offered before Desktop is on starling")
 	}
-	if err := a.Field("provider").Set("magpie"); err != nil {
+	if err := a.Field("provider").Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	if len(f.Options(nil)) != 2 {
@@ -459,7 +459,7 @@ func TestClaudeDesktopTiers(t *testing.T) {
 		t.Fatalf("tiers: %v", gateway.DesktopTiers())
 	}
 	if err := f.Set("nope/x"); err == nil {
-		t.Fatal("a model chongyun doesn't serve was taken")
+		t.Fatal("a model starling doesn't serve was taken")
 	}
 	if err := f.Set(""); err != nil || f.Get() != "" {
 		t.Fatalf("unset: %v %q", err, f.Get())
@@ -469,7 +469,7 @@ func TestClaudeDesktopTiers(t *testing.T) {
 // Kilig 报告: Claude Desktop from its setup.exe on Windows 10 LTSC
 // runs as an MSIX package, its data in
 // %LOCALAPPDATA%\Packages\Claude_<publisher>\LocalCache\Roaming\Claude and
-// nothing in %APPDATA%\Claude. It is detected, and magpie's switch writes
+// nothing in %APPDATA%\Claude. It is detected, and starling's switch writes
 // the package's folders, which the packaged app up to 2.x reads. bg5eau on
 // X: 2.31226.1, packaged the same way, reads the real
 // %LOCALAPPDATA%\Claude-3p, so the switch writes the real folders too, and
@@ -501,11 +501,11 @@ func TestClaudeDesktopMSIX(t *testing.T) {
 	if want := filepath.Join(pkg, "Local", "Claude", "claude_desktop_config.json"); a.Path != want {
 		t.Errorf("path %s, want %s", a.Path, want)
 	}
-	if err := a.Field("provider").Set("magpie"); err != nil {
+	if err := a.Field("provider").Set("starling"); err != nil {
 		t.Fatal(err)
 	}
-	if a.Field("provider").Get() != magpieID {
-		t.Fatal("not on chongyun")
+	if a.Field("provider").Get() != starlingID {
+		t.Fatal("not on starling")
 	}
 	for _, q := range []desktopPaths{p, r} {
 		if !desktopWired(q) {
@@ -547,9 +547,9 @@ func TestClaudeDesktopMSIX(t *testing.T) {
 	}
 }
 
-// A packaged Desktop switched on by a magpie that wrote only the
+// A packaged Desktop switched on by a starling that wrote only the
 // package's folders keeps its stash: switching on now writes the real ones
-// too, and off still leaves the package's as they were before magpie.
+// too, and off still leaves the package's as they were before starling.
 func TestClaudeDesktopMSIXStashBefore(t *testing.T) {
 	home, _ := desktopSandbox(t)
 	old := desktopdir.OS
@@ -561,14 +561,14 @@ func TestClaudeDesktopMSIXStashBefore(t *testing.T) {
 	p := desktopPathsOf(filepath.Join(pkg, "Local", "Claude"), filepath.Join(pkg, "Local", "Claude-3p"))
 	desktopWrite(t, p.config3p, `{"deploymentMode":"1p"}`)
 	before := desktopTree(t, p)
-	// as the magpie before wrote it: the package's set, the plain keys
+	// as the starling before wrote it: the package's set, the plain keys
 	if err := desktopOn(p); err != nil {
 		t.Fatal(err)
 	}
 	r := desktopPathsOf(filepath.Join(local, "Claude"), filepath.Join(local, "Claude-3p"))
 
 	a := claudeDesktop(home)
-	if err := a.Field("provider").Set("magpie"); err != nil {
+	if err := a.Field("provider").Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	if !desktopWired(r) {
@@ -589,10 +589,10 @@ func TestClaudeDesktopMSIXStashBefore(t *testing.T) {
 
 // dumplings 报告: Desktop 2.31226.0 from its MSIX on Windows runs in
 // the real %LOCALAPPDATA%\Claude-3p (its "Local State" there is the newest),
-// and the package's LocalCache copy, which magpie wrote too, is emptied.
-// Desktop is on magpie and the card doesn't say it was changed; the copy
+// and the package's LocalCache copy, which starling wrote too, is emptied.
+// Desktop is on starling and the card doesn't say it was changed; the copy
 // Desktop reads turned back to 1p still does, and Reconnect with a tier on
-// one of magpie's models puts the gateway back, not only the tier.
+// one of starling's models puts the gateway back, not only the tier.
 func TestClaudeDesktopMSIXChecksTheFoldersDesktopRuns(t *testing.T) {
 	home, _ := desktopSandbox(t)
 	old := desktopdir.OS
@@ -614,7 +614,7 @@ func TestClaudeDesktopMSIXChecksTheFoldersDesktopRuns(t *testing.T) {
 		os.Chtimes(f, then, then)
 	}
 	a := claudeDesktop(home)
-	if err := a.Field("provider").Set("magpie"); err != nil {
+	if err := a.Field("provider").Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.Field("sonnet").Set("v/a"); err != nil {
@@ -658,11 +658,11 @@ func TestClaudeDesktopMSIXChecksTheFoldersDesktopRuns(t *testing.T) {
 	}
 }
 
-// Claude-3p is a userData of its own, so Desktop on magpie started in the
+// Claude-3p is a userData of its own, so Desktop on starling started in the
 // system's language, not the one picked signed in with Anthropic (memory
 // and Osal 报告: Chinese gone). The language is carried into
 // Claude-3p's config.json, nothing else of Claude's is, and off takes the
-// file magpie made for it away again.
+// file starling made for it away again.
 func TestClaudeDesktopCarriesTheLanguage(t *testing.T) {
 	home, p := desktopSandbox(t)
 	own := "{\n  \"locale\": \"zh-CN\",\n  \"userThemeMode\": \"dark\"\n}\n"
@@ -670,7 +670,7 @@ func TestClaudeDesktopCarriesTheLanguage(t *testing.T) {
 	before := desktopTree(t, p)
 
 	f := claudeDesktop(home).Field("provider")
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	if m := desktopJSON(t, p.app3p); !reflect.DeepEqual(m, map[string]any{"locale": "zh-CN"}) {
@@ -688,7 +688,7 @@ func TestClaudeDesktopCarriesTheLanguage(t *testing.T) {
 }
 
 // A language already set in 3p mode (Desktop's, or the user's by hand) is
-// theirs: no write of magpie's changes Claude-3p's config.json, on, again,
+// theirs: no write of starling's changes Claude-3p's config.json, on, again,
 // off and on again, and off leaves it there.
 func TestClaudeDesktopKeepsThe3pLanguage(t *testing.T) {
 	home, p := desktopSandbox(t)
@@ -697,7 +697,7 @@ func TestClaudeDesktopKeepsThe3pLanguage(t *testing.T) {
 	desktopWrite(t, p.app3p, mine)
 
 	f := claudeDesktop(home).Field("provider")
-	for i, v := range []string{"magpie", "magpie", "", "magpie"} {
+	for i, v := range []string{"starling", "starling", "", "starling"} {
 		if err := f.Set(v); err != nil {
 			t.Fatal(err)
 		}
@@ -708,12 +708,12 @@ func TestClaudeDesktopKeepsThe3pLanguage(t *testing.T) {
 }
 
 // Wired, and Desktop has written its config.json since: the user then
-// sets the language there by hand. Applying magpie again keeps every key;
-// off keeps the file, which is no longer magpie's alone.
+// sets the language there by hand. Applying starling again keeps every key;
+// off keeps the file, which is no longer starling's alone.
 func TestClaudeDesktopUserEditsThenReapply(t *testing.T) {
 	home, p := desktopSandbox(t)
 	f := claudeDesktop(home).Field("provider")
-	if err := f.Set("magpie"); err != nil {
+	if err := f.Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(p.app3p); err == nil {
@@ -722,7 +722,7 @@ func TestClaudeDesktopUserEditsThenReapply(t *testing.T) {
 	desktopWrite(t, p.app, `{"locale":"zh-CN"}`)
 	edited := "{\n  \"locale\": \"zh-TW\",\n  \"hasCompletedOnboarding\": true\n}\n"
 	desktopWrite(t, p.app3p, edited)
-	for _, v := range []string{"magpie", "", "magpie"} {
+	for _, v := range []string{"starling", "", "starling"} {
 		if err := f.Set(v); err != nil {
 			t.Fatal(err)
 		}
@@ -733,12 +733,12 @@ func TestClaudeDesktopUserEditsThenReapply(t *testing.T) {
 }
 
 // Only a language Desktop can name is carried, and a Claude-3p config.json
-// magpie can't read as an object is left as it is, the takeover going on.
+// starling can't read as an object is left as it is, the takeover going on.
 func TestClaudeDesktopLanguageOddValues(t *testing.T) {
 	for _, own := range []string{`{"locale":"../../x"}`, `{"locale":7}`, `{"locale":""}`, `not json`} {
 		home, p := desktopSandbox(t)
 		desktopWrite(t, p.app, own)
-		if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
+		if err := claudeDesktop(home).Field("provider").Set("starling"); err != nil {
 			t.Fatal(err)
 		}
 		if b, err := os.ReadFile(p.app3p); err == nil {
@@ -748,7 +748,7 @@ func TestClaudeDesktopLanguageOddValues(t *testing.T) {
 	home, p := desktopSandbox(t)
 	desktopWrite(t, p.app, `{"locale":"zh-CN"}`)
 	desktopWrite(t, p.app3p, `[1]`)
-	if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
+	if err := claudeDesktop(home).Field("provider").Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	if b, _ := os.ReadFile(p.app3p); string(b) != `[1]` {

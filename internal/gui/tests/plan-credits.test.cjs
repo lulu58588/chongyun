@@ -2,9 +2,9 @@
 // What WorkBuddy requests cost in the plan's credits (#2512, wwcraft_ on
 // Discord: the Usage page should say the credits spent by model, agent and
 // session). Each reply says it as usage.credit, the figure WorkBuddy's own
-// app shows on a reply as "Credits Consumed"; magpie keeps it on the row and
+// app shows on a reply as "Credits Consumed"; starling keeps it on the row and
 // the Usage page's ranking says the sum on its line of numbers, the
-// Sessions page on the line of where magpie routed the session. A group no
+// Sessions page on the line of where starling routed the session. A group no
 // reply said credits for says none, not 0. Every language, Chromium and
 // WebKit; no backend, the API is faked.
 const assert = require("node:assert/strict");
@@ -63,7 +63,7 @@ function server(lang) {
     if (url.pathname === "/api/sessions") return json({ sessions: [SESSION], terminal: true, dirs: ["~/.codex/sessions"] });
     if (url.pathname === "/api/sessions/stats") return json({ from: "", to: "", days: [], agents: {} });
     if (url.pathname === "/api/sessions/manage") {
-      return json({ agents: [{ agent: "codex", count: 1, deletable: true, name: "Codex", icon: "openai" }], agent: "codex", sessions: [{ ...SESSION, size: 4096, messages: 6, files: 1, deletable: true }], terminal: true, trash: [], trashDir: "~/magpie/trash/sessions" });
+      return json({ agents: [{ agent: "codex", count: 1, deletable: true, name: "Codex", icon: "openai" }], agent: "codex", sessions: [{ ...SESSION, size: 4096, messages: 6, files: 1, deletable: true }], terminal: true, trash: [], trashDir: "~/starling/trash/sessions" });
     }
     if (url.pathname === "/api/groups") return json({ groups: [], models: [] });
     if (url.pathname.startsWith("/api/")) return json({});
@@ -95,7 +95,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         p.setDefaultTimeout(5000);
         p.on("pageerror", (e) => errors.push(e.message));
         await p.route("**/*", server(lang));
-        await p.goto("http://magpie.test/");
+        await p.goto("http://starling.test/");
         await p.locator('[data-view="usage"]').first().click();
         await p.locator(":is(#usageTab .opt, .nav-s):visible").nth(1).click();
         await p.locator("#ledWrap .led tbody tr").first().waitFor();
@@ -121,7 +121,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         await p.setViewportSize({ width: 1100, height: 800 });
 
         // the Sessions page: the routed line of the session says them
-        await p.goto("http://magpie.test/?view=sessions");
+        await p.goto("http://starling.test/?view=sessions");
         const view = p.locator("#view-sessions");
         const r = view.locator('.row.sm-sess[data-id="c-1"]');
         await r.waitFor();

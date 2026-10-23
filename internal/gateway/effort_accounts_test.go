@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // freeRefusesHigh is the ChatGPT backend's 400 for a reasoning level the
@@ -53,7 +53,7 @@ func effortAccounts(t *testing.T, freeLevels []string, plusOut *bool) func() []s
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("free@example.com", "acct-free", "free")), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{

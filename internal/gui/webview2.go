@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// magpie's windows are WebView2 on Windows, a runtime Windows 10 doesn't
+// starling's windows are WebView2 on Windows, a runtime Windows 10 doesn't
 // always have. Without it Wails hands the failure to ErrorHandler and exits,
 // and the desktop build has no console for that to land in: a double-click
 // came up to nothing (#1806, ufec). Run asks before any window is made and,
@@ -18,7 +18,7 @@ const webView2Page = "https://developer.microsoft.com/microsoft-edge/webview2/"
 // webView2Missing reads Wails' own answer, Env.Info().PlatformInfo's
 // "WebView2": the runtime's version, "" when its lookup failed, the lookup
 // a window's WebView2 environment makes. A key Wails doesn't set at all
-// says nothing, and is read as there: refusing to start a magpie that would
+// says nothing, and is read as there: refusing to start a starling that would
 // have worked is worse than the silent exit.
 func webView2Missing(info map[string]any) bool {
 	v, ok := info["WebView2"]
@@ -38,30 +38,30 @@ func webView2Notice(lang string) (title, body string) {
 }
 
 var webView2Words = map[string][2]string{
-	"en": {"chongyun needs WebView2",
-		"chongyun's windows need Microsoft Edge WebView2 Runtime, which isn't installed on this computer.\r\n\r\n" +
+	"en": {"starling needs WebView2",
+		"starling's windows need Microsoft Edge WebView2 Runtime, which isn't installed on this computer.\r\n\r\n" +
 			"Install it from:\r\n%s\r\n\r\nor in a terminal:\r\nwinget install Microsoft.EdgeWebView2Runtime\r\n\r\n" +
-			"Until then, \"chongyun web\" opens chongyun in your browser and \"chongyun tui\" in a terminal.\r\n\r\n" +
+			"Until then, \"starling web\" opens starling in your browser and \"starling tui\" in a terminal.\r\n\r\n" +
 			"Open the download page now?"},
-	"zh": {"chongyun 需要 WebView2",
-		"chongyun 的窗口需要 Microsoft Edge WebView2 运行时，这台电脑上没有安装。\r\n\r\n" +
+	"zh": {"starling 需要 WebView2",
+		"starling 的窗口需要 Microsoft Edge WebView2 运行时，这台电脑上没有安装。\r\n\r\n" +
 			"请从这里安装：\r\n%s\r\n\r\n或在终端里运行：\r\nwinget install Microsoft.EdgeWebView2Runtime\r\n\r\n" +
-			"装好之前，可以用 \"chongyun web\" 在浏览器里打开 chongyun，或用 \"chongyun tui\" 在终端里打开。\r\n\r\n" +
+			"装好之前，可以用 \"starling web\" 在浏览器里打开 starling，或用 \"starling tui\" 在终端里打开。\r\n\r\n" +
 			"现在打开下载页面吗？"},
-	"zh-TW": {"chongyun 需要 WebView2",
-		"chongyun 的視窗需要 Microsoft Edge WebView2 執行階段，這台電腦上沒有安裝。\r\n\r\n" +
+	"zh-TW": {"starling 需要 WebView2",
+		"starling 的視窗需要 Microsoft Edge WebView2 執行階段，這台電腦上沒有安裝。\r\n\r\n" +
 			"請從這裡安裝：\r\n%s\r\n\r\n或在終端機裡執行：\r\nwinget install Microsoft.EdgeWebView2Runtime\r\n\r\n" +
-			"裝好之前，可以用 \"chongyun web\" 在瀏覽器裡開啟 chongyun，或用 \"chongyun tui\" 在終端機裡開啟。\r\n\r\n" +
+			"裝好之前，可以用 \"starling web\" 在瀏覽器裡開啟 starling，或用 \"starling tui\" 在終端機裡開啟。\r\n\r\n" +
 			"現在開啟下載頁面嗎？"},
-	"ja": {"chongyun には WebView2 が必要です",
-		"chongyun のウィンドウには Microsoft Edge WebView2 ランタイムが必要ですが、このコンピューターにはインストールされていません。\r\n\r\n" +
+	"ja": {"starling には WebView2 が必要です",
+		"starling のウィンドウには Microsoft Edge WebView2 ランタイムが必要ですが、このコンピューターにはインストールされていません。\r\n\r\n" +
 			"こちらからインストールしてください：\r\n%s\r\n\r\nまたはターミナルで：\r\nwinget install Microsoft.EdgeWebView2Runtime\r\n\r\n" +
-			"それまでは \"chongyun web\" でブラウザーから、\"chongyun tui\" でターミナルから chongyun を使えます。\r\n\r\n" +
+			"それまでは \"starling web\" でブラウザーから、\"starling tui\" でターミナルから starling を使えます。\r\n\r\n" +
 			"今すぐダウンロードページを開きますか？"},
-	"de": {"chongyun braucht WebView2",
-		"Die Fenster von chongyun brauchen die Microsoft Edge WebView2 Runtime, die auf diesem Computer nicht installiert ist.\r\n\r\n" +
+	"de": {"starling braucht WebView2",
+		"Die Fenster von starling brauchen die Microsoft Edge WebView2 Runtime, die auf diesem Computer nicht installiert ist.\r\n\r\n" +
 			"Installieren Sie sie von:\r\n%s\r\n\r\noder im Terminal:\r\nwinget install Microsoft.EdgeWebView2Runtime\r\n\r\n" +
-			"Bis dahin öffnet \"chongyun web\" chongyun im Browser und \"chongyun tui\" im Terminal.\r\n\r\n" +
+			"Bis dahin öffnet \"starling web\" starling im Browser und \"starling tui\" im Terminal.\r\n\r\n" +
 			"Die Download-Seite jetzt öffnen?"},
 }
 
@@ -70,7 +70,7 @@ var webView2Words = map[string][2]string{
 // app's own arguments: the features to disable, the ones to enable, and
 // every other argument as written. Wails' loader blanks the variable
 // itself, so without this a user's --disable-features=RendererCodeIntegrity
-// never reached magpie's renderer (#2753, LuYquan: an injected DLL got it
+// never reached starling's renderer (#2753, LuYquan: an injected DLL got it
 // killed and the window went black). Wails puts its own
 // msSmartScreenProtection first in DisabledFeatures and writes the list as
 // one --disable-features (and EnabledFeatures as one --enable-features):

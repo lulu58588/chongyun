@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The CPU profile goes to the same callers as the heap profile and no
@@ -23,8 +23,8 @@ import (
 // second is recorded.
 func TestCPUProfileOnlyToThisComputer(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "")
-	t.Setenv("MAGPIE_PUBLIC_URL", "")
+	t.Setenv("STARLING_ADDR", "")
+	t.Setenv("STARLING_PUBLIC_URL", "")
 	_, secrets := newCaller(t, "Page")
 	s := settings.Load()
 	s.CORSOrigins = []string{"https://listed.example"}
@@ -86,7 +86,7 @@ func TestCPUProfileOnlyToThisComputer(t *testing.T) {
 	for _, host := range []string{"127.0.0.1:3425", "localhost:3425", "[::1]:3425"} {
 		w := call(true, "127.0.0.1:50123", host, "User-Agent", "Go-http-client/1.1")
 		if w.Code != http.StatusOK {
-			t.Fatalf("chongyun cpu at %s: %d %q", host, w.Code, w.Body.String())
+			t.Fatalf("starling cpu at %s: %d %q", host, w.Code, w.Body.String())
 		}
 		zr, err := gzip.NewReader(bytes.NewReader(w.Body.Bytes()))
 		if err != nil {
@@ -137,7 +137,7 @@ func TestCPUProfileSecondsBounded(t *testing.T) {
 // its recording, and the next profile can start.
 func TestCPUProfileOneAtATime(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	srv := New()
 	ts := httptest.NewServer(srv.Handler())
 	defer ts.Close()

@@ -14,8 +14,8 @@ import (
 // A plugin's fetch is told the folder the agent works in, as the agent says
 // it in its request, and whether it is a git repository, so a plugin that
 // tells its vendor the user's environment says the agent's and not
-// magpie's own (magpie-community/plugins#86: ZCode's Start Plan said
-// magpie's ~/.config/magpie as the working directory, and the model went
+// starling's own (magpie-community/plugins#86: ZCode's Start Plan said
+// starling's ~/.config/starling as the working directory, and the model went
 // looking there). The headers reach the plugin and never the vendor; a
 // request that says no folder has neither.
 func TestPluginToldWhereTheAgentWorks(t *testing.T) {
@@ -96,7 +96,7 @@ func TestPluginToldWhereTheAgentWorks(t *testing.T) {
 		}
 		h := got[0]
 		mu.Unlock()
-		for _, k := range []string{"X-Magpie-Work-Dir", "X-Magpie-Work-Git"} {
+		for _, k := range []string{"X-Starling-Work-Dir", "X-Starling-Work-Git"} {
 			if v := h.Values(k); len(v) > 0 {
 				t.Errorf("%s: the vendor got %s: %q", tc.name, k, v)
 			}

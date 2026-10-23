@@ -5,14 +5,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A tier, or the subagents, given a model picked from the list keeps it
 // when the main model moves, though the pick is the main model itself or
-// the model the tier would follow on it, picked in magpie with the main
-// model moved in magpie or in Claude Code's /model (#2654, ypli0629: a
+// the model the tier would follow on it, picked in starling with the main
+// model moved in starling or in Claude Code's /model (#2654, ypli0629: a
 // sonnet tier given K2.8 Preview, the main model, read as "Same as main
 // model", and the move to GLM-6 took it along). "Same as main model"
 // picked afterwards has it follow again.
@@ -27,7 +27,7 @@ func TestClaudeTierPickedAsTheMainModelStays(t *testing.T) {
 	// haiku on a Claude main model follows its Haiku: that Haiku picked
 	picks = append(picks, pick{"anth/claude-opus-5-5", "haiku", "anth/claude-haiku-4-5"})
 	for _, p := range picks {
-		for _, via := range []string{"magpie", "/model"} {
+		for _, via := range []string{"starling", "/model"} {
 			t.Run(p.main+"/"+p.key+"="+p.model+"/"+via, func(t *testing.T) {
 				home, _ := codexHome(t, "", "")
 				a := claude(home)
@@ -48,7 +48,7 @@ func TestClaudeTierPickedAsTheMainModelStays(t *testing.T) {
 				written := func() string { m, _ := edit.GetJSON(path, "env."+envKey); return bare(m) }
 				main := func(m string) {
 					t.Helper()
-					if via == "magpie" {
+					if via == "starling" {
 						if err := a.Apply("model", m); err != nil {
 							t.Fatal(err)
 						}

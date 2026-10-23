@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The gateway gives a drawing up to Settings' most minutes, and a video

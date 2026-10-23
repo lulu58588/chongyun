@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // These connections belong to the trace reader, not the Sessions listing cache.

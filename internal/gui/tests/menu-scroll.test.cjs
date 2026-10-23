@@ -42,7 +42,7 @@ async function serve(route) {
   if (url.pathname === "/api/usage/quotas" || url.pathname === "/api/usage/quotas/history" || url.pathname === "/api/agents/install") return json([]);
   if (url.pathname === "/api/whatsnew") return json({});
   if (url.pathname === "/api/upstream") return json({ vendors: [], providers: {} });
-  // the sidebar's plugin pages, and plugin panels in magpie's pages: none
+  // the sidebar's plugin pages, and plugin panels in starling's pages: none
   if (url.pathname === "/api/plugin-pages" || url.pathname === "/api/plugin-panels") return json([]);
   // the sidebar's gateway line, when no page has read the providers
   if (url.pathname === "/api/providers") return json({ providers: [], gateway: { url: "http://127.0.0.1:3425", running: true } });
@@ -93,7 +93,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     const errors = [];
     page.on("pageerror", e => errors.push(e.message));
     await page.route("**/*", serve);
-    await page.addInitScript(() => localStorage.setItem("magpie.usageTab", "sessions"));
+    await page.addInitScript(() => localStorage.setItem("starling.usageTab", "sessions"));
     await context.tracing.start({ screenshots: true, snapshots: true });
     t.after(async () => {
       try {
@@ -105,9 +105,9 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       } finally { await browser.close(); }
     });
     async function reset() {
-      await page.goto("http://magpie.test/?view=usage");
+      await page.goto("http://starling.test/?view=usage");
       await page.locator("#sessFolder:not([hidden])").waitFor();
-      assert.equal(await page.title(), "magpie");
+      assert.equal(await page.title(), "starling");
       assert.equal(await page.locator("#sessList .sess-item").count(), 40);
       // Always-visible scrollbars make track/thumb input independent of OS preferences.
       await page.addStyleTag({ content: `

@@ -12,7 +12,7 @@ import (
 )
 
 // lapsedCopilot is a machine with the editors signed in to octocat (gho_x,
-// taken) and magpie to hubot (gho_kept), whose trade for a session token
+// taken) and starling to hubot (gho_kept), whose trade for a session token
 // answers what status says.
 func lapsedCopilot(t *testing.T) *atomic.Int32 {
 	t.Helper()

@@ -1,6 +1,6 @@
 package provider
 
-// Where Codex keeps its own sign-in, and how chongyun's own ChatGPT sign-in
+// Where Codex keeps its own sign-in, and how starling's own ChatGPT sign-in
 // is put there.
 //
 // Codex 0.162's config.toml says where (codex-rs/login/src/auth/storage.rs,
@@ -11,8 +11,8 @@ package provider
 // keyring and auto mean Codex's encrypted auth storage instead of the
 // keychain item.
 //
-// Nothing here reads a sign-in of Codex's: chongyun writes only the sign-in
-// of its own OAuth flow, so that Codex itself goes by the account chongyun
+// Nothing here reads a sign-in of Codex's: starling writes only the sign-in
+// of its own OAuth flow, so that Codex itself goes by the account starling
 // signed in to. Which store Codex keeps its sign-in in is told by its
 // config.toml, a setting file, not a credential.
 
@@ -32,8 +32,8 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // codexKeychainService is the keychain item Codex keeps its sign-in in.
@@ -103,7 +103,7 @@ func readCodexStoreSetting(home string) (codexStoreSetting, error) {
 	return s, nil
 }
 
-// keychainItem: the store is the keychain item chongyun writes to.
+// keychainItem: the store is the keychain item starling writes to.
 func (s codexStoreSetting) keychainItem() bool {
 	return (s.Mode == "keyring" || s.Mode == "auto") && !s.Secrets && runtime.GOOS == "darwin"
 }
@@ -119,12 +119,12 @@ func (s codexStoreSetting) where() string {
 	return "the system keychain"
 }
 
-// codexStoreError: Codex keeps its sign-in where chongyun cannot write it,
-// so the sign-in chongyun made is not the one Codex goes by.
+// codexStoreError: Codex keeps its sign-in where starling cannot write it,
+// so the sign-in starling made is not the one Codex goes by.
 type codexStoreError struct {
 	Setting codexStoreSetting
 	Config  string
-	Cause   error // nil: a store chongyun doesn't write to on this system
+	Cause   error // nil: a store starling doesn't write to on this system
 }
 
 func (e *codexStoreError) Error() string {
@@ -134,7 +134,7 @@ func (e *codexStoreError) Error() string {
 	if e.Cause != nil {
 		return fmt.Sprintf("Codex keeps its sign-in in %s (cli_auth_credentials_store = %q in %s), and %v", e.Setting.where(), e.Setting.Mode, e.Config, e.Cause)
 	}
-	return fmt.Sprintf("Codex keeps its sign-in in %s (cli_auth_credentials_store = %q in %s), which chongyun can't write", e.Setting.where(), e.Setting.Mode, e.Config)
+	return fmt.Sprintf("Codex keeps its sign-in in %s (cli_auth_credentials_store = %q in %s), which starling can't write", e.Setting.where(), e.Setting.Mode, e.Config)
 }
 
 // codexStore is where a Codex sign-in is written.
@@ -175,9 +175,9 @@ func codexKeychainPut(home string, secret []byte) error {
 }
 
 // saveCodexLogin makes b the sign-in Codex goes by (a switch, or the
-// first sign-in in chongyun), in the store its config.toml names. It
+// first sign-in in starling), in the store its config.toml names. It
 // writes only: no sign-in of Codex's is read, so none is taken for
-// absent, and none is written over by accident — chongyun's own OAuth
+// absent, and none is written over by accident — starling's own OAuth
 // sign-in is what it puts there.
 func saveCodexLogin(home string, b []byte) error {
 	s, err := readCodexStoreSetting(home)
@@ -201,7 +201,7 @@ func saveCodexLogin(home string, b []byte) error {
 	case s.Mode == "keyring":
 		return &codexStoreError{Setting: s, Config: cfg}
 	case s.Mode == "auto":
-		// a store chongyun can't write to: only a Codex on its file
+		// a store starling can't write to: only a Codex on its file
 		// fallback goes by auth.json
 		if _, err := os.Stat(st.file()); err != nil {
 			return &codexStoreError{Setting: s, Config: cfg}

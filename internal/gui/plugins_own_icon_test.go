@@ -7,21 +7,21 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // #1775 (peterroe): a plugin of several providers gives each its own
-// picture in the auth hook and itself one in package.json's magpie.icon.
+// picture in the auth hook and itself one in package.json's starling.icon.
 // Settings → Plugins is told the plugin's own, checked and kept as a
 // listed plugin's is, apart from its providers'; one that gives none, or
-// a picture magpie doesn't take (plain http), is told none.
+// a picture starling doesn't take (plain http), is told none.
 func TestPluginsStateGivesThePluginsOwnIcon(t *testing.T) {
 	h := t.TempDir()
 	t.Setenv("HOME", h)
 	t.Setenv("USERPROFILE", h)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(h, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(h, ".cache"))
-	t.Setenv("MAGPIE_BUN", "")
+	t.Setenv("STARLING_BUN", "")
 	t.Setenv("PATH", "")
 	const png = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
 	dir := func(name, icon string) string {
@@ -31,7 +31,7 @@ func TestPluginsStateGivesThePluginsOwnIcon(t *testing.T) {
 		}
 		pj := map[string]any{"name": name, "version": "1.0.0", "main": "index.js"}
 		if icon != "" {
-			pj["magpie"] = map[string]any{"icon": icon}
+			pj["starling"] = map[string]any{"icon": icon}
 		}
 		b, _ := json.Marshal(pj)
 		if err := os.WriteFile(filepath.Join(d, "package.json"), b, 0o644); err != nil {

@@ -8,13 +8,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // The models picked on a WSL agent's row (Claude Code · WSL Ubuntu) are the
 // ones its pickers offer and the line counts: they are kept under the id
-// it is written magpie's models with and sends the gateway's key of, its
+// it is written starling's models with and sends the gateway's key of, its
 // Windows twin's (#927). Kept under claude@wsl:Ubuntu, the line said 2
 // while the default-model picker, the agent's own menu and the gateway's
 // list still had every model.

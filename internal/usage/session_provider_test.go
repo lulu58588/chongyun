@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 func TestCodexSessionAttributionRequiresRecordedIdentity(t *testing.T) {
@@ -112,7 +112,7 @@ func TestLedgerResolvesOAuthIdentityAndExportsIt(t *testing.T) {
 	jwt := "h." + base64.RawURLEncoding.EncodeToString([]byte(claims)) + ".sig"
 	auth, _ := json.Marshal(map[string]any{"auth_mode": "chatgpt", "tokens": map[string]string{"account_id": "a", "id_token": jwt}})
 	os.WriteFile(filepath.Join(sessions.CodexDir(), "auth.json"), auth, 0600)
-	// chongyun tells the account by the one it keeps in its own logins.json,
+	// starling tells the account by the one it keeps in its own logins.json,
 	// the account it signed the agent in to: it never reads the agent's own
 	// file to find out which account that is.
 	sessionLogin(t, "a", "matched@example.com", auth)
@@ -208,13 +208,13 @@ func TestLocalSessionAccountsDoNotEstablishProviders(t *testing.T) {
 		call sessions.Call
 		want string
 	}{
-		{"Codex on chongyun's account", sessions.Call{Agent: "codex", Upstream: "openai", AccountID: "a-mine", UserID: "u-mine"}, "mine@example.com"},
+		{"Codex on starling's account", sessions.Call{Agent: "codex", Upstream: "openai", AccountID: "a-mine", UserID: "u-mine"}, "mine@example.com"},
 		{"Codex on another account", sessions.Call{Agent: "codex", Upstream: "openai", AccountID: "a-other"}, ""},
 		{"Codex with no account recorded", sessions.Call{Agent: "codex", Upstream: "openai"}, ""},
-		{"chongyun's account through a relay", sessions.Call{Agent: "codex", Upstream: "relay", AccountID: "a-mine", UserID: "u-mine"}, "mine@example.com"},
-		{"Claude Desktop on chongyun's account", sessions.Call{Agent: "claude-desktop", Session: "mine"}, "claude@example.com"},
+		{"starling's account through a relay", sessions.Call{Agent: "codex", Upstream: "relay", AccountID: "a-mine", UserID: "u-mine"}, "mine@example.com"},
+		{"Claude Desktop on starling's account", sessions.Call{Agent: "claude-desktop", Session: "mine"}, "claude@example.com"},
 		{"Claude Desktop in another organization", sessions.Call{Agent: "claude-desktop", Session: "other"}, "team@example.com"},
-		{"Claude-3p on chongyun's account's ids", sessions.Call{Agent: "claude-desktop", Session: "third-3p"}, "claude@example.com"},
+		{"Claude-3p on starling's account's ids", sessions.Call{Agent: "claude-desktop", Session: "third-3p"}, "claude@example.com"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			if got := r.resolve(tc.call); got != tc.want {
@@ -241,7 +241,7 @@ func TestLedgerKeepsLocalAccountsSeparateFromGatewayProviders(t *testing.T) {
 	jwt := "h." + base64.RawURLEncoding.EncodeToString([]byte(claims)) + ".sig"
 	auth, _ := json.Marshal(map[string]any{"auth_mode": "chatgpt", "tokens": map[string]string{"account_id": "a", "id_token": jwt, "access_token": jwt, "refresh_token": "r"}})
 	os.WriteFile(filepath.Join(sessions.CodexDir(), "auth.json"), auth, 0600)
-	// the account is chongyun's own: it keeps what it signed the agent in to
+	// the account is starling's own: it keeps what it signed the agent in to
 	// in its own logins.json, and never reads the agent's own file.
 	sessionLogin(t, "a", "mine@example.com", auth)
 	os.WriteFile(filepath.Join(sessions.CodexDir(), "config.toml"), []byte("model_provider = \"custom\"\n[model_providers.custom]\nname = \"OpenAI\"\nrequires_openai_auth = true\n"), 0600)
@@ -300,7 +300,7 @@ func TestOpenCodeSessionCallIsWhatItAskedFor(t *testing.T) {
 }
 
 // A Claude Code call outside every desktop root costs nothing to place:
-// a started magpie's first Requests read asks this of every call twice,
+// a started starling's first Requests read asks this of every call twice,
 // and the path arithmetic it skipped was a fifth of what that read
 // allocated.
 func TestDesktopIdentityOfCLICallAllocatesNothing(t *testing.T) {

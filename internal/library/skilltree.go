@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/source"
+	"github.com/lulu58588/starling/internal/source"
 )
 
 // ---- fetching only a repository's skills ----------------------------------
@@ -249,7 +249,7 @@ func fetchBlob(c *http.Client, src Source, path, sha, dst string, exec bool) err
 	token := false
 	get := func(u, accept string) (*http.Response, error) {
 		req, _ := http.NewRequest("GET", u, nil)
-		req.Header.Set("User-Agent", "chongyun")
+		req.Header.Set("User-Agent", "starling")
 		if accept != "" {
 			req.Header.Set("Accept", accept)
 		}

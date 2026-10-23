@@ -8,16 +8,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// #1839: the calls magpie made by itself — its routing classifier's (UA
-// magpie-router/1), a web search's, System One's decision — go to the same
+// #1839: the calls starling made by itself — its routing classifier's (UA
+// starling-router/1), a web search's, System One's decision — go to the same
 // accounts and keys as the agents' and are counted in their totals, and
-// each account, key and model says how many of them were magpie's own,
+// each account, key and model says how many of them were starling's own,
 // what they came to and cost. A group with none says nothing of it.
-func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
+func TestSummaryCountsStarlingsOwnCallsApart(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())
 	os.MkdirAll(filepath.Dir(catalog.CachePath()), 0o755)
@@ -35,14 +35,14 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 	recs := []Record{
 		{Time: now, Agent: "codex_cli_rs/0.50", Provider: "cx", Model: "gpt-5", Host: "chatgpt.com as a@example.com", ProviderAccount: "a@example.com", Input: 1000, Output: 100, Status: 200},
 		// the classifier's two asks of the turn, on the same account
-		{Time: now, Agent: "magpie-router/1", Kind: "routing", Provider: "cx", Model: "gpt-5", Host: "chatgpt.com as a@example.com", ProviderAccount: "a@example.com", Input: 300, Output: 2, Status: 200},
-		{Time: now, Agent: "magpie-router/1", Kind: "routing", Provider: "cx", Model: "gpt-5", Host: "chatgpt.com as a@example.com", ProviderAccount: "a@example.com", Input: 200, Output: 1, Status: 200},
+		{Time: now, Agent: "starling-router/1", Kind: "routing", Provider: "cx", Model: "gpt-5", Host: "chatgpt.com as a@example.com", ProviderAccount: "a@example.com", Input: 300, Output: 2, Status: 200},
+		{Time: now, Agent: "starling-router/1", Kind: "routing", Provider: "cx", Model: "gpt-5", Host: "chatgpt.com as a@example.com", ProviderAccount: "a@example.com", Input: 200, Output: 1, Status: 200},
 		// a try of it handed on: its tokens, not a request
-		{Time: now, Agent: "magpie-router/1", Kind: "routing", Provider: "cx", Model: "gpt-5", Host: "chatgpt.com as a@example.com", ProviderAccount: "a@example.com", Input: 10, Status: 429, HandedOn: true},
+		{Time: now, Agent: "starling-router/1", Kind: "routing", Provider: "cx", Model: "gpt-5", Host: "chatgpt.com as a@example.com", ProviderAccount: "a@example.com", Input: 10, Status: 429, HandedOn: true},
 		// another account: the agent's alone
 		{Time: now, Agent: "codex_cli_rs/0.50", Provider: "cx", Model: "gpt-5", Host: "chatgpt.com as b@example.com", ProviderAccount: "b@example.com", Input: 50, Output: 5, Status: 200},
-		// a web search magpie made, on a key
-		{Time: now, Agent: "magpie-search/1", Kind: "web_search", Provider: "relay", Model: "gpt-5", Host: "relay.example", ProviderKeyID: key, Input: 40, Output: 4, Status: 200},
+		// a web search starling made, on a key
+		{Time: now, Agent: "starling-search/1", Kind: "web_search", Provider: "relay", Model: "gpt-5", Host: "relay.example", ProviderKeyID: key, Input: 40, Output: 4, Status: 200},
 		{Time: now, Agent: "claude-cli/2.1", Provider: "relay", Model: "gpt-5", Host: "relay.example", ProviderKeyID: key, Input: 60, Output: 6, Status: 200},
 	}
 	s := summarize(Month, now, recs)
@@ -52,7 +52,7 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 	}
 	a := acct["cx@a@example.com"]
 	if a.Calls != 3 || a.Input != 1510 {
-		t.Fatalf("chongyun's calls are still the account's: %+v", a.Totals)
+		t.Fatalf("starling's calls are still the account's: %+v", a.Totals)
 	}
 	if a.Own.Calls != 2 || a.Own.Tokens != 513 { // the try handed on: its tokens, as Totals has them
 		t.Fatalf("account a's own share: %+v", a.Own)
@@ -61,7 +61,7 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 		t.Fatalf("own cost %v, want %v", a.Own.Cost, want)
 	}
 	if b := acct["cx@b@example.com"]; b.Own != (OwnShare{}) {
-		t.Fatalf("account b has none of chongyun's: %+v", b.Own)
+		t.Fatalf("account b has none of starling's: %+v", b.Own)
 	}
 	var k Group
 	for _, g := range s.ProviderKeys {
@@ -82,23 +82,23 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 	if ownModel != 2 {
 		t.Fatalf("model: %d own calls: %+v", ownModel, s.Models)
 	}
-	// magpie's calls are an agent's row of their own, as before ("magpie"
+	// starling's calls are an agent's row of their own, as before ("starling"
 	// where the agents are loaded, its User-Agent's name here)
 	mine := 0
 	for _, g := range s.Agents {
-		if (Record{Agent: g.ID}).ByMagpie() {
+		if (Record{Agent: g.ID}).ByStarling() {
 			mine += g.Calls
 		} else if g.Own != (OwnShare{}) {
 			t.Fatalf("an agent's row has an own share: %+v", g)
 		}
 	}
 	if mine != 3 {
-		t.Fatalf("chongyun's agent rows: %d calls", mine)
+		t.Fatalf("starling's agent rows: %d calls", mine)
 	}
 	// none is said as nothing at all
 	b, _ := json.Marshal(acct["cx@b@example.com"])
 	if strings.Contains(string(b), `"own"`) {
-		t.Fatalf("a group with none of chongyun's calls: %s", b)
+		t.Fatalf("a group with none of starling's calls: %s", b)
 	}
 	b, _ = json.Marshal(a)
 	if !strings.Contains(string(b), `"own":{"calls":2,"tokens":513`) {
@@ -106,11 +106,11 @@ func TestSummaryCountsMagpiesOwnCallsApart(t *testing.T) {
 	}
 }
 
-// Every request magpie sends by itself is magpie's own: the classifier, the
+// Every request starling sends by itself is starling's own: the classifier, the
 // search, the image description; an agent's is not.
-func TestByMagpie(t *testing.T) {
-	for ua, want := range map[string]bool{"magpie-router/1": true, "magpie-search/1": true, "magpie-vision/1": true, "magpie": true, "claude-cli/2.1": false, "codex_cli_rs/0.50": false, "": false} {
-		if got := (Record{Agent: ua}).ByMagpie(); got != want {
+func TestByStarling(t *testing.T) {
+	for ua, want := range map[string]bool{"starling-router/1": true, "starling-search/1": true, "starling-vision/1": true, "starling": true, "claude-cli/2.1": false, "codex_cli_rs/0.50": false, "": false} {
+		if got := (Record{Agent: ua}).ByStarling(); got != want {
 			t.Errorf("%q: %v, want %v", ua, got, want)
 		}
 	}

@@ -95,7 +95,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       page.setDefaultTimeout(5000);
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", serve(lang, picks));
-      await page.goto("http://magpie.test/?mode=panel");
+      await page.goto("http://starling.test/?mode=panel");
       await page.locator('[data-ptab="routing"]').click();
       const row = page.locator(".pr-pick");
       await row.first().waitFor();

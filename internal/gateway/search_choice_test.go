@@ -9,14 +9,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Settings' Searcher names the provider, and the model, that searches for
 // a model that can't; one that is gone, off or can't search gives way to
-// magpie's own pick, and says why.
+// starling's own pick, and says why.
 func TestSearcherChosen(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())
@@ -149,7 +149,7 @@ func TestSearcherChosen(t *testing.T) {
 	choose("relay/claude-haiku-4-5")
 	want("relay", "claude-haiku-4-5", "")
 
-	// one that can't search, one gone: magpie's pick
+	// one that can't search, one gone: starling's pick
 	choose("plain")
 	want("ant", "claude-haiku-4-5", SearcherCant)
 	choose("nobody/x")

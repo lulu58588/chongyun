@@ -17,7 +17,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // Carry is another agent a session can be carried on in, and the shell

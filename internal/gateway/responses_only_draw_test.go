@@ -9,8 +9,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A provider added as "OpenAI Responses" only (what a Codex backend such as
@@ -56,7 +56,7 @@ func TestResponsesOnlyProviderDraws(t *testing.T) {
 	}
 
 	code, a, raw := postImages(t, New(), "/v1/images/generations", "application/json",
-		`{"model":"relay/gpt-image-2.5-flare","prompt":"a chongyun","size":"1024x1024"}`)
+		`{"model":"relay/gpt-image-2.5-flare","prompt":"a starling","size":"1024x1024"}`)
 	if code != 200 || len(a.Data) != 1 {
 		t.Fatalf("%d %s", code, raw)
 	}

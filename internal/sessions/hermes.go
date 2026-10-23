@@ -15,8 +15,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/dirent"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/dirent"
 )
 
 // Hermes stores canonical, non-overlapping input/cache buckets. Reasoning is

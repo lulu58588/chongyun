@@ -20,7 +20,7 @@ func TestIconGoesThroughTheProxy(t *testing.T) {
 		rw.Write(png)
 	}))
 	defer proxy.Close()
-	t.Setenv("MAGPIE_ICON_PROXY", proxy.URL+"/api/icon")
+	t.Setenv("STARLING_ICON_PROXY", proxy.URL+"/api/icon")
 
 	// a server the registry showed, its icon on its author's host; .invalid
 	// never resolves, so reaching it straight fails the test

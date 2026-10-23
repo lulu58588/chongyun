@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // #256: on a Copilot Student account, copilot/auto answered 400 "Copilot:
@@ -27,7 +27,7 @@ func TestCopilotAutoRefusedThroughGateway(t *testing.T) {
 	os.WriteFile(filepath.Join(cfg, "github-copilot", "apps.json"), mustJSON(map[string]any{
 		"github.com:Iv1.x": map[string]any{"user": "student", "oauth_token": "gho_student371"},
 	}), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json: the editor's own file is never read to find out.
 	copilotLoginSaved(t, "student", "gho_student371")
 

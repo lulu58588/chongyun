@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 func TestRegisterScheme(t *testing.T) {
@@ -35,15 +35,15 @@ func TestRegisterScheme(t *testing.T) {
 				t.Fatal(err)
 			}
 			calls := filepath.Join(root, "calls")
-			t.Setenv("MAGPIE_SCHEME_TEST_CALLS", calls)
+			t.Setenv("STARLING_SCHEME_TEST_CALLS", calls)
 			t.Setenv("PATH", bin)
 			for _, name := range []string{"update-desktop-database", "xdg-mime"} {
-				script := "#!/bin/sh\nprintf '%s\\n' '" + name + "' \"$@\" >> \"$MAGPIE_SCHEME_TEST_CALLS\"\n"
+				script := "#!/bin/sh\nprintf '%s\\n' '" + name + "' \"$@\" >> \"$STARLING_SCHEME_TEST_CALLS\"\n"
 				testenv.Program(t, filepath.Join(bin, name), script)
 			}
 			dir := filepath.Join(data, "applications")
-			path := filepath.Join(dir, "magpie.desktop")
-			const old = "[Desktop Entry]\nExec=/usr/bin/magpie %u\nMimeType=x-scheme-handler/magpie;\n"
+			path := filepath.Join(dir, "starling.desktop")
+			const old = "[Desktop Entry]\nExec=/usr/bin/starling %u\nMimeType=x-scheme-handler/starling;\n"
 			if tc.existing {
 				if err := os.MkdirAll(dir, 0o755); err != nil {
 					t.Fatal(err)
@@ -76,7 +76,7 @@ func TestRegisterScheme(t *testing.T) {
 				t.Fatal(err)
 			}
 			got, err := os.ReadFile(path)
-			if err != nil || !strings.Contains(string(got), "Exec="+exe+" %u\n") || !strings.Contains(string(got), "MimeType=x-scheme-handler/magpie;\n") {
+			if err != nil || !strings.Contains(string(got), "Exec="+exe+" %u\n") || !strings.Contains(string(got), "MimeType=x-scheme-handler/starling;\n") {
 				t.Fatalf("desktop entry: %q, %v", got, err)
 			}
 			checkDesktopBinding(t, data, string(got))
@@ -84,7 +84,7 @@ func TestRegisterScheme(t *testing.T) {
 			if err := registerScheme(); err != nil {
 				t.Fatal(err)
 			}
-			want := "update-desktop-database\n" + dir + "\nxdg-mime\ndefault\nmagpie.desktop\nx-scheme-handler/magpie\n"
+			want := "update-desktop-database\n" + dir + "\nxdg-mime\ndefault\nstarling.desktop\nx-scheme-handler/starling\n"
 			if got, err := os.ReadFile(calls); err != nil || string(got) != want {
 				t.Fatalf("registration calls: %q, want %q (%v)", got, want, err)
 			}
@@ -96,10 +96,10 @@ func TestRegisterScheme(t *testing.T) {
 // is installed, so neither the dock nor the app grid draws a gear (#2626).
 func checkDesktopBinding(t *testing.T, data, entry string) {
 	t.Helper()
-	if !strings.Contains(entry, "\nStartupWMClass="+programName+"\n") || !strings.Contains(entry, "\nIcon=chongyun\n") {
+	if !strings.Contains(entry, "\nStartupWMClass="+programName+"\n") || !strings.Contains(entry, "\nIcon=starling\n") {
 		t.Fatalf("desktop entry doesn't bind the window %q and its icon: %q", programName, entry)
 	}
-	icon, err := os.ReadFile(filepath.Join(data, "icons", "hicolor", "256x256", "apps", "magpie.png"))
+	icon, err := os.ReadFile(filepath.Join(data, "icons", "hicolor", "256x256", "apps", "starling.png"))
 	if err != nil || !bytes.Equal(icon, desktopIcon) {
 		t.Fatalf("icon not installed: %d bytes, %v", len(icon), err)
 	}
@@ -108,7 +108,7 @@ func checkDesktopBinding(t *testing.T, data, entry string) {
 	}
 }
 
-// An entry an older magpie (or install.sh) wrote for this executable has no
+// An entry an older starling (or install.sh) wrote for this executable has no
 // StartupWMClass; it is written again, once, and the icon put beside it.
 func TestRegisterSchemeBindsAnOlderEntry(t *testing.T) {
 	t.Setenv("FLATPAK_ID", "")
@@ -120,19 +120,19 @@ func TestRegisterSchemeBindsAnOlderEntry(t *testing.T) {
 		t.Fatal(err)
 	}
 	calls := filepath.Join(root, "calls")
-	t.Setenv("MAGPIE_SCHEME_TEST_CALLS", calls)
+	t.Setenv("STARLING_SCHEME_TEST_CALLS", calls)
 	t.Setenv("PATH", bin)
 	for _, name := range []string{"update-desktop-database", "xdg-mime"} {
-		testenv.Program(t, filepath.Join(bin, name), "#!/bin/sh\nprintf '%s\\n' '"+name+"' >> \"$MAGPIE_SCHEME_TEST_CALLS\"\n")
+		testenv.Program(t, filepath.Join(bin, name), "#!/bin/sh\nprintf '%s\\n' '"+name+"' >> \"$STARLING_SCHEME_TEST_CALLS\"\n")
 	}
 	exe, err := os.Executable()
 	if err != nil {
 		t.Fatal(err)
 	}
 	dir := filepath.Join(data, "applications")
-	path := filepath.Join(dir, "magpie.desktop")
-	older := "[Desktop Entry]\nType=Application\nName=chongyun\nComment=Every agent's model. One place.\nExec=" + exe +
-		" %u\nIcon=chongyun\nCategories=Development;Utility;\nMimeType=x-scheme-handler/magpie;\nTerminal=false\n"
+	path := filepath.Join(dir, "starling.desktop")
+	older := "[Desktop Entry]\nType=Application\nName=starling\nComment=Every agent's model. One place.\nExec=" + exe +
+		" %u\nIcon=starling\nCategories=Development;Utility;\nMimeType=x-scheme-handler/starling;\nTerminal=false\n"
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -169,7 +169,7 @@ func TestKeepWebData(t *testing.T) {
 		moved         bool
 	}{
 		{"webkit data under the executable's name", true, false, true},
-		{"chongyun's folder there already", true, true, false},
+		{"starling's folder there already", true, true, false},
 		{"a folder that isn't WebKit's", false, false, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -186,7 +186,7 @@ func TestKeepWebData(t *testing.T) {
 			if err := os.WriteFile(filepath.Join(from, sub, "file__0.localstorage"), []byte("favourites"), 0o644); err != nil {
 				t.Fatal(err)
 			}
-			if tc.there { // even empty, it is magpie's, which a rename would replace
+			if tc.there { // even empty, it is starling's, which a rename would replace
 				if err := os.MkdirAll(to, 0o755); err != nil {
 					t.Fatal(err)
 				}

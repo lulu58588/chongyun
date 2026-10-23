@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // resumeHarness runs Claude subscription requests through a script
@@ -153,7 +153,7 @@ func eventually(t *testing.T, what string, ok func() bool) {
 // turn's message alone, where a run started anew is told the whole
 // conversation in one message, all of it written to the prompt cache again
 // (X, AncientTwo: a Claude subscription's limits went much faster through
-// magpie than in Claude Code itself).
+// starling than in Claude Code itself).
 func TestClaudeLetGoConversationResumesItsSession(t *testing.T) {
 	h := newResumeHarness(t)
 	h.ask("rules A", "a1")

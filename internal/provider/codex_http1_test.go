@@ -14,8 +14,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // h2Vendor is a TLS server offering HTTP/2 that notes, for each request,
@@ -118,7 +118,7 @@ func (p *tunnel) serve(c net.Conn, addr string) {
 	<-done
 }
 
-// What magpie asks the ChatGPT backend on its own (the models list, the
+// What starling asks the ChatGPT backend on its own (the models list, the
 // warm-up, the allowance, its resets and spending one) goes over HTTP/1.1,
 // as the gateway's turns there do and Codex itself does, and its TLS hello
 // offers no h2: directly, through Settings' proxy and through the

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/library"
+	"github.com/lulu58588/starling/internal/library"
 )
 
 // Crispin 报告: a skill's PowerPoint template didn't come with a

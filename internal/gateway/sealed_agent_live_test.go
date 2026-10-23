@@ -15,12 +15,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // This explicit check uses the signed-in account for one native Codex turn.
 func TestLiveCodexSealedAgentGuidance(t *testing.T) {
-	bin, home, codexHome := os.Getenv("MAGPIE_LIVE_CODEX_BIN"), os.Getenv("MAGPIE_LIVE_HOME"), os.Getenv("MAGPIE_LIVE_CODEX_HOME")
+	bin, home, codexHome := os.Getenv("STARLING_LIVE_CODEX_BIN"), os.Getenv("STARLING_LIVE_HOME"), os.Getenv("STARLING_LIVE_CODEX_HOME")
 	if bin == "" || home == "" || codexHome == "" {
 		t.Skip("live Codex environment not set")
 	}

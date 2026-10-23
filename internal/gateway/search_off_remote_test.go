@@ -3,14 +3,14 @@ package gateway
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// With provider search Off, this magpie's model list no longer tells
-// another magpie that a Kimi Code plan's models are searched for by it:
+// With provider search Off, this starling's model list no longer tells
+// another starling that a Kimi Code plan's models are searched for by it:
 // without a search API it adds no search tool to them (#1483).
-func TestSearchProviderOffTellsRemoteMagpie(t *testing.T) {
+func TestSearchProviderOffTellsRemoteStarling(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())
 	setHome(t, t.TempDir())
@@ -21,8 +21,8 @@ func TestSearchProviderOffTellsRemoteMagpie(t *testing.T) {
 		t.Fatal(err)
 	}
 	e := provider.Entry{Provider: p, Model: "kimi-for-coding"}
-	if got := webSearchOf(e, canSearch()); got != searchMagpie {
-		t.Fatalf("automatic: %q, want %q", got, searchMagpie)
+	if got := webSearchOf(e, canSearch()); got != searchStarling {
+		t.Fatalf("automatic: %q, want %q", got, searchStarling)
 	}
 	st := settings.Load()
 	st.Searcher = "off"

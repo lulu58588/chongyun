@@ -23,11 +23,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/lastgood"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/lastgood"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 //go:embed host.js
@@ -152,7 +152,7 @@ var (
 	// under it, and so is any RPC result, so a child that never ends a line
 	// fails the host rather than making it allocate without bound.
 	maxWireLine = 32 << 20
-	// maxHeadBytes and maxHeadEntries are magpie's own head-envelope policy,
+	// maxHeadBytes and maxHeadEntries are starling's own head-envelope policy,
 	// not HTTP's: a fetch's head carries at most maxHeadBytes of header bytes
 	// (the UTF-8 bytes of every name and value, plus headEntryCost an entry)
 	// and maxHeadEntries entries, counted the same on both sides. It keeps a
@@ -198,7 +198,7 @@ func (c *call) push(m message) bool {
 	switch m.Event {
 	case "head":
 		// exactly one head, and it is free: a repeat would be an unbounded
-		// run of zero-cost lines. Its headers are capped by magpie's own
+		// run of zero-cost lines. Its headers are capped by starling's own
 		// envelope, so an unbounded header set is not a free line either.
 		if c.headed || len(m.Headers) > maxHeadEntries || headCost(m.Headers) > maxHeadBytes {
 			return c.rejectFrameLocked()
@@ -453,7 +453,7 @@ type host struct {
 	failOnce sync.Once
 	// proxy is the proxy the host was started with (hostProxy), which
 	// host.js keeps for its life; proxyAt is when get last compared it
-	// with magpie's now (proxyMoved), zero for a host not started here.
+	// with starling's now (proxyMoved), zero for a host not started here.
 	proxy   string
 	proxyAt time.Time
 }
@@ -677,8 +677,8 @@ func tell(f func()) {
 // waiting for its browser) finishes them first, while the calls made
 // from now on go to the new one: a plugin updating never cuts a reply.
 func Restart() {
-	// the next host loads the plugins as they are now: what this magpie
-	// installed is not another magpie's change (checkList)
+	// the next host loads the plugins as they are now: what this starling
+	// installed is not another starling's change (checkList)
 	listSeen.Lock()
 	listSeen.stamp, listSeen.set = listStamp(), true
 	listSeen.Unlock()
@@ -843,13 +843,13 @@ func start(ctx context.Context) (*host, error) {
 	if crashed {
 		err = whyDied(ctx, bun, err)
 	}
-	if err == nil || !crashed || os.Getenv("MAGPIE_BUN") != "" {
+	if err == nil || !crashed || os.Getenv("STARLING_BUN") != "" {
 		// a Bun that can't be started at all isn't fallen back from: the
 		// one before is the same build for this system, and setting this
 		// one aside would mark a good version bad (#1877)
 		return h, cantStart(bun, err)
 	}
-	// the Bun magpie last took died starting the host: the one before it,
+	// the Bun starling last took died starting the host: the one before it,
 	// and the new one set aside when that one starts it
 	prev, ok := fallBack()
 	if !ok {
@@ -975,8 +975,8 @@ func startOn(ctx context.Context, bun string) (*host, bool, error) {
 	var items []item
 	for _, e := range l.Plugins {
 		// a plugin that is only gateway middleware or an agent runs in
-		// magpie (internal/middleware, internal/agentplug), not here
-		if !e.Off && !InMagpieOnly(Target(e.Spec)) {
+		// starling (internal/middleware, internal/agentplug), not here
+		if !e.Off && !InStarlingOnly(Target(e.Spec)) {
 			items = append(items, item{e.Spec, Target(e.Spec), e.Options, Gateway(Target(e.Spec))})
 		}
 	}
@@ -1537,7 +1537,7 @@ type FetchRequest struct {
 	Body     []byte            `json:"-"`
 	Session  string            `json:"session,omitempty"`
 	// Proxy is the provider's or the account's own proxy (netproxy.With):
-	// "direct", or its URL; "" follows magpie's. Fetch takes it from ctx
+	// "direct", or its URL; "" follows starling's. Fetch takes it from ctx
 	// when it isn't set.
 	Proxy string `json:"proxy,omitempty"`
 }
@@ -1560,7 +1560,7 @@ func forHost(choice string) string {
 }
 
 // hostProxy is the proxy env gives a host: its *_PROXY, as netproxy.Env
-// put them there from magpie's Settings or the system's.
+// put them there from starling's Settings or the system's.
 func hostProxy(env []string) string {
 	var b strings.Builder
 	for _, e := range env {
@@ -1577,7 +1577,7 @@ func hostProxy(env []string) string {
 // proxyLookEvery is how often get asks whether the proxy moved: the
 // system's is read again at most every 15 seconds anyway (netproxy.System).
 // A host started with none asks every 2 seconds, as netproxy reads the
-// system's again then: at login the proxy app comes up after magpie
+// system's again then: at login the proxy app comes up after starling
 // (#1518), and the host's requests went direct until it was asked.
 var (
 	proxyLookEvery = 15 * time.Second
@@ -1595,7 +1595,7 @@ func proxied(hp string) bool {
 	return false
 }
 
-// proxyMoved is whether magpie's proxy is no longer the one h was started
+// proxyMoved is whether starling's proxy is no longer the one h was started
 // with (#1363): host.js reads it once, so a host started at login before
 // the proxy app had set the system's went out with none for good. Grok's
 // sign-in, renewed by its CLI through the host, then lapsed after every
@@ -1615,7 +1615,7 @@ func (h *host) proxyMoved() bool {
 	return hostProxy(env()) != h.proxy
 }
 
-// hostEnv is env for the host, its *_PROXY named MAGPIE_*_PROXY: Bun
+// hostEnv is env for the host, its *_PROXY named STARLING_*_PROXY: Bun
 // reads *_PROXY once and puts every fetch through them, so a provider set
 // to "direct" couldn't go around them. host.js gives each fetch the proxy
 // they name instead. A SOCKS5 one, which Bun can't use, is bridged.
@@ -1625,9 +1625,9 @@ func hostEnv(env []string) []string {
 		k, v, _ := strings.Cut(e, "=")
 		switch strings.ToUpper(k) {
 		case "HTTPS_PROXY", "HTTP_PROXY", "ALL_PROXY":
-			out = append(out, "MAGPIE_"+k+"="+netproxy.ForBun(v))
+			out = append(out, "STARLING_"+k+"="+netproxy.ForBun(v))
 		case "NO_PROXY":
-			out = append(out, "MAGPIE_"+k+"="+v)
+			out = append(out, "STARLING_"+k+"="+v)
 		default:
 			out = append(out, e)
 		}
@@ -1728,7 +1728,7 @@ func (c *call) headRead(ctx context.Context) (head message, answer *message, err
 
 // body is a fetch's reply body. Its reader takes the chunks the call queued,
 // in the order they came; whoever reads it does the waiting, so nothing of
-// magpie's is parked while a consumer that stopped reading holds one. A
+// starling's is parked while a consumer that stopped reading holds one. A
 // cancelled ctx is noticed in Read and Close; a consumer that neither reads
 // nor closes is not waited on, and the stall watchdog gives it up when its
 // backlog passes the watermark.

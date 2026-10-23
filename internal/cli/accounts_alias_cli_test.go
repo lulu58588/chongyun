@@ -9,12 +9,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// #1515: `chongyun accounts alias` names an account for the user, as
-// magpie keeps it (providers.json): the agent's own sign-in is left as it
-// is, and `chongyun accounts` and `chongyun quota` show the name first.
+// #1515: `starling accounts alias` names an account for the user, as
+// starling keeps it (providers.json): the agent's own sign-in is left as it
+// is, and `starling accounts` and `starling quota` show the name first.
 func TestAccountsAlias(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
@@ -35,7 +35,7 @@ func TestAccountsAlias(t *testing.T) {
 	if err := os.WriteFile(authPath, auth, 0o600); err != nil {
 		t.Fatal(err)
 	}
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	logins, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "me@example.com", "active": true,

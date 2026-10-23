@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// Gateway mode (Player 报告): magpie web with no agents on its
+// Gateway mode (Player 报告): starling web with no agents on its
 // machine is in it by itself, and so is one started with --gateway;
 // Settings' On or Off wins over both, and the Settings page's own save
 // leaves it as it is. The app's windows are never in it. The page is told

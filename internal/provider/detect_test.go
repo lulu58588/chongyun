@@ -12,8 +12,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func detectHome(t *testing.T) {
@@ -68,7 +68,7 @@ func relay(t *testing.T) (*httptest.Server, func() []asked) {
 	}
 }
 
-// One URL typed, one click: each API magpie speaks upstream is sent the
+// One URL typed, one click: each API starling speaks upstream is sent the
 // smallest request at that URL as it takes it, and what answered says
 // which the relay serves (01huadalang 报告). A model is picked from
 // the vendor's list for each, which is asked for first, and kept nowhere.

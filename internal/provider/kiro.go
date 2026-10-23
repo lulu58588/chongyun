@@ -19,7 +19,7 @@ package provider
 // A token is refreshed the way its owner would: kiro-cli is asked to
 // refresh its own first, and only when it can't is the token refreshed
 // here and written back where it came from, so the CLI and the IDE go on
-// with the one magpie now holds (a refresh may replace the refresh token).
+// with the one starling now holds (a refresh may replace the refresh token).
 
 import (
 	"bytes"
@@ -38,10 +38,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
 // KiroExecutable finds kiro-cli, which refreshes its own sign-in; a var so
@@ -116,7 +116,7 @@ func (c kiroCred) fresh() bool {
 }
 
 // readKiroAt is one account's sign-in: the key saved on the provider, one
-// magpie signed in in home, or, with neither, Kiro's own: kiro-cli's, else
+// starling signed in in home, or, with neither, Kiro's own: kiro-cli's, else
 // the IDE's.
 func readKiroAt(key, home string) (kiroCred, bool) {
 	if key != "" {
@@ -126,7 +126,7 @@ func readKiroAt(key, home string) (kiroCred, bool) {
 		return readKiroFile(filepath.Join(home, kiroTokenFile))
 	}
 	// Kiro's own sign-in — kiro-cli's or the IDE's — is not read: only
-	// the accounts chongyun signed in itself, each in a home of its own.
+	// the accounts starling signed in itself, each in a home of its own.
 	return kiroCred{}, false
 }
 
@@ -153,7 +153,7 @@ var kiroAuthCache struct {
 }
 
 // KiroAuthOf is a Kiro account's credentials: those of the key saved on
-// the provider, of the account magpie signed in in home, or of Kiro's own
+// the provider, of the account starling signed in in home, or of Kiro's own
 // sign-in when both are "". A token about to expire is refreshed first;
 // stale, after Kiro turned one down, refreshes it now.
 func KiroAuthOf(ctx context.Context, key, home string, stale bool) (KiroAuth, error) {
@@ -166,9 +166,9 @@ func KiroAuthOf(ctx context.Context, key, home string, stale bool) (KiroAuth, er
 	if !ok {
 		delete(kiroAuthCache.m, id)
 		if home != "" {
-			return KiroAuth{}, errors.New("this Kiro account's sign-in is gone; add it again in chongyun")
+			return KiroAuth{}, errors.New("this Kiro account's sign-in is gone; add it again in starling")
 		}
-		return KiroAuth{}, errors.New("Kiro isn't signed in; add the Kiro subscription in chongyun, or save a Kiro API key on the provider")
+		return KiroAuth{}, errors.New("Kiro isn't signed in; add the Kiro subscription in starling, or save a Kiro API key on the provider")
 	}
 	if kiroAuthCache.m == nil {
 		kiroAuthCache.m = map[string]kiroCred{}
@@ -300,11 +300,11 @@ func refreshKiro(ctx context.Context, c kiroCred) (kiroCred, error) {
 }
 
 // kiroExpired says a sign-in is gone and what to do about it: an account
-// chongyun signed in is added again here, one of Kiro's own is signed in
+// starling signed in is added again here, one of Kiro's own is signed in
 // again where it was.
 func kiroExpired(c kiroCred) error {
 	if c.idePath != "" {
-		return errors.New("Kiro's sign-in has expired; add the account again in chongyun")
+		return errors.New("Kiro's sign-in has expired; add the account again in starling")
 	}
 	return errors.New("Kiro's sign-in has expired; sign in again with `kiro-cli login` or the Kiro IDE")
 }
@@ -510,7 +510,7 @@ func kiroProfile(ctx context.Context, c kiroCred) (string, error) {
 	return "", last
 }
 
-// kiroLimits is GetUsageLimits' answer, as far as magpie reads it.
+// kiroLimits is GetUsageLimits' answer, as far as starling reads it.
 type kiroLimits struct {
 	SubscriptionInfo struct {
 		Title string `json:"subscriptionTitle"`
@@ -542,7 +542,7 @@ func kiroUsageLimits(ctx context.Context, a KiroAuth, email bool) (kiroLimits, e
 }
 
 // plan is the subscription's name as Kiro gives it, "KIRO FREE", said the
-// way the rest of magpie's plans are: "Kiro Free".
+// way the rest of starling's plans are: "Kiro Free".
 func (l kiroLimits) plan() string {
 	words := strings.Fields(strings.ToLower(l.SubscriptionInfo.Title))
 	for i, w := range words {

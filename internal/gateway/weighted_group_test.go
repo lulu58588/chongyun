@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/routes"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/routes"
 )
 
 // A group routed by weight (#1910, DD 报告): members weighing 3, 1

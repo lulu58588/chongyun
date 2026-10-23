@@ -3,7 +3,7 @@ package ghtoken
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // The tests run in a home of their own, so Settings is theirs.

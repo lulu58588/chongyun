@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Command Code's own answers to x-cmd-zdr: 1 for a model no Zero Data
@@ -191,7 +191,7 @@ func TestZDRRefusalIsCommandCodesCodeOnly(t *testing.T) {
 
 // Wherever a try's failure is rested — a strict conversation's own
 // account, a System One decision, a count — a Zero Data Retention refusal
-// rests nothing: read from the vendor's own body, or from magpie's note
+// rests nothing: read from the vendor's own body, or from starling's note
 // beside the error the agent was given in Anthropic's shape, which keeps
 // no code. Another vendor's model refusal in the same words still rests
 // the model.

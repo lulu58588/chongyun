@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/starling/internal/agentenv"
 )
 
 func azureHome(t *testing.T) {
@@ -29,7 +29,7 @@ func azureHome(t *testing.T) {
 
 // Whatever the portal or another app gave — the resource's endpoint, its
 // /openai, the v1 base, a classic deployment's URL, a newer resource's
-// host, or only its name — magpie asks the resource's v1 API.
+// host, or only its name — starling asks the resource's v1 API.
 func TestAzureBase(t *testing.T) {
 	for in, want := range map[string]string{
 		"https://contoso.openai.azure.com":              "https://contoso.openai.azure.com/openai/v1",

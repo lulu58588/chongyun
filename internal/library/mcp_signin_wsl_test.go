@@ -5,14 +5,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/mcpauth/mcpauthtest"
 )
 
 // A WSL agent under NAT reaches the gateway at Windows' address, where a
 // request without an enabled gateway key is refused with a 401, which an
-// MCP client takes for the server asking it to sign in. A server magpie
+// MCP client takes for the server asking it to sign in. A server starling
 // signed in to is given to it at /mcp/<name> with the key the gateway is
 // shared with, as its models are; this machine's agent stays keyless, and
 // so does the WSL one while nothing is shared.

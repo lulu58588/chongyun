@@ -15,8 +15,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // ylorn 报告: a lead Claude Code routed by group/orchestrator to a
@@ -50,10 +50,10 @@ func TestClaudeForksAnsweringTheLeadsCallsEachGetAnAnswer(t *testing.T) {
 	os.WriteFile(filepath.Join(home, ".claude", ".credentials.json"), mustJSON(creds), 0o600)
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "lead@example.com", "accountUuid": "u-lead"}}), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
-	chongyunLogins(t, map[string]any{"agent": "claude", "user": "lead@example.com", "plan": "max", "active": true, "on": true,
+	starlingLogins(t, map[string]any{"agent": "claude", "user": "lead@example.com", "plan": "max", "active": true, "on": true,
 		"seen": time.Now(), "auth": creds, "profile": map[string]any{"emailAddress": "lead@example.com", "accountUuid": "u-lead"}})
 
 	// Claude Code: a turn it is told from the start calls Agent three
@@ -89,7 +89,7 @@ while read -r line; do
   esac
   echo '{"type":"stream_event","event":{"type":"message_start","message":{"id":"m","model":"claude-opus-5-5","usage":{"input_tokens":1}}}}'
   for k in 1 2 3; do
-    echo '{"type":"stream_event","event":{"type":"content_block_start","index":'$k',"content_block":{"type":"tool_use","id":"toolu_L'$$'_'$k'","name":"mcp__magpie__Agent"}}}'
+    echo '{"type":"stream_event","event":{"type":"content_block_start","index":'$k',"content_block":{"type":"tool_use","id":"toolu_L'$$'_'$k'","name":"mcp__starling__Agent"}}}'
     echo '{"type":"stream_event","event":{"type":"content_block_delta","index":'$k',"delta":{"type":"input_json_delta","partial_json":"{\"part\":'$k'}"}}}'
     echo '{"type":"stream_event","event":{"type":"content_block_stop","index":'$k'}}'
   done
@@ -119,7 +119,7 @@ wait
 	srv := httptest.NewServer(s.Handler())
 	t.Cleanup(srv.Close)
 	t.Cleanup(s.subscription.abortAll) // before srv.Close: a run's MCP call holds a request open
-	t.Setenv("MAGPIE_ADDR", srv.Listener.Addr().String())
+	t.Setenv("STARLING_ADDR", srv.Listener.Addr().String())
 
 	post := func(messages string) (int, string) {
 		res, err := http.Post(srv.URL+"/v1/messages", "application/json", strings.NewReader(

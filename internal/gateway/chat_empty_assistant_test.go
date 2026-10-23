@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // dsRefuseEmptyAssistant answers as DeepSeek's and Kimi's Chat APIs do,
@@ -295,7 +295,7 @@ func TestSilentAssistantsOutDecodesOnlyAssistants(t *testing.T) {
 	}
 }
 
-// A Resume's prefill, magpie's own ask to go on from a reply cut short,
+// A Resume's prefill, starling's own ask to go on from a reply cut short,
 // stays however little of the reply there was: without it the upstream
 // would answer from the start instead of going on.
 func TestChatResumeEmptyPrefillKept(t *testing.T) {

@@ -7,14 +7,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A custom provider serving a model models.dev knows from others (a
 // Volcengine endpoint's glm-5.3-flash) hands Codex the reasoning levels
 // those give it: the catalog entry had none, so the Codex app offered no
-// effort and magpie's own control showed a level Codex never used.
+// effort and starling's own control showed a level Codex never used.
 func TestCodexCustomProviderModelHasEfforts(t *testing.T) {
 	home, read := codexHome(t, "", "model_reasoning_effort = \"none\"\n")
 	os.MkdirAll(filepath.Dir(catalog.CachePath()), 0o755)
@@ -34,7 +34,7 @@ func TestCodexCustomProviderModelHasEfforts(t *testing.T) {
 	if cfg := read(); !strings.Contains(cfg, `model_reasoning_effort = "low"`) {
 		t.Fatalf("effort not settled on the nearest level:\n%s", cfg)
 	}
-	b, _ := os.ReadFile(filepath.Join(home, ".codex", "chongyun-models.json"))
+	b, _ := os.ReadFile(filepath.Join(home, ".codex", "starling-models.json"))
 	var cat struct {
 		Models []struct {
 			Slug    string  `json:"slug"`
@@ -134,7 +134,7 @@ func TestCodexDefaultEffortStaysDefault(t *testing.T) {
 	if err := model.Set("volc/glm-5.3-flash"); err != nil {
 		t.Fatal(err)
 	}
-	unset("chongyun's model picked")
+	unset("starling's model picked")
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}

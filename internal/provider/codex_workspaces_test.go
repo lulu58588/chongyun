@@ -28,7 +28,7 @@ func emptyCodexHome(t *testing.T) string {
 
 // codexWorkspaceSignIn signs Codex in to a seat of email's in a Team
 // workspace: two of them read alike, "email · Team". The account is
-// chongyun's own, so it is kept in logins.json, and it is the account the
+// starling's own, so it is kept in logins.json, and it is the account the
 // agent is signed in to.
 func codexWorkspaceSignIn(t *testing.T, home, email, workspace, refresh string) {
 	t.Helper()

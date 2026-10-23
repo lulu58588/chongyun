@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // kimiToolEnumTypes is body with a type written into each schema of its

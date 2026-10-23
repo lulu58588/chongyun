@@ -1,6 +1,6 @@
 package provider
 
-// Several subscriptions per agent. magpie keeps following each agent's own
+// Several subscriptions per agent. starling keeps following each agent's own
 // sign-in; it also remembers every Codex and Claude Code account it has
 // seen signed in, so the user can switch back to one without signing in
 // again. A switch moves the saved credentials into the agent's own store
@@ -26,14 +26,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/filelock"
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/lastgood"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/filelock"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/lastgood"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
 // Login is a remembered subscription account, without its secrets.
@@ -47,13 +47,13 @@ type Login struct {
 	// Lapsed says the vendor refused to refresh a saved account's sign-in:
 	// it has to be signed in again before it can be used.
 	Lapsed string `json:"lapsed,omitempty"`
-	// Own is the agent's own sign-in, which magpie only reads: removed, it
+	// Own is the agent's own sign-in, which starling only reads: removed, it
 	// is hidden rather than deleted (side_logins.go).
 	Own bool `json:"own,omitempty"`
 	// Paused is the account the agent is signed in to, passed over by the
 	// gateway while another is on (savedLogin.Paused).
 	Paused bool `json:"paused,omitempty"`
-	// Returns is the account magpie signed the agent out of when it was
+	// Returns is the account starling signed the agent out of when it was
 	// spent, and signs it back in to once it has room again (#408).
 	Returns bool `json:"returns,omitempty"`
 
@@ -80,11 +80,11 @@ type savedLogin struct {
 	// On puts the account in use beside the one the agent is signed in to:
 	// requests go to it when that one is out of quota (see logins_on.go).
 	On bool `json:"on,omitempty"`
-	// Active is the account chongyun signed the agent in to: the one the
+	// Active is the account starling signed the agent in to: the one the
 	// agent runs on, and the one the gateway goes to first. It is kept here,
-	// in chongyun's own logins.json, rather than read from the agent's own
-	// store, which chongyun never reads: another tool's sign-in is not
-	// chongyun's to take over.
+	// in starling's own logins.json, rather than read from the agent's own
+	// store, which starling never reads: another tool's sign-in is not
+	// starling's to take over.
 	Active bool `json:"active,omitempty"`
 	// Auth is the agent's credential blob as the agent stores it: Codex's
 	// auth.json, Claude Code's keychain item / .credentials.json.
@@ -92,7 +92,7 @@ type savedLogin struct {
 	// Profile is Claude Code's oauthAccount from .claude.json, which says
 	// whose credentials those are.
 	Profile json.RawMessage `json:"profile,omitempty"`
-	// Home is where a Grok account magpie signed in keeps its sign-in; the
+	// Home is where a Grok account starling signed in keeps its sign-in; the
 	// Grok CLI's own account has none (see grok_accounts.go). First puts a
 	// Grok or Copilot account ahead of the agent's own (side_logins.go).
 	Home  string `json:"home,omitempty"`
@@ -100,7 +100,7 @@ type savedLogin struct {
 	// Project is the Google Cloud project a Gemini CLI or Antigravity
 	// account's requests go to, when the user named one (google.go).
 	Project string `json:"project,omitempty"`
-	// Renewed is when magpie last refreshed a saved account's sign-in, and
+	// Renewed is when starling last refreshed a saved account's sign-in, and
 	// Lapsed why the vendor last refused to (logins_on.go, keepalive.go).
 	Renewed time.Time `json:"renewed,omitzero"`
 	Lapsed  string    `json:"lapsed,omitempty"`
@@ -108,16 +108,16 @@ type savedLogin struct {
 	// claude_auth.go): Lapsed holds while the account has that one, and
 	// says nothing of the one it is refreshed or signed in to next.
 	Refused string `json:"refused,omitempty"`
-	// Hidden is the agent's own sign-in removed in magpie, with the mark
+	// Hidden is the agent's own sign-in removed in starling, with the mark
 	// of the sign-in it was (side_logins.go): it is listed and tried no
 	// more until the agent signs in anew. The agent's files stay as they are.
 	Hidden string `json:"hidden,omitempty"`
 	// Paused is set on the account the agent is signed in to when the user
-	// paused it in magpie (#263): the gateway passes over it while another
+	// paused it in starling (#263): the gateway passes over it while another
 	// of the agent's accounts is on, the agent staying signed in to it.
 	Paused bool `json:"paused,omitempty"`
 	// Held is the Claude account Claude Code itself was signed in to when
-	// magpie last looked: its saved copy is that very sign-in, which
+	// starling last looked: its saved copy is that very sign-in, which
 	// Claude Code's /logout revokes (claudeLoggedOut).
 	Held bool `json:"held,omitempty"`
 	// was is the name a Copilot account read under a new one had in the
@@ -128,21 +128,21 @@ type savedLogin struct {
 
 var (
 	// loginsMu is held for every read of logins.json a change is made
-	// from, and the write: in this magpie, and across magpies (#1674), so
+	// from, and the write: in this starling, and across starlings (#1674), so
 	// a refresh the gateway writes is never written back over with what a
-	// magpie run from a terminal read before it. Taken, it has logins.json
+	// starling run from a terminal read before it. Taken, it has logins.json
 	// read afresh.
 	loginsMu = filelock.Mutex{
 		Path:   func() string { return loginsPath() + ".lock" },
 		Locked: func() { filememo.Look(loginsPath()) },
 	}
 	// loginsSeenAt is when the accounts were last changed (UnixNano), 0 for
-	// not since this magpie started. It is read without loginsMu, so a look
+	// not since this starling started. It is read without loginsMu, so a look
 	// not yet due takes no lock (#1665).
 	loginsSeenAt atomic.Int64
 )
 
-// switchable agents: those whose sign-in magpie can save and put back.
+// switchable agents: those whose sign-in starling can save and put back.
 var loginAgents = []string{"claude", "codex"}
 
 // loginID is the account's stable id (#905): the one saved with it, or a
@@ -152,7 +152,7 @@ func loginID(l savedLogin) string {
 	if l.ID != "" {
 		return l.ID
 	}
-	sum := sha256.Sum256([]byte("chongyun login\n" + l.Agent + "\n" + accountKey(l.User)))
+	sum := sha256.Sum256([]byte("starling login\n" + l.Agent + "\n" + accountKey(l.User)))
 	return hex.EncodeToString(sum[:8])
 }
 
@@ -172,10 +172,10 @@ func LoginID(agent, user string) string {
 func loginsPath() string { return filepath.Join(filepath.Dir(Path()), "logins.json") }
 
 // lastLogins is the accounts last read from logins.json: a read that fails
-// (a file half there, one magpie can't open for a moment) is them, not no
+// (a file half there, one starling can't open for a moment) is them, not no
 // accounts, which the next change of an account would write back over
 // every account. loginsKnown is whether there are any such, read or
-// written by this magpie.
+// written by this starling.
 var (
 	lastLoginsMu sync.Mutex
 	lastLogins   []savedLogin
@@ -188,7 +188,7 @@ func parseLogins(b []byte) ([]savedLogin, error) {
 	if err := json.Unmarshal(b, &out); err != nil {
 		return nil, err
 	}
-	// DimAgent's accounts: magpie no longer signs in to it (DimAgent
+	// DimAgent's accounts: starling no longer signs in to it (DimAgent
 	// doesn't allow its subscription used outside its client), so one
 	// signed in before is left out, and gone from the file at its next write
 	out = slices.DeleteFunc(out, func(l savedLogin) bool { return l.Agent == "dimagent" })
@@ -219,7 +219,7 @@ func readLogins() []savedLogin {
 		log.Printf("logins.json: %v; the accounts read before are kept", err)
 		ls = lastLogins
 	default:
-		// magpie just started on a file that doesn't read (all zero after
+		// starling just started on a file that doesn't read (all zero after
 		// a crash, #1505): the accounts are its last good generation's
 		ls = nil
 		if b, ferr := lastgood.Fallback(loginsPath(), unreadBytes(loginsPath()), validLogins); ferr == nil {
@@ -270,7 +270,7 @@ func writeLogins(ls []savedLogin) error {
 }
 
 // beforeLoginsWrite is called as logins.json is about to be written: for a
-// test to have another magpie write it then.
+// test to have another starling write it then.
 var beforeLoginsWrite = func() {}
 
 // sortLogins puts accounts in the order logins.json keeps them: by agent,
@@ -338,7 +338,7 @@ func upsertLogin(ls []savedLogin, l savedLogin) []savedLogin {
 
 // dedupeLogins keeps one record per Claude or Codex account, which
 // sameLogin tells by email and organization or workspace. Other agents'
-// accounts are told by name alone: a Grok account magpie signed in and the
+// accounts are told by name alone: a Grok account starling signed in and the
 // CLI's own sign-in to the same one are two records (side_logins.go), and
 // folding them would lose the first's sign-in at the next write.
 func dedupeLogins(ls []savedLogin) []savedLogin {
@@ -525,7 +525,7 @@ func claudeUser(email, plan string, acct map[string]any) string {
 // SignedOut says that p is a signed-in account whose every account in use
 // (on, or the one the agent is signed in to) has had its sign-in refused:
 // listed, so it can be signed in again, but not "signed in". It is what
-// the app's Providers row says as "{user} is signed out", for magpie
+// the app's Providers row says as "{user} is signed out", for starling
 // providers and the TUI to say the same (LeeHom 报告: Claude Code
 // listed on two lapsed accounts).
 func (p Provider) SignedOut() bool {
@@ -688,7 +688,7 @@ func inUseLogin(agent string, room func(user string) (known, spent bool)) string
 func inUseOf(ls []Login, room func(user string) (known, spent bool)) string {
 	for _, l := range ls {
 		if (l.Active || l.first) && !l.Paused {
-			// The account the agent is signed in to leads, but magpie moves
+			// The account the agent is signed in to leads, but starling moves
 			// the sign-in only every few minutes (SwitchWhenSpent, and for
 			// the agents it signs in at all), while the gateway moves its
 			// requests as soon as an account is spent. So the one in use can
@@ -760,7 +760,7 @@ func loginRoom(agent string) func(user string) (known, spent bool) {
 // they restart; so does Codex's background app-server, which new Codex
 // sessions attach to (CodexDaemonStale says when it is).
 func SwitchLogin(agent, user string) error {
-	// the user's own choice: magpie doesn't sign the agent back in to the
+	// the user's own choice: starling doesn't sign the agent back in to the
 	// account it moved it off
 	if slices.Contains(loginAgents, agent) {
 		setLoginReturn(agent, loginReturn{})
@@ -799,13 +799,13 @@ func switchLogin(agent, user string) error {
 	return err
 }
 
-// switchSavedLogin puts a Codex or Claude Code account magpie saved into
+// switchSavedLogin puts a Codex or Claude Code account starling saved into
 // the agent's own store, and answers the account it replaced: "" when there
 // was none, or the agent was on that one already.
 func switchSavedLogin(agent, user string) (from string, _ error) {
 	if agent == "claude" {
 		// nor while Claude Code runs in the account's own directory for
-		// magpie (inSavedClaudeDir), which may refresh it there
+		// starling (inSavedClaudeDir), which may refresh it there
 		mu := claudeDirRun(user)
 		mu.Lock()
 		defer mu.Unlock()
@@ -901,7 +901,7 @@ func claudeProfilePath() string {
 	return filepath.Join(home, ".claude.json")
 }
 
-// putClaudeLogin gives Claude Code the sign-in chongyun made for it, and
+// putClaudeLogin gives Claude Code the sign-in starling made for it, and
 // says whose it is: the credential where Claude Code keeps it, and the
 // profile beside it, which says the account it belongs to.
 func putClaudeLogin(l savedLogin) error {
@@ -924,7 +924,7 @@ func putClaudeLogin(l savedLogin) error {
 }
 
 // putClaudeProfile writes the account a sign-in is for into the profile
-// Claude Code keeps beside it. The account is chongyun's to write; the rest
+// Claude Code keeps beside it. The account is starling's to write; the rest
 // of the file is the user's, and is kept as it is.
 func putClaudeProfile(profile json.RawMessage) error {
 	if len(profile) == 0 {
@@ -1057,7 +1057,7 @@ func loginAgentName(agent string) string {
 }
 
 // ForgetAccounts makes the next look at the accounts read them afresh, for
-// a caller that changed a sign-in behind magpie's back (a test's home).
+// a caller that changed a sign-in behind starling's back (a test's home).
 func ForgetAccounts() {
 	loginsMu.Lock()
 	loginsSeenAt.Store(0)
@@ -1083,7 +1083,7 @@ func forgetAccountCaches() {
 
 // claudeSignInOfAnother says the Claude sign-in l carries is another saved
 // account's, not the one its profile names: Claude Code's credential and
-// ~/.claude.json were read from two moments, as when magpie switches
+// ~/.claude.json were read from two moments, as when starling switches
 // Claude Code (keeping it signed in to one account) and a Claude Code
 // started on the account before writes that one's profile after. Saved,
 // it put the one account's sign-in and plan under the other's name, whose

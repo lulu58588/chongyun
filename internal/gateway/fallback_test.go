@@ -16,19 +16,19 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// chongyunLogins writes chongyun's own logins.json: the accounts it holds,
-// each of them marked as the one its agent is on. chongyun signs the agents
+// starlingLogins writes starling's own logins.json: the accounts it holds,
+// each of them marked as the one its agent is on. starling signs the agents
 // in itself and keeps what it signed in to there; it never reads another
 // tool's own file to find out which account that is, so a test that means
 // "the agent is signed in to this account" writes it here. An account
 // written here again replaces the one it was for, as a sign-in anew does;
 // the others are kept.
-func chongyunLogins(t *testing.T, entries ...map[string]any) {
+func starlingLogins(t *testing.T, entries ...map[string]any) {
 	t.Helper()
 	path := filepath.Join(filepath.Dir(provider.Path()), "logins.json")
 	ls := []map[string]any{}
@@ -57,9 +57,9 @@ func chongyunLogins(t *testing.T, entries ...map[string]any) {
 	t.Cleanup(provider.ForgetAccounts)
 }
 
-// chongyunCodexLogin is a ChatGPT account in chongyun's own logins.json: the
+// starlingCodexLogin is a ChatGPT account in starling's own logins.json: the
 // account the agent is on.
-func chongyunCodexLogin(user string, auth any) map[string]any {
+func starlingCodexLogin(user string, auth any) map[string]any {
 	return map[string]any{"agent": "codex", "user": user, "active": true, "seen": time.Now(), "auth": auth}
 }
 
@@ -368,11 +368,11 @@ func TestSubscriptionAccountsTakeOver(t *testing.T) {
 	}
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("me@example.com", "acct-1")), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
-	chongyunLogins(t,
-		chongyunCodexLogin("me@example.com", auth("me@example.com", "acct-1")),
+	starlingLogins(t,
+		starlingCodexLogin("me@example.com", auth("me@example.com", "acct-1")),
 		map[string]any{"agent": "codex", "user": "spare@example.com", "on": true, "seen": time.Now(), "auth": auth("spare@example.com", "acct-2")},
 	)
 
@@ -412,7 +412,7 @@ func TestSubscriptionAccountsTakeOver(t *testing.T) {
 
 // Two Claude Max accounts ticked (#177): the one Claude Code is signed in to
 // is out of quota, and the request goes to the saved spare, streamed or not.
-// With magpie wired into Claude Code, `claude auth status` tells of magpie's
+// With starling wired into Claude Code, `claude auth status` tells of starling's
 // token and no email: the account is still named from ~/.claude.json, so it
 // is the saved me@example.com, not a "Claude Max" served beside it.
 func TestClaudeAccountsTakeOver(t *testing.T) {
@@ -432,10 +432,10 @@ func TestClaudeAccountsTakeOver(t *testing.T) {
 	os.WriteFile(filepath.Join(home, ".claude", ".credentials.json"), mustJSON(oauth("tok-primary")), 0o600)
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "me@example.com", "accountUuid": "u-me"}}), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
-	chongyunLogins(t,
+	starlingLogins(t,
 		map[string]any{"agent": "claude", "user": "me@example.com", "plan": "max", "active": true, "on": true, "seen": time.Now(),
 			"auth": oauth("tok-me"), "profile": map[string]any{"emailAddress": "me@example.com", "accountUuid": "u-me"}},
 		map[string]any{"agent": "claude", "user": "spare@example.com", "plan": "max", "on": true, "seen": time.Now().Add(-time.Minute),
@@ -488,7 +488,7 @@ done
 		if code != 200 || !strings.Contains(body, "pong") {
 			t.Fatalf("stream=%s: status %d: %s (runs %q)", stream, code, body, b)
 		}
-		// the account the agent is on once, then the spare: chongyun runs
+		// the account the agent is on once, then the spare: starling runs
 		// Claude Code in a config directory of its own, with the sign-in it
 		// keeps for the account, so the account it serves is named by it
 		if runs := strings.Fields(string(b)); strings.Join(runs, ",") != "tok-me,tok-spare" && strings.Join(runs, ",") != "tok-spare" {

@@ -3,7 +3,7 @@ package provider
 // Accounts: agents the user has signed in to, offered as providers.
 //
 // Claude Code, Codex CLI (ChatGPT), and Copilot logins are subscriptions with
-// models behind them. chongyun signs in to them itself, and keeps what it
+// models behind them. starling signs in to them itself, and keeps what it
 // signed in to in its own logins.json; no other agent's sign-in is read.
 
 import (
@@ -29,11 +29,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/claudecode"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/claudecode"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // Account is the signed-in agent behind a provider.
@@ -42,13 +42,13 @@ type Account struct {
 	User  string `json:"user"`           // who is signed in: an email, a GitHub login
 	Plan  string `json:"plan,omitempty"` // the subscription, when the agent says
 
-	// Stream is set when the backend only streams; magpie then translates
+	// Stream is set when the backend only streams; starling then translates
 	// a non-streaming request instead of relaying it.
 	Stream bool `json:"-"`
 
 	// Home is where a Grok, Kiro or Devin account keeps its sign-in: the
 	// agent's own (the CLI's home for Grok, "" for Kiro and Devin), or one
-	// of magpie's for a further account (grok_accounts.go, kiro_accounts.go,
+	// of starling's for a further account (grok_accounts.go, kiro_accounts.go,
 	// devin_accounts.go).
 	Home string `json:"-"`
 
@@ -60,10 +60,10 @@ type Account struct {
 	// Code's own while Claude Code is signed out (claude_dirs.go).
 	standIn bool
 
-	// primary is the account the agent is signed in to, as chongyun signed
+	// primary is the account the agent is signed in to, as starling signed
 	// it in: the one the gateway goes to first, and the one whose other
 	// accounts are listed beside it. It is served in a config directory of
-	// chongyun's own, so it carries a token of its own; it is told apart
+	// starling's own, so it carries a token of its own; it is told apart
 	// from the accounts in use beside it by this.
 	primary bool
 
@@ -75,14 +75,14 @@ type Account struct {
 	body   func(body []byte) []byte // request tweaks the backend insists on
 	models func() []catalog.Model
 	fetch  func(ctx context.Context) ([]catalog.Model, error)
-	// magpieList is set on an account whose fetch asks no vendor and
-	// keeps a copy of models, magpie's own list (Claude's, from the
+	// starlingList is set on an account whose fetch asks no vendor and
+	// keeps a copy of models, starling's own list (Claude's, from the
 	// models.dev catalog; Factory's, compiled in): the list served is
 	// always models as it is now, never the copy, which held a model
 	// listed after it out until the next Refresh (wakaka 报告:
 	// Claude Haiku 5.5, in Claude Code on the same account, missing from
-	// magpie).
-	magpieList bool
+	// starling).
+	starlingList bool
 
 	// auto is set on a Copilot account: the session of Copilot's Auto,
 	// the model it picks for the account (copilot_auto.go).
@@ -285,7 +285,7 @@ func (p Provider) Prepare(body []byte) []byte {
 	return body
 }
 
-// Exclusion is a sign-in magpie found but will not offer as a provider.
+// Exclusion is a sign-in starling found but will not offer as a provider.
 type Exclusion struct {
 	Agent    string `json:"agent"`
 	Provider string `json:"provider,omitempty"` // set when the user removed it; saving it brings it back
@@ -293,11 +293,11 @@ type Exclusion struct {
 	// plugin's, whose Agent is "plugin" (#694)
 	Name string `json:"name,omitempty"`
 	Why  string `json:"why"`
-	// SignedOut: the agent has accounts saved in magpie but isn't signed
-	// in where magpie looks, and so none of them is offered.
+	// SignedOut: the agent has accounts saved in starling but isn't signed
+	// in where starling looks, and so none of them is offered.
 	SignedOut bool `json:"signedOut,omitempty"`
 	// Users names those saved accounts (no secrets), so they can be
-	// removed from magpie while none of them is offered.
+	// removed from starling while none of them is offered.
 	Users []string `json:"users,omitempty"`
 	// Quiet: the user asked not to be reminded of it; only the Add sheet
 	// offers it back.
@@ -307,12 +307,12 @@ type Exclusion struct {
 	Tucked bool `json:"tucked,omitempty"`
 }
 
-// Excluded lists sign-ins magpie detects but leaves out: the accounts the
-// user removed from magpie.
+// Excluded lists sign-ins starling detects but leaves out: the accounts the
+// user removed from starling.
 func Excluded() []Exclusion {
 	var out []Exclusion
 	for _, a := range Hidden() {
-		x := Exclusion{Agent: a.Account.Agent, Provider: a.ID, Why: "You removed it from chongyun.", Quiet: a.Quiet, Tucked: a.Tucked}
+		x := Exclusion{Agent: a.Account.Agent, Provider: a.ID, Why: "You removed it from starling.", Quiet: a.Quiet, Tucked: a.Tucked}
 		if a.IsPlugin() {
 			x.Name = a.Name
 		}
@@ -321,7 +321,7 @@ func Excluded() []Exclusion {
 	return out
 }
 
-// claudeBase is Anthropic's API root, which Claude Code asks; magpie never
+// claudeBase is Anthropic's API root, which Claude Code asks; starling never
 // does with a Claude sign-in.
 var claudeBase = "https://api.anthropic.com"
 
@@ -405,7 +405,7 @@ func keychainDenied(err error) bool {
 }
 
 // claudeHomeService is the keychain item Claude Code keeps the sign-in
-// magpie reads as its own in: "Claude Code-credentials", or with
+// starling reads as its own in: "Claude Code-credentials", or with
 // CLAUDE_CONFIG_DIR set, that directory's own (claudeDirService), as
 // Claude Code names it, beside the .credentials.json there.
 func claudeHomeService() string {
@@ -487,7 +487,7 @@ func writeClaudeCredential(loc claudeCredentialLocation, c claudeCredentials) er
 }
 
 // claudeExecutable finds the claude CLI (proc.FindTool: claude.exe in
-// ~/.local/bin on Windows too, #839), else the one magpie downloaded
+// ~/.local/bin on Windows too, #839), else the one starling downloaded
 // (claudecode.Find); a var so tests can fake it.
 var claudeExecutable = claudecode.Find
 
@@ -506,10 +506,10 @@ func withoutClaudeWiring(env []string) []string {
 }
 
 func claudeAccount() (Provider, bool) {
-	// the account the agent is signed in to, as chongyun signed it in to:
-	// the sign-in chongyun made for it is where Claude Code keeps its own
+	// the account the agent is signed in to, as starling signed it in to:
+	// the sign-in starling made for it is where Claude Code keeps its own
 	// (putClaudeLogin), and it is served in a config directory of
-	// chongyun's own, so it survives a logout of Claude Code. It is the
+	// starling's own, so it survives a logout of Claude Code. It is the
 	// account the agent is on, not a stand-in: a stand-in is a saved
 	// account served in the place of a signed-out Claude Code.
 	if l, ok := ownActive("claude"); ok {
@@ -517,7 +517,7 @@ func claudeAccount() (Provider, bool) {
 		acct.token = func(context.Context) (string, error) { return claudeSavedDir(l.User) }
 		return claudeProvider(acct), true
 	}
-	// no account of chongyun's own is signed in to: one of them is served
+	// no account of starling's own is signed in to: one of them is served
 	// in its place
 	return claudeStandInAccount()
 }
@@ -527,9 +527,9 @@ func claudeAccount() (Provider, bool) {
 func (a *Account) StandIn() bool { return a != nil && a.standIn }
 
 // beside is whether the account is a saved one in use beside the agent's
-// own: it is served in a config directory of chongyun's own, and it is not
+// own: it is served in a config directory of starling's own, and it is not
 // the one the agent is on. The one the agent is on (primary) is not beside
-// itself, though it is served in a directory of chongyun's own too.
+// itself, though it is served in a directory of starling's own too.
 func (a *Account) beside() bool { return a != nil && a.token != nil && !a.standIn && !a.primary }
 
 // claudeProvider is the Claude Code provider of acct.
@@ -539,9 +539,9 @@ func claudeProvider(acct *Account) Provider {
 	// one that would go straight to the API with its sign-in is refused
 	acct.sign = func(context.Context, *http.Request, []byte) error { return errClaudeViaCLI }
 	acct.models = func() []catalog.Model { return catalog.Provider("anthropic") }
-	acct.magpieList = true
-	// Claude's models are the ones magpie knows: listing them would ask
-	// Anthropic with the account's sign-in, which magpie never does
+	acct.starlingList = true
+	// Claude's models are the ones starling knows: listing them would ask
+	// Anthropic with the account's sign-in, which starling never does
 	acct.fetch = func(context.Context) ([]catalog.Model, error) {
 		ms := catalog.Provider("anthropic")
 		return ms, catalog.SaveLive("claude", claudeBase, ms)
@@ -698,7 +698,7 @@ type codexAuth struct {
 	} `json:"tokens"`
 }
 
-// codexAccount is the Codex provider: the ChatGPT account chongyun signed
+// codexAccount is the Codex provider: the ChatGPT account starling signed
 // in to itself, served with the tokens it keeps in logins.json.
 //
 // A sign-in with an OpenAI API key rather than a ChatGPT account
@@ -750,7 +750,7 @@ func codexRefresh(ctx context.Context, raw map[string]any) (string, error) {
 	// Once sent, a refresh is waited for even when whoever asked gives up
 	// (a request the agent cancelled, a usage read's or the keep-alive's
 	// deadline): OpenAI rotates the refresh token as it answers, and an
-	// answer dropped leaves magpie holding the spent one, which the next
+	// answer dropped leaves starling holding the spent one, which the next
 	// refresh is refused for (refresh_token_reused). The account then
 	// read as signed out while its access token still served (willz on
 	// Discord). The ChatGPT API's refresh waits so already (siwcFresh).
@@ -900,7 +900,7 @@ func (a copilotApp) session(ctx context.Context) (copilotSession, error) {
 func (a copilotApp) trade(ctx context.Context) (copilotSession, error) {
 	// refused before: not asked again at every request
 	if copilotRefusedToken(a.Token) {
-		return copilotSession{}, errors.New("the GitHub token Copilot keeps was refused; sign in to Copilot again in chongyun")
+		return copilotSession{}, errors.New("the GitHub token Copilot keeps was refused; sign in to Copilot again in starling")
 	}
 	return copilotToken(ctx, a)
 }
@@ -1074,7 +1074,7 @@ func copilotToken(ctx context.Context, app copilotApp) (copilotSession, error) {
 }
 
 // copilotAPIs names the APIs of Copilot's supported_endpoints; the
-// websocket one is left out, as is anything magpie doesn't speak. A chat
+// websocket one is left out, as is anything starling doesn't speak. A chat
 // model the list gives no supported_endpoints (GPT-4.1, GPT-4o and the other
 // models before them, what a Student plan is served) is served on chat
 // completions alone: Copilot's /v1/messages answers it "no model endpoints
@@ -1091,7 +1091,7 @@ func copilotAPIs(endpoints []string) []string {
 var copilotInternal = regexp.MustCompile(`^(copilot-search|exec-agent|trajectory)|-(secondary|tertiary|4th|free-auto)$`)
 
 // A model Copilot offers with terms of its own stays disabled until the
-// account accepts them, as VS Code does when one is first picked; magpie
+// account accepts them, as VS Code does when one is first picked; starling
 // lists it and accepts them the first time a request asks for it.
 var (
 	copilotTermsMu sync.Mutex
@@ -1109,7 +1109,7 @@ func copilotAccept(ctx context.Context, app copilotApp, s copilotSession, model 
 	waiting, known := copilotTerms[app.Token]
 	copilotTermsMu.Unlock()
 	if !known {
-		// not listed since magpie started; the list says which wait
+		// not listed since starling started; the list says which wait
 		if _, err := copilotModels(ctx, app); err != nil {
 			return
 		}

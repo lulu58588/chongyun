@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/desktopdir"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/desktopdir"
 )
 
 var callT0 = time.Date(2026, 9, 20, 10, 0, 0, 0, time.UTC)

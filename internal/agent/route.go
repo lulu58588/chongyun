@@ -7,28 +7,28 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Every agent's model picker has two halves: the models the agent reaches
-// on its own (its sign-in, its own keys), and magpie's catalog — every model
+// on its own (its sign-in, its own keys), and starling's catalog — every model
 // of every provider the user added, reached through the local gateway.
 // A catalog model is spelled "provider/model"; an agent that sends that to
 // the gateway gets the vendor's reply in whichever API the agent speaks.
 
-// magpieID is the provider id agents know the gateway by.
-const magpieID = "magpie"
+// starlingID is the provider id agents know the gateway by.
+const starlingID = "starling"
 
 // RoutingGroups is the picker's group of routing groups.
 const RoutingGroups = "Routing groups"
 
-// viaMagpie lists the catalog as agent is shown it, for a picker: the
+// viaStarling lists the catalog as agent is shown it, for a picker: the
 // routing groups first, in one group of their own, then one group per
 // provider.
-func viaMagpie(agent, prefix string) []Option {
+func viaStarling(agent, prefix string) []Option {
 	var out, groups []Option
 	shown, _ := provider.CatalogFor(agent)
 	// own: whether a provider is the account the agent is signed in to,
@@ -53,10 +53,10 @@ func viaMagpie(agent, prefix string) []Option {
 	// firstUser: the account a request for a subscription's model goes to
 	// first, which the note names. A Codex or Claude Code subscription is
 	// the account the agent is signed in to (Account.User), but its
-	// requests go to the first in magpie's order: another one when that
+	// requests go to the first in starling's order: another one when that
 	// one is paused, or when the agent is kept signed in to an account
 	// that isn't first (#1957, parkavenue9639: every codex/gpt-* read
-	// "A · via chongyun" while each went to B). Asked once a provider.
+	// "A · via starling" while each went to B). Asked once a provider.
 	firsts := map[string]string{}
 	firstUser := func(p provider.Provider) string {
 		a := p.Account
@@ -74,13 +74,13 @@ func viaMagpie(agent, prefix string) []Option {
 	var tiered map[string]bool // provider.UltraModels, read at the first fast model
 	for _, e := range shown {
 		if e.Group != "" {
-			groups = append(groups, Option{Value: prefix + e.ID, Label: e.Name, Note: "routing group · via chongyun",
+			groups = append(groups, Option{Value: prefix + e.ID, Label: e.Name, Note: "routing group · via starling",
 				Icon: e.Provider.Icon, Icons: e.Icons, Group: RoutingGroups, Ref: e.ID})
 			continue
 		}
-		note := e.Provider.Name + " · via chongyun"
+		note := e.Provider.Name + " · via starling"
 		if a := e.Provider.Account; a != nil {
-			note = firstUser(e.Provider) + " · via chongyun"
+			note = firstUser(e.Provider) + " · via starling"
 		}
 		o := Option{Value: prefix + e.ID, Label: e.Name, Note: note,
 			Icon: e.Provider.Icon, Group: e.Provider.Name, Ref: e.ID, Free: e.Free, Rate: e.Rate, RateWas: e.RateWas, Context: e.Context, own: own[e.Provider.ID],
@@ -103,7 +103,7 @@ func viaMagpie(agent, prefix string) []Option {
 
 // listLabels are the names the agent's own list calls the catalog's models
 // by, by id: provider.Labels, which follows the Provider in model names
-// setting, where an Option's Label is the name alone for magpie's picker.
+// setting, where an Option's Label is the name alone for starling's picker.
 func listLabels(agent string) map[string]string {
 	shown, _ := provider.CatalogFor(agent)
 	labels := provider.Labels(shown)
@@ -114,11 +114,11 @@ func listLabels(agent string) map[string]string {
 	return out
 }
 
-// viaMagpieFor is viaMagpie without the agent's own account: Codex CLI going
-// through magpie to its own ChatGPT login would only add a hop.
-func viaMagpieFor(agentID, prefix string) []Option {
+// viaStarlingFor is viaStarling without the agent's own account: Codex CLI going
+// through starling to its own ChatGPT login would only add a hop.
+func viaStarlingFor(agentID, prefix string) []Option {
 	var out []Option
-	for _, o := range viaMagpie(agentID, prefix) {
+	for _, o := range viaStarling(agentID, prefix) {
 		if !strings.HasPrefix(o.Value, prefix+agentID+"/") {
 			out = append(out, o)
 		}
@@ -126,26 +126,26 @@ func viaMagpieFor(agentID, prefix string) []Option {
 	return out
 }
 
-// isMagpie reports whether a model value is a catalog reference.
-func isMagpie(v string) bool {
+// isStarling reports whether a model value is a catalog reference.
+func isStarling(v string) bool {
 	if pid, _, ok := strings.Cut(v, "/"); ok && dryProviders[pid] {
 		return true
 	}
 	if !strings.Contains(v, "/") {
 		return false
 	}
-	return magpieRefs.get(v, func() bool {
+	return starlingRefs.get(v, func() bool {
 		_, _, ok := provider.Resolve(v)
 		return ok
 	})
 }
 
-// magpieRefs keeps isMagpie's answers while provider.StampNow stays the
+// starlingRefs keeps isStarling's answers while provider.StampNow stays the
 // same, for a minute at most. Outside a request that holds the catalog,
 // each Resolve built every provider's entries again: the window's drift
 // poll, every 15s, asked it for each agent's values, ~6 MB a poll (the
 // procmem heap profile: 235 MB of 1.37 GB in 10 minutes of GUI use).
-var magpieRefs stampedRefs
+var starlingRefs stampedRefs
 
 // stampedRefs is a model value → answer, dropped when the stamp moves,
 // after a minute (what the stamp can't see: an account another program
@@ -193,16 +193,16 @@ func firstOf(xs []string) string {
 	return ""
 }
 
-// magpieModels is the catalog as agent is shown it, as catalog.Models, for
+// starlingModels is the catalog as agent is shown it, as catalog.Models, for
 // agents that keep their own model files.
-func magpieModels(agent string) []catalog.Model {
+func starlingModels(agent string) []catalog.Model {
 	// the providers built once for all the models' prices, not for each:
 	// dsh's round at every start built them for each of hundreds
 	defer provider.Hold()()
 	var out []catalog.Model
 	shown, _ := provider.CatalogFor(agent)
 	labels := provider.Labels(shown)
-	// a model magpie describes images to takes them (provider.Described)
+	// a model starling describes images to takes them (provider.Described)
 	seen := provider.Described != nil && provider.Described()
 	st, find := settings.Load(), provider.GroupFinder()
 	members := func(id string) []provider.Member {
@@ -238,8 +238,8 @@ func magpieModels(agent string) []catalog.Model {
 			m.APIs = []string{string(provider.Responses)}
 		}
 		// the service tiers Codex is offered on it, as the gateway's own
-		// lists offer them: Fast in the Codex CLI magpie writes
-		// magpie-models.json for (#1530)
+		// lists offer them: Fast in the Codex CLI starling writes
+		// starling-models.json for (#1530)
 		provider.CodexTiers(&m, e, members)
 		// Codex's /fast on a ChatGPT account's own GPT model, which
 		// OpenCode has no command for and takes as variants (#2379); a
@@ -274,7 +274,7 @@ func maxTokens(m catalog.Model) int { return provider.OutputWithin(m.Context, m.
 
 // outputOr is the output limit an agent is handed for m: the Max output the
 // user set for it (catalog.Model.OutputSet), kept within its window, else
-// capped, the agent's own trim of the vendor's figure. A cap of magpie's
+// capped, the agent's own trim of the vendor's figure. A cap of starling's
 // never overrides the user's number: DeepSeek V4.1 Flash set to 384k reached
 // VS Code as 250000 and WorkBuddy as 128000 (#2064).
 func outputOr(m catalog.Model, capped int) int {

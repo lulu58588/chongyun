@@ -102,7 +102,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
             const errors = [];
             page.on("pageerror", (e) => errors.push(e.message));
             await page.route("**/*", server(lang, st));
-            await page.goto("http://magpie.test/?view=settings&tab=network");
+            await page.goto("http://starling.test/?view=settings&tab=network");
             const button = page.locator("#proxySegs button.proxy-test");
             const line = page.locator("#proxyCheck");
             assert.equal((await button.textContent()).trim(), w("Test"));
@@ -136,7 +136,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           const page = await context.newPage();
           page.setDefaultTimeout(5000);
           await page.route("**/*", server(lang, st));
-          await page.goto("http://magpie.test/?view=settings&tab=network");
+          await page.goto("http://starling.test/?view=settings&tab=network");
           await page.locator("#proxySegs button.proxy-test").click();
           await page.locator("#proxyCheck").waitFor({ state: "visible" });
           assert.equal(await page.locator("#proxyCheck").textContent(), w("The test couldn't run: {error}", { error: w("boom") }));

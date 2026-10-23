@@ -28,7 +28,7 @@ type ResetCredits struct {
 	Until *time.Time `json:"until,omitempty"`
 	// ByWindow: each reset is for one window, FiveHour of the five hours'
 	// and Weekly of the week's, and is spent on the vendor's own page (a
-	// GLM Coding team plan's, zcode_team.go), not from magpie
+	// GLM Coding team plan's, zcode_team.go), not from starling
 	ByWindow bool `json:"byWindow,omitempty"`
 	FiveHour int  `json:"fiveHour,omitempty"`
 	Weekly   int  `json:"weekly,omitempty"`
@@ -243,7 +243,7 @@ func useCodexReset(ctx context.Context, user, why string) (ResetOutcome, error) 
 	return out, nil
 }
 
-// codexUserToken signs in as the Codex account user: one chongyun keeps —
+// codexUserToken signs in as the Codex account user: one starling keeps —
 // and says which it was.
 func codexUserToken(ctx context.Context, user string) (who, tok, accountID string, err error) {
 	for _, l := range Logins("codex") {

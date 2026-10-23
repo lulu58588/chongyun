@@ -3,8 +3,8 @@ package provider
 import (
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Where Codex and Claude Code compact a long conversation (#876): the
@@ -23,7 +23,7 @@ func compactOf(s settings.Settings, providerID, model string) int {
 }
 
 // CompactSet is the threshold the user set on a model, by its catalog id
-// ("provider/model", magpie/ and a [1m] mark taken off), or on its
+// ("provider/model", starling/ and a [1m] mark taken off), or on its
 // provider; for a group, the smallest its models have, so none of them
 // outgrows its own. 0 when none is set: settings.Compact then answers.
 func CompactSet(id string) int {
@@ -34,12 +34,12 @@ func CompactSet(id string) int {
 // Compact): the threshold the user set on it or its provider (CompactSet),
 // else, when its window is one the user typed (Entry.WindowSet) and no
 // size of theirs is typed in Settings, that whole window (#1809: a group
-// set to 500K was told Codex as magpie's default 272K, which Codex runs
-// to 95% of). magpie's default gives way to a window the user typed as
+// set to 500K was told Codex as starling's default 272K, which Codex runs
+// to 95% of). starling's default gives way to a window the user typed as
 // it does to one they set in Claude Code (#876); a threshold they typed
 // still comes first. 0 leaves it to settings.Compact. It takes the
 // settings and the group finder from its caller: an agent's list is built
-// for hundreds of models at magpie's start, and reading both again for
+// for hundreds of models at starling's start, and reading both again for
 // each is what EffectivePriceIn saves the same loop.
 func CompactFor(s settings.Settings, e Entry, find func(string) (Group, []Member, bool)) int {
 	if n := compactSet(s, e.ID, find); n > 0 {
@@ -56,7 +56,7 @@ func CompactFor(s settings.Settings, e Entry, find func(string) (Group, []Member
 // group's own size, a group's smallest member's that the user typed
 // (smallestWindow, #2224), its largest member's when it names no size
 // and the user typed that one (largestWindow), or one set on the provider for the model or
-// all of its models. Claude Code then isn't handed magpie's default
+// all of its models. Claude Code then isn't handed starling's default
 // compaction window for it (CompactFor's rule, as Entry.WindowSet).
 func WindowTyped(id string) bool {
 	id = catalogID(id)
@@ -93,7 +93,7 @@ func WindowTyped(id string) bool {
 // group whose every member is one of Anthropic's Claude models, by the
 // name it is listed under or the one the vendor is asked for. Claude Code
 // runs such a group as it runs a Claude model, to its own window, so it
-// isn't handed magpie's default compaction window (#1741: a group of
+// isn't handed starling's default compaction window (#1741: a group of
 // Claude [1m] models was told 272000, its id's last part not starting
 // with "claude"). A group with any other member, or none, isn't.
 func ClaudeGroup(id string) bool {
@@ -113,11 +113,11 @@ func ClaudeGroup(id string) bool {
 	return true
 }
 
-// catalogID is an agent's model id as the catalog has it: magpie/ and
+// catalogID is an agent's model id as the catalog has it: starling/ and
 // Claude Code's [1m] mark taken off, a found group's auto/<model> as
 // group/auto-<slug> (CanonicalRef).
 func catalogID(id string) string {
-	return CanonicalRef(strings.TrimSuffix(strings.TrimPrefix(strings.TrimSpace(id), "magpie/"), "[1m]"))
+	return CanonicalRef(strings.TrimSuffix(strings.TrimPrefix(strings.TrimSpace(id), "starling/"), "[1m]"))
 }
 
 func compactSet(s settings.Settings, id string, find func(string) (Group, []Member, bool)) int {
@@ -184,7 +184,7 @@ func SetModelCompacts(providerID string, cs map[string]int) error {
 			return err
 		}
 		if model != "*" && n > 0 && !p.serves(model) {
-			return errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
+			return errorf("%s has no model %s (starling provider %s lists them)", p.ID, model, p.ID)
 		}
 	}
 	s := settings.Load()

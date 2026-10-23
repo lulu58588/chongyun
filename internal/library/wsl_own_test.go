@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/starling/internal/agent"
 )
 
 // An agent in a WSL distro that keeps everything in its own folder —

@@ -4,10 +4,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/starling/internal/plugin"
 )
 
-// magpie provider login asks a plugin's key by its method's label, with
+// starling provider login asks a plugin's key by its method's label, with
 // the placeholder the plugin gives as its hint (Lemon 报告).
 func TestPluginKeyPrompt(t *testing.T) {
 	p := keyPrompt("Lemon", plugin.Method{Type: "api", Label: "Lemon API key (from lemon.example/keys)", Placeholder: "sk-lemon-…"})

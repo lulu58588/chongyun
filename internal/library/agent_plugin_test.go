@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentplug"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agentplug"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // plugAgents switches on a plugin for each agent module in srcs, in the
@@ -20,7 +20,7 @@ func plugAgents(t *testing.T, h string, srcs ...string) {
 	var l plugin.List
 	for i, src := range srcs {
 		dir := filepath.Join(h, "plugins", "p"+string(rune('a'+i)))
-		write(t, filepath.Join(dir, "package.json"), `{"name":"p`+string(rune('a'+i))+`","magpie":{"agent":"./agent.js"}}`)
+		write(t, filepath.Join(dir, "package.json"), `{"name":"p`+string(rune('a'+i))+`","starling":{"agent":"./agent.js"}}`)
 		write(t, filepath.Join(dir, "agent.js"), src)
 		l.Plugins = append(l.Plugins, plugin.Entry{Spec: dir})
 	}
@@ -38,7 +38,7 @@ export const agent = {
 `
 
 // An agent a plugin adds is given the Library's instructions, MCP servers
-// and skills where its agent.library says, and has only magpie's taken
+// and skills where its agent.library says, and has only starling's taken
 // away again, the user's own kept.
 func TestPluginAgentGetsTheLibrary(t *testing.T) {
 	h := sandbox(t)
@@ -122,7 +122,7 @@ func TestPluginAgentWithoutAPlaceIsRefused(t *testing.T) {
 	}
 }
 
-// An MCP file in a format magpie doesn't write, or none named, keeps the
+// An MCP file in a format starling doesn't write, or none named, keeps the
 // plugin from loading, rather than servers written in a shape its agent
 // can't read.
 func TestPluginAgentMCPFormat(t *testing.T) {
@@ -146,7 +146,7 @@ func TestPluginAgentMCPFormat(t *testing.T) {
 	}
 }
 
-// Every format an agent plugin may name is one magpie writes.
+// Every format an agent plugin may name is one starling writes.
 func TestPluginMCPFormatsAreWritten(t *testing.T) {
 	for _, n := range agentplug.MCPFormats {
 		if _, ok := pluginMCP[n]; !ok {

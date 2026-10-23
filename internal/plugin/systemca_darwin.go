@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 func systemCABundle() string { return "" }
@@ -66,7 +66,7 @@ func systemRoots() [][]byte {
 // trustSettings reads one domain's trust settings (the user's, or with -d
 // the admin's): each certificate's SHA-1 and whether it is trusted.
 func trustSettings(domain ...string) map[string]bool {
-	dir, err := os.MkdirTemp("", "magpie-trust-")
+	dir, err := os.MkdirTemp("", "starling-trust-")
 	if err != nil {
 		return nil
 	}

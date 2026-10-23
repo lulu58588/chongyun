@@ -6,15 +6,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // #310: the Codex app's model picker offers only the efforts in its
 // [desktop] enabled-reasoning-efforts (unset: low … xhigh, ultra,
-// persistent), so a magpie model's "max" was never offered. Routed to one,
-// magpie adds what its models take and the app knows; the user's entries,
+// persistent), so a starling model's "max" was never offered. Routed to one,
+// starling adds what its models take and the app knows; the user's entries,
 // order and comments stay, and nothing is written when nothing is missing.
 func TestCodexDesktopEfforts(t *testing.T) {
 	setup := func(t *testing.T, config string) (string, func() string) {
@@ -54,7 +54,7 @@ func TestCodexDesktopEfforts(t *testing.T) {
 		}
 		// again: nothing missing, nothing written
 		before, _ := os.Stat(filepath.Join(home, ".codex", "config.toml"))
-		if err := codexEnableEfforts(filepath.Join(home, ".codex", "config.toml"), magpieModels("codex")); err != nil {
+		if err := codexEnableEfforts(filepath.Join(home, ".codex", "config.toml"), starlingModels("codex")); err != nil {
 			t.Fatal(err)
 		}
 		if after, _ := os.Stat(filepath.Join(home, ".codex", "config.toml")); !after.ModTime().Equal(before.ModTime()) || read() != cfg {
@@ -86,8 +86,8 @@ func TestCodexDesktopEfforts(t *testing.T) {
 // #2127 (cnlove7777777-art): a routing group Dash could run at High or Max
 // showed in the Codex app at High with no effort control. Its entry lists
 // high and max, but the app offers a model only the efforts in [desktop]
-// enabled-reasoning-efforts, whose default leaves max out, and magpie
-// added max only when Codex's config.toml was on one of magpie's models:
+// enabled-reasoning-efforts, whose default leaves max out, and starling
+// added max only when Codex's config.toml was on one of starling's models:
 // the group got its levels later (8c5190a20, a catalog change) while the
 // config was on Codex's own model, the app's last pick, so the catalog was
 // rewritten with high and max and the app still offered high alone.
@@ -124,7 +124,7 @@ func TestCodexDesktopEffortsFollowTheCatalog(t *testing.T) {
 	if err := provider.SaveGroup(provider.Group{ID: "normal", Name: "普通性能", Members: []string{"volc/glm-5.3", "volc/deepseek-v4"}}); err != nil {
 		t.Fatal(err)
 	}
-	if e := catalog.Efforts(magpieModels("codex"), "group/normal"); strings.Join(e, ",") != "high,max" {
+	if e := catalog.Efforts(starlingModels("codex"), "group/normal"); strings.Join(e, ",") != "high,max" {
 		t.Fatalf("group levels %v", e)
 	}
 	if err := cx.Sync(); err != nil {

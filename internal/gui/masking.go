@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/gwmw"
-	"github.com/lulu58588/chongyun/internal/masking"
-	"github.com/lulu58588/chongyun/internal/maskrec"
+	"github.com/lulu58588/starling/internal/gwmw"
+	"github.com/lulu58588/starling/internal/masking"
+	"github.com/lulu58588/starling/internal/maskrec"
 )
 
 // previewMax is how much text the preview masks.
@@ -57,7 +57,7 @@ func shownRecord(r maskrec.Record, t gwmw.Teller) maskedRecord {
 //     a page of records, newest first;
 //   - GET /api/masking/record?key= one record;
 //   - GET /api/masking/value?p= what a placeholder stood for, while this
-//     magpie's masker remembers it (404 after a restart: it is never on
+//     starling's masker remembers it (404 after a restart: it is never on
 //     disk);
 //   - POST /api/masking/preview {text} the text as a vendor would get it
 //     under the settings now, and what was found, each told by its kind

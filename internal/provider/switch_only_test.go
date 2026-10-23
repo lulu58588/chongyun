@@ -29,11 +29,11 @@ func codexSwitchSignIn(t *testing.T, email, refresh, accountID string) {
 // auth.json, and back once the first has room again. Claude Code's
 // subscription has no such setting. A providers.json that can't be read
 // says switch-only: the user's choice is unknown, and failover through the
-// gateway, magpie's own idea, isn't taken up on it.
+// gateway, starling's own idea, isn't taken up on it.
 func TestCodexSwitchOnlyStillSwitchesTheSignIn(t *testing.T) {
 	home := signIn(t) // me@example.com, acct-1
 	codexSignIn(t, "spare@example.com", "r-spare")
-	// the same account again, with the sign-in it is on now: chongyun keeps
+	// the same account again, with the sign-in it is on now: starling keeps
 	// the accounts it signed in to in logins.json, so signing in to it once
 	// more is what makes it the one the agent is on
 	codexSwitchSignIn(t, "me@example.com", "r-1", "acct-1")

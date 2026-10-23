@@ -7,11 +7,11 @@ package agent
 // protocol, the gateway's /v1 and the key; the model table holds the model
 // string, the context window (AtomCode compacts as it nears it), the output
 // limit, whether it sees images, the reasoning levels its picker offers and
-// the one in use. magpie adds the account "magpie" and one model table per
-// catalog model, keyed "magpie/<provider>/<model>" — the model string goes
+// the one in use. starling adds the account "starling" and one model table per
+// catalog model, keyed "starling/<provider>/<model>" — the model string goes
 // to the gateway as it is, for it to resolve — and points default_provider
 // and default_model at the one picked, default_model winning when both are
-// set; the defaults the user had are stashed and put back when magpie steps
+// set; the defaults the user had are stashed and put back when starling steps
 // out. Requests are Chat Completions with Bearer auth and a User-Agent of
 // atomcode/<version>, which the gateway knows apart; the key is AtomCode's
 // own, so a request is its agent's even when the header is overridden.
@@ -23,28 +23,28 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/gateway"
 )
 
-// atomcodeAccount is the account table magpie writes, and atomcodeModels the
+// atomcodeAccount is the account table starling writes, and atomcodeModels the
 // header prefix of every model table it writes.
-var atomcodeAccount = `provider_accounts."` + magpieID + `"`
-var atomcodeModels = `models."` + magpieID + "/"
-var atomcodeTablePrefixes = []string{atomcodeModels, "models.'" + magpieID + "/"}
-var atomcodeAccountNames = []string{atomcodeAccount, "provider_accounts." + magpieID, "provider_accounts.'" + magpieID + "'"}
+var atomcodeAccount = `provider_accounts."` + starlingID + `"`
+var atomcodeModels = `models."` + starlingID + "/"
+var atomcodeTablePrefixes = []string{atomcodeModels, "models.'" + starlingID + "/"}
+var atomcodeAccountNames = []string{atomcodeAccount, "provider_accounts." + starlingID, "provider_accounts.'" + starlingID + "'"}
 
 var atomcodeEffortLevels = []string{"low", "medium", "high", "xhigh", "max"}
 
-// atomcodeContext is what AtomCode is told of a model whose context magpie
+// atomcodeContext is what AtomCode is told of a model whose context starling
 // doesn't know: it has to be told one, and compacts as it nears it.
 const atomcodeContext = 128000
 
 // atomcodeKey is the model table key of a catalog ref — the value
 // default_provider and default_model name.
-func atomcodeKey(ref string) string { return magpieID + "/" + ref }
+func atomcodeKey(ref string) string { return starlingID + "/" + ref }
 
-// atomcodeTable is the header of the model table a key names. Magpie's are
+// atomcodeTable is the header of the model table a key names. Starling's are
 // always written quoted; the user's own are found by their decoded names
 // (atomcodeOwnModels), not built ones.
 func atomcodeTable(key string) string { return "models." + strconv.Quote(key) }
@@ -105,10 +105,10 @@ func atomcodeIn(at place) *Agent {
 		}
 		return edit.SetTOMLTop(path, edit.KV{Path: "default_model", Value: v})
 	}
-	writeMagpie := func() error {
+	writeStarling := func() error {
 		return edit.SetTOMLTablesMatching(path, atomcodeAccountNames, atomcodeTablePrefixes, atomcodeTablesAt(path, at.v1(), agentKeyAt("atomcode", at.gw())))
 	}
-	dropMagpie := func() error {
+	dropStarling := func() error {
 		return edit.SetTOMLTablesMatching(path, atomcodeAccountNames, atomcodeTablePrefixes, nil)
 	}
 	return atomic(&Agent{
@@ -121,8 +121,8 @@ func atomcodeIn(at place) *Agent {
 				return err
 			}
 			for _, t := range ts {
-				if atomcodeAccountTable(t) || atomcodeMagpieModelTable(t) {
-					return writeMagpie()
+				if atomcodeAccountTable(t) || atomcodeStarlingModelTable(t) {
+					return writeStarling()
 				}
 			}
 			return nil
@@ -135,7 +135,7 @@ func atomcodeIn(at place) *Agent {
 		},
 		Check: func() string {
 			k := cur()
-			if !usesMagpie(k) {
+			if !usesStarling(k) {
 				return ""
 			}
 			t, _, err := atomcodeModelValues(path, k)
@@ -143,14 +143,14 @@ func atomcodeIn(at place) *Agent {
 				return err.Error()
 			}
 			if t == nil {
-				return "AtomCode's [models." + strconv.Quote(k) + "] (config.toml) is gone, so it no longer reaches chongyun"
+				return "AtomCode's [models." + strconv.Quote(k) + "] (config.toml) is gone, so it no longer reaches starling"
 			}
 			a, err := atomcodeAccountValues(path)
 			if err != nil {
 				return err.Error()
 			}
 			if a == nil {
-				return "AtomCode's [" + atomcodeAccount + "] (config.toml) is gone, so it no longer reaches chongyun"
+				return "AtomCode's [" + atomcodeAccount + "] (config.toml) is gone, so it no longer reaches starling"
 			}
 			return wiringOff("AtomCode", path, func(f string) (string, bool) { v, ok := a[f]; return v, ok },
 				"base_url", at.v1(), "api_key", agentKeyAt("atomcode", at.gw()))
@@ -160,31 +160,31 @@ func atomcodeIn(at place) *Agent {
 			Get: cur,
 			Set: func(v string) error {
 				was := cur()
-				if ref, ok := strings.CutPrefix(v, magpieID+"/"); ok && isMagpie(ref) {
-					if !usesMagpie(was) {
+				if ref, ok := strings.CutPrefix(v, starlingID+"/"); ok && isStarling(ref) {
+					if !usesStarling(was) {
 						stash(map[string]string{
 							key + ":default_provider": get("default_provider"),
 							key + ":default_model":    get("default_model"),
 						})
 					}
-					if err := writeMagpie(); err != nil {
+					if err := writeStarling(); err != nil {
 						return err
 					}
 					return setDefaults(v)
 				}
-				if !usesMagpie(was) {
-					// no model of magpie's was in use: the pick moves
+				if !usesStarling(was) {
+					// no model of starling's was in use: the pick moves
 					// default_model, default_provider stays as it is
 					if v == "" {
 						return edit.DelTOMLTop(path, "default_provider", "default_model")
 					}
 					return setOwn(v)
 				}
-				// magpie was in use: the defaults the user had come back
+				// starling was in use: the defaults the user had come back
 				// where AtomCode still has them
 				saved := stashLoad()
 				p, m := saved[key+":default_provider"], saved[key+":default_model"]
-				if p != "" && !usesMagpie(p) && own(p) {
+				if p != "" && !usesStarling(p) && own(p) {
 					if err := edit.SetTOMLTop(path, edit.KV{Path: "default_provider", Value: p}); err != nil {
 						return err
 					}
@@ -194,7 +194,7 @@ func atomcodeIn(at place) *Agent {
 					}
 				}
 				if v == "" {
-					if m != "" && !usesMagpie(m) && own(m) {
+					if m != "" && !usesStarling(m) && own(m) {
 						if err := edit.SetTOMLTop(path, edit.KV{Path: "default_model", Value: m}); err != nil {
 							return err
 						}
@@ -203,7 +203,7 @@ func atomcodeIn(at place) *Agent {
 							return err
 						}
 					}
-					if err := dropMagpie(); err != nil {
+					if err := dropStarling(); err != nil {
 						return err
 					}
 					forget(key+":default_provider", key+":default_model")
@@ -213,14 +213,14 @@ func atomcodeIn(at place) *Agent {
 				if err := setOwn(v); err != nil {
 					return err
 				}
-				if err := dropMagpie(); err != nil {
+				if err := dropStarling(); err != nil {
 					return err
 				}
 				forget(key+":default_provider", key+":default_model")
 				return nil
 			},
 			Options: func(c map[string]string) []Option {
-				return append(atomcodeOwnModels(path, c["model"]), viaMagpie("atomcode", magpieID+"/")...)
+				return append(atomcodeOwnModels(path, c["model"]), viaStarling("atomcode", starlingID+"/")...)
 			},
 		}, {
 			// the current model table's reasoning_effort, sent with every
@@ -228,7 +228,7 @@ func atomcodeIn(at place) *Agent {
 			Key: "effort", Label: "effort",
 			Get: func() string {
 				k := cur()
-				if !usesMagpie(k) {
+				if !usesStarling(k) {
 					return ""
 				}
 				t, _, err := atomcodeModelValues(path, k)
@@ -239,7 +239,7 @@ func atomcodeIn(at place) *Agent {
 			},
 			Set: func(v string) error {
 				k := cur()
-				if !usesMagpie(k) {
+				if !usesStarling(k) {
 					return fmt.Errorf("pick AtomCode's model first; the effort is kept with its model")
 				}
 				_, table, err := atomcodeModelValues(path, k)
@@ -259,9 +259,9 @@ func atomcodeIn(at place) *Agent {
 					// nothing but an effort would be an orphan
 					return fmt.Errorf("AtomCode's [models.%s] (config.toml) is gone — pick the model again", strconv.Quote(k))
 				}
-				ref := strings.TrimPrefix(k, magpieID+"/")
+				ref := strings.TrimPrefix(k, starlingID+"/")
 				var offered []string
-				for _, m := range magpieModels("atomcode") {
+				for _, m := range starlingModels("atomcode") {
 					if m.ID == ref {
 						offered = atomcodeSupportedEfforts(m.Efforts)
 						break
@@ -273,8 +273,8 @@ func atomcodeIn(at place) *Agent {
 				return edit.SetTOMLKey(path, table, "reasoning_effort", v)
 			},
 			Options: func(c map[string]string) []Option {
-				if ref, ok := strings.CutPrefix(c["model"], magpieID+"/"); ok {
-					for _, m := range magpieModels("atomcode") {
+				if ref, ok := strings.CutPrefix(c["model"], starlingID+"/"); ok {
+					for _, m := range starlingModels("atomcode") {
 						if m.ID == ref {
 							return static(atomcodeSupportedEfforts(m.Efforts)...)
 						}
@@ -286,7 +286,7 @@ func atomcodeIn(at place) *Agent {
 	}, path)
 }
 
-// atomcodeTables are magpie's account and model tables: the gateway spoken
+// atomcodeTables are starling's account and model tables: the gateway spoken
 // to as AtomCode's own Chat Completions, one model table per catalog model
 // with the model's window (AtomCode compacts as it nears it), its output
 // limit, whether it sees images, and the reasoning levels its picker offers.
@@ -306,18 +306,18 @@ func atomcodeTablesAt(path, v1, key string) []edit.Table {
 		{Path: "base_url", Value: v1},
 		{Path: "api_key", Value: key},
 	}}}
-	for _, m := range magpieModels("atomcode") {
+	for _, m := range starlingModels("atomcode") {
 		ctx := m.Context
 		if ctx <= 0 {
 			ctx = atomcodeContext
 		}
 		kvs := []edit.KV{
-			{Path: "account", Value: magpieID},
+			{Path: "account", Value: starlingID},
 			{Path: "model", Value: m.ID},
 			{Path: "context_window", Value: ctx},
 		}
 		// an output above the window is cut to it — the window AtomCode is
-		// told when magpie doesn't know the model's is atomcodeContext
+		// told when starling doesn't know the model's is atomcodeContext
 		if n := maxTokens(m); n > 0 {
 			if m.Context <= 0 && n > atomcodeContext {
 				n = atomcodeContext
@@ -356,14 +356,14 @@ func atomcodeOwnModels(path, cur string) []Option {
 		if !ok {
 			k, ok = atomcodeProviderName(t)
 		}
-		if !ok || seen[k] || usesMagpie(k) {
+		if !ok || seen[k] || usesStarling(k) {
 			continue
 		}
 		seen[k] = true
 		m, _ := edit.GetTOMLTable(path, t)
 		out = append(out, Option{Value: k, Icon: modelIcon("", m["model"])})
 	}
-	if cur != "" && !seen[cur] && !usesMagpie(cur) {
+	if cur != "" && !seen[cur] && !usesStarling(cur) {
 		var icon string
 		if m, _, err := atomcodeModelValues(path, cur); err == nil {
 			icon = modelIcon("", m["model"])
@@ -400,9 +400,9 @@ func atomcodeAccountTable(table string) bool {
 	return false
 }
 
-func atomcodeMagpieModelTable(table string) bool {
+func atomcodeStarlingModelTable(table string) bool {
 	k, ok := kimiModelKey(table)
-	return ok && strings.HasPrefix(k, magpieID+"/")
+	return ok && strings.HasPrefix(k, starlingID+"/")
 }
 
 func atomcodeAccountValues(path string) (map[string]string, error) {
@@ -437,7 +437,7 @@ func atomcodeExistingEfforts(path string) map[string]string {
 	tables, _ := edit.TOMLTables(path)
 	for _, table := range tables {
 		key, ok := kimiModelKey(table)
-		if !ok || !strings.HasPrefix(key, magpieID+"/") {
+		if !ok || !strings.HasPrefix(key, starlingID+"/") {
 			continue
 		}
 		values, _ := edit.GetTOMLTable(path, table)

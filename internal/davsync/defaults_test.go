@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/backup"
-	"github.com/lulu58588/chongyun/internal/profile"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/backup"
+	"github.com/lulu58588/starling/internal/profile"
 )
 
 // Two computers exchange an explicit default, a chosen model, and then a
@@ -60,7 +60,7 @@ func TestSyncAgentDefaults(t *testing.T) {
 		t.Fatal(err)
 	}
 	now()
-	remote, err := backup.Open(f.objects["team x+y/magpie/magpie.magpie-backup"], cfg.Passphrase)
+	remote, err := backup.Open(f.objects["team x+y/starling/starling.starling-backup"], cfg.Passphrase)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -11,9 +11,9 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/budget"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/budget"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 func gatewayKeys(args []string) error { return gatewayKeysTo(os.Stdout, args) }
@@ -59,7 +59,7 @@ func gatewayKeysTo(out io.Writer, args []string) error {
 		args = args[:2]
 	}
 	if (action == "list" && len(args) != 1) || (action != "list" && len(args) != 2) {
-		return fmt.Errorf("usage: chongyun gateway-key list | add <name> [--key <value> | --key -] | rotate <id> | remove <id> | limit <id> [list | off | reset [<n>] | remove <n> | [add] day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]] | models <id> [all | <provider>/<model>|<provider>/* ...] | accounts <id> [all | <provider>/<account>|<provider>/<key id> ...] | quotas <id> [on | off]")
+		return fmt.Errorf("usage: starling gateway-key list | add <name> [--key <value> | --key -] | rotate <id> | remove <id> | limit <id> [list | off | reset [<n>] | remove <n> | [add] day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]] | models <id> [all | <provider>/<model>|<provider>/* ...] | accounts <id> [all | <provider>/<account>|<provider>/<key id> ...] | quotas <id> [on | off]")
 	}
 	switch action {
 	case "list", "add", "rotate", "remove":
@@ -121,16 +121,16 @@ func gatewayKeysTo(out io.Writer, args []string) error {
 
 // gatewayKeyLimit shows or sets a key's limits (#585, several since #2227):
 //
-//	magpie gateway-key limit <id> [list]                what it has used of each limit
-//	magpie gateway-key limit <id> off                   no limit
-//	magpie gateway-key limit <id> day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]
+//	starling gateway-key limit <id> [list]                what it has used of each limit
+//	starling gateway-key limit <id> off                   no limit
+//	starling gateway-key limit <id> day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]
 //	                                                    its only limit, or the one of several with that window
-//	magpie gateway-key limit <id> add <window> [--tokens N] [--cost USD] [--cache-reads]
+//	starling gateway-key limit <id> add <window> [--tokens N] [--cost USD] [--cache-reads]
 //	                                                    one more limit; a request passes only while every one has something left
-//	magpie gateway-key limit <id> remove <n>            take off the nth limit
-//	magpie gateway-key limit <id> reset [<n>]           count from 0 again, every limit or the nth; a new N-day or N-hour cycle from now (#1509)
+//	starling gateway-key limit <id> remove <n>            take off the nth limit
+//	starling gateway-key limit <id> reset [<n>]           count from 0 again, every limit or the nth; a new N-day or N-hour cycle from now (#1509)
 func gatewayKeyLimit(out io.Writer, args []string) error {
-	usage := fmt.Errorf("usage: chongyun gateway-key limit <id> [off | reset [<n>] | remove <n> | [add] day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]]")
+	usage := fmt.Errorf("usage: starling gateway-key limit <id> [off | reset [<n>] | remove <n> | [add] day|week|month|<N>d|<N>h [--tokens N] [--cost USD] [--cache-reads]]")
 	if len(args) == 0 {
 		return usage
 	}
@@ -152,7 +152,7 @@ func gatewayKeyLimit(out io.Writer, args []string) error {
 				if len(have) == 0 {
 					return nil, fmt.Errorf("%s has no limit", keys[i].Name)
 				}
-				return nil, fmt.Errorf("a limit's number is 1 to %d, as `chongyun gateway-key limit %s` lists them: %q", len(have), id, v)
+				return nil, fmt.Errorf("a limit's number is 1 to %d, as `starling gateway-key limit %s` lists them: %q", len(have), id, v)
 			}
 			n--
 			return &n, nil
@@ -219,7 +219,7 @@ func gatewayKeyLimit(out io.Writer, args []string) error {
 					return v != nil && l.Period == v.Period && l.Days == v.Days && l.Hours == v.Hours
 				})
 				if n < 0 {
-					return fmt.Errorf("%s has %d limits and none %s: add one with `chongyun gateway-key limit %s add %s ...`, or take one off with `remove <n>`", keys[i].Name, len(have), perPhrase(v), id, args[1])
+					return fmt.Errorf("%s has %d limits and none %s: add one with `starling gateway-key limit %s add %s ...`, or take one off with `remove <n>`", keys[i].Name, len(have), perPhrase(v), id, args[1])
 				}
 				in.Index = &n
 			}
@@ -357,12 +357,12 @@ func parseKeyLimit(window string, rest []string, usage error) (*access.Limit, er
 
 // gatewayKeyModels shows or sets the models a key may use (#882):
 //
-//	magpie gateway-key models <id>                          the models it may use
-//	magpie gateway-key models <id> all                      every model
-//	magpie gateway-key models <id> openai/gpt-5 anthropic/*  only these
+//	starling gateway-key models <id>                          the models it may use
+//	starling gateway-key models <id> all                      every model
+//	starling gateway-key models <id> openai/gpt-5 anthropic/*  only these
 func gatewayKeyModels(out io.Writer, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: chongyun gateway-key models <id> [all | <provider>/<model>|<provider>/* ...]")
+		return fmt.Errorf("usage: starling gateway-key models <id> [all | <provider>/<model>|<provider>/* ...]")
 	}
 	id := args[0]
 	if len(args) > 1 {
@@ -421,7 +421,7 @@ func limitWords(k access.Key, now time.Time) string {
 // account by its name, a key by its KeyID — every one when none are set.
 func gatewayKeyAccounts(out io.Writer, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: chongyun gateway-key accounts <id> [all | <provider>/<account>|<provider>/<key id> ...]")
+		return fmt.Errorf("usage: starling gateway-key accounts <id> [all | <provider>/<account>|<provider>/<key id> ...]")
 	}
 	id := args[0]
 	if len(args) > 1 {
@@ -460,10 +460,10 @@ func gatewayKeyAccounts(out io.Writer, args []string) error {
 // or accounts is told the quotas of what it may use (#2216): the cards of
 // the providers whose every model it may use, of its accounts and keys.
 //
-//	magpie gateway-key quotas <id>         whether it is
-//	magpie gateway-key quotas <id> on|off  tell it them, or none (#1981)
+//	starling gateway-key quotas <id>         whether it is
+//	starling gateway-key quotas <id> on|off  tell it them, or none (#1981)
 func gatewayKeyQuotas(out io.Writer, args []string) error {
-	usage := fmt.Errorf("usage: chongyun gateway-key quotas <id> [on | off]")
+	usage := fmt.Errorf("usage: starling gateway-key quotas <id> [on | off]")
 	if len(args) == 0 || len(args) > 2 {
 		return usage
 	}

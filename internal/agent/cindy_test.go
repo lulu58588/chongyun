@@ -30,7 +30,7 @@ func TestCindyLink(t *testing.T) {
 	if err := json.Unmarshal(b, &p); err != nil {
 		t.Fatal(err)
 	}
-	if p.Kind != "custom" || p.ID != "magpie" || p.Auth.Method != "apiKey" || p.Auth.APIKey != "magpie-cindy" || len(p.Endpoints) != 3 {
+	if p.Kind != "custom" || p.ID != "starling" || p.Auth.Method != "apiKey" || p.Auth.APIKey != "starling-cindy" || len(p.Endpoints) != 3 {
 		t.Fatalf("payload = %+v", p)
 	}
 	if p.Endpoints[0].BaseURL != "http://127.0.0.1:3425" || p.Endpoints[1].BaseURL != "http://127.0.0.1:3425/v1" {
@@ -42,7 +42,7 @@ func TestCindyHas(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "cindy-local-v1.db")
 	gw := "http://127.0.0.1:3425"
 	if cindyHas(path, gw) {
-		t.Fatal("no database, yet has chongyun")
+		t.Fatal("no database, yet has starling")
 	}
 	db, err := sql.Open("sqlite", path)
 	if err != nil {
@@ -53,13 +53,13 @@ func TestCindyHas(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cindyHas(path, gw) {
-		t.Fatal("empty, yet has chongyun")
+		t.Fatal("empty, yet has starling")
 	}
 	if _, err := db.Exec(`INSERT INTO custom_providers VALUES ('p1', 'Other', '{"codex":{"baseUrl":"https://x"}}')`); err != nil {
 		t.Fatal(err)
 	}
 	if cindyHas(path, gw) {
-		t.Fatal("another provider taken for chongyun")
+		t.Fatal("another provider taken for starling")
 	}
 	if _, err := db.Exec(`INSERT INTO custom_providers VALUES ('p2', 'Mine', '{"codex":{"baseUrl":"http://127.0.0.1:3425/v1"}}')`); err != nil {
 		t.Fatal(err)
@@ -70,7 +70,7 @@ func TestCindyHas(t *testing.T) {
 }
 
 // Cindy's global build keeps a database per signed-in account in
-// CindyGlobal: magpie added there is added.
+// CindyGlobal: starling added there is added.
 func TestCindyAdded(t *testing.T) {
 	local, global := t.TempDir(), t.TempDir()
 	gw := "http://127.0.0.1:3425"
@@ -83,10 +83,10 @@ func TestCindyAdded(t *testing.T) {
 	}
 	defer db.Close()
 	if _, err := db.Exec(`CREATE TABLE custom_providers (id text PRIMARY KEY, name text, runtimes text DEFAULT '{}');
-		INSERT INTO custom_providers VALUES ('magpie-73271b6d', 'Chongyun', '{}')`); err != nil {
+		INSERT INTO custom_providers VALUES ('starling-73271b6d', 'Starling', '{}')`); err != nil {
 		t.Fatal(err)
 	}
 	if !cindyAdded([]string{local, global}, gw) {
-		t.Fatal("chongyun in an account's database not found")
+		t.Fatal("starling in an account's database not found")
 	}
 }

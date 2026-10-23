@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // cursorLocalEnvD is the environment.d file systemd's user session reads
@@ -20,7 +20,7 @@ func cursorLocalEnvD() string {
 		home, _ := os.UserHomeDir()
 		cfg = filepath.Join(home, ".config")
 	}
-	return filepath.Join(cfg, "environment.d", "magpie-cursor-local.conf")
+	return filepath.Join(cfg, "environment.d", "starling-cursor-local.conf")
 }
 
 // setUserEnv writes the variables to environment.d, for the sessions from

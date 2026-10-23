@@ -3,7 +3,7 @@ package gateway
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // 0xAncientTwo 报告: the Claude subscription was signed out again and again.

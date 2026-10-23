@@ -15,10 +15,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/lastgood"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/lastgood"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
 // Method is a way a plugin signs in: "oauth" (a browser, then a code
@@ -27,7 +27,7 @@ type Method struct {
 	Type  string `json:"type"`
 	Label string `json:"label"`
 	// Placeholder is the hint an "api" method gives in its key's field
-	// (magpie's own field: OpenCode's says "API key")
+	// (starling's own field: OpenCode's says "API key")
 	Placeholder string `json:"placeholder,omitempty"`
 }
 
@@ -105,7 +105,7 @@ type Model struct {
 	Decides bool `json:"decides,omitempty"`
 	// Searches is set by the plugin on a model that searches the web by
 	// itself when asked in plain words (m.searches: Trae's search model),
-	// which magpie may then search with for other models.
+	// which starling may then search with for other models.
 	Searches bool `json:"searches,omitempty"`
 }
 
@@ -129,7 +129,7 @@ type Provider struct {
 	// (auth.options, #2038), as the host checked them
 	Options []Option `json:"options,omitempty"`
 	// Decide says the plugin serves a decision API (TypeSafe's System
-	// One) for this provider: its config hook set decide on it. magpie
+	// One) for this provider: its config hook set decide on it. starling
 	// posts the questions to the provider's own base, at /systemone,
 	// through the plugin's fetch (#1514).
 	Decide bool `json:"decide,omitempty"`
@@ -152,16 +152,16 @@ type Provider struct {
 	// own id first; SignedIn, AuthType and AccountID are that one's.
 	Accounts []Account `json:"accounts"`
 	// MaxConcurrency is how many requests the plugin says each of its
-	// accounts takes at once (magpie's own field, which OpenCode ignores:
+	// accounts takes at once (starling's own field, which OpenCode ignores:
 	// the auth hook's maxConcurrency, else package.json's
-	// magpie.maxConcurrency); 0 for none said. The user's setting on the
+	// starling.maxConcurrency); 0 for none said. The user's setting on the
 	// provider goes over it.
 	MaxConcurrency int `json:"maxConcurrency,omitempty"`
 }
 
 // Option is a switch a plugin declares for its provider (auth.options,
-// #2038): magpie shows it, keeps the user's value in settings'
-// PluginOptions and hands it to the plugin (input.magpie.option). Nothing
+// #2038): starling shows it, keeps the user's value in settings'
+// PluginOptions and hands it to the plugin (input.starling.option). Nothing
 // runs when it changes.
 type Option struct {
 	Key         string `json:"key"`
@@ -384,7 +384,7 @@ func refreshProvidersInBackground(ctx context.Context, epoch uint64) {
 
 // ProxyFor is the proxy choice (netproxy.With's) of the provider's
 // account at key, or of the provider for key "": set by the providers
-// magpie keeps, which know them.
+// starling keeps, which know them.
 var ProxyFor func(provider, key string) string
 
 // listingProxies are the proxies each provider's model list is asked
@@ -589,7 +589,7 @@ func Settle() {
 }
 
 // Cached is the plugins' providers as last asked, without starting the
-// host: what is known of them when magpie has only just started. A
+// host: what is known of them when starling has only just started. A
 // provider's sign-in is read afresh from plugin-auth.json.
 func Cached() []Provider {
 	checkList()

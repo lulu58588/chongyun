@@ -11,11 +11,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/starling/internal/plugin"
 )
 
 // PluginIcon is the icon a plugin's provider shows: the picture its plugin
-// gives it (the auth hook's icon, or package.json's magpie.icon), kept as
+// gives it (the auth hook's icon, or package.json's starling.icon), kept as
 // a picture given by hand is, else the one the plugin market gives it.
 func PluginIcon(pp plugin.Provider) string {
 	if ic := pluginOwnIcon(pp.Icon); ic != "" {
@@ -127,7 +127,7 @@ func pluginOwnIcon(said string) string {
 }
 
 // RepoIcons are the Icon values of the pictures plugins not installed yet
-// give in their package.json (repositories tagged magpie-plugin), checked
+// give in their package.json (repositories tagged starling-plugin), checked
 // and kept as an installed plugin's are: "" where there is none to show.
 // An https picture not fetched before is waited for up to wait, so the
 // list's first answer has it (upstream: 非官方插件显示不出来 logo); one

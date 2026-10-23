@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func museHome(t *testing.T) (home, path string) {
@@ -64,11 +64,11 @@ func TestMuse(t *testing.T) {
 	for _, o := range f.Options(a.Values()) {
 		vals = append(vals, o.Value)
 	}
-	if !strings.Contains(strings.Join(vals, " "), "muse-spark magpie/deepseek/pro") {
+	if !strings.Contains(strings.Join(vals, " "), "muse-spark starling/deepseek/pro") {
 		t.Fatalf("options: %v", vals)
 	}
 
-	if err := f.Set("magpie/deepseek/pro"); err != nil {
+	if err := f.Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	m := read()
@@ -78,18 +78,18 @@ func TestMuse(t *testing.T) {
 	if m["schema_version"] != 1.0 || !reflect.DeepEqual(m["mcpServers"], want["mcpServers"]) || !reflect.DeepEqual(m["tui"], want["tui"]) {
 		t.Fatalf("the user's keys: %v", m)
 	}
-	if f.Get() != "magpie/deepseek/pro" || a.Check() != "" {
-		t.Fatalf("on chongyun: %q %q", f.Get(), a.Check())
+	if f.Get() != "starling/deepseek/pro" || a.Check() != "" {
+		t.Fatalf("on starling: %q %q", f.Get(), a.Check())
 	}
-	// another of magpie's models keeps what was stashed
-	if err := f.Set("magpie/deepseek/flash"); err != nil {
+	// another of starling's models keeps what was stashed
+	if err := f.Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
-	if f.Get() != "magpie/deepseek/flash" {
+	if f.Get() != "starling/deepseek/flash" {
 		t.Fatalf("again: %q", f.Get())
 	}
 
-	// auth moved back to the Meta sign-in's token: no longer as magpie set it
+	// auth moved back to the Meta sign-in's token: no longer as starling set it
 	edit.SetJSON(path, edit.KV{Path: "endpoint_transport.auth", Value: "bearer"})
 	if d := a.Check(); !strings.Contains(d, "auth") {
 		t.Fatalf("auth bearer: %q", d)
@@ -99,13 +99,13 @@ func TestMuse(t *testing.T) {
 		t.Fatalf("auth none: %q", d)
 	}
 
-	// the endpoint moved elsewhere under magpie's model: still magpie's, and
+	// the endpoint moved elsewhere under starling's model: still starling's, and
 	// setting it again keeps the user's stashed endpoint for the reset
 	edit.SetJSON(path, edit.KV{Path: "endpoint_transport.base_url", Value: "http://127.0.0.1:9/v1"})
-	if d := a.Check(); !strings.Contains(d, "base_url") || f.Get() != "magpie/deepseek/flash" {
+	if d := a.Check(); !strings.Contains(d, "base_url") || f.Get() != "starling/deepseek/flash" {
 		t.Fatalf("moved: %q %q", d, f.Get())
 	}
-	if err := f.Set("magpie/deepseek/flash"); err != nil || a.Check() != "" {
+	if err := f.Set("starling/deepseek/flash"); err != nil || a.Check() != "" {
 		t.Fatalf("again: %v %q", err, a.Check())
 	}
 
@@ -126,7 +126,7 @@ func TestMuse(t *testing.T) {
 	}
 }
 
-// With no settings file, magpie makes one Muse reads (it refuses one
+// With no settings file, starling makes one Muse reads (it refuses one
 // without its schema version) and takes it away again on reset.
 func TestMuseNoSettings(t *testing.T) {
 	home, path := museHome(t)
@@ -135,7 +135,7 @@ func TestMuseNoSettings(t *testing.T) {
 	if f.Get() != "" {
 		t.Fatalf("none: %q", f.Get())
 	}
-	if err := f.Set("magpie/deepseek/pro"); err != nil {
+	if err := f.Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	var m map[string]any
@@ -151,9 +151,9 @@ func TestMuseNoSettings(t *testing.T) {
 		t.Fatalf("left behind: %s", b)
 	}
 
-	// a model of the user's own picked on magpie's: endpoint taken out,
+	// a model of the user's own picked on starling's: endpoint taken out,
 	// the file (theirs now) kept
-	f.Set("magpie/deepseek/pro")
+	f.Set("starling/deepseek/pro")
 	if err := f.Set("muse-spark"); err != nil {
 		t.Fatal(err)
 	}

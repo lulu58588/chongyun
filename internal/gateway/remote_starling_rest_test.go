@@ -8,16 +8,16 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// bigsteven 报告: another computer's magpie (LAN share) serves each
+// bigsteven 报告: another computer's starling (LAN share) serves each
 // of its models from its own providers, and rests them itself. When one of
-// them was out of quota there, its 429 rested the whole remote magpie here
+// them was out of quota there, its 429 rested the whole remote starling here
 // for the 3 hours it named, so a group whose member was another of its
 // models, with quota left, went to its next member, or had none. Such a
 // refusal rests only the model it was about.
-func TestRemoteMagpieQuotaRestsTheModel(t *testing.T) {
+func TestRemoteStarlingQuotaRestsTheModel(t *testing.T) {
 	fresh(t)
 	var asked []string
 	remote := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func TestRemoteMagpieQuotaRestsTheModel(t *testing.T) {
 		io.WriteString(w, `{"id":"x","choices":[{"index":0,"message":{"role":"assistant","content":"from `+req.Model+`"},"finish_reason":"stop"}]}`)
 	}))
 	t.Cleanup(remote.Close)
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Key: "k",
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Key: "k",
 		Chat: remote.URL + "/v1", Models: []string{"codex/gpt-5.5", "glm/glm-5", "kimi/kimi-k3"}}); err != nil {
 		t.Fatal(err)
 	}
@@ -54,7 +54,7 @@ func TestRemoteMagpieQuotaRestsTheModel(t *testing.T) {
 		t.Fatalf("codex on the remote: %d %s", code, body)
 	}
 	if r, ok := restOf("office"); ok {
-		t.Errorf("the whole remote chongyun rests for one model's quota: %+v", r)
+		t.Errorf("the whole remote starling rests for one model's quota: %+v", r)
 	}
 	if _, ok := restOf("office/codex/gpt-5.5"); !ok {
 		t.Errorf("codex/gpt-5.5 doesn't rest: %v", rests())
@@ -68,7 +68,7 @@ func TestRemoteMagpieQuotaRestsTheModel(t *testing.T) {
 		t.Fatalf("glm on the remote: %d %s", code, body)
 	}
 	if r, ok := restOf("office"); ok {
-		t.Errorf("the whole remote chongyun rests for one model's rate limit: %+v", r)
+		t.Errorf("the whole remote starling rests for one model's rate limit: %+v", r)
 	}
 	if r, ok := restOf("office/glm/glm-5"); !ok || r.Why != failRate {
 		t.Errorf("glm/glm-5 doesn't rest as rate limited: %+v %v", r, rests())

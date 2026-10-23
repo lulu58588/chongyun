@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/starling/internal/agent"
 )
 
 type importWindows struct {
@@ -28,7 +28,7 @@ func TestLodyImportHandoff(t *testing.T) {
 	if err := os.WriteFile(catalog, []byte(`{"workspaces":[]}`), 0600); err != nil {
 		t.Fatal(err)
 	}
-	// Cindy, beside it, still says whether it has magpie: false is said,
+	// Cindy, beside it, still says whether it has starling: false is said,
 	// not left out as unknown
 	cfg, err := os.UserConfigDir()
 	if err != nil {
@@ -57,7 +57,7 @@ func TestLodyImportHandoff(t *testing.T) {
 		t.Fatalf("Lody's row says added: %s", b)
 	}
 	if cindy == nil || cindy.Added == nil || *cindy.Added {
-		t.Fatalf("Cindy without chongyun: %+v, want added false", cindy)
+		t.Fatalf("Cindy without starling: %+v, want added false", cindy)
 	}
 	if b, _ := json.Marshal(cindy); !strings.Contains(string(b), `"added":false`) {
 		t.Fatalf("Cindy's row leaves added out: %s", b)

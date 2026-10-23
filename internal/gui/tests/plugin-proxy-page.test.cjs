@@ -1,9 +1,9 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// An answer that is a proxy's own web page, not magpie's: magpie web behind
+// An answer that is a proxy's own web page, not starling's: starling web behind
 // Cloudflare, an install that outlasted its 100 seconds, and the toast
 // showed "<!DOCTYPE html> <!--[if lt IE 7]> <html class="no-js ie…"
 // (precisionz installing Zed, #2032). The page says a proxy answered, by
-// its title, and for a timeout that magpie may still be finishing; a
+// its title, and for a timeout that starling may still be finishing; a
 // plain-text error is still said as it came. English, Chinese, Japanese
 // and German; the API is faked here.
 const assert = require("node:assert/strict");
@@ -22,7 +22,7 @@ const CF524 = `<!DOCTYPE html>
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
 <head>
-<title>magpie.example.com | 524: A timeout occurred</title>
+<title>starling.example.com | 524: A timeout occurred</title>
 <meta charset="UTF-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
@@ -65,35 +65,35 @@ function server(lang, answer) {
     if (url.pathname === "/api/plugins/search") return json({ hits: [] });
     if (url.pathname === "/api/plugins/add") return route.fulfill(answer);
     if (url.pathname.startsWith("/api/")) return json({});
-    if (!/^\/[\w./-]*$/.test(url.pathname) || url.host !== "magpie.test") return route.fulfill({ status: 404, body: "" });
+    if (!/^\/[\w./-]*$/.test(url.pathname) || url.host !== "starling.test") return route.fulfill({ status: 404, body: "" });
     const file = path.join(assets, url.pathname === "/" ? "index.html" : url.pathname);
     const contentType = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".png": "image/png" }[path.extname(file)];
     try { await route.fulfill({ body: await fs.readFile(file), contentType }); } catch { await route.fulfill({ status: 404, body: "" }); }
   };
 }
 
-const what = "magpie.example.com | 524: A timeout occurred";
-const bad = "magpie.example.com | 502: Bad gateway";
+const what = "starling.example.com | 524: A timeout occurred";
+const bad = "starling.example.com | 502: Bad gateway";
 const L = {
   en: {
     install: "Install",
-    timeout: `A proxy in front of magpie stopped waiting; magpie may still be finishing, check again in a minute (${what})`,
-    other: `A proxy in front of magpie answered, not magpie (${bad})`,
+    timeout: `A proxy in front of starling stopped waiting; starling may still be finishing, check again in a minute (${what})`,
+    other: `A proxy in front of starling answered, not starling (${bad})`,
   },
   zh: {
     install: "安装",
-    timeout: `magpie 前面的代理等不及先返回了；magpie 可能仍在处理，请过一分钟再看看（${what}）`,
-    other: `这是 magpie 前面的代理返回的，不是 magpie 的回应（${bad}）`,
+    timeout: `starling 前面的代理等不及先返回了；starling 可能仍在处理，请过一分钟再看看（${what}）`,
+    other: `这是 starling 前面的代理返回的，不是 starling 的回应（${bad}）`,
   },
   ja: {
     install: "インストール",
-    timeout: `magpie の前のプロキシが待ちきれずに応答しました。magpie はまだ処理中かもしれません。1 分ほどして確認してください（${what}）`,
-    other: `magpie ではなく、その前のプロキシからの応答です（${bad}）`,
+    timeout: `starling の前のプロキシが待ちきれずに応答しました。starling はまだ処理中かもしれません。1 分ほどして確認してください（${what}）`,
+    other: `starling ではなく、その前のプロキシからの応答です（${bad}）`,
   },
   de: {
     install: "Installieren",
-    timeout: `Ein Proxy vor magpie hat nicht länger gewartet; magpie arbeitet möglicherweise noch, prüfen Sie es in einer Minute erneut (${what})`,
-    other: `Ein Proxy vor magpie hat geantwortet, nicht magpie (${bad})`,
+    timeout: `Ein Proxy vor starling hat nicht länger gewartet; starling arbeitet möglicherweise noch, prüfen Sie es in einer Minute erneut (${what})`,
+    other: `Ein Proxy vor starling hat geantwortet, nicht starling (${bad})`,
   },
 };
 
@@ -103,7 +103,7 @@ async function installOnce(browser, lang, answer) {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.route("**/*", server(lang, answer));
-  await page.goto("http://magpie.test/?view=plugins");
+  await page.goto("http://starling.test/?view=plugins");
   const manual = page.locator("#view-plugins .pm-manual");
   await manual.waitFor();
   await manual.locator(".pm-minput").fill(PKG);

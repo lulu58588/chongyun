@@ -1,17 +1,17 @@
 package gateway
 
-// A reply says which of magpie's providers and models answered it (#822):
+// A reply says which of starling's providers and models answered it (#822):
 // the body's model is the vendor's own name for it (glm-5.3-flash), which
 // names neither the provider nor the group's member, so an agent that
 // counts usage by it puts every provider's glm-5.3-flash in one bucket.
 //
-// Every reply carries X-Magpie-Provider (the provider's id) and
-// X-Magpie-Model (magpie's provider/model id of the member that answered),
+// Every reply carries X-Starling-Provider (the provider's id) and
+// X-Starling-Model (starling's provider/model id of the member that answered),
 // the body left as the vendor wrote it: agents read the body's model
 // themselves (Claude Code its features, Codex its catalog), so a name they
 // don't know there is not given them unasked. Settings' MemberModel, or a
-// request's X-Magpie-Response-Model: member, has the body's model say
-// magpie's id as well (memberWriter); the vendor's own name is still in
+// request's X-Starling-Response-Model: member, has the body's model say
+// starling's id as well (memberWriter); the vendor's own name is still in
 // the usage log (Record.Served).
 
 import (
@@ -23,14 +23,14 @@ import (
 	"sync"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 const (
-	providerHeader      = "X-Magpie-Provider"
-	modelHeader         = "X-Magpie-Model"
-	responseModelHeader = "X-Magpie-Response-Model" // a request's: member, or vendor
+	providerHeader      = "X-Starling-Provider"
+	modelHeader         = "X-Starling-Model"
+	responseModelHeader = "X-Starling-Response-Model" // a request's: member, or vendor
 )
 
 // vendorNamed are the agents whose replies always keep the vendor's model

@@ -3,8 +3,8 @@
 package cli
 
 import (
-	"github.com/lulu58588/chongyun/internal/gui"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/gui"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 const hasGUI = true

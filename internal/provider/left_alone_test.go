@@ -8,15 +8,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/claudecode"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/claudecode"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// A provider switched off, or whose account was removed from chongyun, gets
-// no request from chongyun in the background: its allowance isn't read, its
+// A provider switched off, or whose account was removed from starling, gets
+// no request from starling in the background: its allowance isn't read, its
 // sign-in isn't renewed or switched, its list isn't fetched (Riko 报告: with
 // Claude switched off, Surge showed `claude auth status --json` every
-// minute). Fake claude and devin CLIs on PATH log every run: chongyun asks
+// minute). Fake claude and devin CLIs on PATH log every run: starling asks
 // no agent CLI who is signed in, so none of them is ever run — switched off
 // or not.
 func TestLeftAloneRunsNoCLI(t *testing.T) {

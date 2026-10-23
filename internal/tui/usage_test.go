@@ -9,11 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/fx"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/fx"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // The Usage page lists the accounts' windows and balances as the app's
@@ -124,9 +124,9 @@ func TestUnlimitedQuotaCell(t *testing.T) {
 
 // The Usage page shows, under the gateway's calls, those the agents made
 // on their own, read from their session files, as the app's Usage page
-// counts them (Kumo31 报告: Codex used outside magpie wasn't in the
+// counts them (Kumo31 报告: Codex used outside starling wasn't in the
 // TUI).
-func TestUsagePageShowsCallsNotThroughMagpie(t *testing.T) {
+func TestUsagePageShowsCallsNotThroughStarling(t *testing.T) {
 	home(t)
 	// the usage clock held at noon, so that the calls a minute or two
 	// before it are today's whenever the test runs
@@ -142,7 +142,7 @@ func TestUsagePageShowsCallsNotThroughMagpie(t *testing.T) {
 	t.Cleanup(func() { usage.LogCalls = old })
 	m := press(t, model{w: 160, h: 60, page: pageUsage}, "t")
 	v := m.viewUsage()
-	gw, own, ok := strings.Cut(v, "not through chongyun")
+	gw, own, ok := strings.Cut(v, "not through starling")
 	if !ok || !strings.Contains(gw, "relay/m") || strings.Contains(gw, "gpt-6-luna") || !strings.Contains(own, "gpt-6-luna") {
 		t.Fatal(v)
 	}
@@ -151,7 +151,7 @@ func TestUsagePageShowsCallsNotThroughMagpie(t *testing.T) {
 	}
 }
 
-// The Usage page asked for as midnight falls shows the calls through magpie
+// The Usage page asked for as midnight falls shows the calls through starling
 // and those not through it of one day, the day it was asked on, when a
 // period is picked and when the page is read again.
 func TestUsagePageAtMidnight(t *testing.T) {
@@ -178,7 +178,7 @@ func TestUsagePageAtMidnight(t *testing.T) {
 	both := func(how string, m model) {
 		t.Helper()
 		v := m.viewUsage()
-		gw, own, ok := strings.Cut(v, "not through chongyun")
+		gw, own, ok := strings.Cut(v, "not through starling")
 		if !ok || !strings.Contains(gw, "relay/m") || !strings.Contains(own, "gpt-6-luna") {
 			t.Errorf("%s:\n%s", how, v)
 		}

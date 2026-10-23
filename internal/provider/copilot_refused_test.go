@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // copilot371Models is a Copilot Student account's /models as #371 measured
@@ -146,7 +146,7 @@ func modelIDs(ms []catalog.Model) []string {
 
 // #371: a Copilot Student account's list offers models Copilot then
 // refuses it (400 "The requested model is not supported."), policy enabled
-// or not, and magpie exposed the four picked for it — one of them not even
+// or not, and starling exposed the four picked for it — one of them not even
 // in the list — every one refused. A pick the list no longer has is left
 // out; a model the account was refused leaves its models and its picks.
 func TestCopilotRefusedLeavesModels(t *testing.T) {

@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/plugin"
 )
 
 // A plugin's provider (see internal/plugin) is a subscription like the
@@ -29,7 +29,7 @@ const pluginBase = "plugin://"
 
 // ConversationHeader carries the conversation a request belongs to, to a
 // plugin's chat.headers hook as its session; it goes no further.
-const ConversationHeader = "X-Magpie-Conversation"
+const ConversationHeader = "X-Starling-Conversation"
 
 // WorkDirHeader and WorkGitHeader tell a plugin's fetch where the agent
 // that asked works, as the agent says it in its request: the folder,
@@ -38,11 +38,11 @@ const ConversationHeader = "X-Magpie-Conversation"
 // known. The plugin host takes them off whatever the plugin sends on
 // (host.js), so they reach no vendor as headers.
 const (
-	WorkDirHeader = "X-Magpie-Work-Dir"
-	WorkGitHeader = "X-Magpie-Work-Git"
+	WorkDirHeader = "X-Starling-Work-Dir"
+	WorkGitHeader = "X-Starling-Work-Git"
 )
 
-// PluginID is the id magpie gives the provider OpenCode calls id: the same,
+// PluginID is the id starling gives the provider OpenCode calls id: the same,
 // unless a preset or a built-in subscription has it (google, openai,
 // anthropic), or a provider of the user's own made before the plugin was
 // installed (zenmux, #867), or "auto" or "group", which start the ids of
@@ -52,7 +52,7 @@ func PluginID(id string) string {
 	if PluginServes(id) {
 		return id
 	}
-	if slices.Contains(accountIDs, id) || Preset(id) != nil || id == "magpie" || id == autoID || id == strings.TrimSuffix(GroupPrefix, "/") || customIDs()[id] {
+	if slices.Contains(accountIDs, id) || Preset(id) != nil || id == "starling" || id == autoID || id == strings.TrimSuffix(GroupPrefix, "/") || customIDs()[id] {
 		return id + "-plugin"
 	}
 	return id
@@ -88,7 +88,7 @@ func subscriptionID(id string) bool {
 func (p Provider) IsPlugin() bool { return p.Account != nil && p.Account.plugin != nil }
 
 // PluginProvider is the id OpenCode knows the plugin's provider p is by
-// (grok, kiro), whatever magpie names it; "" for one no plugin gives.
+// (grok, kiro), whatever starling names it; "" for one no plugin gives.
 func (p Provider) PluginProvider() string {
 	if !p.IsPlugin() {
 		return ""
@@ -96,7 +96,7 @@ func (p Provider) PluginProvider() string {
 	return p.Account.plugin.ID
 }
 
-// PluginOf is the plugin provider magpie's provider id is, when it is one.
+// PluginOf is the plugin provider starling's provider id is, when it is one.
 func PluginOf(id string) (plugin.Provider, bool) {
 	for _, pp := range heldPlugins() {
 		if PluginID(pp.ID) == id {
@@ -518,7 +518,7 @@ func pluginFetch(pp plugin.Provider, account string, req *http.Request) (*http.R
 		url = base + "/models/" + api + ":streamGenerateContent?alt=sse"
 	case strings.HasPrefix(rest, "/v1/"):
 		// chat, responses and Anthropic's messages: the AI SDK's base
-		// ends where magpie's /v1 does
+		// ends where starling's /v1 does
 		url = base + strings.TrimPrefix(rest, "/v1")
 	case strings.HasPrefix(rest, "https://") || strings.HasPrefix(rest, "http://"):
 		// a URL of the vendor's own outside the base (Provider.Origin's),
@@ -556,7 +556,7 @@ func pluginFetch(pp plugin.Provider, account string, req *http.Request) (*http.R
 // the mark, as a built-in whose sign-in renewed took it off whatever the
 // request then met. Without it a 401 marks the account and a success
 // clears the mark.
-const SignInHeader = "X-Magpie-Sign-In"
+const SignInHeader = "X-Starling-Sign-In"
 
 // notePluginSignIn marks or clears an account's lapse as the plugin's
 // answer says, and takes SignInHeader off it.

@@ -4,10 +4,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// magpie group add takes decision models for a group of them alone, asked
+// starling group add takes decision models for a group of them alone, asked
 // at /v1/systemone (ARNO 报告), and refuses one beside a chat model.
 func TestGroupAddDecisionModels(t *testing.T) {
 	groupsHome(t)

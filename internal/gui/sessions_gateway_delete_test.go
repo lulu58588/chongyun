@@ -10,15 +10,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // A Claude Code session seen only through the gateway, its files on another
 // computer, was listed with no delete (lc 报告: "只可列出？不可删除？").
-// Delete now moves what magpie keeps of it, its row and its recorded text,
-// to magpie's trash; Restore brings both back; a later request lists it
+// Delete now moves what starling keeps of it, its row and its recorded text,
+// to starling's trash; Restore brings both back; a later request lists it
 // again; one still going on is left; and clearing the recorded
 // conversations erases the trashed text too.
 func TestSessionsDeleteGatewaySession(t *testing.T) {

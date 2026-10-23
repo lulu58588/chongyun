@@ -4,15 +4,15 @@ import "testing"
 
 func TestTarget(t *testing.T) {
 	for in, want := range map[string]string{
-		`C:\Tools\magpie-windows-amd64.exe`:          `C:\Tools\magpie-windows-amd64.exe`,
-		`C:\Tools\magpie.exe.old`:                    `C:\Tools\magpie.exe`,
-		`C:\Tools\magpie.exe.old-3`:                  `C:\Tools\magpie.exe`,
-		`C:\Tools\magpie.exe.new`:                    `C:\Tools\magpie.exe`,
-		`C:\Tools\MAGPIE.EXE.OLD`:                    `C:\Tools\MAGPIE.EXE`,
-		`C:\old\magpie.exe`:                          `C:\old\magpie.exe`,
-		`C:\Tools\magpie.exe.older`:                  `C:\Tools\magpie.exe.older`,
-		`/usr/local/bin/magpie`:                      `/usr/local/bin/magpie`,
-		`C:\Users\me\Downloads\chongyun (1).exe.old-2`: `C:\Users\me\Downloads\chongyun (1).exe`,
+		`C:\Tools\starling-windows-amd64.exe`:          `C:\Tools\starling-windows-amd64.exe`,
+		`C:\Tools\starling.exe.old`:                    `C:\Tools\starling.exe`,
+		`C:\Tools\starling.exe.old-3`:                  `C:\Tools\starling.exe`,
+		`C:\Tools\starling.exe.new`:                    `C:\Tools\starling.exe`,
+		`C:\Tools\STARLING.EXE.OLD`:                    `C:\Tools\STARLING.EXE`,
+		`C:\old\starling.exe`:                          `C:\old\starling.exe`,
+		`C:\Tools\starling.exe.older`:                  `C:\Tools\starling.exe.older`,
+		`/usr/local/bin/starling`:                      `/usr/local/bin/starling`,
+		`C:\Users\me\Downloads\starling (1).exe.old-2`: `C:\Users\me\Downloads\starling (1).exe`,
 	} {
 		if got := Target(in); got != want {
 			t.Errorf("Target(%q) = %q, want %q", in, got, want)
@@ -21,17 +21,17 @@ func TestTarget(t *testing.T) {
 }
 
 func TestStale(t *testing.T) {
-	exe := "/tools/magpie.exe"
+	exe := "/tools/starling.exe"
 	for _, c := range []struct {
 		target, dir string
 		stale       bool
 	}{
 		{"", "", true},                            // no shortcut yet
-		{"/tools/magpie.exe", "/tools", false},    // already this one
-		{"/TOOLS/Magpie.EXE", "/Tools/", false},   // the same, in another case
-		{"/downloads/magpie.exe", "/tools", true}, // the exe was moved
-		{"/tools/magpie.exe", "/downloads", true}, // starts in another folder
-		{"/tools/magpie.exe", "", true},           // in no folder
+		{"/tools/starling.exe", "/tools", false},    // already this one
+		{"/TOOLS/Starling.EXE", "/Tools/", false},   // the same, in another case
+		{"/downloads/starling.exe", "/tools", true}, // the exe was moved
+		{"/tools/starling.exe", "/downloads", true}, // starts in another folder
+		{"/tools/starling.exe", "", true},           // in no folder
 	} {
 		if got := Stale(c.target, c.dir, exe); got != c.stale {
 			t.Errorf("Stale(%q, %q) = %v, want %v", c.target, c.dir, got, c.stale)

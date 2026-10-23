@@ -9,15 +9,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // pkg is the package these tests add: an npm one, so add installs it
 // through the fake bun.
 const pkg = "@magpie-community/opencode-zed-auth"
 
-// offSandbox gives the test its own magpie folders and a Bun that installs
-// nothing real: $MAGPIE_BUN is this test binary, which stands in for bun as
+// offSandbox gives the test its own starling folders and a Bun that installs
+// nothing real: $STARLING_BUN is this test binary, which stands in for bun as
 // the git plugin's test has it do (fakeBun), so no Bun is downloaded and npm
 // is never asked.
 func offSandbox(t *testing.T) string {
@@ -34,22 +34,22 @@ func offSandbox(t *testing.T) string {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// bunCommand is stubbed rather than $MAGPIE_BUN set, as the git
+	// bunCommand is stubbed rather than $STARLING_BUN set, as the git
 	// plugin's test does it: the environment a test sets reaches the
 	// other tests in the package only through what they read, and
-	// $MAGPIE_BUN set here made another test's Add run this binary too
+	// $STARLING_BUN set here made another test's Add run this binary too
 	// (TestLoadConcurrentWithSavesAndEdits renames plugins.json under
 	// load, and lost it to "Access is denied" on Windows).
-	// $MAGPIE_BUN is set as well, so Bun answers at once instead of
+	// $STARLING_BUN is set as well, so Bun answers at once instead of
 	// downloading one: what it answers with is never run, since
 	// bunCommand below is what install uses.
-	t.Setenv("MAGPIE_BUN", self)
+	t.Setenv("STARLING_BUN", self)
 	log := filepath.Join(dir, "bun.log")
 	orig := bunCommand
 	bunCommand = func(ctx context.Context, bun, dir string, args ...string) *exec.Cmd {
 		cmd := exec.CommandContext(ctx, self, args...)
 		cmd.Dir = dir
-		cmd.Env = append(os.Environ(), "MAGPIE_FAKE_BUN=1", "MAGPIE_FAKE_BUN_LOG="+log)
+		cmd.Env = append(os.Environ(), "STARLING_FAKE_BUN=1", "STARLING_FAKE_BUN_LOG="+log)
 		return cmd
 	}
 	t.Cleanup(func() { bunCommand = orig })

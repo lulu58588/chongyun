@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/pii"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/pii"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The local masking model is on only once it is on disk: turned on where

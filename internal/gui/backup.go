@@ -10,10 +10,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/backup"
-	"github.com/lulu58588/chongyun/internal/davsync"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/backup"
+	"github.com/lulu58588/starling/internal/davsync"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // backupRoutes are the Settings page's Export and Import, and the WebDAV
@@ -43,12 +43,12 @@ func backupRoutes(mux *http.ServeMux, w Windows) {
 			return
 		}
 		dir := downloads()
-		name := filepath.Join(dir, "magpie-"+time.Now().Format("2006-01-02")+backup.Ext)
+		name := filepath.Join(dir, "starling-"+time.Now().Format("2006-01-02")+backup.Ext)
 		for i := 2; ; i++ { // never over an earlier one
 			if _, err := os.Stat(name); err != nil {
 				break
 			}
-			name = filepath.Join(dir, fmt.Sprintf("magpie-%s-%d%s", time.Now().Format("2006-01-02"), i, backup.Ext))
+			name = filepath.Join(dir, fmt.Sprintf("starling-%s-%d%s", time.Now().Format("2006-01-02"), i, backup.Ext))
 		}
 		if err := edit.WriteAtomic(name, data); err != nil {
 			fail(rw, err)
@@ -154,7 +154,7 @@ func backupRoutes(mux *http.ServeMux, w Windows) {
 }
 
 // busy is what of a sync's failure the status doesn't hold: that it waited
-// its time out for another magpie's. The rest is in the status.
+// its time out for another starling's. The rest is in the status.
 func busy(err error) error {
 	if errors.Is(err, davsync.ErrBusy) {
 		return err

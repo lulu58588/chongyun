@@ -8,18 +8,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func TestOTelSessionDiscoveredDuringFirstRequest(t *testing.T) {
 	t.Setenv("PI_CODING_AGENT_DIR", t.TempDir())
 	t.Setenv("PI_CODING_AGENT_SESSION_DIR", "")
 	t.Setenv("CODEX_HOME", t.TempDir())
-	t.Setenv("MAGPIE_OTEL_ENABLED", "true")
-	t.Setenv("MAGPIE_OTEL_ENDPOINT", "http://127.0.0.1:1")
-	t.Setenv("MAGPIE_OTEL_HEADERS", "")
-	t.Setenv("MAGPIE_OTEL_SESSIONS", "true")
+	t.Setenv("STARLING_OTEL_ENABLED", "true")
+	t.Setenv("STARLING_OTEL_ENDPOINT", "http://127.0.0.1:1")
+	t.Setenv("STARLING_OTEL_HEADERS", "")
+	t.Setenv("STARLING_OTEL_SESSIONS", "true")
 	fastOTel(t)
 	// Begin's cached miss must outlast the test however slow the machine
 	// is (#1811): neither the transcript watcher's poll nor the end of the

@@ -3,7 +3,7 @@ package tui
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A local server's preset (Ollama, LM Studio, oMLX, MLX-Serve) is asked

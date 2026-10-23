@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/starling/internal/plugin"
 )
 
 // A plugin's provider is signed in to as many times as the user likes, as
@@ -107,7 +107,7 @@ var pluginOwnUser = func(id string) string {
 
 // pluginLogins are the provider's accounts, the first in use first. What
 // plugin-auth.json keeps is the truth: logins.json follows it. The agent's
-// own account is named as the agent is signed in now; removed in magpie,
+// own account is named as the agent is signed in now; removed in starling,
 // it is only hidden, and shows again once the agent signs in anew.
 func pluginLogins(pp plugin.Provider) []pluginLogin {
 	agent := pluginAgent(pp)
@@ -184,7 +184,7 @@ func pluginSide(pp plugin.Provider) []sideLogin {
 }
 
 // pluginOfAgent is the plugin provider the accounts page names by its
-// magpie id.
+// starling id.
 func pluginOfAgent(agent string) (plugin.Provider, bool) {
 	if strings.HasPrefix(agent, "plugin:") {
 		id := strings.TrimPrefix(agent, "plugin:")
@@ -208,7 +208,7 @@ func setPluginLoginOn(pp plugin.Provider, user string, on bool) error {
 	return setSideLoginOn(pluginAgent(pp), user, on, pluginSide(pp))
 }
 
-// forgetPluginLogin signs the account out: its sign-in is magpie's own.
+// forgetPluginLogin signs the account out: its sign-in is starling's own.
 // The agent's own is only hidden, as the built-in hid it: the agent stays
 // signed in, and the account shows again once it signs in anew. Qoder's
 // first goes as the built-in's did, the next put first.
@@ -375,12 +375,12 @@ func lapsedText(pp plugin.Provider, user string) string {
 }
 
 // clearPluginLapse takes the mark off an account signed in again, and
-// brings back the agent's own account removed in magpie, as signing in to
+// brings back the agent's own account removed in starling, as signing in to
 // the built-in's did (#320). The account's kept usage reading goes too: it
 // was read under the old sign-in, and for a minute it would answer the
 // next reading with the old sign-in's "expired" without asking the plugin,
 // and so without marking or clearing anything. The mark goes by the
-// account alone: the providers' list is empty while another magpie's
+// account alone: the providers' list is empty while another starling's
 // change to plugins.json is read again, and a sign-in finished then left
 // the account saying "sign in again" (#2748).
 func clearPluginLapse(saved plugin.Saved) {

@@ -12,11 +12,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// magpie's image recognition, the model that describes images to a model
+// starling's image recognition, the model that describes images to a model
 // that can't see them (seer: Settings › Models › Image recognition, else
 // AutoVision's), is also an MCP server of its own beside the web search's
 // (JonahFu 报告), so an agent on a model that can't see, or any agent at
@@ -25,7 +25,7 @@ import (
 // gateway key's limit holding each look (reserveFor).
 
 // VisionMCPPath is where the image recognition MCP server is served.
-const VisionMCPPath = "/mcp/magpie/vision"
+const VisionMCPPath = "/mcp/starling/vision"
 
 const visionMCPTool = "analyze_image"
 
@@ -59,7 +59,7 @@ var visionMCPSchema = map[string]any{
 }
 
 func (s *Server) visionMCP(w http.ResponseWriter, r *http.Request) {
-	serveMCP(w, r, "chongyun's image recognition", visionMCPBody, s.visionMCPCall)
+	serveMCP(w, r, "starling's image recognition", visionMCPBody, s.visionMCPCall)
 }
 
 // visionMCPCall answers one request: its result, or its JSON-RPC error.
@@ -69,8 +69,8 @@ func (s *Server) visionMCPCall(r *http.Request, m mcpMessage) (any, map[string]a
 		return map[string]any{
 			"protocolVersion": mcpVersion(m),
 			"capabilities":    map[string]any{"tools": map[string]any{}},
-			"serverInfo":      map[string]any{"name": "magpie-vision", "title": "Chongyun Image Recognition", "version": Version},
-			"instructions":    "analyze_image looks at an image with the model chongyun describes images with (Settings → Models → Image recognition) and answers in text: for a model or agent that can't see images, or to read a screenshot, chart or diagram.",
+			"serverInfo":      map[string]any{"name": "starling-vision", "title": "Starling Image Recognition", "version": Version},
+			"instructions":    "analyze_image looks at an image with the model starling describes images with (Settings → Models → Image recognition) and answers in text: for a model or agent that can't see images, or to read a screenshot, chart or diagram.",
 		}, nil
 	case "ping":
 		return map[string]any{}, nil
@@ -119,9 +119,9 @@ func (s *Server) visionMCPRun(r *http.Request, image, prompt string) (string, er
 	model, ok := seer()
 	if !ok {
 		if provider.HeldSettings().Vision == "off" {
-			return "", searchMCPError("Image recognition is off in chongyun: pick a model for it in Settings → Models → Image recognition")
+			return "", searchMCPError("Image recognition is off in starling: pick a model for it in Settings → Models → Image recognition")
 		}
-		return "", searchMCPError("chongyun has no model that sees images: add a provider with one, or pick one in Settings → Models → Image recognition")
+		return "", searchMCPError("starling has no model that sees images: add a provider with one, or pick one in Settings → Models → Image recognition")
 	}
 	release, err := reserveFor(access.Caller(r.Context()), int64(len(src)+len(prompt)), "", limitClock())
 	if err != nil {
@@ -139,7 +139,7 @@ func (s *Server) visionMCPRun(r *http.Request, image, prompt string) (string, er
 		if r.Context().Err() == nil {
 			log.Printf("vision MCP: %v", err)
 		}
-		return "", searchMCPError(fmt.Sprintf("chongyun couldn't look at the image with %s: %v%s", model, err, missingSeerNote()))
+		return "", searchMCPError(fmt.Sprintf("starling couldn't look at the image with %s: %v%s", model, err, missingSeerNote()))
 	}
 	return said, nil
 }
@@ -147,7 +147,7 @@ func (s *Server) visionMCPRun(r *http.Request, image, prompt string) (string, er
 // visionSrc is the image as the describer is sent it: a URL or data URL as
 // it is, a file read into a data URL. A file is read only for an agent on
 // this computer: another machine's path names none of its own here, and a
-// shared magpie's files aren't its callers'.
+// shared starling's files aren't its callers'.
 func visionSrc(r *http.Request, image string) (string, error) {
 	low := strings.ToLower(image)
 	switch {
@@ -172,7 +172,7 @@ func visionSrc(r *http.Request, image string) (string, error) {
 		return "", searchMCPError("analyze_image takes an absolute file path (the gateway doesn't know your agent's working folder), an http(s) URL or a data URL: " + image + " is none of them")
 	}
 	if !local(r) {
-		return "", searchMCPError("analyze_image reads a file only for an agent on the computer chongyun runs on: from another computer, send the image as a data URL (data:image/png;base64,...) or an http(s) URL")
+		return "", searchMCPError("analyze_image reads a file only for an agent on the computer starling runs on: from another computer, send the image as a data URL (data:image/png;base64,...) or an http(s) URL")
 	}
 	f, err := os.Open(path)
 	if err != nil {

@@ -11,9 +11,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // Devin's own ids models.dev doesn't know (swe-2, gpt-6-1-sol) take images,
@@ -23,7 +23,7 @@ import (
 // whatever models.dev says, and one Devin doesn't name is left to it.
 func TestDevinImagesFromModelConfigs(t *testing.T) {
 	home := claudeHome(t)
-	// the account chongyun signed in has a home of its own, its sign-in in
+	// the account starling signed in has a home of its own, its sign-in in
 	// it: the Devin CLI's own sign-in isn't read
 	acc, err := newDevinHome()
 	if err != nil {

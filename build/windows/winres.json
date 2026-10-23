@@ -7,8 +7,8 @@
   "RT_MANIFEST": {
     "#1": {
       "0409": {
-        "identity": { "name": "com.chongyun.ai.gateway", "version": "" },
-        "description": "崇云科技 AI 网关",
+        "identity": { "name": "com.starling.ai.gateway", "version": "" },
+        "description": "星鸣 AI 网关",
         "minimum-os": "win10",
         "execution-level": "as invoker",
         "ui-access": false,
@@ -32,11 +32,11 @@
         "fixed": { "file_version": "0.0.0.0", "product_version": "0.0.0.0" },
         "info": {
           "0409": {
-            "CompanyName": "崇云科技",
-            "FileDescription": "崇云科技 AI 网关",
+            "CompanyName": "星鸣",
+            "FileDescription": "星鸣 AI 网关",
             "LegalCopyright": "© 2026 yetone · MIT",
-            "OriginalFilename": "chongyun.exe",
-            "ProductName": "崇云科技 AI 网关"
+            "OriginalFilename": "starling.exe",
+            "ProductName": "星鸣 AI 网关"
           }
         }
       }

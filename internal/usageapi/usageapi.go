@@ -1,6 +1,6 @@
-// Package usageapi builds what magpie tells of its usage log: the Usage
+// Package usageapi builds what starling tells of its usage log: the Usage
 // page's summary and its requests, a page at a time. The GUI's /api/usage
-// and the gateway's /v1/magpie/usage answer the same JSON from here, so an
+// and the gateway's /v1/starling/usage answer the same JSON from here, so an
 // app reading one reads the other.
 package usageapi
 
@@ -11,15 +11,15 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // Client is an agent as the usage JSON names it.
 type Client struct{ ID, Name, Icon string }
 
-// Clients are the agents magpie knows, for their names and logos: set by
+// Clients are the agents starling knows, for their names and logos: set by
 // the GUI (internal/agent imports the gateway, which imports this). Unset,
 // an agent is named by its id.
 var Clients func() []Client
@@ -61,7 +61,7 @@ type Usage struct {
 }
 
 // State is the Usage page's summary of a period: what /api/usage and the
-// gateway's GET /v1/magpie/usage answer.
+// gateway's GET /v1/starling/usage answer.
 func State(p usage.Period) Usage { return stateOf(usage.Summarize(p)) }
 
 // PageSessions is how many sessions Page lists: the Usage page draws none of
@@ -106,7 +106,7 @@ func stateOf(s usage.Summary) Usage {
 }
 
 // providerFaces names a provider id from the usage log as the Usage page
-// shows it: by the provider set up under it (all), by the name magpie
+// shows it: by the provider set up under it (all), by the name starling
 // knows it by when none is (a Claude Code subscription signed out of, a
 // preset's removed since: provider.KnownFace), and by the id itself only
 // when neither knows it. A session file without route evidence is a local
@@ -213,8 +213,8 @@ type Ledger struct {
 	// the two together, so the page can show all three (#the usage report).
 	Through usage.Totals `json:"through"`
 	Direct  usage.Totals `json:"direct"`
-	// Reported: the calls a client told magpie of through POST
-	// /v1/magpie/usage/requests (#1874), which went straight to their vendor
+	// Reported: the calls a client told starling of through POST
+	// /v1/starling/usage/requests (#1874), which went straight to their vendor
 	Reported usage.Totals `json:"reported"`
 	// Agents, Providers and Purposes: those with calls in the period, for the filters
 	Agents    []Named  `json:"agents"`
@@ -281,7 +281,7 @@ func LedgerPage(p usage.Period, f usage.Filter, offset, limit int) Ledger {
 	for _, g := range out.CallerKeys {
 		callerLabels[g.CallerKeyID] = g.Name
 	}
-	// a group magpie found is named as agents pick it, auto/<model>; the
+	// a group starling found is named as agents pick it, auto/<model>; the
 	// ledger keeps group/auto-<slug> (provider.CanonicalRef)
 	pub := map[string]string{}
 	for _, r := range page {

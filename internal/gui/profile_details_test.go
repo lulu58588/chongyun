@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/profile"
+	"github.com/lulu58588/starling/internal/profile"
 )
 
 // The state the page draws carries what each profile holds, by agent, for a

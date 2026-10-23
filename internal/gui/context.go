@@ -15,8 +15,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 // defaultWindow is the window a prompt is measured against when the
@@ -486,7 +486,7 @@ func contextRoutes(r *http.Request, days int) []gateway.Route {
 			}
 		}
 	}
-	// a group magpie found by the id agents pick it by (publicRoute)
+	// a group starling found by the id agents pick it by (publicRoute)
 	pub := publicRefs()
 	for i := range out {
 		out[i].Model = pub(out[i].Model)

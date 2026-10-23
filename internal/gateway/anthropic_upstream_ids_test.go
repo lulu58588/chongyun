@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A Codex conversation that had another vendor's tool call, its call_id

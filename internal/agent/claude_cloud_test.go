@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // claudeCloudHome is claudeAboutHome with the managed settings in the
@@ -28,7 +28,7 @@ func claudeCloudHome(t *testing.T, settings string) (home, path string, parse fu
 
 // claudeClouded is each settings.json of a Claude Code on a cloud, as jw1dev
 // 报告 had Bedrock: the switch on beside the cloud's own variables, and an
-// endpoint and Bedrock main model of the user's own for magpie to give back.
+// endpoint and Bedrock main model of the user's own for starling to give back.
 var claudeClouded = []struct {
 	name, settings, key, raw string
 	cloud                    []string
@@ -45,13 +45,13 @@ var claudeClouded = []struct {
 		"CLAUDE_CODE_USE_FOUNDRY", `"yes"`, []string{"ANTHROPIC_FOUNDRY_RESOURCE", "ANTHROPIC_FOUNDRY_API_KEY"}},
 }
 
-// jw1dev 报告: magpie wired Claude Code (ANTHROPIC_BASE_URL and its model)
+// jw1dev 报告: starling wired Claude Code (ANTHROPIC_BASE_URL and its model)
 // while CLAUDE_CODE_USE_BEDROCK=1 stayed in the same env, so Claude Code
-// went on to Bedrock, which refused magpie's model, and magpie showed
-// nothing wrong. Routed through magpie, the switch is out and the cloud's
-// own variables stay; through Sync too; and magpie stepping out, by
+// went on to Bedrock, which refused starling's model, and starling showed
+// nothing wrong. Routed through starling, the switch is out and the cloud's
+// own variables stay; through Sync too; and starling stepping out, by
 // Disconnect or Claude Code's own model, gives the switch back as written.
-func TestClaudeCloudSwitchStepsAsideForMagpie(t *testing.T) {
+func TestClaudeCloudSwitchStepsAsideForStarling(t *testing.T) {
 	for _, c := range claudeClouded {
 		for _, out := range []string{"disconnect", "default"} {
 			t.Run(c.name+"/"+out, func(t *testing.T) {
@@ -64,7 +64,7 @@ func TestClaudeCloudSwitchStepsAsideForMagpie(t *testing.T) {
 				routed := func(when string) {
 					t.Helper()
 					if v, has := edit.GetJSONRaw(path, "env."+c.key); has {
-						t.Fatalf("%s: %s left at %s beside chongyun's wiring:\n%s", when, c.key, v, readFile(path))
+						t.Fatalf("%s: %s left at %s beside starling's wiring:\n%s", when, c.key, v, readFile(path))
 					}
 					for _, k := range c.cloud {
 						if _, has := edit.GetJSON(path, "env."+k); !has {
@@ -98,7 +98,7 @@ func TestClaudeCloudSwitchStepsAsideForMagpie(t *testing.T) {
 				}
 				got := parse()
 				if out == "default" {
-					// Claude Code's own model: the one magpie took over
+					// Claude Code's own model: the one starling took over
 					// isn't the user's to have back
 					delete(want, "model")
 					delete(got, "model")
@@ -139,8 +139,8 @@ func TestClaudeCloudSwitchOffStays(t *testing.T) {
 	}
 }
 
-// A switch turned on in settings.json while Claude Code is on magpie is
-// drift, saying which and where; magpie's next Sync takes it out (and
+// A switch turned on in settings.json while Claude Code is on starling is
+// drift, saying which and where; starling's next Sync takes it out (and
 // Apply again would), and Disconnect gives it back. One the user writes
 // again before that stays as they wrote it.
 func TestClaudeCloudSwitchTurnedOnWhileRouted(t *testing.T) {
@@ -188,7 +188,7 @@ func TestClaudeCloudSwitchTurnedOnWhileRouted(t *testing.T) {
 	}
 }
 
-// A switch magpie doesn't write over, where Claude Code still reads it, is
+// A switch starling doesn't write over, where Claude Code still reads it, is
 // drift that says where: an administrator's managed settings (which win
 // over the user's), ~/.claude.json's env (which the user's settings win
 // over), and the login shell (which every settings file wins over).
@@ -233,10 +233,10 @@ func TestClaudeCloudSwitchElsewhereIsSaid(t *testing.T) {
 			}
 			// the template's own words, its slots filled, for the GUI to
 			// translate (tNotice)
-			if !strings.HasSuffix(d.Detail, "to go through chongyun.") {
+			if !strings.HasSuffix(d.Detail, "to go through starling.") {
 				t.Fatalf("%q isn't one of the notices", d.Detail)
 			}
-			// where magpie can't write it, it doesn't: the file stays
+			// where starling can't write it, it doesn't: the file stays
 			if c.managed != "" && !strings.Contains(readFile(claudeManaged()), `"1"`) {
 				t.Fatalf("managed settings written: %s", readFile(claudeManaged()))
 			}
@@ -297,9 +297,9 @@ func TestClaudeCloudSwitchInWSL(t *testing.T) {
 	}
 }
 
-// T3 Code's magpie instance runs Claude Code with the user's ~/.claude
-// settings env put over its own, so a switch on there takes it past magpie
-// too: drift that says so. One the user put on magpie's own instance goes
+// T3 Code's starling instance runs Claude Code with the user's ~/.claude
+// settings env put over its own, so a switch on there takes it past starling
+// too: drift that says so. One the user put on starling's own instance goes
 // at its next write.
 func TestT3CodeSaysAClaudeCloudSwitch(t *testing.T) {
 	home := syncHome(t)
@@ -314,9 +314,9 @@ func TestT3CodeSaysAClaudeCloudSwitch(t *testing.T) {
 	writeFile(t, claudePath, `{"env":{"CLAUDE_CODE_USE_BEDROCK":"1"}}`)
 	a := t3code(home)
 	if a.Check() != "" {
-		t.Fatal("drift before chongyun's instance is there")
+		t.Fatal("drift before starling's instance is there")
 	}
-	if err := a.Field("provider").Set(magpieID); err != nil {
+	if err := a.Field("provider").Set(starlingID); err != nil {
 		t.Fatal(err)
 	}
 	if got := a.Check(); !strings.Contains(got, "CLAUDE_CODE_USE_BEDROCK") || !strings.Contains(got, "Amazon Bedrock") {
@@ -327,7 +327,7 @@ func TestT3CodeSaysAClaudeCloudSwitch(t *testing.T) {
 		t.Fatalf("check %q with the switch gone", got)
 	}
 
-	// put on magpie's instance in T3's own editor
+	// put on starling's instance in T3's own editor
 	path := filepath.Join(home, ".t3", "userdata", "settings.json")
 	raw, _ := edit.GetJSON(path, t3Instance+".environment")
 	var env []map[string]any
@@ -345,7 +345,7 @@ func TestT3CodeSaysAClaudeCloudSwitch(t *testing.T) {
 	raw, _ = edit.GetJSON(path, t3Instance+".environment")
 	for _, k := range agentenv.ClaudeProviders {
 		if strings.Contains(raw, k) {
-			t.Fatalf("%s left on chongyun's instance: %s", k, raw)
+			t.Fatalf("%s left on starling's instance: %s", k, raw)
 		}
 	}
 	if !strings.Contains(raw, "MY_OWN") {

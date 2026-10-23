@@ -1,12 +1,12 @@
 package provider
 
 // The tests set the agents' own files up the way they always did: the
-// account an agent is signed in to is in them. chongyun never reads them —
+// account an agent is signed in to is in them. starling never reads them —
 // it signs the agents in itself and keeps what it signed in to in its own
 // logins.json, marking there the account each agent is on.
 //
-// This shim is what the tests use in place of chongyun reading them: what
-// the agents' own files hold is what chongyun's logins.json is given, the
+// This shim is what the tests use in place of starling reading them: what
+// the agents' own files hold is what starling's logins.json is given, the
 // account marked as the one the agent is signed in to. It reads the test's
 // own files, which are the tests' fixtures, and nothing else.
 
@@ -72,7 +72,7 @@ func onlySeenMoved(was, next []savedLogin, now time.Time) bool {
 
 // rememberFixtureAccounts brings the accounts the agents in the test's own
 // home are signed in to into logins.json: the account the agent is on is
-// the one chongyun serves it, marked as such in logins.json.
+// the one starling serves it, marked as such in logins.json.
 func rememberFixtureAccounts(force bool) {
 	if !force && !loginsLookDue() {
 		return

@@ -4,8 +4,8 @@
 package warmups
 
 import (
-	"github.com/lulu58588/chongyun/internal/pluginrt"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/pluginrt"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func init() {

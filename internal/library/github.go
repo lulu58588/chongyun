@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/lulu58588/chongyun/internal/ghtoken"
+	"github.com/lulu58588/starling/internal/ghtoken"
 )
 
 // ---- asking GitHub's API with the user's token ----------------------------

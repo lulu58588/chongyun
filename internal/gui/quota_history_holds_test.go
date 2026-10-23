@@ -3,9 +3,9 @@ package gui
 import (
 	"encoding/base64"
 	"encoding/json"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -63,10 +63,10 @@ func TestQuotaHistoryHoldsReadsLocalSnapshot(t *testing.T) {
 		"access_token": jwt(map[string]any{"exp": now.Add(24 * time.Hour).Unix()}), "refresh_token": "fake-refresh", "account_id": "history-api",
 	}}
 	write(filepath.Join(home, ".codex", "auth.json"), auth)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
-	chongyunLogins(t, map[string]any{"agent": "codex", "user": user, "active": true, "seen": time.Now(), "auth": auth})
+	starlingLogins(t, map[string]any{"agent": "codex", "user": user, "active": true, "seen": time.Now(), "auth": auth})
 	future := now.Add(3 * 24 * time.Hour)
 	write(filepath.Join(filepath.Dir(provider.Path()), "quotas.json"), map[string]any{"codex/" + user: map[string]any{"at": now, "quota": provider.SubscriptionQuota{Provider: "codex", User: user, ReadAt: &now, Windows: []provider.QuotaWindow{{Name: "7 days", Used: 1, ResetsAt: &future}}}, "spans": []map[string]any{{"span": int64(7 * 24 * time.Hour)}}}})
 	provider.ForgetAccounts()

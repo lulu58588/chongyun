@@ -11,9 +11,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/redact"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/redact"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func TestSettingsSaveKeepsCorruptFile(t *testing.T) {

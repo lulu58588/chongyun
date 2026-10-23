@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // An agent on a routing group whose ref carries Claude Code's [1m] mark is
@@ -73,7 +73,7 @@ func TestProviderInfoShowsAnAgentOnItsGroupsProviders(t *testing.T) {
 	}
 
 	a := &agent.Agent{ID: "claude", Name: "Claude Code", Icon: "claude-color", Bin: "claude"}
-	a.Fields = []agent.Field{{Key: "model", Label: "model", Get: func() string { return "magpie/group/g[1m]" }}}
+	a.Fields = []agent.Field{{Key: "model", Label: "model", Get: func() string { return "starling/group/g[1m]" }}}
 	uses := agentUses([]*agent.Agent{a}, provider.GroupFinder())
 	if !uses[0].inGroup {
 		t.Fatalf("the agent is on a group: %+v", uses[0])

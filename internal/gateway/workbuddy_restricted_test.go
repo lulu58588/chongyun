@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // wbRestrictedBody is WorkBuddy's 403 for an account it restricted, byte
@@ -135,7 +135,7 @@ func TestPluginRestrictedAccountSkipped(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			fresh(t)
-			t.Setenv("MAGPIE_BUN", bun)
+			t.Setenv("STARLING_BUN", bun)
 			t.Cleanup(plugin.Settle)
 			var mu sync.Mutex
 			var tried []string

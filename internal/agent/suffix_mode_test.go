@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // tomlString quotes a path for a TOML basic string: Windows separators
@@ -17,7 +17,7 @@ func tomlString(p string) string {
 	return strings.ReplaceAll(p, `\`, `\\`)
 }
 
-// The lists magpie writes into Codex's model_catalog_json and Pi's
+// The lists starling writes into Codex's model_catalog_json and Pi's
 // models.json name models by the Provider in model names setting, and are
 // written again as it changes: on, as by default, a renamed model too has
 // its provider's after it (#203); own, the name the user gave is just as
@@ -31,10 +31,10 @@ func TestSuffixModesReachAgentFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	piModels := filepath.Join(home, ".pi", "agent", "models.json")
-	writeFile(t, piModels, `{"providers":{"magpie":{"name": "崇云科技","models":[]}}}`)
+	writeFile(t, piModels, `{"providers":{"starling":{"name": "星鸣","models":[]}}}`)
 	codexDir := filepath.Join(home, ".codex")
-	codexCat := filepath.Join(codexDir, "chongyun-models.json")
-	writeFile(t, filepath.Join(codexDir, "config.toml"), "model = \"relay/glm-4.6\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = \""+tomlString(codexCat)+"\"\n")
+	codexCat := filepath.Join(codexDir, "starling-models.json")
+	writeFile(t, filepath.Join(codexDir, "config.toml"), "model = \"relay/glm-4.6\"\nmodel_provider = \"starling\"\nmodel_catalog_json = \""+tomlString(codexCat)+"\"\n")
 	writeFile(t, codexCat, `{"models":[]}`)
 	catalog.Changed = SyncCatalog
 	t.Cleanup(func() { catalog.Changed = nil })
@@ -52,7 +52,7 @@ func TestSuffixModesReachAgentFiles(t *testing.T) {
 			t.Fatal(err)
 		}
 		pi = map[string]string{}
-		for _, m := range p.Providers["magpie"].Models {
+		for _, m := range p.Providers["starling"].Models {
 			pi[m["id"].(string)], _ = m["name"].(string)
 		}
 		var cx struct {

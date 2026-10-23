@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A custom provider's Gemini API (#1346, NagaseMinato), behind a relay's

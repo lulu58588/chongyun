@@ -10,12 +10,12 @@ import (
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
-// watchTrayUsage keeps the tray's cards up to date, and magpie's name over
+// watchTrayUsage keeps the tray's cards up to date, and starling's name over
 // today's total in the tooltip while there are none (trayIdleTip).
 func (h *host) watchTrayUsage() {
 	wake := make(chan struct{}, 1)

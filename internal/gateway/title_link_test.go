@@ -16,9 +16,9 @@ import (
 
 	"github.com/klauspost/compress/zstd"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func titleTestKey(t testing.TB) {
@@ -391,7 +391,7 @@ func BenchmarkTitleLinkRequest(b *testing.B) {
 }
 
 // Real gateway requests, not pre-filled parentSession fields: both native
-// Codex and Magpie's title wrapper retain enough evidence for the GUI.
+// Codex and Starling's title wrapper retain enough evidence for the GUI.
 func TestTitleLinkGatewayTransports(t *testing.T) {
 	for _, tc := range []struct {
 		name           string

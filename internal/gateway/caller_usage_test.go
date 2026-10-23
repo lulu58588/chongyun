@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func newCaller(t *testing.T, names ...string) ([]access.Key, []string) {
@@ -174,7 +174,7 @@ func TestMigratedLANKeyUsageAndRevocation(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := settings.Load()
-	s.LAN, s.LANKey = true, "sk-magpie-test-legacy-lan"
+	s.LAN, s.LANKey = true, "sk-starling-test-legacy-lan"
 	if err := settings.Save(s); err != nil {
 		t.Fatal(err)
 	}

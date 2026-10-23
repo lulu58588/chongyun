@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/starling/internal/agentenv"
 )
 
 // A vendor that lists its models away from the base URL requests go to

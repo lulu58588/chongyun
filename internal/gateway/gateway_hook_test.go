@@ -12,15 +12,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 func TestAsyncGatewayResponseDoesNotHoldStream(t *testing.T) {
-	t.Setenv("MAGPIE_BUN", testenv.Bun(t))
+	t.Setenv("STARLING_BUN", testenv.Bun(t))
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())
 	t.Cleanup(plugin.Settle)
@@ -76,7 +76,7 @@ export async function onResponse(body,ctx){await fetch(ctx.options.url,{method:"
 	// Client reads the first delta while upstream generation is still blocked.
 	go func() {
 		req, _ := http.NewRequestWithContext(t.Context(), "POST", gw.URL+"/v1/chat/completions", strings.NewReader(`{"model":"fake/m1","stream":true,"messages":[{"role":"user","content":"question"}]}`))
-		req.Header.Set("Authorization", "Bearer magpie")
+		req.Header.Set("Authorization", "Bearer starling")
 		res, err := gw.Client().Do(req)
 		if err != nil {
 			first <- err.Error()
@@ -117,7 +117,7 @@ export async function onResponse(body,ctx){await fetch(ctx.options.url,{method:"
 // Exercise the asynchronous host and server guard with all agent wire APIs.
 // Service-specific contracts belong to companion plugin integration tests.
 func TestAsyncGatewayThroughProtocols(t *testing.T) {
-	t.Setenv("MAGPIE_BUN", testenv.Bun(t))
+	t.Setenv("STARLING_BUN", testenv.Bun(t))
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())
 	t.Cleanup(plugin.Settle)
@@ -187,7 +187,7 @@ export async function onRequest(body,ctx) {
 			t.Fatal(err)
 		}
 		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Authorization", "Bearer magpie-codex")
+		req.Header.Set("Authorization", "Bearer starling-codex")
 		req.Header.Set(SessionHeader, session)
 		res, err := gw.Client().Do(req)
 		if err != nil {
@@ -213,7 +213,7 @@ export async function onRequest(body,ctx) {
 			if strings.Count(got, "QUARTZ-8413") != 1 || !strings.Contains(got, "session-a") || !strings.Contains(got, "Quartz codename?") {
 				t.Fatalf("recall did not reach provider exactly once: %s", got)
 			}
-			if strings.Contains(got, "context-test") || strings.Contains(got, "magpie-codex") {
+			if strings.Contains(got, "context-test") || strings.Contains(got, "starling-codex") {
 				t.Fatalf("plugin credentials leaked upstream: %s", got)
 			}
 			query := <-queries
@@ -274,7 +274,7 @@ func TestGatewayQueryUsesUserWords(t *testing.T) {
 // Exercise provenance through authentication and the real Bun lifecycle; a
 // client's body/header claims cannot replace the host's classification.
 func TestAsyncGatewayOrigin(t *testing.T) {
-	t.Setenv("MAGPIE_BUN", testenv.Bun(t))
+	t.Setenv("STARLING_BUN", testenv.Bun(t))
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("XDG_CACHE_HOME", t.TempDir())
 	t.Cleanup(plugin.Settle)
@@ -319,12 +319,12 @@ export async function onResponse(reply,ctx){await fetch(ctx.options.url,{method:
 		{"unknown-peer", "malformed", "", "", "0", "remote"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Setenv("MAGPIE_TRUST_PROXY", tc.trust)
+			t.Setenv("STARLING_TRUST_PROXY", tc.trust)
 			// The guard requires sharing for nonlocal peers, without opening a listener.
-			t.Setenv("MAGPIE_ADDR", "0.0.0.0:3425")
+			t.Setenv("STARLING_ADDR", "0.0.0.0:3425")
 			req := httptest.NewRequest("POST", "http://127.0.0.1/v1/chat/completions", strings.NewReader(`{"model":"fake/m1","origin":"local","messages":[{"role":"user","content":"hello"}]}`))
 			req.RemoteAddr = tc.peer
-			req.Header.Set("X-Magpie-Origin", "local")
+			req.Header.Set("X-Starling-Origin", "local")
 			if tc.header != "" {
 				req.Header.Set(tc.header, "remote-client")
 			}
@@ -384,7 +384,7 @@ func TestGatewayHookSeesReplyAfterClientHangsUp(t *testing.T) {
 		}
 	})
 	defer close(held)
-	t.Setenv("MAGPIE_BUN", testenv.Bun(t))
+	t.Setenv("STARLING_BUN", testenv.Bun(t))
 	t.Cleanup(plugin.Settle)
 	completed := make(chan map[string]any, 1)
 	observer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

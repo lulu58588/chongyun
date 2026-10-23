@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// The Agents page's Disconnect: an agent magpie is in says so (wired), and
+// The Agents page's Disconnect: an agent starling is in says so (wired), and
 // disconnecting it puts back the model the user had and answers with the
 // agent no longer wired.
 func TestAgentDisconnectAPI(t *testing.T) {
@@ -53,10 +53,10 @@ func TestAgentDisconnectAPI(t *testing.T) {
 		return agentJSON{}
 	}
 	if codex(call("/api/state", "")).Wired {
-		t.Fatal("wired before chongyun set anything")
+		t.Fatal("wired before starling set anything")
 	}
 	if !codex(call("/api/set", `{"agent":"codex","field":"model","value":"relay/m1"}`)).Wired {
-		t.Fatal("not wired on a chongyun model")
+		t.Fatal("not wired on a starling model")
 	}
 	a := codex(call("/api/agents/disconnect/codex", "{}"))
 	if a.Wired || a.Fields[0].Value != "gpt-5.4" {

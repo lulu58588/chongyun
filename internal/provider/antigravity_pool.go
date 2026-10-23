@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // Antigravity rolls models out per account. The first account's catalog

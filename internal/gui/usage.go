@@ -13,16 +13,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/usage"
-	"github.com/lulu58588/chongyun/internal/usageapi"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/usage"
+	"github.com/lulu58588/starling/internal/usageapi"
 )
 
 // The Usage page's JSON is built in usageapi, which the gateway's
-// /v1/magpie/usage answers from too.
+// /v1/starling/usage answers from too.
 type (
 	usageGroup = usageapi.Group
 	usageJSON  = usageapi.Usage
@@ -51,20 +51,20 @@ func init() {
 // and the day of now, the moment its rows were read at.
 func csvStamp(p usage.Period, day string, now time.Time) string {
 	if _, err := time.Parse(time.DateOnly, day); err == nil {
-		return "magpie-requests-day-" + day
+		return "starling-requests-day-" + day
 	}
 	if p.IsRange() { // the days picked, which already say when
-		return "magpie-requests-" + strings.Replace(string(p), "..", "-to-", 1)
+		return "starling-requests-" + strings.Replace(string(p), "..", "-to-", 1)
 	}
 	// a rolling window ("last:24h0m0s") without the colon, which Windows
 	// doesn't take in a file name (#2075)
-	return "magpie-requests-" + strings.ReplaceAll(string(p), ":", "-") + "-" + now.Format(time.DateOnly)
+	return "starling-requests-" + strings.ReplaceAll(string(p), ":", "-") + "-" + now.Format(time.DateOnly)
 }
 
 // contentJSON is what was said in a request, or why it can't be told.
 type contentJSON struct {
 	Found bool `json:"found"`
-	// Why not: "session" (the request named none), "agent" (magpie reads the session
+	// Why not: "session" (the request named none), "agent" (starling reads the session
 	// files of Claude Code, Claude Desktop and Codex only), "missing" (the files have no
 	// such call: deleted, moved, or not written yet) or "read" (the file wouldn't read)
 	Why   string `json:"why,omitempty"`
@@ -114,7 +114,7 @@ func usageRoutes(mux *http.ServeMux, w Windows) {
 	})
 	// what was said in one request, read from the agent's session file when the
 	// row is opened, between two times (the call's own, or a gateway request's
-	// span): magpie keeps no copy
+	// span): starling keeps no copy
 	mux.HandleFunc("GET /api/usage/requests/content", func(rw http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		from, err1 := time.Parse(time.RFC3339Nano, q.Get("from"))
@@ -131,7 +131,7 @@ func usageRoutes(mux *http.ServeMux, w Windows) {
 		}
 		writeJSON(rw, requestContent(q.Get("agent"), q.Get("session"), from, to, at))
 	})
-	// the same CSV to a browser (magpie web), which saves it itself
+	// the same CSV to a browser (starling web), which saves it itself
 	mux.HandleFunc("GET /api/usage/requests.csv", func(rw http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		p := periodOf(q.Get("period"))
@@ -188,14 +188,14 @@ func usageRoutes(mux *http.ServeMux, w Windows) {
 		// a WorkBuddy (China) account's card says how its daily check-in
 		// went (#694)
 		qs := provider.InProviderOrder(provider.WithCheckins(provider.Quotas(ctx)))
-		// and what each window holds whole, by what magpie routed in it
+		// and what each window holds whole, by what starling routed in it
 		qs = usage.WithWindowHolds(qs, usage.Clock())
 		// and when each began, for its Pace number (fflake33)
 		qs = provider.WithWindowStarts(qs, usage.Clock())
 		// an account's card may be the stale copy a read under way will
 		// replace: the page asks again until it has landed (#959)
 		if provider.SubscriptionUsageReading() {
-			rw.Header().Set("X-Magpie-Reading", "1")
+			rw.Header().Set("X-Starling-Reading", "1")
 		}
 		writeJSON(rw, qs)
 	})
@@ -214,7 +214,7 @@ func usageRoutes(mux *http.ServeMux, w Windows) {
 		writeJSON(rw, provider.WithWindowStarts(usage.WithWindowHolds(provider.InProviderOrder(provider.WithCheckins(provider.Quotas(ctx))), usage.Clock()), usage.Clock()))
 	})
 	// WorkBuddy's daily check-in pressed now, from the Usage card, for
-	// each account not in yet today, as `chongyun accounts checkin` does; the
+	// each account not in yet today, as `starling accounts checkin` does; the
 	// card is read again after
 	mux.HandleFunc("POST /api/usage/workbuddy-checkin", func(rw http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), time.Minute)
@@ -275,7 +275,7 @@ func usageRoutes(mux *http.ServeMux, w Windows) {
 	mux.HandleFunc("GET /api/usage/quotas/history", func(rw http.ResponseWriter, r *http.Request) {
 		days := r.URL.Query().Get("days")
 		hs := provider.QuotaHistories(provider.QuotaHistorySince(days, time.Now()), "", "")
-		// and a remote magpie's, for its cards (office/codex)
+		// and a remote starling's, for its cards (office/codex)
 		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 		defer cancel()
 		writeJSON(rw, append(hs, provider.RemoteQuotaHistories(ctx, days)...))

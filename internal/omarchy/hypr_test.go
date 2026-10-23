@@ -99,21 +99,21 @@ func TestPanelAtMonitorOffScreenOrigin(t *testing.T) {
 }
 
 func TestPanelRule(t *testing.T) {
-	got := panelRule("chongyun panel", "HDMI-A-1", 1318, 40)
-	for _, want := range []string{`match = { title = "^chongyun panel$" }`, `monitor = "HDMI-A-1", move = { 1318, 40 }`, `float = true`, `pin = true`} {
+	got := panelRule("starling panel", "HDMI-A-1", 1318, 40)
+	for _, want := range []string{`match = { title = "^starling panel$" }`, `monitor = "HDMI-A-1", move = { 1318, 40 }`, `float = true`, `pin = true`} {
 		if !strings.Contains(got, want) {
 			t.Errorf("rule %s\nhas no %s", got, want)
 		}
 	}
 	// no monitor known: no monitor named, rather than an empty one
-	if got := panelRule("chongyun panel", "", 6, 32); strings.Contains(got, "monitor") || !strings.Contains(got, "move = { 6, 32 }") {
+	if got := panelRule("starling panel", "", 6, 32); strings.Contains(got, "monitor") || !strings.Contains(got, "move = { 6, 32 }") {
 		t.Errorf("rule with no monitor: %s", got)
 	}
 }
 
 func TestRegexpQuote(t *testing.T) {
 	for in, want := range map[string]string{
-		"chongyun panel": "chongyun panel",
+		"starling panel": "starling panel",
 		"a.b(c)":       `a\.b\(c\)`,
 		"x+y*":         `x\+y\*`,
 	} {

@@ -4,10 +4,10 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// A model is switched fast for an agent only when magpie can ask its vendor
+// A model is switched fast for an agent only when starling can ask its vendor
 // for a fast mode, never a routing group (its members say it), and is kept
 // by agent through a rename of its provider (#954).
 func TestSetFastPick(t *testing.T) {

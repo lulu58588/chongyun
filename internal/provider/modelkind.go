@@ -6,12 +6,12 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // What a model makes, as the user says it (shen-joe, #1399): a provider set
-// up with a base URL tells magpie its image and video models by its own
+// up with a base URL tells starling its image and video models by its own
 // model list ("kind": "image" or "video") or, for images, by a model's name.
 // A relay whose list says neither — most don't — leaves a video model
 // making nothing, and an image model with an odd name drawing nothing. The
@@ -26,11 +26,11 @@ const (
 )
 
 // MarksKinds is whether p's models can be said to make images or videos: a
-// provider set up with a base URL, which magpie asks at the OpenAI-shaped
-// images and videos APIs under it. A subscription's account, another magpie
+// provider set up with a base URL, which starling asks at the OpenAI-shaped
+// images and videos APIs under it. A subscription's account, another starling
 // (whose own list says) and a decision API's can't.
 func (p Provider) MarksKinds() bool {
-	return p.Account == nil && !p.IsRemoteMagpie() && !p.DecideOnly() &&
+	return p.Account == nil && !p.IsRemoteStarling() && !p.DecideOnly() &&
 		(p.Base(Chat) != "" || p.Base(Responses) != "")
 }
 
@@ -104,7 +104,7 @@ func setModelKind(ref, kind string) (bool, error) {
 			return false, errors.New(p.ID + " makes images and videos only as its own API does: none of its models can be said to make them")
 		}
 		if !p.hasKindable(model) {
-			return false, fmt.Errorf("%s has no model %s (chongyun provider %s lists them)", p.ID, model, p.ID)
+			return false, fmt.Errorf("%s has no model %s (starling provider %s lists them)", p.ID, model, p.ID)
 		}
 	}
 	s := settings.Load()

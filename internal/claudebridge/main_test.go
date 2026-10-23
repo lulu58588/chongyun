@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // helperEnv makes the test binary the helper itself, as an agent starts

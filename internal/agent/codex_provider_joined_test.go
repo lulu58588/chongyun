@@ -5,17 +5,17 @@ import (
 	"testing"
 )
 
-// isymbo (#2267): Codex joined beside its ChatGPT sign-in, a magpie model
-// picked, then magpie API chosen. The config had magpie as Codex's
+// isymbo (#2267): Codex joined beside its ChatGPT sign-in, a starling model
+// picked, then starling API chosen. The config had starling as Codex's
 // provider, but the joined mark stayed, so the Agents row still said
-// Codex's own models stay in /model beside magpie's: the ChatGPT state
+// Codex's own models stay in /model beside starling's: the ChatGPT state
 // the user had just left, which is the one the Codex app blocks sending
-// in while the account is out. Joined is false while magpie is Codex's
+// in while the account is out. Joined is false while starling is Codex's
 // provider, and true again once it is back beside the sign-in.
 func TestCodexProviderIsNotJoined(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, `model = "gpt-5.5"`+"\n")
-	// chongyun never reads the agent's own sign-in: a Codex signed in to
-	// ChatGPT is one chongyun wired beside that sign-in.
+	// starling never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one starling wired beside that sign-in.
 	codexBeside(t, home, "beside")
 	cx := codex(home)
 	if ok, err := cx.Join(); err != nil || !ok || !cx.Joined() {
@@ -25,22 +25,22 @@ func TestCodexProviderIsNotJoined(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !cx.Joined() || !cx.Beside() {
-		t.Fatalf("a chongyun model beside the sign-in: joined %v, beside %v", cx.Joined(), cx.Beside())
+		t.Fatalf("a starling model beside the sign-in: joined %v, beside %v", cx.Joined(), cx.Beside())
 	}
 	if err := cx.Field("login").Set("api"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "starling"`) {
 		t.Fatalf("api:\n%s", cfg)
 	}
 	if cx.Joined() || cx.Beside() {
-		t.Fatalf("chongyun API: joined %v, beside %v", cx.Joined(), cx.Beside())
+		t.Fatalf("starling API: joined %v, beside %v", cx.Joined(), cx.Beside())
 	}
 	if !cx.Wired() {
-		t.Fatal("chongyun API: not wired")
+		t.Fatal("starling API: not wired")
 	}
 
-	// the ChatGPT account held by the Codex app: magpie its provider too
+	// the ChatGPT account held by the Codex app: starling its provider too
 	if err := cx.Field("login").Set(""); err != nil {
 		t.Fatal(err)
 	}
@@ -52,7 +52,7 @@ func TestCodexProviderIsNotJoined(t *testing.T) {
 	if err := cx.Sync(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model_provider = "magpie"`) || cx.Joined() {
+	if cfg := read(); !strings.Contains(cfg, `model_provider = "starling"`) || cx.Joined() {
 		t.Fatalf("held: joined %v\n%s", cx.Joined(), cfg)
 	}
 	codexUsedUp = func() bool { return false }

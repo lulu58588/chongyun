@@ -16,7 +16,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/source"
+	"github.com/lulu58588/starling/internal/source"
 )
 
 // dl is the download under way, one at a time.
@@ -43,7 +43,7 @@ var stallAfter = 60 * time.Second
 // Download fetches pf-serve and the model, each checked against its
 // sha256, in the background, and calls done once both are on disk. A
 // download already under way is left to go on. What was fetched of the
-// model before (a download stopped, magpie quit) is taken up where it
+// model before (a download stopped, starling quit) is taken up where it
 // stopped.
 func Download(done func()) error {
 	if !Supported() {

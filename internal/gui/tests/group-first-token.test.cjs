@@ -82,7 +82,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const errors = [], posts = [];
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", serve(lang, posts));
-      await page.goto("http://magpie.test/?view=routing");
+      await page.goto("http://starling.test/?view=routing");
       const card = page.locator(".rt-group", { hasText: "Sol" });
       await card.waitFor();
       assert.equal(await card.locator(".tag", { hasText: w.tag }).count(), 0, "off by default");
@@ -171,7 +171,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         "Every member is waited for, however long it takes to begin answering.",
         "A member that hasn't begun answering after {n} — no text, reasoning or tool call yet — is let go and the next one asked, before any of it reaches the agent. It doesn't rest; the last one left is always waited for. Only for streamed requests.",
         "{who} hadn't begun answering after {ms}, so the request went on to the next before any of it reached {agent}. Nothing is wrong with {who}, so it doesn't rest.",
-        "In magpie", "Vendor's first token",
+        "In starling", "Vendor's first token",
         "Custom", "e.g. 5", "Minutes", "min", "{v} is not a number of minutes",
       ].filter((k) => !["zh", "zh-TW", "ja", "de"].every((l) => I18N[l][k])));
       assert.deepEqual(missing, [], "every string has its zh, zh-TW, ja and de");

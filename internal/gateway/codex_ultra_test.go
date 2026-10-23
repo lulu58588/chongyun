@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/codexcat"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/codexcat"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // copilotUp is a Copilot account whose API serves gpt-6.1-sol and gpt-6-luna
@@ -46,7 +46,7 @@ func copilotSol(t *testing.T) *copilotUp {
 	os.WriteFile(filepath.Join(cfg, "github-copilot", "apps.json"), mustJSON(map[string]any{
 		"github.com:Iv1.x": map[string]any{"user": "wlll5", "oauth_token": "gho_656_" + t.Name()},
 	}), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// editor's own file to find out which account that is.
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
@@ -116,7 +116,7 @@ func copilotSol(t *testing.T) *copilotUp {
 	return c
 }
 
-// Codex's Ultra on Copilot's GPT-6.1 Sol (#656): magpie's /v1/models and
+// Codex's Ultra on Copilot's GPT-6.1 Sol (#656): starling's /v1/models and
 // the list it hands Codex offer it there, not on GPT-6 Luna, which OpenAI
 // offers up to max alone; Codex is told multi-agent V2 for it, where Ultra
 // hands work to its agents. An "ultra" that reaches the gateway goes to
@@ -216,7 +216,7 @@ func TestCopilotUltraSubagentWithWebSearch(t *testing.T) {
 		t.Fatalf("lead: %d %s", code, out)
 	}
 	// made again for Copilot, not relayed: its tools flat, the search
-	// magpie's
+	// starling's
 	if lead, _ := json.Marshal(c.last(t)["tools"]); !strings.Contains(string(lead), `"collaboration__spawn_agent"`) || strings.Contains(string(lead), `"encrypted"`) {
 		t.Fatalf("lead's tools to Copilot: %s", lead)
 	}
@@ -269,7 +269,7 @@ func TestCopilotUltraSubagentWithWebSearch(t *testing.T) {
 
 // A Codex turn on Copilot offering web_search is relayed as Codex sent it,
 // as Copilot runs the search itself (echo_ts 报告: translated for
-// magpie's search, every turn lost the relay); one whose tools mark an
+// starling's search, every turn lost the relay); one whose tools mark an
 // argument "encrypted" is made again unmarked, with the search or without,
 // since Copilot seals that argument and can't open it on the next turn.
 func TestCopilotRelayedUnlessAskedToSeal(t *testing.T) {
@@ -292,7 +292,7 @@ func TestCopilotRelayedUnlessAskedToSeal(t *testing.T) {
 		if code != 200 {
 			t.Fatalf("%s: %d %s", tc.name, code, out)
 		}
-		// a field magpie doesn't know goes on only as Codex sent it
+		// a field starling doesn't know goes on only as Codex sent it
 		body := c.last(t)
 		sent, _ := json.Marshal(body["tools"])
 		relayed := body["probe"] == "as sent"

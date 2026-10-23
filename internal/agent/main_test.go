@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // TestMain gives the package a home of its own (testenv). A home an agent is
@@ -59,9 +59,9 @@ func TestMain(m *testing.M) {
 	claudeShellEnv = func(string) string { return "" }
 	codexSystemProxy = func() netproxy.Proxy { return netproxy.Proxy{} }
 	proxyProbe = func(string, string) bool { return true }
-	// nor an address of the agent's own asked whether magpie answers
-	// there (a reverse proxy, #1985): known, and not magpie, as for a
+	// nor an address of the agent's own asked whether starling answers
+	// there (a reverse proxy, #1985): known, and not starling, as for a
 	// relay; the proxy-kept tests answer it
-	magpieAt = func(string) (bool, bool) { return false, true }
+	starlingAt = func(string) (bool, bool) { return false, true }
 	os.Exit(testenv.Run(m))
 }

@@ -7,11 +7,11 @@ package agent
 // table; one at the top level is not read), and takes the summary in at the
 // turn's next step. It starts one only on a provider whose
 // capabilities.remote_compaction is "v2", which Codex gives OpenAI's own and
-// Azure alone: on magpie's [model_providers.magpie] it never ran until that
-// was written there too. magpie's gateway answers the trigger as it does
+// Azure alone: on starling's [model_providers.starling] it never ran until that
+// was written there too. starling's gateway answers the trigger as it does
 // Codex's own compaction (codexCompact, or the provider's native one).
 //
-// What magpie writes is kept in the stash, so a value the user set there
+// What starling writes is kept in the stash, so a value the user set there
 // (by hand, or a value they changed since) is theirs: never written over,
 // and left when the setting is turned off.
 
@@ -21,7 +21,7 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/starling/internal/edit"
 )
 
 const (
@@ -29,7 +29,7 @@ const (
 	codexAsyncPercent = "model_async_compact_threshold_percent"
 )
 
-// codexAsyncStash is what magpie wrote.
+// codexAsyncStash is what starling wrote.
 type codexAsyncStash struct {
 	Enabled bool `json:"enabled,omitempty"` // enabled = true
 	Percent int  `json:"percent,omitempty"` // the threshold
@@ -37,7 +37,7 @@ type codexAsyncStash struct {
 }
 
 // codexAsyncNow is how the config has them: the async_compaction value
-// (nil, a bool, or a table) and magpie's provider table, nil when absent.
+// (nil, a bool, or a table) and starling's provider table, nil when absent.
 func codexAsyncNow(path string) (feature any, provider map[string]any, err error) {
 	raw, err := edit.Read(path)
 	if err != nil || raw == nil {
@@ -49,15 +49,15 @@ func codexAsyncNow(path string) (feature any, provider map[string]any, err error
 	}
 	features, _ := doc["features"].(map[string]any)
 	providers, _ := doc["model_providers"].(map[string]any)
-	p, _ := providers[magpieID].(map[string]any)
+	p, _ := providers[starlingID].(map[string]any)
 	return features["async_compaction"], p, nil
 }
 
 // codexAsyncSync puts the setting into the Codex config at path, where
-// Codex is routed through magpie or not: on is the setting, percent its
+// Codex is routed through starling or not: on is the setting, percent its
 // threshold (0 leaves Codex's own). key is the stash's. The capability is
 // written for a feature the user turned on in the config themselves too:
-// on magpie's provider it would never run without it (#2493).
+// on starling's provider it would never run without it (#2493).
 func codexAsyncSync(path, key string, routed, on bool, percent int) error {
 	feature, provider, err := codexAsyncNow(path)
 	var bad *toml.DecodeError
@@ -129,7 +129,7 @@ func codexAsyncSync(path, key string, routed, on bool, percent int) error {
 		st.Enabled, st.Percent = false, 0
 	}
 
-	// capabilities on magpie's provider table, when there is one: one the
+	// capabilities on starling's provider table, when there is one: one the
 	// user gave it, whatever it says, stays as it is
 	if feature, _, err = codexAsyncNow(path); err != nil {
 		return err
@@ -147,12 +147,12 @@ func codexAsyncSync(path, key string, routed, on bool, percent int) error {
 		}
 		switch {
 		case want && provider["capabilities"] == nil:
-			if err := edit.SetTOMLKey(path, "model_providers."+magpieID, "capabilities", edit.Inline{{Path: "remote_compaction", Value: "v2"}}); err != nil {
+			if err := edit.SetTOMLKey(path, "model_providers."+starlingID, "capabilities", edit.Inline{{Path: "remote_compaction", Value: "v2"}}); err != nil {
 				return err
 			}
 			st.Cap = true
 		case !want && st.Cap:
-			if err := edit.DelTOMLKey(path, "model_providers."+magpieID, "capabilities"); err != nil {
+			if err := edit.DelTOMLKey(path, "model_providers."+starlingID, "capabilities"); err != nil {
 				return err
 			}
 			st.Cap = false
@@ -170,9 +170,9 @@ func codexAsyncSync(path, key string, routed, on bool, percent int) error {
 	return nil
 }
 
-// codexProviderCaps is the capabilities magpie's provider table has, as an
+// codexProviderCaps is the capabilities starling's provider table has, as an
 // Inline to write it back with when the table is written again: one the
-// user gave it, or magpie's for the background compaction, isn't lost.
+// user gave it, or starling's for the background compaction, isn't lost.
 func codexProviderCaps(path string) edit.Inline {
 	_, provider, err := codexAsyncNow(path)
 	if err != nil {

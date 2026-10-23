@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// The community's READMEs say `chongyun plugin options model-map '<json>'`:
+// The community's READMEs say `starling plugin options model-map '<json>'`:
 // a package's short name finds it, as its full name and its spec do.
 func TestSetOptionsShortName(t *testing.T) {
 	storeSandbox(t)

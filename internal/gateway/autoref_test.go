@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// A group magpie found is listed as auto/<model> (ZeroClover 报告), and
+// A group starling found is listed as auto/<model> (ZeroClover 报告), and
 // served by that id and by its old group/auto-<slug> alike: one group, one
 // route, one name in the usage log, whichever an agent sent.
 func TestFoundGroupServedByBothIDs(t *testing.T) {

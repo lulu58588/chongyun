@@ -1,4 +1,4 @@
-// A magpie://import link with only gemini= (#2251, ggbdpq): the dialog's
+// A starling://import link with only gemini= (#2251, ggbdpq): the dialog's
 // warning names the host the user's prompts and key would go to, the
 // Gemini endpoint shows, and Add saves it. Before, the warning read "will
 // go to ;" with no host. All APIs and keys are fixtures.
@@ -43,7 +43,7 @@ async function fixture(t, engine, lang, width) {
     await browser.close();
     assert.deepEqual(errors, []);
   });
-  await page.goto("http://magpie.test/?view=providers&import=gem2251");
+  await page.goto("http://starling.test/?view=providers&import=gem2251");
   const ed = page.locator(".editor.import");
   await ed.waitFor();
   return { page, ed, saves };

@@ -4,7 +4,7 @@
 //
 // The model is OpenAI's Privacy Filter (Apache-2.0), 1.6 GB as the q8 GGUF
 // LocalAI made of it, run by pf-serve (native/privacy-filter), a program
-// built from privacy-filter.cpp on ggml. Neither ships with magpie: both
+// built from privacy-filter.cpp on ggml. Neither ships with starling: both
 // are downloaded when the user turns the model on, each checked against
 // the sha256 pinned here, and the setting (settings.RedactModel) is saved
 // only once both are. pf-serve is started on the first request that needs
@@ -14,7 +14,7 @@
 // A process of its own, not linked in: 1.7 GB the gateway would otherwise
 // hold for good, and a GPU driver's crash that would end the gateway with
 // it. One that dies is started again; one that dies on the GPU is started
-// on the CPU for the rest of magpie's run.
+// on the CPU for the rest of starling's run.
 package pii
 
 import (
@@ -25,7 +25,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 )
 
 // The model, at a revision of LocalAI's repo, so the file is always the
@@ -43,7 +43,7 @@ var (
 	// serveBase is where this build's own pf-serve zips live. It is empty
 	// in this build: the upstream project's releases are not ours to serve,
 	// so the privacy filter is off until a base is given
-	// (CHONGYUN_PF_BASE), and the SHA-256 of every file below must match
+	// (STARLING_PF_BASE), and the SHA-256 of every file below must match
 	// the file served there.
 	serveBase = pfBase()
 	serveSHA  = map[string]string{
@@ -56,12 +56,12 @@ var (
 )
 
 // pfBase is where this build's own pf-serve zips are published, read from
-// CHONGYUN_PF_BASE. It is empty by default: the upstream project's
+// STARLING_PF_BASE. It is empty by default: the upstream project's
 // releases are not ours to serve, so the local masking model stays off
 // until a base of our own is given, and the SHA-256 of every file must
 // match the file served there.
 func pfBase() string {
-	b := strings.TrimSpace(os.Getenv("CHONGYUN_PF_BASE"))
+	b := strings.TrimSpace(os.Getenv("STARLING_PF_BASE"))
 	if b == "" {
 		return ""
 	}
@@ -77,7 +77,7 @@ func Supported() bool { return serveSHA[target()] != "" && serveBase != "" }
 // Size is how much turning the model on downloads.
 func Size() int64 { return modelSize }
 
-// dir is where the model and pf-serve are kept: magpie's cache, since
+// dir is where the model and pf-serve are kept: starling's cache, since
 // either can be downloaded again, and never the settings' folder, which a
 // sync carries to the user's other computers.
 var dir = func() string { return filepath.Join(appdir.Cache(), "privacy-filter") }
@@ -105,7 +105,7 @@ func Installed() bool {
 }
 
 // ErrNotInstalled is what a request gets when the model is on in the
-// settings and isn't on disk (magpie's cache was cleared).
+// settings and isn't on disk (starling's cache was cleared).
 var ErrNotInstalled = errors.New("the local masking model isn't downloaded; download it again in Settings → Privacy, or turn it off")
 
 // Status is what Settings → Privacy shows of the model.

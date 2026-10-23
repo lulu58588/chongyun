@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // manyEyes is a key of a router listing n models that see, the cheapest a
@@ -76,7 +76,7 @@ func TestAutoVisionDoesNotBuildListsAgain(t *testing.T) {
 
 // What AutoVision keeps is built again when what it was built of changes:
 // a provider saved (its picks), a vendor's list fetched, an account signed
-// in, the settings and the providers' file written by another magpie.
+// in, the settings and the providers' file written by another starling.
 func TestAutoVisionSeesEachChange(t *testing.T) {
 	routerUp(t, "text")
 	if m := AutoVision(); m != "" {
@@ -108,7 +108,7 @@ func TestAutoVisionSeesEachChange(t *testing.T) {
 		t.Fatalf("AutoVision = %q after the list priced Haiku the cheaper", m)
 	}
 
-	// the providers' file written by another magpie (magpie provider
+	// the providers' file written by another starling (starling provider
 	// edit in a terminal): Haiku taken out
 	b, err := os.ReadFile(provider.Path())
 	if err != nil {
@@ -122,7 +122,7 @@ func TestAutoVisionSeesEachChange(t *testing.T) {
 		t.Fatal(err)
 	}
 	if m := AutoVision(); m != "router/google/gemini-3-flash" {
-		t.Fatalf("AutoVision = %q after another chongyun took Haiku out", m)
+		t.Fatalf("AutoVision = %q after another starling took Haiku out", m)
 	}
 
 	// a setting saved moves what it is kept by
@@ -152,10 +152,10 @@ func TestAutoVisionSeesEachChange(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
-	chongyunLogins(t, chongyunCodexLogin("me@example.com", auth))
+	starlingLogins(t, starlingCodexLogin("me@example.com", auth))
 	provider.ForgetAccounts() // the 30s accounts are looked for again in
 	t.Cleanup(provider.ForgetAccounts)
 	if m := AutoVision(); m != "codex/gpt-6.1-sol" {

@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // codexTitleRequest is a title request as Codex's TUI sends one on its own
@@ -62,7 +62,7 @@ func outputText(t *testing.T, body string) (string, int) {
 
 // Codex's title requests go where Settings says (#705): as they came to
 // Codex's ChatGPT sign-in by default; turned off, answered here with no
-// title and sent nowhere; or to a model of magpie's, its plain answer
+// title and sent nowhere; or to a model of starling's, its plain answer
 // handed back as the {"title": …} Codex reads. Each stays a title request
 // in the Usage and Routing views.
 func TestCodexTitlesSetting(t *testing.T) {
@@ -91,7 +91,7 @@ func TestCodexTitlesSetting(t *testing.T) {
 	s := New()
 	rec := codexTitleRequest(t, s, "")
 	if text, _ := outputText(t, rec.Body.String()); chatgptCalls != 1 || f.calls != 0 || text != `{"title":"From ChatGPT"}` {
-		t.Fatalf("default: chatgpt %d, chongyun model %d, %q", chatgptCalls, f.calls, text)
+		t.Fatalf("default: chatgpt %d, starling model %d, %q", chatgptCalls, f.calls, text)
 	}
 
 	// off: nothing goes out, a finished reply with no title in it
@@ -100,22 +100,22 @@ func TestCodexTitlesSetting(t *testing.T) {
 		rec = codexTitleRequest(t, s, sub)
 		text, n := outputText(t, rec.Body.String())
 		if rec.Code != 200 || n != 0 || text != "" || chatgptCalls != 1 || f.calls != 0 {
-			t.Fatalf("off (%q): %d %q, %d items, chatgpt %d, chongyun model %d", sub, rec.Code, rec.Body.String(), n, chatgptCalls, f.calls)
+			t.Fatalf("off (%q): %d %q, %d items, chatgpt %d, starling model %d", sub, rec.Code, rec.Body.String(), n, chatgptCalls, f.calls)
 		}
 	}
 
-	// a model of magpie's: it writes the title, in the shape Codex reads
+	// a model of starling's: it writes the title, in the shape Codex reads
 	save("fake/m1")
 	rec = codexTitleRequest(t, s, "thread_title")
 	if text, _ := outputText(t, rec.Body.String()); rec.Code != 200 || text != `{"title":"Fix login bug"}` || f.calls != 1 || chatgptCalls != 1 {
-		t.Fatalf("routed: %d %q, chongyun model %d, chatgpt %d", rec.Code, rec.Body.String(), f.calls, chatgptCalls)
+		t.Fatalf("routed: %d %q, starling model %d, chatgpt %d", rec.Code, rec.Body.String(), f.calls, chatgptCalls)
 	}
 	var sent struct {
 		Model string `json:"model"`
 	}
 	json.Unmarshal(f.got, &sent)
 	if sent.Model != "m1" {
-		t.Errorf("the chongyun model was asked for %q", sent.Model)
+		t.Errorf("the starling model was asked for %q", sent.Model)
 	}
 
 	// a turn of the conversation is not a title: it goes as before
@@ -124,19 +124,19 @@ func TestCodexTitlesSetting(t *testing.T) {
 	req.Header.Set("Authorization", "Bearer chatgpt-token")
 	s.Handler().ServeHTTP(rec, req)
 	if chatgptCalls != 2 || f.calls != 1 {
-		t.Errorf("a plain turn: chatgpt %d, chongyun model %d", chatgptCalls, f.calls)
+		t.Errorf("a plain turn: chatgpt %d, starling model %d", chatgptCalls, f.calls)
 	}
 
 	// every title request is in the ledger as one: ChatGPT's, the three
-	// answered here, the magpie model's
+	// answered here, the starling model's
 	var kinds []string
 	for _, u := range usage.Load(time.Time{}) {
 		kinds = append(kinds, u.Provider+":"+u.Kind)
-		if u.Provider == "magpie" && (!u.IsRejected() || u.Status != 200) {
+		if u.Provider == "starling" && (!u.IsRejected() || u.Status != 200) {
 			t.Errorf("an answered-here title %+v", u)
 		}
 	}
-	want := "openai:thread_title magpie:thread_title magpie:thread_title magpie:thread_title_reconsideration fake:thread_title openai:"
+	want := "openai:thread_title starling:thread_title starling:thread_title starling:thread_title_reconsideration fake:thread_title openai:"
 	if got := strings.Join(kinds, " "); got != want {
 		t.Errorf("ledger %s\nwant   %s", got, want)
 	}
@@ -153,9 +153,9 @@ func TestCodexTitlesSetting(t *testing.T) {
 }
 
 // codexProviderTitle is a title request as Codex's TUI sends one with
-// magpie as its model provider (model_provider = "magpie", #743): to
-// magpie's own /v1/responses, on the conversation's model, a magpie id —
-// or, with backend, to the ChatGPT backend path on that magpie model.
+// starling as its model provider (model_provider = "starling", #743): to
+// starling's own /v1/responses, on the conversation's model, a starling id —
+// or, with backend, to the ChatGPT backend path on that starling model.
 func codexProviderTitle(t *testing.T, s *Server, backend bool) *httptest.ResponseRecorder {
 	t.Helper()
 	body := `{"model":"fake/m1","stream":true,"reasoning":{"effort":"low"},"input":[{"type":"message","role":"user","content":[{"type":"input_text","text":"Generate a concise title. User prompt:\nfix the login bug"}]}],` +
@@ -172,14 +172,14 @@ func codexProviderTitle(t *testing.T, s *Server, backend bool) *httptest.Respons
 	return rec
 }
 
-// A title Codex asks one of magpie's models for is one it can read
-// (#743): with magpie as Codex's provider the request comes to /v1, where
+// A title Codex asks one of starling's models for is one it can read
+// (#743): with starling as Codex's provider the request comes to /v1, where
 // the Codex titles setting is heeded too, and with no model set there the
 // conversation's model's plain answer — a Chat model is never shown the
 // schema — is handed back as {"title": …}, as it is on the ChatGPT path.
 // An answer with no title in it is in the Routing and Usage views as the
 // failure it is to Codex.
-func TestCodexTitleOnMagpieProvider(t *testing.T) {
+func TestCodexTitleOnStarlingProvider(t *testing.T) {
 	answer := "Fix login bug"
 	f := &fake{t: t}
 	setup(t, provider.Chat, f)
@@ -327,20 +327,20 @@ func TestCodexDescriptionsSetting(t *testing.T) {
 	s := New()
 	rec := codexDescriptionRequest(t, s)
 	if text, _ := outputText(t, rec.Body.String()); chatgptCalls != 1 || f.calls != 0 || text != `{"description":"From ChatGPT"}` {
-		t.Fatalf("default: chatgpt %d, chongyun model %d, %q", chatgptCalls, f.calls, text)
+		t.Fatalf("default: chatgpt %d, starling model %d, %q", chatgptCalls, f.calls, text)
 	}
 
 	save("fake/m1")
 	rec = codexDescriptionRequest(t, s)
 	if text, _ := outputText(t, rec.Body.String()); rec.Code != 200 || text != `{"description":"Reviewed the routing change and verified it"}` || f.calls != 1 || chatgptCalls != 1 {
-		t.Fatalf("routed: %d %q, chongyun model %d, chatgpt %d", rec.Code, rec.Body.String(), f.calls, chatgptCalls)
+		t.Fatalf("routed: %d %q, starling model %d, chatgpt %d", rec.Code, rec.Body.String(), f.calls, chatgptCalls)
 	}
 	var sent struct {
 		Model string `json:"model"`
 	}
 	json.Unmarshal(f.got, &sent)
 	if sent.Model != "m1" {
-		t.Errorf("the chongyun model was asked for %q", sent.Model)
+		t.Errorf("the starling model was asked for %q", sent.Model)
 	}
 	var kinds []string
 	for _, u := range usage.Load(time.Time{}) {
@@ -352,7 +352,7 @@ func TestCodexDescriptionsSetting(t *testing.T) {
 	}
 }
 
-func TestCodexDescriptionFallbackOnMagpie(t *testing.T) {
+func TestCodexDescriptionFallbackOnStarling(t *testing.T) {
 	for _, path := range []string{"/v1/responses", "/backend-api/codex/responses"} {
 		t.Run(path, func(t *testing.T) {
 			f := &fake{t: t, reply: sse(

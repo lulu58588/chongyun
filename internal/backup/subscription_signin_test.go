@@ -29,10 +29,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The credentials in the fixtures below. Each appears only in a sign-in
@@ -67,11 +67,11 @@ const (
 	// offers the subscription at all.
 	//
 	// opencode-zen is a real NoKey preset, so a row with no key on it is a
-	// row magpie stores rather than one this test had to force past Save.
+	// row starling stores rather than one this test had to force past Save.
 	movedProviderID = "opencode-zen"
 )
 
-// signIns writes both sign-in stores the way magpie keeps them after the
+// signIns writes both sign-in stores the way starling keeps them after the
 // user has signed in twice on this machine: two built-in agents in
 // logins.json, and the moved subscription in both stores, one plugin
 // account under its provider's id and a second under id#slot. More than
@@ -294,7 +294,7 @@ func TestCollectCarriesTheRowOfAMovedSubscription(t *testing.T) {
 // TestCollectCarriesTypedKeysOnlyWhenAsked is the control that keeps the
 // policy above from being read as "nothing credential-shaped syncs": a key
 // the user typed is not an agent's sign-in on this machine, it is the one
-// credential magpie's backups have always carried. It goes in when keys are
+// credential starling's backups have always carried. It goes in when keys are
 // asked for and stays out when they are not, on all three of the places a
 // provider holds one.
 func TestCollectCarriesTypedKeysOnlyWhenAsked(t *testing.T) {

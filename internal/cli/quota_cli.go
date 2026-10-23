@@ -10,23 +10,23 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-const quotaUsage = `usage: chongyun quota [<provider>…] [--json]
-       chongyun quota reset [<codex account>] [--yes]
-       chongyun quota auto-reset [<codex account>] [week|expiring] [on|off]
-       chongyun quota credits [<codex account>] [on|off]
-       chongyun quota alert [<percent>|off] [--balance <amount>|off]
-       chongyun quota wait <provider|account> [--timeout <duration>] [--quiet]
-       chongyun quota history [<provider|account>…] [--days <n>] [--json]
-       chongyun quota refresh <provider> [<account>] [--json]
-  what is left of every subscription, plan and key chongyun has: each window's use and
+const quotaUsage = `usage: starling quota [<provider>…] [--json]
+       starling quota reset [<codex account>] [--yes]
+       starling quota auto-reset [<codex account>] [week|expiring] [on|off]
+       starling quota credits [<codex account>] [on|off]
+       starling quota alert [<percent>|off] [--balance <amount>|off]
+       starling quota wait <provider|account> [--timeout <duration>] [--quiet]
+       starling quota history [<provider|account>…] [--days <n>] [--json]
+       starling quota refresh <provider> [<account>] [--json]
+  what is left of every subscription, plan and key starling has: each window's use and
   when it starts again, and each key's balance, asked of the vendors now (or less than
   a minute ago). --json is for scripts and agents, each entry with lastServedAt, when it
   last answered through the gateway, and last: true on the latest; the gateway answers the same at
-  GET http://127.0.0.1:3425/v1/magpie/quotas (on the port in Settings' Gateway address), and to another machine only while chongyun is
+  GET http://127.0.0.1:3425/v1/starling/quotas (on the port in Settings' Gateway address), and to another machine only while starling is
   shared on the local network, with its key as the API key (Authorization: Bearer or x-api-key)
   A Codex account that holds rate-limit resets says how many; quota reset spends one,
   starting the account's current windows again (the one Codex is signed in to unless
@@ -42,40 +42,40 @@ const quotaUsage = `usage: chongyun quota [<provider>…] [--json]
   It is the account's standing setting, held resets or not; off stops it, and alone
   it says which accounts have it on. It is off until turned on.
   quota credits off keeps a Codex account from spending its credits: once one of
-  its windows is used up, by chongyun's latest reading (refreshed about every
+  its windows is used up, by starling's latest reading (refreshed about every
   minute), routing holds it as used up until that window renews and the request
   goes to the other accounts, groups and fallbacks, or is refused with why (with
   auto-reset on, its week used up and no one else left, it spends a reset first).
   on, the default, lets the vendor answer on its credits then, so the task goes
   on; alone it says which accounts don't spend theirs.
-  quota alert 80 has the chongyun app notify when any window of a subscription or plan
+  quota alert 80 has the starling app notify when any window of a subscription or plan
   reaches 80% used, once each time the window runs (not windows set aside, such as
   on-demand spending); --balance 5 when a balance falls to 5 or under, in its own
   currency or credits, once until topped up past it. off turns either off, and alone
   it says what is set. Both are off until set.
-  quota wait codex returns once any Codex account chongyun has on has allowance again
+  quota wait codex returns once any Codex account starling has on has allowance again
   (a window that stops it no longer used up), and an account's email or login, or
   <provider>/<account>, waits for that one alone: it reads the vendors itself, gateway
   running or not, again shortly after the soonest reset (every 1 to 10 minutes), and
   says on stderr what it waits for. For a script to go on with work it stopped:
-  until codex exec …; do chongyun quota wait codex || break; done. Exit 0 once there
+  until codex exec …; do starling quota wait codex || break; done. Exit 0 once there
   is allowance, 1 when --timeout (30m, 6h) passes first, 2 for a name it doesn't
   know, 130 on Ctrl+C.
-  quota history is what chongyun has read of each subscription's and plan's windows
+  quota history is what starling has read of each subscription's and plan's windows
   over time, kept 45 days (UTC times, a reading only when it changed, each window's
   runs apart by when they reset): the latest readings of each window, or with --json
-  every one since --days days ago, as GET /v1/magpie/quotas/history?days=&provider=&user=
+  every one since --days days ago, as GET /v1/starling/quotas/history?days=&provider=&user=
   answers. A provider, an account's email or login, or <provider>/<account> narrows it.
   A reading is kept at the time it was read: a Claude account's, which Claude Code
   tells only as it answers or runs /usage, isn't written again each time it is shown.
   quota refresh reads one card again, as its refresh button on the Usage page does:
   the provider's, or of the one account named (<provider>/<account> works too), and
   shows only it, --json with each card's readAt and error. A saved Claude account is
-  read by running Claude Code's /usage in its own folder, which plain chongyun quota
+  read by running Claude Code's /usage in its own folder, which plain starling quota
   never does. A card read less than 30 seconds ago isn't asked again: what was read
   then is shown.`
 
-// quotaCmd: magpie quota [<provider>…] [--json]
+// quotaCmd: starling quota [<provider>…] [--json]
 func quotaCmd(args []string) error {
 	if len(args) > 1 && args[1] == "reset" {
 		return quotaResetCmd(args[2:])
@@ -111,7 +111,7 @@ func quotaCmd(args []string) error {
 			only = append(only, strings.ToLower(a))
 		}
 	}
-	// magpie quota is the user asking: read even when allowances are read
+	// starling quota is the user asking: read even when allowances are read
 	// only when asked (#1518)
 	ctx, cancel := context.WithTimeout(provider.Asked(context.Background()), 15*time.Second)
 	defer cancel()
@@ -142,7 +142,7 @@ func quotaCmd(args []string) error {
 	return nil
 }
 
-// printQuotas is magpie quota's table: a line for each card.
+// printQuotas is starling quota's table: a line for each card.
 func printQuotas(qs []provider.Quota) {
 	width := 0
 	for _, q := range qs {
@@ -170,7 +170,7 @@ func printQuotas(qs []provider.Quota) {
 		line += quotaReadingCell(q.AsOf, q.ReadAt, q.Windows)
 		fmt.Println(line)
 	}
-	fmt.Println(faint.Render("  % is how much of a window is used · ↻ when it starts again · --json for scripts, or GET /v1/magpie/quotas on the gateway"))
+	fmt.Println(faint.Render("  % is how much of a window is used · ↻ when it starts again · --json for scripts, or GET /v1/starling/quotas on the gateway"))
 }
 
 // balanceCell is what an account holds in a line: "1.2K credits left",
@@ -199,7 +199,7 @@ func resetsCell(r *provider.ResetCredits, agent, user string) string {
 	return cell
 }
 
-// quotaResetCmd: magpie quota reset [<codex account>] [--yes] — spends one
+// quotaResetCmd: starling quota reset [<codex account>] [--yes] — spends one
 // of the account's rate-limit resets, once the user has said so.
 func quotaResetCmd(args []string) error {
 	yes, user := false, ""
@@ -262,7 +262,7 @@ func quotaResetCmd(args []string) error {
 	return nil
 }
 
-// quotaAutoResetCmd: magpie quota auto-reset [<codex account>] [week|expiring]
+// quotaAutoResetCmd: starling quota auto-reset [<codex account>] [week|expiring]
 // [on|off] — whether the account spends a reset by itself once its week is
 // used up, before one expires, or both (#2078).
 func quotaAutoResetCmd(args []string) error {
@@ -284,12 +284,12 @@ func quotaAutoResetCmd(args []string) error {
 		}
 	}
 	if when != "" && !set {
-		return fmt.Errorf("say on or off: chongyun quota auto-reset <account> %s on", when)
+		return fmt.Errorf("say on or off: starling quota auto-reset <account> %s on", when)
 	}
 	if !set && user == "" {
 		on := settings.Load().CodexAutoReset
 		if len(on) == 0 {
-			fmt.Println(muted.Render("no Codex account uses a reset by itself ·"), "chongyun quota auto-reset <account> on")
+			fmt.Println(muted.Render("no Codex account uses a reset by itself ·"), "starling quota auto-reset <account> on")
 			return nil
 		}
 		for _, u := range on {
@@ -340,13 +340,13 @@ func autoResetSay(user string) string {
 	return "uses its resets only when told to"
 }
 
-// printResetsUsed lists the resets of user's magpie spent, newest first,
+// printResetsUsed lists the resets of user's starling spent, newest first,
 // and why: so a reset gone from the account can be told apart from one it
 // ran out of or the user spent elsewhere.
 func printResetsUsed(user string) {
 	used := provider.ResetsUsed(user)
 	if len(used) == 0 {
-		fmt.Println(muted.Render("chongyun hasn't used any of its resets in the last 90 days"))
+		fmt.Println(muted.Render("starling hasn't used any of its resets in the last 90 days"))
 		return
 	}
 	for _, u := range used {
@@ -354,7 +354,7 @@ func printResetsUsed(user string) {
 	}
 }
 
-// resetUsedWhy says why magpie used a reset, as ResetUse.Why has it.
+// resetUsedWhy says why starling used a reset, as ResetUse.Why has it.
 func resetUsedWhy(why string) string {
 	switch why {
 	case provider.ResetUsedWeek:
@@ -365,7 +365,7 @@ func resetUsedWhy(why string) string {
 	return "used by hand"
 }
 
-// quotaCreditsCmd: magpie quota credits [<codex account>] [on|off] —
+// quotaCreditsCmd: starling quota credits [<codex account>] [on|off] —
 // whether the account spends its credits once its allowance is used up.
 func quotaCreditsCmd(args []string) error {
 	user, set, on := "", false, false
@@ -386,11 +386,11 @@ func quotaCreditsCmd(args []string) error {
 	if !set && user == "" {
 		off := settings.Load().CodexNoCredits
 		if len(off) == 0 {
-			fmt.Println(muted.Render("every Codex account spends its credits once its allowance is used up ·"), "chongyun quota credits <account> off")
+			fmt.Println(muted.Render("every Codex account spends its credits once its allowance is used up ·"), "starling quota credits <account> off")
 			return nil
 		}
 		for _, u := range off {
-			fmt.Println(muted.Render("○"), u, muted.Render("doesn't spend its credits: held once chongyun reads a window used up"))
+			fmt.Println(muted.Render("○"), u, muted.Render("doesn't spend its credits: held once starling reads a window used up"))
 		}
 		return nil
 	}
@@ -402,7 +402,7 @@ func quotaCreditsCmd(args []string) error {
 		if provider.CodexCredits(user) {
 			fmt.Println(user, "spends its credits once its allowance is used up")
 		} else {
-			fmt.Println(user, "doesn't spend its credits: once chongyun reads a window used up it is held till it renews")
+			fmt.Println(user, "doesn't spend its credits: once starling reads a window used up it is held till it renews")
 		}
 		return nil
 	}
@@ -412,7 +412,7 @@ func quotaCreditsCmd(args []string) error {
 	if on {
 		fmt.Println(green.Render("✓"), user+":", "spends its credits once its allowance is used up, so a task goes on")
 	} else {
-		fmt.Println(green.Render("✓"), user+":", "no longer spends its credits: once chongyun reads a window used up, requests go to the other accounts till it renews")
+		fmt.Println(green.Render("✓"), user+":", "no longer spends its credits: once starling reads a window used up, requests go to the other accounts till it renews")
 	}
 	return nil
 }
@@ -435,7 +435,7 @@ func codexAccountNamed(user string) (string, error) {
 	return user, nil
 }
 
-// quotaAlertCmd: magpie quota alert [<percent>|off] [--balance <amount>|off]
+// quotaAlertCmd: starling quota alert [<percent>|off] [--balance <amount>|off]
 // — the usage alerts Settings sets (#368), the notifications the app shows.
 func quotaAlertCmd(args []string) error {
 	s := settings.Load()
@@ -494,7 +494,7 @@ func quotaAlertCmd(args []string) error {
 		fmt.Println("; no balance alert")
 	}
 	if s.UsageAlert > 0 || s.BalanceAlert > 0 {
-		fmt.Println(muted.Render("  the notifications come from the chongyun app, while it runs"))
+		fmt.Println(muted.Render("  the notifications come from the starling app, while it runs"))
 	}
 	return nil
 }
@@ -524,7 +524,7 @@ func quotaMatches(q provider.Quota, only []string) bool {
 		if strings.EqualFold(q.Provider, o) || strings.EqualFold(q.Name, o) || strings.EqualFold(q.Kind, o) || (q.Alias != "" && strings.EqualFold(q.Alias, o)) {
 			return true
 		}
-		// a remote magpie's card: by the remote ("office", or its name)
+		// a remote starling's card: by the remote ("office", or its name)
 		// or by the provider there ("codex" is office/codex too)
 		if rid, there, ok := strings.Cut(q.Provider, "/"); ok && q.From != "" &&
 			(strings.EqualFold(rid, o) || strings.EqualFold(q.From, o) || strings.EqualFold(there, o)) {
@@ -552,7 +552,7 @@ func withUntold(qs []provider.Quota, only []string) ([]provider.Quota, error) {
 	return qs, nil
 }
 
-// quotaHistoryCmd: magpie quota history [<provider|account>…] [--days <n>] [--json]
+// quotaHistoryCmd: starling quota history [<provider|account>…] [--days <n>] [--json]
 func quotaHistoryCmd(args []string) error {
 	asJSON, days := false, ""
 	var only []string
@@ -584,7 +584,7 @@ func quotaHistoryCmd(args []string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	all := provider.QuotaHistories(provider.QuotaHistorySince(days, now), "", "")
-	// and each remote magpie's, as it keeps them (office/codex)
+	// and each remote starling's, as it keeps them (office/codex)
 	all = append(all, provider.RemoteQuotaHistories(ctx, days)...)
 	for _, h := range all {
 		rid, there, _ := strings.Cut(h.Provider, "/")
@@ -603,7 +603,7 @@ func quotaHistoryCmd(args []string) error {
 		if len(only) > 0 {
 			return fmt.Errorf("no readings kept of %s", strings.Join(only, ", "))
 		}
-		fmt.Println(muted.Render("nothing kept yet ·"), "a subscription's or plan's windows are kept here as chongyun reads them")
+		fmt.Println(muted.Render("nothing kept yet ·"), "a subscription's or plan's windows are kept here as starling reads them")
 		return nil
 	}
 	for _, h := range hs {
@@ -616,7 +616,7 @@ func quotaHistoryCmd(args []string) error {
 			fmt.Println("  " + l.Name + "  " + quotaPointsCell(l.Points, 8))
 		}
 	}
-	fmt.Println(faint.Render("  % is how much was left · ↻ a new run of the window · --json for every reading, or GET /v1/magpie/quotas/history on the gateway"))
+	fmt.Println(faint.Render("  % is how much was left · ↻ a new run of the window · --json for every reading, or GET /v1/starling/quotas/history on the gateway"))
 	return nil
 }
 

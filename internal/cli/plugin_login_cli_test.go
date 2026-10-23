@@ -10,13 +10,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// magpie accounts add, signing in to a plugin's provider removed from
-// magpie, brings it back, as the window's sign-in and a built-in's do.
+// starling accounts add, signing in to a plugin's provider removed from
+// starling, brings it back, as the window's sign-in and a built-in's do.
 func TestAccountsAddBringsBackARemovedPlugin(t *testing.T) {
 	ctx := fakeCoHome(t)
 	if _, err := provider.PluginAPIKey(ctx, "fakeco", 0, nil, "sk-one-key-1111"); err != nil {
@@ -38,7 +38,7 @@ func TestAccountsAddBringsBackARemovedPlugin(t *testing.T) {
 	}
 }
 
-// magpie plugin login, signing in again to an account whose sign-in the
+// starling plugin login, signing in again to an account whose sign-in the
 // vendor turned away, takes its lapsed mark off, as the window's sign-in
 // does, rather than the account saying "sign in again" until a request or
 // a usage read goes through.
@@ -108,7 +108,7 @@ func fakeCoHome(t *testing.T) context.Context {
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
 	t.Setenv("CLAUDE_CONFIG_DIR", filepath.Join(home, ".claude"))
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	t.Cleanup(cancel)
@@ -122,7 +122,7 @@ func fakeCoHome(t *testing.T) context.Context {
 	return ctx
 }
 
-// noBrowser has the sign-in pages magpie opens go nowhere. It swaps the
+// noBrowser has the sign-in pages starling opens go nowhere. It swaps the
 // opener rather than putting a do-nothing open first on PATH: a script
 // written now is a program macOS checks on its first run, which took 25 to
 // 55 seconds while other test binaries ran, and ate the minute the plugin
@@ -134,10 +134,10 @@ func noBrowser(t *testing.T) {
 	t.Cleanup(func() { openInBrowser = old })
 }
 
-// magpie plugin login installs the CLI a plugin signs in through before
+// starling plugin login installs the CLI a plugin signs in through before
 // the sign-in, as the window's does, and a failed install stops it there
 // rather than the plugin saying "install Grok Build first: curl … | bash",
-// which magpie's Docker image has no curl to run (#2223, evier12345).
+// which starling's Docker image has no curl to run (#2223, evier12345).
 func TestPluginLoginInstallsItsCLIFirst(t *testing.T) {
 	fakeCoHome(t)
 	noBrowser(t)

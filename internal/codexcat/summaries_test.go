@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // Codex before 0.145 loads no catalog an entry of which lacks
@@ -36,8 +36,8 @@ func TestCodexCatalogReasoningSummaries(t *testing.T) {
 }
 
 // Keep carries over what the user put in by hand, Codex's own entries too,
-// and a true of supports_reasoning_summaries where magpie says false; of
-// the rest magpie owns, nothing.
+// and a true of supports_reasoning_summaries where starling says false; of
+// the rest starling owns, nothing.
 func TestKeepUserKeys(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
@@ -57,7 +57,7 @@ func TestKeepUserKeys(t *testing.T) {
 		t.Error("a file that doesn't parse: changed")
 	}
 	if got := Keep(b, b); string(got) != string(b) {
-		t.Error("chongyun's own file: changed")
+		t.Error("starling's own file: changed")
 	}
 
 	cur := `{"models":[
@@ -81,15 +81,15 @@ func TestKeepUserKeys(t *testing.T) {
 		t.Errorf("user's object: %v", m1["x_note"])
 	}
 	if _, ok := m1["context_window"]; ok {
-		t.Error("a window chongyun left out came back")
+		t.Error("a window starling left out came back")
 	}
 	if _, ok := m1["auto_review_model_override"]; ok {
-		t.Error("an auto-review model chongyun took out came back")
+		t.Error("an auto-review model starling took out came back")
 	}
 	if m1["shell_type"] != "unified_exec" {
-		t.Errorf("a key chongyun writes: %v", m1["shell_type"])
+		t.Errorf("a key starling writes: %v", m1["shell_type"])
 	}
-	// Codex's own entry: its cache's value is magpie's; a key of the user's stays
+	// Codex's own entry: its cache's value is starling's; a key of the user's stays
 	if own["supports_reasoning_summaries"] != true || own["x_mine"] != json.Number("1") {
 		t.Errorf("own entry: %v %v", own["supports_reasoning_summaries"], own["x_mine"])
 	}

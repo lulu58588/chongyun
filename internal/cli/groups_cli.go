@@ -9,27 +9,27 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Routing groups from the terminal: what the Routing view does, through
 // the same provider.SaveGroup, DeleteGroup and ShowGroup.
 
 const groupUsage = `usage:
-  chongyun groups                           list routing groups: yours, then those chongyun found
-  chongyun group <id>                       show one group and its models (also: chongyun group show <id>)
-  chongyun group add <name> models=<m1>[,m2…] [routing=…] [stays=…]
+  starling groups                           list routing groups: yours, then those starling found
+  starling group <id>                       show one group and its models (also: starling group show <id>)
+  starling group add <name> models=<m1>[,m2…] [routing=…] [stays=…]
                                           make a group; agents pick it as group/<id>, the id made from the name;
                                           a name in use replaces that group
-  chongyun group set <id> k=v…              change one: name, models (the whole list, in order, patterns too),
+  starling group set <id> k=v…              change one: name, models (the whole list, in order, patterns too),
                                           models+=<m>[,m2…] (append), models-=<m>[,m2…] (drop), routing, stays,
                                           context (how long a request agents are told it takes: 272k; smallest
                                           is its smallest model's; empty is its largest model's), levels (the reasoning levels agents are offered:
                                           levels=none,low,medium,high,xhigh,max; empty is those every model has —
                                           a model without the one asked is sent its nearest),
-                                          family (a tag: chongyun visible shows agents families, not each group),
+                                          family (a tag: starling visible shows agents families, not each group),
                                           id (what agents pick it as: id=gpt-6-astra drops auto-; the groups
                                           it is in follow; an agent set to the old id needs setting again),
                                           effort=auto (the classifier picks each turn's reasoning; needs classifier=),
@@ -40,32 +40,32 @@ const groupUsage = `usage:
                                           1 to 1000; a model not named keeps its own, 1 by default; empty for all 1),
                                           listed=no (its models leave the lists agents see, offered through the
                                           group alone; listed=yes lists them too again)
-  chongyun group pick <id> <model>          route the group manually, every request to that one of its models
+  starling group pick <id> <model>          route the group manually, every request to that one of its models
                                           (as clicking it on the group's card in the Routing view does)
-  chongyun group copy <id> [name]           duplicate a group with its models, routing and rules, listed after it
-                                          (name: "<its name> copy" when left out; also: chongyun group duplicate)
-  chongyun group template [kind] [name]     a group for a common need, made of your own models in one go; without
+  starling group copy <id> [name]           duplicate a group with its models, routing and rules, listed after it
+                                          (name: "<its name> copy" when left out; also: starling group duplicate)
+  starling group template [kind] [name]     a group for a common need, made of your own models in one go; without
                                           a kind, lists them and the models each would take: smart (hard turns
                                           to the strongest model, easy ones to a cheap one, a classifier telling
                                           them apart), thrifty (a cheap model first, the strongest for high
                                           reasoning or when the cheap ones fail), steady (the strongest model of
                                           each of up to three providers, each behind the other). A name or id in
                                           use is numbered, never replaced
-  chongyun group rm <id>…                   remove groups (one chongyun found is hidden instead)
-  chongyun group restore <id>               bring back a group chongyun found that you removed
-  chongyun group auto [on|off]              whether chongyun finds groups on its own (on by default); off, none is
+  starling group rm <id>…                   remove groups (one starling found is hidden instead)
+  starling group restore <id>               bring back a group starling found that you removed
+  starling group auto [on|off]              whether starling finds groups on its own (on by default); off, none is
                                           listed or served — yours, and found ones you changed, stay — and an
                                           agent set to one is moved to its model from one provider; on brings
                                           them back
-  chongyun group rule add|rm|mv <id> …      rules: which model a turn goes to first, by its length, an image,
-                                          the reasoning asked for or the agent (chongyun group rule help)
+  starling group rule add|rm|mv <id> …      rules: which model a turn goes to first, by its length, an image,
+                                          the reasoning asked for or the agent (starling group rule help)
 
-  chongyun finds a group for each model two or more providers serve (auto-<model>, never stored;
-  chongyun group auto off stops it);
+  starling finds a group for each model two or more providers serve (auto-<model>, never stored;
+  starling group auto off stops it);
   removing one stores {"id":…,"hidden":true} in providers.json, which is what keeps it removed:
   take that record out of the file and the group is back
 
-  models   provider/model ids as chongyun models lists them; a bare model id works when one provider serves it;
+  models   provider/model ids as starling models lists them; a bare model id works when one provider serves it;
            group/<id> puts another group in it, routed by its own routing and rules in its place —
            never one the group is in already (that would put it in itself), at most 8 groups deep
            provider/model:<effort> fixes the member's reasoning — none, minimal, low, medium, high, xhigh
@@ -75,13 +75,13 @@ const groupUsage = `usage:
            provider/model[:effort]:fast sends the member in its vendor's fast mode: priority processing on a
            ChatGPT account (Codex's Fast) or an OpenAI key, Cursor's -fast model, Claude's fast mode on an
            Anthropic key for Opus 4.8 and 5; a model without one is refused (codex/gpt-6.1-sol:high:fast)
-           a pattern puts in every model it matches, as chongyun models lists them now and later: a glob, where
+           a pattern puts in every model it matches, as starling models lists them now and later: a glob, where
            * is any run of characters, / too, over the provider/model id in any case (openrouter/*:free,
            *-free, opencode-zen/*), or re:<regexp> matching the whole id (re:openrouter/.*:(free|beta)).
            Quote it for the shell. The group keeps the pattern, not its models: one the vendor adds joins,
            one it drops leaves. The models you name come first, in your order, then those the patterns
-           match, in the order chongyun models lists them; one both named and matched keeps its named place.
-           A pattern never matches a group. models-=<pattern> drops the pattern; chongyun group <id> shows
+           match, in the order starling models lists them; one both named and matched keeps its named place.
+           A pattern never matches a group. models-=<pattern> drops the pattern; starling group <id> shows
            how many models each matches now, and says when one matches nothing
   routing  smart   (default) of the subscriptions with quota to spare, the one renewing soonest first
            order   the first model until it can't answer, then the next
@@ -102,23 +102,23 @@ const groupUsage = `usage:
                    account that answered is still asked and its error goes to the agent
   effort   agent   (default) each request reasons as much as the agent asked, but at a member's own :<effort>
            auto    as a turn begins, the group's classifier — Jev, from a TypeSafe provider
-                   (chongyun provider add typesafe key=…), or any model, as Jev Router on OpenRouter,
+                   (starling provider add typesafe key=…), or any model, as Jev Router on OpenRouter,
                    asked in words — rates how hard it is, and the turn's requests
                    reason at low, medium, high or xhigh in place of the agent's level; only those
                    the agent asked to reason, never one it turned off (none). A route's effort
                    is what the agent asked, each try's what its model was sent
 
-  e.g. chongyun group add "Opus anywhere" models=claude/claude-opus-5-5,copilot/claude-opus-5.5 routing=order
-       chongyun group set opus-anywhere stays=session models+=openrouter/anthropic/claude-opus-5.5
-       chongyun group set auto-gpt-6-astra id=gpt-6-astra
-       chongyun group add Everything models=group/opus-anywhere,deepseek/deepseek-v4-flash routing=order
-       chongyun group set opus-anywhere effort=auto classifier=typesafe/jev-latest
-       chongyun group add Fast models=codex/gpt-5.6-luna:low,deepseek/deepseek-v4-flash,glm/glm-5.3-flash:high
-       chongyun group set fast models+=gcloud/gemini-3.8-flash:medium
-       chongyun group add my-free-pool models='openrouter/*:free,opencode-zen/*-free' routing=order
-       chongyun group set opus-anywhere routing=weight weight=claude/claude-opus-5-5=3
-       chongyun group pick opus-anywhere copilot/claude-opus-5.5
-       chongyun claude group/opus-anywhere`
+  e.g. starling group add "Opus anywhere" models=claude/claude-opus-5-5,copilot/claude-opus-5.5 routing=order
+       starling group set opus-anywhere stays=session models+=openrouter/anthropic/claude-opus-5.5
+       starling group set auto-gpt-6-astra id=gpt-6-astra
+       starling group add Everything models=group/opus-anywhere,deepseek/deepseek-v4-flash routing=order
+       starling group set opus-anywhere effort=auto classifier=typesafe/jev-latest
+       starling group add Fast models=codex/gpt-5.6-luna:low,deepseek/deepseek-v4-flash,glm/glm-5.3-flash:high
+       starling group set fast models+=gcloud/gemini-3.8-flash:medium
+       starling group add my-free-pool models='openrouter/*:free,opencode-zen/*-free' routing=order
+       starling group set opus-anywhere routing=weight weight=claude/claude-opus-5-5=3
+       starling group pick opus-anywhere copilot/claude-opus-5.5
+       starling claude group/opus-anywhere`
 
 // routingNames: each routing's value in the file, what the CLI calls it,
 // and the other spellings it takes.
@@ -160,7 +160,7 @@ func parseRouting(v string) (string, error) {
 		}
 		names = append(names, r.name)
 	}
-	return "", fmt.Errorf("routing %q is not one chongyun has: %s, or <plugin>/<name> for a gateway plugin's", v, strings.Join(names, ", "))
+	return "", fmt.Errorf("routing %q is not one starling has: %s, or <plugin>/<name> for a gateway plugin's", v, strings.Join(names, ", "))
 }
 
 func parseStays(v string) (string, error) {
@@ -172,7 +172,7 @@ func parseStays(v string) (string, error) {
 		}
 		names = append(names, s.name)
 	}
-	return "", fmt.Errorf("stays %q is not one chongyun has: %s", v, strings.Join(names, ", "))
+	return "", fmt.Errorf("stays %q is not one starling has: %s", v, strings.Join(names, ", "))
 }
 
 // routingName is what the CLI calls routing v: a plugin's, or one it
@@ -246,7 +246,7 @@ func memberResolver(keep []string) func(string) (string, error) {
 	}
 	var resolve func(string) (string, error)
 	resolve = func(in string) (string, error) {
-		id := strings.TrimPrefix(strings.TrimSpace(in), "magpie/")
+		id := strings.TrimPrefix(strings.TrimSpace(in), "starling/")
 		if slices.Contains(keep, id) {
 			return id, nil
 		}
@@ -277,7 +277,7 @@ func memberResolver(keep []string) func(string) (string, error) {
 					return provider.GroupPrefix + g.ID, nil
 				}
 			}
-			return "", fmt.Errorf("chongyun has no group %q (chongyun groups lists them)", gid)
+			return "", fmt.Errorf("starling has no group %q (starling groups lists them)", gid)
 		}
 		if slices.Contains(ids, id) || slices.Contains(keep, id) {
 			return id, nil
@@ -299,11 +299,11 @@ func memberResolver(keep []string) func(string) (string, error) {
 		default:
 			return "", fmt.Errorf("%s is served by %d providers; name one: %s", id, len(hits), strings.Join(hits, ", "))
 		}
-		msg := fmt.Sprintf("chongyun knows no model %q", id)
+		msg := fmt.Sprintf("starling knows no model %q", id)
 		if near := closeMatches(id, ids, 6); len(near) > 0 {
 			msg += "; did you mean " + strings.Join(near, ", ") + "?"
 		}
-		return "", fmt.Errorf("%s (chongyun models lists them)", msg)
+		return "", fmt.Errorf("%s (starling models lists them)", msg)
 	}
 	return resolve
 }
@@ -393,7 +393,7 @@ func applyGroupPairs(g *provider.Group, pairs []string, resolve func(string) (st
 	for _, kv := range pairs {
 		k, v, ok := strings.Cut(kv, "=")
 		if !ok {
-			return fmt.Errorf("expected key=value, got %q (chongyun group help)", kv)
+			return fmt.Errorf("expected key=value, got %q (starling group help)", kv)
 		}
 		var err error
 		switch strings.ToLower(strings.TrimSpace(k)) {
@@ -431,7 +431,7 @@ func applyGroupPairs(g *provider.Group, pairs []string, resolve func(string) (st
 		case "models-", "members-", "model-":
 			for _, m := range splitIDs(v, inGroup(g.Members)) {
 				if provider.IsPattern(m) {
-					m = strings.TrimPrefix(strings.TrimSpace(m), "magpie/")
+					m = strings.TrimPrefix(strings.TrimSpace(m), "starling/")
 					i := slices.Index(g.Match, m)
 					if i < 0 {
 						return fmt.Errorf("%s is not one of the group's patterns (%s)", m, orNone(g.Match))
@@ -439,7 +439,7 @@ func applyGroupPairs(g *provider.Group, pairs []string, resolve func(string) (st
 					g.Match = slices.Delete(g.Match, i, i+1)
 					continue
 				}
-				m, _ = provider.MemberFast(strings.TrimPrefix(m, "magpie/"))
+				m, _ = provider.MemberFast(strings.TrimPrefix(m, "starling/"))
 				i := slices.IndexFunc(g.Members, func(x string) bool { return strings.EqualFold(x, m) })
 				if i < 0 { // a bare model id, as models= takes it
 					i = slices.IndexFunc(g.Members, func(x string) bool {
@@ -506,7 +506,7 @@ func applyGroupPairs(g *provider.Group, pairs []string, resolve func(string) (st
 				err = fmt.Errorf("effort=auto (the classifier picks each turn's) or effort=agent (the agent's), not %q", v)
 			}
 		case "classifier", "classify":
-			g.Classifier = strings.TrimPrefix(strings.TrimSpace(v), "magpie/")
+			g.Classifier = strings.TrimPrefix(strings.TrimSpace(v), "starling/")
 		case "fast":
 			// the members sent in their vendor's fast mode, as they are in
 			// the group
@@ -550,7 +550,7 @@ func applyGroupPairs(g *provider.Group, pairs []string, resolve func(string) (st
 			g.Pick, err = pickMember(g.Members, v)
 			g.Routing = provider.Manual
 		default:
-			return fmt.Errorf("unknown field %q (fields: name, models, models+, models-, routing, pick, stays, context, levels, family, effort, classifier, fast, weight, listed; chongyun group help)", k)
+			return fmt.Errorf("unknown field %q (fields: name, models, models+, models-, routing, pick, stays, context, levels, family, effort, classifier, fast, weight, listed; starling group help)", k)
 		}
 		if err != nil {
 			return err
@@ -562,7 +562,7 @@ func applyGroupPairs(g *provider.Group, pairs []string, resolve func(string) (st
 // pickMember is the group's member the user named: its id, or a bare
 // model id one member has.
 func pickMember(members []string, v string) (string, error) {
-	v = strings.TrimPrefix(strings.TrimSpace(v), "magpie/")
+	v = strings.TrimPrefix(strings.TrimSpace(v), "starling/")
 	if i := slices.IndexFunc(members, func(x string) bool { return strings.EqualFold(x, v) }); i >= 0 {
 		return members[i], nil
 	}
@@ -584,7 +584,7 @@ func pickMember(members []string, v string) (string, error) {
 // findGroup looks a group up by its id, its catalog id or its name.
 func findGroup(ref string) (provider.Group, error) {
 	all := provider.Groups()
-	ref = strings.TrimPrefix(provider.CanonicalRef(strings.TrimPrefix(strings.TrimSpace(ref), "magpie/")), provider.GroupPrefix)
+	ref = strings.TrimPrefix(provider.CanonicalRef(strings.TrimPrefix(strings.TrimSpace(ref), "starling/")), provider.GroupPrefix)
 	for _, match := range []func(provider.Group) bool{
 		func(g provider.Group) bool { return g.ID == ref },
 		func(g provider.Group) bool { return strings.EqualFold(g.ID, ref) },
@@ -601,7 +601,7 @@ func findGroup(ref string) (provider.Group, error) {
 		}
 	}
 	if len(ids) == 0 {
-		return provider.Group{}, fmt.Errorf("no group %q; there are none yet (chongyun group add <name> models=…)", ref)
+		return provider.Group{}, fmt.Errorf("no group %q; there are none yet (starling group add <name> models=…)", ref)
 	}
 	return provider.Group{}, fmt.Errorf("no group %q (groups: %s)", ref, strings.Join(ids, ", "))
 }
@@ -624,7 +624,7 @@ func newGroupID(name string) string {
 	return id
 }
 
-// groupCmd: `chongyun group <verb> …`
+// groupCmd: `starling group <verb> …`
 func groupCmd(args []string) error {
 	if len(args) < 2 {
 		return fmt.Errorf("%s", groupUsage)
@@ -636,7 +636,7 @@ func groupCmd(args []string) error {
 		return nil
 	case "add", "new":
 		if len(rest) == 0 || strings.Contains(rest[0], "=") {
-			return fmt.Errorf("chongyun group add <name> models=<m1>[,m2…] [routing=…] [stays=…]\n\n%s", groupUsage)
+			return fmt.Errorf("starling group add <name> models=<m1>[,m2…] [routing=…] [stays=…]\n\n%s", groupUsage)
 		}
 		verb := "added"
 		if slices.ContainsFunc(provider.Groups(), func(o provider.Group) bool {
@@ -652,7 +652,7 @@ func groupCmd(args []string) error {
 		return showGroup(g)
 	case "set", "edit":
 		if len(rest) < 2 {
-			return fmt.Errorf("chongyun group set <id> k=v…\n\n%s", groupUsage)
+			return fmt.Errorf("starling group set <id> k=v…\n\n%s", groupUsage)
 		}
 		g, err := setGroup(rest[0], rest[1:])
 		if err != nil {
@@ -666,7 +666,7 @@ func groupCmd(args []string) error {
 		return showGroup(g)
 	case "rm", "remove", "delete":
 		if len(rest) < 1 {
-			return fmt.Errorf("chongyun group rm <id>…")
+			return fmt.Errorf("starling group rm <id>…")
 		}
 		gs, err := removeGroups(rest)
 		if err != nil {
@@ -674,7 +674,7 @@ func groupCmd(args []string) error {
 		}
 		for _, g := range gs {
 			if g.Auto {
-				fmt.Println(green.Render("✓"), "removed", bold.Render(g.Name), muted.Render("· chongyun found it, so it's hidden: chongyun group restore "+g.ID+" brings it back"))
+				fmt.Println(green.Render("✓"), "removed", bold.Render(g.Name), muted.Render("· starling found it, so it's hidden: starling group restore "+g.ID+" brings it back"))
 			} else {
 				fmt.Println(green.Render("✓"), "removed", bold.Render(g.Name))
 			}
@@ -682,7 +682,7 @@ func groupCmd(args []string) error {
 		return nil
 	case "pick", "use":
 		if len(rest) != 2 {
-			return fmt.Errorf("chongyun group pick <id> <model>")
+			return fmt.Errorf("starling group pick <id> <model>")
 		}
 		g, err := setGroup(rest[0], []string{"pick=" + rest[1]})
 		if err != nil {
@@ -692,14 +692,14 @@ func groupCmd(args []string) error {
 		return showGroup(g)
 	case "copy", "duplicate", "dup", "clone":
 		if len(rest) < 1 {
-			return fmt.Errorf("chongyun group copy <id> [name]")
+			return fmt.Errorf("starling group copy <id> [name]")
 		}
 		src, err := findGroup(rest[0])
 		if err != nil {
 			return err
 		}
 		if src.Hidden {
-			return fmt.Errorf("%s was removed: chongyun group restore %s brings it back first", src.ID, src.ID)
+			return fmt.Errorf("%s was removed: starling group restore %s brings it back first", src.ID, src.ID)
 		}
 		g, err := provider.CopyGroup(src.ID, strings.Join(rest[1:], " "))
 		if err != nil {
@@ -713,7 +713,7 @@ func groupCmd(args []string) error {
 		return ruleCmd(rest)
 	case "show":
 		if len(rest) != 1 {
-			return fmt.Errorf("chongyun group show <id>")
+			return fmt.Errorf("starling group show <id>")
 		}
 		g, err := findGroup(rest[0])
 		if err != nil {
@@ -724,7 +724,7 @@ func groupCmd(args []string) error {
 		return autoGroupsCmd(rest)
 	case "restore", "unhide":
 		if len(rest) != 1 {
-			return fmt.Errorf("chongyun group restore <id>")
+			return fmt.Errorf("starling group restore <id>")
 		}
 		g, err := restoreGroup(rest[0])
 		if err != nil {
@@ -738,7 +738,7 @@ func groupCmd(args []string) error {
 		return showGroup(g)
 	}
 	if len(rest) > 0 {
-		return fmt.Errorf("chongyun group has no %q\n\n%s", verb, groupUsage)
+		return fmt.Errorf("starling group has no %q\n\n%s", verb, groupUsage)
 	}
 	g, err := findGroup(verb)
 	if err != nil {
@@ -754,7 +754,7 @@ func addGroup(name string, pairs []string) (provider.Group, error) {
 	}
 	if g.ID = strings.ToLower(strings.TrimSpace(g.ID)); g.ID != "" {
 		if old, err := findGroup(g.ID); err == nil && old.ID == g.ID {
-			return g, fmt.Errorf("there is a group %s already: chongyun group set %s k=v… changes it", g.ID, g.ID)
+			return g, fmt.Errorf("there is a group %s already: starling group set %s k=v… changes it", g.ID, g.ID)
 		}
 	} else {
 		// a group is known by its name: adding one under a name taken
@@ -771,7 +771,7 @@ func addGroup(name string, pairs []string) (provider.Group, error) {
 		g.Name = g.ID
 	}
 	if len(g.Members) == 0 && len(g.Match) == 0 {
-		return g, fmt.Errorf("a group needs a model in it: models=<provider/model>[,…] (chongyun models lists them), or a pattern: models='openrouter/*:free'")
+		return g, fmt.Errorf("a group needs a model in it: models=<provider/model>[,…] (starling models lists them), or a pattern: models='openrouter/*:free'")
 	}
 	if err := provider.SaveGroup(g); err != nil {
 		return g, err
@@ -785,14 +785,14 @@ func setGroup(ref string, pairs []string) (provider.Group, error) {
 		return g, err
 	}
 	if g.Hidden {
-		return g, fmt.Errorf("%s was removed: chongyun group restore %s brings it back first", g.ID, g.ID)
+		return g, fmt.Errorf("%s was removed: starling group restore %s brings it back first", g.ID, g.ID)
 	}
 	from := g.ID
 	if err := applyGroupPairs(&g, pairs, memberResolver(g.Members), true); err != nil {
 		return g, err
 	}
 	if len(g.Members) == 0 && len(g.Match) == 0 {
-		return g, fmt.Errorf("a group needs a model in it; chongyun group rm %s removes it", from)
+		return g, fmt.Errorf("a group needs a model in it; starling group rm %s removes it", from)
 	}
 	pruneRules(&g)
 	to := strings.ToLower(strings.TrimSpace(g.ID))
@@ -800,7 +800,7 @@ func setGroup(ref string, pairs []string) (provider.Group, error) {
 		return g, fmt.Errorf("a group's id must be lowercase letters, digits, dots and dashes, not %q", g.ID)
 	}
 	g.ID = from
-	if err := provider.SaveGroup(g); err != nil { // one magpie found is the user's now
+	if err := provider.SaveGroup(g); err != nil { // one starling found is the user's now
 		return g, err
 	}
 	if to != from {
@@ -812,10 +812,10 @@ func setGroup(ref string, pairs []string) (provider.Group, error) {
 	return findGroup(to)
 }
 
-// removedOnly is a removed found group magpie doesn't find now (its model
+// removedOnly is a removed found group starling doesn't find now (its model
 // is down to one provider): only its record is left, to keep it removed.
 func removedOnly(ref string) (string, bool) {
-	ref = strings.TrimPrefix(provider.CanonicalRef(strings.TrimPrefix(strings.TrimSpace(ref), "magpie/")), provider.GroupPrefix)
+	ref = strings.TrimPrefix(provider.CanonicalRef(strings.TrimPrefix(strings.TrimSpace(ref), "starling/")), provider.GroupPrefix)
 	for _, id := range provider.RemovedGroups() {
 		if strings.EqualFold(id, ref) {
 			return id, true
@@ -838,7 +838,7 @@ func removeGroups(refs []string) ([]provider.Group, error) {
 			return nil, err
 		}
 		if g.Hidden {
-			return nil, fmt.Errorf("%s is removed already; chongyun group restore %s brings it back", g.ID, g.ID)
+			return nil, fmt.Errorf("%s is removed already; starling group restore %s brings it back", g.ID, g.ID)
 		}
 		gs, ids = append(gs, g), append(ids, g.ID)
 	}
@@ -849,12 +849,12 @@ func removeGroup(ref string) (provider.Group, error) {
 	g, err := findGroup(ref)
 	if err != nil {
 		if id, ok := removedOnly(ref); ok {
-			return g, fmt.Errorf("%s is removed already (and no two providers serve its model now); chongyun group restore %s brings it back", id, id)
+			return g, fmt.Errorf("%s is removed already (and no two providers serve its model now); starling group restore %s brings it back", id, id)
 		}
 		return g, err
 	}
 	if g.Hidden {
-		return g, fmt.Errorf("%s is removed already; chongyun group restore %s brings it back", g.ID, g.ID)
+		return g, fmt.Errorf("%s is removed already; starling group restore %s brings it back", g.ID, g.ID)
 	}
 	return g, provider.DeleteGroup(g.ID)
 }
@@ -884,7 +884,7 @@ func groupUses() map[string][]string {
 		if len(a.Fields) == 0 {
 			continue
 		}
-		v := strings.TrimPrefix(a.Fields[0].Get(), "magpie/")
+		v := strings.TrimPrefix(a.Fields[0].Get(), "starling/")
 		// a group an agent is on carries Claude Code's [1m] mark, as a
 		// model's does, and these are the agents' own settings: the mark
 		// comes off before the id is looked up by it (GroupFinder)
@@ -939,16 +939,16 @@ func catalogByID() map[string]provider.Entry {
 	return out
 }
 
-// groups: `chongyun groups`
-// autoGroupsCmd says whether magpie finds groups on its own, or turns
+// groups: `starling groups`
+// autoGroupsCmd says whether starling finds groups on its own, or turns
 // that on or off: off, the agents set to one are moved to its model from
 // one provider (agent.Reseat), as the Routing view's switch does.
 func autoGroupsCmd(args []string) error {
 	if len(args) == 0 {
 		if provider.AutoGroupsOn() {
-			fmt.Println("found groups are", green.Render("on"), muted.Render("· a model two or more providers serve is a group of them (auto-<model>); chongyun group auto off turns them off"))
+			fmt.Println("found groups are", green.Render("on"), muted.Render("· a model two or more providers serve is a group of them (auto-<model>); starling group auto off turns them off"))
 		} else {
-			fmt.Println("found groups are", amber.Render("off"), muted.Render("· only the groups you made or changed; chongyun group auto on brings the others back"))
+			fmt.Println("found groups are", amber.Render("off"), muted.Render("· only the groups you made or changed; starling group auto on brings the others back"))
 		}
 		return nil
 	}
@@ -958,10 +958,10 @@ func autoGroupsCmd(args []string) error {
 		on = true
 	case "off", "false", "no", "0":
 	default:
-		return fmt.Errorf("chongyun group auto [on|off]")
+		return fmt.Errorf("starling group auto [on|off]")
 	}
 	if len(args) > 1 {
-		return fmt.Errorf("chongyun group auto [on|off]")
+		return fmt.Errorf("starling group auto [on|off]")
 	}
 	moved, err := agent.Reseat(func() error { return provider.SetAutoGroups(on) })
 	if err != nil {
@@ -987,10 +987,10 @@ func groups() error {
 		}
 	}
 	if len(shown) == 0 {
-		fmt.Println(muted.Render("no routing groups yet ·"), "chongyun group add <name> models=<m1>,<m2>", muted.Render("· chongyun group help"))
+		fmt.Println(muted.Render("no routing groups yet ·"), "starling group add <name> models=<m1>,<m2>", muted.Render("· starling group help"))
 	}
 	if !provider.AutoGroupsOn() {
-		defer fmt.Println(" ", muted.Render("found groups are off · chongyun group auto on brings them back"))
+		defer fmt.Println(" ", muted.Render("found groups are off · starling group auto on brings them back"))
 	}
 	names, uses := catalogByID(), groupUses()
 	for _, e := range provider.Served() {
@@ -1070,7 +1070,7 @@ func groups() error {
 	}
 	if len(ids) > 0 {
 		fmt.Println()
-		fmt.Println(" ", muted.Render("removed: "+strings.Join(ids, ", ")+" · chongyun group restore <id> brings one back"))
+		fmt.Println(" ", muted.Render("removed: "+strings.Join(ids, ", ")+" · starling group restore <id> brings one back"))
 		fmt.Println(" ", muted.Render("  (each is a {\"hidden\": true} record in providers.json that keeps it removed; deleting the record brings it back)"))
 	}
 	return nil
@@ -1080,14 +1080,14 @@ func showGroup(g provider.Group) error {
 	kv := func(k, v string) { fmt.Printf("  %s %s\n", muted.Render(pad(k, 9)), v) }
 	head := bold.Render(g.Name) + muted.Render("  "+g.Ref())
 	if g.Auto {
-		head += faint.Render("  found by chongyun — changing it makes it yours")
+		head += faint.Render("  found by starling — changing it makes it yours")
 	}
 	if g.Hidden {
-		head += amber.Render("  removed") + muted.Render(" · chongyun group restore "+g.ID)
+		head += amber.Render("  removed") + muted.Render(" · starling group restore "+g.ID)
 	}
 	fmt.Println(" ", head)
 	if g.Routing == provider.Manual {
-		kv("routing", "manual"+muted.Render("  every request to "+g.Picked()+"; chongyun group pick "+g.ID+" <model> picks another"))
+		kv("routing", "manual"+muted.Render("  every request to "+g.Picked()+"; starling group pick "+g.ID+" <model> picks another"))
 	} else {
 		kv("routing", routingName(g.Routing))
 	}
@@ -1170,7 +1170,7 @@ func showGroup(g provider.Group) error {
 }
 
 // whyNotServed is why a group's member isn't served: most often a model its
-// provider's list has but doesn't expose, which `chongyun provider models
+// provider's list has but doesn't expose, which `starling provider models
 // <id> +<model>` puts right (MOMO 报告: opencode-go/deepseek-flash).
 func whyNotServed(member string) string {
 	pid, model, ok := strings.Cut(member, "/")
@@ -1186,12 +1186,12 @@ func whyNotServed(member string) string {
 	}
 	if slices.ContainsFunc(p.Available(), func(m catalog.Model) bool { return m.ID == model }) &&
 		!slices.ContainsFunc(p.Exposed(), func(m catalog.Model) bool { return m.ID == model }) {
-		return "not served: not exposed · chongyun provider models " + p.ID + " +" + model
+		return "not served: not exposed · starling provider models " + p.ID + " +" + model
 	}
 	return "not served"
 }
 
-// templateCmd: magpie group template [kind] [name] (provider.Templates):
+// templateCmd: starling group template [kind] [name] (provider.Templates):
 // each template and the models it would take, or one of them added.
 func templateCmd(rest []string) error {
 	if len(rest) == 0 {
@@ -1206,7 +1206,7 @@ func templateCmd(rest []string) error {
 				fmt.Println("  " + muted.Render("classifier "+tp.Group.Classifier))
 			}
 		}
-		fmt.Println(muted.Render("chongyun group template <kind> [name] adds one"))
+		fmt.Println(muted.Render("starling group template <kind> [name] adds one"))
 		return nil
 	}
 	kind := strings.ToLower(rest[0])

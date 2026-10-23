@@ -9,8 +9,8 @@
 package gateway
 
 import (
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/pluginrt"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/pluginrt"
 )
 
 // Settings are the page's settings, at their defaults.

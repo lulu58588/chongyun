@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // The search APIs (#419) go in a backup with the providers: their keys
@@ -60,7 +60,7 @@ func TestBackupSearchAPIs(t *testing.T) {
 		t.Fatalf("need key %v", r.NeedKey)
 	}
 
-	// a backup from a magpie before them leaves them alone
+	// a backup from a starling before them leaves them alone
 	old := without
 	old.Searches = nil
 	if _, err := Restore(old, Parts{Providers: true}); err != nil {

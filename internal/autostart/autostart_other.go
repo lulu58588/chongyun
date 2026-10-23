@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/edit"
 )
 
 func record() string {
@@ -18,7 +18,7 @@ func record() string {
 		home, _ := os.UserHomeDir()
 		dir = filepath.Join(home, ".config")
 	}
-	return filepath.Join(dir, "autostart", "magpie.desktop")
+	return filepath.Join(dir, "autostart", "starling.desktop")
 }
 
 // the two keys a desktop entry needs before the desktop starts it at login:
@@ -44,7 +44,7 @@ func enable(exe string) error {
 	}
 	// the Exec key's quoting: in double quotes, \ " ` $ escaped
 	q := strings.NewReplacer(`\`, `\\`, `"`, `\"`, "`", "\\`", `$`, `\$`).Replace(exe)
-	body := "[Desktop Entry]\nType=Application\nName=chongyun\nComment=one place to pick every agent's model\n" +
+	body := "[Desktop Entry]\nType=Application\nName=starling\nComment=one place to pick every agent's model\n" +
 		"Exec=\"" + q + "\" " + Arg + "\nTerminal=false\nX-GNOME-Autostart-enabled=true\n"
 	return edit.WriteAtomic(p, []byte(body))
 }
@@ -56,7 +56,7 @@ func disable() error {
 	return nil
 }
 
-// refresh: nothing an older magpie wrote here needs writing again
+// refresh: nothing an older starling wrote here needs writing again
 func refresh() error { return nil }
 
 // heldBack: nothing here is switched off apart from the record itself

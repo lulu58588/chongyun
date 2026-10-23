@@ -11,7 +11,7 @@ import (
 )
 
 // keepaliveCodexSignIn keeps a ChatGPT account in logins.json, as
-// chongyun's own sign-in does: the account it signed in to is kept there,
+// starling's own sign-in does: the account it signed in to is kept there,
 // with the sign-in it has.
 func keepaliveCodexSignIn(t *testing.T, email, plan, accountID, refresh string) {
 	t.Helper()
@@ -26,7 +26,7 @@ func keepaliveCodexSignIn(t *testing.T, email, plan, accountID, refresh string) 
 	codexOwnLogin(t, email, plan, auth)
 }
 
-// keepaliveSavedAuth is the sign-in chongyun keeps for the codex account user.
+// keepaliveSavedAuth is the sign-in starling keeps for the codex account user.
 func keepaliveSavedAuth(t *testing.T, user string) string {
 	t.Helper()
 	for _, l := range readLogins() {
@@ -86,7 +86,7 @@ func TestRenewLogins(t *testing.T) {
 	if !strings.Contains(string(l.Auth), `"r-2"`) || time.Since(l.Renewed) > time.Minute || !renewalDue(l, keepAliveEvery, time.Now().Add(25*time.Hour)) {
 		t.Fatalf("saved after renewal: %+v", l)
 	}
-	// the account the agent is on keeps the sign-in chongyun has for it:
+	// the account the agent is on keeps the sign-in starling has for it:
 	// the renewal of the other account did not touch it
 	if auth := keepaliveSavedAuth(t, "work@example.com"); !strings.Contains(auth, "r-work") {
 		t.Fatalf("the agent's own sign-in changed: %s", auth)

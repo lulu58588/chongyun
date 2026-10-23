@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // #1424: one email in two Team workspaces, Codex signed in to the second
@@ -51,7 +51,7 @@ func TestCodexTeamSeatsOfOneEmailWeighedApart(t *testing.T) {
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("me@example.com", "team", "ws-two")), 0o600)
 	saved := []map[string]any{
 		{"agent": "codex", "user": teamA, "plan": "team", "on": true, "seen": time.Now(), "auth": auth("me@example.com", "team", "ws-one")},
-		// chongyun keeps the account it signed the agent in to in its own
+		// starling keeps the account it signed the agent in to in its own
 		// logins.json, marked as the one the agent is on: it never reads
 		// the agent's own file to find out which account that is.
 		{"agent": "codex", "user": teamB, "plan": "team", "active": true, "on": true, "seen": time.Now(), "auth": auth("me@example.com", "team", "ws-two")},

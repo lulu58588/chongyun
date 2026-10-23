@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // movedFake is the fake plugin signed in as the built-in id it was moved
@@ -23,7 +23,7 @@ func movedFake(t *testing.T, id string, up http.Handler) {
 	t.Helper()
 	bun := testenv.Bun(t)
 	fresh(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Setenv("FAKE_ID", id)
 	t.Cleanup(plugin.Settle)
 	srv := httptest.NewServer(up)

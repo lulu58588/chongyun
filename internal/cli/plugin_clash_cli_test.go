@@ -7,18 +7,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// magpie plugin lists both plugins that sign in to one provider (neiko on
+// starling plugin lists both plugins that sign in to one provider (neiko on
 // Discord: a third-party plugin and their own), says which one serves it
-// and how to have the other one serve it; `chongyun plugin use` does that.
+// and how to have the other one serve it; `starling plugin use` does that.
 func TestPluginListSaysClash(t *testing.T) {
 	bun := testenv.Bun(t)
 	groupsHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
-	t.Setenv("MAGPIE_PLUGIN_MARKET", "off")
+	t.Setenv("STARLING_BUN", bun)
+	t.Setenv("STARLING_PLUGIN_MARKET", "off")
 	t.Setenv("NO_COLOR", "1")
 	t.Cleanup(plugin.Settle)
 	src, err := os.ReadFile("../plugin/testdata/fake/index.js")
@@ -40,7 +40,7 @@ func TestPluginListSaysClash(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(out, "served by "+theirs+", which signs in to it too · chongyun plugin use "+mine+" fakeco") {
+	if !strings.Contains(out, "served by "+theirs+", which signs in to it too · starling plugin use "+mine+" fakeco") {
 		t.Errorf("mine's row doesn't say theirs serves fakeco:\n%s", out)
 	}
 	if !strings.Contains(out, "also signed in to by "+mine+"; this one serves it") {
@@ -50,7 +50,7 @@ func TestPluginListSaysClash(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(out, "served by "+mine+", which signs in to it too · chongyun plugin use "+theirs+" fakeco") {
+	if !strings.Contains(out, "served by "+mine+", which signs in to it too · starling plugin use "+theirs+" fakeco") {
 		t.Errorf("after use, theirs' row doesn't say mine serves fakeco:\n%s", out)
 	}
 	if _, err := stdoutOf(t, func() error { return pluginCmd([]string{"plugin", "use", "nosuch", "fakeco"}) }); err == nil {

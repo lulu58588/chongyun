@@ -1,5 +1,5 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// magpie's own skill (magpie-quota, ttmouse 报告) is first in the market's
+// starling's own skill (magpie-quota, ttmouse 报告) is first in the market's
 // skills: until skills.sh lists it there is no count of installs to show and
 // no skills.sh page to link, so its card and sheet show neither, where a
 // skills.sh skill keeps both. Every language, a narrow window, both engines.
@@ -29,7 +29,7 @@ function serve(lang, asked) {
     if (url.pathname === "/api/plugins") return json({ plugins: [] });
     if (url.pathname === "/api/library") {
       return json({
-        dir: `${HOME}/.magpie/library`, backups: `${HOME}/.magpie/backups`, home: HOME,
+        dir: `${HOME}/.starling/library`, backups: `${HOME}/.starling/backups`, home: HOME,
         agents: [{ id: "claude", name: "Claude Code", icon: "claudecode-color", skills: `${HOME}/.claude/skills`, mcp: `${HOME}/.claude.json` }],
         instructions: { agents: [], sets: [] }, servers: [], foundServers: [], projects: [], foundSkills: [], skills: [], problems: [],
       });
@@ -56,7 +56,7 @@ function serve(lang, asked) {
 
 for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium", "webkit"])) {
   for (const lang of ["en", "zh", "ja", "de"]) {
-    test(`${engine} ${lang}: magpie's own skill shows no installs and no skills.sh link`, async (t) => {
+    test(`${engine} ${lang}: starling's own skill shows no installs and no skills.sh link`, async (t) => {
       const browser = await (engine === "webkit" ? webkit.launch() : chromium.launch({ channel: "chromium" }));
       const context = await browser.newContext({ viewport: { width: 520, height: 760 }, reducedMotion: "reduce" });
       const page = await context.newPage();
@@ -65,9 +65,9 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       page.on("pageerror", (e) => errors.push(e.message));
       const asked = {};
       await page.route("**/*", serve(lang, asked));
-      await page.addInitScript(() => { localStorage.setItem("magpie.libTab", "skills"); });
+      await page.addInitScript(() => { localStorage.setItem("starling.libTab", "skills"); });
       t.after(() => browser.close());
-      await page.goto("http://magpie.test/?view=library");
+      await page.goto("http://starling.test/?view=library");
       const view = page.locator("#view-library");
       const card = (id) => view.locator(`.mk[data-market="skills"] .mk-card[data-id="${id}"]`);
       const own = card("magpie-community/plugins/magpie-quota"), pdf = card("acme/skills/pdf");

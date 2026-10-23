@@ -9,14 +9,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // #2505 (h4rk8s): DSH names its session in x-deepseek-harness-session-id
 // and marks a request compacting its context with
 // x-deepseek-harness-compact. A call is recorded under that session and as
-// a compaction ("compact", the Requests list's Compaction), on this magpie
+// a compaction ("compact", the Requests list's Compaction), on this starling
 // and on a remote one it is passed on to; a request without the mark is
 // never taken for one by what its prompt says. The vendor is sent neither
 // header.
@@ -46,7 +46,7 @@ func TestDshMarksSessionAndCompaction(t *testing.T) {
 		h.ServeHTTP(w, r)
 	}))
 	t.Cleanup(remote.Close)
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Key: "rk", Models: []string{"fake/m1"}, Chat: remote.URL + "/v1"}); err != nil {
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Key: "rk", Models: []string{"fake/m1"}, Chat: remote.URL + "/v1"}); err != nil {
 		t.Fatal(err)
 	}
 	records := func(n int) []usage.Record {
@@ -93,7 +93,7 @@ func TestDshMarksSessionAndCompaction(t *testing.T) {
 			got := arrived[len(arrived)-1]
 			mu.Unlock()
 			if got.Get("x-deepseek-harness-session-id") != "dsh-session-A" || got.Get("x-deepseek-harness-compact") != tc.compact {
-				t.Errorf("%d: the remote chongyun was sent session %q compact %q", i, got.Get("x-deepseek-harness-session-id"), got.Get("x-deepseek-harness-compact"))
+				t.Errorf("%d: the remote starling was sent session %q compact %q", i, got.Get("x-deepseek-harness-session-id"), got.Get("x-deepseek-harness-compact"))
 			}
 		}
 		rs := records(i + 1)

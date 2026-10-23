@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func TestPurposeAssetMatchesUsage(t *testing.T) {

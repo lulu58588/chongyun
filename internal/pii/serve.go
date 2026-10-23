@@ -14,8 +14,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/redact"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/redact"
 )
 
 // hello is the line pf-serve writes once the model is loaded.
@@ -37,7 +37,7 @@ type helper struct {
 	exited chan struct{}
 }
 
-// srv is the pf-serve magpie runs, one at a time: its requests take
+// srv is the pf-serve starling runs, one at a time: its requests take
 // turns.
 var srv struct {
 	mu   sync.Mutex

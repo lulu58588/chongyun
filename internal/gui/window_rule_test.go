@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The window opens at the size it was last given, the default before

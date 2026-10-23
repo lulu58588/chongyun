@@ -12,9 +12,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/davsync"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/davsync"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // webdavHome is a machine of its own: no agent on it, no gateway at the
@@ -34,7 +34,7 @@ func webdavHome(t *testing.T) {
 	t.Setenv("LOCALAPPDATA", "")
 	t.Setenv("CLAUDE_CONFIG_DIR", filepath.Join(home, ".claude"))
 	t.Setenv("CODEX_HOME", filepath.Join(home, ".codex"))
-	t.Setenv("MAGPIE_ADDR", "127.0.0.1:1")
+	t.Setenv("STARLING_ADDR", "127.0.0.1:1")
 	piped(t)
 }
 
@@ -89,7 +89,7 @@ func (d *davServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (d *davServer) file() []byte {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.files["/dav/magpie/magpie.magpie-backup"]
+	return d.files["/dav/starling/starling.starling-backup"]
 }
 
 func (d *davServer) passwords() []string {

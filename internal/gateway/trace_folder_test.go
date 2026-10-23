@@ -9,18 +9,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 func TestShortFolder(t *testing.T) {
 	for dir, want := range map[string]string{
-		"/Users/someone/secret/workspace/magpie":  "workspace/magpie",
-		"/Users/someone/secret/workspace/magpie/": "workspace/magpie",
-		`C:\Users\someone\src\chongyun`:             "src/chongyun",
-		`D:\chongyun`:                               "chongyun",
+		"/Users/someone/secret/workspace/starling":  "workspace/starling",
+		"/Users/someone/secret/workspace/starling/": "workspace/starling",
+		`C:\Users\someone\src\starling`:             "src/starling",
+		`D:\starling`:                               "starling",
 		`C:\`:                                     "",
-		`\\server\share\team\chongyun`:              "team/chongyun",
-		"/magpie":                                 "magpie",
+		`\\server\share\team\starling`:              "team/starling",
+		"/starling":                                 "starling",
 		"/":                                       "",
 		"":                                        "",
 		"/home/u/my project/中文 目录":                "my project/中文 目录",
@@ -66,14 +66,14 @@ func TestRouteKeepsItsFolderShort(t *testing.T) {
 		return rs[len(rs)-1]
 	}
 	// Claude Code's main request: its environment in a system block
-	turn := `{"model":"plan/m1","stream":true,"max_tokens":100,"system":[{"type":"text","text":"You are Claude Code, Anthropic's official CLI for Claude."},{"type":"text","text":"# Environment\nYou have been invoked in the following environment: \n - Primary working directory: /Users/someone/secret/workspace/magpie\n - Is a git repository: true\n - Platform: darwin\n"}],"messages":[{"role":"user","content":"hi"}]}`
+	turn := `{"model":"plan/m1","stream":true,"max_tokens":100,"system":[{"type":"text","text":"You are Claude Code, Anthropic's official CLI for Claude."},{"type":"text","text":"# Environment\nYou have been invoked in the following environment: \n - Primary working directory: /Users/someone/secret/workspace/starling\n - Is a git repository: true\n - Platform: darwin\n"}],"messages":[{"role":"user","content":"hi"}]}`
 	// its title request: no environment
 	title := `{"model":"plan/m1","stream":true,"max_tokens":100,"system":[{"type":"text","text":"Generate a concise, sentence-case title (3-7 words) that captures the main topic or goal of this coding session."}],"messages":[{"role":"user","content":"hi"}]}`
 
-	if r := send(turn, "s1"); r.Folder != "workspace/magpie" {
+	if r := send(turn, "s1"); r.Folder != "workspace/starling" {
 		t.Fatalf("the turn's folder: %q", r.Folder)
 	}
-	if r := send(title, "s1"); r.Folder != "workspace/magpie" {
+	if r := send(title, "s1"); r.Folder != "workspace/starling" {
 		t.Fatalf("a request of the session that says no folder: %q", r.Folder)
 	}
 	if r := send(title, "s2"); r.Folder != "" {
@@ -83,7 +83,7 @@ func TestRouteKeepsItsFolderShort(t *testing.T) {
 		t.Fatalf("no session id: %q", r.Folder)
 	}
 	// the folder said last goes: the agent moved
-	moved := strings.Replace(turn, "/Users/someone/secret/workspace/magpie", `C:\\Users\\someone\\src\\dial`, 1)
+	moved := strings.Replace(turn, "/Users/someone/secret/workspace/starling", `C:\\Users\\someone\\src\\dial`, 1)
 	if r := send(moved, "s1"); r.Folder != "src/dial" {
 		t.Fatalf("moved: %q", r.Folder)
 	}
@@ -108,7 +108,7 @@ func TestRouteKeepsItsFolderShort(t *testing.T) {
 	for _, r := range kept {
 		folders = append(folders, r.Folder)
 	}
-	if got := strings.Join(folders, ","); !strings.Contains(got, "workspace/magpie") || !strings.Contains(got, "src/dial") {
+	if got := strings.Join(folders, ","); !strings.Contains(got, "workspace/starling") || !strings.Contains(got, "src/dial") {
 		t.Fatalf("the history's folders: %q", got)
 	}
 }

@@ -1,4 +1,4 @@
-// Package cli is magpie's command line: every command, and the app, tray
+// Package cli is starling's command line: every command, and the app, tray
 // and TUI it opens (the root's main.go only calls Main).
 package cli
 
@@ -13,131 +13,131 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/claudebridge"
-	"github.com/lulu58588/chongyun/internal/davsync"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/imagemcp"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/pluginrt"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/profile"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/tui"
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/claudebridge"
+	"github.com/lulu58588/starling/internal/davsync"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/imagemcp"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/pluginrt"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/profile"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/tui"
+	"github.com/lulu58588/starling/internal/update"
 )
 
 // version is the root main package's, set at build time
 // (-ldflags "-X main.version=…") and handed over by Main.
 var version = "dev"
 
-const usage = `chongyun — 崇云科技的统一 AI 模型网关 / one place to pick every agent's model
+const usage = `starling — 星鸣的统一 AI 模型网关 / one place to pick every agent's model
 
-  chongyun                          open the app: a window plus a menu bar icon
-  chongyun tray                     start in the menu bar only
-  chongyun panel                    open the menu bar icon's quick panel, or close it
-  chongyun autostart [on|off]       open chongyun (in the menu bar) when you log in, or say whether it does
-  chongyun tui                      the same thing, in the terminal (serves the gateway while open when no chongyun does)
-  chongyun web [--addr host:port] [--lan] [--no-open] [--gateway] [--tls-cert <file> --tls-key <file>]
+  starling                          open the app: a window plus a menu bar icon
+  starling tray                     start in the menu bar only
+  starling panel                    open the menu bar icon's quick panel, or close it
+  starling autostart [on|off]       open starling (in the menu bar) when you log in, or say whether it does
+  starling tui                      the same thing, in the terminal (serves the gateway while open when no starling does)
+  starling web [--addr host:port] [--lan] [--no-open] [--gateway] [--tls-cert <file> --tls-key <file>]
                                   the app's window in a browser, with the gateway (no desktop needed: WSL, a server over SSH)
-                                  a new key each run; MAGPIE_WEB_KEY (16+ letters, digits, - . _ ~) keeps one, signed in for 400 days
-                                  behind a reverse proxy, MAGPIE_WEB_URL=https://<the page there> prints the link through it
+                                  a new key each run; STARLING_WEB_KEY (16+ letters, digits, - . _ ~) keeps one, signed in for 400 days
+                                  behind a reverse proxy, STARLING_WEB_URL=https://<the page there> prints the link through it
                                   --gateway: gateway mode, no Agents, Sessions or Library (on by itself with no agents here; Settings › General turns it off)
                                   --tls-cert/--tls-key: the page and the gateway over https:// to other computers
-  chongyun ls                       list detected agents and their settings
-  chongyun <agent>                  show one agent
-  chongyun <agent> <model>          set an agent's model   e.g. chongyun claude deepseek/deepseek-chat
-  chongyun <agent> <field>          show one field   e.g. chongyun codex effort
-  chongyun <agent> <field> <value>  set another field   e.g. chongyun codex effort high
-  chongyun <agent> default          take chongyun out: the agent back on what it had before
-  chongyun <agent> <field> default  that field back to the agent's own default
-  chongyun <command> --help         what a command or an agent takes; -h or --help anywhere does nothing else
+  starling ls                       list detected agents and their settings
+  starling <agent>                  show one agent
+  starling <agent> <model>          set an agent's model   e.g. starling claude deepseek/deepseek-chat
+  starling <agent> <field>          show one field   e.g. starling codex effort
+  starling <agent> <field> <value>  set another field   e.g. starling codex effort high
+  starling <agent> default          take starling out: the agent back on what it had before
+  starling <agent> <field> default  that field back to the agent's own default
+  starling <command> --help         what a command or an agent takes; -h or --help anywhere does nothing else
 
-  chongyun save <name>              snapshot every agent's settings as a profile
-  chongyun use <name>               apply a profile
-  chongyun profiles                 list profiles
-  chongyun rm <name>                delete a profile
+  starling save <name>              snapshot every agent's settings as a profile
+  starling use <name>               apply a profile
+  starling profiles                 list profiles
+  starling rm <name>                delete a profile
 
-  chongyun backup [--no-keys] [--no-library] [file]    providers, keys, settings, profiles, agent models and the library in one file, sealed with a passphrase
-  chongyun restore [--no-agents] [--no-library] <file> put a backup in on this machine
-  chongyun webdav [on <address>|set k=v…|now|off]      the same, kept the same on every computer through a WebDAV folder (chongyun webdav help)
-  chongyun s3 [on s3://<bucket>[/<prefix>]|set k=v…|now|off]   the same through an S3-compatible bucket: AWS, R2, B2, MinIO… (chongyun s3 help)
-  chongyun github [on github://<owner>/<repo>[/<folder>]|set k=v…|now|off]   the same in an encrypted GitHub repository (chongyun github help)
+  starling backup [--no-keys] [--no-library] [file]    providers, keys, settings, profiles, agent models and the library in one file, sealed with a passphrase
+  starling restore [--no-agents] [--no-library] <file> put a backup in on this machine
+  starling webdav [on <address>|set k=v…|now|off]      the same, kept the same on every computer through a WebDAV folder (starling webdav help)
+  starling s3 [on s3://<bucket>[/<prefix>]|set k=v…|now|off]   the same through an S3-compatible bucket: AWS, R2, B2, MinIO… (starling s3 help)
+  starling github [on github://<owner>/<repo>[/<folder>]|set k=v…|now|off]   the same in an encrypted GitHub repository (starling github help)
 
-  chongyun library [sync|instructions|mcp|skill]   the instructions, MCP servers and skills written into every agent (chongyun library help)
+  starling library [sync|instructions|mcp|skill]   the instructions, MCP servers and skills written into every agent (starling library help)
 
-  chongyun providers                list your providers: host, key, models, who uses them
-  chongyun presets                  the vendors chongyun knows: add one with just a key
-  chongyun provider add <preset> <key>   e.g. chongyun provider add deepseek sk-…
-  chongyun provider add <name> k=v…      a custom vendor (chongyun provider for the fields)
-  chongyun provider key|models|test|rm <id>
-  chongyun provider fallback <id> <provider/model>…   use these when it's out of quota or down
-  chongyun import [-y] <link>       add the provider a chongyun://import?… link describes
-  chongyun models [<agent>]         every model agents can pick, as provider/model; an agent's, and why others aren't
-  chongyun model name <provider/model> <name>|--reset       the name a model goes by, everywhere
-  chongyun model efforts <provider/model> <l>,<l>|--reset   the reasoning levels a model offers (chongyun model help)
-  chongyun visible [<agent> <family|provider|group>,… | all | --only-picked | --show-new]
-                                  which models an agent is shown: families (chongyun provider/group set <id> family=…),
+  starling providers                list your providers: host, key, models, who uses them
+  starling presets                  the vendors starling knows: add one with just a key
+  starling provider add <preset> <key>   e.g. starling provider add deepseek sk-…
+  starling provider add <name> k=v…      a custom vendor (starling provider for the fields)
+  starling provider key|models|test|rm <id>
+  starling provider fallback <id> <provider/model>…   use these when it's out of quota or down
+  starling import [-y] <link>       add the provider a starling://import?… link describes
+  starling models [<agent>]         every model agents can pick, as provider/model; an agent's, and why others aren't
+  starling model name <provider/model> <name>|--reset       the name a model goes by, everywhere
+  starling model efforts <provider/model> <l>,<l>|--reset   the reasoning levels a model offers (starling model help)
+  starling visible [<agent> <family|provider|group>,… | all | --only-picked | --show-new]
+                                  which models an agent is shown: families (starling provider/group set <id> family=…),
                                   or only the models ticked for it, a new one off until it is ticked
-  chongyun search [add <api> <key>|rm <api>]   Tavily, Brave, Exa, Firecrawl, You.com, DeepSeek or SearXNG for web search when no provider can search
-  chongyun groups                   routing groups: several models agents pick as one, group/<id>
-  chongyun group add <name> models=<m1>,<m2> [routing=smart|order|rotate|usage|pace] [stays=auto|session|turn|off]
-  chongyun group <id> | set <id> k=v… | rm <id>   show, change or remove one (chongyun group help for more)
-  chongyun accounts [agent] [--json]  every subscription chongyun knows, with each one's allowance used and when it resets
-  chongyun accounts add <agent>     sign in to one more Claude, ChatGPT or Google (Gemini CLI, Antigravity) subscription
-  chongyun accounts add copilot [--host <name>.ghe.com]   one more Copilot account, on github.com or an enterprise's GHE.com
-  chongyun accounts switch <agent> <email>   sign the agent in to another of them
-  chongyun accounts refresh         renew the saved ChatGPT sign-ins now (the gateway does it daily)
-  chongyun accounts checkin         WorkBuddy's daily check-in (签到) for each WorkBuddy account, now (Settings can do it daily)
-  chongyun accounts project <gemini|antigravity> <email> <project>   the Google Cloud project a Google account's requests go to
-  chongyun accounts alias <agent> <email> [<name>|--clear]   a name of your own for an account, shown on its card, in the menu bar and in chongyun quota
-  chongyun accounts switch-only codex [on|off]   only switch Codex's own sign-in to an account with room; its requests go straight to OpenAI, never through chongyun
-  chongyun claude-code [install [--yes]|remove]   the Claude Code a Claude subscription runs; install downloads Anthropic's own build, checked against its manifest, for a server or container without one
-  chongyun plugin [add <package>|rm|update|on|off|login <provider>|logout <provider>]
+  starling search [add <api> <key>|rm <api>]   Tavily, Brave, Exa, Firecrawl, You.com, DeepSeek or SearXNG for web search when no provider can search
+  starling groups                   routing groups: several models agents pick as one, group/<id>
+  starling group add <name> models=<m1>,<m2> [routing=smart|order|rotate|usage|pace] [stays=auto|session|turn|off]
+  starling group <id> | set <id> k=v… | rm <id>   show, change or remove one (starling group help for more)
+  starling accounts [agent] [--json]  every subscription starling knows, with each one's allowance used and when it resets
+  starling accounts add <agent>     sign in to one more Claude, ChatGPT or Google (Gemini CLI, Antigravity) subscription
+  starling accounts add copilot [--host <name>.ghe.com]   one more Copilot account, on github.com or an enterprise's GHE.com
+  starling accounts switch <agent> <email>   sign the agent in to another of them
+  starling accounts refresh         renew the saved ChatGPT sign-ins now (the gateway does it daily)
+  starling accounts checkin         WorkBuddy's daily check-in (签到) for each WorkBuddy account, now (Settings can do it daily)
+  starling accounts project <gemini|antigravity> <email> <project>   the Google Cloud project a Google account's requests go to
+  starling accounts alias <agent> <email> [<name>|--clear]   a name of your own for an account, shown on its card, in the menu bar and in starling quota
+  starling accounts switch-only codex [on|off]   only switch Codex's own sign-in to an account with room; its requests go straight to OpenAI, never through starling
+  starling claude-code [install [--yes]|remove]   the Claude Code a Claude subscription runs; install downloads Anthropic's own build, checked against its manifest, for a server or container without one
+  starling plugin [add <package>|rm|update|on|off|login <provider>|logout <provider>]
                                   OpenCode provider plugins and pi packages: subscriptions signed in to, and served, through a plugin
-  chongyun plugin move|migrate <subscription>   run a built-in subscription's accounts on its community plugin
+  starling plugin move|migrate <subscription>   run a built-in subscription's accounts on its community plugin
 
-  chongyun serve [--web[=host:port]] [--tls-cert <file> --tls-key <file>]
-                                  run the gateway alone (the app runs it too); --web serves chongyun web's page too, from the same process (127.0.0.1:3430 unless told);
-                                  with a certificate and key (PEM; MAGPIE_TLS_CERT, MAGPIE_TLS_KEY) other computers reach both over https://
-  chongyun daemon [install|uninstall|start|stop|restart|status]
-                                  chongyun serve as a service of yours, from boot or login and started again when it stops (systemd --user on Linux, launchd on the Mac)
-  chongyun daemon install [--web] [--lan] [--addr host:port] [--no-web] [--tls-cert <file> --tls-key <file>|--no-tls]
-                                  --web: the service serves chongyun web's page too, with a key kept across restarts; installed again, it keeps what it served
-  chongyun daemon web [on|off] [--lan] [--addr host:port]
+  starling serve [--web[=host:port]] [--tls-cert <file> --tls-key <file>]
+                                  run the gateway alone (the app runs it too); --web serves starling web's page too, from the same process (127.0.0.1:3430 unless told);
+                                  with a certificate and key (PEM; STARLING_TLS_CERT, STARLING_TLS_KEY) other computers reach both over https://
+  starling daemon [install|uninstall|start|stop|restart|status]
+                                  starling serve as a service of yours, from boot or login and started again when it stops (systemd --user on Linux, launchd on the Mac)
+  starling daemon install [--web] [--lan] [--addr host:port] [--no-web] [--tls-cert <file> --tls-key <file>|--no-tls]
+                                  --web: the service serves starling web's page too, with a key kept across restarts; installed again, it keeps what it served
+  starling daemon web [on|off] [--lan] [--addr host:port]
                                   the service's page: its link, or turn it on or off
-  chongyun healthcheck              exit 0 when the gateway answers (a container's HEALTHCHECK)
-  chongyun heap [<file>]            a Go heap profile of the running chongyun, with its memory numbers, for a report of it using too much memory
-  chongyun cpu [<file>] [--seconds N]   a Go CPU profile of the running chongyun over 30s (5..120) while you use it, for a report of it using too much CPU
-  chongyun gateway-key list|add <name>|rotate <id>|remove <id>   manage the keys clients use to call a shared gateway
-  chongyun gateway-key limit <id> [list|off|reset [n]|remove <n>|[add] day|week|month|<N>d|<N>h --tokens N --cost USD --cache-reads]   a key's own limits, and what it used
-  chongyun gateway-key models <id> [all|<provider>/<model>|<provider>/* ...]   the models a key may use, every one unless it names some
-  chongyun gateway-key quotas <id> [on|off]   whether a key held to a budget, models or accounts is told the quotas of what it may use
-  chongyun mcp image                the image and video generation MCP server an agent is given from the library (stdio)
-  chongyun usage [today|7d|30d|all] tokens and cost per agent, model and subscription account (30d)
-  chongyun usage --csv [--account <name>] [today|7d|30d|all]   every request as CSV (or one account's): the model asked for, sent and served, tokens, cost, time, status, account
-  chongyun usage [--csv [--account <name>]] --last <dur>|--days <n>   the same for a window ending now (24h, 90m, 1.5 days), not from a midnight
-  chongyun sessions [--model <m>] [--folder <f>] [--json]   the latest Claude Code, Codex, OpenCode and Pi sessions, with what each cost
-  chongyun sessions --days N|today|all [--model <m>] [--folder <f>] [--json]
+  starling healthcheck              exit 0 when the gateway answers (a container's HEALTHCHECK)
+  starling heap [<file>]            a Go heap profile of the running starling, with its memory numbers, for a report of it using too much memory
+  starling cpu [<file>] [--seconds N]   a Go CPU profile of the running starling over 30s (5..120) while you use it, for a report of it using too much CPU
+  starling gateway-key list|add <name>|rotate <id>|remove <id>   manage the keys clients use to call a shared gateway
+  starling gateway-key limit <id> [list|off|reset [n]|remove <n>|[add] day|week|month|<N>d|<N>h --tokens N --cost USD --cache-reads]   a key's own limits, and what it used
+  starling gateway-key models <id> [all|<provider>/<model>|<provider>/* ...]   the models a key may use, every one unless it names some
+  starling gateway-key quotas <id> [on|off]   whether a key held to a budget, models or accounts is told the quotas of what it may use
+  starling mcp image                the image and video generation MCP server an agent is given from the library (stdio)
+  starling usage [today|7d|30d|all] tokens and cost per agent, model and subscription account (30d)
+  starling usage --csv [--account <name>] [today|7d|30d|all]   every request as CSV (or one account's): the model asked for, sent and served, tokens, cost, time, status, account
+  starling usage [--csv [--account <name>]] --last <dur>|--days <n>   the same for a window ending now (24h, 90m, 1.5 days), not from a midnight
+  starling sessions [--model <m>] [--folder <f>] [--json]   the latest Claude Code, Codex, OpenCode and Pi sessions, with what each cost
+  starling sessions --days N|today|all [--model <m>] [--folder <f>] [--json]
                                   what every session spent, day by day, with the top models and folders (7 days)
-  chongyun quota [<provider>] [--json]  what is left of every subscription, plan and key balance
-  chongyun quota wait <provider|account> [--timeout <d>] [--quiet]
+  starling quota [<provider>] [--json]  what is left of every subscription, plan and key balance
+  starling quota wait <provider|account> [--timeout <d>] [--quiet]
                                   block until that subscription (any of its accounts) or account has allowance again
-  chongyun quota history [<provider|account>] [--days N] [--json]
+  starling quota history [<provider|account>] [--days N] [--json]
                                   each window's readings over time, kept 45 days
-  chongyun statusline [<provider|account>]   one line for Claude Code's status line: the session's model and each account's windows
-  chongyun sync                     refresh the model catalog and vendor model lists
-  chongyun agents                   list every supported agent
-  chongyun update [check] [--proxy <url>] [--mirror <prefix>]
+  starling statusline [<provider|account>]   one line for Claude Code's status line: the session's model and each account's windows
+  starling sync                     refresh the model catalog and vendor model lists
+  starling agents                   list every supported agent
+  starling update [check] [--proxy <url>] [--mirror <prefix>]
                                   install the newest release (check: only say if there is one); --proxy: an
                                   http(s):// or socks5:// proxy for it; --mirror: a GitHub download mirror put
                                   before the github.com URL (none unless given; still checked against the feed's SHA-256)
-  chongyun update mirror [<prefix>|off]  the mirror every update, the app's own too, is downloaded through
-  chongyun update auto [on|off] [download|notify] [30m|1h|6h|24h]
+  starling update mirror [<prefix>|off]  the mirror every update, the app's own too, is downloaded through
+  starling update auto [on|off] [download|notify] [30m|1h|6h|24h]
                                   whether the app looks for updates by itself, how often (6h), and whether
                                   it downloads one at once or only says it is out (notify: for metered networks)
 
@@ -151,34 +151,34 @@ var (
 	green = lipgloss.NewStyle().Foreground(lipgloss.AdaptiveColor{Light: "#0F9D58", Dark: "#7EE2A8"})
 )
 
-// Main runs magpie with os.Args, at the version the build was stamped with.
+// Main runs starling with os.Args, at the version the build was stamped with.
 func Main(v string) {
 	version = v
 	// before anything reads or writes a file: no home, or a relative one,
-	// would put the agents' configs and magpie's keys under the working
-	// folder. What needs no file still answers (magpie version in a
-	// container or a script without HOME): run makes magpie's folders first.
+	// would put the agents' configs and starling's keys under the working
+	// folder. What needs no file still answers (starling version in a
+	// container or a script without HOME): run makes starling's folders first.
 	ignored, err := appdir.CheckEnv()
 	if err != nil {
 		if len(os.Args) > 1 {
 			switch os.Args[1] {
 			case "-v", "--version", "version":
-				fmt.Println("magpie", version)
+				fmt.Println("starling", version)
 				return
 			case "-h", "--help", "help":
 				fmt.Print(usage)
 				return
 			}
 		}
-		fmt.Fprintln(os.Stderr, "chongyun:", err)
+		fmt.Fprintln(os.Stderr, "starling:", err)
 		os.Exit(1)
 	}
 	slices.Sort(ignored)
 	for _, v := range ignored {
-		fmt.Fprintf(os.Stderr, "chongyun: ignoring %s: not an absolute path (the programs chongyun starts still get it)\n", v)
+		fmt.Fprintf(os.Stderr, "starling: ignoring %s: not an absolute path (the programs starling starts still get it)\n", v)
 	}
 	if provider.TookOpenedURL(os.Args[1:]) {
-		// Claude Code, signing in for magpie, handed over the page to open
+		// Claude Code, signing in for starling, handed over the page to open
 		return
 	}
 	endProbesOnSignal()
@@ -196,7 +196,7 @@ func Main(v string) {
 			code = e.code
 		}
 		if msg := err.Error(); msg != "" {
-			fmt.Fprintln(os.Stderr, "chongyun:", msg)
+			fmt.Fprintln(os.Stderr, "starling:", msg)
 		}
 		os.Exit(code)
 	}
@@ -222,11 +222,11 @@ func run(args []string) error {
 		return healthcheck() // every few seconds in a container: nothing else
 	}
 	if len(args) > 0 && args[0] == "heap" {
-		// the running magpie's heap profile: asks it, and moves nothing here
+		// the running starling's heap profile: asks it, and moves nothing here
 		return heapCmd(args[1:])
 	}
 	if len(args) > 0 && args[0] == "cpu" {
-		// the running magpie's CPU profile: asks it, and moves nothing here
+		// the running starling's CPU profile: asks it, and moves nothing here
 		return cpuCmd(args[1:])
 	}
 	if len(args) == 2 && args[0] == agent.DryRunArg {
@@ -235,17 +235,17 @@ func run(args []string) error {
 		// (agent.DisconnectPreview)
 		return agent.DryRun(args[1])
 	}
-	// started by an update, the magpie it replaces goes first: the moves
+	// started by an update, the starling it replaces goes first: the moves
 	// below write the files it may still be writing
 	update.AwaitPredecessor()
 	makeDirs()
 	settings.Migrate()
 	// every built-in plugin starts on (plugins.yml), on a new install too
 	if _, err := pluginrt.Settle(); err != nil {
-		fmt.Fprintf(os.Stderr, "chongyun: plugins.yml: %v\n", err)
+		fmt.Fprintf(os.Stderr, "starling: plugins.yml: %v\n", err)
 	}
 	if _, err := pluginrt.Refresh(); err != nil {
-		fmt.Fprintf(os.Stderr, "chongyun: plugins.yml: %v\n", err)
+		fmt.Fprintf(os.Stderr, "starling: plugins.yml: %v\n", err)
 	}
 	// the providers and settings read once for every agent's fields, which
 	// the moves below look at (a write among them reads them again)
@@ -258,17 +258,17 @@ func run(args []string) error {
 	// a provider added, edited or removed, or a list fetched anew, reaches
 	// the model lists agents keep in files of their own
 	catalog.Changed = agent.SyncCatalog
-	// a model Claude Code names that magpie doesn't serve goes to the one
+	// a model Claude Code names that starling doesn't serve goes to the one
 	// it is set to use for that tier
 	gateway.StandIn = agent.StandIn
-	// a Codex that reaches magpie for account failover alone is handed
+	// a Codex that reaches starling for account failover alone is handed
 	// only its own models (#1385)
 	gateway.CodexOwnOnly = agent.CodexOwnOnly
 	// the setup kept the same on every computer, by whichever serves
 	gateway.WhileServing = append(gateway.WhileServing, davsync.Run)
 	// and dsh's patch lists, which dsh reads live: a route left behind by
 	// something else writing the file fails every session there until
-	// magpie writes its own list again
+	// starling writes its own list again
 	gateway.WhileServing = append(gateway.WhileServing, agent.KeepDshWired)
 	// and Cursor Private Inference's variables, which the Mac's launchd
 	// forgets at a restart, for the gateway's address now
@@ -290,15 +290,15 @@ func run(args []string) error {
 		gateway.Serves = "tui"
 		return runTUI()
 	}
-	// a chongyun:// link the system handed over (Windows, Linux): the app
+	// a starling:// link the system handed over (Windows, Linux): the app
 	// opens it for the user to confirm
-	if strings.HasPrefix(strings.ToLower(args[0]), "chongyun:") {
+	if strings.HasPrefix(strings.ToLower(args[0]), "starling:") {
 		if !hasGUI {
 			return importCmd(args)
 		}
 		return runGUI(false, args[0])
 	}
-	// how this process was started, for the Routing page of another magpie on
+	// how this process was started, for the Routing page of another starling on
 	// this computer to name the one that serves the gateway (#2606)
 	switch args[0] {
 	case "tui", "web", "serve", "tray":
@@ -312,7 +312,7 @@ func run(args []string) error {
 	case "web":
 		return webCmd(args[1:])
 	case "app", "gui":
-		// `chongyun gui settings`: the window on that tab, as a restart to
+		// `starling gui settings`: the window on that tab, as a restart to
 		// update from it comes back (update.RelaunchArgs)
 		if len(args) > 1 {
 			return runWindow(args[1])
@@ -321,7 +321,7 @@ func run(args []string) error {
 	case "tray":
 		return runGUI(false, "")
 	case "-Embedding":
-		// Windows starting magpie for a click on one of its notifications
+		// Windows starting starling for a click on one of its notifications
 		// (a usage alert, #368) left in the Action Center after it quit:
 		// the window, on the Usage page
 		return runWindow("usage")
@@ -335,7 +335,7 @@ func run(args []string) error {
 		fmt.Print(usage)
 		return nil
 	case "-v", "--version", "version":
-		fmt.Println("magpie", version)
+		fmt.Println("starling", version)
 		return nil
 	case "ls", "list":
 		// in the order the app lists them; those hidden there come last, dimmed
@@ -417,20 +417,20 @@ func run(args []string) error {
 		return err
 	}
 	// no agent form takes a flag: one is never set as a model or a value
-	// (`chongyun snow --verbose` would take magpie out of Snow, #1457)
+	// (`starling snow --verbose` would take starling out of Snow, #1457)
 	if f := flagArg(args[1:]); f != "" {
 		return fmt.Errorf("unknown flag %s: nothing was changed\n\n%s", f, strings.TrimRight(agentHelp(a), "\n"))
 	}
 	if len(a.Fields) == 0 && a.Import != nil {
-		// `chongyun cindy`: it takes magpie through its own link, confirmed there
+		// `starling cindy`: it takes starling through its own link, confirmed there
 		if len(args) > 1 {
 			link := a.Import()
 			if link == "" {
 				// Lody takes only a gateway on this computer's loopback
-				return fmt.Errorf("%s takes chongyun only at a loopback address, and the gateway is at %s: nothing was opened", a.Name, gateway.URL())
+				return fmt.Errorf("%s takes starling only at a loopback address, and the gateway is at %s: nothing was opened", a.Name, gateway.URL())
 			}
 			openInBrowser(link)
-			fmt.Println(green.Render("✓"), bold.Render(a.Name), muted.Render("opened to add chongyun — confirm it there"))
+			fmt.Println(green.Render("✓"), bold.Render(a.Name), muted.Render("opened to add starling — confirm it there"))
 			fmt.Println(muted.Render("  " + link))
 			return nil
 		}
@@ -439,21 +439,21 @@ func run(args []string) error {
 	case 1:
 		return list([]*agent.Agent{a}, true, -1)
 	case 2:
-		// default is magpie's word in any case, as an agent's name and a
-		// field's are: magpie codex DEFAULT wrote model = "DEFAULT"
+		// default is starling's word in any case, as an agent's name and a
+		// field's are: starling codex DEFAULT wrote model = "DEFAULT"
 		if strings.EqualFold(args[1], "default") {
 			if a.Wired() {
 				return disconnect(a)
 			}
 			return set(a, a.Fields[0].Key, "")
 		}
-		// `chongyun codex model`: a field's name alone asks what it is set to,
+		// `starling codex model`: a field's name alone asks what it is set to,
 		// where it was set as the model (model = "model"). Claude Code's
 		// opus is a model's name as well as a tier's, and stays the model
 		if f := a.Field(args[1]); f != nil && !modelAlias(a, args[1]) {
 			return showField(a, f)
 		}
-		// `chongyun codex xhigh`: a bare value that belongs to a non-model field
+		// `starling codex xhigh`: a bare value that belongs to a non-model field
 		// (effort levels, for instance) is routed there; anything else is a model.
 		if f := fieldForValue(a, args[1]); f != nil {
 			return set(a, f.Key, args[1])
@@ -478,7 +478,7 @@ func set(a *agent.Agent, key, value string) error {
 		}
 		return fmt.Errorf("%s has no field %q (fields: %s)", a.Name, key, strings.Join(keys, ", "))
 	}
-	// a field's name is no value: magpie codex subagent effort ran Codex's
+	// a field's name is no value: starling codex subagent effort ran Codex's
 	// subagents on a model called effort. Claude Code's opus is a model's
 	// name as well as a tier's
 	if g := a.Field(value); value != "" && g != nil && !modelAlias(a, value) {
@@ -490,14 +490,14 @@ func set(a *agent.Agent, key, value string) error {
 	}
 	before := f.Get()
 	wired := a.Wired()
-	// a magpie model picked on an agent not connected yet connects it
+	// a starling model picked on an agent not connected yet connects it
 	// first, as the Agents page's picker does (#1900): the agent is wired
 	// in, and Disconnect puts back what it had before
 	if err := a.Pick(f.Key, value); err != nil {
 		return err
 	}
 	// what the config reads now, not what was asked: an agent may name the
-	// model under a provider of its own (OpenCode's magpie-relay/…), and a
+	// model under a provider of its own (OpenCode's starling-relay/…), and a
 	// value it had already is said to be so
 	now := f.Get()
 	shown := now
@@ -508,12 +508,12 @@ func set(a *agent.Agent, key, value string) error {
 		shown += " " + muted.Render("(unchanged)")
 	}
 	fmt.Println(green.Render("✓"), bold.Render(a.Name), muted.Render(f.Label), shown)
-	// a value that is the agent's own, not one of magpie's, takes magpie
-	// out: said, as Disconnect is, with the way back (#2000: magpie claude
+	// a value that is the agent's own, not one of starling's, takes starling
+	// out: said, as Disconnect is, with the way back (#2000: starling claude
 	// sonnet put Claude Code back on its DeepSeek endpoint, which refused
 	// Sonnet, and only "✓ Claude Code model sonnet" was printed)
 	if wired && now != "" && !a.Wired() {
-		fmt.Println(muted.Render(fmt.Sprintf("  disconnected from chongyun: %s is %s's own, sent to the endpoint it had before chongyun; chongyun %s <model> with one of chongyun's models connects it again", now, a.Name, a.ID)))
+		fmt.Println(muted.Render(fmt.Sprintf("  disconnected from starling: %s is %s's own, sent to the endpoint it had before starling; starling %s <model> with one of starling's models connects it again", now, a.Name, a.ID)))
 	}
 	if a.Notice != nil && (!f.Live || !wired && a.Wired()) {
 		if n := a.Notice(); n != "" {
@@ -530,24 +530,24 @@ func modelAlias(a *agent.Agent, w string) bool {
 }
 
 // fieldAsValue refuses field g's name given as field f's value, for what
-// was meant: two words that are one field's label (magpie codex subagent
+// was meant: two words that are one field's label (starling codex subagent
 // effort), a switch, which is turned on (Claude Code's ultracode), or the
 // field, which its name alone shows.
 func fieldAsValue(a *agent.Agent, f, g *agent.Field, value string) error {
 	for _, name := range []string{f.Key + " " + value, f.Key + "_" + value} {
 		if h := a.Field(name); h != nil {
-			return fmt.Errorf("%q is one field of %s's: chongyun %s %s shows it", h.Label, a.Name, a.ID, h.Key)
+			return fmt.Errorf("%q is one field of %s's: starling %s %s shows it", h.Label, a.Name, a.ID, h.Key)
 		}
 	}
 	if g.Options != nil {
 		if o := g.Options(a.Values()); len(o) == 1 && o[0].Value == "on" {
-			return fmt.Errorf("%q is a switch of %s's, not a value for its %s: chongyun %s %s on", value, a.Name, f.Label, a.ID, g.Key)
+			return fmt.Errorf("%q is a switch of %s's, not a value for its %s: starling %s %s on", value, a.Name, f.Label, a.ID, g.Key)
 		}
 	}
-	return fmt.Errorf("%q is a field of %s's, not a value for its %s: chongyun %s %s shows it", value, a.Name, f.Label, a.ID, g.Key)
+	return fmt.Errorf("%q is a field of %s's, not a value for its %s: starling %s %s shows it", value, a.Name, f.Label, a.ID, g.Key)
 }
 
-// showField is `chongyun <agent> <field>`: what the field is set to, as set
+// showField is `starling <agent> <field>`: what the field is set to, as set
 // prints it
 func showField(a *agent.Agent, f *agent.Field) error {
 	v := f.Get()
@@ -558,11 +558,11 @@ func showField(a *agent.Agent, f *agent.Field) error {
 	return nil
 }
 
-// disconnect is `chongyun <agent> default` on an agent magpie is wired into:
+// disconnect is `starling <agent> default` on an agent starling is wired into:
 // the Agents page's Disconnect, which puts back what the user had before
-// magpie — Claude Code's own model, its endpoint — where a field's default
-// leaves the agent as installed (__jingling 报告: magpie claude default
-// took the model they had set away with magpie's)
+// starling — Claude Code's own model, its endpoint — where a field's default
+// leaves the agent as installed (__jingling 报告: starling claude default
+// took the model they had set away with starling's)
 func disconnect(a *agent.Agent) error {
 	before := a.Values()
 	if err := a.Disconnect(); err != nil {
@@ -579,7 +579,7 @@ func disconnect(a *agent.Agent) error {
 		}
 		fmt.Println(green.Render("✓"), bold.Render(a.Name), muted.Render(f.Label), shown)
 	}
-	fmt.Println(muted.Render("  disconnected from chongyun, back to what it had before"))
+	fmt.Println(muted.Render("  disconnected from starling, back to what it had before"))
 	if a.Notice != nil {
 		if n := a.Notice(); n != "" {
 			fmt.Println(muted.Render("  ↻ " + n))
@@ -666,15 +666,15 @@ func list(agents []*agent.Agent, detectedOnly bool, dimFrom int) error {
 				r.name = faint.Render(a.Name) + " " + faint.Render("hidden")
 			}
 			r.vals = strings.Join(parts, label.Render("  ·  "))
-			// through magpie for account failover while not connected (#1385)
+			// through starling for account failover while not connected (#1385)
 			if said := a.FailoverSaid(); said != "" {
 				r.vals += label.Render("  ·  " + said)
 			}
 			if a.Import != nil {
 				if a.Added != nil && a.Added() {
-					r.vals = value.Render("chongyun added")
+					r.vals = value.Render("starling added")
 				} else {
-					r.vals = label.Render("chongyun "+a.ID+" add") + faint.Render("  to add chongyun")
+					r.vals = label.Render("starling "+a.ID+" add") + faint.Render("  to add starling")
 				}
 			}
 		}
@@ -703,7 +703,7 @@ func profiles(args []string) error {
 			return err
 		}
 		if len(ps) == 0 {
-			fmt.Println(muted.Render("no profiles yet · chongyun save <name>"))
+			fmt.Println(muted.Render("no profiles yet · starling save <name>"))
 			return nil
 		}
 		detected := agent.Detected()
@@ -718,7 +718,7 @@ func profiles(args []string) error {
 		return nil
 	case "save":
 		if len(args) < 2 {
-			return fmt.Errorf("usage: chongyun save <name>")
+			return fmt.Errorf("usage: starling save <name>")
 		}
 		p, err := profile.Snapshot()
 		if err != nil {
@@ -734,7 +734,7 @@ func profiles(args []string) error {
 		return nil
 	case "use":
 		if len(args) < 2 {
-			return fmt.Errorf("usage: chongyun use <name>")
+			return fmt.Errorf("usage: starling use <name>")
 		}
 		ps, err := profile.Load()
 		if err != nil {
@@ -755,7 +755,7 @@ func profiles(args []string) error {
 		return nil
 	case "rm":
 		if len(args) < 2 {
-			return fmt.Errorf("usage: chongyun rm <name>")
+			return fmt.Errorf("usage: starling rm <name>")
 		}
 		if err := profile.Delete(args[1]); err != nil {
 			return err

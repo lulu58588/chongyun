@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // #2008: the editor knows nothing of the time of day a provider's daily
-// allowance comes back, set by `chongyun provider quota-rest <id> until
-// 08:00`, nor of its rest cap (`chongyun provider rest-cap`), so its save
+// allowance comes back, set by `starling provider quota-rest <id> until
+// 08:00`, nor of its rest cap (`starling provider rest-cap`), so its save
 // keeps both.
 func TestSaveKeepsQuotaResetAt(t *testing.T) {
 	home := t.TempDir()

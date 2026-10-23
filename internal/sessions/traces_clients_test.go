@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 func clientTraceFeed(t *testing.T, c *traceCursor, bodies bool, lines ...string) []TraceSpan {

@@ -2,8 +2,8 @@ package provider
 
 import (
 	"encoding/json"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/update"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -47,7 +47,7 @@ func movingOf(t *testing.T, id string) map[string]Moving {
 	return out
 }
 
-// An account magpie signed in goes whole, the provider's key as an API key
+// An account starling signed in goes whole, the provider's key as an API key
 // account (off the provider while the plugin has it); back, a renewed
 // sign-in is written into its home, one signed in since gets a home, and
 // the key goes back onto the provider. Kiro's own sign-in is not read, so
@@ -147,7 +147,7 @@ func TestKiroMover(t *testing.T) {
 }
 
 // WorkBuddy desktop's sign-in goes as a marker the plugin reads the app's
-// file by, never as tokens; one magpie signed in goes whole, and comes back
+// file by, never as tokens; one starling signed in goes whole, and comes back
 // with the plugin's renewed tokens.
 func TestWorkBuddyMover(t *testing.T) {
 	home := signIn(t)

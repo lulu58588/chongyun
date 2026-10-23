@@ -13,11 +13,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 type codexTestCall struct {
@@ -346,7 +346,7 @@ func TestCodexSessionAPIAddsOwnModelEffort(t *testing.T) {
 		t.Fatalf("GUI usage requests: %d %s", guiUsage.Code, guiUsage.Body)
 	}
 	gwUsage := httptest.NewRecorder()
-	gwRequest := httptest.NewRequest("GET", "/v1/magpie/usage/requests?period=all", nil)
+	gwRequest := httptest.NewRequest("GET", "/v1/starling/usage/requests?period=all", nil)
 	gwRequest.RemoteAddr = "127.0.0.1:5000"
 	gateway.New().Handler().ServeHTTP(gwUsage, gwRequest)
 	if gwUsage.Code != http.StatusOK {

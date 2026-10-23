@@ -9,17 +9,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
-// A request one magpie passes on to another (a Remote magpie provider)
-// keeps the session its agent named — magpie's X-Magpie-Session and the
-// agent's own session_id — so the other magpie records it under that
+// A request one starling passes on to another (a Remote starling provider)
+// keeps the session its agent named — starling's X-Starling-Session and the
+// agent's own session_id — so the other starling records it under that
 // session and keeps the conversation apart from another with the same first
 // message; they were dropped for an agent that isn't Codex, such as Pi
-// (#672). The vendor behind the other magpie is sent neither.
-func TestRemoteMagpieKeepsTheSession(t *testing.T) {
+// (#672). The vendor behind the other starling is sent neither.
+func TestRemoteStarlingKeepsTheSession(t *testing.T) {
 	var mu sync.Mutex
 	var vendor []http.Header // as the vendor saw each request
 	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func TestRemoteMagpieKeepsTheSession(t *testing.T) {
 	if err := provider.Save(provider.Provider{ID: "fake", Name: "Fake", Key: "k", Models: []string{"m1"}, Chat: up.URL, Responses: up.URL}); err != nil {
 		t.Fatal(err)
 	}
-	var arrived []http.Header // as the remote magpie was asked
+	var arrived []http.Header // as the remote starling was asked
 	h := New().Handler()
 	remote := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		mu.Lock()
@@ -49,7 +49,7 @@ func TestRemoteMagpieKeepsTheSession(t *testing.T) {
 		h.ServeHTTP(w, r)
 	}))
 	t.Cleanup(remote.Close)
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Key: "rk", Models: []string{"fake/m1"},
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Key: "rk", Models: []string{"fake/m1"},
 		Chat: remote.URL + "/v1", Responses: remote.URL + "/v1", Anthropic: remote.URL}); err != nil {
 		t.Fatal(err)
 	}
@@ -91,7 +91,7 @@ func TestRemoteMagpieKeepsTheSession(t *testing.T) {
 		got := arrived[len(arrived)-1]
 		mu.Unlock()
 		if got.Get(SessionHeader) != "trace-A" || got.Get(tc.header) != tc.native {
-			t.Errorf("%s: the remote chongyun was sent %s=%q %s=%q; want trace-A, %s", tc.path, SessionHeader, got.Get(SessionHeader), tc.header, got.Get(tc.header), tc.native)
+			t.Errorf("%s: the remote starling was sent %s=%q %s=%q; want trace-A, %s", tc.path, SessionHeader, got.Get(SessionHeader), tc.header, got.Get(tc.header), tc.native)
 		}
 		if r := there(i + 1); r.Session != "trace-A" || r.NativeSession != tc.native || r.Agent != tc.agent {
 			t.Errorf("%s: the remote recorded agent %q session %q native %q; want %s, trace-A, %s", tc.path, r.Agent, r.Session, r.NativeSession, tc.agent, tc.native)
@@ -101,7 +101,7 @@ func TestRemoteMagpieKeepsTheSession(t *testing.T) {
 	defer mu.Unlock()
 	for _, v := range vendor {
 		for k := range v {
-			if lk := strings.ToLower(k); strings.HasPrefix(lk, "x-magpie-") || lk == "session_id" || lk == "x-conversation-id" {
+			if lk := strings.ToLower(k); strings.HasPrefix(lk, "x-starling-") || lk == "session_id" || lk == "x-conversation-id" {
 				t.Errorf("the vendor was sent %s", k)
 			}
 		}

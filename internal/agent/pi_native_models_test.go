@@ -18,7 +18,7 @@ func pickRows(opts []Option, prefix string) []pickRow {
 	return out
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。
 
 // omp shares the gap for the provider of its current model: its own
 // catalog (@oh-my-pi/pi-catalog) lists openai-codex's models, without the

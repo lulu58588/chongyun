@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 func (server *Server) drawingModel(request *http.Request, id string) (provider.Provider, string, bool) {

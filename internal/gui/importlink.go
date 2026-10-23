@@ -8,10 +8,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// An import link (chongyun://import?…, see provider.ParseImport) is parsed
+// An import link (starling://import?…, see provider.ParseImport) is parsed
 // here, parked under a random id, and the window opens on the Providers tab
 // with that id; the page fetches it once and asks the user before saving
 // anything.

@@ -39,7 +39,7 @@ func TestCompactQuotaNumber(t *testing.T) {
 }
 
 // A stale copy comes back at once while it refreshes, and accounts removed
-// from magpie in the meantime are left out of it.
+// from starling in the meantime are left out of it.
 func TestSubscriptionUsageServesStale(t *testing.T) {
 	signIn(t)
 	if err := Delete("codex"); err != nil {
@@ -154,14 +154,14 @@ func TestChosenWindows(t *testing.T) {
 	}
 }
 
-// A Copilot account magpie signed in itself gets its card even when the
-// editors' own sign-in isn't on the machine: every account magpie knows is
+// A Copilot account starling signed in itself gets its card even when the
+// editors' own sign-in isn't on the machine: every account starling knows is
 // asked, not only the one the editors' or the CLI's token belongs to.
 func TestCopilotQuotaWithoutEditorsSignIn(t *testing.T) {
 	home := signIn(t)
 	t.Setenv("COPILOT_HOME", filepath.Join(home, ".copilot")) // not the machine's own CLI, when it has one
-	// the editors' own sign-in gone: what chongyun keeps is all that's
-	// left. chongyun never reads the editors' files, so what stands for
+	// the editors' own sign-in gone: what starling keeps is all that's
+	// left. starling never reads the editors' files, so what stands for
 	// that sign-in is the account it kept of it.
 	for _, dir := range []string{filepath.Join(home, ".config", "github-copilot"), filepath.Join(home, ".copilot")} {
 		if err := os.RemoveAll(dir); err != nil {
@@ -197,7 +197,7 @@ func TestCopilotQuotaWithoutEditorsSignIn(t *testing.T) {
 		}
 	}
 	if card == nil {
-		t.Fatal("no Copilot card: an account signed in from chongyun alone was left out")
+		t.Fatal("no Copilot card: an account signed in from starling alone was left out")
 	}
 	if card.User != "hubot" || card.Plan != "Pro+" || len(card.Windows) != 1 {
 		t.Fatalf("Copilot card = %+v", *card)

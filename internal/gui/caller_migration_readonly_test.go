@@ -5,12 +5,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func TestReadOnlyLANMigrationDoesNotBlockSettingsOrKeys(t *testing.T) {
 	sandboxHome(t)
-	s := settings.Settings{LAN: true, LANKey: "sk-magpie-fixture-readonly"}
+	s := settings.Settings{LAN: true, LANKey: "sk-starling-fixture-readonly"}
 	if err := settings.Save(s); err != nil {
 		t.Fatal(err)
 	}

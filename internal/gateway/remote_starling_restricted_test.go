@@ -9,19 +9,19 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// caa536733's rule for a remote magpie's quota, credit and rate refusals,
+// caa536733's rule for a remote starling's quota, credit and rate refusals,
 // on the two faces it left out: a restricted account, and one its vendor
 // wants verified first. Both are the remote's own account, on the model
 // that account serves there — the remote rests that account itself, and
-// its other models keep answering. The refusal passes here in magpie's own
+// its other models keep answering. The refusal passes here in starling's own
 // words (restrictedSaid reads them whoever answered), and rested the whole
 // remote for the two hours restrictedRest names (verifyRest's half hour for
 // a verify), so the group's next request went to the member on this
 // computer instead of the remote's model that was fine.
-func TestRemoteMagpieRestrictedRestsTheModel(t *testing.T) {
+func TestRemoteStarlingRestrictedRestsTheModel(t *testing.T) {
 	fresh(t)
 	var asked []string
 	remote := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +33,7 @@ func TestRemoteMagpieRestrictedRestsTheModel(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		if req.Model == "workbuddy/glm-5.3-flash" {
 			// the plugin's restricted account, as it says it (#1849: the
-			// 403 11140 ends in magpie's own hint words)
+			// 403 11140 ends in starling's own hint words)
 			w.WriteHeader(http.StatusForbidden)
 			io.WriteString(w, `{"error":{"message":"403 11140: `+provider.WBRestrictedHint+`"}}`)
 			return
@@ -41,7 +41,7 @@ func TestRemoteMagpieRestrictedRestsTheModel(t *testing.T) {
 		io.WriteString(w, `{"id":"x","choices":[{"index":0,"message":{"role":"assistant","content":"from `+req.Model+`"},"finish_reason":"stop"}]}`)
 	}))
 	t.Cleanup(remote.Close)
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Key: "k",
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Key: "k",
 		Chat: remote.URL + "/v1", Models: []string{"workbuddy/glm-5.3-flash", "kimi/kimi-k3"}}); err != nil {
 		t.Fatal(err)
 	}
@@ -60,7 +60,7 @@ func TestRemoteMagpieRestrictedRestsTheModel(t *testing.T) {
 		t.Fatalf("glm restricted on the remote: %d %s", code, body)
 	}
 	if r, ok := restOf("office"); ok {
-		t.Errorf("the whole remote chongyun rests for one model's restricted account: %+v", r)
+		t.Errorf("the whole remote starling rests for one model's restricted account: %+v", r)
 	}
 	r, ok := restOf("office/workbuddy/glm-5.3-flash")
 	if !ok || r.Why != failRestricted || r.By != "restricted" || !r.Until.After(time.Now()) {
@@ -79,10 +79,10 @@ func TestRemoteMagpieRestrictedRestsTheModel(t *testing.T) {
 // A verify refusal of the remote's own account is the model's too, as its
 // quota, credit and rate refusals are; the key's own limit there still
 // rests the whole remote (#2077).
-func TestRemoteMagpieVerifyAndKeyLimitScoping(t *testing.T) {
-	c := candidate{p: provider.Provider{ID: "office", Preset: provider.RemoteMagpiePreset, Key: "k"}, model: "gemini/gemini-3-flash", rest: "office"}
+func TestRemoteStarlingVerifyAndKeyLimitScoping(t *testing.T) {
+	c := candidate{p: provider.Provider{ID: "office", Preset: provider.RemoteStarlingPreset, Key: "k"}, model: "gemini/gemini-3-flash", rest: "office"}
 	if !remoteModelRest(c, failRestricted, http.Header{}) || !remoteModelRest(c, failVerify, http.Header{}) {
-		t.Error("a restricted or verify refusal from the other chongyun rests the whole remote, not the model")
+		t.Error("a restricted or verify refusal from the other starling rests the whole remote, not the model")
 	}
 	h := http.Header{}
 	h.Set(remoteKeyLimitHeader, "2026-10-15T00:00:00Z")
@@ -90,7 +90,7 @@ func TestRemoteMagpieVerifyAndKeyLimitScoping(t *testing.T) {
 		t.Error("the key's own limit there rests only the model, not the key")
 	}
 	if remoteModelRest(candidate{p: provider.Provider{ID: "office", Key: "k"}, model: "m", rest: "office"}, failRestricted, http.Header{}) {
-		t.Error("a provider that isn't a remote chongyun rests the model on a restricted refusal")
+		t.Error("a provider that isn't a remote starling rests the model on a restricted refusal")
 	}
 }
 
@@ -98,7 +98,7 @@ func TestRemoteMagpieVerifyAndKeyLimitScoping(t *testing.T) {
 // given again without asking while it is held (#152): the agent's
 // reconnects aren't sent on to the remote that just refused, and the
 // remote's other models are still asked.
-func TestRemoteMagpieVerifyHeldOnTheModel(t *testing.T) {
+func TestRemoteStarlingVerifyHeldOnTheModel(t *testing.T) {
 	fresh(t)
 	var asked []string
 	remote := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -116,7 +116,7 @@ func TestRemoteMagpieVerifyHeldOnTheModel(t *testing.T) {
 		io.WriteString(w, `{"id":"x","choices":[{"index":0,"message":{"role":"assistant","content":"from `+req.Model+`"},"finish_reason":"stop"}]}`)
 	}))
 	t.Cleanup(remote.Close)
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Key: "k",
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Key: "k",
 		Chat: remote.URL + "/v1", Models: []string{"antigravity/gemini-3-pro", "kimi/kimi-k3"}}); err != nil {
 		t.Fatal(err)
 	}

@@ -7,17 +7,17 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A network that can't reach GitHub can have a release's file come
 // through a GitHub download mirror: its prefix goes before the file's
-// github.com URL (https://mirror.example/https://github.com/…). magpie
-// names no mirror of its own; one is used only when given (magpie update
-// --mirror, or Settings' UpdateMirror, which magpie update mirror sets).
+// github.com URL (https://mirror.example/https://github.com/…). starling
+// names no mirror of its own; one is used only when given (starling update
+// --mirror, or Settings' UpdateMirror, which starling update mirror sets).
 //
-// A mirror is a host chongyun doesn't trust: the update feed, with each
+// A mirror is a host starling doesn't trust: the update feed, with each
 // file's SHA-256, is still asked at the feed itself and never through the
 // mirror, the file is checked against that hash, and the macOS app must
 // still be signed by the team that signed the one installed. A mirror

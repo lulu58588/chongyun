@@ -11,12 +11,12 @@ import (
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 )
 
-// appPath is where Win+R and `start chongyun` look magpie.exe up: the user's
+// appPath is where Win+R and `start starling` look starling.exe up: the user's
 // own, no administrator needed
-const appPath = `Software\Microsoft\Windows\CurrentVersion\App Paths\magpie.exe`
+const appPath = `Software\Microsoft\Windows\CurrentVersion\App Paths\starling.exe`
 
 func registerAppPath(exe string) {
 	if k, _, err := registry.CreateKey(registry.CURRENT_USER, appPath, registry.SET_VALUE); err == nil {

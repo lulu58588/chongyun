@@ -80,7 +80,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         page.on("pageerror", (e) => errors.push(e.message));
         const calls = [];
         await page.route("**/*", serve(lang, calls));
-        await page.goto("http://magpie.test/?view=sessions");
+        await page.goto("http://starling.test/?view=sessions");
         const view = page.locator("#view-sessions");
         if (!(await view.isVisible())) {
           const nav = page.locator("#nav").getByRole("button", { name: NAV[lang], exact: true });

@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // zhipuNoBalance is Zhipu's answer to a key whose account has no balance

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/testenv"
 	"gopkg.in/yaml.v3"
 )
 

@@ -6,11 +6,11 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/backup"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/backup"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Gateway keys travel with Settings in a backup. Changing just an independent
@@ -55,7 +55,7 @@ func TestGatewayKeysSync(t *testing.T) {
 			remote := func() backup.Bundle {
 				t.Helper()
 				fake.mu.Lock()
-				data := append([]byte(nil), fake.files["/dav/magpie/magpie.magpie-backup"]...)
+				data := append([]byte(nil), fake.files["/dav/starling/starling.starling-backup"]...)
 				fake.mu.Unlock()
 				got, err := backup.Open(data, cfg.Passphrase)
 				if err != nil {

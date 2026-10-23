@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// TestRTKOffPath (#601): an rtk magpie finds where rtk's script puts it,
+// TestRTKOffPath (#601): an rtk starling finds where rtk's script puts it,
 // ~/.local/bin, which the app adds to its own PATH but the user's shell
 // may not have, isn't one the agents' hooks can run — Pi's turns itself
 // off with "rtk binary not found in PATH". The page says so instead of

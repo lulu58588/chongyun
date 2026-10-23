@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // SubagentPick is a subagent's request put on the model the user set for
@@ -63,7 +63,7 @@ func codexSubagentPick(r *http.Request, agent, kind, asked string, body []byte) 
 	if _, off := idOff(to); off {
 		// the user disabled it (#1867): the subagent stays on its lead's
 		// model, itself refused when it is disabled too
-		pick.Kept = "it is disabled in chongyun"
+		pick.Kept = "it is disabled in starling"
 		return pick
 	}
 	if why := provider.CodexSubagentUnserved(to); why != "" {

@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 type desktopSessionInfo struct {
@@ -174,7 +174,7 @@ func (r *sessionResolver) desktopIdentity(c sessions.Call) (desktopSessionIdenti
 	// Only a file under a desktop root's local-agent-mode-sessions can
 	// name one: the rest (every Claude Code session, ~380k calls in a
 	// long history, asked twice each) skip the Rel and the Split, which
-	// were a fifth of what a started magpie's first Requests read
+	// were a fifth of what a started starling's first Requests read
 	// allocated.
 	roots := r.roots
 	if !strings.Contains(c.File, desktopAgentSessions) {

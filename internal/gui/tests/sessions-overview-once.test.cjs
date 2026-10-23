@@ -59,8 +59,8 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", serve(lang, seen, held));
       await page.clock.install();
-      await page.addInitScript(() => { localStorage.setItem("magpie.usageTab", "sessions"); localStorage.setItem("magpie.sessRange", "today"); });
-      await page.goto("http://magpie.test/?view=usage");
+      await page.addInitScript(() => { localStorage.setItem("starling.usageTab", "sessions"); localStorage.setItem("starling.sessRange", "today"); });
+      await page.goto("http://starling.test/?view=usage");
       await page.locator('#sessAgent [data-agent="codex"]').click();
       for (let i = 0; i < 100 && !held.length; i++) await new Promise((r) => setTimeout(r, 20));
       assert.equal(held.length, 1, "the filter asked for its overview");

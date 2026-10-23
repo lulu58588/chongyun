@@ -11,10 +11,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/fx"
-	"github.com/lulu58588/chongyun/internal/settings"
-	stats "github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/fx"
+	"github.com/lulu58588/starling/internal/settings"
+	stats "github.com/lulu58588/starling/internal/usage"
 )
 
 // costCurrency and costRate are cost's currency and, for cny, the
@@ -38,19 +38,19 @@ func loadCostCurrency() {
 	}
 }
 
-// usageCmd: `chongyun usage [today|7d|30d|all]` — tokens and cost per agent,
+// usageCmd: `starling usage [today|7d|30d|all]` — tokens and cost per agent,
 // model, subscription account and session; with --csv, every request of the
 // period as CSV, one row each, to set beside a vendor's bill, and with
 // --account <name> too, only the calls that account answered (#557). With
 // --days or --last, a rolling window ending now rather than a preset's
-// calendar boundary (#2075), as magpie sessions and magpie quota history
+// calendar boundary (#2075), as starling sessions and starling quota history
 // take --days.
 func usageCmd(args []string) error {
 	return usageTo(os.Stdout, args)
 }
 
 func usageTo(out io.Writer, args []string) error {
-	const how = "usage: chongyun usage [--csv [--account <name>]] [--days <n>|--last <dur>] [today|7d|30d|all]"
+	const how = "usage: starling usage [--csv [--account <name>]] [--days <n>|--last <dur>] [today|7d|30d|all]"
 	asCSV := false
 	if i := slices.Index(args, "--csv"); i > 0 {
 		asCSV, args = true, slices.Delete(slices.Clone(args), i, i+1)
@@ -63,7 +63,7 @@ func usageTo(out io.Writer, args []string) error {
 		f.Account, args = args[i+1], slices.Delete(slices.Clone(args), i, i+2)
 	}
 	// a rolling window: --days takes a number of days (1, 7, even 1.5, as
-	// magpie quota history's does) and --last a duration (24h, 90m), both
+	// starling quota history's does) and --last a duration (24h, 90m), both
 	// ending now, where the presets begin at a local midnight (#2075)
 	var last time.Duration
 	take := func(flag string, parse func(string) (time.Duration, error)) (bool, error) {
@@ -138,7 +138,7 @@ func usageTo(out io.Writer, args []string) error {
 		return stats.WriteCSV(out, rows)
 	}
 	loadCostCurrency()
-	// s is the calls through magpie, d the calls the agents made on their
+	// s is the calls through starling, d the calls the agents made on their
 	// own, read from their session files: the window's Requests tab counts
 	// them too (Kumo31 报告). Asked together, both are of one day when
 	// midnight falls while they are read.
@@ -148,7 +148,7 @@ func usageTo(out io.Writer, args []string) error {
 		title = "last " + humanWindow(dur)
 	}
 	if s.Calls == 0 && d.Calls == 0 {
-		fmt.Fprintln(out, muted.Render("no calls "+title+" ·"), "route an agent through chongyun and its usage shows up here")
+		fmt.Fprintln(out, muted.Render("no calls "+title+" ·"), "route an agent through starling and its usage shows up here")
 		fmt.Fprintln(out, faint.Render("  "+stats.Path()))
 		return nil
 	}
@@ -157,13 +157,13 @@ func usageTo(out io.Writer, args []string) error {
 		names[a.ID] = a.Name
 	}
 	if s.Calls == 0 {
-		fmt.Fprintln(out, muted.Render("no calls through chongyun "+title))
+		fmt.Fprintln(out, muted.Render("no calls through starling "+title))
 	} else {
 		printUsage(out, s, title, names)
 	}
 	if d.Calls > 0 {
 		fmt.Fprintln(out)
-		fmt.Fprintln(out, muted.Render("not through chongyun · the agents' own requests, read from their session files"))
+		fmt.Fprintln(out, muted.Render("not through starling · the agents' own requests, read from their session files"))
 		printUsage(out, d, title, names)
 	}
 	fmt.Fprintln(out, faint.Render("  "+stats.Path()))

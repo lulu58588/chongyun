@@ -3,10 +3,10 @@ package cli
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// magpie group pick / pick= route a group manually (#317): every request
+// starling group pick / pick= route a group manually (#317): every request
 // to the model picked, stored with the group, the others left aside.
 func TestGroupPick(t *testing.T) {
 	groupsHome(t)

@@ -8,15 +8,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
-// Another magpie writing logins.json (a temp file renamed over it: the one
+// Another starling writing logins.json (a temp file renamed over it: the one
 // an update is replacing, a second one started) has Windows say, for a
 // moment, that it isn't there: read so, it was no accounts, and the write
 // that followed left every account out (Packing1 报告, Windows 11:
 // 「整行都没了，供应商里面antigravity直接消失了」 after an update).
-func TestLoginsKeptWhileAnotherMagpieWrites(t *testing.T) {
+func TestLoginsKeptWhileAnotherStarlingWrites(t *testing.T) {
 	googleSandbox(t, &fakeGoogle{})
 	if err := addGoogleLogin("antigravity", "a@x.com", "", googleAuth{RefreshToken: "1//a", Project: "pa"}); err != nil {
 		t.Fatal(err)
@@ -65,6 +65,6 @@ func TestLoginsKeptWhileAnotherMagpieWrites(t *testing.T) {
 		t.Fatalf("the Antigravity account is gone from logins.json (read as none %d times)", misses)
 	}
 	if misses > 0 {
-		t.Fatalf("logins.json read as no accounts %d times while another chongyun wrote it", misses)
+		t.Fatalf("logins.json read as no accounts %d times while another starling wrote it", misses)
 	}
 }

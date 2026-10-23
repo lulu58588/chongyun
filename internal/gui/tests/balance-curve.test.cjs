@@ -73,9 +73,9 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         pages.push([name, page]);
         page.setDefaultTimeout(5000);
         page.on("pageerror", (e) => errors.push(e.message));
-        if (range) await page.addInitScript((r) => localStorage.setItem("magpie.quotaRange", r), range);
+        if (range) await page.addInitScript((r) => localStorage.setItem("starling.quotaRange", r), range);
         await page.route("**/*", serve(lang, theme, fixtures(Date.now())));
-        await page.goto("http://magpie.test/?view=usage");
+        await page.goto("http://starling.test/?view=usage");
         return page;
       };
 
@@ -147,7 +147,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       page.setDefaultTimeout(5000);
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", serve("en", theme, fixtures(Date.now()), colorblind));
-      await page.goto("http://magpie.test/?view=usage");
+      await page.goto("http://starling.test/?view=usage");
       const curve = page.locator(".subscription-card", { hasText: "DeepSeek" }).locator(".balance-curve");
       await curve.waitFor();
       const got = await curve.evaluate((c) => {

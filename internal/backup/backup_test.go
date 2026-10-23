@@ -13,12 +13,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/library"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/profile"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/library"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/profile"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func TestRestoreKeepsCorruptSettings(t *testing.T) {
@@ -47,7 +47,7 @@ func TestRestoreKeepsCorruptSettings(t *testing.T) {
 	}
 }
 
-// home gives the test a machine of its own: no agents, no magpie files.
+// home gives the test a machine of its own: no agents, no starling files.
 func home(t *testing.T) {
 	t.Helper()
 	h := t.TempDir()
@@ -378,7 +378,7 @@ func TestLibrary(t *testing.T) {
 }
 
 func TestNotABackup(t *testing.T) {
-	for _, data := range []string{"", "{}", `{"format":"magpie-backup","version":9,"kdf":"x"}`} {
+	for _, data := range []string{"", "{}", `{"format":"starling-backup","version":9,"kdf":"x"}`} {
 		if _, err := Open([]byte(data), "pw"); err == nil || errors.Is(err, ErrPassphrase) {
 			t.Fatalf("%q: %v", data, err)
 		}
@@ -490,7 +490,7 @@ func TestRestorePluginsAndSignIn(t *testing.T) {
 		t.Fatalf("result: %+v, want claude to sign in to, the plugin added, the failure said, acme to key", r)
 	}
 
-	// a backup from a magpie before plugins installs nothing
+	// a backup from a starling before plugins installs nothing
 	asked = nil
 	got.Plugins = nil
 	if _, err := Restore(got, All); err != nil || asked != nil {

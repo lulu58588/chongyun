@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/update"
 )
 
 // #2296 (meifu2027): on a metered network or a proxy billed by traffic,
@@ -30,7 +30,7 @@ func TestUpdateDownloadWaitsForAClick(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(h, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(h, ".cache"))
 
-	body := []byte("new chongyun")
+	body := []byte("new starling")
 	sum := sha256.Sum256(body)
 	var latest atomic.Value
 	latest.Store("0.1.11")
@@ -46,7 +46,7 @@ func TestUpdateDownloadWaitsForAClick(t *testing.T) {
 		}})
 	}))
 	defer srv.Close()
-	t.Setenv("MAGPIE_UPDATE_FEED", srv.URL)
+	t.Setenv("STARLING_UPDATE_FEED", srv.URL)
 	oldV := Version
 	Version = "0.1.10"
 	defer func() { Version = oldV }()

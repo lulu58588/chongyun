@@ -9,19 +9,19 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/budget"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/budget"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// #1547 (PennyVibe), between two magpies: a computer with another magpie
-// as its provider, through two gateway keys that magpie gave it, is shown
+// #1547 (PennyVibe), between two starlings: a computer with another starling
+// as its provider, through two gateway keys that starling gave it, is shown
 // each key's own limit and what it used, read with that key alone. The
 // numbers move with the key's own requests, never with the other key's;
 // a key held to no limit says so.
-func TestRemoteMagpieKeyLimitCards(t *testing.T) {
+func TestRemoteStarlingKeyLimitCards(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	budget.Forget()
 	now := pinLimitClock(t)
 	limitedUpstream(t, 0)
@@ -30,7 +30,7 @@ func TestRemoteMagpieKeyLimitCards(t *testing.T) {
 	setLimit(t, keys[1].ID, &access.Limit{Period: "week", Tokens: 5000})
 	gw := httptest.NewServer(lanGuard(New().Handler()))
 	defer gw.Close()
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Key: secrets[0], KeyName: "laptop",
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Key: secrets[0], KeyName: "laptop",
 		Keys: []provider.KeyAccount{{Name: "desk", Key: secrets[1]}}, Chat: gw.URL}); err != nil {
 		t.Fatal(err)
 	}
@@ -153,9 +153,9 @@ func TestKeyLimitTellsOnlyTheCaller(t *testing.T) {
 		t.Fatal(w.Code, w.Body.String())
 	}
 	for _, q := range []string{"", "?key=" + keys[1].ID, "?key=B", "?id=" + keys[1].ID + "&name=B"} {
-		r := httptest.NewRequest("GET", "/v1/magpie/limit"+q, nil)
+		r := httptest.NewRequest("GET", "/v1/starling/limit"+q, nil)
 		r.Header.Set("Authorization", "Bearer "+secrets[0])
-		r.Header.Set("X-Magpie-Key", keys[1].ID)
+		r.Header.Set("X-Starling-Key", keys[1].ID)
 		w := httptest.NewRecorder()
 		h.ServeHTTP(w, r)
 		var got struct {
@@ -172,7 +172,7 @@ func TestKeyLimitTellsOnlyTheCaller(t *testing.T) {
 		}
 	}
 	// without a key, from another machine: nothing
-	r = httptest.NewRequest("GET", "/v1/magpie/limit", nil)
+	r = httptest.NewRequest("GET", "/v1/starling/limit", nil)
 	r.RemoteAddr = "192.168.1.9:5000"
 	w = httptest.NewRecorder()
 	lanGuard(h).ServeHTTP(w, r)

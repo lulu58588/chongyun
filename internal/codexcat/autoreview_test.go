@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func overrides(t *testing.T, ms []catalog.Model) map[string]any {
@@ -27,10 +27,10 @@ func overrides(t *testing.T, ms []catalog.Model) map[string]any {
 	return out
 }
 
-// With settings.CodexAutoReview every entry magpie hands Codex — the ChatGPT
-// account's own and magpie's — names that model as
+// With settings.CodexAutoReview every entry starling hands Codex — the ChatGPT
+// account's own and starling's — names that model as
 // auto_review_model_override, which Codex's auto-review runs on (#938); with
-// none set no entry has the field, and one magpie left in Codex's cache is
+// none set no entry has the field, and one starling left in Codex's cache is
 // taken out.
 func TestCodexAutoReviewEntries(t *testing.T) {
 	v1Home(t, `{"etag":"W/\"a\"","models":[{"slug":"gpt-6","base_instructions":"x"},{"slug":"gpt-7","base_instructions":"x","auto_review_model_override":"deepseek/old"},{"slug":"gpt-8","base_instructions":"x","auto_review_model_override":"codex-auto-review"}]}`)

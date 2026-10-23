@@ -5,10 +5,10 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// Models are magpie's models the agent is set to, as catalog ids
+// Models are starling's models the agent is set to, as catalog ids
 // (provider/model, group/<id>), each once: the agent's own models aside.
 // Usage stats count them (internal/stats).
 func (a *Agent) Models() []string {
@@ -31,7 +31,7 @@ func (a *Agent) Models() []string {
 	vals := a.Values()
 	for _, f := range a.Fields {
 		v := vals[f.Key]
-		if !magpieValue(a, f, v, vals) {
+		if !starlingValue(a, f, v, vals) {
 			continue
 		}
 		m, _, _ := a.split(v)
@@ -49,15 +49,15 @@ func (a *Agent) Models() []string {
 	return out
 }
 
-// modelRef is v as a catalog id when it names one of magpie's models or
-// groups, as an agent spells it (magpie/…, Claude Code's [1m]); "" else.
+// modelRef is v as a catalog id when it names one of starling's models or
+// groups, as an agent spells it (starling/…, Claude Code's [1m]); "" else.
 func modelRef(v string) string {
 	v = strings.TrimSuffix(strings.TrimSpace(v), "[1m]")
-	v = strings.TrimPrefix(v, magpieID+"/")
+	v = strings.TrimPrefix(v, starlingID+"/")
 	if provider.IsGroupRef(v) {
 		return provider.CanonicalRef(v) // a found group by one id, whichever it was set to
 	}
-	if isMagpie(v) {
+	if isStarling(v) {
 		return v
 	}
 	return ""

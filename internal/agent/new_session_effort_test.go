@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // effortModels is a provider whose models take the levels models.dev gives
@@ -39,7 +39,7 @@ func TestCodexNewSessionEffortLastsModelSwitch(t *testing.T) {
 	cx := codex(home)
 	defaults := func() map[string]string {
 		t.Helper()
-		b, _ := os.ReadFile(filepath.Join(home, ".codex", "chongyun-models.json"))
+		b, _ := os.ReadFile(filepath.Join(home, ".codex", "starling-models.json"))
 		var cat struct {
 			Models []struct {
 				Slug    string  `json:"slug"`
@@ -88,7 +88,7 @@ func TestCodexNewSessionEffortLastsModelSwitch(t *testing.T) {
 	if d := defaults(); d["volc/all-five"] != "medium" || d["volc/lo-hi-max"] != "high" {
 		t.Fatalf("catalog defaults for Default: %v", d)
 	}
-	// picked in magpie, a model without the level settles on the nearest
+	// picked in starling, a model without the level settles on the nearest
 	if err := cx.Fields[1].Set("xhigh"); err != nil {
 		t.Fatal(err)
 	}
@@ -114,13 +114,13 @@ func TestGrokNewSessionEffortLastsModelSwitch(t *testing.T) {
 	os.MkdirAll(filepath.Dir(path), 0o755)
 	os.WriteFile(path, []byte("[models]\ndefault = \"grok-4.6\"\ndefault_reasoning_effort = \"xhigh\"\n"), 0o644)
 	a := grok(home)
-	if err := a.Field("model").Set("magpie/volc/all-five"); err != nil {
+	if err := a.Field("model").Set("starling/volc/all-five"); err != nil {
 		t.Fatal(err)
 	}
 	if v := a.Field("effort").Get(); v != "xhigh" {
 		t.Fatalf("xhigh on a model that takes it: %q", v)
 	}
-	if err := a.Field("model").Set("magpie/volc/lo-hi-max"); err != nil {
+	if err := a.Field("model").Set("starling/volc/lo-hi-max"); err != nil {
 		t.Fatal(err)
 	}
 	if v := a.Field("effort").Get(); v != "max" {

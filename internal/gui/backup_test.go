@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/library"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/library"
 )
 
 // folderOnly is the app's windows as far as an export needs them.
@@ -19,7 +19,7 @@ type folderOnly struct{ Windows }
 
 func (folderOnly) OpenFolder(string) error { return nil }
 
-// sandboxHome gives the test a machine of its own: no agents, no magpie files.
+// sandboxHome gives the test a machine of its own: no agents, no starling files.
 func sandboxHome(t *testing.T) string {
 	t.Helper()
 	h := t.TempDir()

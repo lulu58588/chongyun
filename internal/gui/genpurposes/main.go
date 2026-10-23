@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func main() {

@@ -7,14 +7,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/starling/internal/plugin"
 )
 
 // StartPluginSignIn begins signing in to a plugin's provider (OpenCode's
 // id) with its OAuth method, the method's questions answered: the page to
 // open, then either the plugin notices on its own or the code the page
 // shows is pasted back (SubmitSignInCallback). SignInStatus follows it,
-// as it does a built-in sign-in; its Agent is the provider's magpie id.
+// as it does a built-in sign-in; its Agent is the provider's starling id.
 // The account goes beside those signed in already, or replaces the one it
 // is. A built-in moved onto its plugin installs the CLI it runs through
 // first, as the built-in's sign-in did.
@@ -65,7 +65,7 @@ func StartPluginSignInWith(id string, method int, inputs map[string]string, o Si
 // pluginRunsCLI are the plugins (by OpenCode's id) that sign in with the
 // vendor's CLI themselves, as the built-in did: the community Grok plugin
 // runs `grok login`. One installed beside the built-in, not moved onto,
-// said "install Grok Build first: curl … | bash", which a magpie in Docker
+// said "install Grok Build first: curl … | bash", which a starling in Docker
 // has no shell to run; its CLI is installed first, as a moved one's is.
 var pluginRunsCLI = map[string]bool{"grok": true}
 
@@ -85,7 +85,7 @@ func pluginCLI(id string) (agentCLI, bool) {
 // PluginCLIMissing is the name of the vendor CLI a plugin's sign-in runs
 // through and this machine lacks (Grok Build for Grok's), "" when there is
 // none to install. The command line's sign-in installs it first, as
-// StartPluginSignIn does; without it, `chongyun plugin login grok` in Docker
+// StartPluginSignIn does; without it, `starling plugin login grok` in Docker
 // said "install Grok Build first: curl … | bash", which the image has no
 // curl to run (#2223).
 func PluginCLIMissing(id string) string {
@@ -208,7 +208,7 @@ func (s *signInFlow) pluginDone(saved plugin.Saved, err error) {
 
 // PluginAPIKey signs in to a plugin's provider with a key, as its "api"
 // method does, beside the accounts signed in already; it gives the
-// provider's magpie id.
+// provider's starling id.
 func PluginAPIKey(ctx context.Context, id string, method int, inputs map[string]string, key string) (string, error) {
 	if strings.TrimSpace(key) == "" {
 		return "", errors.New("enter the key")
@@ -221,11 +221,11 @@ func PluginAPIKey(ctx context.Context, id string, method int, inputs map[string]
 	return PluginSignedIn(saved), nil
 }
 
-// PluginSignedIn finishes a sign-in to a plugin's provider that magpie
+// PluginSignedIn finishes a sign-in to a plugin's provider that starling
 // doesn't follow, a key or the command line's own, once the plugin has
 // saved the account: as for one it follows (pluginDone), the account's
-// lapsed mark goes and, removed from magpie, it comes back. It gives the
-// provider's magpie id.
+// lapsed mark goes and, removed from starling, it comes back. It gives the
+// provider's starling id.
 func PluginSignedIn(saved plugin.Saved) string {
 	clearPluginLapse(saved)
 	id := PluginID(saved.Provider)

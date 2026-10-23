@@ -343,13 +343,13 @@ func TestWorkBuddyCheckinPluginResetRetriesSoon(t *testing.T) {
 }
 
 // An account on the plugin is checked in through the plugin's own fetch,
-// which signs it: magpie holds no token of it to renew or send.
+// which signs it: starling holds no token of it to renew or send.
 func TestWorkBuddyCheckinThroughPlugin(t *testing.T) {
 	var paths []string
 	via := func(req *http.Request) (*http.Response, error) {
 		paths = append(paths, req.URL.Path)
 		if req.Header.Get("Authorization") != "" {
-			t.Errorf("chongyun signed %s itself", req.URL.Path)
+			t.Errorf("starling signed %s itself", req.URL.Path)
 		}
 		body := `{"code":0,"data":{"active":true,"today_checked_in":false,"streak_days":2}}`
 		if strings.HasSuffix(req.URL.Path, "/daily-checkin") {
@@ -405,7 +405,7 @@ func TestWorkBuddyCheckinOnTheCard(t *testing.T) {
 }
 
 // The WorkBuddy plugin's accounts are checked in, and their cards say so;
-// WorkBuddy AI's are not, and a sign-in magpie kept from the retired
+// WorkBuddy AI's are not, and a sign-in starling kept from the retired
 // built-in, not moved yet, is checked in by nothing (#694, Dazzle-sys on
 // 0.1.774: two accounts on the card, credits by day, no check-in).
 func TestWorkBuddyCheckinPluginAccounts(t *testing.T) {
@@ -462,7 +462,7 @@ func TestWorkBuddyCheckinPluginAccounts(t *testing.T) {
 }
 
 // WorkBuddy's gateway answering the check-in with its bare 401 (モモコ on
-// Discord: 签到失败，magpie 稍后重试 · Unauthorized, all day, and signing in
+// Discord: 签到失败，starling 稍后重试 · Unauthorized, all day, and signing in
 // again didn't help) is told apart by reading the account's credits with
 // the same headers: they read, so the sign-in is good and the check-in
 // takes WorkBuddy's own app — an answer for the day, not asked again; they
@@ -510,7 +510,7 @@ func TestWorkBuddyCheckinUnauthorizedThroughPlugin(t *testing.T) {
 	via := func(req *http.Request) (*http.Response, error) {
 		paths = append(paths, req.URL.Path)
 		if strings.HasSuffix(req.URL.Path, "/checkin-activity-status") {
-			return &http.Response{StatusCode: 401, Body: io.NopCloser(strings.NewReader(wbGateway401)), Header: http.Header{"X-Magpie-Sign-In": {"kept"}}}, nil
+			return &http.Response{StatusCode: 401, Body: io.NopCloser(strings.NewReader(wbGateway401)), Header: http.Header{"X-Starling-Sign-In": {"kept"}}}, nil
 		}
 		body := `{"code":0,"data":{"Packages":[]}}`
 		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(body)), Header: http.Header{}}, nil

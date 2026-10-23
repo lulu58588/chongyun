@@ -6,14 +6,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/starling/internal/gateway"
 )
 
 // The terminal serves the gateway while it is open, as the app does, when
-// no magpie has it: in WSL with only magpie tui, the agents it connected to
-// magpie asked an address nothing listened at, and Claude Code said
-// ECONNREFUSED (gnayiab 报告). Another magpie that has it (the app, magpie
-// web, magpie serve) keeps it, and this one takes it up once that one is
+// no starling has it: in WSL with only starling tui, the agents it connected to
+// starling asked an address nothing listened at, and Claude Code said
+// ECONNREFUSED (gnayiab 报告). Another starling that has it (the app, starling
+// web, starling serve) keeps it, and this one takes it up once that one is
 // gone.
 
 // gw is who serves the gateway, for the status line.
@@ -25,7 +25,7 @@ var gw struct {
 // gatewayWatch is how often the terminal looks for a gateway gone.
 var gatewayWatch = 15 * time.Second
 
-// serveGateway serves the gateway here until ctx ends whenever no magpie
+// serveGateway serves the gateway here until ctx ends whenever no starling
 // answers at its address, and returns a wait for the one it serves to have
 // stopped.
 func serveGateway(ctx context.Context) (wait func()) {
@@ -82,7 +82,7 @@ func serveGateway(ctx context.Context) (wait func()) {
 // nothing else to say: served here, or why agents can't reach it.
 func gatewayStatus() string {
 	if gw.here.Load() {
-		return sMuted.Render("● gateway " + gateway.URL() + " · served while chongyun tui is open")
+		return sMuted.Render("● gateway " + gateway.URL() + " · served while starling tui is open")
 	}
 	if e := gw.err.Load(); e != nil && *e != "" {
 		return sBad.Render("✗ ") + sText.Render("gateway not running: "+*e)
@@ -92,5 +92,5 @@ func gatewayStatus() string {
 
 // gatewayGoneNote is said as the terminal quits having served the gateway.
 func gatewayGoneNote() string {
-	return "chongyun: the gateway stopped with chongyun tui; agents connected to chongyun reach it while chongyun tui, chongyun web or chongyun serve runs"
+	return "starling: the gateway stopped with starling tui; agents connected to starling reach it while starling tui, starling web or starling serve runs"
 }

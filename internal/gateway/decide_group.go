@@ -17,8 +17,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // decisionGroupOf is the decision group a System One request's model names:
@@ -42,9 +42,9 @@ func decisionGroupOf(asked string) (g provider.Group, ms []provider.Member, ok b
 			return g, nil, false, 0, nil
 		}
 		if off, isOff := provider.DisabledGroup(ref); isOff {
-			return g, nil, false, http.StatusNotFound, fmt.Errorf("the routing group %s is switched off in Chongyun, so %q is not served; switch it on again on Chongyun's Routing page to use it", off.Name, asked)
+			return g, nil, false, http.StatusNotFound, fmt.Errorf("the routing group %s is switched off in Starling, so %q is not served; switch it on again on Starling's Routing page to use it", off.Name, asked)
 		}
-		return g, nil, false, http.StatusNotFound, fmt.Errorf("chongyun has no routing group %q", strings.TrimPrefix(ref, provider.GroupPrefix))
+		return g, nil, false, http.StatusNotFound, fmt.Errorf("starling has no routing group %q", strings.TrimPrefix(ref, provider.GroupPrefix))
 	}
 	if !g.Decides() {
 		if !explicit {
@@ -218,7 +218,7 @@ func (s *Server) serveDecideTries(w http.ResponseWriter, r *http.Request, body [
 			}
 		}
 		last = true
-		took := time.Since(start).Milliseconds() // before what magpie writes down of it (#1939)
+		took := time.Since(start).Milliseconds() // before what starling writes down of it (#1939)
 		tried(status, errMsg, fail, rest, used)
 		if status < 400 {
 			servedCandidate(c, used.Input+used.Output)

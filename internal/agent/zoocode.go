@@ -9,13 +9,13 @@ package agent
 // its own Settings → Import does (importSettingsFromPath,
 // src/core/config/importExport.ts):
 //
-//	{"providerProfiles":{"currentApiConfigName":"magpie",
-//	  "apiConfigs":{"magpie":{"id":"magpie","apiProvider":"openai",
-//	    "openAiBaseUrl":"http://127.0.0.1:3425/v1","openAiApiKey":"magpie-zoo-code",
+//	{"providerProfiles":{"currentApiConfigName":"starling",
+//	  "apiConfigs":{"starling":{"id":"starling","apiProvider":"openai",
+//	    "openAiBaseUrl":"http://127.0.0.1:3425/v1","openAiApiKey":"starling-zoo-code",
 //	    "openAiModelId":"<model>","openAiCustomModelInfo":{…}}}}}
 //
 // Imported profiles are merged over the user's own, which stay, and the
-// imported currentApiConfigName becomes the profile Zoo Code uses. magpie
+// imported currentApiConfigName becomes the profile Zoo Code uses. starling
 // writes that file in Zoo Code's own folder of VS Code's
 // (zooCodeImportPath) and points the setting at it in VS Code's settings.json, the default profile's and
 // each other profile's (vscodeProfiles), a value of the user's own kept
@@ -25,17 +25,17 @@ package agent
 //
 // What this route can't do: Zoo Code reads the file only when it starts
 // (the Notice asks for a window reload), and imports it again on each
-// start, so while connected each start puts Zoo Code back on magpie's
+// start, so while connected each start puts Zoo Code back on starling's
 // profile. A profile once imported lives in Zoo Code's secret storage,
-// which magpie can't write, so Disconnect stops the import and leaves the
-// profile "magpie" there for the user to switch from or delete. Which
-// profile the user picks inside Zoo Code magpie can't see either.
+// which starling can't write, so Disconnect stops the import and leaves the
+// profile "starling" there for the user to switch from or delete. Which
+// profile the user picks inside Zoo Code starling can't see either.
 //
 // Zoo Code for JetBrains runs the same extension in its own extension
 // host, which is handed an empty configuration on every start
 // (RPCManager.startInitialize), so the setting can't reach it there, and
 // keeps its secrets in ~/.zoo-code/secrets.json, a store of its own with
-// no lock and no documented format. magpie doesn't write either.
+// no lock and no documented format. starling doesn't write either.
 
 import (
 	"os"
@@ -43,8 +43,8 @@ import (
 	"strings"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/edit"
 )
 
 // zooImport is the setting naming the file Zoo Code imports at start-up,
@@ -55,20 +55,20 @@ const zooImport = `zoo-code\.autoImportSettingsPath`
 // in begins: zoocodeorganization.zoo-code-<version>.
 const zooExtension = "zoocodeorganization.zoo-code"
 
-var noticeZoo = newNotice("Zoo Code reads chongyun's profile when it starts — run Developer: Reload Window in VS Code to use this.")
+var noticeZoo = newNotice("Zoo Code reads starling's profile when it starts — run Developer: Reload Window in VS Code to use this.")
 
 func zooCode(home, cfg string) *Agent {
 	return zooCodeAt(vscodeUserDir(vscodeStable, home, cfg), filepath.Join(home, ".vscode", "extensions"))
 }
 
-// zooCodeImportPath is the file magpie has Zoo Code import, in the VS Code
+// zooCodeImportPath is the file starling has Zoo Code import, in the VS Code
 // User folder dir: in Zoo Code's own folder there, beside the settings
 // files it keeps itself (globalStorage/<extension>/settings). It is the
-// agent's config, not magpie's: one the user points at a magpie on another
+// agent's config, not starling's: one the user points at a starling on another
 // machine keeps that address through a sync (kept.away), which skips
-// magpie's own folder.
+// starling's own folder.
 func zooCodeImportPath(dir string) string {
-	return filepath.Join(dir, "globalStorage", zooExtension, "settings", "magpie-import.json")
+	return filepath.Join(dir, "globalStorage", zooExtension, "settings", "starling-import.json")
 }
 
 // zooCodeAt is Zoo Code in the VS Code whose User folder is dir and whose
@@ -79,13 +79,13 @@ func zooCodeAt(dir, exts string) *Agent {
 	key := func(p string) string { return "zoo-code:" + p + ":import" }
 	getAt := func(p string) string { v, _ := edit.GetJSON(p, zooImport); return v }
 	ours := func(p string) bool { return getAt(p) == file }
-	// profile is magpie's profile in the file, "" when there's none
+	// profile is starling's profile in the file, "" when there's none
 	profile := func() string {
 		b, err := os.ReadFile(file)
 		if err != nil || !gjson.ValidBytes(b) {
 			return ""
 		}
-		return gjson.GetBytes(b, "providerProfiles.apiConfigs."+magpieID).Raw
+		return gjson.GetBytes(b, "providerProfiles.apiConfigs."+starlingID).Raw
 	}
 	joined := func() bool { return ours(path) && profile() != "" }
 	model := func() string {
@@ -93,11 +93,11 @@ func zooCodeAt(dir, exts string) *Agent {
 			return ""
 		}
 		if id := gjson.Get(profile(), "openAiModelId").String(); id != "" {
-			return magpieID + "/" + id
+			return starlingID + "/" + id
 		}
 		return ""
 	}
-	// restore puts back the setting a settings.json had before magpie's
+	// restore puts back the setting a settings.json had before starling's
 	restore := func(p string) error {
 		if was := unstash(key(p)); was != "" {
 			return edit.SetJSON(p, edit.KV{Path: zooImport, Value: was})
@@ -186,10 +186,10 @@ func zooCodeAt(dir, exts string) *Agent {
 		Fields: []Field{{
 			Key: "model", Label: "model", Get: model,
 			Set: func(v string) error {
-				ref, ok := strings.CutPrefix(v, magpieID+"/")
-				if !ok || !isMagpie(ref) {
+				ref, ok := strings.CutPrefix(v, starlingID+"/")
+				if !ok || !isStarling(ref) {
 					// Zoo Code's own profiles are in its secret storage:
-					// magpie stops the import and leaves them to it
+					// starling stops the import and leaves them to it
 					return off()
 				}
 				if err := write(ref); err != nil {
@@ -203,7 +203,7 @@ func zooCodeAt(dir, exts string) *Agent {
 				})
 			},
 			Options: func(map[string]string) []Option {
-				return viaMagpie("zoo-code", magpieID+"/")
+				return viaStarling("zoo-code", starlingID+"/")
 			},
 		}},
 	}, path, file, stashPath())
@@ -223,28 +223,28 @@ func zooCodeInstalled(exts string) bool {
 	return false
 }
 
-// zooCodeProfiles is magpie as Zoo Code's provider profiles to import: one
-// profile, "magpie", on the gateway's Chat Completions with model ref, the
+// zooCodeProfiles is starling as Zoo Code's provider profiles to import: one
+// profile, "starling", on the gateway's Chat Completions with model ref, the
 // one Zoo Code uses after the import.
 func zooCodeProfiles(ref string) map[string]any {
 	p := map[string]any{
-		"id": magpieID, "apiProvider": "openai",
+		"id": starlingID, "apiProvider": "openai",
 		"openAiBaseUrl": gatewayV1(), "openAiApiKey": agentKey("zoo-code"),
 		"openAiModelId": ref, "openAiStreamingEnabled": true,
 	}
-	for _, m := range magpieModels("zoo-code") {
+	for _, m := range starlingModels("zoo-code") {
 		if m.ID == ref {
 			p["openAiCustomModelInfo"] = zooCodeModelInfo(m)
 			break
 		}
 	}
 	return map[string]any{
-		"currentApiConfigName": magpieID,
-		"apiConfigs":           map[string]any{magpieID: p},
+		"currentApiConfigName": starlingID,
+		"apiConfigs":           map[string]any{starlingID: p},
 	}
 }
 
-// zooCodeModelInfo is a model of magpie's as Zoo Code's modelInfo: the
+// zooCodeModelInfo is a model of starling's as Zoo Code's modelInfo: the
 // window it trims a conversation to, what a reply may take, and whether it
 // sends images. contextWindow and supportsPromptCache are the two its
 // schema requires.

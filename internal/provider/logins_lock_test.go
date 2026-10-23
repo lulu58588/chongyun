@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/filememo"
+	"github.com/lulu58588/starling/internal/filememo"
 )
 
-// newProcess is what a magpie run from a terminal starts with: nothing
+// newProcess is what a starling run from a terminal starts with: nothing
 // remembered of when the accounts were last looked at.
 func newProcess() {
 	loginsMu.Lock()
@@ -36,7 +36,7 @@ func seenAgo(t *testing.T, d time.Duration) (raw []byte, mod time.Time) {
 		l["seen"] = time.Now().Add(-d).UTC().Truncate(time.Second)
 	}
 	writeFile(t, loginsPath(), ls)
-	// a time of its own each call, as another magpie's write has: the
+	// a time of its own each call, as another starling's write has: the
 	// same size at the same time would read as the file unchanged
 	seenAgoCalls++
 	mod = time.Now().Add(-time.Hour - time.Duration(seenAgoCalls)*time.Minute).Truncate(time.Second)
@@ -57,7 +57,7 @@ func loginsUnchanged(t *testing.T, raw []byte, mod time.Time) bool {
 	return bytes.Equal(b, raw) && fi.ModTime().Equal(mod)
 }
 
-// A magpie run from a terminal that only lists accounts (magpie ls,
+// A starling run from a terminal that only lists accounts (starling ls,
 // providers, sessions, usage) writes nothing to logins.json (#1674,
 // FaintGhost): each is a new process, so the 30 seconds between looks
 // never held, and every run wrote the file back with Seen moved on, over
@@ -107,11 +107,11 @@ func TestReadOnlyRunLeavesLogins(t *testing.T) {
 	}
 }
 
-// TestLoginsOtherMagpie is the gateway of TestLoginsKeepAnotherMagpiesWrite:
+// TestLoginsOtherStarling is the gateway of TestLoginsKeepAnotherStarlingsWrite:
 // it renews the saved account's sign-in, as renewSavedLogin writes it.
-func TestLoginsOtherMagpie(t *testing.T) {
-	if os.Getenv("MAGPIE_LOGINS_WRITER") == "" {
-		t.Skip("run by TestLoginsKeepAnotherMagpiesWrite")
+func TestLoginsOtherStarling(t *testing.T) {
+	if os.Getenv("STARLING_LOGINS_WRITER") == "" {
+		t.Skip("run by TestLoginsKeepAnotherStarlingsWrite")
 	}
 	loginsMu.Lock()
 	defer loginsMu.Unlock()
@@ -132,11 +132,11 @@ func TestLoginsOtherMagpie(t *testing.T) {
 	}
 }
 
-// The gateway renews a saved account's sign-in while a magpie run from a
+// The gateway renews a saved account's sign-in while a starling run from a
 // terminal is between reading logins.json and writing it back (#1674): the
 // renewed sign-in stays. Codex's refresh tokens are spent by use, so the
 // old one written back would sign the account out.
-func TestLoginsKeepAnotherMagpiesWrite(t *testing.T) {
+func TestLoginsKeepAnotherStarlingsWrite(t *testing.T) {
 	signIn(t)
 	codexSignIn(t, "work@example.com", "r-work")
 	codexSignIn(t, "me@example.com", "r-me")
@@ -144,16 +144,16 @@ func TestLoginsKeepAnotherMagpiesWrite(t *testing.T) {
 		t.Fatalf("work@example.com not saved: %s", b)
 	}
 
-	// Codex refreshed its own sign-in: this magpie has a change to write.
-	// The write is chongyun's own sign-in now — it keeps what it signed
-	// in to in logins.json — so the other chongyun is started as this one
+	// Codex refreshed its own sign-in: this starling has a change to write.
+	// The write is starling's own sign-in now — it keeps what it signed
+	// in to in logins.json — so the other starling is started as this one
 	// is about to write.
 	var other *exec.Cmd
 	otherDone := make(chan error, 1)
 	beforeLoginsWrite = func() {
 		beforeLoginsWrite = func() {}
-		other = exec.Command(os.Args[0], "-test.run=^TestLoginsOtherMagpie$", "-test.count=1")
-		other.Env = append(os.Environ(), "MAGPIE_LOGINS_WRITER=1")
+		other = exec.Command(os.Args[0], "-test.run=^TestLoginsOtherStarling$", "-test.count=1")
+		other.Env = append(os.Environ(), "STARLING_LOGINS_WRITER=1")
 		var out bytes.Buffer
 		other.Stdout, other.Stderr = &out, &out
 		if err := other.Start(); err != nil {
@@ -164,11 +164,11 @@ func TestLoginsKeepAnotherMagpiesWrite(t *testing.T) {
 		go func() {
 			err := other.Wait()
 			if err != nil {
-				t.Logf("the other chongyun: %v\n%s", err, out.Bytes())
+				t.Logf("the other starling: %v\n%s", err, out.Bytes())
 			}
 			otherDone <- err
 		}()
-		// the other magpie writes now if it can; with the lock held here
+		// the other starling writes now if it can; with the lock held here
 		// it waits for this one's write instead
 		select {
 		case err := <-otherDone:
@@ -180,23 +180,23 @@ func TestLoginsKeepAnotherMagpiesWrite(t *testing.T) {
 	newProcess()
 	codexSignIn(t, "me@example.com", "r-me-2")
 	if other == nil {
-		t.Fatal("this chongyun wrote nothing")
+		t.Fatal("this starling wrote nothing")
 	}
 	if err := <-otherDone; err != nil {
-		t.Fatal("the other chongyun failed")
+		t.Fatal("the other starling failed")
 	}
 
 	b, _ := os.ReadFile(loginsPath())
 	if !bytes.Contains(b, []byte("r-rotated")) || bytes.Contains(b, []byte(`r-work"`)) {
-		t.Fatalf("the other chongyun's renewed sign-in was written over:\n%s", b)
+		t.Fatalf("the other starling's renewed sign-in was written over:\n%s", b)
 	}
 	if !bytes.Contains(b, []byte("r-me-2")) {
-		t.Fatalf("this chongyun's change was lost:\n%s", b)
+		t.Fatalf("this starling's change was lost:\n%s", b)
 	}
 }
 
 // A change is made from logins.json as it is on the disk, not as this
-// magpie parsed it before another wrote it: the GUI's state holds what
+// starling parsed it before another wrote it: the GUI's state holds what
 // was read for a second (filememo.Hold), and taking loginsMu looks again.
 func TestLoginsReadAfreshUnderLock(t *testing.T) {
 	emptyCodexHome(t)
@@ -207,7 +207,7 @@ func TestLoginsReadAfreshUnderLock(t *testing.T) {
 	defer release()
 	readLogins()
 
-	// another magpie's write, which this one's filememo.Forget never hears of
+	// another starling's write, which this one's filememo.Forget never hears of
 	b, _ := os.ReadFile(loginsPath())
 	if err := os.WriteFile(loginsPath(), bytes.ReplaceAll(b, []byte("r-work"), []byte("r-rotated")), 0o600); err != nil {
 		t.Fatal(err)

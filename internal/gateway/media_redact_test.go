@@ -13,9 +13,9 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/redact"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/redact"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 const mediaSecret = "sk-proj-abcdEFGH1234ijklMNOP5678qrst"
@@ -174,7 +174,7 @@ func TestImagesRedacted(t *testing.T) {
 				p.Chat = "https://generativelanguage.googleapis.com/v1beta/openai"
 			}
 			if tc.remote {
-				p.Preset = provider.RemoteMagpiePreset
+				p.Preset = provider.RemoteStarlingPreset
 			}
 			if err := provider.Save(p); err != nil {
 				t.Fatal(err)
@@ -222,7 +222,7 @@ func TestVideosRedacted(t *testing.T) {
 				model, upstream := "grok/grok-imagine-video", "/v1/videos/generations"
 				if remote {
 					model, upstream = "office/grok-imagine-video", "/v1/videos"
-					if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset,
+					if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset,
 						Chat: "https://office.test/v1", Key: "key", Models: []string{"grok-imagine-video"}}); err != nil {
 						t.Fatal(err)
 					}
@@ -372,7 +372,7 @@ func TestGrokVideoPollRedacted(t *testing.T) {
 
 func TestRemoteVideoPollRedacted(t *testing.T) {
 	fresh(t)
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset,
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset,
 		Chat: "https://office.test/v1", Key: "key", Models: []string{"grok-imagine-video"}}); err != nil {
 		t.Fatal(err)
 	}

@@ -8,10 +8,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The catalog is rebuilt from every provider's files on each Resolve (tens
@@ -51,7 +51,7 @@ func stampOf(path string) rootStamp {
 
 // heldFreshLocked drops what is built when a file was written since, by
 // this process (filememo.Gen) or, for the providers' and the settings'
-// files, by another (the CLI's "chongyun group add", seen by the next
+// files, by another (the CLI's "starling group add", seen by the next
 // request, not a second later). Called with held held.
 func heldFreshLocked(look bool) {
 	if g := filememo.Gen(); g != held.fgen {
@@ -157,7 +157,7 @@ func dropHeld() {
 }
 
 // Stamp marks what the catalog is built from, read without building it.
-// Two equal stamps mean nothing magpie wrote or was told of came between
+// Two equal stamps mean nothing starling wrote or was told of came between
 // them: no Changed (a provider, an account, a setting saved), no plugin's
 // change, no catalog.Reset or Touched, no filememo.Forget, the same
 // environment, and the providers', the settings' and the catalog's own

@@ -18,11 +18,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// sandbox gives the test its own magpie folders and the Bun on PATH; a
+// sandbox gives the test its own starling folders and the Bun on PATH; a
 // machine without Bun skips it.
 func sandbox(t *testing.T) {
 	t.Helper()
@@ -32,7 +32,7 @@ func sandbox(t *testing.T) {
 	t.Setenv("USERPROFILE", dir)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(dir, "config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(dir, "cache"))
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(Settle)
 }
 
@@ -319,7 +319,7 @@ func TestUnloadedPluginKeepsProviders(t *testing.T) {
 
 // A request made for a provider or an account with its own proxy goes
 // through it, the plugin's own fetches and its usage's among them; one
-// set to go direct goes through none, though magpie's global proxy is in
+// set to go direct goes through none, though starling's global proxy is in
 // the host's env.
 func TestPluginProxy(t *testing.T) {
 	sandbox(t)
@@ -372,7 +372,7 @@ func TestPluginProxy(t *testing.T) {
 		return (*seen)[len(*seen)-1]
 	}
 
-	// none of its own: magpie's
+	// none of its own: starling's
 	if b, err := fetch(ctx); err != nil || b != "global" {
 		t.Fatalf("with no proxy of its own: %q, %v", b, err)
 	}
@@ -408,7 +408,7 @@ func TestPluginProxy(t *testing.T) {
 	if m != n {
 		t.Fatalf("a direct request went through a proxy: own %v, global %v", own, global)
 	}
-	// and the next with none of its own takes magpie's again
+	// and the next with none of its own takes starling's again
 	if b, err := fetch(ctx); err != nil || b != "global" {
 		t.Fatalf("after a direct one: %q, %v", b, err)
 	}
@@ -459,9 +459,9 @@ func TestPluginSignInProxy(t *testing.T) {
 	}
 }
 
-// Plugins changed by another magpie (magpie plugin add or move in a
+// Plugins changed by another starling (starling plugin add or move in a
 // terminal while the app runs) reach the one running: its host starts
-// again with them, and meanwhile it knows the providers the other magpie
+// again with them, and meanwhile it knows the providers the other starling
 // was told, where it went on without them until restarted.
 func TestPluginsChangedElsewhere(t *testing.T) {
 	sandbox(t)
@@ -476,7 +476,7 @@ func TestPluginsChangedElsewhere(t *testing.T) {
 	}
 	gen := generation.Load()
 
-	// the other magpie: its providers told, then plugins.json written
+	// the other starling: its providers told, then plugins.json written
 	var ps []Provider
 	b, _ := os.ReadFile(providersPath())
 	_ = json.Unmarshal(b, &ps)
@@ -492,7 +492,7 @@ func TestPluginsChangedElsewhere(t *testing.T) {
 	}
 
 	if !slices.ContainsFunc(Cached(), func(p Provider) bool { return p.ID == "elsewhere" }) {
-		t.Fatalf("the other chongyun's providers unknown: %+v", Cached())
+		t.Fatalf("the other starling's providers unknown: %+v", Cached())
 	}
 	if _, err := Providers(ctx); err != nil {
 		t.Fatal(err)

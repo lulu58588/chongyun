@@ -10,11 +10,11 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/starling/internal/gateway"
 )
 
-// healthcheck: magpie healthcheck — exits 0 when a magpie gateway answers
-// at its address (MAGPIE_ADDR, else the port in Settings' Gateway address on 127.0.0.1,
+// healthcheck: starling healthcheck — exits 0 when a starling gateway answers
+// at its address (STARLING_ADDR, else the port in Settings' Gateway address on 127.0.0.1,
 // 3425 unless set), for a container's
 // HEALTHCHECK, which has no curl to ask it with.
 func healthcheck() error {
@@ -26,7 +26,7 @@ func healthcheck() error {
 	defer res.Body.Close()
 	b, _ := io.ReadAll(io.LimitReader(res.Body, 4096))
 	if res.StatusCode != http.StatusOK || !bytes.Contains(b, []byte(`"`+gateway.ProductName+`"`)) {
-		return fmt.Errorf("%s answers %s, not as a chongyun gateway", gateway.URL(), res.Status)
+		return fmt.Errorf("%s answers %s, not as a starling gateway", gateway.URL(), res.Status)
 	}
 	return nil
 }

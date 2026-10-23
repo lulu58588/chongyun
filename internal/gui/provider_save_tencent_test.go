@@ -16,7 +16,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 func TestProviderListTellsTencentAccessKey(t *testing.T) {

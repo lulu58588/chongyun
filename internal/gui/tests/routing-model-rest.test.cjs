@@ -100,7 +100,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           }
           await browser.close();
         });
-        await page.goto("http://magpie.test/?view=routing");
+        await page.goto("http://starling.test/?view=routing");
         await page.locator(".rt-act").first().waitFor();
 
         // the stage: a row per account and model

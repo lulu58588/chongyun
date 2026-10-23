@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // #200: switching a provider off moves Claude Code off its model, to the

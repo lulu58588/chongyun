@@ -233,7 +233,7 @@ function renderCosts() {
   if (usage) renderUsage();
   if (ledger && usageTab === "requests") renderLedger();
   if (sessions) renderSessions();
-  document.dispatchEvent(new Event("magpie-costs-changed"));
+  document.dispatchEvent(new Event("starling-costs-changed"));
 }
 // quotaWho is how an account's card names it (#1515): by the name the user
 // gave it, the account beside it, else the account; and the key plan it
@@ -264,7 +264,7 @@ function quotaWho(q) {
 }
 
 function ownCalls(n) {
-  return t("{n} by magpie itself", { n: fmtN(n) });
+  return t("{n} by starling itself", { n: fmtN(n) });
 }
 // quotaReadings: a line's last eight readings, newest first, each what was
 // left and when it was read (#802), a line each, ↻ where the window
@@ -297,9 +297,9 @@ new ResizeObserver(fitChartLabels).observe($("#view-usage"));
 
 // The Overview's lists — Agents, Models, Accounts, Gateway keys — each fold
 // away under their heading (#2378: 日常看账号维度较多，都要拉到最底下), and
-// stay folded across a reload (magpie.usageFolded, the folded ones' names).
+// stay folded across a reload (starling.usageFolded, the folded ones' names).
 let usageFolded = new Set();
-try { usageFolded = new Set(JSON.parse(localStorage.getItem("magpie.usageFolded") || "[]")); } catch {}
+try { usageFolded = new Set(JSON.parse(localStorage.getItem("starling.usageFolded") || "[]")); } catch {}
 const USAGE_FOLDS = { agents: ["usageAgents", "usageAgentsHid"], models: ["usageModels"], accounts: ["usageAccounts"], keys: ["usageKeys"] };
 const USAGE_FOLD_TITLES = {
   agents: ["Show the agents", "Fold the agents away"],
@@ -313,7 +313,7 @@ function mountUsageFolds() {
     b.onclick = () => {
       const id = b.dataset.fold;
       if (usageFolded.has(id)) usageFolded.delete(id); else usageFolded.add(id);
-      try { localStorage.setItem("magpie.usageFolded", JSON.stringify([...usageFolded])); } catch {}
+      try { localStorage.setItem("starling.usageFolded", JSON.stringify([...usageFolded])); } catch {}
       showUsageFolds();
       backToReader($("#view-usage"));
     };
@@ -342,9 +342,9 @@ function usageParts(texts) {
 // The Overview's token totals count what went in and out; the cache's
 // tokens, read and written, can be counted in them too (#2378), as the
 // Requests tab's total always has them. Kept as the reader left it
-// (magpie.usageWithCache).
+// (starling.usageWithCache).
 let usageWithCache = false;
-try { usageWithCache = localStorage.getItem("magpie.usageWithCache") === "1"; } catch {}
+try { usageWithCache = localStorage.getItem("starling.usageWithCache") === "1"; } catch {}
 const cacheOf = (x) => (x.cache_read || 0) + (x.cache_write || 0);
 const usageTokens = (x) => tokensOf(x) + (usageWithCache ? cacheOf(x) : 0);
 // the tokens tile's label: a pop-up of the two ways to count
@@ -362,7 +362,7 @@ function usageTokensPick() {
       { v: "1", name: "With cache", note: "Cache read and written counted too" },
     ], usageWithCache ? "1" : "", (v) => {
       usageWithCache = v === "1";
-      try { localStorage.setItem("magpie.usageWithCache", usageWithCache ? "1" : "0"); } catch {}
+      try { localStorage.setItem("starling.usageWithCache", usageWithCache ? "1" : "0"); } catch {}
       renderUsage();
     }, "Token totals", "sess-menu");
   };
@@ -461,13 +461,13 @@ function renderUsage() {
       const sub = [];
       if (g.sub) sub.push(g.sub);
       sub.push(t(g.calls === 1 ? "{n} call" : "{n} calls", { n: g.calls }));
-      // magpie's own calls apart from the agents' (#1839): magpie's row
+      // starling's own calls apart from the agents' (#1839): starling's row
       // says it is, and a model's, a key's or an account's how many of
       // its calls were
-      if (id === "usageAgents" && g.id === "magpie") who.firstChild.append(ownBadge());
+      if (id === "usageAgents" && g.id === "starling") who.firstChild.append(ownBadge());
       else if (g.own?.calls) sub.push(ownCalls(g.own.calls));
       if (g.errors) sub.push(t("{n} failed", { n: g.errors }));
-      // of those, the replies magpie ended stuck in a loop (#1858)
+      // of those, the replies starling ended stuck in a loop (#1858)
       if (g.loops) sub.push(t("{n} looped", { n: g.loops }));
       if (g.retried) sub.push(t("{n} answered on a retry", { n: g.retried }));
       // how long the streamed replies took to begin, and how fast they
@@ -512,7 +512,7 @@ function renderUsage() {
     b.setAttribute("aria-haspopup", "menu");
     b.setAttribute("aria-label", t("Actions for {name}", { name: g.name || g.id }));
     b.append(svg(DOTS, 14, 2.2));
-    // a client magpie doesn't know can be counted as one of the agents
+    // a client starling doesn't know can be counted as one of the agents
     // it does (#1958, NorethSea): a bridge that starts Codex under a name
     // of its own; the agent counting one has it put back on its own
     const counted = Object.entries(state.settings?.clientAgents || {}).filter(([, as]) => as === g.id).map(([c]) => c);
@@ -555,21 +555,21 @@ function renderUsage() {
   list("usageKeys", u.callerKeys || []);
   $("#usageNote").textContent = t("Counted from the providers' own usage reports on every call through the gateway · {path}", { path: u.path });
   // the account cards say how many of this period's requests were
-  // magpie's own (ownLine), which they could only once the summary came
+  // starling's own (ownLine), which they could only once the summary came
   if (quotas && (u.accounts?.some((g) => g.own?.calls) || $("#subscriptionUsage .quota-own"))) renderQuotas();
 }
 
 // countable is whether the Usage page's Agents list offers to count a
-// client as an agent: one magpie doesn't know, not magpie's own (#1839)
+// client as an agent: one starling doesn't know, not starling's own (#1839)
 // nor the calls that named no client.
 const COUNT_AS = "M3 3v3.5A3.5 3.5 0 0 0 6.5 10H13M10 7l3 3-3 3";
 function countable(id) {
-  return !!id && id !== "other" && !/^magpie/i.test(id) && !(state.clients || []).some((a) => a.id === id);
+  return !!id && id !== "other" && !/^starling/i.test(id) && !(state.clients || []).some((a) => a.id === id);
 }
 // pickCountAs opens the agents a client can be counted as, under its menu
 // button.
 function pickCountAs(anchor, g) {
-  const opts = (state.clients || []).filter((a) => a.id !== "magpie").map((a) => ({ v: a.id, name: a.name, literalName: true, note: "" }));
+  const opts = (state.clients || []).filter((a) => a.id !== "starling").map((a) => ({ v: a.id, name: a.name, literalName: true, note: "" }));
   openProtoMenu(anchor, opts, "", (v) => countClientAs(g.id, v), "Count this client's calls as", "", "left", false, opts.length > 8 ? "Search agents…" : "");
 }
 // countClientAs counts a client's calls as an agent's on the Usage and
@@ -627,7 +627,7 @@ const LED_PAGE = 100;
 // Remember the chart metric; start each app load split by model.
 let ledMetric = "tokens", ledSplit = "model";
 try {
-  const m = localStorage.getItem("magpie.ledMetric");
+  const m = localStorage.getItem("starling.ledMetric");
   if (["tokens", "cost", "calls", "speed"].includes(m)) ledMetric = m;
 } catch {}
 
@@ -714,7 +714,7 @@ function ledParams(extra) {
 // asked again while it is read (the refresh button, the timer) waits for
 // that read, and another page or filter cancels it. Each pick and press
 // used to send one more, and a long history's reads, all still running,
-// took the browser's few connections to magpie, so the page never came.
+// took the browser's few connections to starling, so the page never came.
 // flight: { want, ctl, p }
 const ledFlights = { page: null, heat: null };
 function ledRead(kind, path, want) {
@@ -787,7 +787,7 @@ function ledTime(when) {
 }
 // the model the reply named: amber, as the Routing page's tag, when it is
 // another than the one sent; plain when it is that one under a dated name,
-// or the member a remote magpie's routing group sent it to, said in its title
+// or the member a remote starling's routing group sent it to, said in its title
 function ledServed(r) {
   if (!r.served) return el("span", "faint", "—");
   if (r.routed && !r.swapped) {
@@ -896,14 +896,14 @@ function ledDetail(r, cols) {
   if (r.kind) add("Called for", window.kindName ? window.kindName(r.kind) : r.kind);
   if (r.ttft_ms) add("First token", ledTook(r.ttft_ms));
   // of it, what came before the request went to the vendor, and the
-  // vendor's wait from then to its first token. Before it, magpie's own
+  // vendor's wait from then to its first token. Before it, starling's own
   // time is told apart from the tries that failed first, a wait for a
   // slot and connecting and sending the body (#1532: a vendor that held a
-  // try ~100 s before its 503 read as 104 s in magpie); a record from
+  // try ~100 s before its 503 read as 104 s in starling); a record from
   // before they were kept has only the whole
   if (r.ttft_ms && r.sent_ms) {
     const split = r.own_ms != null;
-    add("In magpie", ledTook(split ? r.own_ms : r.sent_ms));
+    add("In starling", ledTook(split ? r.own_ms : r.sent_ms));
     if (split) {
       if (r.retried_ms > 0) add("Tries that failed first", ledTook(r.retried_ms));
       if (r.queued_ms > 0) add("Waiting for a slot", ledTook(r.queued_ms));
@@ -951,7 +951,7 @@ function ledDetail(r, cols) {
 
 // What was said in a request — what its agent was given, and what came back —
 // is in the agent's own session file, and read from it when a row is opened
-// (the server finds the call by its session and time); magpie keeps no copy.
+// (the server finds the call by its session and time); starling keeps no copy.
 // What came is kept here while the list is looked at, so a row opened again, or
 // drawn again as the list is read anew, doesn't ask again.
 const ledContent = new Map();
@@ -977,7 +977,7 @@ function ledLoadContent(r) {
 }
 const LED_WHY = {
   session: "No session was named with this request, so its session file can't be found",
-  agent: "magpie reads the session files of Claude Code, Claude Desktop and Codex only",
+  agent: "starling reads the session files of Claude Code, Claude Desktop and Codex only",
   missing: "This request isn't in the agent's session files: they may be deleted, moved, or not written yet",
   read: "The session file couldn't be read",
 };
@@ -995,7 +995,7 @@ function ledContentBox(c) {
     box.append(sec);
   }
   if (c.cut) box.append(el("p", "cx-none", t("There was more than is shown here")));
-  box.append(el("p", "cx-src", t("Read from the agent's session file; magpie keeps no copy")));
+  box.append(el("p", "cx-src", t("Read from the agent's session file; starling keeps no copy")));
   return box;
 }
 
@@ -1133,7 +1133,7 @@ function drawLedTrend() {
     }
     slide(host, key);
   };
-  pill($("#ledMetric"), "ledMetric", LED_TREND, ledMetric, (id) => { ledMetric = id; try { localStorage.setItem("magpie.ledMetric", id); } catch {} drawLedTrend(); });
+  pill($("#ledMetric"), "ledMetric", LED_TREND, ledMetric, (id) => { ledMetric = id; try { localStorage.setItem("starling.ledMetric", id); } catch {} drawLedTrend(); });
   const keyed = (l.callerKeys || []).length > 0;
   if (ledSplit === "callerKey" && !keyed) ledSplit = "model";
   pill($("#ledSplit"), "ledSplit", LED_SPLITS.filter(([id]) => id !== "callerKey" || keyed), ledSplit, (id) => { ledSplit = id; drawLedTrend(); });
@@ -1176,7 +1176,7 @@ function drawLedTrend() {
 // sight; the pointer on a day says its date and what it had.
 let ledHeat = null, ledHeatWant = "", ledHeatMetric = "tokens";
 try {
-  const m = localStorage.getItem("magpie.ledHeatMetric");
+  const m = localStorage.getItem("starling.ledHeatMetric");
   if (["tokens", "calls", "cost"].includes(m)) ledHeatMetric = m;
 } catch {}
 const LED_HEAT = [["tokens", "Tokens"], ["calls", "Requests"], ["cost", "Cost"]];
@@ -1234,7 +1234,7 @@ function drawLedHeat() {
     b.onclick = () => {
       if (id === ledHeatMetric) return;
       ledHeatMetric = id;
-      try { localStorage.setItem("magpie.ledHeatMetric", id); } catch {}
+      try { localStorage.setItem("starling.ledHeatMetric", id); } catch {}
       drawLedHeat();
     };
     seg.append(b);
@@ -1425,7 +1425,7 @@ const ledRowSpeed = (r) => { const d = ledDecode(r); return d ? d.n / (d.w / 100
 // speed after the first token can't be under. Against Claude Code's own
 // stream it read 2–5% under for a reply of 1,400 tokens or more, 11–33% for
 // a shorter one or one asked with a tool's result, so only a reply of 1,000
-// or more is told. 0 when it tells none, and a call magpie timed tells its
+// or more is told. 0 when it tells none, and a call starling timed tells its
 // own (ledDecode). Only the row's: the period's speed counts timed calls.
 // Claude Code's, Claude Desktop's and Codex's files only (usage.FloorAgents):
 // a call's time is from what asked for it, never from inside it. OpenCode's
@@ -1547,7 +1547,7 @@ function renderLedger() {
   }
   $("#ledSum").textContent = sum.join(" · ");
   // the two sources and their total, in the same block of cells as the totals
-  // above them: what magpie carried, what it only read about in the agents'
+  // above them: what starling carried, what it only read about in the agents'
   // own session files, and the two together. Each is a filter: picking one
   // lists only its requests, and the total is the way back. Its own numbers
   // are counted with the pick cleared (usage.RequestPage), so all three stay
@@ -1596,8 +1596,8 @@ function renderLedger() {
     }
     via.style.setProperty("--vias", String(n));
     tile(cells[0], "all requests", thru.calls + dir.calls + rep.calls, all, "");
-    tile(cells[1], "through magpie", thru.calls, thru, "through");
-    tile(cells[2], "not through magpie", dir.calls, dir, "direct");
+    tile(cells[1], "through starling", thru.calls, thru, "through");
+    tile(cells[2], "not through starling", dir.calls, dir, "direct");
     if (n === 4) tile(cells[3], "reported by apps", rep.calls, rep, "reported");
     via.hidden = false;
   } else {
@@ -1662,20 +1662,20 @@ function renderLedger() {
     }
     td(when, "when", new Date(r.t).toLocaleString(intlLang()));
     const who = el("span", "who");
-    // an agent on another computer, whose magpie passed the request on
+    // an agent on another computer, whose starling passed the request on
     const name = r.agentName || r.agent;
     // one made on another computer, whose usage sync brought (#542)
     const at = r.computerName ? t("{agent} · on {computer}", { agent: name, computer: r.computerName }) : name;
     who.append(icon(r.icon || "generic"), el("span", "", [r.via ? t("{agent} · via {host}", { agent: at, host: r.via }) : at, r.callerKeyLabel || r.callerKeyName].filter(Boolean).join(" · ")));
-    // a request magpie made by itself, apart from the agents' own (#1839)
-    if (r.agent === "magpie") who.append(ownBadge());
+    // a request starling made by itself, apart from the agents' own (#1839)
+    if (r.agent === "starling") who.append(ownBadge());
     td(who, "", [r.kind, r.session && t("session {id}", { id: r.session })].filter(Boolean).join(" · "));
     td(r.req || "—", "model" + (r.req ? "" : " faint"), r.req || t("Not kept for requests before this version"));
     const local = r.source === "log";
     // A session file names the provider it was set up to call, which is
     // where a call that went straight to a vendor went: nothing stood
     // between the agent and it. It is the file's own record and not a route
-    // magpie saw, so the id the file carries is shown as it is — never
+    // starling saw, so the id the file carries is shown as it is — never
     // resolved to a provider's name, which would promote an unknown request
     // to an official provider — and the row keeps saying it is a local
     // session. A row whose file names none says only that.
@@ -1702,14 +1702,14 @@ function renderLedger() {
     if (local && (r.session_account || r.session_provider)) {
       const k = el("span", "src local", t("Local session"));
       k.title = r.session_provider
-        ? t("Read from the agent's session file, which names the provider it was set up to call. The name shown is that record, not a route magpie saw.")
+        ? t("Read from the agent's session file, which names the provider it was set up to call. The name shown is that record, not a route starling saw.")
         : t("Read from the agent's session file. The account is shown only when local metadata identifies it; no service provider is inferred.");
       badges.append(k);
     }
     // a call an app reported itself (#1874): it went straight to its vendor
     if (r.source === "reported") {
       const k = el("span", "src reported", t("Reported"));
-      k.title = t("Reported by the app that made it, through POST /v1/magpie/usage/requests: the call went straight to its vendor, not through magpie.");
+      k.title = t("Reported by the app that made it, through POST /v1/starling/usage/requests: the call went straight to its vendor, not through starling.");
       badges.append(k);
     }
     if (badges.childElementCount) wc.append(badges);
@@ -1836,7 +1836,7 @@ function renderLedger() {
 
 const USAGE_TABS = [["usage", "Overview"], ["requests", "Requests"], ["sessions", "Sessions"], ["context", "Context"]];
 let usageTab = "usage";
-try { const k = localStorage.getItem("magpie.usageTab"); if (USAGE_TABS.some(([id]) => id === k)) usageTab = k; } catch {}
+try { const k = localStorage.getItem("starling.usageTab"); if (USAGE_TABS.some(([id]) => id === k)) usageTab = k; } catch {}
 let sessAgent = "all";
 let sessQuery = "";
 // The list is drawn in pages: every session is read (so the count beside it
@@ -1866,11 +1866,11 @@ let sessMetric = "tokens";
 const SESS_TOPS = [["tokens", "Tokens"], ["cost", "Cost"], ["active", "Active"]];
 let sessTopBy = "tokens";
 try {
-  const r = localStorage.getItem("magpie.sessRange");
+  const r = localStorage.getItem("starling.sessRange");
   if (SESS_RANGES.some(([id]) => id === r)) sessRange = r;
-  const m = localStorage.getItem("magpie.sessMetric");
+  const m = localStorage.getItem("starling.sessMetric");
   if (SESS_METRICS.some(([id]) => id === m)) sessMetric = m;
-  const b = localStorage.getItem("magpie.sessTop");
+  const b = localStorage.getItem("starling.sessTop");
   if (SESS_TOPS.some(([id]) => id === b)) sessTopBy = b;
 } catch {}
 let sessStats = null; // { from, to, days: [{ date, usage, active }], agents } for sessRange
@@ -1895,7 +1895,7 @@ function renderUsageTab() {
       if (id === usageTab) return;
       if (usageTab === "requests") ledLeave();
       usageTab = id;
-      try { localStorage.setItem("magpie.usageTab", id); } catch {}
+      try { localStorage.setItem("starling.usageTab", id); } catch {}
       $("#usageCost").replaceChildren();
       // to the Overview is to the allowances (#1588)
       loadUsage(id === "usage").catch((e) => status(e.message, "err"));
@@ -2219,7 +2219,7 @@ function renderSessRange(loading) {
     b.onclick = () => {
       if (id === sessRange) return;
       sessRange = id;
-      try { localStorage.setItem("magpie.sessRange", id); } catch {}
+      try { localStorage.setItem("starling.sessRange", id); } catch {}
       sessStats = null;
       loadSessions().catch((e) => status(e.message, "err"));
     };
@@ -2352,7 +2352,7 @@ function renderSessions() {
       const history = el("button", "text sess-show-history", t("All sessions"));
       history.onclick = () => {
         sessRange = "all";
-        try { localStorage.setItem("magpie.sessRange", sessRange); } catch {}
+        try { localStorage.setItem("starling.sessRange", sessRange); } catch {}
         sessStats = null;
         loadSessions().catch((e) => status(e.message, "err"));
       };
@@ -2619,7 +2619,7 @@ function renderSessChart(chart, st, used, ov, acts) {
     const head = el("div", "sess-chart-head");
     const seg = sessSegs(SESS_METRICS.map(([id, name]) => [id, name, off[id]]), metric, (id) => {
       sessMetric = id;
-      try { localStorage.setItem("magpie.sessMetric", id); } catch {}
+      try { localStorage.setItem("starling.sessMetric", id); } catch {}
       chart.redraw();
     });
     head.append(el("span", "label", t(shape === "week" ? "By week" : shape === "day" ? "By day" : "Activity")), seg, el("span", "grow"));
@@ -2773,7 +2773,7 @@ function renderSessTop() {
   const head = sessCardHead("Top sessions");
   const seg = sessSegs(SESS_TOPS, sessTopBy, (id) => {
     sessTopBy = id;
-    try { localStorage.setItem("magpie.sessTop", id); } catch {}
+    try { localStorage.setItem("starling.sessTop", id); } catch {}
     renderSessTop();
   });
   head.append(el("span", "grow"), seg);
@@ -2790,12 +2790,12 @@ function renderSessTop() {
     const r = el("div", "row sess sess-top");
     r.append(icon(icons.get(s.agent) || "generic"));
     const who = el("div", "who");
-    // a session magpie saw only through the gateway (#2285: a Pi
+    // a session starling saw only through the gateway (#2285: a Pi
     // subagent's, its file in a temp folder) has no folder and no prompt
     // unless gateway conversations are recorded: say so, not "(no prompt)"
     who.append(el("div", "name", s.title || t(s.gateway ? "(prompt not recorded)" : "(no prompt)")));
     const sub = el("div", "sub", [s.cwd ? baseName(s.cwd) : s.gateway ? t("Gateway session") : "", names[s.agent] || s.agent, s.models?.[0], ago(s.last)].filter(Boolean).join(" · "));
-    sub.title = s.cwd || (s.gateway ? t("Seen only through the gateway: the agent kept no session file magpie can read. Turn on Record gateway conversations in Sessions to keep its prompts.") : "");
+    sub.title = s.cwd || (s.gateway ? t("Seen only through the gateway: the agent kept no session file starling can read. Turn on Record gateway conversations in Sessions to keep its prompts.") : "");
     who.append(sub);
     r.append(who);
     const fc = fmtCost({ cost: s.cost, unpriced: !s.priced });
@@ -2825,7 +2825,7 @@ function renderSessTop() {
 // the ways a session's shape is told, and the one shown
 const SESS_SHAPES = [["messages", "Messages"], ["minutes", "Length"], ["autonomy", "Tool calls"]];
 let sessShapeBy = "messages";
-try { const v = localStorage.getItem("magpie.sessShape"); if (SESS_SHAPES.some(([id]) => id === v)) sessShapeBy = v; } catch {}
+try { const v = localStorage.getItem("starling.sessShape"); if (SESS_SHAPES.some(([id]) => id === v)) sessShapeBy = v; } catch {}
 
 // renderSessShape counts the range's sessions by how long they ran: by
 // messages, by minutes at work, or by tool calls a prompt
@@ -2838,7 +2838,7 @@ function renderSessShape() {
   const head = sessCardHead("Session shape");
   const seg = sessSegs(SESS_SHAPES, sessShapeBy, (id) => {
     sessShapeBy = id;
-    try { localStorage.setItem("magpie.sessShape", id); } catch {}
+    try { localStorage.setItem("starling.sessShape", id); } catch {}
     renderSessShape();
   });
   head.append(seg, el("span", "grow"), el("span", "tz", sh ? t(sh.total === 1 ? "{n} session" : "{n} sessions", { n: fmtN(sh.total) }) : ""));
@@ -3084,7 +3084,7 @@ function sessionItem(s) {
   r.append(go);
   const open = (e) => {
     if (window.getSelection()?.toString()) return;
-    if (!featuresOff.has("sessions")) return magpie.call("sessions", "reveal", s, e);
+    if (!featuresOff.has("sessions")) return starling.call("sessions", "reveal", s, e);
     // Sessions is switched off: there is no page to open it on
     sessListOpen = sessListOpen === key ? "" : key;
     // one open at a time: the one that was folds
@@ -3129,7 +3129,7 @@ function sessionDetail(s) {
 }
 
 // All sessions: the Sessions page, on the agent picked here if one is
-$("#sessAll").onclick = (e) => magpie.call("sessions", "reveal", sessAgent === "all" ? {} : { agent: sessAgent }, e);
+$("#sessAll").onclick = (e) => starling.call("sessions", "reveal", sessAgent === "all" ? {} : { agent: sessAgent }, e);
 $("#sessQ").oninput = (e) => { sessQuery = e.target.value; if (sessions) renderSessions(); };
 $("#sessQ").onkeydown = (e) => { if (e.key === "Escape" && e.target.value) { e.stopPropagation(); e.target.value = ""; sessQuery = ""; if (sessions) renderSessions(); } };
 
@@ -3137,7 +3137,7 @@ $("#sessQ").onkeydown = (e) => { if (e.key === "Escape" && e.target.value) { e.s
 //
 // Three choices (palette, language, what the tray icon opens) and the facts
 // people come looking for:
-// the version, where magpie keeps its files, the gateway's address.
+// the version, where starling keeps its files, the gateway's address.
 
 // The Usage page reads its numbers again while it is looked at, as often as
 // the reader says — off, or every 5 s to a minute (a request through the gateway
@@ -3147,7 +3147,7 @@ $("#sessQ").onkeydown = (e) => { if (e.key === "Escape" && e.target.value) { e.s
 const USAGE_EVERY = [[0, "Off"], [5, "5 s"], [10, "10 s"], [30, "30 s"], [60, "1 min"]];
 let usageEvery = 5; // seconds; 0 is off
 try {
-  const v = localStorage.getItem("magpie.usageEvery");
+  const v = localStorage.getItem("starling.usageEvery");
   if (USAGE_EVERY.some(([n]) => String(n) === v)) usageEvery = Number(v);
 } catch {}
 let usageLast = 0, usageReadAt = 0, sessionsAt = 0, quotasAsked = 0;
@@ -3162,7 +3162,7 @@ function renderUsageEvery() {
     if (b.classList.contains("open")) return closeProtoMenu();
     openProtoMenu(b, USAGE_EVERY.map(([n, name]) => ({ v: String(n), name: t(name), note: "" })), String(usageEvery), (v) => {
       usageEvery = Number(v);
-      try { localStorage.setItem("magpie.usageEvery", v); } catch {}
+      try { localStorage.setItem("starling.usageEvery", v); } catch {}
       usageLast = performance.now();
       renderUsageEvery();
     }, "Refresh every", "sess-menu");

@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Pi asks each model on the API its provider serves it on, so the gateway
@@ -38,14 +38,14 @@ func TestPiModelsAskedOnTheirNativeAPI(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err := pi(home).Field("model").Set("magpie/resp/grok-5"); err != nil {
+	if err := pi(home).Field("model").Set("starling/resp/grok-5"); err != nil {
 		t.Fatal(err)
 	}
 	var file map[string]any
 	if err := json.Unmarshal([]byte(readFile(filepath.Join(home, ".pi", "agent", "models.json"))), &file); err != nil {
 		t.Fatal(err)
 	}
-	pm := file["providers"].(map[string]any)["magpie"].(map[string]any)
+	pm := file["providers"].(map[string]any)["starling"].(map[string]any)
 	if pm["api"] != "openai-completions" || pm["baseUrl"] != gatewayV1() {
 		t.Fatalf("provider: %v", pm)
 	}

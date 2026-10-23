@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/gwmw"
-	"github.com/lulu58588/chongyun/internal/maskrec"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/gwmw"
+	"github.com/lulu58588/starling/internal/maskrec"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A masked request is recorded for Settings → Privacy: each value by its

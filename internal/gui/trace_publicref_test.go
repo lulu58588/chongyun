@@ -10,13 +10,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
-// The Routing page names a group magpie found as agents pick it,
+// The Routing page names a group starling found as agents pick it,
 // auto/<model>, wherever a route names one: the model the agent asked
 // for, the group and the groups in it, the request a search was for and a
 // subagent's pick (未寒 报告: the live view still said

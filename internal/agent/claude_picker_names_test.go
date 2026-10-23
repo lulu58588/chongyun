@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // love1sbug 报告: switching Names in agents' lists between Off, Not on
@@ -18,7 +18,7 @@ import (
 // modelPicker labelled every model by its name alone. Each row is now
 // labelled as every agent's list names the model (provider.Labels), and
 // written again when the setting changes; a description that would repeat
-// the provider the label says is left "via chongyun".
+// the provider the label says is left "via starling".
 func TestClaudePickerFollowsSuffixMode(t *testing.T) {
 	home := syncHome(t)
 	if err := provider.Save(provider.Provider{ID: "relay", Name: "Relay", Key: "k", Chat: "http://127.0.0.1:1/v1", Models: []string{"glm-4.6", "glm-5"}}); err != nil {
@@ -57,10 +57,10 @@ func TestClaudePickerFollowsSuffixMode(t *testing.T) {
 		glm, mine, mix  string
 		glmNote, mixNot string
 	}{
-		{provider.SuffixOn, "GLM-4.6 · Relay", "My GLM · Relay", "Mix · routing group", "via chongyun", "via chongyun"},
-		{provider.SuffixOwn, "GLM-4.6 · Relay", "My GLM", "Mix", "via chongyun", "routing group · via chongyun"},
-		{provider.SuffixOff, "GLM-4.6", "My GLM", "Mix", "Relay · via chongyun", "routing group · via chongyun"},
-		{provider.SuffixOn, "GLM-4.6 · Relay", "My GLM · Relay", "Mix · routing group", "via chongyun", "via chongyun"},
+		{provider.SuffixOn, "GLM-4.6 · Relay", "My GLM · Relay", "Mix · routing group", "via starling", "via starling"},
+		{provider.SuffixOwn, "GLM-4.6 · Relay", "My GLM", "Mix", "via starling", "routing group · via starling"},
+		{provider.SuffixOff, "GLM-4.6", "My GLM", "Mix", "Relay · via starling", "routing group · via starling"},
+		{provider.SuffixOn, "GLM-4.6 · Relay", "My GLM · Relay", "Mix · routing group", "via starling", "via starling"},
 	} {
 		if err := provider.SetSuffixMode(c.mode); err != nil {
 			t.Fatal(err)
@@ -104,7 +104,7 @@ func TestClaudePickerSubscriptionSaysItsProvider(t *testing.T) {
 		"refresh_token": "r-1", "account_id": "acct-1"}})
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), auth, 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json: the agent's own file is never read to find out.
 	var blob map[string]any
 	json.Unmarshal(auth, &blob)
@@ -121,8 +121,8 @@ func TestClaudePickerSubscriptionSaysItsProvider(t *testing.T) {
 	catalog.Changed = SyncCatalog
 	t.Cleanup(func() { catalog.Changed = nil })
 	for _, c := range []struct{ mode, label, note string }{
-		{provider.SuffixOn, "GPT-5.5 · Codex", "me@example.com · via chongyun"},
-		{provider.SuffixOff, "GPT-5.5", "Codex · me@example.com · via chongyun"},
+		{provider.SuffixOn, "GPT-5.5 · Codex", "me@example.com · via starling"},
+		{provider.SuffixOff, "GPT-5.5", "Codex · me@example.com · via starling"},
 	} {
 		if err := provider.SetSuffixMode(c.mode); err != nil {
 			t.Fatal(err)

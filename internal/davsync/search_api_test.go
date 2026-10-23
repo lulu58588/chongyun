@@ -3,8 +3,8 @@ package davsync
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/backup"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/backup"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // The search APIs (#419) sync with the providers: sent without keys, the
@@ -30,7 +30,7 @@ func TestSyncSearchAPIs(t *testing.T) {
 		t.Error("a search API isn't a change")
 	}
 
-	// brought from a magpie before them, the ones here stay
+	// brought from a starling before them, the ones here stay
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	if err := provider.SetSearchAPI(provider.SearchAPI{Vendor: "exa", Key: "k"}); err != nil {
 		t.Fatal(err)
@@ -39,7 +39,7 @@ func TestSyncSearchAPIs(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(provider.StoredSearchAPIs()) != 1 {
-		t.Fatal("an older chongyun's providers took them away")
+		t.Fatal("an older starling's providers took them away")
 	}
 	if err := bring(backup.Bundle{Searches: &[]provider.SearchAPI{}}, "providers"); err != nil {
 		t.Fatal(err)

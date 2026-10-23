@@ -22,7 +22,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const w = zh
         ? { label: "此密钥可用的模型", all: "全部模型", gone: "当前未提供", off: "当前未登录", used: "会被使用：OpenAI 没有勾选任何账号", hint: "没勾选任何账号的供应商" }
         : { label: "Models this key may use", all: "All models", gone: "Not served now", off: "Not signed in now", used: "Used: no OpenAI account is picked", hint: "A provider with no account picked is used on every account" };
-      await page.goto("http://magpie.test/?view=gateway");
+      await page.goto("http://starling.test/?view=gateway");
       await page.locator("#gatewayKeys .acc[data-key]").last().waitFor();
       const row = (id) => page.locator(`#gatewayKeys .acc[data-key="${id}"]`);
       // what the menu sends on close is sent asynchronously: wait for it

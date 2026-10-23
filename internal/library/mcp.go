@@ -20,13 +20,13 @@ import (
 	"github.com/tidwall/jsonc"
 	"gopkg.in/yaml.v3"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/imagemcp"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/imagemcp"
 )
 
-// Server is one MCP server: a command magpie's agents start, or a URL they
+// Server is one MCP server: a command starling's agents start, or a URL they
 // reach.
 type Server struct {
 	Name string `json:"name"`
@@ -42,9 +42,9 @@ type Server struct {
 	// names the server gives them, written in each agent's own way where
 	// it has one (mcp_tools_off.go)
 	DisabledTools []string `json:"disabledTools,omitempty"`
-	// OAuth is an OAuth app of the user's own that magpie signs in to the
-	// server as, for one whose sign-in doesn't let magpie register itself
-	// (GitHub's, 新v学员 报告). It is magpie's alone: the agents are
+	// OAuth is an OAuth app of the user's own that starling signs in to the
+	// server as, for one whose sign-in doesn't let starling register itself
+	// (GitHub's, 新v学员 报告). It is starling's alone: the agents are
 	// given the server as before.
 	OAuth *OAuthApp `json:"oauth,omitempty"`
 }
@@ -100,7 +100,7 @@ func (s *Server) check() error {
 	default:
 		return fmt.Errorf("%s: unknown transport %q", s.Name, s.Transport)
 	}
-	// magpie signs in only to a streamable HTTP server
+	// starling signs in only to a streamable HTTP server
 	if s.Transport != "http" {
 		s.OAuth = nil
 	} else if s.OAuth != nil {
@@ -201,7 +201,7 @@ type mcpFile struct {
 	// reads, with what couldn't be moved from it.
 	Extra []string
 	// WSL: the agent runs in a WSL distro, where a Windows program isn't
-	// one it can start, but for magpie's own (side); Distro is its name and
+	// one it can start, but for starling's own (side); Distro is its name and
 	// Home its $HOME as the distro spells it
 	WSL          bool
 	Distro, Home string
@@ -252,7 +252,7 @@ func (f *mcpFile) supports(s *Server) error {
 // backslash in it, or …/npx.cmd.
 var windowsPath = regexp.MustCompile(`^[A-Za-z]:[\\/]|\\|(?i)\.(?:exe|cmd|bat|ps1)$`)
 
-// foreign says why an entry by the server's name that magpie can't read as
+// foreign says why an entry by the server's name that starling can't read as
 // a server is one it mustn't write over, or nil: Zed's server from an
 // extension is its "settings" alone, which a command written beside it
 // would take the place of, and taking the server off Zed then would take
@@ -267,7 +267,7 @@ func (f *mcpFile) foreign(old map[string]any) error {
 	return errZedExtension
 }
 
-var errZedExtension = errors.New("Zed has a server by this name from one of its extensions, which chongyun leaves as it is: give the server another name to give it to Zed")
+var errZedExtension = errors.New("Zed has a server by this name from one of its extensions, which starling leaves as it is: give the server another name to give it to Zed")
 
 // errNoRemote is what the page says of an app that reaches only a server
 // it runs itself (Claude Desktop, whose remote ones are its Connectors).
@@ -337,7 +337,7 @@ func (o ordered) MarshalYAML() (any, error) {
 }
 
 // selfTimeout is the seconds an agent waits for a tool of s: what
-// magpie-image's video tool needs, else def.
+// starling-image's video tool needs, else def.
 func selfTimeout(s *Server, def int) int {
 	if s.Name == selfServerName && s.Command != "" {
 		return int(imagemcp.ToolTimeout().Seconds())
@@ -345,11 +345,11 @@ func selfTimeout(s *Server, def int) int {
 	return def
 }
 
-// gooseOldTimeout is the timeout magpie wrote for every Goose server before
-// magpie-image was given a longer one.
+// gooseOldTimeout is the timeout starling wrote for every Goose server before
+// starling-image was given a longer one.
 const gooseOldTimeout = 300
 
-// behind says whether an entry magpie wrote before lacks the timeout it
+// behind says whether an entry starling wrote before lacks the timeout it
 // gives s now: Codex's tool_timeout_sec is missing, or Goose's timeout is
 // still the gooseOldTimeout every server had. A value the user chose is
 // neither, so it is left as it is.
@@ -595,7 +595,7 @@ func (f *mcpFile) encode(s *Server) ordered {
 		}
 	case fmtAntigravity:
 		// Antigravity tells SSE from streamable HTTP itself; "type" only
-		// lets magpie read an SSE server back as one (agy keeps the key)
+		// lets starling read an SSE server back as one (agy keeps the key)
 		if s.Remote() {
 			if s.Transport == "sse" {
 				add("type", "sse")
@@ -675,7 +675,7 @@ func strMap(v any) map[string]string {
 	return out
 }
 
-// decode reads one of the agent's entries; false for one magpie can't read
+// decode reads one of the agent's entries; false for one starling can't read
 // as a server (a Goose builtin, say).
 func (f *mcpFile) decode(name string, m map[string]any) (*Server, bool) {
 	s := &Server{Name: name}
@@ -752,7 +752,7 @@ func (f *mcpFile) decode(name string, m map[string]any) (*Server, bool) {
 		}
 	case fmtDsh:
 		// a variable read as dshRef writes it is a reference; any other
-		// value dsh works out itself (!!js) isn't one magpie can hold
+		// value dsh works out itself (!!js) isn't one starling can hold
 		headers, env := dshUnrefs(m["headers"]), dshUnrefs(m["env"])
 		for _, k := range owned[fmtDsh] {
 			v := m[k]
@@ -941,7 +941,7 @@ func cloneAny(v any) any {
 	return v
 }
 
-// read is every server in the file, magpie's or not, by name.
+// read is every server in the file, starling's or not, by name.
 func (f *mcpFile) read() (map[string]*Server, error) {
 	es, err := f.entries()
 	out := map[string]*Server{}
@@ -951,7 +951,7 @@ func (f *mcpFile) read() (map[string]*Server, error) {
 		}
 	}
 	if (f.Format == fmtPi || f.Format == fmtPiNative || f.Format == fmtDesktop) && err == nil {
-		// Pi's (or Desktop's) other files, the one magpie writes first
+		// Pi's (or Desktop's) other files, the one starling writes first
 		// winning a name
 		for _, p := range append(slices.Clone(f.Also), f.Extra...) {
 			more, _ := (&mcpFile{Path: p, Format: f.Format}).read()
@@ -1002,9 +1002,9 @@ func (f *mcpFile) holds(name string) bool {
 	return false
 }
 
-// owned are the keys of an entry that say what the server is: magpie
+// owned are the keys of an entry that say what the server is: starling
 // writes them. An entry's other keys — a timeout, the tools it may call,
-// a note — are the user's, and kept when magpie writes the server again.
+// a note — are the user's, and kept when starling writes the server again.
 var owned = map[mcpFormat][]string{
 	fmtClaude:   {"type", "url", "headers", "command", "args", "env"},
 	fmtCrush:    {"type", "url", "headers", "command", "args", "env"},
@@ -1018,7 +1018,7 @@ var owned = map[mcpFormat][]string{
 	fmtCodex:   {"url", "http_headers", "command", "args", "env"},
 	fmtDesktop: {"url", "headers", "command", "args", "env"},
 	fmtPi:      {"transport", "httpTransport", "url", "headers", "command", "args", "env"},
-	// the adapter's transport keys too, dropped when magpie writes the
+	// the adapter's transport keys too, dropped when starling writes the
 	// entry again
 	fmtPiNative: {"type", "transport", "httpTransport", "url", "headers", "command", "args", "env"},
 	fmtZCode:    {"type", "url", "headers", "command", "args", "env"},
@@ -1031,18 +1031,18 @@ var owned = map[mcpFormat][]string{
 	fmtDevin:  {"transport", "type", "url", "headers", "command", "args", "env"},
 	// enabled and the timeouts are the user's
 	fmtGrok: {"type", "url", "headers", "command", "args", "env"},
-	// the flat shape's keys go when magpie writes the entry again
+	// the flat shape's keys go when starling writes the entry again
 	fmtCline:       {"transport", "type", "transportType", "url", "headers", "command", "args", "cwd", "env"},
 	fmtCommandCode: {"transport", "type", "url", "headers", "command", "args", "env"},
 	// enabled, remote, timeout and oauth are the user's
 	fmtZed: {"url", "headers", "command", "args", "env"},
 
-	// a url agy read in place of serverUrl goes when magpie writes one
+	// a url agy read in place of serverUrl goes when starling writes one
 	fmtAntigravity: {"type", "serverUrl", "url", "headers", "command", "args", "env"},
 }
 
-// mine are the keys of the entry magpie writes for s. The keys of Codex's
-// and Goose's that name a variable are magpie's only while s references
+// mine are the keys of the entry starling writes for s. The keys of Codex's
+// and Goose's that name a variable are starling's only while s references
 // one there (refKeys): an env_vars or env_keys the user gave a server
 // whose library entry has none stays theirs.
 func (f *mcpFile) mine(s *Server) []string {
@@ -1054,7 +1054,7 @@ func (f *mcpFile) mine(s *Server) []string {
 
 // current is the agent's entry read as the server, for comparing with s:
 // what decode reads, but for the variables a Codex or Goose entry names in
-// keys that are the user's rather than magpie's (mine).
+// keys that are the user's rather than starling's (mine).
 func (f *mcpFile) current(name string, m map[string]any, s *Server) (*Server, bool) {
 	cur, ok := f.decode(name, m)
 	if !ok || cur == nil || len(f.refKeys(s)) > 0 {
@@ -1087,8 +1087,8 @@ func (f *mcpFile) current(name string, m map[string]any, s *Server) (*Server, bo
 	return cur, true
 }
 
-// merged is the entry magpie writes, with what the user added to the old
-// one kept; a default magpie gives (Copilot's tools, Goose's timeout)
+// merged is the entry starling writes, with what the user added to the old
+// one kept; a default starling gives (Copilot's tools, Goose's timeout)
 // yields to the user's.
 func (f *mcpFile) merged(s *Server, old map[string]any) ordered {
 	o := f.encode(s)

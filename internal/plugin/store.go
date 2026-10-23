@@ -1,16 +1,16 @@
-// Package plugin runs OpenCode's provider plugins for magpie.
+// Package plugin runs OpenCode's provider plugins for starling.
 //
 // A subscription a vendor may object to being used outside its own app is
-// not built into magpie: a plugin signs in to it and makes its requests,
+// not built into starling: a plugin signs in to it and makes its requests,
 // the way OpenCode's plugins do (opencode-gemini-auth and the like), and
-// magpie runs those same plugins. They are npm packages (or local files)
+// starling runs those same plugins. They are npm packages (or local files)
 // written against OpenCode's plugin API (@opencode-ai/plugin, v1): their
 // auth hook gives the sign-in methods and a loader whose fetch carries the
-// requests, their config and provider hooks the models. magpie runs them
+// requests, their config and provider hooks the models. starling runs them
 // under Bun, downloaded the first time a plugin is added, in one process
 // (host.js) it talks to over stdin and stdout.
 //
-// What magpie keeps: plugins.json, the plugins and the config handed to
+// What starling keeps: plugins.json, the plugins and the config handed to
 // them (OpenCode's, its provider section: a plugin's options); the npm
 // packages under plugins/; plugin-auth.json, the sign-ins, in OpenCode's
 // auth.json shape (so one can be moved between the two).
@@ -34,12 +34,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/lastgood"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/steady"
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/lastgood"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/steady"
+	"github.com/lulu58588/starling/internal/update"
 )
 
 // Entry is one plugin the user added.
@@ -86,19 +86,19 @@ func runBun(ctx context.Context, bun string, args ...string) ([]byte, error) {
 	return bunCommand(ctx, bun, Dir(), args...).CombinedOutput()
 }
 
-// Dir is the folder magpie installs npm plugins into.
+// Dir is the folder starling installs npm plugins into.
 func Dir() string { return filepath.Join(settings.Dir(), "plugins") }
 
 // AuthPath is the plugins' sign-ins, OpenCode's auth.json in shape.
 func AuthPath() string { return filepath.Join(settings.Dir(), "plugin-auth.json") }
 
 // authLockStale is how long plugin-auth.json.lock is held at most: one
-// older was left by a host or a magpie that died holding it.
+// older was left by a host or a starling that died holding it.
 const authLockStale = 10 * time.Second
 
 // lockAuth takes plugin-auth.json.lock, which host.js takes too, for a
 // change to plugin-auth.json read afresh under it: two hosts (one being
-// restarted) and magpie never write each other's accounts away. It gives
+// restarted) and starling never write each other's accounts away. It gives
 // the unlock.
 func lockAuth() func() {
 	lock := AuthPath() + ".lock"
@@ -208,7 +208,7 @@ func cloneJSON(v any) any {
 	}
 }
 
-// writeWhole writes b to p by a rename, so a magpie or the host reading
+// writeWhole writes b to p by a rename, so a starling or the host reading
 // p meanwhile reads the old file or the new one, never one half-written,
 // and flushed to the disk first, so a machine that goes down meanwhile
 // doesn't leave p all zero (#1505); read back with steady.ReadFile, which
@@ -237,7 +237,7 @@ func save(l List) error {
 	return nil
 }
 
-// listSeen is plugins.json as this magpie last wrote or read it.
+// listSeen is plugins.json as this starling last wrote or read it.
 var listSeen struct {
 	sync.Mutex
 	stamp string
@@ -245,7 +245,7 @@ var listSeen struct {
 }
 
 // listStamp is plugins.json as it is now, and what is installed: bun's
-// package.json and lockfile in Dir(), which `chongyun plugin update` changes
+// package.json and lockfile in Dir(), which `starling plugin update` changes
 // without touching plugins.json (#952: a terminal's update to 0.1.18 left
 // the app's host answering with 0.1.17 until it was killed).
 func listStamp() string {
@@ -259,14 +259,14 @@ func listStamp() string {
 	return b.String()
 }
 
-// hostStale is set when another magpie changed the plugins (magpie plugin
+// hostStale is set when another starling changed the plugins (starling plugin
 // add, remove, update or move in a terminal while the app runs): the host
 // running has the old ones loaded.
 var hostStale atomic.Bool
 
-// checkList notices plugins.json changed by another magpie: the host is
+// checkList notices plugins.json changed by another starling: the host is
 // started again with the plugins as they are, and the providers the other
-// magpie last saw asked for are the ones known meanwhile.
+// starling last saw asked for are the ones known meanwhile.
 func checkList() {
 	st := listStamp()
 	listSeen.Lock()
@@ -456,7 +456,7 @@ var indexFiles = []string{"index.ts", "index.tsx", "index.js", "index.mjs", "ind
 // notPlugin says why the plugin at target is nothing the host can load,
 // or nil: a package that names no file to import (main, exports), has no
 // index file, and is neither pi's nor a middleware — a command alone
-// (bin), an MCP server like magpie-x-search, is installed fine and then
+// (bin), an MCP server like starling-x-search, is installed fine and then
 // never loads (#1327).
 func notPlugin(target string) error {
 	st, err := os.Stat(target)
@@ -497,7 +497,7 @@ func notPlugin(target string) error {
 	if name == "" {
 		name = filepath.Base(target)
 	}
-	why := fmt.Sprintf("%s isn't an OpenCode or chongyun plugin: its package names no file to load (no main or exports in package.json, no index file)", name)
+	why := fmt.Sprintf("%s isn't an OpenCode or starling plugin: its package names no file to load (no main or exports in package.json, no index file)", name)
 	if len(pkg.Bin) > 0 && string(pkg.Bin) != "null" {
 		why += ", only a command (bin). If it is an MCP server, add it under Library → MCP servers instead"
 	}
@@ -701,7 +701,7 @@ func install(ctx context.Context, spec string) error {
 	installMu.Lock()
 	pj := filepath.Join(Dir(), "package.json")
 	if _, err := os.Stat(pj); err != nil {
-		if err := os.WriteFile(pj, []byte("{\n  \"name\": \"magpie-plugins\",\n  \"private\": true\n}\n"), 0o644); err != nil {
+		if err := os.WriteFile(pj, []byte("{\n  \"name\": \"starling-plugins\",\n  \"private\": true\n}\n"), 0o644); err != nil {
 			installMu.Unlock()
 			return err
 		}
@@ -752,7 +752,7 @@ func installAt(ctx context.Context, pkg, version string) error {
 		// what bun said comes first: the page's status line shows the
 		// start of a long message
 		if m := minAge.FindStringSubmatch(err.Error()); m != nil {
-			return fmt.Errorf("%s %s isn't installed yet: Bun's minimumReleaseAge (in a .bunfig.toml) holds back versions published less than %s ago, and chongyun installs it once it is older (%w)", pkg, version, ageText(m[1]), err)
+			return fmt.Errorf("%s %s isn't installed yet: Bun's minimumReleaseAge (in a .bunfig.toml) holds back versions published less than %s ago, and starling installs it once it is older (%w)", pkg, version, ageText(m[1]), err)
 		}
 		var said []string
 		for _, l := range strings.Split(err.Error(), "\n") {
@@ -919,7 +919,7 @@ func command(ctx context.Context, name string, args ...string) *exec.Cmd {
 	return proc.CommandContext(ctx, name, args...)
 }
 
-// env is the plugins' environment: magpie's, with its proxy.
+// env is the plugins' environment: starling's, with its proxy.
 func env() []string { return netproxy.Env(os.Environ()) }
 
 // Version is the version of the package spec installed (or checked out

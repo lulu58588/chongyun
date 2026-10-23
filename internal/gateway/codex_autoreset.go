@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // autoResetTimeout bounds the look at an account's week and the reset.

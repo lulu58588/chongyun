@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func TestOTelGenerationCosts(t *testing.T) {
@@ -48,7 +48,7 @@ func TestOTelGenerationCosts(t *testing.T) {
 		{name: "billed failure", context: &OTelSpan{}, status: 502, input: 0.00405, output: 0.0016},
 		{name: "local session generation", provider: usage.UnknownProvider, context: &OTelSpan{Session: true, Type: "generation"}, input: 0.006075, output: 0.003},
 		{name: "free model", provider: "free"},
-		{name: "unknown price", model: "magpie-unpriced-test-model", omit: true},
+		{name: "unknown price", model: "starling-unpriced-test-model", omit: true},
 		{name: "gateway parent", context: &OTelSpan{Root: true}, omit: true},
 		{name: "conversation parent", context: &OTelSpan{Session: true, Type: "agent"}, omit: true},
 		{name: "tool", context: &OTelSpan{Session: true, Type: "tool"}, omit: true},

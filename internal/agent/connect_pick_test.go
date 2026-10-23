@@ -5,13 +5,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // The 「接入」 switch keeps an agent on the model it was on, now through
-// magpie: Claude Code on its opus alias goes to the Claude Opus magpie
+// starling: Claude Code on its opus alias goes to the Claude Opus starling
 // serves, not to the first model of the first provider.
 func TestConnectKeepsTheModel(t *testing.T) {
 	home, _ := codexHome(t, "", "")
@@ -58,7 +58,7 @@ func TestGeminiConnectRoundTrip(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(dir, ".env")); err == nil {
 		if k, _ := edit.GetEnvFile(filepath.Join(dir, ".env"), "GEMINI_API_KEY"); k != "" {
-			t.Fatalf("chongyun's key left: %q", k)
+			t.Fatalf("starling's key left: %q", k)
 		}
 	}
 	// and on again, on the model it was on (its sign-in follows the model)
@@ -117,11 +117,11 @@ func TestConnectPrefersTheSubscription(t *testing.T) {
 	}
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。
 
 // The 「接入」 switch off and on again leaves the agent on the models it was
 // on (the owner: an agent remembers its last pick): Claude Code on a second
-// magpie model and its effort, not the one Connect would pick. One the user
+// starling model and its effort, not the one Connect would pick. One the user
 // changed while it was off is theirs, and Connect picks as it does at first.
 func TestReconnectKeepsTheLastPick(t *testing.T) {
 	home, _ := codexHome(t, "", "")
@@ -191,13 +191,13 @@ func TestGooseRoundTripKeepsItsOwnModel(t *testing.T) {
 		}
 	}
 	if _, err := os.Stat(gooseProviderPath(a.Path)); err == nil {
-		t.Fatal("chongyun's custom provider left")
+		t.Fatal("starling's custom provider left")
 	}
 }
 
-// magpie's max rides in Claude Code's env, over the effortLevel the user
+// starling's max rides in Claude Code's env, over the effortLevel the user
 // had: disconnecting takes the env's level away and leaves theirs, and
-// switching on again puts magpie's back over it (found on the omarchy VM:
+// switching on again puts starling's back over it (found on the omarchy VM:
 // a round trip lost the user's xhigh, under a connection made before
 // Connect kept what the agent was on).
 func TestClaudeDisconnectKeepsTheUsersEffort(t *testing.T) {
@@ -217,7 +217,7 @@ func TestClaudeDisconnectKeepsTheUsersEffort(t *testing.T) {
 	if err := c.Apply("effort", "max"); err != nil {
 		t.Fatal(err)
 	}
-	// connected by a magpie before this one, which kept no record of what
+	// connected by a starling before this one, which kept no record of what
 	// the agent was on
 	stash(map[string]string{"claude.connect.was": ""})
 	if err := c.Disconnect(); err != nil {
@@ -235,9 +235,9 @@ func TestClaudeDisconnectKeepsTheUsersEffort(t *testing.T) {
 	}
 }
 
-// A model of magpie's picked on the Agents page for an agent not connected
+// A model of starling's picked on the Agents page for an agent not connected
 // connects it first, as its switch does (the owner: the switch, and one
-// click in magpie, both): Goose starts on the model picked, and
+// click in starling, both): Goose starts on the model picked, and
 // disconnecting it brings back its own provider and model.
 func TestPickConnectsFirst(t *testing.T) {
 	home := syncHome(t)
@@ -275,10 +275,10 @@ func TestPickConnectsFirst(t *testing.T) {
 }
 
 // The switch says how it chose the model it connected an agent on (#726:
-// Codex kept its last pick, Claude Code went to a Sonnet through magpie,
+// Codex kept its last pick, Claude Code went to a Sonnet through starling,
 // with nothing to say why): Claude Code on its opus alias goes to the
-// Opus magpie serves, said "alike"; switched off and on, it is back on what
-// it was on, "again"; one already connected is "kept"; on a model magpie
+// Opus starling serves, said "alike"; switched off and on, it is back on what
+// it was on, "again"; one already connected is "kept"; on a model starling
 // doesn't serve, "first".
 func TestConnectSaysHow(t *testing.T) {
 	home, _ := codexHome(t, "", "")
@@ -315,6 +315,6 @@ func TestConnectSaysHow(t *testing.T) {
 	}
 	writeFile(t, path, `{"model": "claude-haiku-9"}`)
 	if how, err := c.ConnectHow(); err != nil || how.How != "first" || how.Value == "" {
-		t.Fatalf("on a model chongyun lacks: %+v %v", how, err)
+		t.Fatalf("on a model starling lacks: %+v %v", how, err)
 	}
 }

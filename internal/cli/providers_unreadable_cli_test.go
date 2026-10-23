@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // printed is what fn printed, and the error it ended with.
@@ -36,8 +36,8 @@ func printed(t *testing.T, fn func() error) (string, error) {
 	return out.String(), err
 }
 
-// A providers.json that can't be read is not "no providers yet": magpie
-// providers and magpie models end in why, and leave the file as it is
+// A providers.json that can't be read is not "no providers yet": starling
+// providers and starling models end in why, and leave the file as it is
 // (#415's review). With no good providers.json.bak to read instead
 // (#1505), it is unknown.
 func TestProvidersCmdSaysUnreadable(t *testing.T) {

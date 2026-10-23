@@ -11,23 +11,23 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/starling/internal/access"
 )
 
-// magpie's web search, the one a model that can't search is given
+// starling's web search, the one a model that can't search is given
 // (webSearch: the searcher's model, a Kimi Code plan's service, the
 // search APIs), is also an MCP server of its own (Kayphoon 报告),
 // so Cursor, Claude Desktop and any other agent can mount it as a
 // web_search tool: Streamable HTTP at SearchMCPPath, JSON answered to each
 // POST. It is a gateway route like the others: this computer calls it with
-// any key, another one only while magpie is shared and with an enabled
+// any key, another one only while starling is shared and with an enabled
 // gateway key (lanGuard), a gateway key's limit holds each search
 // (reserveFor), and a web page is turned away, as the MCP spec has a
 // server check Origin.
 
 // SearchMCPPath is where the web search MCP server is served. It has two
 // segments under /mcp/, so it can't hide a signed-in server's /mcp/{name}.
-const SearchMCPPath = "/mcp/magpie/web-search"
+const SearchMCPPath = "/mcp/starling/web-search"
 
 // searchMCPVersions are the MCP versions the server speaks, newest first:
 // a client asking for one of them is answered in it, any other in the first.
@@ -43,15 +43,15 @@ type mcpMessage struct {
 }
 
 func (s *Server) searchMCP(w http.ResponseWriter, r *http.Request) {
-	serveMCP(w, r, "chongyun's web search", 1<<20, s.searchMCPCall)
+	serveMCP(w, r, "starling's web search", 1<<20, s.searchMCPCall)
 }
 
-// serveMCP answers the JSON-RPC messages POSTed to one of magpie's own MCP
+// serveMCP answers the JSON-RPC messages POSTed to one of starling's own MCP
 // servers (what names it in a refusal) with call, a body up to limit bytes
 // long: guarded as a gateway route, and a web page turned away.
 func serveMCP(w http.ResponseWriter, r *http.Request, what string, limit int64, call func(*http.Request, mcpMessage) (any, map[string]any)) {
 	if !local(r) && !sharedWith(r) {
-		http.Error(w, what+" is served to another machine only when chongyun is shared on the local network and the request carries a gateway key (Authorization: Bearer <key>)", http.StatusForbidden)
+		http.Error(w, what+" is served to another machine only when starling is shared on the local network and the request carries a gateway key (Authorization: Bearer <key>)", http.StatusForbidden)
 		return
 	}
 	// a page on this computer (localhost) gets past corsGuard; only one the
@@ -120,8 +120,8 @@ func (s *Server) searchMCPCall(r *http.Request, m mcpMessage) (any, map[string]a
 		return map[string]any{
 			"protocolVersion": mcpVersion(m),
 			"capabilities":    map[string]any{"tools": map[string]any{}},
-			"serverInfo":      map[string]any{"name": "magpie-web-search", "title": "Chongyun Web Search", "version": Version},
-			"instructions":    "web_search searches the web with the search chongyun gives its models: a provider that can search, or the search APIs set up in chongyun (Settings → Models → Web search). web_fetch reads a page it found, by its URL.",
+			"serverInfo":      map[string]any{"name": "starling-web-search", "title": "Starling Web Search", "version": Version},
+			"instructions":    "web_search searches the web with the search starling gives its models: a provider that can search, or the search APIs set up in starling (Settings → Models → Web search). web_fetch reads a page it found, by its URL.",
 		}, nil
 	case "ping":
 		return map[string]any{}, nil
@@ -202,9 +202,9 @@ func (s *Server) searchMCPRun(r *http.Request, query string) (string, error) {
 		if r.Context().Err() == nil {
 			log.Printf("web search MCP: %v", err)
 		}
-		msg := "chongyun couldn't search the web: " + err.Error()
+		msg := "starling couldn't search the web: " + err.Error()
 		if errors.Is(err, errNoSearcher) {
-			msg += ": add a search API in chongyun's Settings → Models → Web search (or chongyun search add <api> <key>), or a provider that can search"
+			msg += ": add a search API in starling's Settings → Models → Web search (or starling search add <api> <key>), or a provider that can search"
 		}
 		return "", searchMCPError(msg)
 	}

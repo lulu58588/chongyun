@@ -5,18 +5,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // TestClaudeModelCapabilities: Claude Code on a gateway (Claude Desktop's
 // Code tab) takes no model it doesn't know for one with xhigh, so
-// "ultracode": true did nothing on magpie's models (#430). magpie tells it
+// "ultracode": true did nothing on starling's models (#430). starling tells it
 // in CLAUDE_CODE_MODEL_CAPABILITIES what each of its models (and Desktop's
-// mythos-magpie-<number> for it) can do, only the levels the model has, the
+// mythos-starling-<number> for it) can do, only the levels the model has, the
 // model Claude Code is set to first; a value of the user's is left alone,
-// and magpie's goes when Claude Code is taken off magpie. One that reaches
+// and starling's goes when Claude Code is taken off starling. One that reaches
 // max without xhigh (GLM, DeepSeek) is said to have xhigh too: the gateway
 // runs it at max, and Claude Code's Ultracode needs xhigh_effort
 // (leesunrise2364 报告, Ultracode missing on Desktop).
@@ -95,9 +95,9 @@ func TestClaudeModelCapabilities(t *testing.T) {
 		t.Errorf("switched to Deep: %s", caps())
 	}
 
-	// Claude Desktop on magpie: its ids for magpie's models, as Claude Code
+	// Claude Desktop on starling: its ids for starling's models, as Claude Code
 	// gets them from its Code tab
-	if err := claudeDesktop(home).Field("provider").Set("magpie"); err != nil {
+	if err := claudeDesktop(home).Field("provider").Set("starling"); err != nil {
 		t.Fatal(err)
 	}
 	var deep provider.Entry
@@ -107,7 +107,7 @@ func TestClaudeModelCapabilities(t *testing.T) {
 		}
 	}
 	alias := gateway.DesktopID(deep)
-	if !strings.HasPrefix(alias, "mythos-magpie-") || segs()[alias] != "effort,xhigh_effort,max_effort" {
+	if !strings.HasPrefix(alias, "mythos-starling-") || segs()[alias] != "effort,xhigh_effort,max_effort" {
 		t.Errorf("Desktop's %s: %s", alias, caps())
 	}
 	if err := claudeDesktop(home).Field("provider").Set(""); err != nil {
@@ -117,15 +117,15 @@ func TestClaudeModelCapabilities(t *testing.T) {
 		t.Errorf("Desktop off kept its ids: %s", caps())
 	}
 
-	// off magpie, and back to Claude Code as installed: magpie's value goes
+	// off starling, and back to Claude Code as installed: starling's value goes
 	set("model", "claude-opus-4-8")
 	if caps() != "" {
-		t.Fatalf("Claude's own model kept chongyun's capabilities: %q", caps())
+		t.Fatalf("Claude's own model kept starling's capabilities: %q", caps())
 	}
 	set("model", "v/mid")
 	set("model", "")
 	if caps() != "" {
-		t.Fatalf("reset kept chongyun's capabilities: %q", caps())
+		t.Fatalf("reset kept starling's capabilities: %q", caps())
 	}
 
 	// the user's own value is theirs, through a switch and back

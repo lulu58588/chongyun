@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // A Google AI Pro account as loadCodeAssist answers it (CLIProxyAPI
@@ -75,11 +75,11 @@ func antigravityModelIDs(t *testing.T, agent string) []string {
 	return ids
 }
 
-// A Google AI Pro account's Antigravity has Claude (Discord: magpie 0.1.770
+// A Google AI Pro account's Antigravity has Claude (Discord: starling 0.1.770
 // listed a Pro account's models without any, while Antigravity's picker
 // had Claude 5.5): fetchAvailableModels names the plan the account pays for
 // in entitlement.userTier, as Antigravity's language server does, and the
-// log says what Google answered and what magpie left out.
+// log says what Google answered and what starling left out.
 func TestAntigravityProAccountNamesItsTier(t *testing.T) {
 	f := &fakeGoogle{load: proLoad, modelsFor: tierModels("g1-pro-tier")}
 	googleSandbox(t, f)
@@ -172,7 +172,7 @@ func TestAntigravityTierFreeAndKeptProject(t *testing.T) {
 // #1553 (AnxForever): a Google AI Pro account that loadCodeAssist has on
 // free-tier, paying for g1-pro-tier, in aicode-consumers. Google answered
 // its fetchAvailableModels with g1-pro-tier named "Request contains an
-// invalid argument." magpie then asks again with {project} alone, which is
+// invalid argument." starling then asks again with {project} alone, which is
 // all the open-source clients that serve Pro accounts send (CLIProxyAPI,
 // sub2api, Antigravity-Manager), and lists what that gives. Should that
 // fail too, the log says so and the account keeps the list it had.

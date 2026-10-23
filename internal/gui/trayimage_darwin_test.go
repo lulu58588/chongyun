@@ -15,14 +15,14 @@ import (
 
 // The menu bar's image: the bird, then a cell for each card side by side,
 // drawn at twice the points for a Retina screen, in the bar's text colour
-// light or dark. MAGPIE_TRAY_PREVIEW=<dir> writes each as a PNG to look at.
+// light or dark. STARLING_TRAY_PREVIEW=<dir> writes each as a PNG to look at.
 func TestTrayImage(t *testing.T) {
 	bird, err := os.ReadFile("tray.png")
 	if err != nil {
 		t.Fatal(err)
 	}
 	cells, _, _ := trayUsageView(trayCards(), time.Now(), false, false)
-	out := os.Getenv("MAGPIE_TRAY_PREVIEW")
+	out := os.Getenv("STARLING_TRAY_PREVIEW")
 	widths := map[bool][]int{}
 	for _, dark := range []bool{false, true} {
 		for n := 0; n <= 3; n++ {

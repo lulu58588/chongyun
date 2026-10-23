@@ -5,10 +5,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// #2274 (huangzuomin): Codex compacting through magpie on
+// #2274 (huangzuomin): Codex compacting through starling on
 // antigravity/gemini-3.8-flash asked for 1169 summaries in 6 hours. Each
 // summary's stream was let through at its first words, so Antigravity
 // cutting it short ("the reply ended before it was complete"), or a 429
@@ -121,7 +121,7 @@ func TestCodexCompactCutSummaryIsNoSummary(t *testing.T) {
 			f := &fake{t: t, reply: cut}
 			setup(t, provider.Responses, f)
 			code, body := codexPost(t, compact404Request)
-			if code < 400 || strings.Contains(body, magpieCompaction) {
+			if code < 400 || strings.Contains(body, starlingCompaction) {
 				t.Fatalf("%d %s", code, body)
 			}
 		})

@@ -23,7 +23,7 @@ func TestImportIsReadOnce(t *testing.T) {
 		return rec, in
 	}
 
-	id := stashImport("chongyun://import?preset=deepseek&key=sk-test")
+	id := stashImport("starling://import?preset=deepseek&key=sk-test")
 	rec, in := get(id)
 	if rec.Code != 200 || in.Provider.ID != "deepseek" || in.Provider.Key != "sk-test" || in.Error != "" {
 		t.Fatalf("%d %+v", rec.Code, in)
@@ -31,7 +31,7 @@ func TestImportIsReadOnce(t *testing.T) {
 	if rec, _ := get(id); rec.Code != 404 {
 		t.Fatalf("second read: %d", rec.Code)
 	}
-	if _, in := get(stashImport("chongyun://import?name=x")); in.Error == "" {
+	if _, in := get(stashImport("starling://import?name=x")); in.Error == "" {
 		t.Fatal("a bad link reported no error")
 	}
 }
@@ -62,10 +62,10 @@ func TestImportIconRoute(t *testing.T) {
 }
 
 func TestImportLink(t *testing.T) {
-	if ImportLink([]string{"/usr/bin/magpie", "tray"}) != "" {
+	if ImportLink([]string{"/usr/bin/starling", "tray"}) != "" {
 		t.Fatal("found a link in plain args")
 	}
-	if ImportLink([]string{"CHONGYUN://import?preset=x"}) == "" {
+	if ImportLink([]string{"STARLING://import?preset=x"}) == "" {
 		t.Fatal("missed an upper-case link")
 	}
 }

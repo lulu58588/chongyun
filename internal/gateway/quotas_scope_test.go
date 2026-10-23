@@ -13,12 +13,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// #2216 (Kenoia): a key held to models or accounts on a shared magpie was
-// told no quota at all (#1981), so the remote magpie it was set up on
+// #2216 (Kenoia): a key held to models or accounts on a shared starling was
+// told no quota at all (#1981), so the remote starling it was set up on
 // showed none of the providers it may use. A key whose owner turns its
 // quotas on is told the cards of the providers whose every model it may
 // use, of the accounts and keys it may use, and nothing else: not another
@@ -26,7 +26,7 @@ import (
 // account's it may not use.
 func TestHeldKeyToldItsOwnQuotas(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	seedKeptBalances(t)
 
 	ref := func(id, user string) string {
@@ -97,7 +97,7 @@ func TestHeldKeyToldItsOwnQuotas(t *testing.T) {
 		"AlphaTwo":  {"alpha:two"},
 		"BetaKey":   every,
 	}
-	for _, path := range []string{"/v1/magpie/quotas?kept=1", provider.RemoteCardsPath} {
+	for _, path := range []string{"/v1/starling/quotas?kept=1", provider.RemoteCardsPath} {
 		for i, s := range secrets {
 			name := keys[i].Name
 			c, b := do("GET", path, s)
@@ -113,8 +113,8 @@ func TestHeldKeyToldItsOwnQuotas(t *testing.T) {
 					}
 				}
 			case "Nothing":
-				// told no card here: the other magpie shows its own limit,
-				// not "nothing read on that chongyun yet"
+				// told no card here: the other starling shows its own limit,
+				// not "nothing read on that starling yet"
 				if path == provider.RemoteCardsPath {
 					if c != http.StatusForbidden || !strings.Contains(b, provider.KeyHeldCode) {
 						t.Errorf("%s %s: %d %s", name, path, c, b)
@@ -137,7 +137,7 @@ func TestHeldKeyToldItsOwnQuotas(t *testing.T) {
 		}
 	}
 	// the history and the report read afresh go by the same cards
-	for _, path := range []string{"/v1/magpie/quotas", "/v1/magpie/quotas/history"} {
+	for _, path := range []string{"/v1/starling/quotas", "/v1/starling/quotas/history"} {
 		for i, s := range secrets[1:5] {
 			name := keys[i+1].Name
 			c, b := do("GET", path, s)
@@ -219,13 +219,13 @@ func seedKeptBalances(t *testing.T) {
 
 }
 
-// #2216 from the other side: a magpie with that magpie as its provider,
+// #2216 from the other side: a starling with that starling as its provider,
 // through a key let see its quotas, shows the cards of what the key may
 // use beside the key's own; a key told none shows its own card alone, not
-// "nothing read on that chongyun yet", which a refresh wouldn't change.
-func TestRemoteMagpieShowsHeldKeyItsQuotas(t *testing.T) {
+// "nothing read on that starling yet", which a refresh wouldn't change.
+func TestRemoteStarlingShowsHeldKeyItsQuotas(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	seedKeptBalances(t)
 	keys, secrets := newCaller(t, "AlphaTwo", "Nothing")
 	p, err := provider.Find("alpha")
@@ -257,7 +257,7 @@ func TestRemoteMagpieShowsHeldKeyItsQuotas(t *testing.T) {
 	ctx := t.Context()
 	shown := func(secret string) []string {
 		t.Helper()
-		if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Key: secret, Chat: gw.URL}); err != nil {
+		if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Key: secret, Chat: gw.URL}); err != nil {
 			t.Fatal(err)
 		}
 		provider.ForgetRemoteCardsForTest()

@@ -19,10 +19,10 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
-	"github.com/lulu58588/chongyun/internal/wslrun"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
+	"github.com/lulu58588/starling/internal/wslrun"
 )
 
 // autoModeAsk is Claude Code's auto mode classifier's first stage as it
@@ -300,7 +300,7 @@ func TestAutoModeReviewOnlyForClaude(t *testing.T) {
 
 // TestAutoModeReviewedRoutes: the models whose requests can carry auto
 // mode's review to Anthropic, the rule Claude Code's wiring turns the
-// review off by while none of them is behind magpie (1EFLOPS 报告): the
+// review off by while none of them is behind starling (1EFLOPS 报告): the
 // Claude subscription, a Claude model under any vendor's spelling of it,
 // and Anthropic's own API. Codex, DeepSeek's Anthropic API and an
 // OpenAI-compatible relay's GPT are not.
@@ -549,13 +549,13 @@ func TestClaudeBridgeSafeguardResults(t *testing.T) {
 				d, _ := json.Marshal(map[string]any{"type": "stream_event", "event": map[string]any{"type": "message_delta", "delta": delta}})
 				lines := []string{
 					`{"type":"stream_event","event":{"type":"message_start","message":{"id":"msg_client","model":"claude-sonnet-5"}}}`,
-					`{"type":"stream_event","event":{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_client","name":"mcp__magpie__Bash"}}}`,
+					`{"type":"stream_event","event":{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_client","name":"mcp__starling__Bash"}}}`,
 					string(d),
 					`{"type":"stream_event","event":{"type":"message_stop"}}`,
 				}
 				if whole {
 					message := map[string]any{"id": "msg_whole", "model": "claude-sonnet-5", "stop_reason": "tool_use",
-						"content": []any{map[string]any{"type": "tool_use", "id": "toolu_client", "name": "mcp__magpie__Bash", "input": map[string]any{}}}}
+						"content": []any{map[string]any{"type": "tool_use", "id": "toolu_client", "name": "mcp__starling__Bash", "input": map[string]any{}}}}
 					if verdict != "null" {
 						message["safeguard_results"] = json.RawMessage(verdict)
 					}

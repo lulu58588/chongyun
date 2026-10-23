@@ -13,12 +13,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
 // Tool is a tool a plugin gives: OpenCode's tool hook ({tool: {name:
-// tool({description, args, execute})}}), which magpie offers every agent
+// tool({description, args, execute})}}), which starling offers every agent
 // through its plugin tools MCP server (internal/gateway/tools_mcp.go).
 type Tool struct {
 	Name        string `json:"name"`

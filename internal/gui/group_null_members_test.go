@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A group made of patterns only whose provider stops listing the models

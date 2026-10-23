@@ -11,8 +11,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Claude's refusal with what its classifier said of it, streamed and
@@ -67,7 +67,7 @@ func keyedClaude(t *testing.T, refusing ...string) *[]string {
 
 // handedBack says body is Claude's refusal as the vendor said it, to an
 // agent on Anthropic's Messages API: what Claude Code switches to its
-// fallback model on, not magpie's 400.
+// fallback model on, not starling's 400.
 func handedBack(code int, body string) bool {
 	return code == 200 && strings.Contains(body, `"stop_reason":"refusal"`) && strings.Contains(body, `"category":"cyber"`) &&
 		!strings.Contains(body, "refused this request")
@@ -77,7 +77,7 @@ const messagesAsk = `{"model":"a/m","max_tokens":10,"stream":true,"messages":[{"
 
 // With RefusalRetries 0, a keyed Anthropic provider's refusal goes to
 // Claude Code as Anthropic said it, streamed or whole, with its other keys
-// never asked and the key that refused not set aside (DD 报告: magpie
+// never asked and the key that refused not set aside (DD 报告: starling
 // moved on through the accounts and answered 400, so Claude Code never
 // switched to its fallback model as it does on Anthropic's own API).
 func TestRefusalRetriesNoneHandsClaudeCodeTheRefusal(t *testing.T) {
@@ -174,7 +174,7 @@ func TestRefusalRetriesGroup(t *testing.T) {
 	}
 }
 
-// claudeOwnToken is the access token of the Claude account chongyun keeps
+// claudeOwnToken is the access token of the Claude account starling keeps
 // in its own logins.json: the sign-in of the account it signed the agent
 // in to, which a run is on, in that account's own config directory.
 func claudeOwnToken(t *testing.T, user string) string {
@@ -208,7 +208,7 @@ func claudeOwnToken(t *testing.T, user string) string {
 // classifier's category, streamed and whole.
 func TestRefusalRetriesClaudeSubscription(t *testing.T) {
 	log := claudeSubscriptionRefusing(t)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json: the agent's own file is never read to find out.
 	activateLogin(t, "claude", "me@example.com")
 	want := claudeOwnToken(t, "me@example.com")
@@ -221,7 +221,7 @@ func TestRefusalRetriesClaudeSubscription(t *testing.T) {
 		os.Remove(log)
 		code, body := sendTo(s, "/v1/messages", ask)
 		b, _ := os.ReadFile(log)
-		// the run is on the account chongyun signed the agent in to, in its
+		// the run is on the account starling signed the agent in to, in its
 		// own config directory: the spare account's is never run on
 		if !handedBack(code, body) || strings.Join(strings.Fields(string(b)), ",") != want {
 			t.Fatalf("%s: status %d: %s (runs %q, want %q)", ask, code, body, b, want)

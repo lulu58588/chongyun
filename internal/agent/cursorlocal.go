@@ -8,7 +8,7 @@ package agent
 // Private Inference"). The endpoint it takes from a model's own settings,
 // else its Open configuration dialog's (kept in the state.vscdb regular
 // Cursor shares), else from its environment: CURSOR_LOCAL_AGENT_BASE_URL
-// and CURSOR_LOCAL_AGENT_API_KEY. magpie writes nothing of Cursor's — the
+// and CURSOR_LOCAL_AGENT_API_KEY. starling writes nothing of Cursor's — the
 // Open configuration's base URL and key are regular Cursor's own override
 // settings too, so writing them would move regular Cursor as well. It sets
 // the two variables, which only this build reads, for the user instead
@@ -33,10 +33,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // CursorLocalID is the agent's id, which its key names (TokenFor).
@@ -228,9 +228,9 @@ func cursorLocalEnv(gw string) map[string]string {
 	return map[string]string{cursorLocalVars[0]: gw + "/v1", cursorLocalVars[1]: agentKeyAt(CursorLocalID, gw)}
 }
 
-// cursorLocalMark is magpie's own note that the variables are set for the
+// cursorLocalMark is starling's own note that the variables are set for the
 // user, which the row reads as connected: the Mac forgets launchctl's at a
-// restart, and magpie sets them again when it starts (KeepCursorLocalEnv).
+// restart, and starling sets them again when it starts (KeepCursorLocalEnv).
 func cursorLocalMark() string { return filepath.Join(appdir.Config(), "cursor-local.env") }
 
 func cursorLocalWired() bool { return isFile(cursorLocalMark()) }
@@ -296,13 +296,13 @@ func cursorLocal() *Agent {
 			Key: "provider", Label: "provider",
 			Get: func() string {
 				if cursorLocalWired() {
-					return magpieID
+					return starlingID
 				}
 				return ""
 			},
 			Set: func(v string) error { return cursorLocalOn(v != "") },
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun",
+				return []Option{{Value: starlingID, Label: "星鸣", Icon: "starling",
 					Note: "CURSOR_LOCAL_AGENT_BASE_URL and _API_KEY set for your user, which only this build reads (quit it and open it again)"}}
 			},
 		}, {
@@ -349,4 +349,4 @@ func cursorLocalEfforts() []Option {
 }
 
 // what Cursor Private Inference says after a change (notice.go)
-var noticeCursorLocal = newNotice("{agent} reads chongyun's gateway from CURSOR_LOCAL_AGENT_BASE_URL and CURSOR_LOCAL_AGENT_API_KEY, now set for your user: quit it (the app, not only its window) and open it again, as it keeps the model list it was first given until it quits. A base URL or API key set in its Open configuration or a model's settings comes first, so leave both empty (or set the base URL to {url} and the key to {key}).")
+var noticeCursorLocal = newNotice("{agent} reads starling's gateway from CURSOR_LOCAL_AGENT_BASE_URL and CURSOR_LOCAL_AGENT_API_KEY, now set for your user: quit it (the app, not only its window) and open it again, as it keeps the model list it was first given until it quits. A base URL or API key set in its Open configuration or a model's settings comes first, so leave both empty (or set the base URL to {url} and the key to {key}).")

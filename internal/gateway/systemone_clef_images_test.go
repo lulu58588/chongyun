@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// A Clef asked through magpie's System One API gets the images the request
+// A Clef asked through starling's System One API gets the images the request
 // embeds, as Workers AI takes them (ARNO 报告: clef模型是支持图像输入的):
 // a request of a few MiB isn't refused, and the images reach the Clef's
 // own path as they were sent.
@@ -46,7 +46,7 @@ func TestSystemOneClefImages(t *testing.T) {
 	})
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest("POST", "/v1/systemone", strings.NewReader(string(body)))
-	req.Header.Set("Authorization", "Bearer magpie")
+	req.Header.Set("Authorization", "Bearer starling")
 	New().Handler().ServeHTTP(rec, req)
 	if rec.Code != 200 || !strings.Contains(rec.Body.String(), `"noul":0.97`) {
 		t.Fatalf("%d %.300s", rec.Code, rec.Body)

@@ -14,14 +14,14 @@ import (
 
 // A Team seat on the email of a personal subscription is an account of its
 // own: added beside the personal one, which stays signed in; and signing in
-// brings back a Claude account that had been removed from magpie.
+// brings back a Claude account that had been removed from starling.
 func TestClaudeTeamSeatBesidePersonal(t *testing.T) {
 	home := claudeHome(t)
 	noAnthropic(t)
 	fakeClaudeLogin(t, fakeClaudeAccount{email: "same@example.com", org: "Acme", orgUUID: "o-team", plan: "team", refresh: "sk-ant-ort01-team"}, "", true)
 
 	cred := filepath.Join(home, ".claude", ".credentials.json")
-	// the personal account is chongyun's own sign-in too: it keeps it in
+	// the personal account is starling's own sign-in too: it keeps it in
 	// logins.json, beside the seat, and Claude Code runs on it there
 	claudeAccountSignIn(t, "same@example.com", "max", time.Now().Add(time.Hour))
 	if err := Delete("claude"); err != nil {
@@ -38,7 +38,7 @@ func TestClaudeTeamSeatBesidePersonal(t *testing.T) {
 	finishInBrowser(t, st, "the-code")
 	st = waitDone(t, st.ID)
 	// the seat is added beside the personal account, which the agent
-	// stays on: chongyun does not move the agent off the account it is on
+	// stays on: starling does not move the agent off the account it is on
 	// when another one is signed in to
 	if st.State != "done" || st.User != "same@example.com · Acme" || st.Plan != "team" || st.Using {
 		t.Fatalf("state %+v", st)
@@ -72,7 +72,7 @@ func TestSaveKeepsAccountIDs(t *testing.T) {
 // its own: added beside the personal one, and either can be switched to.
 func TestCodexTeamWorkspaceBesidePersonal(t *testing.T) {
 	home := signIn(t) // me@example.com, personal Pro, workspace acct-1
-	// the sign-in where Codex keeps it, as chongyun's own sign-in left it
+	// the sign-in where Codex keeps it, as starling's own sign-in left it
 	for _, l := range readLogins() {
 		if l.Agent == "codex" {
 			os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
@@ -101,7 +101,7 @@ func TestCodexTeamWorkspaceBesidePersonal(t *testing.T) {
 	}
 	finishInBrowser(t, st, "code")
 	// the workspace is added beside the personal plan, which the agent
-	// stays on: chongyun does not move the agent off the account it is on
+	// stays on: starling does not move the agent off the account it is on
 	// when another one is signed in to
 	if st = waitDone(t, st.ID); st.State != "done" || st.User != "me@example.com · Team" || st.Using {
 		t.Fatalf("state %+v", st)

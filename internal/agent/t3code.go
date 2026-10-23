@@ -15,22 +15,22 @@ package agent
 // A claudeAgent instance runs Claude Code (Anthropic's Agent SDK, the
 // user's ~/.claude settings read as Claude Code reads them) with the
 // instance's environment added, and lists Claude's models and its custom
-// models, each sent as Claude Code's model. So magpie is an instance of its
-// own, "magpie": Claude Code pointed at the gateway (ANTHROPIC_BASE_URL and
+// models, each sent as Claude Code's model. So starling is an instance of its
+// own, "starling": Claude Code pointed at the gateway (ANTHROPIC_BASE_URL and
 // the token Claude Code is routed with, so its requests are Claude Code's
-// to the gateway, tiers and all), every magpie model one of its custom
-// models, a 1M one marked [1m] as magpie marks it for Claude Code, with
+// to the gateway, tiers and all), every starling model one of its custom
+// models, a 1M one marked [1m] as starling marks it for Claude Code, with
 // a Reasoning pick of the levels it takes and a Thinking switch
 // (t3Capabilities). It is
-// magpie's alone: the user's own instances, their custom models and T3's
+// starling's alone: the user's own instances, their custom models and T3's
 // other keys stay as they are, and off takes only it out. A binary path or
 // Claude home the user gave T3's own Claude is carried over, so it runs the
 // same Claude Code. T3's Codex lists what Codex's model/list says, which is
-// magpie's catalog once Codex is routed through magpie, so it needs nothing.
+// starling's catalog once Codex is routed through starling, so it needs nothing.
 //
 // The settings environment (~/.claude/settings.json's env) is applied over
 // the process', so a Claude Code routed elsewhere in its own settings
-// takes its requests there; one routed through magpie or not routed at all
+// takes its requests there; one routed through starling or not routed at all
 // asks the gateway. A provider switch on there (CLAUDE_CODE_USE_BEDROCK, …)
 // takes it to that cloud, which Check says.
 
@@ -42,16 +42,16 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// t3Instance is the key of magpie's provider instance in T3 Code's
+// t3Instance is the key of starling's provider instance in T3 Code's
 // settings.json.
-const t3Instance = "providerInstances." + magpieID
+const t3Instance = "providerInstances." + starlingID
 
 func t3code(home string) *Agent {
 	base := appdir.Getenv("T3CODE_HOME")
@@ -73,11 +73,11 @@ func t3code(home string) *Agent {
 		},
 		// its custom models are the models picked for it (#1508)
 		ListsModels: true,
-		// magpie's instance still on the gateway, as for every agent with
+		// starling's instance still on the gateway, as for every agent with
 		// a Check (TestDriftUnwiredEveryAgent, TestPortMovesEveryAgent).
 		// The user's ~/.claude settings env is put over the instance's, so
 		// a provider switch on there (or in the shell T3 was started from)
-		// takes magpie's instance to that cloud too; magpie only says so,
+		// takes starling's instance to that cloud too; starling only says so,
 		// as that file is Claude Code's, wired or not
 		Check: func() string {
 			if !wired() {
@@ -93,7 +93,7 @@ func t3code(home string) *Agent {
 			Key: "provider", Label: "provider",
 			Get: func() string {
 				if wired() {
-					return magpieID
+					return starlingID
 				}
 				return ""
 			},
@@ -104,7 +104,7 @@ func t3code(home string) *Agent {
 				return edit.SetJSON(path, edit.KV{Path: t3Instance, Value: t3Merged(path, gateway.URL())})
 			},
 			Options: func(map[string]string) []Option {
-				return []Option{{Value: magpieID, Label: "崇云科技", Icon: "chongyun", Note: "every chongyun model as a provider in T3 Code, on Claude Code"}}
+				return []Option{{Value: starlingID, Label: "星鸣", Icon: "starling", Note: "every starling model as a provider in T3 Code, on Claude Code"}}
 			},
 		}},
 	}
@@ -126,14 +126,14 @@ func t3App(home string) bool {
 	return false
 }
 
-// t3InstanceJSON is magpie's provider instance in T3 Code's settings.json
-// at path: a claudeAgent instance named magpie on the gateway at gw, with
-// every magpie model as a custom model, and the binary path and Claude
+// t3InstanceJSON is starling's provider instance in T3 Code's settings.json
+// at path: a claudeAgent instance named starling on the gateway at gw, with
+// every starling model as a custom model, and the binary path and Claude
 // home of T3's own Claude when the user gave them one.
 func t3InstanceJSON(path, gw string) map[string]any {
 	mark := claude1MFor("t3code")
 	models := []map[string]any{}
-	for _, m := range magpieModels("t3code") {
+	for _, m := range starlingModels("t3code") {
 		// Claude Code reads a dotted Claude version as Claude Opus 4
 		e := map[string]any{"slug": provider.ClaudeSpelled(mark(m.ID)), "name": m.Name}
 		if c := t3Capabilities(m.ID, m.Efforts); c != nil {
@@ -164,17 +164,17 @@ func t3InstanceJSON(path, gw string) map[string]any {
 		environment = append(environment, map[string]any{"name": claudeReviewEnv, "value": "0", "sensitive": false})
 	}
 	return map[string]any{
-		"driver": "claudeAgent", "displayName": "崇云科技", "enabled": true,
+		"driver": "claudeAgent", "displayName": "星鸣", "enabled": true,
 		"environment": environment,
 		"config":      config,
 	}
 }
 
-// t3Env is the environment variables of magpie's instance that magpie
+// t3Env is the environment variables of starling's instance that starling
 // sets: the gateway's address and key, and auto mode's review.
 var t3Env = []string{"ANTHROPIC_BASE_URL", "ANTHROPIC_AUTH_TOKEN", claudeReviewEnv}
 
-// t3EnvOf is the value of the environment variable named k on magpie's
+// t3EnvOf is the value of the environment variable named k on starling's
 // instance in the T3 settings at path.
 func t3EnvOf(path, k string) (string, bool) {
 	cur, ok := edit.GetJSON(path, t3Instance+".environment")
@@ -194,15 +194,15 @@ func t3EnvOf(path, k string) (string, bool) {
 	return "", false
 }
 
-// t3Merged is magpie's instance as t3InstanceJSON writes it, merged into
+// t3Merged is starling's instance as t3InstanceJSON writes it, merged into
 // the one at path: what the user set on it in T3 Code's own settings
 // stays (#2030, Kanscape: its name and Auto-compact after were reset on
-// every start). Its name, whether it is on, and every key magpie doesn't
+// every start). Its name, whether it is on, and every key starling doesn't
 // write (config.autoCompactWindow, config.launchArgs, accentColor) are
-// theirs, as are the environment variables besides magpie's own. The
-// custom models and the gateway's variables are magpie's, and so is a
+// theirs, as are the environment variables besides starling's own. The
+// custom models and the gateway's variables are starling's, and so is a
 // binary path or Claude home while T3's own Claude has one to carry over.
-// Only magpie's instance is read: another, such as T3's own Claude, lends
+// Only starling's instance is read: another, such as T3's own Claude, lends
 // it nothing of the user's.
 func t3Merged(path, gw string) any {
 	want := t3InstanceJSON(path, gw)
@@ -226,8 +226,8 @@ func t3Merged(path, gw string) any {
 	if json.Unmarshal(have["environment"], &theirs) == nil {
 		env := want["environment"].([]map[string]any)
 		for _, v := range theirs {
-			// a provider switch would take magpie's instance past the
-			// gateway (claudeClouds), so it doesn't stay on magpie's
+			// a provider switch would take starling's instance past the
+			// gateway (claudeClouds), so it doesn't stay on starling's
 			if n, _ := v["name"].(string); n != "" && !slices.Contains(t3Env, n) && !slices.Contains(agentenv.ClaudeProviders, n) {
 				env = append(env, v)
 			}
@@ -247,7 +247,7 @@ func t3Merged(path, gw string) any {
 var t3EffortLabels = map[string]string{"low": "Low", "medium": "Medium", "high": "High", "xhigh": "Extra High", "max": "Max"}
 
 // t3Capabilities is the picks T3 Code shows beside a custom model: without
-// them it shows none and sends no effort, so every magpie model ran at
+// them it shows none and sends no effort, so every starling model ran at
 // whatever Claude Code took (KevinXC 报告). Reasoning is the levels
 // of Claude Code's the model takes, medium chosen first as on T3's own
 // Claude models (else the lowest); T3 hands the level to Claude Code as it

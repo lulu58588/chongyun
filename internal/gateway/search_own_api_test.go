@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A request that offers web search, at a provider that doesn't search by
@@ -50,7 +50,7 @@ func TestSearchOfferedStaysOnTheClientsAPI(t *testing.T) {
 }
 
 // Codex's web_search at a provider serving Responses that doesn't search:
-// the model, asked on Responses, is given magpie's web_search function,
+// the model, asked on Responses, is given starling's web_search function,
 // the search is done by a provider that can, and Codex gets the answer
 // (#997).
 func TestCodexSearchAnsweredOnResponses(t *testing.T) {

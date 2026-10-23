@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// codexSignIn keeps a ChatGPT account in logins.json, as chongyun's own
+// codexSignIn keeps a ChatGPT account in logins.json, as starling's own
 // sign-in does: the account it signed in to is kept there, beside the
 // others.
 func codexSignIn(t *testing.T, email, refresh string) {
@@ -79,7 +79,7 @@ func TestCodexLogins(t *testing.T) {
 	}
 }
 
-// loginsCodexAuthOf is the sign-in chongyun keeps for the codex account
+// loginsCodexAuthOf is the sign-in starling keeps for the codex account
 // user: what the agent is signed in to with, in logins.json.
 func loginsCodexAuthOf(t *testing.T, user string) json.RawMessage {
 	t.Helper()
@@ -136,13 +136,13 @@ func TestSideLoginsNotCollapsed(t *testing.T) {
 		t.Fatal(err)
 	}
 	if got := readLogins(); len(got) != 2 || got[0].Home != "/grok/me" {
-		t.Fatalf("a Grok account chongyun signed in was folded into the CLI's own: %+v", got)
+		t.Fatalf("a Grok account starling signed in was folded into the CLI's own: %+v", got)
 	}
 }
 
 func TestClaudeLogins(t *testing.T) {
 	claudeHome(t)
-	// the accounts chongyun keeps, each of them in logins.json
+	// the accounts starling keeps, each of them in logins.json
 	claudeAccountSignIn(t, "a@example.com", "max", time.Now().Add(time.Hour))
 	// the second account has a sign-in of its own: two accounts of one
 	// Claude credential are one account
@@ -160,7 +160,7 @@ func TestClaudeLogins(t *testing.T) {
 	if _, active := loginUsers(Logins("claude")); active != "a@example.com" {
 		t.Fatalf("active after switch: %q", active)
 	}
-	// the account switched to runs Claude Code with the sign-in chongyun
+	// the account switched to runs Claude Code with the sign-in starling
 	// keeps for it, in a config directory of its own
 	dir, err := claudeSavedDir("a@example.com")
 	if err != nil {
@@ -172,4 +172,4 @@ func TestClaudeLogins(t *testing.T) {
 	}
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。

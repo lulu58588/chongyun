@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // Ollama (0.35.0 and later, 0.40.5 for its cloud models) serves decision

@@ -15,8 +15,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // fakeCodex signs a ChatGPT account in to Codex, its models listed by a
@@ -50,7 +50,7 @@ func fakeCodex(t *testing.T, h string) (down string) {
 		"refresh_token": "r", "account_id": "acct-1",
 	}})
 	write(t, filepath.Join(h, ".codex", "auth.json"), string(b))
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	logins, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "me@example.com", "plan": "pro",

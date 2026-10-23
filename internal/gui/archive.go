@@ -11,9 +11,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/davsync"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/davsync"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // archiveStore is the bucket a call is read back from: sync's S3 one, or
@@ -79,7 +79,7 @@ func openArchive(r *http.Request) (io.ReadCloser, int64, string, error) {
 	}
 	body, size, err := b.Open(r.Context(), name)
 	if errors.Is(err, davsync.ErrNoObject) {
-		return nil, 0, "", errors.New("Not in the archive yet: it is uploaded just after the call, or the upload failed (chongyun's log says why)")
+		return nil, 0, "", errors.New("Not in the archive yet: it is uploaded just after the call, or the upload failed (starling's log says why)")
 	}
 	if err != nil {
 		return nil, 0, "", err
@@ -139,7 +139,7 @@ func archiveRoutes(mux *http.ServeMux) {
 		writeJSON(rw, archivePreview{ID: a.ID, Call: &a.Call, Request: preview(a.Request), Response: preview(a.Response), Bytes: int64(len(data))})
 	})
 	// the archive's file, whole and as the bucket has it, to the browser
-	// that asks: magpie web's
+	// that asks: starling web's
 	mux.HandleFunc("GET /api/archive/file", func(rw http.ResponseWriter, r *http.Request) {
 		body, size, name, err := openArchive(r)
 		if err != nil {
@@ -148,7 +148,7 @@ func archiveRoutes(mux *http.ServeMux) {
 		}
 		defer body.Close()
 		rw.Header().Set("Content-Type", "application/json")
-		rw.Header().Set("Content-Disposition", `attachment; filename="magpie-request-`+name+`.json"`)
+		rw.Header().Set("Content-Disposition", `attachment; filename="starling-request-`+name+`.json"`)
 		if size >= 0 {
 			rw.Header().Set("Content-Length", fmt.Sprint(size))
 		}
@@ -162,7 +162,7 @@ func archiveRoutes(mux *http.ServeMux) {
 			return
 		}
 		defer body.Close()
-		path, err := saveDownload(downloads(), "magpie-request-"+name, ".json", body)
+		path, err := saveDownload(downloads(), "starling-request-"+name, ".json", body)
 		if err != nil {
 			fail(rw, err)
 			return

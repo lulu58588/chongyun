@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/edit"
 )
 
 // Defaults survive encryption and restore, while a legacy backup's

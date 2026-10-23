@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/fx"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/fx"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // TestMain keeps the rate off the network: a state read with no rate cached
@@ -14,8 +14,8 @@ import (
 // endpoint and land in whatever test runs next. And the tests run in a
 // home of their own, never the user's real files.
 func TestMain(m *testing.M) {
-	// started by TestGatewayFixQuitsOnlyAMagpie as an older magpie
-	if addr := os.Getenv("MAGPIE_TEST_FAKE_GATEWAY"); addr != "" {
+	// started by TestGatewayFixQuitsOnlyAStarling as an older starling
+	if addr := os.Getenv("STARLING_TEST_FAKE_GATEWAY"); addr != "" {
 		fakeOlderGateway(addr)
 		return
 	}

@@ -18,8 +18,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // tierAccounts signs Codex in to a Plus ChatGPT account, first, with a Pro
@@ -52,7 +52,7 @@ func tierAccounts(t *testing.T, proOut, echo *bool) func() []string {
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("plus@example.com", "acct-plus", "plus")), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
@@ -149,7 +149,7 @@ func TestUltrafastGoesToAnAccountOfferingIt(t *testing.T) {
 		t.Errorf("pro out: ultrafast tried %s", got)
 	}
 
-	// an agent asking through magpie's own endpoint is ordered the same
+	// an agent asking through starling's own endpoint is ordered the same
 	proOut = false
 	if code, body := post(t, "/v1/responses", `{"model":"codex/gpt-6-luna","input":"ping","service_tier":"ultrafast"}`); code != 200 || !strings.HasPrefix(strings.Join(tried(), ","), "acct-pro:") {
 		t.Errorf("/v1/responses: status %d: %s", code, body)

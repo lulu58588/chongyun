@@ -11,20 +11,20 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// A remote magpie (another computer's gateway as a provider) is asked in
+// A remote starling (another computer's gateway as a provider) is asked in
 // the API the model's own provider speaks there: a Chat client's request
 // for a model served on Anthropic's Messages goes to it as Messages, not as
 // Chat to be translated on the other side too; a routing group's, which
 // could be any member, goes on in the client's own API. Here the gateway is
 // both computers': "office" is it, reached over HTTP, and the vendor behind
 // it speaks Anthropic's Messages alone.
-func TestRemoteMagpieNativeAPI(t *testing.T) {
+func TestRemoteStarlingNativeAPI(t *testing.T) {
 	var mu sync.Mutex
-	var vendor, hops []string // paths the vendor, and the remote magpie, were asked on
+	var vendor, hops []string // paths the vendor, and the remote starling, were asked on
 	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		b, _ := io.ReadAll(r.Body)
 		mu.Lock()
@@ -65,7 +65,7 @@ func TestRemoteMagpieNativeAPI(t *testing.T) {
 	t.Cleanup(remote.Close)
 
 	// added as the Add sheet does: the address alone, on the Chat field
-	id, err := provider.Add(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Chat: strings.TrimPrefix(remote.URL, "http://")})
+	id, err := provider.Add(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Chat: strings.TrimPrefix(remote.URL, "http://")})
 	if err != nil {
 		t.Fatal(err)
 	}

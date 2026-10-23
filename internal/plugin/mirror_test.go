@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/source"
+	"github.com/lulu58588/starling/internal/source"
 )
 
 // with 「国内镜像」, bun installs from npmmirror, unless the environment

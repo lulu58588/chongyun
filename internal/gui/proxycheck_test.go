@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/netproxy"
+	"github.com/lulu58588/starling/internal/netproxy"
 )
 
 // proxyCheckRig: a trace page at a name that resolves nowhere

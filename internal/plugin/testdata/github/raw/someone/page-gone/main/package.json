@@ -1,8 +1,8 @@
 {
-  "name": "magpie-page-gone",
+  "name": "starling-page-gone",
   "version": "0.1.0",
-  "description": "An example of a plugin's own page in magpie's window: today's usage at a glance",
-  "magpie": {
+  "description": "An example of a plugin's own page in starling's window: today's usage at a glance",
+  "starling": {
     "page": { "title": "Usage glance", "file": "page/index.html", "icon": "page/icon.svg" },
     "permissions": ["usage:summary"]
   }

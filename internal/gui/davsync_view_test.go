@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/davsync"
+	"github.com/lulu58588/starling/internal/davsync"
 )
 
 // The Settings page re-reads the WebDAV view when it is redrawn (the CLI
@@ -35,7 +35,7 @@ func TestDavsyncViewFollowsTheSetup(t *testing.T) {
 		t.Fatalf("off: %v", v)
 	}
 
-	// what `chongyun webdav on … agents=no library=no` leaves (the CLI's own
+	// what `starling webdav on … agents=no library=no` leaves (the CLI's own
 	// defaults for what it isn't told: keys yes), behind the window's back
 	no := false
 	if err := davsync.Configure(davsync.Config{URL: "https://dav.jianguoyun.com/dav/", Passphrase: "correct horse", Keys: true, Agents: false, Library: &no}); err != nil {
@@ -45,7 +45,7 @@ func TestDavsyncViewFollowsTheSetup(t *testing.T) {
 		t.Fatalf("after the CLI change: %v", v)
 	}
 
-	// what `chongyun s3 on …` leaves: the same re-read, a bucket's view
+	// what `starling s3 on …` leaves: the same re-read, a bucket's view
 	if err := davsync.Off(); err != nil {
 		t.Fatal(err)
 	}
@@ -57,7 +57,7 @@ func TestDavsyncViewFollowsTheSetup(t *testing.T) {
 		t.Fatalf("after an S3 change: %v", v)
 	}
 
-	// and what `chongyun webdav off` leaves: off, the defaults back
+	// and what `starling webdav off` leaves: off, the defaults back
 	if err := davsync.Off(); err != nil {
 		t.Fatal(err)
 	}

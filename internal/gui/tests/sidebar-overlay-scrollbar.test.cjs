@@ -59,9 +59,9 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         page.setDefaultTimeout(5000);
         const errors = [];
         page.on("pageerror", (e) => errors.push(e.message));
-        await page.addInitScript(() => { try { localStorage.setItem("magpie.navLayout", "side"); } catch {} });
+        await page.addInitScript(() => { try { localStorage.setItem("starling.navLayout", "side"); } catch {} });
         await page.route("**/*", serve(lang));
-        await page.goto("http://magpie.test/");
+        await page.goto("http://starling.test/");
         await page.waitForSelector("#nav button.on");
         await page.locator("#side").waitFor();
         await frame(page);
@@ -114,9 +114,9 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const context = await browser.newContext({ viewport: { width: 1100, height: 1000 }, reducedMotion: "reduce" });
       const page = await context.newPage();
       page.setDefaultTimeout(5000);
-      await page.addInitScript(() => { try { localStorage.setItem("magpie.navLayout", "side"); } catch {} });
+      await page.addInitScript(() => { try { localStorage.setItem("starling.navLayout", "side"); } catch {} });
       await page.route("**/*", serve("en"));
-      await page.goto("http://magpie.test/");
+      await page.goto("http://starling.test/");
       await page.waitForSelector("#nav button.on");
       await frame(page);
       const s = await bar(page);

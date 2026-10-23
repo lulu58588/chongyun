@@ -13,9 +13,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // Picking Claude Code's model answers at once, although /api/set answers
@@ -163,7 +163,7 @@ func TestSetAnswersWhileDevinAndProvidersHang(t *testing.T) {
 	}
 
 	// what is written is what it was: the last pick, Anthropic's own
-	// model, off magpie's gateway
+	// model, off starling's gateway
 	if m, _ := edit.GetJSON(settingsPath, "model"); m != "claude-sonnet-5-5" {
 		t.Errorf("settings.json model %q", m)
 	}

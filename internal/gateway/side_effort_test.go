@@ -12,9 +12,9 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // pickEfforts saves the levels picked in Settings for Image recognition's
@@ -30,7 +30,7 @@ func pickEfforts(t *testing.T, vision, searcher string) {
 
 // The reasoning level picked for Image recognition (MOMO 报告) is
 // what its model is asked at, fitted to the levels it has, with room to
-// think in; Default is magpie's own, the least it has, as before. The
+// think in; Default is starling's own, the least it has, as before. The
 // model's own requests, from an agent, are sent as they came.
 func TestVisionEffortPicked(t *testing.T) {
 	fresh(t)

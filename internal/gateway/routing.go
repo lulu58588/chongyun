@@ -25,9 +25,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/routes"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/routes"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // usageHalfLife is how fast the tokens a key served stop counting against
@@ -171,7 +171,7 @@ const (
 	// someone does, or lifts its rest in the app
 	verifyRest = 30 * time.Minute
 	// verifyHold is how long the last one left, refused for verification,
-	// is answered that way by magpie without asking again: an agent's
+	// is answered that way by starling without asking again: an agent's
 	// reconnects don't all land on the account Google has stopped
 	verifyHold = time.Minute
 	// restrictedRest: an account its vendor restricted (WorkBuddy's 403
@@ -198,7 +198,7 @@ var (
 	usedUpWords = regexp.MustCompile(`(?i)quota|usage.?limit|out of budget|budget (exceeded|exhausted)|limit.?reached|hit your .*limit|limit.{0,24}resets|exceeded.*(plan|limit)|额度|用量|套餐|上限`)
 	// rateWords: a 429 that is a short rate limit — requests or tokens per
 	// minute — which usedUpWords took for a used-up plan ("Rate limit
-	// exceeded", "reached"): as magpie words an upstream error, with
+	// exceeded", "reached"): as starling words an upstream error, with
 	// "rate_limit_error" for its type, every such 429 was, and rested a
 	// quarter of an hour rather than a minute (#153).
 	rateWords = regexp.MustCompile(`(?i)rate.?limit|too many requests|per.?(second|sec|minute|min)\b|\b[rt]pm\b|频率|太频繁`)
@@ -276,7 +276,7 @@ const (
 	// failEffort: the account's plan doesn't take the reasoning level
 	// asked for (#520) — another account is asked, and nobody rests
 	failEffort = "effort"
-	// failProxy: the proxy magpie sends through (its own setting, the
+	// failProxy: the proxy starling sends through (its own setting, the
 	// *_PROXY variables, the system's) didn't take the connection (#381) —
 	// nothing reached the vendor, so the next one is asked, and nobody rests
 	failProxy = "proxy"
@@ -406,16 +406,16 @@ func failureOf(c candidate, status int, body []byte) string {
 	return failure(status, body)
 }
 
-// restrictedSaid says an error is one magpie already put in words as an
+// restrictedSaid says an error is one starling already put in words as an
 // account its vendor restricted: WorkBuddy's 11140 as the built-in
 // translates it, or as the plugin does, both ending in
-// provider.WBRestrictedHint. magpie's own words, which no vendor says, so
+// provider.WBRestrictedHint. starling's own words, which no vendor says, so
 // they are read whoever answered.
 func restrictedSaid(status int, body []byte) bool {
 	return status >= 400 && bytes.Contains(body, []byte(provider.WBRestrictedHint))
 }
 
-// restrictedRefused says p's vendor restricted the account: magpie's words
+// restrictedRefused says p's vendor restricted the account: starling's words
 // for it (restrictedSaid), or WorkBuddy's own answer as it came — its code
 // 11140 or its displayMsg's words — from a WorkBuddy account, the
 // built-in's or the plugin's. Another vendor's code 11140 is its own, and
@@ -591,7 +591,7 @@ func (s *Server) UnrestAll(key string) int {
 
 // verifyHeld is the error to give again, without asking, for a candidate
 // its vendor refused a moment ago until the account is verified: rested
-// whole, or only its model where that is how it rests (a Remote magpie's
+// whole, or only its model where that is how it rests (a Remote starling's
 // model, remoteModelRest).
 func verifyHeld(c candidate) (string, bool) {
 	r, ok := restOf(c.restKey())
@@ -660,9 +660,9 @@ var zhipuResets = regexp.MustCompile(`(?:\bYour limit will reset at|您的限额
 
 // heldClock is when a key or model held out of its allowance is asked
 // again, as an error put in words says it. The agent reading it, or a
-// Remote magpie's user, may be on another clock than this magpie's, so the
+// Remote starling's user, may be on another clock than this starling's, so the
 // offset goes with it: "20:12 UTC+8" today, else "Oct 16 09:00 UTC+8".
-// Without it a magpie on UTC+8 said "not asked again before 17:12" to a
+// Without it a starling on UTC+8 said "not asked again before 17:12" to a
 // user who couldn't tell whose 17:12 it was (Player 报告).
 func heldClock(t, now time.Time) string { return heldClockIn(t, now, time.Local) }
 
@@ -1003,20 +1003,20 @@ func (s *Server) restAfterMarked(c candidate, status int, header http.Header, bo
 }
 
 // remoteModelRest says a refusal for want of quota, credit or rate rests
-// only the model it was about, when it came from another computer's magpie
-// (a Remote magpie provider, LAN share): that magpie serves each of its
+// only the model it was about, when it came from another computer's starling
+// (a Remote starling provider, LAN share): that starling serves each of its
 // models from its own providers and rests them itself, so one of them out
 // of quota there says nothing of the others (bigsteven 报告: the
 // remote's 429 for one model rested every model on it for the 3 hours it
 // named). A restricted account, or one its vendor wants verified first, is
 // that computer's account too, on the model it serves there (#1849: the
-// restricted one says so in magpie's own words, which no vendor uses, so
+// restricted one says so in starling's own words, which no vendor uses, so
 // the refusal is read whoever answered). Its key refused, or the computer
 // unreachable, still rests it whole, and so does the key's own limit there
 // (keyLimited's 429, with remoteKeyLimitHeader), which refuses every model
 // alike (#2077).
 func remoteModelRest(c candidate, why string, header http.Header) bool {
-	if !c.p.IsRemoteMagpie() || header.Get(remoteKeyLimitHeader) != "" {
+	if !c.p.IsRemoteStarling() || header.Get(remoteKeyLimitHeader) != "" {
 		return false
 	}
 	return why == failQuota || why == failCredit || why == failRate || why == failRestricted || why == failVerify
@@ -1082,7 +1082,7 @@ func (c candidate) full(now time.Time) time.Time {
 }
 
 // allowance is the candidate's allowance as last known: a subscription
-// account's, or a key's own windows when magpie reads them (a sub2api
+// account's, or a key's own windows when starling reads them (a sub2api
 // key's limits, provider.KeyAllowance). ok is false when it isn't known.
 func (c candidate) allowance() (provider.Allowance, bool) {
 	if a := c.p.Account; a != nil {
@@ -1127,12 +1127,12 @@ func keepRetry(dst, src http.Header, body []byte) {
 
 // refusedHeader carries, from keepRetry to settle, that an error status
 // was the safety filter refusing the request, and what it said.
-const refusedHeader = "X-Magpie-Refused"
+const refusedHeader = "X-Starling-Refused"
 
 // resetsHeader carries, from keepRetry to restAfter, when a subscription
 // out of quota said it's back. A held error that is passed on after all
 // leaves it out; one written straight to the agent carries it, harmlessly.
-const resetsHeader = "X-Magpie-Resets-At"
+const resetsHeader = "X-Starling-Resets-At"
 
 // resetsNoted is how long until the time keepRetry noted, if it did.
 func resetsNoted(h http.Header, now time.Time) time.Duration {

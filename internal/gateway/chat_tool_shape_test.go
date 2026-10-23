@@ -5,11 +5,11 @@ import (
 	"testing"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // zcodeAsking is jinyue806's reproduction of #2622 as they sent it to
-// magpie, with tool standing in for its tools[0]. The tools are the
+// starling, with tool standing in for its tools[0]. The tools are the
 // shapes the report tried, each of which SenseNova turned away.
 const zcodeAsking = `{
     "model": "sensenova/kimi-k3",

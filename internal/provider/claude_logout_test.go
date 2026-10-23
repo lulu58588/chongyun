@@ -7,9 +7,9 @@ import (
 	"time"
 )
 
-// Claude Code wired to magpie, its accounts served by magpie: the user logs
-// out of Claude Code (it says to, over magpie's ANTHROPIC_AUTH_TOKEN), and
-// the accounts saved in magpie are still served — the one it was signed in
+// Claude Code wired to starling, its accounts served by starling: the user logs
+// out of Claude Code (it says to, over starling's ANTHROPIC_AUTH_TOKEN), and
+// the accounts saved in starling are still served — the one it was signed in
 // to first, in a config directory of its own, the others on behind it — and
 // none of them is dropped from the list (StringKe 报告: all six went).
 func TestClaudeAccountsOutliveLogout(t *testing.T) {
@@ -34,7 +34,7 @@ func TestClaudeAccountsOutliveLogout(t *testing.T) {
 		t.Fatalf("signed in: %v %+v", ok, p.Account)
 	}
 
-	// /logout: Claude Code's sign-in is gone. chongyun doesn't read it, so
+	// /logout: Claude Code's sign-in is gone. starling doesn't read it, so
 	// none of its accounts changes: they are sign-ins of its own.
 	os.Remove(cred)
 	loginsMu.Lock()
@@ -85,7 +85,7 @@ func TestClaudeAccountsOutliveLogout(t *testing.T) {
 	}
 }
 
-// A switch in magpie takes Claude Code off one account and puts it on
+// A switch in starling takes Claude Code off one account and puts it on
 // another, saving the first's sign-in as it was: nothing revoked it, and it
 // isn't taken for logged out.
 func TestClaudeSwitchIsNoLogout(t *testing.T) {
@@ -116,13 +116,13 @@ func TestClaudeSwitchIsNoLogout(t *testing.T) {
 	}
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。
 //
-// The case asserted that an account signed in to in chongyun while Claude
-// Code is logged out stays chongyun's: Claude Code isn't signed in to it
-// again, which would only bring back its warning over chongyun's token.
+// The case asserted that an account signed in to in starling while Claude
+// Code is logged out stays starling's: Claude Code isn't signed in to it
+// again, which would only bring back its warning over starling's token.
 // What told it that Claude Code is logged out was Claude Code's own
-// credentials, which chongyun no longer reads; and the account chongyun
+// credentials, which starling no longer reads; and the account starling
 // signs in to is the one the agent is on (addLogin is always using), so
 // Claude Code is signed in to it as well.
 
@@ -175,7 +175,7 @@ func TestClaudeAllSignedOutStaysListed(t *testing.T) {
 	if u := InUseLogin("claude"); u != "one@example.com" && u != "" {
 		t.Fatalf("in use %q", u)
 	}
-	// what magpie providers, the TUI and the app's row say of it
+	// what starling providers, the TUI and the app's row say of it
 	if !p.SignedOut() {
 		t.Fatal("listed on a signed-out account, the provider doesn't say it is signed out")
 	}

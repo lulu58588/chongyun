@@ -49,7 +49,7 @@ function serve(lang, config) {
     if (url.pathname === "/api/groups") return json({ groups: [] });
     if (url.pathname === "/api/caller-keys") return json({ keys: [] });
     if (url.pathname.startsWith("/api/")) return json({});
-    if (url.host !== "magpie.test") return route.fulfill({ status: 404, body: "" });
+    if (url.host !== "starling.test") return route.fulfill({ status: 404, body: "" });
     const file = path.join(assets, url.pathname === "/" ? "index.html" : url.pathname);
     const contentType = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml" }[path.extname(file)];
     let body;
@@ -74,7 +74,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         page.on("console", (m) => { if (m.type() === "error") logged.push(m.text()); });
         await page.addInitScript(() => { window.__break = true; });
         await page.route("**/*", serve(lang, {}));
-        await page.goto("http://magpie.test/?view=gateway");
+        await page.goto("http://starling.test/?view=gateway");
         const card = page.locator("#view-gateway .slot-error");
         await card.waitFor();
         assert.equal(await card.getAttribute("role"), "alert", where);
@@ -125,7 +125,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const errors = [];
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", serve(lang, { gateway: { callsPage: 10 } }));
-      await page.goto("http://magpie.test/?view=gateway");
+      await page.goto("http://starling.test/?view=gateway");
       const rows = page.locator("#activity .call-item");
       await rows.first().waitFor();
       // from boot.js, before the first paint

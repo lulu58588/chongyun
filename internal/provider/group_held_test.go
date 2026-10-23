@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // groupHeldFixture is a dozen providers serving the same models, so
-// magpie finds a group of each, and a group of the user's of four.
+// starling finds a group of each, and a group of the user's of four.
 func groupHeldFixture(t *testing.T) {
 	t.Helper()
 	isolate(t)
@@ -20,7 +20,7 @@ func groupHeldFixture(t *testing.T) {
 	t.Setenv("USERPROFILE", home)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
-	t.Setenv("MAGPIE_NO_ACCOUNTS", "1")
+	t.Setenv("STARLING_NO_ACCOUNTS", "1")
 	var models []string
 	for i := range 10 {
 		models = append(models, fmt.Sprintf("m%d", i))
@@ -110,7 +110,7 @@ func TestGroupLooksParseNoSettingsPerGroupWhileHeld(t *testing.T) {
 }
 
 // BenchmarkGroupEntries is the groups' entries of a catalog of 30
-// providers serving the same 60 models (60 groups magpie finds, of 30
+// providers serving the same 60 models (60 groups starling finds, of 30
 // members each), built afresh: what each request built several times.
 func BenchmarkGroupEntries(b *testing.B) {
 	isolate(b)
@@ -119,7 +119,7 @@ func BenchmarkGroupEntries(b *testing.B) {
 	b.Setenv("USERPROFILE", home)
 	b.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	b.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
-	b.Setenv("MAGPIE_NO_ACCOUNTS", "1")
+	b.Setenv("STARLING_NO_ACCOUNTS", "1")
 	var models []string
 	for i := range 60 {
 		models = append(models, fmt.Sprintf("m%d", i))
@@ -272,7 +272,7 @@ func BenchmarkGroupLooksHeld(b *testing.B) {
 	b.Setenv("USERPROFILE", home)
 	b.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	b.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
-	b.Setenv("MAGPIE_NO_ACCOUNTS", "1")
+	b.Setenv("STARLING_NO_ACCOUNTS", "1")
 	var models []string
 	for i := range 60 {
 		models = append(models, fmt.Sprintf("m%d", i))

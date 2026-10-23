@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 )
 
 // Kimi Code's calls (#1607, infinitr0us: its direct calls to api.kimi.com
@@ -37,9 +37,9 @@ import (
 // llm.request; 1.4 and the 1.5 builds before late August write no agentId.
 // The record alone carries everything a call needs.
 //
-// A call Kimi made through magpie's own entry (internal/agent's kimi.go
-// writes it as the provider "magpie", its model tables keyed
-// "magpie/<provider>/<model>") is the gateway's to count: it logged the
+// A call Kimi made through starling's own entry (internal/agent's kimi.go
+// writes it as the provider "starling", its model tables keyed
+// "starling/<provider>/<model>") is the gateway's to count: it logged the
 // call itself, with the provider and account that answered.
 //
 // kimi fork copies the parent's records into the new session unchanged,
@@ -60,8 +60,13 @@ func KimiCodeDir() string {
 
 func kimiSessions() string { return filepath.Join(KimiCodeDir(), "sessions") }
 
-// kimiGateway is how the model of a call to magpie's entry begins.
-const kimiGateway = "magpie/"
+// kimiGateway is how the model of a call to starling's entry begins.
+const (
+	kimiGateway    = "starling/"
+	// the name before the rename: a call in the user's history from
+	// before still carries the model it was sent under then
+	kimiGatewayOld = "magpie/"
+)
 
 // kimiCallFiles are every agent's wire.jsonl of every session. A session
 // migrated from the Python kimi-cli (a ses_* folder) is read too: one Kimi
@@ -111,7 +116,7 @@ func kimiCallLine(st *callFile, b []byte) {
 // kimiCall is a usage.record as a call.
 func kimiCall(st *callFile, agentDir string, rec kimiRecord) (Call, bool) {
 	u := rec.Usage
-	if rec.Type != "usage.record" || u == nil || strings.HasPrefix(rec.Model, kimiGateway) {
+	if rec.Type != "usage.record" || u == nil || strings.HasPrefix(rec.Model, kimiGateway) || strings.HasPrefix(rec.Model, kimiGatewayOld) {
 		return Call{}, false
 	}
 	if u.InputOther < 0 || u.Output < 0 || u.InputCacheRead < 0 || u.InputCacheCreation < 0 {

@@ -7,7 +7,7 @@ package gateway
 // Extra Usage. The subprocess keeps Claude Code's real Agent/CLI identity.
 //
 // Caller tools are exposed as an MCP server. A tools/call blocks in the hidden
-// stdio helper while magpie returns the tool_use to the caller. The caller's next
+// stdio helper while starling returns the tool_use to the caller. The caller's next
 // HTTP request supplies tool_result blocks, which unblock the same Claude Code
 // turn. This is the protocol-neutral equivalent of pi-claude-bridge's parked
 // Agent SDK query (https://github.com/elidickinson/pi-claude-bridge, MIT).
@@ -59,13 +59,13 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/claudecode"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/wslrun"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/claudecode"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/wslrun"
 )
 
 type subscriptionBridge struct {
@@ -136,14 +136,14 @@ type subscriptionRun struct {
 	outputs []*os.File
 	reading sync.WaitGroup
 	// exited is closed once Claude Code has exited and its output is read,
-	// exit then how it ended (Wait's error); killed says magpie ended it
+	// exit then how it ended (Wait's error); killed says starling ended it
 	// (abort) while it ran
 	exited chan struct{}
 	exit   error
 	killed bool
 	tmp    string
 	// room frees the process's place in claudeRoom once it has exited,
-	// roomLeft telling it magpie ended it (abort)
+	// roomLeft telling it starling ended it (abort)
 	room     func(left bool)
 	roomLeft bool
 	// schema says the client asked for an answer fitting a JSON schema,
@@ -208,7 +208,7 @@ type subscriptionRun struct {
 	// found none (#1638).
 	behindKey  string
 	behindTurn string
-	// endWhy is why magpie ended it, as the log of a turn that finds it
+	// endWhy is why starling ended it, as the log of a turn that finds it
 	// gone says (abortFor); results are the calls whose results it was
 	// last handed (continueWith)
 	endWhy  string
@@ -245,7 +245,7 @@ type subscriptionRun struct {
 	// each answer with a message start of its own.
 	onCall func(id, name string, args json.RawMessage)
 
-	// search answers magpie's web search tool, searchName, which the
+	// search answers starling's web search tool, searchName, which the
 	// client never sees
 	search     func(ctx context.Context, query string) (string, []Hit, error)
 	searchName string
@@ -289,7 +289,7 @@ type shownCall struct {
 }
 
 // waitTool collects a tool result that took longer than an agent's patience.
-const waitTool = "chongyun_wait"
+const waitTool = "starling_wait"
 
 type mcpToolResult struct {
 	Content []map[string]any `json:"content"`
@@ -321,12 +321,12 @@ func claudeProjectName(path string) string {
 
 // sweepBridgeProjects removes the projects that runs from before
 // --no-session-persistence left in Claude Code's folder: only those named
-// after a magpie-claude- folder in the temp directory, which no one but the
+// after a starling-claude- folder in the temp directory, which no one but the
 // bridge works in.
 func sweepBridgeProjects(claudeDir, tempDir string) {
 	var prefixes []string
 	for _, d := range []string{tempDir, evalSymlinks(tempDir)} {
-		prefix := claudeProjectName(filepath.Join(d, "magpie-claude-"))
+		prefix := claudeProjectName(filepath.Join(d, "starling-claude-"))
 		if !slices.Contains(prefixes, prefix) {
 			prefixes = append(prefixes, prefix)
 		}
@@ -345,7 +345,7 @@ func sweepBridgeProjects(claudeDir, tempDir string) {
 }
 
 // sweepBridgeTemps removes the folders runs a gateway no longer running
-// left in the temp directory: a run's own magpie-claude-<n> (its tools.json,
+// left in the temp directory: a run's own starling-claude-<n> (its tools.json,
 // its work folder when it has no shared one) is removed when it ends, but a
 // gateway quit for an update, or killed, ends none of its runs (#958).
 // Another gateway on the same account (a dev build) makes them in the same
@@ -355,7 +355,7 @@ func sweepBridgeProjects(claudeDir, tempDir string) {
 func sweepBridgeTemps(tempDir string) {
 	entries, _ := os.ReadDir(tempDir)
 	for _, e := range entries {
-		rest, ok := strings.CutPrefix(e.Name(), "magpie-claude-")
+		rest, ok := strings.CutPrefix(e.Name(), "starling-claude-")
 		if !ok || !e.IsDir() || rest == "" || strings.Trim(rest, "0123456789") != "" {
 			continue
 		}
@@ -454,7 +454,7 @@ func randomToken() string {
 	return hex.EncodeToString(b[:])
 }
 
-// claudeCLI is the Claude Code magpie runs: this machine's, or, on Windows
+// claudeCLI is the Claude Code starling runs: this machine's, or, on Windows
 // without one, the one installed in a running WSL distro, run there with
 // its own login and quota (wslrun).
 type claudeCLI struct {
@@ -462,7 +462,7 @@ type claudeCLI struct {
 	wsl  *wslrun.Tool
 }
 
-// claudeBinary is this machine's Claude Code, or the one magpie downloaded
+// claudeBinary is this machine's Claude Code, or the one starling downloaded
 // for it (claudecode.Find), else one in WSL.
 func claudeBinary() (claudeCLI, error) {
 	if p := claudecode.Find(); p != "" {
@@ -481,10 +481,10 @@ func (c claudeCLI) command(ctx context.Context, args ...string) *exec.Cmd {
 	return proc.CommandContext(ctx, c.path, args...)
 }
 
-// claudeEuid is the user magpie runs as; a var for tests.
+// claudeEuid is the user starling runs as; a var for tests.
 var claudeEuid = os.Geteuid
 
-// root is whether this Claude Code runs as root: magpie itself as root
+// root is whether this Claude Code runs as root: starling itself as root
 // (a server's or a container's), or a WSL distro's default user root.
 func (c claudeCLI) root() bool {
 	if c.wsl != nil {
@@ -498,7 +498,7 @@ func (c claudeCLI) root() bool {
 // used with root/sudo privileges") unless IS_SANDBOX is "1" or
 // CLAUDE_CODE_BUBBLEWRAP is set: its setup checks exactly that (2.1.296).
 // The run has no tool of Claude Code's own that touches the machine, only
-// magpie's MCP ones, answered by the client, and Anthropic's web search,
+// starling's MCP ones, answered by the client, and Anthropic's web search,
 // so skipping the permission prompts as root does nothing more than as
 // anyone else. Run as anyone else, env is kept as it is.
 func (c claudeCLI) asRoot(env []string) []string {
@@ -521,7 +521,7 @@ func (c claudeCLI) asRoot(env []string) []string {
 	return append(out, "IS_SANDBOX=1")
 }
 
-// claudeEnvVars are the variables magpie sets for a Claude Code run, which
+// claudeEnvVars are the variables starling sets for a Claude Code run, which
 // one in WSL is handed (wslrun's Env).
 var claudeEnvVars = []string{"ENABLE_CLAUDEAI_MCP_SERVERS", "DISABLE_AUTO_COMPACT", "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC",
 	"DISABLE_TELEMETRY", "DISABLE_ERROR_REPORTING", "DISABLE_AUTOUPDATER", "ANTHROPIC_BETAS"}
@@ -552,7 +552,7 @@ func (c claudeCLI) proxied(ctx context.Context, env []string) ([]string, error) 
 	return netproxy.EnvForBunWith(claudeProxy(ctx), env, c.wsl == nil || c.wsl.Host == "")
 }
 
-// file is where this Claude Code reads a file of magpie's at path: one in
+// file is where this Claude Code reads a file of starling's at path: one in
 // WSL under the distro's mount of the drive.
 func (c claudeCLI) file(path string) string {
 	if c.wsl != nil {
@@ -561,7 +561,7 @@ func (c claudeCLI) file(path string) string {
 	return path
 }
 
-// exe is magpie's own executable, as this Claude Code starts it.
+// exe is starling's own executable, as this Claude Code starts it.
 func (c claudeCLI) exe() (string, error) {
 	if c.wsl != nil {
 		return c.wsl.Exe()
@@ -583,7 +583,7 @@ func callbackBaseURL() string {
 
 // claudeMCPPath is where the Claude subscription bridge's MCP helper hands
 // a tool call back: the path, then the run's callback token.
-const claudeMCPPath = "/_magpie/claude-mcp/"
+const claudeMCPPath = "/_starling/claude-mcp/"
 
 // from, when set, is the conversation's session a run let go past idleMost
 // saved (unshelve): Claude Code goes on with it, told only the messages
@@ -630,7 +630,7 @@ func (b *subscriptionBridge) startRun(ctx context.Context, req *Request, model, 
 			sweepBridgeTemps(os.TempDir())
 		}()
 	})
-	tmp, err := os.MkdirTemp("", "magpie-claude-")
+	tmp, err := os.MkdirTemp("", "starling-claude-")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -655,7 +655,7 @@ func (b *subscriptionBridge) startRun(ctx context.Context, req *Request, model, 
 		return nil, nil, err
 	}
 	mcpConfig, _ := json.Marshal(map[string]any{"mcpServers": map[string]any{
-		"magpie": map[string]any{"command": exe, "args": []string{"claude-mcp-helper", callbackPath, toolsPath}},
+		"starling": map[string]any{"command": exe, "args": []string{"claude-mcp-helper", callbackPath, toolsPath}},
 	}})
 	args := claudeCLIArgs(model, string(mcpConfig), req.Effort, req.WebSearch)
 	if req.leanPrompt {
@@ -882,7 +882,7 @@ func (r *subscriptionRun) cliControl(request map[string]any) error {
 	ch := make(chan controlReply, 1)
 	// one that ended says how, and the last it wrote to stderr: "Claude
 	// Code ended" alone left the user nothing to act on
-	what := fmt.Sprintf("answered chongyun's %v request", request["subtype"])
+	what := fmt.Sprintf("answered starling's %v request", request["subtype"])
 	r.mu.Lock()
 	if r.closed {
 		r.mu.Unlock()
@@ -1357,7 +1357,7 @@ func (b *subscriptionBridge) keepIdle(r *subscriptionRun, key, conv string) bool
 	// request exclude each other through gone()). Left there, the same
 	// run under two keys was the oldest again after each pass below, which
 	// let go of one key only, so the loop never ended and drop grew with
-	// b.mu held (X, Sma1lboy: magpie at 158 GB after two days).
+	// b.mu held (X, Sma1lboy: starling at 158 GB after two days).
 	if r.idleKey != "" && r.idleKey != key && b.idle[r.idleKey] == r {
 		delete(b.idle, r.idleKey)
 	}
@@ -1406,7 +1406,7 @@ const shelfMost = 64
 // have asked it, a prefix it has cached; a run started anew is told the
 // whole conversation in one message, and writes all of it to the cache
 // again (X, AncientTwo: a Claude subscription's limits went much faster
-// through magpie than in Claude Code — with more than idleMost
+// through starling than in Claude Code — with more than idleMost
 // conversations going, each turn of each wrote its whole conversation).
 type savedSession struct {
 	session  string
@@ -2133,19 +2133,19 @@ func (r *subscriptionRun) readOutput(rd io.Reader) {
 	}
 	// toolStart says whether a tool_use block, index of this message, is a
 	// call of the client's, to be handed over as name: Claude Code's own
-	// calls (WebSearch, magpie's web search, a schema's StructuredOutput)
+	// calls (WebSearch, starling's web search, a schema's StructuredOutput)
 	// are its own to answer
 	toolStart := func(index int, name string) (string, bool) {
 		if r.schema && name == "StructuredOutput" {
 			own[index] = true
 			return "", false
 		}
-		name, ok := strings.CutPrefix(name, "mcp__magpie__")
+		name, ok := strings.CutPrefix(name, "mcp__starling__")
 		r.mu.Lock()
 		name = declaredName(r.names, name)
 		search := r.search != nil && name == r.searchName
 		r.mu.Unlock()
-		// magpie answers its own web search, as Claude Code does
+		// starling answers its own web search, as Claude Code does
 		// its WebSearch
 		if !ok || search {
 			own[index] = true
@@ -2732,7 +2732,7 @@ func leanSystem(req *Request) string {
 // mark reach a mark 320 messages earlier.
 const historyChunk = 16
 
-// cacheMark1h is the prompt-cache mark on what magpie gives a run: an
+// cacheMark1h is the prompt-cache mark on what starling gives a run: an
 // hour's, as Claude Code's own (claudeCacheTTL, pinned in cleanClaudeEnv),
 // since Anthropic refuses a 1h mark after a 5m one.
 func cacheMark1h() map[string]string {
@@ -2802,27 +2802,42 @@ func historyEnd(msgs []Message) int {
 // "Bash is disabled for this session, in subagents as well as here.",
 // which the model takes for a fact and gives up (#958).
 func bridgeName(name string) string {
-	return "mcp__magpie__" + bridgeToolName(name)
+	return bridgeNamePrefix + bridgeToolName(name)
 }
 
 // bridgeToolName is the name the MCP helper offers a tool of the caller's
 // under. Claude Code takes an MCP tool's name as [A-Za-z0-9_-] only, with
-// mcp__magpie__ before it in at most 64: it made "spawn.agent" its
+// mcp__starling__ before it in at most 64: it made "spawn.agent" its
 // spawn_agent, which the client never offered (#2649). A name it would
 // change, or one ending as a changed name ends, is told apart by a hash of
 // it, the same in every run, so a resumed session and a conversation's
 // history name the tool as before; declaredName maps it back.
+//
+// The whole name, the prefix and it, stays within the 64 Claude Code
+// takes. The prefix is two characters longer than upstream's, so a name
+// of 50 or 51 would make 65 or 66: such a name is hashed too, into one
+// short enough, the same in every run as for any other.
 func bridgeToolName(name string) string {
-	if bridgeToolNameOK.MatchString(name) && !bridgeToolNameHashed.MatchString(name) {
+	if bridgeToolNameOK.MatchString(name) && !bridgeToolNameHashed.MatchString(name) &&
+		len(bridgeNamePrefix)+len(name) <= bridgeNameMax {
 		return name
 	}
 	sum := sha256.Sum256([]byte(name))
 	short := bridgeToolNameBad.ReplaceAllString(name, "_")
-	if len(short) > 38 {
-		short = short[:38]
+	// The hashed name is 36 characters and its hash 12, so the whole with
+	// the prefix stays within the 64 Claude Code takes: upstream's prefix
+	// is two characters shorter, and it cuts the name at 38.
+	if len(short) > 36 {
+		short = short[:36]
 	}
 	return short + "_" + hex.EncodeToString(sum[:6])
 }
+
+// The prefix and the longest a Claude Code tool name is.
+const (
+	bridgeNamePrefix = "mcp__starling__"
+	bridgeNameMax    = 64
+)
 
 var (
 	bridgeToolNameOK     = regexp.MustCompile(`^[A-Za-z0-9_-]{1,51}$`)
@@ -3677,10 +3692,10 @@ func (r *subscriptionRun) launch() error {
 // tell writes line to Claude Code's input. Wait closes that input as
 // Claude Code exits, and a write after it failed "write |1: file already
 // closed", which said nothing of why: one Claude Code no longer reads says
-// how it ended, or that magpie ended it, and the last it wrote to stderr —
+// how it ended, or that starling ended it, and the last it wrote to stderr —
 // the cause comes last, after any warnings before it.
 func (r *subscriptionRun) tell(line []byte) error {
-	// one magpie ended is not written to: until Wait has reaped it, its
+	// one starling ended is not written to: until Wait has reaped it, its
 	// input still takes a write, which no one will read
 	r.mu.Lock()
 	killed := r.killed
@@ -3706,7 +3721,7 @@ func (r *subscriptionRun) tell(line []byte) error {
 	return r.whyEnded()
 }
 
-// whyEnded says how the run's Claude Code ended, or that magpie ended it,
+// whyEnded says how the run's Claude Code ended, or that starling ended it,
 // and the last it wrote to stderr.
 func (r *subscriptionRun) whyEnded() error {
 	return r.endedBefore("read its input")
@@ -3719,7 +3734,7 @@ func (r *subscriptionRun) endedBefore(what string) error {
 	defer r.mu.Unlock()
 	why := "exited before it " + what
 	if r.killed {
-		why = "was ended by chongyun before it " + what
+		why = "was ended by starling before it " + what
 	} else if r.exit != nil {
 		why += " (" + r.exit.Error() + ")"
 	}
@@ -3819,7 +3834,7 @@ func (b *subscriptionBridge) abortAll() {
 		runs = append(runs, run)
 	}
 	b.mu.Unlock()
-	// each asked at once, then waited for: a Claude Code magpie exits
+	// each asked at once, then waited for: a Claude Code starling exits
 	// under is not left to be killed by no one
 	stops := make([]<-chan struct{}, 0, len(runs))
 	for _, run := range runs {
@@ -3855,7 +3870,7 @@ func keepLost(m map[string]lostRun, key string, l lostRun, most int) {
 }
 
 // whyLost is why the run ended, for the log of its conversation's next
-// turn: the reason magpie gave (abortFor), or how its Claude Code exited.
+// turn: the reason starling gave (abortFor), or how its Claude Code exited.
 func (r *subscriptionRun) whyLost() string {
 	r.mu.Lock()
 	why, killed, exit := r.endWhy, r.killed, r.exit
@@ -3864,7 +3879,7 @@ func (r *subscriptionRun) whyLost() string {
 	case why != "":
 		return why
 	case killed:
-		return "chongyun ended it"
+		return "starling ended it"
 	case exit != nil:
 		return "its Claude Code exited (" + exit.Error() + ")"
 	}
@@ -4037,7 +4052,7 @@ func (s *Server) serveClaudeSubscription(w http.ResponseWriter, r *http.Request,
 // anthropic-ratelimit-unified-* headers, which a Claude Code signed in to
 // claude.ai reads into its status line's rate_limits (claude-hud's 5-hour
 // and weekly figures, #1257). Its run tells them in its rate_limit_event,
-// not as headers, so they are said again from what magpie keeps.
+// not as headers, so they are said again from what starling keeps.
 func limitHeaders(w http.ResponseWriter, owner string) {
 	user, own := ownerAccount(owner)
 	if user == "" || own && provider.ClaudeCodeMovedOff(user) {
@@ -4103,7 +4118,7 @@ func (s *Server) serveSubscription(w http.ResponseWriter, r *http.Request, from 
 			}
 		}
 	}
-	// its model searches the web with magpie's tool, which magpie answers
+	// its model searches the web with starling's tool, which starling answers
 	var search Tool
 	if req.WebSearch && !searching(r.Context()) {
 		if canSearch() {

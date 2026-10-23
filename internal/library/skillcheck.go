@@ -19,8 +19,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/ghtoken"
-	"github.com/lulu58588/chongyun/internal/source"
+	"github.com/lulu58588/starling/internal/ghtoken"
+	"github.com/lulu58588/starling/internal/source"
 )
 
 // ---- which skills GitHub has changed --------------------------------------
@@ -86,7 +86,7 @@ func forgetCheck(name string) {
 }
 
 // checkedAt is when the skills were last checked for updates (unix
-// nanoseconds), 0 before the first check since magpie started.
+// nanoseconds), 0 before the first check since starling started.
 var checkedAt atomic.Int64
 
 // checkEvery is how long the Library page goes before it checks for
@@ -94,7 +94,7 @@ var checkedAt atomic.Int64
 const checkEvery = 12 * time.Hour
 
 // checkDue is whether the page should check the library's skills from
-// GitHub for updates: none checked since magpie started, or not for
+// GitHub for updates: none checked since starling started, or not for
 // checkEvery.
 func checkDue(l *Library) bool {
 	if !slices.ContainsFunc(l.Skills, func(s *Skill) bool { return s.Source.remote() }) {
@@ -160,7 +160,7 @@ func lastCommit(src Source) (*commit, error) {
 // errLimited.
 func apiGet(u string) ([]byte, int, bool, error) {
 	req, _ := http.NewRequest("GET", u, nil)
-	req.Header.Set("User-Agent", "chongyun")
+	req.Header.Set("User-Agent", "starling")
 	req.Header.Set("Accept", "application/vnd.github+json")
 	etags.Lock()
 	had, cached := etags.m[u]
@@ -427,7 +427,7 @@ func checkSkill(s *Skill, f *fetcher, asked map[string]*commit, limited *atomic.
 	}
 	have := s.Hash
 	if have == "" {
-		have = hashDir(skillDir(s.Name)) // installed before magpie kept it
+		have = hashDir(skillDir(s.Name)) // installed before starling kept it
 	}
 	if theirs := hashDir(from); theirs == "" || theirs != have {
 		c.Status, c.URL = "update", history

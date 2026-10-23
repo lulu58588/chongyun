@@ -9,14 +9,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A gateway key held to some models (#882) sees only those in the model
 // lists, is refused any other before a provider is asked — by a bare
 // name, through a group with one it may not use or as a fallback — while
-// another key and magpie's own calls for it go on.
+// another key and starling's own calls for it go on.
 func TestGatewayKeyModelsHoldAKey(t *testing.T) {
 	fresh(t)
 	plan := &fake{t: t, ctype: "application/json", reply: `{"id":"from-plan","choices":[]}`}
@@ -107,14 +107,14 @@ func TestGatewayKeyModelsHoldAKey(t *testing.T) {
 	if w := chat(secrets[1], "spare/m2"); w.Code != 200 || !strings.Contains(w.Body.String(), "from-spare") {
 		t.Fatal("a free key was held", w.Code, w.Body.String())
 	}
-	// magpie's own call for the key (a search, a picture described) goes on
+	// starling's own call for the key (a search, a picture described) goes on
 	r := httptest.NewRequest("POST", "/v1/chat/completions", strings.NewReader(`{"model":"spare/m2","messages":[{"role":"user","content":"hi"}]}`))
-	r = r.WithContext(magpieChose(r.Context()))
+	r = r.WithContext(starlingChose(r.Context()))
 	r.Header.Set("Authorization", "Bearer "+secrets[0])
 	rec := httptest.NewRecorder()
 	h.ServeHTTP(rec, r)
 	if rec.Code != 200 {
-		t.Fatal("chongyun's own call was held", rec.Code, rec.Body.String())
+		t.Fatal("starling's own call was held", rec.Code, rec.Body.String())
 	}
 	// plan out of quota: its fallback is a model the key may not use
 	plan.code, plan.reply = 429, `{"error":{"message":"slow down"}}`
@@ -342,7 +342,7 @@ func TestGatewayKeyModelsHoldCountTokensAndSystemOne(t *testing.T) {
 	}
 }
 
-// Another magpie added as a provider with a gateway key held to some
+// Another starling added as a provider with a gateway key held to some
 // models asks this one for its image and video models too
 // (provider.DrawersHeader, VideomakersHeader). It is told of those the
 // key may use alone, as it is of chat models; a key free of models, and

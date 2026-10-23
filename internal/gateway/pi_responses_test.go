@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // piResponses is a turn as Pi's openai-responses API sends it (pi-ai's
@@ -92,7 +92,7 @@ func TestPiResponsesRelayedToChatGPT(t *testing.T) {
 	auth := fmt.Sprintf(`{"auth_mode":"chatgpt","tokens":{"id_token":%q,"access_token":%q,"refresh_token":"r","account_id":"acct-1"}}`,
 		claims(map[string]any{"email": "me@example.com"}), claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}))
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), []byte(auth), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json: the agent's own file is never read to find out.
 	codexLoginSavedFromFile(t, "me@example.com")
 	f := &fake{t: t, ctype: "none", reply: piReply}
@@ -115,7 +115,7 @@ func TestPiResponsesRelayedToChatGPT(t *testing.T) {
 	}
 }
 
-// DeepSeek Harness on magpie's route switched to OpenAI Responses (its
+// DeepSeek Harness on starling's route switched to OpenAI Responses (its
 // llm-pi-ai plugin is pi-ai's openai-responses, so it asks as Pi does)
 // reaches a model served on Chat Completions alone, a DeepSeek one: the
 // gateway asks it in Chat, the effort as reasoning_effort, the image, tool
@@ -129,7 +129,7 @@ func TestDshResponsesReachChatVendor(t *testing.T) {
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest("POST", "/v1/responses", strings.NewReader(fmt.Sprintf(piResponses, "fake/m1")))
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer magpie")
+	req.Header.Set("Authorization", "Bearer starling")
 	req.Header.Set("User-Agent", "deepseek-harness/0.2.0")
 	New().Handler().ServeHTTP(rec, req)
 	body := rec.Body.String()

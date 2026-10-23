@@ -25,8 +25,8 @@ import (
 	"time"
 
 	"github.com/Calcium-Ion/moejs"
-	"github.com/lulu58588/chongyun/internal/jsmod"
-	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/starling/internal/jsmod"
+	"github.com/lulu58588/starling/internal/plugin"
 )
 
 // How long a hook may run before it is stopped and its input kept as it
@@ -373,7 +373,7 @@ func (in *inst) console() map[string]any {
 }
 
 // linesAMinute is how many lines a middleware may log a minute, so one
-// that logs every event doesn't fill magpie's log.
+// that logs every event doesn't fill starling's log.
 const linesAMinute = 60
 
 func (m *mw) say(level, msg string) {

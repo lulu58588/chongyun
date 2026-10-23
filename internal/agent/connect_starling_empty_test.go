@@ -6,17 +6,17 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Lumens 报告 (v0.1.1233): connecting WorkBuddy said it was
 // connected, then its switch went back off and WorkBuddy had none of
-// magpie's models. WorkBuddy's one field puts magpie in its own picker, so
+// starling's models. WorkBuddy's one field puts starling in its own picker, so
 // Connect set it without asking whether any model was left for it: with
 // every model taken out of WorkBuddy's list, models.json got none, and the
 // row read as not connected. Connect now says why, as it does for an agent
 // that picks among the catalog (#1989).
-func TestConnectMagpieAsProviderWithNoModelLeft(t *testing.T) {
+func TestConnectStarlingAsProviderWithNoModelLeft(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
 	t.Setenv("USERPROFILE", home)
@@ -27,7 +27,7 @@ func TestConnectMagpieAsProviderWithNoModelLeft(t *testing.T) {
 	os.MkdirAll(filepath.Dir(path), 0o755)
 	os.WriteFile(path, []byte(`[{"id":"qwen-local","local":true,"url":"http://127.0.0.1:8080/v1/chat/completions"}]`), 0o600)
 
-	// nothing added in magpie yet
+	// nothing added in starling yet
 	_, err := workbuddy(home).ConnectHow()
 	var nm *NoModelsError
 	if !errors.As(err, &nm) || nm.Agent != "WorkBuddy" {
@@ -60,7 +60,7 @@ func TestConnectMagpieAsProviderWithNoModelLeft(t *testing.T) {
 		t.Fatal(err)
 	}
 	c, err := workbuddy(home).ConnectHow()
-	if err != nil || c.How != "magpie" {
+	if err != nil || c.How != "starling" {
 		t.Fatalf("with a model: %+v %v", c, err)
 	}
 	if !workbuddyWired(path) {

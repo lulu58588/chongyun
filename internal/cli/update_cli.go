@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/update"
 )
 
 // updateExecutable, updateCanElevate and updateInContainer are
@@ -21,11 +21,11 @@ var (
 	updateInContainer = gateway.InContainer
 )
 
-// updateEveries are the intervals magpie update auto takes, by their
+// updateEveries are the intervals starling update auto takes, by their
 // minutes in settings.UpdateEveries.
 var updateEveries = map[string]int{"30m": 30, "1h": 60, "6h": 360, "24h": 1440}
 
-// updateAutoCmd is `chongyun update auto [on|off] [download|notify]
+// updateAutoCmd is `starling update auto [on|off] [download|notify]
 // [30m|1h|6h|24h]`: whether the app asks for a newer version by itself, how
 // often (#472), and whether one found is downloaded at once or only said to
 // be out, downloaded on a click (notify, #2296). With none, it says how it
@@ -41,7 +41,7 @@ func updateAutoCmd(args []string) error {
 		default:
 			m, ok := updateEveries[a]
 			if !ok {
-				return fmt.Errorf("chongyun update auto takes on, off, download, notify or how often (30m, 1h, 6h or 24h), not %q", a)
+				return fmt.Errorf("starling update auto takes on, off, download, notify or how often (30m, 1h, 6h or 24h), not %q", a)
 			}
 			s.UpdateEvery = m
 		}
@@ -58,27 +58,27 @@ func updateAutoCmd(args []string) error {
 		}
 	}
 	if s.NoAutoUpdate {
-		fmt.Println("automatic updates are off", muted.Render("· chongyun update or Settings' Check looks for one (every "+every+" when on)"))
+		fmt.Println("automatic updates are off", muted.Render("· starling update or Settings' Check looks for one (every "+every+" when on)"))
 		if s.NoAutoDownload {
-			fmt.Println(muted.Render("  a newer version found is only said to be out; Download update or chongyun update downloads it"))
+			fmt.Println(muted.Render("  a newer version found is only said to be out; Download update or starling update downloads it"))
 		}
 		return nil
 	}
 	if s.NoAutoDownload {
-		fmt.Println("automatic updates are on", muted.Render("· chongyun looks for a newer version every "+every+" and says it is out; Download update or chongyun update downloads it (chongyun update auto download: at once)"))
+		fmt.Println("automatic updates are on", muted.Render("· starling looks for a newer version every "+every+" and says it is out; Download update or starling update downloads it (starling update auto download: at once)"))
 		return nil
 	}
-	fmt.Println("automatic updates are on", muted.Render("· chongyun looks for a newer version every "+every+" and downloads it (chongyun update auto notify: only says it is out)"))
+	fmt.Println("automatic updates are on", muted.Render("· starling looks for a newer version every "+every+" and downloads it (starling update auto notify: only says it is out)"))
 	return nil
 }
 
-// updateMirrorCmd is `chongyun update mirror [<prefix>|off]`: the GitHub
+// updateMirrorCmd is `starling update mirror [<prefix>|off]`: the GitHub
 // download mirror every update goes through, the app's own among them
 // (settings.UpdateMirror). With nothing, it says which.
 func updateMirrorCmd(args []string) error {
 	s := settings.Load()
 	if len(args) > 1 {
-		return fmt.Errorf("chongyun update mirror takes one prefix, or off")
+		return fmt.Errorf("starling update mirror takes one prefix, or off")
 	}
 	if len(args) == 1 {
 		switch m := strings.TrimSpace(args[0]); m {
@@ -95,10 +95,10 @@ func updateMirrorCmd(args []string) error {
 		}
 	}
 	if s.UpdateMirror == "" {
-		fmt.Println("updates are downloaded from GitHub", muted.Render("· chongyun update mirror <prefix> has them come through a mirror; the checksum is still the feed's"))
+		fmt.Println("updates are downloaded from GitHub", muted.Render("· starling update mirror <prefix> has them come through a mirror; the checksum is still the feed's"))
 		return nil
 	}
-	fmt.Println("updates are downloaded through", bold.Render(s.UpdateMirror), muted.Render("· each is checked against the feed's checksum · chongyun update mirror off goes back to where it came from"))
+	fmt.Println("updates are downloaded through", bold.Render(s.UpdateMirror), muted.Render("· each is checked against the feed's checksum · starling update mirror off goes back to where it came from"))
 	return nil
 }
 
@@ -136,7 +136,7 @@ func updateFlags(args []string) (rest []string, proxy, mirror string, err error)
 	return rest, proxy, mirror, nil
 }
 
-// updateCmd is `chongyun update [check] [--proxy <url>] [--mirror <prefix>]`:
+// updateCmd is `starling update [check] [--proxy <url>] [--mirror <prefix>]`:
 // the app replaces its bundle, the terminal build its binary.
 func updateCmd(args []string) error {
 	args, proxy, mirror, err := updateFlags(args)
@@ -150,7 +150,7 @@ func updateCmd(args []string) error {
 		return updateMirrorCmd(args[2:])
 	}
 	if len(args) > 2 || len(args) == 2 && args[1] != "check" {
-		return fmt.Errorf("usage: chongyun update [check] [--proxy <url>] [--mirror <prefix>]")
+		return fmt.Errorf("usage: starling update [check] [--proxy <url>] [--mirror <prefix>]")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
@@ -161,22 +161,22 @@ func updateCmd(args []string) error {
 	}
 	if !update.Newer(rel.Version, version) {
 		if update.Released(version) {
-			fmt.Println(green.Render("✓"), "magpie", version, muted.Render("is the latest"))
+			fmt.Println(green.Render("✓"), "starling", version, muted.Render("is the latest"))
 		} else {
-			fmt.Println("magpie", version, muted.Render("was built from source; the latest release is "+rel.Version))
+			fmt.Println("starling", version, muted.Render("was built from source; the latest release is "+rel.Version))
 		}
 		return nil
 	}
-	fmt.Println("magpie", bold.Render(rel.Version), "is out", muted.Render("(you have "+version+") · "+rel.URL))
+	fmt.Println("starling", bold.Render(rel.Version), "is out", muted.Render("(you have "+version+") · "+rel.URL))
 	if len(args) > 1 && args[1] == "check" {
 		return nil
 	}
 	if !update.Released(version) {
-		return fmt.Errorf("this chongyun was built from source; update it the way you built it, or get the release from %s", update.Site)
+		return fmt.Errorf("this starling was built from source; update it the way you built it, or get the release from %s", update.Site)
 	}
 	if app := update.Bundle(); app != "" {
 		if update.Stuck(app) != "" {
-			return fmt.Errorf("%s can't be replaced where it is; move chongyun to Applications, or download the new version from %s", tilde(app), update.Site)
+			return fmt.Errorf("%s can't be replaced where it is; move starling to Applications, or download the new version from %s", tilde(app), update.Site)
 		}
 		fmt.Println(muted.Render("  downloading " + update.AppAsset() + via(ctx) + " …"))
 		staged, err := update.Stage(ctx, rel, app)
@@ -190,23 +190,23 @@ func updateCmd(args []string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println(green.Render("✓"), "updated", tilde(app), "to", rel.Version, muted.Render("· quit and reopen chongyun to use it"))
+		fmt.Println(green.Render("✓"), "updated", tilde(app), "to", rel.Version, muted.Render("· quit and reopen starling to use it"))
 		if stale := update.StaleCLI(rel.Version); stale != "" {
 			// The copy won't follow the app; the fix is the link install.sh
-			// makes. `chongyun update` run from the copy can't do it (it
+			// makes. `starling update` run from the copy can't do it (it
 			// replaces the copy with another copy), so name the real step.
-			bin := filepath.Join(app, "Contents", "MacOS", "magpie")
-			fmt.Println(muted.Render("  the `chongyun` command at " + tilde(stale) + " is a copy behind this app; re-run the installer, or link it: ln -sf " + tilde(bin) + " " + tilde(stale)))
+			bin := filepath.Join(app, "Contents", "MacOS", "starling")
+			fmt.Println(muted.Render("  the `starling` command at " + tilde(stale) + " is a copy behind this app; re-run the installer, or link it: ln -sf " + tilde(bin) + " " + tilde(stale)))
 		}
 		return nil
 	}
-	// the Docker image's /magpie, run as nonroot: the image is what is
+	// the Docker image's /starling, run as nonroot: the image is what is
 	// updated, and a replace would only fail with "permission denied"
 	if exe, err := updateExecutable(); err == nil && !update.Writable(filepath.Dir(exe)) && !updateCanElevate() && updateInContainer() {
-		return fmt.Errorf("this chongyun runs in a container and can't replace itself; pull the new image (docker pull ghcr.io/lulu58588/chongyun:latest) and recreate the container")
+		return fmt.Errorf("this starling runs in a container and can't replace itself; pull the new image (docker pull ghcr.io/lulu58588/starling:latest) and recreate the container")
 	}
 	if exe, err := update.Executable(); err == nil && update.Homebrew(exe) {
-		return fmt.Errorf("this chongyun was installed with Homebrew; update it with: brew upgrade chongyun")
+		return fmt.Errorf("this starling was installed with Homebrew; update it with: brew upgrade starling")
 	}
 	fmt.Println(muted.Render("  downloading " + update.BinaryAsset() + via(ctx) + " …"))
 	if err := update.ReplaceBinary(ctx, rel); err != nil {

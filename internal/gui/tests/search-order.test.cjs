@@ -70,7 +70,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const posted = [], opts = {};
       await page.route("**/*", serve(lang, posted, opts));
       await watchSettingsReads(page);
-      await page.goto("http://magpie.test/?view=settings&tab=models");
+      await page.goto("http://starling.test/?view=settings&tab=models");
       await settingsDrawn(page);
       const list = page.locator("#searchList");
       const units = list.locator(".search-unit");

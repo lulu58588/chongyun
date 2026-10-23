@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func TestMixedDecisionGateway(t *testing.T) {
@@ -128,7 +128,7 @@ func (u *jevUp) turns() []map[string]any {
 	return out
 }
 
-// Magpie's own /v1/systemone sends the call to the Jev provider named by
+// Starling's own /v1/systemone sends the call to the Jev provider named by
 // the model prefix, with that prefix taken off the model. /systemone is
 // not served.
 func TestSystemOneRoutesByPrefix(t *testing.T) {
@@ -189,7 +189,7 @@ func TestSystemOneRoutesByPrefix(t *testing.T) {
 	call := func(path, body string) *httptest.ResponseRecorder {
 		rec := httptest.NewRecorder()
 		req := httptest.NewRequest("POST", path, strings.NewReader(body))
-		req.Header.Set("Authorization", "Bearer magpie")
+		req.Header.Set("Authorization", "Bearer starling")
 		req.Header.Set(SessionHeader, "decision-session")
 		s.Handler().ServeHTTP(rec, req)
 		return rec
@@ -340,15 +340,15 @@ func TestJevPicksTheIntent(t *testing.T) {
 	if r.Rule.N != 0 || r.Rule.Classified.Intent != "" || r.Rule.Classified.Error != "" {
 		t.Fatalf("unsure: %+v", r.Rule.Classified)
 	}
-	// Jev's call is magpie's own; it holds no conversation itself
+	// Jev's call is starling's own; it holds no conversation itself
 	if code, out := postAs(t, s, "s3", `{"model":"ts/jev-latest","messages":[{"role":"user","content":"hi"}]}`); code != 400 || !strings.Contains(out, "only decides") {
 		t.Fatalf("chat to Jev: %d %s", code, out)
 	}
-	// its record is the routing classifier's, magpie's own (#1839)
+	// its record is the routing classifier's, starling's own (#1839)
 	n := 0
 	for _, r := range usage.Load(time.Time{}) {
 		if r.Provider == "ts" {
-			if r.Kind != "routing" || !r.ByMagpie() {
+			if r.Kind != "routing" || !r.ByStarling() {
 				t.Fatalf("Jev's record: %+v", r)
 			}
 			n++

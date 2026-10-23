@@ -10,12 +10,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/lastgood"
-	"github.com/lulu58588/chongyun/internal/library"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/lastgood"
+	"github.com/lulu58588/starling/internal/library"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Profile is every agent's fields, and the library's setup.
@@ -27,7 +27,7 @@ type Profile struct {
 	// or before profiles kept it, which leaves the library as it is.
 	Library *library.Setup
 	// Models are the agents' model lists (#1368), by the id their lists are
-	// kept under (agent.ListsFor): which of magpie's models each shows and
+	// kept under (agent.ListsFor): which of starling's models each shows and
 	// in what order. An agent not named, every one in a profile saved
 	// before profiles kept them, keeps the list it has.
 	Models map[string]provider.ModelList

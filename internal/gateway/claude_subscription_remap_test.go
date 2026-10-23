@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // remapHarness serves requests through serveSubscription with runs whose
@@ -151,7 +151,7 @@ func resultOf(t *testing.T, w chan mcpToolResult) string {
 // tool_use id and its result's tool_use_id, in every request after — so
 // none of its results named a call the run's Claude Code waits on: each
 // request started a Claude Code anew, told the whole conversation, its
-// cache written again (Chapin, magpie 0.1.757). The run whose reply made
+// cache written again (Chapin, starling 0.1.757). The run whose reply made
 // the same calls, in a conversation the request goes on from, has them,
 // and goes on in the same Claude Code turn after turn.
 func TestRewrittenToolIDsKeepTheRun(t *testing.T) {

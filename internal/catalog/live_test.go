@@ -47,10 +47,10 @@ func TestFetchContextLength(t *testing.T) {
 	}
 }
 
-// Another magpie's list tells each model's native APIs, over the ones it
+// Another starling's list tells each model's native APIs, over the ones it
 // serves it on, its longest reply and its reasoning levels; a vendor's odd
 // values are only left out, never the whole list.
-func TestFetchMagpieFields(t *testing.T) {
+func TestFetchStarlingFields(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		rw.Write([]byte(`{"object":"list","data":[
 		  {"id":"anthropic/claude-opus-4-8","native_endpoints":["/v1/messages"],"max_output_tokens":128000,"supported_reasoning_levels":[{"effort":"low"},{"effort":"high"}]},
@@ -130,17 +130,17 @@ func TestFetchAtVersionedBase(t *testing.T) {
 	}
 }
 
-// Another magpie's list tells each model's price (magpie_price), tiers
+// Another starling's list tells each model's price (starling_price), tiers
 // and all; one no vendor could charge is not taken, and a list without
 // one leaves the model unpriced.
-func TestLiveMagpiePrice(t *testing.T) {
+func TestLiveStarlingPrice(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, `{"data":[
-			{"id":"a/priced","magpie_price":{"input":3,"output":12,"cache_read":0.3,"cache_write":3.75,"tiers":[{"above":200000,"input":6,"output":18,"cache_read":0.6,"cache_write":7.5}]}},
-			{"id":"a/free","magpie_price":{"input":0,"output":0,"cache_read":0,"cache_write":0}},
-			{"id":"a/negative","magpie_price":{"input":-1,"output":12,"cache_read":0,"cache_write":0}},
-			{"id":"a/sizeless","magpie_price":{"input":1,"output":2,"cache_read":0,"cache_write":0,"tiers":[{"above":0,"input":2,"output":4}]}},
-			{"id":"a/odd","magpie_price":"cheap"},
+			{"id":"a/priced","starling_price":{"input":3,"output":12,"cache_read":0.3,"cache_write":3.75,"tiers":[{"above":200000,"input":6,"output":18,"cache_read":0.6,"cache_write":7.5}]}},
+			{"id":"a/free","starling_price":{"input":0,"output":0,"cache_read":0,"cache_write":0}},
+			{"id":"a/negative","starling_price":{"input":-1,"output":12,"cache_read":0,"cache_write":0}},
+			{"id":"a/sizeless","starling_price":{"input":1,"output":2,"cache_read":0,"cache_write":0,"tiers":[{"above":0,"input":2,"output":4}]}},
+			{"id":"a/odd","starling_price":"cheap"},
 			{"id":"a/none"}]}`)
 	}))
 	defer srv.Close()
@@ -208,13 +208,13 @@ func TestFetchCommandCodeNames(t *testing.T) {
 func TestFetchNamePrecedence(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"models":[
-		  {"id":"all","magpie_label":"label","display_name":"display","name":"name"},
-		  {"id":"display","magpie_label":"","display_name":"display name","name":"name"},
+		  {"id":"all","starling_label":"label","display_name":"display","name":"name"},
+		  {"id":"display","starling_label":"","display_name":"display name","name":"name"},
 		  {"id":"name","display_name":"","name":"provider name"},
 		  {"id":"id","name":""},
 		  {"id":"prefixed","name":"Vendor: Model"},
 		  {"id":"prefixed-display","display_name":"Vendor: Display","name":"Vendor: Name"},
-		  {"id":"prefixed-label","magpie_label":"Vendor: Label","name":"Vendor: Name"},
+		  {"id":"prefixed-label","starling_label":"Vendor: Label","name":"Vendor: Name"},
 		  {"id":"variant","name":"Model:free"},
 		  {"name":"name-only"},
 		  {"display_name":"no identifier"},

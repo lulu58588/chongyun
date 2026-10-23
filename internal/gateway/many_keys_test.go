@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// @NetRozee 报告: a custom endpoint given a thousand keys froze magpie.
+// @NetRozee 报告: a custom endpoint given a thousand keys froze starling.
 // Every request asked, for each key, whether it serves the model, and
 // each asking read the provider's lists again: a thousand reads of the
 // lists' file a request. The reads are counted, not timed: a request

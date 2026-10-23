@@ -1,11 +1,11 @@
 package gateway
 
 import (
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// The reasoning level picked in Settings for a model magpie asks on its
+// The reasoning level picked in Settings for a model starling asks on its
 // own, beside the model in use: Image recognition's and the searcher's
 // (MOMO 报告, "外置模型能不能提供思考深度选项"). Only those calls
 // are asked so; every other request goes as it did.
@@ -33,7 +33,7 @@ func sideEffort(model, want string) string {
 }
 
 // visionEffort is the level the Image recognition model is asked to read
-// an image at: the one picked in Settings, else magpie's own, the least
+// an image at: the one picked in Settings, else starling's own, the least
 // it has (classifyEffort), as a description is wanted quickly.
 func visionEffort(model string) string {
 	if e := sideEffort(model, provider.HeldSettings().VisionEffort); e != "" {

@@ -10,10 +10,10 @@
 package redact
 
 import (
-	"github.com/lulu58588/chongyun/internal/gwmw"
-	"github.com/lulu58588/chongyun/internal/masking"
-	"github.com/lulu58588/chongyun/internal/pluginrt"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/gwmw"
+	"github.com/lulu58588/starling/internal/masking"
+	"github.com/lulu58588/starling/internal/pluginrt"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func init() {

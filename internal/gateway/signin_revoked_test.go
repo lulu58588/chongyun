@@ -16,7 +16,7 @@ import (
 
 	"github.com/klauspost/compress/zstd"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // revokedUpstream stands in for the ChatGPT backend with the sign-in of
@@ -148,10 +148,10 @@ func TestRevokedSignInPassedOverTillSignedInAgain(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(os.Getenv("HOME"), ".codex", "auth.json"), mustJSON(auth), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	// chongyun keeps what it signed the agent in to in its own logins.json:
+	// starling keeps what it signed the agent in to in its own logins.json:
 	// a sign-in anew is the account with the new credential, and the mark
 	// of the revoked sign-in is gone with it.
-	chongyunLogins(t, chongyunCodexLogin("me@example.com", auth))
+	starlingLogins(t, starlingCodexLogin("me@example.com", auth))
 	provider.ForgetAccounts()
 	turn("signed in again", "a new conversation", "acct-1")
 	if got := codexLapsed(t, "me@example.com"); got != "" {
@@ -182,7 +182,7 @@ func TestRevokedWordsFromAKeyRestAsBefore(t *testing.T) {
 	}
 }
 
-// Compaction goes to an account of magpie's alone, with the one Codex is
+// Compaction goes to an account of starling's alone, with the one Codex is
 // signed in to paused (#263): one whose sign-in OpenAI revoked (#1793) is
 // marked by its 401 there too, and the next compaction goes to another,
 // not to it again.

@@ -23,7 +23,7 @@ const words = {
 };
 
 // model is the page's /api/privacy-model: a POST is recorded and moves it
-// along, as magpie would (downloading, then on and running on the GPU)
+// along, as starling would (downloading, then on and running on the GPU)
 function serve(lang, masking, model, posts) {
   const settings = () => ({ lang, theme: "light", redact: masking, redactPersonal: false });
   const state = { agents: [], profiles: [], settings: settings() };
@@ -66,7 +66,7 @@ async function open(engine, lang, width, masking, model, posts) {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.route("**/*", serve(lang, masking, model, posts));
   await watchSettingsReads(page);
-  await page.goto("http://magpie.test/?view=settings&tab=privacy");
+  await page.goto("http://starling.test/?view=settings&tab=privacy");
   await page.locator("#redactList .row").first().waitFor();
   await settingsDrawn(page);
   return { browser, page, errors };

@@ -14,15 +14,15 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
+	"github.com/lulu58588/starling/internal/plugin"
 
 	// opens another app's SQLite database (openReadOnly below)
-	_ "github.com/lulu58588/chongyun/internal/sqlitedb"
+	_ "github.com/lulu58588/starling/internal/sqlitedb"
 )
 
 // freeID is id, or id-2, id-3… whichever no provider has.
 func freeID(id string) string {
-	taken := map[string]bool{"magpie": true}
+	taken := map[string]bool{"starling": true}
 	for _, id := range accountIDs {
 		taken[id] = true
 	}
@@ -49,7 +49,7 @@ func itoa(n int) string {
 }
 
 // sameProvider: the same key, host, and headers are the same account; a is
-// the provider magpie has, which may hold the key among its others.
+// the provider starling has, which may hold the key among its others.
 func sameProvider(a, b Provider) bool {
 	if !maps.Equal(cleanHeaders(a.Headers), cleanHeaders(b.Headers)) {
 		return false

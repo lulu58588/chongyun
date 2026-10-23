@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 func pageHome(t *testing.T) {
@@ -199,7 +199,7 @@ func TestQueryPageSourceAndIdentityInvalidation(t *testing.T) {
 	pageHome(t)
 	// QueryPage saves a copy of the account Codex is signed in to, at most
 	// once every 30s (rememberLogins), and this test expects only the
-	// identity of the account chongyun keeps in its own logins.json. Look at
+	// identity of the account starling keeps in its own logins.json. Look at
 	// the accounts before signing in, as an earlier test in a package run
 	// does, so no copy is saved while it runs.
 	provider.ForgetAccounts()
@@ -245,7 +245,7 @@ func TestQueryPageSourceAndIdentityInvalidation(t *testing.T) {
 	sessionAuth(t, sessions.CodexDir(), "a", "u", "two@example.com")
 	check(2, "two@example.com", true)
 	sessionAuth(t, sessions.CodexDir(), "other", "u", "wrong@example.com")
-	// chongyun keeps the account it signed the agent in to before, so the
+	// starling keeps the account it signed the agent in to before, so the
 	// session is still told by the account it was recorded under: the one
 	// the agent is on now never takes its place.
 	check(2, "two@example.com", true)

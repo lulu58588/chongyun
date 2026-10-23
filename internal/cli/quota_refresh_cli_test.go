@@ -12,12 +12,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// magpie quota refresh <provider> reads that card again, as its refresh
+// starling quota refresh <provider> reads that card again, as its refresh
 // button on the Usage page does, and shows it alone: the other providers'
 // vendors aren't asked, and a second run within 30 seconds asks nobody and
 // shows what was read (#2104).

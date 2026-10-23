@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // codexHome sets a Codex home up: the agent's own auth.json and
@@ -45,7 +45,7 @@ func codexHome(t *testing.T, auth, config string) (home string, read func() stri
 	os.MkdirAll(dir, 0o755)
 	if auth != "" {
 		os.WriteFile(filepath.Join(dir, "auth.json"), []byte(auth), 0o600)
-		// chongyun keeps the account it signed the agent in to in its own
+		// starling keeps the account it signed the agent in to in its own
 		// logins.json, marked as the one the agent is on: it never reads
 		// the agent's own file to find out which account that is.
 		if blob := codexAuthBlob(auth); blob != nil {
@@ -62,10 +62,10 @@ func codexHome(t *testing.T, auth, config string) (home string, read func() stri
 	}
 }
 
-// codexBeside says Codex is signed in to ChatGPT, the way chongyun knows
-// it: chongyun never reads the agent's own sign-in, so a test says it by
-// the base URL chongyun wrote and the mark it left beside that sign-in —
-// "beside" for a model of chongyun's picked beside it, "joined" for a
+// codexBeside says Codex is signed in to ChatGPT, the way starling knows
+// it: starling never reads the agent's own sign-in, so a test says it by
+// the base URL starling wrote and the mark it left beside that sign-in —
+// "beside" for a model of starling's picked beside it, "joined" for a
 // connection by Join, which the sign-in state of its own keeps.
 func codexBeside(t *testing.T, home, mark string) {
 	t.Helper()
@@ -91,7 +91,7 @@ func codexAuthBlob(auth string) map[string]any {
 }
 
 // codexAuthUser names the ChatGPT account a Codex sign-in holds: its email
-// as the id token says it, as chongyun's own logins.json keeps the
+// as the id token says it, as starling's own logins.json keeps the
 // account.
 func codexAuthUser(auth map[string]any) string {
 	toks, _ := auth["tokens"].(map[string]any)
@@ -110,16 +110,16 @@ func codexAuthUser(auth map[string]any) string {
 	return "me@example.com"
 }
 
-// codexLoginSaved puts a Codex account into chongyun's own logins.json and
+// codexLoginSaved puts a Codex account into starling's own logins.json and
 // marks it the one the agent is on: the account the agent's own auth.json
-// holds, which chongyun never reads to find out.
+// holds, which starling never reads to find out.
 func codexLoginSaved(t *testing.T, user string, auth map[string]any) {
 	t.Helper()
 	saveLogin(t, map[string]any{"agent": "codex", "user": user, "active": true,
 		"seen": time.Now(), "auth": auth})
 }
 
-// saveLogin adds an account to chongyun's own logins.json, and makes the
+// saveLogin adds an account to starling's own logins.json, and makes the
 // accounts be read afresh. An account already there is kept as it is, and
 // only the fields named here are set.
 func saveLogin(t *testing.T, entry map[string]any) {
@@ -163,15 +163,15 @@ func saveLogin(t *testing.T, entry map[string]any) {
 	t.Cleanup(provider.ForgetAccounts)
 }
 
-// Signed in, a magpie model points Codex's built-in OpenAI provider at
-// magpie and leaves the provider as it is; one of Codex's own models takes
-// the base URL away again and brings back what was there. magpie's provider
+// Signed in, a starling model points Codex's built-in OpenAI provider at
+// starling and leaves the provider as it is; one of Codex's own models takes
+// the base URL away again and brings back what was there. starling's provider
 // table is written all the same, for threads started on it.
 func TestCodexSignedInRoutesByBaseURL(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`,
 		"model = \"gpt-5.5\"\nmodel_reasoning_effort = \"xhigh\"\n\n[projects.\"/x\"]\ntrust_level = \"trusted\"\n")
-	// chongyun never reads the agent's own sign-in: a Codex signed in to
-	// ChatGPT is one chongyun wired beside that sign-in.
+	// starling never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one starling wired beside that sign-in.
 	codexBeside(t, home, "beside")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
@@ -180,10 +180,10 @@ func TestCodexSignedInRoutesByBaseURL(t *testing.T) {
 	cfg := read()
 	if !strings.Contains(cfg, `openai_base_url = "http://127.0.0.1:`) || !strings.Contains(cfg, `/backend-api/codex"`) ||
 		!strings.Contains(cfg, `model = "fake/m1"`) || strings.Contains(cfg, "model_provider =") ||
-		strings.Contains(cfg, "model_catalog_json") || !strings.Contains(cfg, "[model_providers.magpie]") {
-		t.Fatalf("chongyun model:\n%s", cfg)
+		strings.Contains(cfg, "model_catalog_json") || !strings.Contains(cfg, "[model_providers.starling]") {
+		t.Fatalf("starling model:\n%s", cfg)
 	}
-	if _, err := os.Stat(filepath.Join(home, ".codex", "chongyun-models.json")); err == nil {
+	if _, err := os.Stat(filepath.Join(home, ".codex", "starling-models.json")); err == nil {
 		t.Error("catalog file written")
 	}
 	if err := cx.Fields[0].Set("gpt-5.4"); err != nil {
@@ -196,37 +196,37 @@ func TestCodexSignedInRoutesByBaseURL(t *testing.T) {
 	}
 }
 
-// A magpie set up as a provider of Codex's, from before, moves to the base
-// URL the next time a magpie model is picked, and its table stays: threads
+// A starling set up as a provider of Codex's, from before, moves to the base
+// URL the next time a starling model is picked, and its table stays: threads
 // started on it name it, and without it Codex can't open them (#129).
 func TestCodexSignedInLeavesProviderTable(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`,
-		"model = \"fake/m1\"\nmodel_provider = \"magpie\"\nmodel_catalog_json = \"/x/chongyun-models.json\"\n\n[model_providers.magpie]\nname = \"magpie\"\nbase_url = \"http://127.0.0.1:3425/v1\"\nwire_api = \"responses\"\n")
-	// chongyun never reads the agent's own sign-in: a Codex signed in to
-	// ChatGPT is one chongyun wired beside that sign-in.
+		"model = \"fake/m1\"\nmodel_provider = \"starling\"\nmodel_catalog_json = \"/x/starling-models.json\"\n\n[model_providers.starling]\nname = \"starling\"\nbase_url = \"http://127.0.0.1:3425/v1\"\nwire_api = \"responses\"\n")
+	// starling never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one starling wired beside that sign-in.
 	codexBeside(t, home, "beside")
 	if err := codex(home).Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
 	cfg := read()
 	if !strings.Contains(cfg, "openai_base_url") || strings.Contains(cfg, "model_provider =") || strings.Contains(cfg, "model_catalog_json") ||
-		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, `experimental_bearer_token = "magpie"`) {
+		!strings.Contains(cfg, "[model_providers.starling]") || !strings.Contains(cfg, `experimental_bearer_token = "starling"`) {
 		t.Fatalf("\n%s", cfg)
 	}
 }
 
 // A provider table the user wrote with spaces around the dots — valid TOML —
-// is the same table to magpie: it is reused in place, and left for the
+// is the same table to starling: it is reused in place, and left for the
 // threads started on it when Codex steps back to its own models, as if
-// magpie had written it.
+// starling had written it.
 func TestCodexSpacedProviderTable(t *testing.T) {
-	home, read := codexHome(t, "", "model = \"gpt-5.5\"\n\n[ model_providers . magpie ]\nname = \"magpie\"\nbase_url = \"http://127.0.0.1:1/v1\"\n\n[[skills.config]]\npath = \"/skill\"\n")
+	home, read := codexHome(t, "", "model = \"gpt-5.5\"\n\n[ model_providers . starling ]\nname = \"starling\"\nbase_url = \"http://127.0.0.1:1/v1\"\n\n[[skills.config]]\npath = \"/skill\"\n")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
 	cfg := read()
-	if strings.Count(cfg, "model_providers") != 1 || !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if strings.Count(cfg, "model_providers") != 1 || !strings.Contains(cfg, `model_provider = "starling"`) {
 		t.Fatalf("provider table was not reused:\n%s", cfg)
 	}
 	if err := cx.Fields[0].Set(""); err != nil {
@@ -238,8 +238,8 @@ func TestCodexSpacedProviderTable(t *testing.T) {
 	}
 }
 
-// Not signed in, Codex's OpenAI provider can't run, so magpie is a provider
-// of its own; the base URL is magpie's too, for the threads started on the
+// Not signed in, Codex's OpenAI provider can't run, so starling is a provider
+// of its own; the base URL is starling's too, for the threads started on the
 // built-in provider (#259).
 func TestCodexSignedOutUsesProvider(t *testing.T) {
 	home, read := codexHome(t, "", "")
@@ -248,24 +248,24 @@ func TestCodexSignedOutUsesProvider(t *testing.T) {
 		t.Fatal(err)
 	}
 	cfg := read()
-	if !strings.Contains(cfg, `openai_base_url = "`+codexGatewayURL()+`"`) || !strings.Contains(cfg, `model_provider = "magpie"`) ||
-		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, "model_catalog_json") {
+	if !strings.Contains(cfg, `openai_base_url = "`+codexGatewayURL()+`"`) || !strings.Contains(cfg, `model_provider = "starling"`) ||
+		!strings.Contains(cfg, "[model_providers.starling]") || !strings.Contains(cfg, "model_catalog_json") {
 		t.Fatalf("\n%s", cfg)
 	}
 	if err := cx.Fields[0].Set(""); err != nil {
 		t.Fatal(err)
 	}
 	if cfg = read(); strings.Contains(cfg, "model =") || strings.Contains(cfg, "openai_base_url") || strings.Contains(cfg, "model_provider =") ||
-		strings.Contains(cfg, "model_catalog_json") || !strings.Contains(cfg, "[model_providers.magpie]") {
+		strings.Contains(cfg, "model_catalog_json") || !strings.Contains(cfg, "[model_providers.starling]") {
 		t.Fatalf("reset:\n%s", cfg)
 	}
-	if _, err := os.Stat(filepath.Join(home, ".codex", "chongyun-models.json")); err == nil {
+	if _, err := os.Stat(filepath.Join(home, ".codex", "starling-models.json")); err == nil {
 		t.Error("catalog file left")
 	}
 }
 
 // A ChatGPT account that has used its allowance up keeps the Codex app from
-// sending, so magpie is a provider of Codex's then, as when signed out.
+// sending, so starling is a provider of Codex's then, as when signed out.
 func TestCodexUsedUpUsesProvider(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "")
 	codexUsedUp = func() bool { return true }
@@ -273,14 +273,14 @@ func TestCodexUsedUpUsesProvider(t *testing.T) {
 		t.Fatal(err)
 	}
 	cfg := read()
-	if !strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model_provider = "magpie"`) ||
-		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, `model = "fake/m1"`) {
+	if !strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model_provider = "starling"`) ||
+		!strings.Contains(cfg, "[model_providers.starling]") || !strings.Contains(cfg, `model = "fake/m1"`) {
 		t.Fatalf("\n%s", cfg)
 	}
 }
 
-// Subagents can be given a magpie model of their own once Codex runs through
-// magpie; it goes with magpie when Codex steps back to its own models, where
+// Subagents can be given a starling model of their own once Codex runs through
+// starling; it goes with starling when Codex steps back to its own models, where
 // a user's own choice of one of those stays.
 func TestCodexSubagentModel(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`,
@@ -291,11 +291,11 @@ func TestCodexSubagentModel(t *testing.T) {
 		t.Fatal("no subagent field")
 	}
 	if err := sub.Set("fake/m1"); err == nil {
-		t.Error("a chongyun model was taken before Codex runs through chongyun")
+		t.Error("a starling model was taken before Codex runs through starling")
 	}
 	for _, o := range sub.Options(nil) {
-		if isMagpie(o.Value) {
-			t.Errorf("chongyun model offered before Codex runs through chongyun: %s", o.Value)
+		if isStarling(o.Value) {
+			t.Errorf("starling model offered before Codex runs through starling: %s", o.Value)
 		}
 	}
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
@@ -314,7 +314,7 @@ func TestCodexSubagentModel(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cfg := read(); strings.Contains(cfg, "default_subagent_model") || !strings.Contains(cfg, "max_threads = 6") {
-		t.Fatalf("stepping out of chongyun:\n%s", cfg)
+		t.Fatalf("stepping out of starling:\n%s", cfg)
 	}
 	if err := sub.Set("gpt-5.4-mini"); err != nil {
 		t.Fatal(err)
@@ -333,9 +333,9 @@ func TestCodexSubagentModel(t *testing.T) {
 	}
 }
 
-// #1633 (laacmilan): the model magpie puts every Codex subagent on offers
+// #1633 (laacmilan): the model starling puts every Codex subagent on offers
 // another provider's models, not only a ChatGPT account's, and takes one;
-// one of Codex's own bare names, which magpie can't put a request on, is
+// one of Codex's own bare names, which starling can't put a request on, is
 // refused.
 func TestCodexSubagentModelTakesAnyProvider(t *testing.T) {
 	home, _ := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "model = \"gpt-5.5\"\n")
@@ -366,7 +366,7 @@ func TestCodexSubagentModelTakesAnyProvider(t *testing.T) {
 
 // Subagents can start at an effort of their own (#469): Codex's [agents]
 // default_subagent_reasoning_effort, used when a spawn names none. Codex
-// refuses a spawn at a level the subagents' model lacks, so magpie takes
+// refuses a spawn at a level the subagents' model lacks, so starling takes
 // only one it has, and drops one a new subagent model doesn't.
 func TestCodexSubagentEffort(t *testing.T) {
 	home, read := codexHome(t, "", "model = \"gpt-a\"\n\n[agents]\nmax_threads = 6\n")
@@ -416,7 +416,7 @@ func TestCodexSubagentEffort(t *testing.T) {
 }
 
 func TestCodexSubagentReadErrorStopsChanges(t *testing.T) {
-	const input = "model = \"fake/m1\"\nmodel_provider = \"magpie\"\n\n[agents]\ndefault_subagent_model = [\n"
+	const input = "model = \"fake/m1\"\nmodel_provider = \"starling\"\n\n[agents]\ndefault_subagent_model = [\n"
 	for _, model := range []string{"", "gpt-native"} {
 		t.Run("model="+model, func(t *testing.T) {
 			home := t.TempDir()
@@ -444,7 +444,7 @@ func TestCodexSubagentReadErrorStopsChanges(t *testing.T) {
 
 func TestCodexCheckReportsTOMLParseErrors(t *testing.T) {
 	for _, profile := range []string{"", "profile = \"work\"\n"} {
-		input := "model = \"fake/m1\"\nmodel_provider = \"magpie\"\n" + profile + "\n[model_providers.magpie]\ninvalid = [\n"
+		input := "model = \"fake/m1\"\nmodel_provider = \"starling\"\n" + profile + "\n[model_providers.starling]\ninvalid = [\n"
 		home, read := codexHome(t, "", input)
 		path := filepath.Join(home, ".codex", "config.toml")
 		message := codex(home).Check()
@@ -457,9 +457,9 @@ func TestCodexCheckReportsTOMLParseErrors(t *testing.T) {
 	}
 }
 
-// The sign-in field's api puts magpie in as Codex's provider while Codex is
+// The sign-in field's api puts starling in as Codex's provider while Codex is
 // signed in to ChatGPT, so the Codex app is in its API state; back to
-// ChatGPT, Codex keeps its sign-in and magpie's table stays for the threads
+// ChatGPT, Codex keeps its sign-in and starling's table stays for the threads
 // started meanwhile. The choice outlasts a pick of Codex's own models.
 func TestCodexLoginAPI(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "model = \"gpt-5.5\"\n")
@@ -481,26 +481,26 @@ func TestCodexLoginAPI(t *testing.T) {
 		t.Fatal(err)
 	}
 	cfg := read()
-	if !strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model_provider = "magpie"`) ||
-		!strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, "model_catalog_json") {
+	if !strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model_provider = "starling"`) ||
+		!strings.Contains(cfg, "[model_providers.starling]") || !strings.Contains(cfg, "model_catalog_json") {
 		t.Fatalf("api:\n%s", cfg)
 	}
-	// chongyun never reads the agent's own sign-in: a Codex signed in to
-	// ChatGPT is one chongyun wired beside that sign-in.
+	// starling never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one starling wired beside that sign-in.
 	codexBeside(t, home, "beside")
 	if err := login.Set(""); err != nil {
 		t.Fatal(err)
 	}
 	cfg = read()
 	if !strings.Contains(cfg, "openai_base_url") || strings.Contains(cfg, "model_provider =") ||
-		strings.Contains(cfg, "model_catalog_json") || !strings.Contains(cfg, "[model_providers.magpie]") ||
+		strings.Contains(cfg, "model_catalog_json") || !strings.Contains(cfg, "[model_providers.starling]") ||
 		!strings.Contains(cfg, `model = "fake/m1"`) {
 		t.Fatalf("back to ChatGPT:\n%s", cfg)
 	}
 	if err := login.Set("api"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg = read(); !strings.Contains(cfg, `model_provider = "magpie"`) || strings.Count(cfg, "openai_base_url") != 1 {
+	if cfg = read(); !strings.Contains(cfg, `model_provider = "starling"`) || strings.Count(cfg, "openai_base_url") != 1 {
 		t.Fatalf("api again:\n%s", cfg)
 	}
 	if err := cx.Fields[0].Set(""); err != nil {
@@ -512,28 +512,28 @@ func TestCodexLoginAPI(t *testing.T) {
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg = read(); !strings.Contains(cfg, `model_provider = "magpie"`) {
+	if cfg = read(); !strings.Contains(cfg, `model_provider = "starling"`) {
 		t.Fatalf("api after default:\n%s", cfg)
 	}
 }
 
-// A Codex routed by base URL whose provider table an older magpie took away
-// gets it back at the next sync, so its threads started on magpie open.
+// A Codex routed by base URL whose provider table an older starling took away
+// gets it back at the next sync, so its threads started on starling open.
 func TestCodexSyncPutsProviderTableBack(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`,
 		"model = \"fake/m1\"\nopenai_base_url = \""+codexGatewayURL()+"\"\n")
-	// chongyun never reads the agent's own sign-in: a Codex signed in to
-	// ChatGPT is one chongyun wired beside that sign-in.
+	// starling never reads the agent's own sign-in: a Codex signed in to
+	// ChatGPT is one starling wired beside that sign-in.
 	codexBeside(t, home, "beside")
 	if err := codex(home).Sync(); err != nil {
 		t.Fatal(err)
 	}
 	cfg := read()
-	if !strings.Contains(cfg, "[model_providers.magpie]") || !strings.Contains(cfg, `wire_api = "responses"`) ||
+	if !strings.Contains(cfg, "[model_providers.starling]") || !strings.Contains(cfg, `wire_api = "responses"`) ||
 		strings.Contains(cfg, "model_provider =") {
 		t.Fatalf("\n%s", cfg)
 	}
-	// Codex on its own model, not through magpie: nothing is added
+	// Codex on its own model, not through starling: nothing is added
 	home, read = codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "model = \"gpt-5.5\"\n")
 	if err := codex(home).Sync(); err != nil {
 		t.Fatal(err)
@@ -544,7 +544,7 @@ func TestCodexSyncPutsProviderTableBack(t *testing.T) {
 }
 
 // #2545: a key made under Gateway keys, put in the provider table's
-// experimental_bearer_token in place of magpie's, goes through magpie all
+// experimental_bearer_token in place of starling's, goes through starling all
 // the same, so a model pick keeps it, as a sync keeps one. A key the
 // gateway doesn't take is still wired over.
 func TestCodexPickKeepsAGatewayKeyOfTheUsers(t *testing.T) {
@@ -554,7 +554,7 @@ func TestCodexPickKeepsAGatewayKeyOfTheUsers(t *testing.T) {
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `experimental_bearer_token = "magpie"`) {
+	if cfg := read(); !strings.Contains(cfg, `experimental_bearer_token = "starling"`) {
 		t.Fatalf("not wired:\n%s", cfg)
 	}
 	secret, err := access.Update("add-key", access.Change{Name: "codex"})
@@ -562,7 +562,7 @@ func TestCodexPickKeepsAGatewayKeyOfTheUsers(t *testing.T) {
 		t.Fatal(err)
 	}
 	path := filepath.Join(home, ".codex", "config.toml")
-	if err := edit.SetTOMLKey(path, "model_providers.magpie", "experimental_bearer_token", secret); err != nil {
+	if err := edit.SetTOMLKey(path, "model_providers.starling", "experimental_bearer_token", secret); err != nil {
 		t.Fatal(err)
 	}
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
@@ -571,7 +571,7 @@ func TestCodexPickKeepsAGatewayKeyOfTheUsers(t *testing.T) {
 	if cfg := read(); !strings.Contains(cfg, `experimental_bearer_token = "`+secret+`"`) {
 		t.Fatalf("a model pick wrote over the user's caller key:\n%s", cfg)
 	}
-	if err := edit.SetTOMLKey(path, "model_providers.magpie", "experimental_bearer_token", "sk-not-this-gateways"); err != nil {
+	if err := edit.SetTOMLKey(path, "model_providers.starling", "experimental_bearer_token", "sk-not-this-gateways"); err != nil {
 		t.Fatal(err)
 	}
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {

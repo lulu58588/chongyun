@@ -9,9 +9,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // corsGuard lets the web pages and browser extensions the user listed
@@ -47,17 +47,17 @@ func corsGuard(next http.Handler) http.Handler {
 		if origin == "" || !corsAllowed(origin) {
 			if foreignPage(r, origin) {
 				log.Printf("refused %s %s from the web page %s: not one listed in Settings", r.Method, r.URL.Path, origin)
-				writeError(w, provider.Chat, http.StatusForbidden, "chongyun doesn't answer the web page "+origin+": list it in Settings → Network and sharing → Web pages to let it call chongyun with a gateway key")
+				writeError(w, provider.Chat, http.StatusForbidden, "starling doesn't answer the web page "+origin+": list it in Settings → Network and sharing → Web pages to let it call starling with a gateway key")
 				return
 			}
 			if origin == "null" && !keyedCaller(r) {
 				log.Printf("refused %s %s from Origin: null: a sandboxed frame or a local page, with no gateway key", r.Method, r.URL.Path)
-				writeError(w, provider.Chat, http.StatusForbidden, "chongyun doesn't answer a sandboxed frame or a local page (Origin: null) without a gateway key: create one in chongyun's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
+				writeError(w, provider.Chat, http.StatusForbidden, "starling doesn't answer a sandboxed frame or a local page (Origin: null) without a gateway key: create one in starling's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
 				return
 			}
 			if localhostSubdomain(origin) && !keyedCaller(r) {
 				log.Printf("refused %s %s from the web page %s: a localhost subdomain, with no gateway key", r.Method, r.URL.Path, origin)
-				writeError(w, provider.Chat, http.StatusForbidden, "chongyun doesn't answer the web page "+origin+" without a gateway key: Safari and other WebKit browsers ask the network's DNS for a localhost subdomain, so the page may not be on this computer. Open it at localhost or 127.0.0.1, or create a key in chongyun's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
+				writeError(w, provider.Chat, http.StatusForbidden, "starling doesn't answer the web page "+origin+" without a gateway key: Safari and other WebKit browsers ask the network's DNS for a localhost subdomain, so the page may not be on this computer. Open it at localhost or 127.0.0.1, or create a key in starling's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
 				return
 			}
 			next.ServeHTTP(w, r)
@@ -81,9 +81,9 @@ func corsGuard(next http.Handler) http.Handler {
 			return
 		}
 		// lanGuard, in front of Handler on the real server, has already
-		// taken the key and put magpie's own token in its place
+		// taken the key and put starling's own token in its place
 		if !keyedCaller(r) {
-			writeError(w, provider.Chat, http.StatusUnauthorized, "a web page or browser extension calls chongyun with a gateway key: create one in chongyun's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
+			writeError(w, provider.Chat, http.StatusUnauthorized, "a web page or browser extension calls starling with a gateway key: create one in starling's Gateway page and send it as Authorization: Bearer <key> (or x-api-key)")
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -101,7 +101,7 @@ func keyedCaller(r *http.Request) bool {
 // foreignPage: origin is an http(s) web page that is neither on this
 // computer (localhost, *.localhost, 127.0.0.0/8, [::1], any port) nor the
 // request's own origin (a page served at the address the request names,
-// such as chongyun's web app on a LAN address), so a browser sent it for a
+// such as starling's web app on a LAN address), so a browser sent it for a
 // site elsewhere. A site served on this machine may still read the Omarchy
 // theme (omarchyTheme).
 //
@@ -138,13 +138,13 @@ func foreignPage(r *http.Request, origin string) bool {
 	if hostPort(u.Host, scheme) == hostPort(r.Host, scheme) {
 		return false
 	}
-	if r.URL.Path == "/v1/magpie/omarchy" && siteOrigin(origin) {
+	if r.URL.Path == "/v1/starling/omarchy" && siteOrigin(origin) {
 		return false
 	}
 	return true
 }
 
-// webviewOS is the system magpie runs on, which localhostSubdomain asks;
+// webviewOS is the system starling runs on, which localhostSubdomain asks;
 // a variable so a test can be each.
 var webviewOS = runtime.GOOS
 

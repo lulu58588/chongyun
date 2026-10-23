@@ -5,11 +5,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // info's count of the models is kept, and counted again once a provider
-// is added. Another magpie asks every 15s or so, after the catalog a
+// is added. Another starling asks every 15s or so, after the catalog a
 // request held (provider.Hold) has gone: info is asked here outside one.
 func TestInfoCountsModelsOnceAChange(t *testing.T) {
 	var s *Server

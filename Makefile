@@ -3,8 +3,8 @@
 # another one (make -f path/to/Makefile) they would act there. make -C
 # works. go.mod is read relative to the working folder, so a path with
 # spaces (or a symlinked Makefile) changes nothing.
-ifneq ($(shell sed -n 's/^module //p' go.mod 2>/dev/null),github.com/lulu58588/chongyun)
-  $(error run make in this project's folder (make -C path/to/chongyun), not in $(CURDIR))
+ifneq ($(shell sed -n 's/^module //p' go.mod 2>/dev/null),github.com/lulu58588/starling)
+  $(error run make in this project's folder (make -C path/to/starling), not in $(CURDIR))
 endif
 
 # A tag may hold $, ( or `, which the shell lines below would run: the
@@ -35,10 +35,10 @@ endif
 .PHONY: build cli install test test-ui app icons release release-cli release-windows release-linux clean dev dev-once
 
 build:
-	go build -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" -o chongyun .
+	go build -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" -o starling .
 
 cli:
-	CGO_ENABLED=0 go build -tags nogui -trimpath -ldflags="$(LDFLAGS)" -o chongyun .
+	CGO_ENABLED=0 go build -tags nogui -trimpath -ldflags="$(LDFLAGS)" -o starling .
 
 install:
 	go install -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" .
@@ -58,13 +58,13 @@ test-ui:
 
 # macOS bundle: menu bar app with no Dock icon (LSUIElement).
 app: build
-	@rm -rf chongyun.app
-	@mkdir -p chongyun.app/Contents/MacOS chongyun.app/Contents/Resources
-	@cp chongyun chongyun.app/Contents/MacOS/chongyun
-	@cp build/darwin/chongyun.icns chongyun.app/Contents/Resources/chongyun.icns
-	@cp build/darwin/Assets.car chongyun.app/Contents/Resources/Assets.car
-	@sed 's/@VERSION@/$(VERSION)/' build/darwin/Info.plist > chongyun.app/Contents/Info.plist
-	@echo "  chongyun.app"
+	@rm -rf starling.app
+	@mkdir -p starling.app/Contents/MacOS starling.app/Contents/Resources
+	@cp starling starling.app/Contents/MacOS/starling
+	@cp build/darwin/starling.icns starling.app/Contents/Resources/starling.icns
+	@cp build/darwin/Assets.car starling.app/Contents/Resources/Assets.car
+	@sed 's/@VERSION@/$(VERSION)/' build/darwin/Info.plist > starling.app/Contents/Info.plist
+	@echo "  starling.app"
 
 icons:
 	@go run build/icon/gen.go tray internal/gui/tray.png
@@ -72,15 +72,15 @@ icons:
 	@go run build/icon/gen.go app 64 internal/gui/icon.png
 	@go run build/icon/gen.go app 1024 internal/gui/icon-1024.png
 	@go run build/icon/gen.go app 256 internal/gui/icon-256.png
-	@rm -rf build/darwin/chongyun.iconset && mkdir -p build/darwin/chongyun.iconset
+	@rm -rf build/darwin/starling.iconset && mkdir -p build/darwin/starling.iconset
 	@for s in 16 32 128 256 512; do \
-		go run build/icon/gen.go app $$s build/darwin/chongyun.iconset/icon_$${s}x$${s}.png; \
-		go run build/icon/gen.go app $$((s*2)) build/darwin/chongyun.iconset/icon_$${s}x$${s}@2x.png; \
+		go run build/icon/gen.go app $$s build/darwin/starling.iconset/icon_$${s}x$${s}.png; \
+		go run build/icon/gen.go app $$((s*2)) build/darwin/starling.iconset/icon_$${s}x$${s}@2x.png; \
 	done
-	@iconutil -c icns build/darwin/chongyun.iconset -o build/darwin/chongyun.icns && rm -rf build/darwin/chongyun.iconset
+	@iconutil -c icns build/darwin/starling.iconset -o build/darwin/starling.icns && rm -rf build/darwin/starling.iconset
 	@# macOS 26 draws the Dock icon from AppIcon.icon, light and dark (Xcode 26's actool);
 	@# the compiled Assets.car is kept in the tree so a release needn't have it
-	@go run build/icon/gen.go glyph 1024 build/darwin/AppIcon.icon/Assets/chongyun.png
+	@go run build/icon/gen.go glyph 1024 build/darwin/AppIcon.icon/Assets/starling.png
 	@if xcrun --find actool >/dev/null 2>&1; then \
 		rm -rf build/darwin/actool && mkdir -p build/darwin/actool; \
 		xcrun actool build/darwin/AppIcon.icon --compile build/darwin/actool --platform macosx \
@@ -92,7 +92,7 @@ icons:
 
 release: clean build
 	@mkdir -p dist
-	@cp chongyun dist/chongyun-$(shell go env GOOS)-$(shell go env GOARCH)
+	@cp starling dist/starling-$(shell go env GOOS)-$(shell go env GOARCH)
 	@$(MAKE) --no-print-directory release-cli
 
 release-cli:
@@ -100,7 +100,7 @@ release-cli:
 	@for t in $(TARGETS); do \
 		os=$${t%/*}; arch=$${t#*/}; ext=""; [ $$os = windows ] && ext=.exe; \
 		echo "  $$os/$$arch (cli)"; \
-		CGO_ENABLED=0 GOOS=$$os GOARCH=$$arch go build -tags nogui -trimpath -ldflags="$(LDFLAGS)" -o dist/chongyun-cli-$$os-$$arch$$ext . || exit 1; \
+		CGO_ENABLED=0 GOOS=$$os GOARCH=$$arch go build -tags nogui -trimpath -ldflags="$(LDFLAGS)" -o dist/starling-cli-$$os-$$arch$$ext . || exit 1; \
 	done
 
 # The desktop app for Windows: the system WebView2 needs no cgo, so both
@@ -113,7 +113,7 @@ release-windows:
 		--file-version "$(or $(WINVER),0.0.0)" --product-version "$(or $(WINVER),0.0.0)"
 	@for arch in amd64 arm64; do \
 		echo "  windows/$$arch (app)"; \
-		CGO_ENABLED=0 GOOS=windows GOARCH=$$arch go build -tags production -trimpath -ldflags="$(LDFLAGS) -H windowsgui" -o dist/chongyun-windows-$$arch.exe . || exit 1; \
+		CGO_ENABLED=0 GOOS=windows GOARCH=$$arch go build -tags production -trimpath -ldflags="$(LDFLAGS) -H windowsgui" -o dist/starling-windows-$$arch.exe . || exit 1; \
 	done; rm -f rsrc_windows_*.syso
 
 # The desktop app for Linux links GTK 3 and WebKitGTK 4.1 through cgo, so it
@@ -121,25 +121,25 @@ release-windows:
 release-linux:
 	@mkdir -p dist
 	@echo "  linux/$(shell go env GOARCH) (app)"
-	@go build -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" -o dist/chongyun-linux-$(shell go env GOARCH) .
+	@go build -tags "$(TAGS)" -trimpath -ldflags="$(LDFLAGS)" -o dist/starling-linux-$(shell go env GOARCH) .
 
 clean:
-	rm -rf chongyun chongyun.exe chongyun.app dist rsrc_windows_*.syso
+	rm -rf starling starling.exe starling.app dist rsrc_windows_*.syso
 
 # Development: the UI is served from internal/gui/assets and the window
 # reloads itself when a file there is saved. With fswatch installed, the
 # windows stay up and a Go change rebuilds and restarts only the backend
 # behind them (build/dev.sh); without it, dev-once runs the app as one
-# process. Uses its own ports so a running chongyun keeps serving the agents.
+# process. Uses its own ports so a running starling keeps serving the agents.
 DEV_ADDR ?= 127.0.0.1:3426
 DEV_UI ?= 127.0.0.1:3427
 DEV_BACKEND ?= 127.0.0.1:3428
 DEV_CONTROL ?= 127.0.0.1:3429
 dev:
 	@if command -v fswatch >/dev/null; then \
-	  MAGPIE_ADDR=$(DEV_ADDR) MAGPIE_DEV_UI=$(DEV_UI) MAGPIE_DEV_BACKEND=$(DEV_BACKEND) MAGPIE_DEV_CONTROL=$(DEV_CONTROL) build/dev.sh; \
+	  STARLING_ADDR=$(DEV_ADDR) STARLING_DEV_UI=$(DEV_UI) STARLING_DEV_BACKEND=$(DEV_BACKEND) STARLING_DEV_CONTROL=$(DEV_CONTROL) build/dev.sh; \
 	else $(MAKE) --no-print-directory dev-once; fi
 
 dev-once:
-	@go build -tags dev -o chongyun-dev . && echo "  chongyun-dev · UI from internal/gui/assets, reload on save · gateway $(DEV_ADDR)"
-	@MAGPIE_ADDR=$(DEV_ADDR) MAGPIE_DEV_UI=$(DEV_UI) ./chongyun-dev app
+	@go build -tags dev -o starling-dev . && echo "  starling-dev · UI from internal/gui/assets, reload on save · gateway $(DEV_ADDR)"
+	@STARLING_ADDR=$(DEV_ADDR) STARLING_DEV_UI=$(DEV_UI) ./starling-dev app

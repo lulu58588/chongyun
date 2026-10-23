@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // An agent that is a desktop app as well as a CLI has the app's version shown
@@ -183,7 +183,7 @@ func macBundle(app desktopApp) bool {
 
 // macBundles are where app's bundle may be on a Mac, the likeliest first:
 // under one of its names in appFolders, or in a folder of theirs one level
-// down (sungoku keeps DeepSeek Harness.app in /Applications/AI, and magpie
+// down (sungoku keeps DeepSeek Harness.app in /Applications/AI, and starling
 // 0.1.1253 said 未找到 CLI, #2325), then wherever Spotlight knows its bundle
 // id to be (spotlightApps), as Zed's is found (zedAppPath). A caller still
 // reads each one's Info.plist.
@@ -246,7 +246,7 @@ const spotlightFresh = 5 * time.Minute
 // spotlightSandbox is testenv.Marker, which agent can't import: set in a
 // test binary testenv isolated, where this Mac's Spotlight would find the
 // developer's own apps (#1823) from every package that asks for one.
-const spotlightSandbox = "MAGPIE_TEST_SANDBOX"
+const spotlightSandbox = "STARLING_TEST_SANDBOX"
 
 func spotlightBundles(id string) []string {
 	if runtime.GOOS != "darwin" || os.Getenv(spotlightSandbox) != "" {
@@ -276,7 +276,7 @@ func spotlightBundles(id string) []string {
 }
 
 // AppVersion is the version of the agent's desktop app installed here, ""
-// for an agent without one magpie knows, one not installed, or an Info.plist
+// for an agent without one starling knows, one not installed, or an Info.plist
 // that doesn't say (a binary one isn't read).
 func (a *Agent) AppVersion() string {
 	app, ok := desktopApps[a.ID]

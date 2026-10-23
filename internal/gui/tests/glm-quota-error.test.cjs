@@ -44,7 +44,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const errors = [];
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", server(lang));
-      await page.goto("http://magpie.test/?view=providers");
+      await page.goto("http://starling.test/?view=providers");
       await page.waitForFunction(() => typeof quotaError === "function");
       const generic = await page.evaluate(() => t("Allowance unavailable"));
       for (const [vendor, err] of errs) {

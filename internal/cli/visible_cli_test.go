@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The visibility is kept under the agent's id lowered, because VisibleTo
@@ -37,7 +37,7 @@ func TestVisibleKeyLowered(t *testing.T) {
 	}
 }
 
-// magpie models and magpie visible take a WSL agent by its id, in the
+// starling models and starling visible take a WSL agent by its id, in the
 // distro's own case or any other: before, both lowered what was typed and
 // then matched it exactly against ids that keep the distro's case (#271).
 func TestWSLAgentByIDInModelsAndVisible(t *testing.T) {

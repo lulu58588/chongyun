@@ -65,7 +65,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       };
       // a new context's storage is empty: no reload to clear it, which
       // would cancel the page's first reads, each a page error in WebKit (#1350)
-      const page = await open("http://magpie.test/?view=usage");
+      const page = await open("http://starling.test/?view=usage");
       await page.waitForSelector(".subscription-account .user");
       const btn = page.locator("#usageMask");
       assert.equal((await btn.textContent()).trim(), w.hide);
@@ -117,7 +117,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       assert.match(await page.locator("#route").textContent(), /^\S+ answered; team key waited$/);
 
       // the tray panel follows the window's setting, as it is turned
-      const panel = await open("http://magpie.test/?mode=panel");
+      const panel = await open("http://starling.test/?mode=panel");
       await panel.evaluate(() => setPanelTab("usage"));
       await panel.waitForFunction(() => [...document.querySelectorAll("#panelQuota .pq-user .pii")].some((e) => e.dataset.raw === "李雷"));
       const pq = await panel.evaluate(() => [...document.querySelectorAll("#panelQuota .pq-card")].map((c) => ({ text: c.querySelector(".pq-user").textContent, title: c.title })));
@@ -127,7 +127,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       await panel.evaluate(() => {
         const li = document.createElement("li");
         li.id = "pickRow";
-        li.textContent = "GPT-6-Astra via magpie dev.one@example.com";
+        li.textContent = "GPT-6-Astra via starling dev.one@example.com";
         li.title = "dev.one@example.com";
         document.querySelector("#pop #list").append(li);
       });
@@ -138,7 +138,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       assert.equal((await btn.textContent()).trim(), w.hide);
       await panel.waitForFunction(() => !document.querySelector("#panelQuota .pii"));
       await panel.waitForFunction(() => !document.querySelector("#pickRow .pii"));
-      assert.equal(await panel.locator("#pickRow").textContent(), "GPT-6-Astra via magpie dev.one@example.com");
+      assert.equal(await panel.locator("#pickRow").textContent(), "GPT-6-Astra via starling dev.one@example.com");
       assert.ok(await panel.evaluate(() => [...document.querySelectorAll("#panelQuota .pq-user")].some((e) => e.textContent === "李雷")));
       // and back as they were in the window
       assert.equal(await page.locator("#sample").textContent(), "李雷 checked in · Sleeper Lee · ZCode");

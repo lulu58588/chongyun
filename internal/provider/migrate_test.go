@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // fakeMover moves a made-up built-in, "fakeco", whose accounts keep a
@@ -86,7 +86,7 @@ func fakeSaved(t *testing.T) map[string]savedLogin {
 func TestMoveToPlugin(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -210,13 +210,13 @@ func TestMoveToPlugin(t *testing.T) {
 
 }
 
-// A move cut short (magpie quit mid-way) is put back before it is tried
-// again, and a failed one waits before magpie tries it by itself again:
+// A move cut short (starling quit mid-way) is put back before it is tried
+// again, and a failed one waits before starling tries it by itself again:
 // hours while the built-in serves its accounts, minutes once it is retired.
 func TestMoveCutShort(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -290,7 +290,7 @@ func TestMoveCutShort(t *testing.T) {
 	if errs := MoveRetiring(ctx); errs["fakeco"] != nil || !Moved("fakeco") {
 		t.Fatalf("a retired built-in after retiredRetry: %v", errs)
 	}
-	// a magpie that stopped between the record and logins.json: tidied
+	// a starling that stopped between the record and logins.json: tidied
 	loginsMu.Lock()
 	_ = writeLogins(append(readLogins(), fakeLogin("late@fake", "r-l", false, true)))
 	loginsMu.Unlock()
@@ -317,7 +317,7 @@ func mustPlugin(t *testing.T) plugin.Provider {
 func TestPutBackKeepsNewer(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -385,7 +385,7 @@ func TestRetiredBuiltinQuiet(t *testing.T) {
 }
 
 // A moved built-in's plugin is updated to the version its move needs, as
-// the built-in came up to date with magpie; one whose plugin the user
+// the built-in came up to date with starling; one whose plugin the user
 // removed isn't installed again.
 func TestKeepMovedCurrent(t *testing.T) {
 	claudeHome(t)

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/lulu58588/chongyun/internal/fonts"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/fonts"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // onFonts updates existing webviews even while the other one has focus.

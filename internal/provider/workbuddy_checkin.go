@@ -10,7 +10,7 @@ package provider
 
 // WorkBuddy's daily check-in (签到): while its event runs, a WorkBuddy
 // (China) account is given a few credits a day for pressing 签到 in the
-// app, more on a streak. While the setting is on, whichever magpie runs the
+// app, more on a streak. While the setting is on, whichever starling runs the
 // gateway presses it for each signed-in account once a Beijing day, as
 // WorkBuddy does: it asks the event's status, and claims when the event is
 // on and today's isn't in yet.
@@ -46,8 +46,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 const (
@@ -67,13 +67,13 @@ const (
 
 // What came of a day's check-in, WorkBuddyCheckin.Outcome.
 const (
-	CheckinClaimed    = "claimed"    // claimed by magpie
+	CheckinClaimed    = "claimed"    // claimed by starling
 	CheckinDone       = "done"       // in already, pressed in WorkBuddy or before
 	CheckinIneligible = "ineligible" // the account can't take part
 	CheckinInactive   = "inactive"   // no event running, or it has ended
 	CheckinFailed     = "failed"     // no answer; tried again later that day
 	// CheckinCaptcha is a plugin's check-in the vendor asked a captcha
-	// of: the user checks in in its own app, magpie never solves one
+	// of: the user checks in in its own app, starling never solves one
 	CheckinCaptcha = "captcha"
 	// CheckinOwnApp is a check-in the user is to do in the vendor's own
 	// app: an answer for the day. WorkBuddy's check-in answered 401 while
@@ -190,10 +190,10 @@ func readCheckins(path string) (map[string]WorkBuddyCheckin, error) {
 			if err == nil {
 				err = errors.New("it holds null")
 			}
-			err = fmt.Errorf("%s doesn't parse (%v): chongyun leaves it as it is and checks in no account of it until it does", path, err)
+			err = fmt.Errorf("%s doesn't parse (%v): starling leaves it as it is and checks in no account of it until it does", path, err)
 		}
 	default:
-		err = fmt.Errorf("%s can't be read (%v): chongyun leaves it as it is and checks in no account of it until it can", path, err)
+		err = fmt.Errorf("%s can't be read (%v): starling leaves it as it is and checks in no account of it until it can", path, err)
 	}
 	checkinsReadMu.Lock()
 	defer checkinsReadMu.Unlock()
@@ -237,7 +237,7 @@ func shownCheckins(path string) map[string]WorkBuddyCheckin {
 	return st
 }
 
-// wbCheckinMu keeps two check-ins in one magpie (the loop and a press of
+// wbCheckinMu keeps two check-ins in one starling (the loop and a press of
 // the CLI's) from asking for one account at once.
 var wbCheckinMu sync.Mutex
 
@@ -301,13 +301,13 @@ func wbCheckin(ctx context.Context, a wbAccount) WorkBuddyCheckin {
 
 // wbCheckinUnauthorized is wbCheckinRefused, told apart on a 401: WorkBuddy's
 // gateway answers a token it refuses with a bare 401 (an HTML page, so the
-// card said only "Unauthorized" and "chongyun tries again later", every 30
+// card said only "Unauthorized" and "starling tries again later", every 30
 // minutes, all day; モモコ 报告, a Free account, signing in again
 // didn't help). The account's credits are read with the same headers at
 // once: when they read, the sign-in is good and it is the check-in alone
-// that refuses magpie — WorkBuddy's own app sends its check-in, and only
+// that refuses starling — WorkBuddy's own app sends its check-in, and only
 // its check-in, with a device token from its security SDK (X-Device-Token,
-// buildHeadersWithTuringToken in WorkBuddy 5.5.6), which magpie can't make
+// buildHeadersWithTuringToken in WorkBuddy 5.5.6), which starling can't make
 // — so it is an answer for the day, to check in in the WorkBuddy app. When
 // they don't read either, the sign-in itself is refused: sign in again.
 func wbCheckinUnauthorized(ctx context.Context, do func(*http.Request) (*http.Response, error), a wbAccount, h map[string]string, err error) WorkBuddyCheckin {
@@ -390,7 +390,7 @@ func WorkBuddyCheckins() []WorkBuddyCheckin {
 // WithCheckins is qs with each WorkBuddy (China) account's card told it
 // is checked in each day and how its last check-in went, for the Usage
 // page to say on the card (#694: having to look in Settings to know whether
-// it checked in is wrong). It holds for a moved account too: magpie checks
+// it checked in is wrong). It holds for a moved account too: starling checks
 // those in through the plugin's fetch. qs, which may be the usage cache,
 // is left as it is; nothing is asked.
 func WithCheckins(qs []SubscriptionQuota) []SubscriptionQuota {

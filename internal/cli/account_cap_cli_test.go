@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// magpie provider account-cap caps a subscription account at a share of
+// starling provider account-cap caps a subscription account at a share of
 // each usage window (70, 70%), off lifts it; a share out of 1–99, an
 // account the subscription hasn't, or a provider with keys is an error.
 func TestAccountCapCmd(t *testing.T) {
@@ -33,7 +33,7 @@ func TestAccountCapCmd(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(home, ".codex", "auth.json"), auth, 0o600); err != nil {
 		t.Fatal(err)
 	}
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	logins, _ := json.Marshal([]map[string]any{{"agent": "codex", "user": "me@example.com", "active": true,

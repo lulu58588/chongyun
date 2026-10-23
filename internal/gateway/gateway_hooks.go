@@ -6,15 +6,15 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // gatewayResponse observes the bytes delivered to the client without changing
 // them. The caller runs done after middleware has finished writing its reply.
 func gatewayResponse(w http.ResponseWriter, r *http.Request, proto provider.Protocol, body []byte, run *plugin.GatewayRun) (http.ResponseWriter, func()) {
 	capture := &conversationWriter{captureResponseWriter: &captureResponseWriter{
-		ResponseWriter: w, full: &spool{limit: conversationBodyMax, pattern: "magpie-hook-*"},
+		ResponseWriter: w, full: &spool{limit: conversationBodyMax, pattern: "starling-hook-*"},
 	}}
 	return capture, func() {
 		defer capture.full.discard()

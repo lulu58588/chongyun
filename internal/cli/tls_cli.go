@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/starling/internal/gateway"
 )
 
 // tlsFlags takes --tls-cert <file> and --tls-key <file> (or =<file>) out
-// of args, sets them for the gateway over MAGPIE_TLS_CERT and
-// MAGPIE_TLS_KEY, and checks the pair: one without the other, or files
+// of args, sets them for the gateway over STARLING_TLS_CERT and
+// STARLING_TLS_KEY, and checks the pair: one without the other, or files
 // that don't load, refuse to start rather than serve plain HTTP the user
 // didn't ask for. rest is the other arguments.
 func tlsFlags(args []string) (rest []string, err error) {

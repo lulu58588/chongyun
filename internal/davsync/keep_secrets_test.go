@@ -3,11 +3,11 @@ package davsync
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/backup"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/backup"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// #1821: an upload with keys from a magpie that knows no access key (one
+// #1821: an upload with keys from a starling that knows no access key (one
 // before v0.1.1142, or one it was never given on) has the provider's key
 // and no AccessKey ID or Secret. The server's are kept while the key is
 // the same, so the next computer to sync doesn't lose them; a keyless

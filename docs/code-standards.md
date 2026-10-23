@@ -18,9 +18,9 @@
 | 一个修复覆盖这个 bug 的每一个同类位置。 | grep 同样的模式：每一个 agent、同形状的 subcommand、guard，以及被改动判据的每一个调用方，都要在同一次改动里拿到这个修复。这包括同一操作的其他分支，以及提到同一个 endpoint 或规则的其它消息。2026-10-05 有六个修复需要再发一次版本，因为它们只覆盖了报告里那个场景。10-06，#933 的 Codex 模型在登录后隔了一小时才跟上。10-07，cd8d64a9（#1059）在一处提示里给出了 sub2api 的余额 URL，而余额读取失败后显示的错误仍然只提 new-api 的。Pi 对 mcp.json 的整文件移动直到 d40fee80（#1097）才有备份，尽管旁边的合并分支早就有了。 |
 | 一次改动会重新推导所有建立在它之上东西。 | 当一次改动改变了公式、列表、布局断点或某个异步步骤的时序时，找出每一个假定了旧含义的调用方、保存的副本和测试，并跑一遍。12cba74a 在新的 max_tokens 下保留了 Zed 旧的 clamp。5d871723（#860）把 Requests 页面的列宽改到 1150px，而 click-scroll 在 10-07 大部分时间在 main 上都是红的（82a36a35）。ee2588c2 加了一次立即重读，测试中关于中间状态的断言在 Linux CI 上变成了竞态（3e38bd76）。 |
 | 一次读取、解析或哈希失败意味着"未知"。 | 它绝不意味着"空"、"无"或"相等"。保留之前读到的内容，把解析不出来的文件先复制到一边再覆盖写入，并修好共享读取器，而不是在旁边另写一个更严格的。一个用于限制访问的列表（白名单、key 数量上限）在文件读不出来时必须失败关闭。用文件读不出来的情况来测试。readLogins 把解析错误写回成"没有账号"（b363327d），两天后 agent/stash.go 有了同样的 bug（270b5257）。10-12，7a9490638 的 IP 白名单把读不出来的 settings.json 当成空列表，放任每个地址进来（7d9382db2）。10-13，#2017 的补丁把读不出来的 codex-autoreset.json 读成"没有重置额度用掉"（e297a8ab2）。 |
-| 别的 app 的取值来自那个 app。 | 当崇云科技写另一个 app 的文件或代它说话时，每个字段的类型和取值都要取自那个 app 自己的数据、二进制、合并代码或文档，而不只是它的字段名。84554e57 把 updatedAt 写成毫秒，卡死了 Claude Desktop 的 skills 页面（#863）。#966 猜了 Codex 的 limit_reached，#996 在读了 ChatGPT.app 之后把它撤销了。10-13，accc8c090 抄了 Claude Code 的 OAuth client 名字，却发了自己的 redirect_uri（127.0.0.1，而 Claude Code 发的是 localhost）；e0ecf0161 读了二进制并修好了。 |
+| 别的 app 的取值来自那个 app。 | 当星鸣写另一个 app 的文件或代它说话时，每个字段的类型和取值都要取自那个 app 自己的数据、二进制、合并代码或文档，而不只是它的字段名。84554e57 把 updatedAt 写成毫秒，卡死了 Claude Desktop 的 skills 页面（#863）。#966 猜了 Codex 的 limit_reached，#996 在读了 ChatGPT.app 之后把它撤销了。10-13，accc8c090 抄了 Claude Code 的 OAuth client 名字，却发了自己的 redirect_uri（127.0.0.1，而 Claude Code 发的是 localhost）；e0ecf0161 读了二进制并修好了。 |
 | 会阻塞的东西绝不在它的读取方需要的锁下运行。 | 绝不要在持有一个对方先拿的锁时往 channel 上发送或调用任何可能阻塞的东西。在交接（让另一个 goroutine 来看共享状态）之前先设好共享状态，而按值复制的 struct 里装着 map 并不等于复制。假服务器的 handler 跑在很多 goroutine 上：它记录的东西要用锁保护，并且只统计测试自己发起的调用，因为后台读取也会打到它。启动 goroutine 或 timer 的改动在推送前要跑 `-race`。85fd35ab 卡死了 macOS 的 -race CI（4fb8e887）。01e66e0f 的 marshal 往一个共享 map 里写（15afd988）。10-11，7cba316b9 的 turn-done timer 在自己的 goroutine 上读字段，在 -race 下变红（a2afc1828）。10-13，TestKeptLoginStandsAtItsPlace 的假 Codex 从两个 goroutine 追加（a75de4c21）。 |
-| 崇云科技的默认值绝不覆盖用户设过的值。 | 在写某个 key 之前，先列出 agent 或崇云科技会从哪里读到这项设置，并在存在用户设定值的情况下做测试。会重写某项设置的迁移要列出那些自己设过它的用户，并保留他们的值，或者在发布说明里讲清楚为什么不保留。CLAUDE_CODE_AUTO_COMPACT_WINDOW 覆盖了用户自己的 autoCompactWindow 大约 150 个版本（602d4ec6）。10-10 的四个修复（603dc0c4、5aca7d09、c65d9fb4、d9bf7c1c）都是在一个持有用户设定值的测试都没有的情况下开工的。10-17，5a2414acd 把每一个未标记的 Essentials 预设都变成了 All，包括用户用 `chongyun plugin preset essentials` 选的那个（#2749）。 |
+| 星鸣的默认值绝不覆盖用户设过的值。 | 在写某个 key 之前，先列出 agent 或星鸣会从哪里读到这项设置，并在存在用户设定值的情况下做测试。会重写某项设置的迁移要列出那些自己设过它的用户，并保留他们的值，或者在发布说明里讲清楚为什么不保留。CLAUDE_CODE_AUTO_COMPACT_WINDOW 覆盖了用户自己的 autoCompactWindow 大约 150 个版本（602d4ec6）。10-10 的四个修复（603dc0c4、5aca7d09、c65d9fb4、d9bf7c1c）都是在一个持有用户设定值的测试都没有的情况下开工的。10-17，5a2414acd 把每一个未标记的 Essentials 预设都变成了 All，包括用户用 `starling plugin preset essentials` 选的那个（#2749）。 |
 | 检查覆盖改动触及的边界。 | 对数字，检查边界值。对路径，检查每个平台（macOS、Linux、Windows）。对并发，检查竞态和过期状态。按风险挑选检查项。 |
 
 ## 测试
@@ -34,7 +34,7 @@
 | 测试用真实输入。 | fixture 看起来像真实请求、真实序列化输出和磁盘上的真实文件。这包括缺失字段、空值和默认值。 |
 | 测试检查行为，而不是实现。 | 断言用户或调用方需要的东西。格式改动和内部重构不该弄坏测试，除非要求的就是精确字节。 |
 | 在 `main` 上失败的测试就是要马上修的 bug。 | "在 origin/main 上也一样失败"不是基线，"整套跑时失败、单独跑时通过"也不是。修掉根因，或者开一个 issue 点名根因，并且用单独的提交来做，之后才能在它之上继续发布。从 10-05 到 10-07，有几十个提交在红灯测试之上发布了。有些是真 bug：一次数据竞态（a45b3e09）、测试顺序（bfe8bcaf），以及自 5d871723 起就一直红的 click-scroll，而 dcbae2ef、76d82528 和 b2345078 都在它之上发布了。在把一个 Go 测试叫作 flaky 之前，先跑 `go test -race -count=20 -run X`。 |
-| 测试不碰真实机器。 | 在临时 HOME 下运行它们，并把 Go 的缓存固定住（见 [provider-plugins.md](subsystems/provider-plugins.md)）。绝不碰任何真实 agent 的配置或 `~/.config/magpie`。agent 的变量要放进 `agentenv.Vars`，这样沙箱才会清掉它。 |
+| 测试不碰真实机器。 | 在临时 HOME 下运行它们，并把 Go 的缓存固定住（见 [provider-plugins.md](subsystems/provider-plugins.md)）。绝不碰任何真实 agent 的配置或 `~/.config/starling`。agent 的变量要放进 `agentenv.Vars`，这样沙箱才会清掉它。 |
 | 测试启动的东西，测试结束时也要结束。 | 测试放出去的假进程、goroutine 或异步刷新，必须在测试返回前被停掉或等完，否则它会写进下一个测试的目录（"directory not empty"）或者空转好几天。一个在自己 `TestMain` 里隔离自己、而不是用 `testenv.Run` 的包，要设置 testenv 设置的那些东西，包括 `testenv.Marker`。TestClaudeSignInByPaste 的假进程轮询了 2 天（38a0f470）。10-11，一个比测试活得久的 CLI 身份请求弄坏了下一个测试（#1524）：4ee3a76b 只在 internal/gateway 里修了它，9c377231 则通过 marker 为每个包修了它，而 gateway 从没设过这个 marker（a349de82）。 |
 | 计时测试两边都要留余量。 | 绝不要用一个负载满满的 runner 可能超掉的挂钟时间来限制测试，并且让阈值分类器的 fixture 远离它的每一个阈值。复现一次计时失败要靠注入延迟（一次被挂起的写、一次迟到的首次到达），而不是反复重跑到它失败为止；修一个测试时把里面每一个计时假设都列出来。319b72c7 修了两个共用 2000 行上限的循环中的一个，另一个在 9 小时后变红（229ce19a）。10-11，TestMaxRPM 的 flaky 其实是个真漏洞：一个迟到抵达厂商的首次请求，让厂商在它那一分钟里多看到一次（ce1ecaa4）；而排队流的测试在 CPU 饥饿下把客户端时钟当成了权威（3f4287e6）。 |
 
@@ -54,7 +54,7 @@
    的。片段在 [provider-plugins.md](subsystems/provider-plugins.md#verification) 里。
    不固定缓存的话，每次运行都会往新的临时 HOME 里下载 1–2 GB。测试绝不读取
    或写入运行中的 agent 配置（`~/.codex`、`~/.claude`、`~/.claude.json`、
-   `~/.gemini` 等等）或 `~/.config/magpie`。各个包在它们的 `TestMain` 里设置
+   `~/.gemini` 等等）或 `~/.config/starling`。各个包在它们的 `TestMain` 里设置
    这些，大多数用 testenv。
 3. **构建和测试套件。** 对改动过的文件跑 `gofmt -l`（它不输出任何东西）、
    `go vet ./...`、`GOOS=linux go vet -tags nogui ./...`、
@@ -86,7 +86,7 @@
    模型，一个没有用量的账号）。
 5. **尽可能做真实使用验证。** 对 provider、订阅或 agent 的改动也要对照真实
    情况检查：真实账号或 key、agent 的真实配置格式、厂商的真实回复。在沙箱 HOME
-   里、用凭证的副本做这件事。绝不碰运行中的网关或正在跑的崇云科技。如果做不到
+   里、用凭证的副本做这件事。绝不碰运行中的网关或正在跑的星鸣。如果做不到
    真实检查，就直说。没有用真实东西试过的部分不会被建立在上面，也不会被当作
    可用来告诉用户。平台报告（Windows、WSL、Linux）要在那个平台上检查；Windows
    那台机器和它的 WSL2 发行版都在，而 GOOS 构建不是测试。网关 guard 的测试要

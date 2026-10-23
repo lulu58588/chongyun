@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // openaiStrict is a Responses upstream that checks reasoning as OpenAI does
@@ -166,10 +166,10 @@ func TestReasoningTextNotSentToCodexAccount(t *testing.T) {
 		"access_token":  claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}),
 		"refresh_token": "r", "account_id": "acct-1"}}
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
-	chongyunLogins(t, chongyunCodexLogin("me@example.com", auth))
+	starlingLogins(t, starlingCodexLogin("me@example.com", auth))
 	provider.ForgetAccounts()
 	t.Cleanup(provider.ForgetAccounts)
 	u := &openaiStrict{}
@@ -255,7 +255,7 @@ func (u *openaiItems) asked() ([]string, [][]map[string]any) {
 // switchedBackFromDeepSeek is jue's Codex thread (Discord, #feedback): a
 // turn on GPT, whose reasoning OpenAI sealed (content null, as Codex
 // writes a reasoning item without text), then a turn on DeepSeek set for
-// Codex on magpie's Agents page, whose reasoning DeepSeek's Responses API
+// Codex on starling's Agents page, whose reasoning DeepSeek's Responses API
 // gave with its text and nothing sealed (encrypted_content null), then
 // back on GPT. input[8] is DeepSeek's reasoning, with one content entry.
 func switchedBackFromDeepSeek(model string) string {
@@ -276,8 +276,8 @@ func switchedBackFromDeepSeek(model string) string {
 // jue 报告: Codex on DeepSeek, then back on its own GPT, failed its
 // next turn with OpenAI's 400 over input[8].content, the reasoning
 // DeepSeek wrote. Every way a request for one of OpenAI's models reaches
-// OpenAI's Responses endpoint through magpie — Codex's turn and its
-// compaction, on its own sign-in, its API key or a magpie account, and a
+// OpenAI's Responses endpoint through starling — Codex's turn and its
+// compaction, on its own sign-in, its API key or a starling account, and a
 // client of the gateway's own /v1/responses — goes without that item,
 // asked once, OpenAI's own sealed reasoning and the rest kept.
 func TestForeignReasoningNeverReachesOpenAI(t *testing.T) {
@@ -289,8 +289,8 @@ func TestForeignReasoningNeverReachesOpenAI(t *testing.T) {
 		{name: "compaction on Codex's sign-in", path: CodexPath + "/responses/compact", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token"},
 		{name: "turn on Codex's API key", path: CodexPath + "/responses", model: "gpt-6.1-sol", auth: "Bearer sk-test"},
 		{name: "compaction on Codex's API key", path: CodexPath + "/responses/compact", model: "gpt-6.1-sol", auth: "Bearer sk-test"},
-		{name: "turn on a chongyun account", path: CodexPath + "/responses", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token", spare: true, pauseOwn: true},
-		{name: "compaction on a chongyun account", path: CodexPath + "/responses/compact", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token", spare: true, pauseOwn: true},
+		{name: "turn on a starling account", path: CodexPath + "/responses", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token", spare: true, pauseOwn: true},
+		{name: "compaction on a starling account", path: CodexPath + "/responses/compact", model: "gpt-6.1-sol", auth: "Bearer chatgpt-token", spare: true, pauseOwn: true},
 		{name: "the gateway's own Responses API", path: "/v1/responses", model: "codex/gpt-6.1-sol", auth: ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

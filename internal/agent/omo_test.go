@@ -8,15 +8,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // OmO (#264) is an agent of its own, wired as Pi is but in ~/.omo/agent:
-// a model through magpie sets settings.json's defaultProvider/defaultModel
-// and magpie's provider in models.json there, the same block Pi gets, and
-// Pi's ~/.pi is left alone; its own model takes magpie out again.
+// a model through starling sets settings.json's defaultProvider/defaultModel
+// and starling's provider in models.json there, the same block Pi gets, and
+// Pi's ~/.pi is left alone; its own model takes starling out again.
 func TestOmo(t *testing.T) {
 	home := syncHome(t)
 	t.Setenv("PATH", t.TempDir()) // no omo on PATH: only its folder tells (#1646)
@@ -40,13 +40,13 @@ func TestOmo(t *testing.T) {
 		t.Fatalf("detected %v, model %q", a.Detected(), a.Field("model").Get())
 	}
 
-	if err := a.Field("model").Set("magpie/relay/glm-4.6"); err != nil {
+	if err := a.Field("model").Set("starling/relay/glm-4.6"); err != nil {
 		t.Fatal(err)
 	}
 	if err := a.Field("effort").Set("high"); err != nil {
 		t.Fatal(err)
 	}
-	for k, want := range map[string]string{"defaultProvider": "magpie", "defaultModel": "relay/glm-4.6", "defaultThinkingLevel": "high", "theme": "dark"} {
+	for k, want := range map[string]string{"defaultProvider": "starling", "defaultModel": "relay/glm-4.6", "defaultThinkingLevel": "high", "theme": "dark"} {
 		if v, _ := edit.GetJSON(settings, k); v != want {
 			t.Fatalf("%s = %q:\n%s", k, v, readFile(settings))
 		}
@@ -57,11 +57,11 @@ func TestOmo(t *testing.T) {
 	if err := json.Unmarshal([]byte(readFile(models)), &file); err != nil {
 		t.Fatal(err)
 	}
-	got := file.Providers["magpie"]
+	got := file.Providers["starling"]
 	if got["baseUrl"] != gateway.URL()+"/v1" || got["apiKey"] != gateway.Token {
 		t.Fatalf("models:\n%s", readFile(models))
 	}
-	want, _ := json.Marshal(magpieProviderJSON("pi"))
+	want, _ := json.Marshal(starlingProviderJSON("pi"))
 	if b, _ := json.Marshal(got); string(b) != string(want) {
 		t.Fatalf("not Pi's block:\n got %s\nwant %s", b, want)
 	}
@@ -138,7 +138,7 @@ func TestOmoCLI(t *testing.T) {
 
 // omo update runs npm by its bare name, so it is given the npm (and node)
 // of the prefix OmO was installed in first on PATH: a system node's npm in
-// /usr/local/bin, which magpie's PATH holds before a version manager's
+// /usr/local/bin, which starling's PATH holds before a version manager's
 // (fnm), would install into a folder only root may change (#2021, ggbdpq).
 func TestOmoUpdateTakesItsOwnNpm(t *testing.T) {
 	if runtime.GOOS == "windows" {
@@ -146,7 +146,7 @@ func TestOmoUpdateTakesItsOwnNpm(t *testing.T) {
 	}
 	tmp, _ := filepath.EvalSymlinks(t.TempDir())
 	ran := filepath.Join(tmp, "ran")
-	// the system's npm, found first on magpie's PATH
+	// the system's npm, found first on starling's PATH
 	sys := filepath.Join(tmp, "usr/local/bin")
 	file(t, filepath.Join(sys, "npm"), "#!/bin/sh\necho system >> "+ran+"\nexit 1\n")
 	// fnm's node, where OmO is

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/starling/internal/agentenv"
 )
 
 // readsEnv matches the two ways these packages name a variable they read to
@@ -24,16 +24,16 @@ var notAnAgent = map[string]string{
 	"LOCALAPPDATA":          "the same",
 	"PATH":                  "the process' own",
 	"USER":                  "the process' own",
-	"XDG_CONFIG_HOME":       "chongyun's own folder's, which appdir decides",
+	"XDG_CONFIG_HOME":       "starling's own folder's, which appdir decides",
 	"XDG_DATA_HOME":         "the same",
 	"XDG_CACHE_HOME":        "Go's build cache's too, which a sandbox keeps shared; Air's ACP OpenCode under it is found by path in a test's own home (#2423)",
-	"MAGPIE_ADDR":           "chongyun's own",
-	"MAGPIE_DEBUG":          "chongyun's own debug flag",
-	"MAGPIE_PUBLIC_URL":     "chongyun's own public URL",
-	"MAGPIE_TRUST_PROXY":    "chongyun's own: a proxy here signs its clients in (#1022)",
-	"MAGPIE_EFFORT_UPDATES": "chongyun's own switch for effort updates (#617)",
-	"MAGPIE_SITE_ORIGIN":    "a site origin chongyun's Omarchy theme answers, to try the site locally",
-	"MAGPIE_PARTNERS":       "where chongyun's own partner list is read from (a URL, or off), not a folder",
+	"STARLING_ADDR":           "starling's own",
+	"STARLING_DEBUG":          "starling's own debug flag",
+	"STARLING_PUBLIC_URL":     "starling's own public URL",
+	"STARLING_TRUST_PROXY":    "starling's own: a proxy here signs its clients in (#1022)",
+	"STARLING_EFFORT_UPDATES": "starling's own switch for effort updates (#617)",
+	"STARLING_SITE_ORIGIN":    "a site origin starling's Omarchy theme answers, to try the site locally",
+	"STARLING_PARTNERS":       "where starling's own partner list is read from (a URL, or off), not a folder",
 	"CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "Claude Code's behaviour flag, not an agent's folder",
 	"GIT_SSH":         "the user's own SSH program for git, which a skill fetched with their git keeps",
 	"GIT_SSH_COMMAND": "the same, as a command",
@@ -47,8 +47,8 @@ var notAnAgent = map[string]string{
 //
 // The five packages are this one, sessions, provider, library and gateway,
 // with appdir's codex.go, where CODEX_HOME is read for all of them:
-// every agent's folder variable magpie reads is read in one of them, and the
-// rest of the repository reads only magpie's own variables, the process' and
+// every agent's folder variable starling reads is read in one of them, and the
+// rest of the repository reads only starling's own variables, the process' and
 // the desktop's. Their sources are read as files rather than imported, since a
 // test in sessions or provider cannot import this package, which imports
 // them; what the walk looks at is what they say, not what they do.

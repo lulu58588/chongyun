@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/desktopdir"
+	"github.com/lulu58588/starling/internal/desktopdir"
 )
 
 // Call is one model call as an agent's own session file records it.
@@ -337,7 +337,7 @@ func callSources() []file {
 // desktopDataDirs are Claude Desktop's folders on this computer that
 // hold sessions: its own (%APPDATA%\Claude on Windows, or the MSIX
 // package's, and the real ones beside a package's), the Claude folder
-// magpie writes and Claude-3p, as desktopdir finds them.
+// starling writes and Claude-3p, as desktopdir finds them.
 func desktopDataDirs() []string { return desktopdir.Everywhere() }
 
 // headLen is how much of a file's start is kept to know it again.

@@ -33,7 +33,7 @@ func TestCountPartner(t *testing.T) {
 	t.Cleanup(resetPartners)
 	var body atomic.Value
 	body.Store(`{"partners":[{"id":"acme","name":"Acme","chat":"https://a.example/v1"}]}`)
-	t.Setenv("MAGPIE_PARTNERS", partnerFeedServer(t, &body).URL)
+	t.Setenv("STARLING_PARTNERS", partnerFeedServer(t, &body).URL)
 	fetchPartnersNow()
 
 	for range 25 {

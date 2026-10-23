@@ -27,14 +27,14 @@ func WriteMarkdown(w io.Writer, s Session, name string) error {
 	})
 }
 
-// WriteGatewayMarkdown writes a session magpie's gateway recorded (t, from
+// WriteGatewayMarkdown writes a session starling's gateway recorded (t, from
 // GatewayTranscript) as WriteMarkdown writes one read from the agent's own
 // file: for a session whose agent ran on another machine, as one that
-// reaches this magpie through a remote magpie does (akic404 报告),
+// reaches this starling through a remote starling does (akic404 报告),
 // there is no file here, only what the gateway kept. It says so, and says
 // when older turns or the end of a long part weren't kept.
 func WriteGatewayMarkdown(w io.Writer, s Session, name string, t Transcript) error {
-	return writeMarkdown(w, s, name, "Recorded by", "chongyun's gateway", t.Cut, func(each func(Part) bool) error {
+	return writeMarkdown(w, s, name, "Recorded by", "starling's gateway", t.Cut, func(each func(Part) bool) error {
 		for _, p := range t.Parts {
 			if !each(p) {
 				break

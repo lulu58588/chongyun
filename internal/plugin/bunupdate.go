@@ -1,11 +1,11 @@
 package plugin
 
-// Bun kept up to date, as the plugins are: every six hours magpie asks
+// Bun kept up to date, as the plugins are: every six hours starling asks
 // GitHub for Bun's newest release and, once it has been out two days (a
 // release with a bad bug is usually followed by a fix within them),
 // downloads it, checks its checksum, tries it and switches the plugin
 // host to it, a reply streaming through the old host finishing first.
-// BunVersion is the floor: magpie never runs an older Bun. The Bun it ran
+// BunVersion is the floor: starling never runs an older Bun. The Bun it ran
 // before stays on disk, and a new one the host won't start on is set
 // aside for the one before, never tried again.
 
@@ -23,15 +23,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/steady"
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/steady"
+	"github.com/lulu58588/starling/internal/update"
 )
 
-// bunSettle is how long a Bun release is out before magpie takes it.
+// bunSettle is how long a Bun release is out before starling takes it.
 const bunSettle = 48 * time.Hour
 
-// bunState is what magpie keeps about the Bun it runs, in bun/state.json.
+// bunState is what starling keeps about the Bun it runs, in bun/state.json.
 type bunState struct {
 	// Current is the Bun the host runs on, "" for BunVersion.
 	Current string `json:"current,omitempty"`
@@ -42,7 +42,7 @@ type bunState struct {
 	Checked time.Time `json:"checked,omitzero"`
 }
 
-// bunRoot is where magpie keeps its Buns and their state.json. A musl
+// bunRoot is where starling keeps its Buns and their state.json. A musl
 // Linux keeps them under bun/musl: one version is a different build there,
 // so a machine whose C library changed under it (a container's image
 // moved from Debian to Alpine, or back) never runs the other one's build,
@@ -59,12 +59,12 @@ func bunRoot() string {
 
 func bunDirOf(v string) string { return filepath.Join(bunRoot(), v) }
 
-// bunExeOf is where magpie keeps Bun v: named magpie-bun, so a proxy app's
+// bunExeOf is where starling keeps Bun v: named starling-bun, so a proxy app's
 // PROCESS-NAME rule can tell the requests plugins make (and their installs)
 // from any other Bun's (#1048).
-func bunExeOf(v string) string { return filepath.Join(bunDirOf(v), magpieBun()) }
+func bunExeOf(v string) string { return filepath.Join(bunDirOf(v), starlingBun()) }
 
-func magpieBun() string { return "magpie-" + bunExe() }
+func starlingBun() string { return "starling-" + bunExe() }
 
 func bunStatePath() string { return filepath.Join(bunRoot(), "state.json") }
 
@@ -92,7 +92,7 @@ func haveBun(v string) bool {
 	if _, err := os.Stat(exe); err == nil {
 		return true
 	}
-	// a Bun downloaded before it was named magpie-bun takes the name
+	// a Bun downloaded before it was named starling-bun takes the name
 	_ = os.Rename(filepath.Join(bunDirOf(v), bunExe()), exe)
 	_, err := os.Stat(exe)
 	return err == nil
@@ -104,9 +104,9 @@ func (s bunState) usable(v string) bool {
 }
 
 // BunInUse is the version of the Bun plugins run on (or will, once it is
-// downloaded): the newest magpie took, else BunVersion.
+// downloaded): the newest starling took, else BunVersion.
 func BunInUse() string {
-	if b := os.Getenv("MAGPIE_BUN"); b != "" {
+	if b := os.Getenv("STARLING_BUN"); b != "" {
 		bunMu.Lock()
 		defer bunMu.Unlock()
 		if _, ok := envBunVersion[b]; !ok {
@@ -127,7 +127,7 @@ func inUseLocked() string {
 	return BunVersion
 }
 
-// envBunVersion is what each $MAGPIE_BUN said it is, asked once.
+// envBunVersion is what each $STARLING_BUN said it is, asked once.
 var envBunVersion = map[string]string{}
 
 var bunVersionRe = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
@@ -195,7 +195,7 @@ var tryBun = func(ctx context.Context, exe, v string) error {
 // switched to, the host restarted gracefully. It says the version taken,
 // "" when none was.
 func CheckBun(ctx context.Context) (string, error) {
-	if os.Getenv("MAGPIE_BUN") != "" {
+	if os.Getenv("STARLING_BUN") != "" {
 		return "", nil
 	}
 	latest, published, err := bunLatest(ctx)
@@ -298,7 +298,7 @@ func pruneBuns(s bunState) {
 	}
 }
 
-// KeepBunUpdated looks for a newer Bun a little after magpie starts, then
+// KeepBunUpdated looks for a newer Bun a little after starling starts, then
 // every bunEvery, while there are plugins to run on it.
 func KeepBunUpdated(ctx context.Context) {
 	t := time.NewTimer(2 * time.Minute)

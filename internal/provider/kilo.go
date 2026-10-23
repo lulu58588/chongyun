@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
-// KiloVersion is the Kilo CLI release magpie says it is to the Kilo
+// KiloVersion is the Kilo CLI release starling says it is to the Kilo
 // Gateway.
 const KiloVersion = "7.8.3"
 

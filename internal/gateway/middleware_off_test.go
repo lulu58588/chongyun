@@ -10,12 +10,12 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/gwmw"
-	"github.com/lulu58588/chongyun/internal/masking"
-	"github.com/lulu58588/chongyun/internal/middleware"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/gwmw"
+	"github.com/lulu58588/starling/internal/masking"
+	"github.com/lulu58588/starling/internal/middleware"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // echoing is a vendor that keeps what it was sent and says the last

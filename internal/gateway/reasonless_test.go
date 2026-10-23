@@ -9,8 +9,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // reasoningLeft says what of a sent body still asks the model to reason.
@@ -107,7 +107,7 @@ func (u *anthUp) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // Relayed to an Anthropic vendor as it came, a reasonless model is sent
-// neither the agent's thinking nor the thinking:{type:disabled} magpie
+// neither the agent's thinking nor the thinking:{type:disabled} starling
 // adds for a model that isn't Claude: that is a reasoning field too.
 func TestReasonlessAnthropicRelay(t *testing.T) {
 	fresh(t)

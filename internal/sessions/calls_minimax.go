@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 )
 
 // MiniMax Code's calls (#1605, LukeZ1988: MiniMax Code was missing from
@@ -27,7 +27,7 @@ import (
 //	 "provider":"custom_provider:relay","model":"m2","usage":{"input":123,
 //	 "output":7,"cacheRead":50,"cacheWrite":20,…},"timestamp":1791717525043,…}}
 //
-// A call MiniMax Code made through magpie's entry (custom_provider:magpie,
+// A call MiniMax Code made through starling's entry (custom_provider:starling,
 // which internal/agent's minimax.go writes) is the gateway's to count: it
 // logged the call itself, with the provider and account that answered.
 
@@ -43,8 +43,14 @@ func MiniMaxDir() string {
 
 func minimaxSessions() string { return filepath.Join(MiniMaxDir(), "v2", "sessions") }
 
-// mcodeGateway is the provider MiniMax Code names a call to magpie's entry by.
-const mcodeGateway = "custom_provider:magpie"
+// mcodeGateway is the provider MiniMax Code names a call to starling's entry
+// by, and mcodeGatewayOld the name it had before the rename: a call in the
+// user's history from before still carries the old one, and is skipped as
+// this one is, the two being the same entry.
+const (
+	mcodeGateway    = "custom_provider:starling"
+	mcodeGatewayOld = "custom_provider:magpie"
+)
 
 // minimaxCallFiles are each session's messages files: messages.jsonl, and
 // any other generation of it the session's history-catalog.json keeps
@@ -131,7 +137,8 @@ func readMiniMaxCalls(f file) (*callFile, bool) {
 // minimaxCall is an assistant message as a call.
 func minimaxCall(st *callFile, l mcodeLine) (Call, bool) {
 	m := l.Message
-	if m == nil || m.Role != "assistant" || m.Usage == nil || m.Provider == mcodeGateway {
+	if m == nil || m.Role != "assistant" || m.Usage == nil ||
+		m.Provider == mcodeGateway || m.Provider == mcodeGatewayOld {
 		return Call{}, false
 	}
 	at := ms(m.Timestamp)

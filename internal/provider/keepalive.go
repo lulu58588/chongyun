@@ -1,14 +1,14 @@
 package provider
 
-// Keeping saved accounts signed in. A ChatGPT account saved in magpie but
+// Keeping saved accounts signed in. A ChatGPT account saved in starling but
 // not the one Codex is signed in to is refreshed only when it is used or
 // its allowance looked at — and one waiting its turn (smart
 // routing leaves the accounts whose week resets later for days) could sit
 // unused past its refresh token's life, and be found signed out just when
-// it's needed. So whichever magpie runs the gateway renews each such
+// it's needed. So whichever starling runs the gateway renews each such
 // sign-in about once a day. The account the agent is signed in to is the
 // agent's own to refresh, and is left to it. A Claude account is never
-// refreshed by magpie: Claude Code refreshes it, whenever it runs on it
+// refreshed by starling: Claude Code refreshes it, whenever it runs on it
 // (claude_dirs.go).
 
 import (
@@ -72,7 +72,7 @@ func RenewLogins(ctx context.Context, every time.Duration) []Renewal {
 }
 
 // renewalDue says whether a saved sign-in has gone every without being
-// renewed — since magpie last renewed it, or since it was last seen in the
+// renewed — since starling last renewed it, or since it was last seen in the
 // agent's hands, which kept it fresh — or its refresh token is near its end.
 func renewalDue(l savedLogin, every time.Duration, now time.Time) bool {
 	last := l.Renewed

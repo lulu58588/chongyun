@@ -1,6 +1,6 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Chiao 报告: an account card's window says what the whole window
-// holds, reckoned from what magpie routed through the account in it over
+// holds, reckoned from what starling routed through the account in it over
 // the share used — "≈ N tokens · ≈ $X" under its reset, in every language,
 // at a phone's width too, and in its tooltip how it was reckoned and that
 // it reads low if the account is used elsewhere. A window the server didn't
@@ -69,7 +69,7 @@ for (const [name, engine] of [["webkit", webkit], ["chromium", chromium]]) {
           const page = await (await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: "reduce" })).newPage();
           page.setDefaultTimeout(5000);
           await page.route("**/*", serve(lang));
-          await page.goto("http://magpie.test/?view=usage");
+          await page.goto("http://starling.test/?view=usage");
           await page.locator(".subscription-card .quota-holds").nth(2).waitFor();
           const got = await page.evaluate(() => {
             const lines = [...document.querySelectorAll(".quota-holds")];

@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
+	"github.com/lulu58588/starling/internal/agentenv"
 )
 
 func TestBalanceReaders(t *testing.T) {
@@ -497,7 +497,7 @@ func TestBalanceURLNamesTheKey(t *testing.T) {
 
 // A known balance query read with its field left empty (#881): new-api's
 // for a key and for the account, OpenAI's old credit grants, a sub2api
-// panel's profile and its query for a key; a query magpie doesn't know
+// panel's profile and its query for a key; a query starling doesn't know
 // still asks for the field.
 func TestKnownBalanceFieldLeftEmpty(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

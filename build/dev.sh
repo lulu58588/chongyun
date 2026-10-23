@@ -4,7 +4,7 @@
 # gateway. The page refreshes what it shows in place; UI files under
 # internal/gui/assets reload the page as before. A build that fails leaves
 # the running backend alone. A change to the shell's own code
-# (internal/gui/app.go, dev_on.go) restarts the windows too. Quitting chongyun
+# (internal/gui/app.go, dev_on.go) restarts the windows too. Quitting starling
 # from the tray, or Ctrl-C, ends it all.
 #
 # A restart is a handover, so an agent streaming through the dev gateway
@@ -13,8 +13,8 @@
 # has and exit. A backend that builds but never comes up leaves the old one
 # serving.
 #
-# make passes MAGPIE_ADDR, MAGPIE_DEV_UI, MAGPIE_DEV_BACKEND and
-# MAGPIE_DEV_CONTROL.
+# make passes STARLING_ADDR, STARLING_DEV_UI, STARLING_DEV_BACKEND and
+# STARLING_DEV_CONTROL.
 set -u
 cd "$(dirname "$0")/.." || exit 1
 
@@ -22,7 +22,7 @@ shell='' backend='' watch='' fsw='' draining=''
 
 stop() { [ -n "$1" ] && kill "$1" 2>/dev/null && wait "$1" 2>/dev/null; }
 
-start_backend() { MAGPIE_DEV_ROLE=backend ./chongyun-dev-backend app & backend=$!; }
+start_backend() { STARLING_DEV_ROLE=backend ./starling-dev-backend app & backend=$!; }
 
 # listening waits (up to 30s) for backend $1 to listen on the gateway's
 # port and the backend's; no, once it has exited
@@ -30,7 +30,7 @@ listening() {
 	local i
 	for ((i = 0; i < 150; i++)); do
 		kill -0 "$1" 2>/dev/null || return 1
-		listens "$1" "${MAGPIE_ADDR##*:}" && listens "$1" "${MAGPIE_DEV_BACKEND##*:}" && return 0
+		listens "$1" "${STARLING_ADDR##*:}" && listens "$1" "${STARLING_DEV_BACKEND##*:}" && return 0
 		sleep 0.2
 	done
 	return 1
@@ -54,7 +54,7 @@ handover() {
 
 # the shell, and a watcher that ends everything once it is quit
 start_shell() {
-	MAGPIE_DEV_ROLE=shell ./chongyun-dev app & shell=$!
+	STARLING_DEV_ROLE=shell ./starling-dev app & shell=$!
 	{ while kill -0 "$shell" 2>/dev/null; do sleep 1; done; kill -TERM $$; } & watch=$!
 }
 
@@ -80,15 +80,15 @@ relevant() {
 }
 
 # builds to a new file and moves it in, never over a running binary
-build() { go build -tags dev -o chongyun-dev.new . && cp chongyun-dev.new chongyun-dev-backend.new && mv chongyun-dev-backend.new chongyun-dev-backend; }
+build() { go build -tags dev -o starling-dev.new . && cp starling-dev.new starling-dev-backend.new && mv starling-dev-backend.new starling-dev-backend; }
 
 build || exit 1
-mv chongyun-dev.new chongyun-dev
+mv starling-dev.new starling-dev
 start_backend
 start_shell
-exec 3< <(fswatch -r -e '/\.git/' -e '/site/' -e '/chongyun-dev' "$PWD")
+exec 3< <(fswatch -r -e '/\.git/' -e '/site/' -e '/starling-dev' "$PWD")
 fsw=$!
-echo "  chongyun-dev · UI from internal/gui/assets, reload on save · Go changes restart the backend only · gateway $MAGPIE_ADDR"
+echo "  starling-dev · UI from internal/gui/assets, reload on save · Go changes restart the backend only · gateway $STARLING_ADDR"
 
 while read -r -u 3 path; do
 	relevant "$path" || continue
@@ -105,9 +105,9 @@ while read -r -u 3 path; do
 	*/internal/gui/app.go* | */internal/gui/dev_on.go*)
 		echo "  window code changed · reopening the windows"
 		stop_shell
-		mv chongyun-dev.new chongyun-dev
+		mv starling-dev.new starling-dev
 		start_shell
 		;;
-	*) rm -f chongyun-dev.new ;;
+	*) rm -f starling-dev.new ;;
 	esac
 done

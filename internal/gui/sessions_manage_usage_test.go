@@ -9,13 +9,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // The Sessions page shows what each session spent, as the Usage page's
 // list did (#752): sessions/manage carries a session's tokens, cost and
-// models, and where magpie's gateway sent its calls (via).
+// models, and where starling's gateway sent its calls (via).
 func TestSessionsManageCarriesUsage(t *testing.T) {
 	h := sandboxHome(t)
 	claude := filepath.Join(h, ".claude")

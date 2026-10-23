@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/budget"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/budget"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // postEncoded sends body to the running gateway at path with the given
@@ -142,7 +142,7 @@ func TestEncodedBodyInflatedPastLimit(t *testing.T) {
 	}
 }
 
-// A body in an encoding magpie can't read is refused 415, saying which,
+// A body in an encoding starling can't read is refused 415, saying which,
 // rather than read as broken JSON.
 func TestUnknownBodyEncodingRefused(t *testing.T) {
 	for _, path := range []string{"/v1/responses", "/v1/chat/completions", "/v1/messages", "/v1beta/models/fake/m1:generateContent", CodexPath + "/responses"} {

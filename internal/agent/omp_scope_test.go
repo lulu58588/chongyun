@@ -7,12 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
-// ompScopeHome is a home with omp's agent folder and a provider of magpie's.
+// ompScopeHome is a home with omp's agent folder and a provider of starling's.
 func ompScopeHome(t *testing.T) (home, configPath, modelsPath string) {
 	t.Helper()
 	home = t.TempDir()
@@ -40,20 +40,20 @@ func ompScopeRead(t *testing.T, p string) (map[string]any, string) {
 }
 
 // The reporter's case (#1769): omp's config.yml already has a non-empty
-// enabledModels, and the default role is set to one of magpie's models
+// enabledModels, and the default role is set to one of starling's models
 // outside it. omp would start new sessions on a model from the list, and
-// its picker and Ctrl+P show only the list's models, so magpie/** joins its
-// end: every model magpie gives omp, the one picked among them. The user's
+// its picker and Ctrl+P show only the list's models, so starling/** joins its
+// end: every model starling gives omp, the one picked among them. The user's
 // entries, their order and comments stay. Only the default role is held to
 // the list (omp resolves its other roles against every model it has).
 func TestOmpDefaultJoinsEnabledModels(t *testing.T) {
 	home, configPath, _ := ompScopeHome(t)
 	os.WriteFile(configPath, []byte("# mine\nenabledModels:\n  - provider-a/model-a # first\n  - provider-b/model-b\nmodelRoles:\n  default: provider-a/model-a\n"), 0o644)
 	a := omp(home)
-	if err := a.Field("model").Set("magpie/deepseek/pro:high"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/pro:high"); err != nil {
 		t.Fatal(err)
 	}
-	want := []string{"provider-a/model-a", "provider-b/model-b", "magpie/**"}
+	want := []string{"provider-a/model-a", "provider-b/model-b", "starling/**"}
 	if got := edit.GetYAMLList(configPath, "enabledModels"); !slices.Equal(got, want) {
 		t.Fatalf("enabledModels: %q, want %q", got, want)
 	}
@@ -63,11 +63,11 @@ func TestOmpDefaultJoinsEnabledModels(t *testing.T) {
 	if _, raw := ompScopeRead(t, configPath); !strings.Contains(raw, "# mine") || !strings.Contains(raw, "# first") {
 		t.Fatalf("comments lost:\n%s", raw)
 	}
-	if v, _ := edit.GetYAML(configPath, "modelRoles.default"); v != "magpie/deepseek/pro:high" {
+	if v, _ := edit.GetYAML(configPath, "modelRoles.default"); v != "starling/deepseek/pro:high" {
 		t.Fatalf("default: %q", v)
 	}
 	// set again, or at another level: listed once
-	for _, v := range []string{"magpie/deepseek/pro:high", "magpie/deepseek/pro:low"} {
+	for _, v := range []string{"starling/deepseek/pro:high", "starling/deepseek/pro:low"} {
 		if err := a.Field("model").Set(v); err != nil {
 			t.Fatal(err)
 		}
@@ -76,7 +76,7 @@ func TestOmpDefaultJoinsEnabledModels(t *testing.T) {
 		t.Fatalf("set again: %q", got)
 	}
 	// a role other than the default isn't held to the list
-	if err := a.Field("small").Set("magpie/deepseek/flash"); err != nil {
+	if err := a.Field("small").Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	if got := edit.GetYAMLList(configPath, "enabledModels"); !slices.Equal(got, want) {
@@ -101,10 +101,10 @@ func TestOmpEnabledModelsLeftAlone(t *testing.T) {
 		{"none", "modelRoles:\n  default: a/b\n"},
 		{"empty", "enabledModels: []\nmodelRoles:\n  default: a/b\n"},
 		{"folders only", "enabledModels:\n  - path: /work\n    models:\n      - a/b\n"},
-		{"same at a level", "enabledModels:\n  - a/b\n  - magpie/deepseek/pro:max\n"},
-		{"glob", "enabledModels:\n  - a/b\n  - magpie/deepseek/*\n"},
+		{"same at a level", "enabledModels:\n  - a/b\n  - starling/deepseek/pro:max\n"},
+		{"glob", "enabledModels:\n  - a/b\n  - starling/deepseek/*\n"},
 		// omp matches a glob against provider/id and the id alone (Bun.Glob,
-		// whose * stops at a slash), and a model of magpie's id is
+		// whose * stops at a slash), and a model of starling's id is
 		// provider/model
 		{"glob on the id", "enabledModels:\n  - a/b\n  - deepseek/*\n"},
 	}
@@ -113,7 +113,7 @@ func TestOmpEnabledModelsLeftAlone(t *testing.T) {
 			home, configPath, _ := ompScopeHome(t)
 			os.WriteFile(configPath, []byte(c.config), 0o644)
 			before, _ := ompScopeRead(t, configPath)
-			if err := omp(home).Field("model").Set("magpie/deepseek/pro"); err != nil {
+			if err := omp(home).Field("model").Set("starling/deepseek/pro"); err != nil {
 				t.Fatal(err)
 			}
 			after, raw := ompScopeRead(t, configPath)
@@ -126,20 +126,20 @@ func TestOmpEnabledModelsLeftAlone(t *testing.T) {
 	}
 }
 
-// Once nothing else is on magpie, its models leave the list with its
+// Once nothing else is on starling, its models leave the list with its
 // provider; a list left with nothing goes, never written as []. One scoped
 // to folders is the user's and keeps the provider.
 func TestOmpEnabledModelsCleared(t *testing.T) {
-	hasMagpie := func(modelsPath string) bool {
+	hasStarling := func(modelsPath string) bool {
 		m, _ := ompScopeRead(t, modelsPath)
 		p, _ := m["providers"].(map[string]any)
-		return p["magpie"] != nil
+		return p["starling"] != nil
 	}
 
 	home, configPath, modelsPath := ompScopeHome(t)
 	os.WriteFile(configPath, []byte("enabledModels:\n  - provider-a/model-a # mine\nmodelRoles:\n  default: provider-a/model-a\n"), 0o644)
 	f := omp(home).Field("model")
-	if err := f.Set("magpie/deepseek/pro"); err != nil {
+	if err := f.Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	if err := f.Set(""); err != nil {
@@ -154,12 +154,12 @@ func TestOmpEnabledModelsCleared(t *testing.T) {
 	if _, raw := ompScopeRead(t, configPath); !strings.Contains(raw, "# mine") {
 		t.Fatalf("comment lost:\n%s", raw)
 	}
-	if hasMagpie(modelsPath) {
-		t.Fatal("chongyun's provider stayed")
+	if hasStarling(modelsPath) {
+		t.Fatal("starling's provider stayed")
 	}
 
-	// the list had only magpie's model: the key goes
-	os.WriteFile(configPath, []byte("enabledModels:\n  - magpie/deepseek/flash\nmodelRoles:\n  default: magpie/deepseek/flash\n"), 0o644)
+	// the list had only starling's model: the key goes
+	os.WriteFile(configPath, []byte("enabledModels:\n  - starling/deepseek/flash\nmodelRoles:\n  default: starling/deepseek/flash\n"), 0o644)
 	if err := f.Set(""); err != nil {
 		t.Fatal(err)
 	}
@@ -167,29 +167,29 @@ func TestOmpEnabledModelsCleared(t *testing.T) {
 		t.Fatalf("emptied list kept:\n%s", raw)
 	}
 
-	// a folder's own list on magpie keeps it, and its entries
-	os.WriteFile(configPath, []byte("enabledModels:\n  - magpie/deepseek/flash\n  - path: /work\n    models:\n      - magpie/deepseek/pro\nmodelRoles:\n  default: magpie/deepseek/flash\n"), 0o644)
-	if err := f.Set("magpie/deepseek/flash"); err != nil {
+	// a folder's own list on starling keeps it, and its entries
+	os.WriteFile(configPath, []byte("enabledModels:\n  - starling/deepseek/flash\n  - path: /work\n    models:\n      - starling/deepseek/pro\nmodelRoles:\n  default: starling/deepseek/flash\n"), 0o644)
+	if err := f.Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	if err := f.Set(""); err != nil {
 		t.Fatal(err)
 	}
-	if !hasMagpie(modelsPath) {
-		t.Fatal("a folder's list on chongyun lost chongyun's provider")
+	if !hasStarling(modelsPath) {
+		t.Fatal("a folder's list on starling lost starling's provider")
 	}
-	if _, raw := ompScopeRead(t, configPath); !strings.Contains(raw, "magpie/deepseek/pro") {
+	if _, raw := ompScopeRead(t, configPath); !strings.Contains(raw, "starling/deepseek/pro") {
 		t.Fatalf("folder's entry dropped:\n%s", raw)
 	}
 }
 
-// A default role on magpie that a list written by hand leaves out shows as
+// A default role on starling that a list written by hand leaves out shows as
 // a model that won't start, and setting it again (Reapply) mends it.
 func TestOmpEnabledModelsLeavingOutIsDrift(t *testing.T) {
 	home, configPath, _ := ompScopeHome(t)
 	os.WriteFile(configPath, []byte("modelRoles:\n  default: provider-a/model-a\n"), 0o644)
 	a := omp(home)
-	if err := a.Field("model").Set("magpie/deepseek/pro:high"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/pro:high"); err != nil {
 		t.Fatal(err)
 	}
 	if d := a.Check(); d != "" {
@@ -198,7 +198,7 @@ func TestOmpEnabledModelsLeavingOutIsDrift(t *testing.T) {
 	if err := edit.SetYAML(configPath, edit.KV{Path: "enabledModels", Value: []string{"provider-a/model-a"}}); err != nil {
 		t.Fatal(err)
 	}
-	if d := a.Check(); !strings.Contains(d, "enabledModels") || !strings.Contains(d, "magpie/deepseek/pro") {
+	if d := a.Check(); !strings.Contains(d, "enabledModels") || !strings.Contains(d, "starling/deepseek/pro") {
 		t.Fatalf("check: %q", d)
 	}
 	if err := a.Field("model").Set(a.Field("model").Get()); err != nil {
@@ -210,30 +210,30 @@ func TestOmpEnabledModelsLeavingOutIsDrift(t *testing.T) {
 }
 
 // real-jacket on #1769, after v0.1.1214: the default role started, but
-// omp's picker and Ctrl+P listed only the old list and the one model magpie
-// had added, while magpie's Agents page offers its whole catalog. Their
-// config as v0.1.1214 left it: the model picked again puts magpie/** in
-// place of the one model, so omp's picker has all of magpie's; the other
+// omp's picker and Ctrl+P listed only the old list and the one model starling
+// had added, while starling's Agents page offers its whole catalog. Their
+// config as v0.1.1214 left it: the model picked again puts starling/** in
+// place of the one model, so omp's picker has all of starling's; the other
 // roles' models with it, without a list entry each.
-func TestOmpEnabledModelsTakeEveryMagpieModel(t *testing.T) {
+func TestOmpEnabledModelsTakeEveryStarlingModel(t *testing.T) {
 	home, configPath, modelsPath := ompScopeHome(t)
-	os.WriteFile(configPath, []byte("enabledModels:\n  - provider-a/model-a\n  - provider-b/model-b\n  - magpie/deepseek/pro\nmodelRoles:\n  default: magpie/deepseek/pro:high\n"), 0o644)
+	os.WriteFile(configPath, []byte("enabledModels:\n  - provider-a/model-a\n  - provider-b/model-b\n  - starling/deepseek/pro\nmodelRoles:\n  default: starling/deepseek/pro:high\n"), 0o644)
 	a := omp(home)
-	if err := a.Field("model").Set("magpie/deepseek/flash:high"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/flash:high"); err != nil {
 		t.Fatal(err)
 	}
-	want := []string{"provider-a/model-a", "provider-b/model-b", "magpie/**"}
+	want := []string{"provider-a/model-a", "provider-b/model-b", "starling/**"}
 	if got := edit.GetYAMLList(configPath, "enabledModels"); !slices.Equal(got, want) {
 		t.Fatalf("enabledModels: %q, want %q", got, want)
 	}
-	// every model magpie wrote for omp is one the list takes in
+	// every model starling wrote for omp is one the list takes in
 	m, _ := ompScopeRead(t, modelsPath)
-	ms, _ := m["providers"].(map[string]any)["magpie"].(map[string]any)["models"].([]any)
+	ms, _ := m["providers"].(map[string]any)["starling"].(map[string]any)["models"].([]any)
 	if len(ms) < 2 {
 		t.Fatalf("models.yml: %v", m)
 	}
 	for _, x := range ms {
-		id := "magpie/" + x.(map[string]any)["id"].(string)
+		id := "starling/" + x.(map[string]any)["id"].(string)
 		if !ompScopeTakes(want, id) {
 			t.Errorf("%s isn't in omp's list", id)
 		}
@@ -245,13 +245,13 @@ func TestOmpEnabledModelsTakeEveryMagpieModel(t *testing.T) {
 		t.Fatalf("check: %q", d)
 	}
 	// picked again, it is there once
-	if err := a.Field("model").Set("magpie/deepseek/pro"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	if got := edit.GetYAMLList(configPath, "enabledModels"); !slices.Equal(got, want) {
 		t.Fatalf("set again: %q", got)
 	}
-	// disconnected, it goes with magpie's provider
+	// disconnected, it goes with starling's provider
 	if err := a.Field("model").Set(""); err != nil {
 		t.Fatal(err)
 	}

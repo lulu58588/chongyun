@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // CleanAccounts is a key's account list as kept (#905): each entry

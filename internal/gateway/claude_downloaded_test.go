@@ -8,14 +8,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/claudecode"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/claudecode"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // A machine with no Claude Code of its own (a server, a container) answers
-// a Claude subscription's request with the one `chongyun claude-code install`
-// downloaded into magpie's cache (Jorben 报告): before, the request
+// a Claude subscription's request with the one `starling claude-code install`
+// downloaded into starling's cache (Jorben 报告): before, the request
 // failed "Claude Code is not installed" with that build right there.
 func TestClaudeSubscriptionRunsTheDownloadedClaudeCode(t *testing.T) {
 	if runtime.GOOS == "windows" {
@@ -47,7 +47,7 @@ echo '{"type":"stream_event","event":{"type":"message_stop"}}'
 	}
 }
 
-// With neither, the error says how to have magpie download it.
+// With neither, the error says how to have starling download it.
 func TestClaudeSubscriptionWithoutClaudeCodeSaysHowToGetIt(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("WSL may have one")
@@ -55,7 +55,7 @@ func TestClaudeSubscriptionWithoutClaudeCodeSaysHowToGetIt(t *testing.T) {
 	t.Setenv("PATH", t.TempDir())
 	_ = os.RemoveAll(claudecode.Root())
 	_, err := claudeBinary()
-	if err == nil || !strings.Contains(err.Error(), "chongyun claude-code install") {
+	if err == nil || !strings.Contains(err.Error(), "starling claude-code install") {
 		t.Fatalf("claudeBinary() error = %v", err)
 	}
 }

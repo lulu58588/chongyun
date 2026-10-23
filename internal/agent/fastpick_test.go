@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A catalog model with a fast mode says, in an agent's picker, which agent
@@ -30,7 +30,7 @@ func TestFastPickOptions(t *testing.T) {
 	}
 	of := func(agent string) map[string]Option {
 		out := map[string]Option{}
-		for _, o := range viaMagpie(agent, "magpie/") {
+		for _, o := range viaStarling(agent, "starling/") {
 			out[o.Ref] = o
 		}
 		return out

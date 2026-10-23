@@ -7,15 +7,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/daemon"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/gui"
+	"github.com/lulu58588/starling/internal/daemon"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/gui"
 )
 
-// webAddr is where `chongyun web` listens unless told: beside the gateway.
+// webAddr is where `starling web` listens unless told: beside the gateway.
 const webAddr = "127.0.0.1:3430"
 
-// webCmd: magpie web [--addr host:port] [--lan] [--no-open] [--gateway]
+// webCmd: starling web [--addr host:port] [--lan] [--no-open] [--gateway]
 // [--tls-cert <file> --tls-key <file>] —
 // the app's window in a browser, for a computer that can't show the app;
 // --gateway shows it in gateway mode (gui.WebGateway) unless Settings says
@@ -41,7 +41,7 @@ func webCmd(args []string) error {
 		case a == "--gateway":
 			gui.WebGateway.Store(true)
 		default:
-			return fmt.Errorf("chongyun web: unknown %q · chongyun web [--addr host:port] [--lan] [--no-open] [--gateway] [--tls-cert <file> --tls-key <file>], MAGPIE_WEB_KEY to keep one key", a)
+			return fmt.Errorf("starling web: unknown %q · starling web [--addr host:port] [--lan] [--no-open] [--gateway] [--tls-cert <file> --tls-key <file>], STARLING_WEB_KEY to keep one key", a)
 		}
 	}
 	if lan && addr == webAddr {
@@ -52,8 +52,8 @@ func webCmd(args []string) error {
 	// it serves, is the one to open
 	if a, k := daemon.Web(); a != "" && gateway.ServedBy().Running {
 		link := webLink(a, k)
-		fmt.Println(green.Render("●"), "the chongyun service serves this page:", bold.Render(link))
-		fmt.Println(muted.Render("  chongyun daemon web off turns it off"))
+		fmt.Println(green.Render("●"), "the starling service serves this page:", bold.Render(link))
+		fmt.Println(muted.Render("  starling daemon web off turns it off"))
 		if open {
 			openInBrowser(link)
 		}
@@ -64,17 +64,17 @@ func webCmd(args []string) error {
 		return err
 	}
 	if !w.ServesGateway() {
-		// another magpie has the gateway (the service, magpie serve, the
+		// another starling has the gateway (the service, starling serve, the
 		// app): this page shows its settings and accounts, read from the
 		// same files, and takes the gateway up when that one stops
 		o := gateway.ServedBy()
-		who := "another chongyun"
+		who := "another starling"
 		if o.Version != "" {
 			who += " (" + o.Version + ")"
 		}
 		fmt.Println(muted.Render("  the gateway on " + gateway.URL() + " is served by " + who + "; this page shows the same settings and accounts, and serves the gateway once that one stops"))
 		if st, err := daemon.Get(); err == nil && st.Running {
-			fmt.Println(muted.Render("  to have the service serve this page itself: chongyun daemon web on"))
+			fmt.Println(muted.Render("  to have the service serve this page itself: starling daemon web on"))
 		}
 	}
 	printWeb(w)
@@ -86,7 +86,7 @@ func webCmd(args []string) error {
 
 // printWeb prints where a started page is, and what its link carries.
 func printWeb(w *gui.Web) {
-	fmt.Println(green.Render("●"), "chongyun web on", bold.Render(w.Link))
+	fmt.Println(green.Render("●"), "starling web on", bold.Render(w.Link))
 	if l := tlsLine(); l != "" {
 		fmt.Println(l)
 	}
@@ -103,9 +103,9 @@ func printWeb(w *gui.Web) {
 	} else if l := proxyLink(key); l != "" {
 		fmt.Println(muted.Render("  through your proxy"), l)
 	}
-	carries := "this run's key (MAGPIE_WEB_KEY keeps one across runs)"
-	if os.Getenv("MAGPIE_WEB_KEY") != "" {
-		carries = "MAGPIE_WEB_KEY"
+	carries := "this run's key (STARLING_WEB_KEY keeps one across runs)"
+	if os.Getenv("STARLING_WEB_KEY") != "" {
+		carries = "STARLING_WEB_KEY"
 	}
 	fmt.Println(muted.Render("  the link carries " + carries + " · gateway " + advertisedURL() + " · Ctrl-C to stop"))
 }
@@ -113,9 +113,9 @@ func printWeb(w *gui.Web) {
 // lanWarning is said wherever the page is served on the network.
 func lanWarning() string {
 	if gateway.TLSOn() {
-		return "anyone with the link can change chongyun and see its keys"
+		return "anyone with the link can change starling and see its keys"
 	}
-	return "anyone with the link can change chongyun and see its keys, and the network carries it unencrypted (--tls-cert and --tls-key serve it over https)"
+	return "anyone with the link can change starling and see its keys, and the network carries it unencrypted (--tls-cert and --tls-key serve it over https)"
 }
 
 // webLink is the link to a page served on addr with key, from this
@@ -138,13 +138,13 @@ func webLink(addr, key string) string {
 }
 
 // proxyLink is the page's link through a reverse proxy in front of a page
-// served on loopback (#1479), with the key: MAGPIE_WEB_URL, the page's own
-// address there (https://magpie.example.com), or else MAGPIE_PUBLIC_URL
+// served on loopback (#1479), with the key: STARLING_WEB_URL, the page's own
+// address there (https://starling.example.com), or else STARLING_PUBLIC_URL
 // with no port of its own, as NetworkLinks takes it (#372). One with a
 // port names a host whose ports are published, not a proxy. "" with
-// neither, or a MAGPIE_WEB_URL that isn't a plain http(s) address.
+// neither, or a STARLING_WEB_URL that isn't a plain http(s) address.
 func proxyLink(key string) string {
-	if v := strings.TrimSpace(os.Getenv("MAGPIE_WEB_URL")); v != "" {
+	if v := strings.TrimSpace(os.Getenv("STARLING_WEB_URL")); v != "" {
 		if !strings.Contains(v, "://") {
 			v = "https://" + v
 		}
@@ -161,9 +161,9 @@ func proxyLink(key string) string {
 	return strings.TrimRight(u.String(), "/") + key
 }
 
-// serveCmd: magpie serve [--web[=host:port]] — the gateway, and with
-// --web magpie web's page from the same process: what the service runs
-// (`chongyun daemon install --web`), so the page shows the gateway that
+// serveCmd: starling serve [--web[=host:port]] — the gateway, and with
+// --web starling web's page from the same process: what the service runs
+// (`starling daemon install --web`), so the page shows the gateway that
 // serves the agents, its routing included (HuanCheng 报告).
 func serveCmd(args []string) error {
 	args, err := tlsFlags(args)
@@ -178,10 +178,10 @@ func serveCmd(args []string) error {
 		case strings.HasPrefix(a, "--web="):
 			web = strings.TrimPrefix(a, "--web=")
 			if _, _, err := net.SplitHostPort(web); err != nil {
-				return fmt.Errorf("chongyun serve: --web=%s isn't host:port", web)
+				return fmt.Errorf("starling serve: --web=%s isn't host:port", web)
 			}
 		default:
-			return fmt.Errorf("chongyun serve: unknown %q · chongyun serve [--web[=host:port]] [--tls-cert <file> --tls-key <file>]", a)
+			return fmt.Errorf("starling serve: unknown %q · starling serve [--web[=host:port]] [--tls-cert <file> --tls-key <file>]", a)
 		}
 	}
 	if web == "" {
@@ -192,14 +192,14 @@ func serveCmd(args []string) error {
 		return err
 	}
 	public := advertisedURL()
-	fmt.Println(green.Render("●"), "chongyun gateway on", bold.Render(gateway.URL()))
+	fmt.Println(green.Render("●"), "starling gateway on", bold.Render(gateway.URL()))
 	fmt.Println(muted.Render("  OpenAI  "), public+"/v1/chat/completions", muted.Render("·"), public+"/v1/responses")
 	fmt.Println(muted.Render("  Anthropic"), public+"/v1/messages")
 	if l := tlsLine(); l != "" {
 		fmt.Println(l)
 	}
 	if !w.ServesGateway() {
-		fmt.Println(amber.Render("!"), "another chongyun serves the gateway there: this one serves it once that one stops")
+		fmt.Println(amber.Render("!"), "another starling serves the gateway there: this one serves it once that one stops")
 	}
 	printWeb(w)
 	return w.Wait()

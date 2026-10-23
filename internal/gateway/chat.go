@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // ---- OpenAI Chat Completions --------------------------------------------------
@@ -236,7 +236,7 @@ func dataURL(p Part) string {
 // buildHost is the host a request for p is built for. Cursor's plugin is
 // "cursor" (plugin://cursor) moved or not: a moved one's Host is the
 // built-in's, for show, which Cursor's is none, and its fast mode was lost
-// on every request magpie translated (#1360).
+// on every request starling translated (#1360).
 func buildHost(p provider.Provider) string {
 	if p.IsPlugin() {
 		switch id := p.PluginProvider(); id {
@@ -933,12 +933,12 @@ type cUsage struct {
 	// which their own replies couldn't count (the Cursor plugin's usage
 	// events that showed late, upstream issue #1053): billed with the step,
 	// never its prompt, which a client reads as how full its context is
-	MagpieDeferred *struct {
+	StarlingDeferred *struct {
 		PromptTokens     int `json:"prompt_tokens"`
 		CompletionTokens int `json:"completion_tokens"`
 		CachedTokens     int `json:"cached_tokens"`
 		CacheWriteTokens int `json:"cache_write_tokens"`
-	} `json:"magpie_deferred,omitempty"`
+	} `json:"starling_deferred,omitempty"`
 }
 
 func (u cUsage) usage() Usage {
@@ -968,7 +968,7 @@ func (u cUsage) usage() Usage {
 	if c := u.Credit; c != nil && *c >= 0 {
 		out.Credits = c
 	}
-	if d := u.MagpieDeferred; d != nil && d.PromptTokens+d.CompletionTokens > 0 {
+	if d := u.StarlingDeferred; d != nil && d.PromptTokens+d.CompletionTokens > 0 {
 		out.Deferred = &Usage{Input: max(d.PromptTokens-d.CachedTokens-d.CacheWriteTokens, 0), Output: d.CompletionTokens,
 			CacheRead: d.CachedTokens, CacheWrite: d.CacheWriteTokens}
 	}
@@ -1306,7 +1306,7 @@ func (d *chatDecoder) decode(data string, emit func(Event)) error {
 			emit(Event{Kind: KStop, Stop: stopFromChat(c.FinishReason)})
 		}
 	}
-	if ch.Usage != nil && (ch.Usage.PromptTokens > 0 || ch.Usage.CompletionTokens > 0 || ch.Usage.MagpieDeferred != nil || ch.Usage.Credit != nil) {
+	if ch.Usage != nil && (ch.Usage.PromptTokens > 0 || ch.Usage.CompletionTokens > 0 || ch.Usage.StarlingDeferred != nil || ch.Usage.Credit != nil) {
 		emit(Event{Kind: KUsage, Usage: ch.Usage.usage()})
 	}
 	return nil

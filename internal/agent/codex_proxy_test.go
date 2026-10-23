@@ -16,10 +16,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // proxyAs has codexProxyFor read env, sys and goos, and proxyProbe answer
@@ -38,7 +38,7 @@ func proxyAs(t *testing.T, env map[string]string, sys netproxy.Proxy, goos strin
 	})
 }
 
-// Which proxy Codex sends a request for magpie's 127.0.0.1 through, the way
+// Which proxy Codex sends a request for starling's 127.0.0.1 through, the way
 // its reqwest does (hyper-util's Matcher::from_system) and, with
 // respect_system_proxy on, the way codex-rs outbound_proxy does.
 func TestCodexProxyFor(t *testing.T) {
@@ -144,9 +144,9 @@ func TestCodexProxyNamesItsVariable(t *testing.T) {
 	}
 }
 
-// liu_dyj 报告: magpie opened from the Dock lacks the NO_PROXY a shell
+// liu_dyj 报告: starling opened from the Dock lacks the NO_PROXY a shell
 // profile sets, which the Codex a terminal or the ChatGPT app runs has.
-// The login shell's value is Codex's; magpie's own only where the shell
+// The login shell's value is Codex's; starling's own only where the shell
 // has none.
 func TestCodexEnvTakesLoginShell(t *testing.T) {
 	was := loginEnv
@@ -158,7 +158,7 @@ func TestCodexEnvTakesLoginShell(t *testing.T) {
 		t.Fatalf("NO_PROXY = %q, want the login shell's", got)
 	}
 	if got := codexEnv("HTTP_PROXY"); got != "http://127.0.0.1:7890" {
-		t.Fatalf("HTTP_PROXY = %q, want chongyun's own", got)
+		t.Fatalf("HTTP_PROXY = %q, want starling's own", got)
 	}
 	proxyAs(t, nil, netproxy.Proxy{URL: "http://127.0.0.1:7890", HTTP: "http://127.0.0.1:7890"}, "darwin", nil)
 	codexProxyEnv = codexEnv
@@ -169,10 +169,10 @@ func TestCodexEnvTakesLoginShell(t *testing.T) {
 	}
 }
 
-// A proxy's own 502 isn't magpie; a proxy that passes the request on is.
+// A proxy's own 502 isn't starling; a proxy that passes the request on is.
 func TestRealProxyProbe(t *testing.T) {
 	gw := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, `{"name": "崇云科技"}`)
+		io.WriteString(w, `{"name": "星鸣"}`)
 	}))
 	defer gw.Close()
 	dead := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -192,7 +192,7 @@ func TestRealProxyProbe(t *testing.T) {
 	}))
 	defer pass.Close()
 	if realProxyProbe(gw.URL+"/v1", dead.URL) {
-		t.Fatal("a proxy answering 502 counted as reaching chongyun")
+		t.Fatal("a proxy answering 502 counted as reaching starling")
 	}
 	if !realProxyProbe(gw.URL+"/v1", pass.URL) {
 		t.Fatal("a proxy passing the request on didn't count")
@@ -257,8 +257,8 @@ func socksOnly(t *testing.T) string {
 }
 
 // Muma102kMichael 报告: Codex 502 on every project and every new chat once
-// magpie took it over, its requests for 127.0.0.1 sent through a proxy that
-// didn't pass them on. Failover, which magpie writes uninvited, is never
+// starling took it over, its requests for 127.0.0.1 sent through a proxy that
+// didn't pass them on. Failover, which starling writes uninvited, is never
 // written then, and one written before goes again; once the proxy passes
 // them on, it is.
 func TestCodexFailoverHeldWhileProxyDoesNotPassOn(t *testing.T) {
@@ -274,7 +274,7 @@ func TestCodexFailoverHeldWhileProxyDoesNotPassOn(t *testing.T) {
 	}
 	me, _ := json.Marshal(auth("me@example.com", "acct-1"))
 	home, read := codexHome(t, string(me), "model = \"gpt-5.5\"\n")
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	b, _ := json.Marshal([]map[string]any{
@@ -310,7 +310,7 @@ func TestCodexFailoverHeldWhileProxyDoesNotPassOn(t *testing.T) {
 	}
 }
 
-// Connected to magpie, with the gateway up but Codex's way to it through a
+// Connected to starling, with the gateway up but Codex's way to it through a
 // proxy that answers 502: the row says so, which proxy and where it is set,
 // rather than connected (kind "proxied"); once the proxy passes it on, or
 // 127.0.0.1 goes around it, connected again.
@@ -376,11 +376,11 @@ func TestCodexProxiedDriftShowsNoCredentials(t *testing.T) {
 	}
 }
 
-// Leon920717 报告: with magpie quit, Codex CLI kept retrying the gateway
-// till magpie was open again. The failover base URL magpie wrote goes as
-// the magpie serving the gateway quits (EndCodexFailover), and the next
+// Leon920717 报告: with starling quit, Codex CLI kept retrying the gateway
+// till starling was open again. The failover base URL starling wrote goes as
+// the starling serving the gateway quits (EndCodexFailover), and the next
 // start's Sync writes it again; a base URL the user wrote stays.
-func TestCodexFailoverEndsWithMagpie(t *testing.T) {
+func TestCodexFailoverEndsWithStarling(t *testing.T) {
 	claims := func(m map[string]any) string {
 		b, _ := json.Marshal(m)
 		return "h." + base64.RawURLEncoding.EncodeToString(b) + ".s"
@@ -396,7 +396,7 @@ func TestCodexFailoverEndsWithMagpie(t *testing.T) {
 	t.Setenv("HOME", home)
 	t.Setenv("USERPROFILE", home)
 	logins := func(on bool) {
-		// chongyun keeps the account it signed the agent in to in its own
+		// starling keeps the account it signed the agent in to in its own
 		// logins.json, marked as the one the agent is on: it never reads
 		// the agent's own file to find out which account that is.
 		b, _ := json.Marshal([]map[string]any{
@@ -427,7 +427,7 @@ func TestCodexFailoverEndsWithMagpie(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cfg := read(); strings.Contains(cfg, "openai_base_url") || !strings.Contains(cfg, `model = "gpt-5.5"`) {
-		t.Fatalf("chongyun quit, Codex still pointed at it:\n%s", cfg)
+		t.Fatalf("starling quit, Codex still pointed at it:\n%s", cfg)
 	}
 	// the app-server keeps the base URL it started with: asked to restart
 	if len(asked) != 1 || asked[0] != filepath.Dir(cx.Path) {
@@ -464,8 +464,8 @@ func TestCodexFailoverEndsWithMagpie(t *testing.T) {
 // CC Switch with "unify Codex session history" on (xuxing0727 报告) runs
 // the official sign-in as its "custom" mirror, so failover goes on that
 // table's base_url rather than openai_base_url: it too waits for the proxy
-// to pass Codex on, and goes as the magpie serving the gateway quits.
-func TestCodexMirrorFailoverHeldAndEndsWithMagpie(t *testing.T) {
+// to pass Codex on, and goes as the starling serving the gateway quits.
+func TestCodexMirrorFailoverHeldAndEndsWithStarling(t *testing.T) {
 	// CC Switch's own bytes (src-tauri services/provider/mod.rs)
 	const unified = "model_provider = \"custom\"\nmodel = \"gpt-5.5\"\n\n" +
 		"[model_providers.custom]\nname = \"OpenAI\"\nrequires_openai_auth = true\nsupports_websockets = true\nwire_api = \"responses\"\n"
@@ -483,7 +483,7 @@ func TestCodexMirrorFailoverHeldAndEndsWithMagpie(t *testing.T) {
 	home, read := codexHome(t, string(me), unified)
 	t.Setenv("HOME", home)
 	t.Setenv("USERPROFILE", home)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	b, _ := json.Marshal([]map[string]any{
@@ -520,6 +520,6 @@ func TestCodexMirrorFailoverHeldAndEndsWithMagpie(t *testing.T) {
 		t.Fatal(err)
 	}
 	if cfg := read(); strings.Contains(cfg, "base_url") || !strings.Contains(cfg, `model_provider = "custom"`) || !strings.Contains(cfg, "supports_websockets = true") {
-		t.Fatalf("chongyun quit, CC Switch's mirror still pointed at it:\n%s", cfg)
+		t.Fatalf("starling quit, CC Switch's mirror still pointed at it:\n%s", cfg)
 	}
 }

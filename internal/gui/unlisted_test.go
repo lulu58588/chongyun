@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A provider set to "Only through routing groups" keeps its models out of

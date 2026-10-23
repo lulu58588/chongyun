@@ -7,10 +7,10 @@ package masking
 import (
 	"net/http"
 
-	"github.com/lulu58588/chongyun/internal/gwmw"
-	"github.com/lulu58588/chongyun/internal/pii"
-	"github.com/lulu58588/chongyun/internal/redact"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/gwmw"
+	"github.com/lulu58588/starling/internal/pii"
+	"github.com/lulu58588/starling/internal/redact"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Masker masks as the settings say, read on each call.

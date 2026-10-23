@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/fonts"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/fonts"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 func TestFontChoicesPersistAndStayLocal(t *testing.T) {

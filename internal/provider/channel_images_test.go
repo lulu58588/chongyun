@@ -7,9 +7,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/codexcat"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/codexcat"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // #2157 (sstdgm): a custom provider's nyro-gpt-5.5 is GPT-5.5 on the

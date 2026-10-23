@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // A reply a Claude subscription account answered says that account's
@@ -105,10 +105,10 @@ func TestClaudeAllowanceHeadersThroughTheGateway(t *testing.T) {
 	os.WriteFile(filepath.Join(home, ".claude", ".credentials.json"), mustJSON(creds), 0o600)
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "hud@example.com", "accountUuid": "u-hud"}}), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
-	chongyunLogins(t, map[string]any{"agent": "claude", "user": "hud@example.com", "plan": "pro", "active": true, "on": true,
+	starlingLogins(t, map[string]any{"agent": "claude", "user": "hud@example.com", "plan": "pro", "active": true, "on": true,
 		"seen": time.Now(), "auth": creds, "profile": map[string]any{"emailAddress": "hud@example.com", "accountUuid": "u-hud"}})
 	five := strconv.FormatInt(time.Now().Add(2*time.Hour).Unix(), 10)
 	week := strconv.FormatInt(time.Now().Add(5*24*time.Hour).Unix(), 10)

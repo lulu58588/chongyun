@@ -3,12 +3,12 @@ package gateway
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Cursor Private Inference can't say an effort in its environment nor, for
-// most models, in its app (#1003): the one picked for it in magpie is asked
+// most models, in its app (#1003): the one picked for it in starling is asked
 // on its requests to a model that reasons, whichever API it speaks, in
 // place of a level the request sent; another agent's requests, a model
 // that doesn't reason and a member a group fixes at a level go as they

@@ -7,17 +7,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // A plugin provider's accounts are arranged like a built-in's: the page
-// names them by the provider's id, magpie keeps them as plugin:<id>, and
+// names them by the provider's id, starling keeps them as plugin:<id>, and
 // the gateway tries them in the order dragged.
 func TestAccountOrderPluginAccounts(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()

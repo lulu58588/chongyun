@@ -1,4 +1,4 @@
-module github.com/lulu58588/chongyun
+module github.com/lulu58588/starling
 
 go 1.26.8
 

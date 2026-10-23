@@ -17,23 +17,23 @@ func providerAt(t *testing.T, path, top string) map[string]any {
 	if err := json.Unmarshal([]byte(readFile(path)), &f); err != nil || json.Unmarshal(f[top], &ps) != nil {
 		t.Fatalf("%s: %v\n%s", path, err, readFile(path))
 	}
-	return ps[magpieID]
+	return ps[starlingID]
 }
 
 // #1103: pi-cache-optimizer's /cache-optimizer fix adds
-// providers.magpie.compat.sendSessionAffinityHeaders to Pi's models.json.
-// A catalog sync, and a pick of a magpie model in Pi, keep it; the model
-// list is still magpie's, so a model gone from the catalog leaves it, and
+// providers.starling.compat.sendSessionAffinityHeaders to Pi's models.json.
+// A catalog sync, and a pick of a starling model in Pi, keep it; the model
+// list is still starling's, so a model gone from the catalog leaves it, and
 // a sync with nothing new writes nothing.
-func TestPiKeepsTheirKeysInMagpiesProvider(t *testing.T) {
+func TestPiKeepsTheirKeysInStarlingsProvider(t *testing.T) {
 	home := syncHome(t)
 	piModels := filepath.Join(home, ".pi", "agent", "models.json")
-	// the block as magpie wrote it, with the optimizer's key added
+	// the block as starling wrote it, with the optimizer's key added
 	writeFile(t, piModels, `{
   "providers": {
-    "magpie": {
+    "starling": {
       "api": "openai-completions",
-      "apiKey": "magpie",
+      "apiKey": "starling",
       "baseUrl": "http://127.0.0.1:3425/v1",
       "compat": {
         "sendSessionAffinityHeaders": true
@@ -44,7 +44,7 @@ func TestPiKeepsTheirKeysInMagpiesProvider(t *testing.T) {
           "name": "Old"
         }
       ],
-      "name": "magpie"
+      "name": "starling"
     }
   }
 }
@@ -57,7 +57,7 @@ func TestPiKeepsTheirKeysInMagpiesProvider(t *testing.T) {
 	}
 	ms, _ := json.Marshal(p["models"])
 	if strings.Contains(string(ms), "gone/old-model") || !strings.Contains(string(ms), "relay/glm-4.6") {
-		t.Fatalf("models not chongyun's list: %s", ms)
+		t.Fatalf("models not starling's list: %s", ms)
 	}
 
 	// synced already: the next sync writes nothing
@@ -69,8 +69,8 @@ func TestPiKeepsTheirKeysInMagpiesProvider(t *testing.T) {
 		t.Errorf("models.json rewritten though nothing changed:\n%s", readFile(piModels))
 	}
 
-	// picking a magpie model in Pi writes the block too
-	if err := pi(home).Fields[0].Set("magpie/relay/glm-4.6"); err != nil {
+	// picking a starling model in Pi writes the block too
+	if err := pi(home).Fields[0].Set("starling/relay/glm-4.6"); err != nil {
 		t.Fatal(err)
 	}
 	compat, _ = providerAt(t, piModels, "providers")["compat"].(map[string]any)
@@ -79,12 +79,12 @@ func TestPiKeepsTheirKeysInMagpiesProvider(t *testing.T) {
 	}
 }
 
-// The same for OpenCode's provider.magpie (an options key of the user's
-// own) and Crush's providers.magpie.
-func TestOpenCodeAndCrushKeepTheirKeysInMagpiesProvider(t *testing.T) {
+// The same for OpenCode's provider.starling (an options key of the user's
+// own) and Crush's providers.starling.
+func TestOpenCodeAndCrushKeepTheirKeysInStarlingsProvider(t *testing.T) {
 	home := syncHome(t)
 	cfg := filepath.Join(home, ".config", "opencode", "opencode.json")
-	writeFile(t, cfg, `{"model":"magpie/relay/glm-4.6","provider":{"magpie":{"name": "崇云科技","npm":"@ai-sdk/openai-compatible","options":{"baseURL":"http://127.0.0.1:3425/v1","apiKey":"magpie","setCacheKey":true},"models":{"gone/old-model":{"name":"Old"}}}}}`)
+	writeFile(t, cfg, `{"model":"starling/relay/glm-4.6","provider":{"starling":{"name": "星鸣","npm":"@ai-sdk/openai-compatible","options":{"baseURL":"http://127.0.0.1:3425/v1","apiKey":"starling","setCacheKey":true},"models":{"gone/old-model":{"name":"Old"}}}}}`)
 	oc := opencode(home, filepath.Join(home, ".config"))
 	if err := oc.Sync(); err != nil {
 		t.Fatal(err)
@@ -95,7 +95,7 @@ func TestOpenCodeAndCrushKeepTheirKeysInMagpiesProvider(t *testing.T) {
 	if opts["setCacheKey"] != true || ms["gone/old-model"] != nil || ms["relay/glm-4.6"] == nil {
 		t.Fatalf("opencode sync:\n%s", readFile(cfg))
 	}
-	if err := oc.Fields[0].Set("magpie/relay/glm-4.6"); err != nil {
+	if err := oc.Fields[0].Set("starling/relay/glm-4.6"); err != nil {
 		t.Fatal(err)
 	}
 	if opts, _ := providerAt(t, cfg, "provider")["options"].(map[string]any); opts["setCacheKey"] != true {
@@ -103,7 +103,7 @@ func TestOpenCodeAndCrushKeepTheirKeysInMagpiesProvider(t *testing.T) {
 	}
 
 	cr := filepath.Join(home, ".config", "crush", "crush.json")
-	writeFile(t, cr, `{"providers":{"magpie":{"type":"openai","name":"magpie","base_url":"http://127.0.0.1:3425/v1","api_key":"magpie","extra_headers":{"X-Mine":"1"},"models":[]}}}`)
+	writeFile(t, cr, `{"providers":{"starling":{"type":"openai","name":"starling","base_url":"http://127.0.0.1:3425/v1","api_key":"starling","extra_headers":{"X-Mine":"1"},"models":[]}}}`)
 	c := crushAt(here(home), cr, filepath.Join(home, ".local", "share", "crush", "crush.json"))
 	if err := c.Sync(); err != nil {
 		t.Fatal(err)
@@ -111,7 +111,7 @@ func TestOpenCodeAndCrushKeepTheirKeysInMagpiesProvider(t *testing.T) {
 	if h, _ := providerAt(t, cr, "providers")["extra_headers"].(map[string]any); h["X-Mine"] != "1" {
 		t.Fatalf("crush sync:\n%s", readFile(cr))
 	}
-	if err := c.Fields[0].Set("magpie/relay/glm-4.6"); err != nil {
+	if err := c.Fields[0].Set("starling/relay/glm-4.6"); err != nil {
 		t.Fatal(err)
 	}
 	if h, _ := providerAt(t, cr, "providers")["extra_headers"].(map[string]any); h["X-Mine"] != "1" {

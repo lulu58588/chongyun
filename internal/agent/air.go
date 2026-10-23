@@ -3,7 +3,7 @@ package agent
 // JetBrains Air, JetBrains' agentic development environment, runs its own
 // agents (Claude Agent, Codex, Gemini CLI, Junie) on the accounts signed in
 // under Settings | Account | AI Providers: a sign-in or an API key, with no
-// base URL of its own to point at magpie (AIR-4541 asks for one). What it
+// base URL of its own to point at starling (AIR-4541 asks for one). What it
 // does take is any agent that speaks the Agent Client Protocol, listed in
 // acp.json in its config folder — ~/Library/Application Support/JetBrains/Air
 // on macOS, $XDG_CONFIG_HOME/JetBrains/Air on Linux, %APPDATA%\JetBrains\Air
@@ -12,22 +12,22 @@ package agent
 //	{"agent_servers": {"<name in Air's agent menu>": {"command": …, "args": […], "env": {…}}}}
 //
 // and the models such an agent reports at session/new are its model menu
-// in Air. So magpie adds an agent of its own there, "Chongyun": OpenCode's ACP
-// server (opencode acp), handed with OPENCODE_CONFIG a config file magpie
-// keeps beside acp.json that has magpie's provider, its models, the one
+// in Air. So starling adds an agent of its own there, "Starling": OpenCode's ACP
+// server (opencode acp), handed with OPENCODE_CONFIG a config file starling
+// keeps beside acp.json that has starling's provider, its models, the one
 // picked as the model a task starts on, and enabled_providers narrowed to
-// magpie, so Air's menu lists magpie's models and routing groups and nothing
+// starling, so Air's menu lists starling's models and routing groups and nothing
 // of OpenCode's own. OpenCode merges that file over the user's own config
 // and leaves the rest of it (their plugins, agents, MCP servers) as it is.
 // Air's own agents, and the accounts they run on, aren't touched.
 //
 // Checked with OpenCode 2.0.20's opencode acp under a sandbox HOME, as Air
-// starts it: session/new's model option lists magpie's models alone, the
+// starts it: session/new's model option lists starling's models alone, the
 // one set here current. Not with Air itself. One gap is OpenCode's: when a
 // provider's key is in the environment it is started with (OPENAI_API_KEY,
 // DEEPSEEK_API_KEY, … set, not empty), 2.0.20's ACP server lists that
 // provider and none of its config's — this file's, the global one or a
-// project's alike — so magpie's models don't show; an emptied key, or one
+// project's alike — so starling's models don't show; an emptied key, or one
 // kept in OpenCode's auth.json, doesn't do it.
 
 import (
@@ -38,14 +38,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
-// airAgent is the name magpie's agent has in acp.json, and so in Air's
+// airAgent is the name starling's agent has in acp.json, and so in Air's
 // agent menu.
-const airAgent = "Chongyun"
+const airAgent = "Starling"
 
 // airDir is where Air keeps its settings and acp.json.
 func airDir(home, cfg string) string {
@@ -137,17 +137,17 @@ func acpOpenCode(home, name, goos string) string {
 func air(home, cfg string) *Agent {
 	dir := airDir(home, cfg)
 	path := filepath.Join(dir, "acp.json")
-	// the OpenCode config magpie's agent runs on, magpie's own file
-	ocPath := filepath.Join(dir, "magpie-opencode.json")
+	// the OpenCode config starling's agent runs on, starling's own file
+	ocPath := filepath.Join(dir, "starling-opencode.json")
 	entry := "agent_servers." + airAgent
-	provider := openCodeKept(ocPath, func() any { return magpieProviderJSONFor("opencode", "air") })
-	// ours: acp.json's Magpie is the agent magpie added, on its file
+	provider := openCodeKept(ocPath, func() any { return starlingProviderJSONFor("opencode", "air") })
+	// ours: acp.json's Starling is the agent starling added, on its file
 	ours := func() bool {
 		v, _ := edit.GetJSON(path, entry+".env.OPENCODE_CONFIG")
 		return v == ocPath
 	}
-	// model is the one a task starts on, read from magpie's own file: with
-	// Magpie gone from acp.json it still reads, for Check to say so and a
+	// model is the one a task starts on, read from starling's own file: with
+	// Starling gone from acp.json it still reads, for Check to say so and a
 	// set again to put the entry back
 	model := func() string { v, _ := edit.GetJSON(ocPath, "model"); return v }
 	return atomic(&Agent{
@@ -165,17 +165,17 @@ func air(home, cfg string) *Agent {
 			return noticeAir2.String()
 		},
 		Check: func() string {
-			if !usesMagpie(model()) {
+			if !usesStarling(model()) {
 				return ""
 			}
 			if !ours() {
-				return "Air's Chongyun agent (" + filepath.Base(path) + ") is gone, so Air no longer reaches chongyun"
+				return "Air's Starling agent (" + filepath.Base(path) + ") is gone, so Air no longer reaches starling"
 			}
-			return wiringOff("Air", ocPath, func(k string) (string, bool) { return edit.GetJSON(ocPath, "provider."+magpieID+".options."+k) },
+			return wiringOff("Air", ocPath, func(k string) (string, bool) { return edit.GetJSON(ocPath, "provider."+starlingID+".options."+k) },
 				"baseURL", gatewayV1(), "apiKey", hereKey())
 		},
 		Sync: func() error {
-			return syncJSONInOrder(ocPath, "provider."+magpieID, provider)
+			return syncJSONInOrder(ocPath, "provider."+starlingID, provider)
 		},
 		Fields: []Field{{
 			Key: "model", Label: "model",
@@ -190,15 +190,15 @@ func air(home, cfg string) *Agent {
 					}
 					return nil
 				}
-				ref, ok := strings.CutPrefix(v, magpieID+"/")
-				if !ok || !isMagpie(ref) {
-					return fmt.Errorf("Air takes only chongyun's models here (its own agents are picked in Air): %s isn't one", v)
+				ref, ok := strings.CutPrefix(v, starlingID+"/")
+				if !ok || !isStarling(ref) {
+					return fmt.Errorf("Air takes only starling's models here (its own agents are picked in Air): %s isn't one", v)
 				}
 				// each key new to the file goes in at its top: last first,
 				// so a new file reads $schema, model, …, provider
 				if err := edit.SetJSON(ocPath,
-					edit.KV{Path: "provider." + magpieID, Value: provider()},
-					edit.KV{Path: "enabled_providers", Value: []string{magpieID}},
+					edit.KV{Path: "provider." + starlingID, Value: provider()},
+					edit.KV{Path: "enabled_providers", Value: []string{starlingID}},
 					// titles and summaries too, as the user's own small
 					// model may be a provider left out here
 					edit.KV{Path: "small_model", Value: v},
@@ -215,13 +215,13 @@ func air(home, cfg string) *Agent {
 					"env": map[string]string{"OPENCODE_CONFIG": ocPath},
 				}})
 			},
-			Options: func(map[string]string) []Option { return viaMagpie("air", magpieID+"/") },
+			Options: func(map[string]string) []Option { return viaStarling("air", starlingID+"/") },
 		}},
 	}, path, ocPath)
 }
 
 // what air says after a change (notice.go)
 var (
-	noticeAir1 = newNotice("Air runs chongyun's models through OpenCode's ACP server, and OpenCode isn't installed here: install OpenCode (npm i -g opencode-ai), then pick Chongyun in a new Air task.")
-	noticeAir2 = newNotice("In Air, start a new task and pick Chongyun in its agent menu: chongyun's models and routing groups are in its model menu.")
+	noticeAir1 = newNotice("Air runs starling's models through OpenCode's ACP server, and OpenCode isn't installed here: install OpenCode (npm i -g opencode-ai), then pick Starling in a new Air task.")
+	noticeAir2 = newNotice("In Air, start a new task and pick Starling in its agent menu: starling's models and routing groups are in its model menu.")
 )

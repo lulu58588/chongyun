@@ -7,9 +7,9 @@ import (
 	"testing"
 )
 
-// A plugin's page (magpie.page) is a file inside the plugin's folder: one
+// A plugin's page (starling.page) is a file inside the plugin's folder: one
 // that names a path out of it, by "..", an absolute path or a symbolic
-// link, is no page. Its reads are those magpie has, and a plugin that is
+// link, is no page. Its reads are those starling has, and a plugin that is
 // only a page is nothing for the host to load, nor "not a plugin".
 func TestWindowPageStaysInside(t *testing.T) {
 	root := t.TempDir()
@@ -31,30 +31,30 @@ func TestWindowPageStaysInside(t *testing.T) {
 		}
 		return d
 	}
-	good := mk("good", `{"name":"good","magpie":{"page":{"title":"Good","file":"page/index.html","icon":"page/index.html"},"permissions":["usage:summary","secrets:all","usage:summary"]}}`)
+	good := mk("good", `{"name":"good","starling":{"page":{"title":"Good","file":"page/index.html","icon":"page/index.html"},"permissions":["usage:summary","secrets:all","usage:summary"]}}`)
 	w, only := Window(good)
 	if w == nil || w.Page == nil || !only || w.Page.Title != "Good" || w.Page.Icon != "index.html" {
 		t.Fatalf("good: %+v only=%v", w, only)
 	}
 	p := w.Page
 	if !slices.Equal(w.Reads, []string{"usage:summary"}) {
-		t.Errorf("reads %v, want only the one chongyun has, once", w.Reads)
+		t.Errorf("reads %v, want only the one starling has, once", w.Reads)
 	}
-	if !InMagpieOnly(good) || notPlugin(good) != nil {
-		t.Errorf("a page-only plugin: InMagpieOnly %v, notPlugin %v", InMagpieOnly(good), notPlugin(good))
+	if !InStarlingOnly(good) || notPlugin(good) != nil {
+		t.Errorf("a page-only plugin: InStarlingOnly %v, notPlugin %v", InStarlingOnly(good), notPlugin(good))
 	}
-	if _, only := Window(mk("main", `{"name":"m","main":"index.js","magpie":{"page":{"file":"page/index.html"}}}`)); only {
+	if _, only := Window(mk("main", `{"name":"m","main":"index.js","starling":{"page":{"file":"page/index.html"}}}`)); only {
 		t.Error("a plugin with a main is more than its page")
 	}
-	link := mk("link", `{"name":"l","magpie":{"page":{"file":"page/out.html"}}}`)
+	link := mk("link", `{"name":"l","starling":{"page":{"file":"page/out.html"}}}`)
 	if err := os.Symlink(outside, filepath.Join(link, "page", "out.html")); err != nil {
 		t.Fatal(err)
 	}
 	for name, pkg := range map[string]string{
-		"dotdot": `{"name":"d","magpie":{"page":{"file":"../secret.html"}}}`,
-		"abs":    `{"name":"a","magpie":{"page":{"file":"` + filepath.ToSlash(outside) + `"}}}`,
-		"notml":  `{"name":"n","magpie":{"page":{"file":"package.json"}}}`,
-		"none":   `{"name":"x","magpie":{"page":{"file":"page/missing.html"}}}`,
+		"dotdot": `{"name":"d","starling":{"page":{"file":"../secret.html"}}}`,
+		"abs":    `{"name":"a","starling":{"page":{"file":"` + filepath.ToSlash(outside) + `"}}}`,
+		"notml":  `{"name":"n","starling":{"page":{"file":"package.json"}}}`,
+		"none":   `{"name":"x","starling":{"page":{"file":"page/missing.html"}}}`,
 	} {
 		if w, _ := Window(mk(name, pkg)); w != nil {
 			t.Errorf("%s: %+v is a page", name, w)
@@ -71,10 +71,10 @@ func TestWindowPageStaysInside(t *testing.T) {
 	}
 }
 
-// A plugin's panels (magpie.panels) go only where magpie has a slot, each
+// A plugin's panels (starling.panels) go only where starling has a slot, each
 // an .html inside the plugin's folder, at most maxPanels of them; a page
 // replaces only a built-in page that can be replaced. A plugin that is
-// only panels is a window plugin all the same: in magpie only, and a
+// only panels is a window plugin all the same: in starling only, and a
 // plugin.
 func TestWindowPanels(t *testing.T) {
 	root := t.TempDir()
@@ -96,7 +96,7 @@ func TestWindowPanels(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	write(`{"name":"p","magpie":{"panels":[
+	write(`{"name":"p","starling":{"panels":[
 		{"slot":"usage","file":"ui/usage.html","title":"Spend"},
 		{"slot":"provider","file":"ui/prov.html"},
 		{"slot":"nowhere","file":"ui/usage.html"},
@@ -118,21 +118,21 @@ func TestWindowPanels(t *testing.T) {
 	if !slices.Equal(w.Reads, []string{"providers:list"}) {
 		t.Errorf("reads %v", w.Reads)
 	}
-	if !InMagpieOnly(d) || notPlugin(d) != nil {
-		t.Errorf("a panels-only plugin: InMagpieOnly %v, notPlugin %v", InMagpieOnly(d), notPlugin(d))
+	if !InStarlingOnly(d) || notPlugin(d) != nil {
+		t.Errorf("a panels-only plugin: InStarlingOnly %v, notPlugin %v", InStarlingOnly(d), notPlugin(d))
 	}
 
 	many := `{"slot":"usage","file":"ui/usage.html"}`
 	for range maxPanels {
 		many += `,{"slot":"usage","file":"ui/usage.html"}`
 	}
-	write(`{"name":"p","magpie":{"panels":[` + many + `]}}`)
+	write(`{"name":"p","starling":{"panels":[` + many + `]}}`)
 	if w, _ := Window(d); w == nil || len(w.Panels) != maxPanels {
 		t.Errorf("%+v kept, want %d panels at most", w, maxPanels)
 	}
 
 	for replaces, want := range map[string]string{"usage": "usage", "sessions": "sessions", "agents": "", "settings": "", "plugins": "", "": ""} {
-		write(`{"name":"p","magpie":{"page":{"file":"ui/page.html","replaces":"` + replaces + `"}}}`)
+		write(`{"name":"p","starling":{"page":{"file":"ui/page.html","replaces":"` + replaces + `"}}}`)
 		w, _ := Window(d)
 		if w == nil || w.Page == nil || w.Page.Replaces != want {
 			t.Errorf("replaces %q: %+v, want %q", replaces, w, want)
@@ -140,7 +140,7 @@ func TestWindowPanels(t *testing.T) {
 	}
 }
 
-// A page's and a panel's titles by language (magpie.page.titles) are kept
+// A page's and a panel's titles by language (starling.page.titles) are kept
 // trimmed, without the empty ones; titles that aren't an object of strings
 // leave the page as it was, with its title.
 func TestWindowTitles(t *testing.T) {
@@ -150,7 +150,7 @@ func TestWindowTitles(t *testing.T) {
 	}
 	write := func(titles string) *WindowSpec {
 		t.Helper()
-		pkg := `{"name":"p","magpie":{"page":{"title":"Glance","file":"index.html","titles":` + titles + `},
+		pkg := `{"name":"p","starling":{"page":{"title":"Glance","file":"index.html","titles":` + titles + `},
 			"panels":[{"slot":"usage","file":"index.html","title":"Spend","titles":` + titles + `}]}}`
 		if err := os.WriteFile(filepath.Join(d, "package.json"), []byte(pkg), 0o644); err != nil {
 			t.Fatal(err)
@@ -174,14 +174,14 @@ func TestWindowTitles(t *testing.T) {
 	}
 }
 
-// A plugin's actions (magpie.actions) are items in a provider's or an
+// A plugin's actions (starling.actions) are items in a provider's or an
 // agent's row menu that open its page: a plugin with no page has none,
-// an action in a menu magpie hasn't, or with an id the page couldn't
+// an action in a menu starling hasn't, or with an id the page couldn't
 // switch on, is dropped, an id given twice is the first's, and there are
 // eight at most.
 func TestWindowActions(t *testing.T) {
 	root := t.TempDir()
-	mk := func(name, magpie string) string {
+	mk := func(name, starling string) string {
 		t.Helper()
 		d := filepath.Join(root, name)
 		if err := os.MkdirAll(d, 0o755); err != nil {
@@ -190,7 +190,7 @@ func TestWindowActions(t *testing.T) {
 		if err := os.WriteFile(filepath.Join(d, "index.html"), []byte("<p>hi</p>"), 0o644); err != nil {
 			t.Fatal(err)
 		}
-		if err := os.WriteFile(filepath.Join(d, "package.json"), []byte(`{"name":"`+name+`","magpie":`+magpie+`}`), 0o644); err != nil {
+		if err := os.WriteFile(filepath.Join(d, "package.json"), []byte(`{"name":"`+name+`","starling":`+starling+`}`), 0o644); err != nil {
 			t.Fatal(err)
 		}
 		return d

@@ -15,7 +15,7 @@ const assets = path.resolve(__dirname, "../assets");
 
 const CALC = "/Users/x/pl/calc";
 const state = { bun: true, bunVersion: "1.3.0", plugins: [
-  { spec: CALC, providers: [], moved: [], inMagpieOnly: true, tools: [{ name: "add", mcp: "calc_add" }] },
+  { spec: CALC, providers: [], moved: [], inStarlingOnly: true, tools: [{ name: "add", mcp: "calc_add" }] },
 ] };
 const listings = [
   { package: "@magpie-community/provider-x", name: "X plan", community: true, providers: ["x"], summary: { en: "Signs in to X" }, npm: { version: "0.1.0" } },
@@ -65,7 +65,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         const errors = [];
         page.on("pageerror", (e) => errors.push(e.message));
         await page.route("**/*", server(lang));
-        await page.goto("http://magpie.test/?view=plugins");
+        await page.goto("http://starling.test/?view=plugins");
         const view = page.locator("#view-plugins");
         const kinds = (r) => r.locator(".pm-chip.kind").allInnerTexts().then((a) => a.map((x) => x.trim()));
         const sec = (name) => view.locator(".pm-sec").filter({ has: page.locator(".pm-sechead h3", { hasText: new RegExp("^" + name + "$") }) });
@@ -93,7 +93,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         await how.click();
         for (let i = 0; i < 50 && !opened.length; i++) await page.waitForTimeout(20);
         assert.deepEqual(opened, [w.docs]);
-        assert.equal(page.url(), "http://magpie.test/?view=plugins", "the window stays on magpie");
+        assert.equal(page.url(), "http://starling.test/?view=plugins", "the window stays on starling");
 
         const over = await page.evaluate(() => document.scrollingElement.scrollWidth - document.scrollingElement.clientWidth);
         assert.ok(over <= 0, "page scrolls sideways by " + over);

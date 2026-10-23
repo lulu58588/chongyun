@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // refreshPath takes up the PATH an installer just wrote to the registry,

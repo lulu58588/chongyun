@@ -1,11 +1,11 @@
-// Package claudecode finds the Claude Code magpie's Claude subscription
+// Package claudecode finds the Claude Code starling's Claude subscription
 // runs, and downloads Anthropic's own build of it when the user asks, for a
 // machine with none: a server or a container (Jorben 报告).
 //
 // The build comes from where Anthropic's installer (claude.ai/install.sh)
 // takes it: the release's manifest.json names each platform's SHA-256 and
 // size, and the binary is checked against both before it is kept. It is
-// kept in magpie's cache folder, not on PATH, so it stands in for no agent:
+// kept in starling's cache folder, not on PATH, so it stands in for no agent:
 // it is only what the bridge and the sign-in run.
 package claudecode
 
@@ -25,16 +25,16 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/libc"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/libc"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // Base is where Anthropic publishes Claude Code's builds, as its installer
 // downloads them; a var for tests.
 var Base = "https://downloads.claude.ai/claude-code-releases"
 
-// Root is the folder magpie keeps the Claude Code it downloaded in, one
+// Root is the folder starling keeps the Claude Code it downloaded in, one
 // folder per version.
 func Root() string { return filepath.Join(appdir.Cache(), "claude-code") }
 
@@ -47,7 +47,7 @@ func exeName(goos string) string {
 
 var versionRe = regexp.MustCompile(`^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$`)
 
-// Downloaded is the Claude Code magpie downloaded and its version, or ""
+// Downloaded is the Claude Code starling downloaded and its version, or ""
 // when there is none: the newest of Root's versions that has the binary.
 func Downloaded() (path, version string) {
 	ents, err := os.ReadDir(Root())
@@ -84,7 +84,7 @@ func newer(a, b string) bool {
 }
 
 // Find is the Claude Code to run on this machine: the user's own (on PATH
-// or where its installers put it, proc.FindTool), else the one magpie
+// or where its installers put it, proc.FindTool), else the one starling
 // downloaded; "" when there is neither.
 func Find() string {
 	if p := proc.FindTool("claude"); p != "" {
@@ -95,8 +95,8 @@ func Find() string {
 }
 
 // InstallHint is what an error about a missing Claude Code adds: how to
-// have magpie download it.
-const InstallHint = "or run `chongyun claude-code install` to download Anthropic's own build for chongyun"
+// have starling download it.
+const InstallHint = "or run `starling claude-code install` to download Anthropic's own build for starling"
 
 // Platform is the name Anthropic's manifest gives the build for goos/goarch
 // (musl: a Linux whose C library is musl, as Alpine's).
@@ -211,7 +211,7 @@ func get(ctx context.Context, url string, limit int64) ([]byte, error) {
 }
 
 // Install downloads r into Root, checks its size and SHA-256 against the
-// manifest's, and keeps it as the Claude Code magpie runs when the machine
+// manifest's, and keeps it as the Claude Code starling runs when the machine
 // has none of its own; the versions downloaded before are removed. progress,
 // when set, is told the bytes so far. It returns the binary's path.
 func Install(ctx context.Context, r Release, progress func(done int64)) (string, error) {
@@ -293,5 +293,5 @@ func (f progressFunc) Write(p []byte) (int, error) {
 	return len(p), nil
 }
 
-// Remove deletes every Claude Code magpie downloaded.
+// Remove deletes every Claude Code starling downloaded.
 func Remove() error { return os.RemoveAll(Root()) }

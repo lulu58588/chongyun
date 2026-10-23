@@ -3,9 +3,9 @@ package provider
 // Local identities for associating historical session metadata. No credential
 // refresh, sign-in discovery command or login-store write is needed here.
 //
-// The identities are those of the accounts chongyun signed in to itself, as
+// The identities are those of the accounts starling signed in to itself, as
 // it keeps them in logins.json. No other agent's sign-in is read for them:
-// what a session's account was is told by the accounts chongyun holds.
+// what a session's account was is told by the accounts starling holds.
 
 import (
 	"cmp"
@@ -20,7 +20,7 @@ type SessionIdentity struct {
 	OfficialLogin bool
 }
 
-// SessionIdentities are the identities of the accounts chongyun remembers.
+// SessionIdentities are the identities of the accounts starling remembers.
 // Callers must match the IDs recorded in a session; presence alone is not evidence
 // that the account served that session's requests.
 func SessionIdentities() []SessionIdentity {

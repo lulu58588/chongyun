@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 func fixturePrompt(t *testing.T, name string, from provider.Protocol) *Prompt {
@@ -280,7 +280,7 @@ func TestRouteTellsItsPrompt(t *testing.T) {
 	if _, ok := itemOf(p, PartMemory, "/home/dev/proj/CLAUDE.md"); !ok {
 		t.Fatalf("memory %+v", p.Parts)
 	}
-	if rs[0].Conv == "" || !strings.HasPrefix(rs[0].Conv, "magpie-") {
+	if rs[0].Conv == "" || !strings.HasPrefix(rs[0].Conv, "starling-") {
 		t.Fatalf("conversation %q", rs[0].Conv)
 	}
 }

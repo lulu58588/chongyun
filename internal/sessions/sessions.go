@@ -8,7 +8,7 @@
 //
 // The files grow long (hundreds of MB), so each one's parse is kept by path,
 // size and time, and a file that only grew is read on from where it was left.
-// The parses are kept on disk too, in magpie's cache folder.
+// The parses are kept on disk too, in starling's cache folder.
 package sessions
 
 import (
@@ -34,12 +34,12 @@ import (
 	"unicode/utf8"
 
 	"github.com/klauspost/compress/zstd"
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/dirent"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/dirent"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Tokens is a count of tokens. Input excludes what was read from cache.
@@ -117,10 +117,10 @@ type CodexIdentity struct {
 // Session is one agent session.
 type Session struct {
 	ReadOnly bool `json:"read_only,omitempty"`
-	// Gateway: seen only through magpie's gateway, with no file of the
+	// Gateway: seen only through starling's gateway, with no file of the
 	// agent's on this computer (external.go)
 	Gateway       bool          `json:"gateway,omitempty"`
-	Agent         string        `json:"agent"` // magpie agent id: claude, codex, opencode, pi, omp, zcode, dsh, cline, qoder, qoder-cn, grok, workbuddy, codebuddy, droid, cursor, hermes, alma, kimi
+	Agent         string        `json:"agent"` // starling agent id: claude, codex, opencode, pi, omp, zcode, dsh, cline, qoder, qoder-cn, grok, workbuddy, codebuddy, droid, cursor, hermes, alma, kimi
 	ID            string        `json:"id"`
 	Cwd           string        `json:"cwd"`
 	Title         string        `json:"title"` // the name it was given, else the agent's own title, else the first prompt
@@ -641,7 +641,7 @@ var (
 func CachePath() string { return filepath.Join(filepath.Dir(catalog.CachePath()), "sessions.json") }
 
 // cacheVersion changes when a parse would come out differently, so the
-// parses kept by an older magpie are read again.
+// parses kept by an older starling are read again.
 // 2: each file's usage by day, and its active time
 // 3: the active time by hour of the day
 // 4: the tool calls and skills a day
@@ -893,7 +893,7 @@ func refresh(want, all []file) {
 	}
 	// What is read is kept on disk every checkpointEvery, not only at the
 	// end: a first read of a long history on a slow disk runs for minutes,
-	// and a magpie quit before the end (its CPU full, #1665) kept nothing
+	// and a starling quit before the end (its CPU full, #1665) kept nothing
 	// of it, so the next start read it all again.
 	tick := time.NewTicker(checkpointEvery)
 	defer tick.Stop()
@@ -1167,7 +1167,7 @@ func assemble(fs []file, price func(string) *catalog.Price) (Session, bool) {
 // to resume it, its subagents): whether List lists the session, and its
 // agent, id, title and usage. The stats ask it of every session on each
 // poll, and building every session's subagents there read each Claude Code
-// subagent's file again (3.5 GB of a live magpie's 6.3 GB of scans).
+// subagent's file again (3.5 GB of a live starling's 6.3 GB of scans).
 func assembleListed(fs []file, price func(string) *catalog.Price) (Session, bool) {
 	sortSessionFiles(fs)
 	s := Session{Agent: fs[0].agent, Path: fs[0].path, Models: []Model{}, WSL: fs[0].wsl}
@@ -1609,7 +1609,7 @@ func scanBuffer(f io.Reader, off int64) int {
 
 // lineReaders keep scanAt's read buffers between scans, one pool per
 // power-of-two size from scanBuffer's 16 KiB to its 1 MiB. Every scan
-// allocated its own: a live magpie's start read ~3,200 Claude Code subagent
+// allocated its own: a live starling's start read ~3,200 Claude Code subagent
 // files for their first lines (ccTask), most over 1 MiB, and with the
 // session and call reads scanAt allocated 6.3 GB in 48 minutes, 3.8 GB of
 // it these buffers, while ~157 MB was live. A pool keeps about one buffer
@@ -1686,7 +1686,7 @@ func openLines(path string) (io.ReadCloser, error) {
 
 // streams holds decoders between packed reads. A decoder made for each
 // read allocated its window (a packed rollout's is 2 MiB, held in 3 MiB at
-// low memory) and its block buffers every time: 75 GB of a live magpie's
+// low memory) and its block buffers every time: 75 GB of a live starling's
 // first read of 11,591 rollouts. One kept here keeps them, and is let go
 // with the pool's other idle ones by the garbage collector. streamShelf
 // keeps a few first, across collections.
@@ -1783,7 +1783,7 @@ func title(s string) string {
 
 var dated = regexp.MustCompile(`-\d{8}$`)
 
-// priceOf prices a model as a session names it: one through magpie as
+// priceOf prices a model as a session names it: one through starling as
 // "<provider>/<model>" at the price the gateway counts it at — what the user
 // set for that provider and model, else that provider's own list price, else
 // its maker's on models.dev — and a bare id only ever at its maker's, which is

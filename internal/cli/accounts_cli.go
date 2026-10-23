@@ -14,20 +14,20 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// accountsCmd: `chongyun accounts [agent] [--json]`, `chongyun accounts add <agent>`,
-// `chongyun accounts switch|forget <agent> <email>`,
-// `chongyun accounts project <gemini|antigravity> <email> <project>`,
-// `chongyun accounts alias <agent> <email> [<name>|--clear]`
-// `chongyun accounts switch-only codex [on|off]`
-// — the subscriptions magpie remembers, how much of each one's allowance is
+// accountsCmd: `starling accounts [agent] [--json]`, `starling accounts add <agent>`,
+// `starling accounts switch|forget <agent> <email>`,
+// `starling accounts project <gemini|antigravity> <email> <project>`,
+// `starling accounts alias <agent> <email> [<name>|--clear]`
+// `starling accounts switch-only codex [on|off]`
+// — the subscriptions starling remembers, how much of each one's allowance is
 // used, and switching the agent between them.
 func accountsCmd(args []string) error {
-	const usage = "usage: chongyun accounts [claude|codex|grok|copilot|gemini|antigravity|zed|factory|mimo|<plugin>] [--json] | chongyun accounts add <claude|codex|gemini|antigravity|zed|factory|mimo|<plugin>> | chongyun accounts add copilot [--host <name>.ghe.com] | chongyun accounts refresh [--json] | chongyun accounts checkin [--json] | chongyun accounts switch|forget <claude|codex|gemini|antigravity|zed|factory|mimo|<plugin>> <email> | chongyun accounts switch|forget copilot <login>[@<name>.ghe.com] [--host <name>.ghe.com] | chongyun accounts project <gemini|antigravity> <email> <gcp-project-id> | chongyun accounts alias <agent|<plugin>> <email> [<name>|--clear] | chongyun accounts switch-only codex [on|off]"
+	const usage = "usage: starling accounts [claude|codex|grok|copilot|gemini|antigravity|zed|factory|mimo|<plugin>] [--json] | starling accounts add <claude|codex|gemini|antigravity|zed|factory|mimo|<plugin>> | starling accounts add copilot [--host <name>.ghe.com] | starling accounts refresh [--json] | starling accounts checkin [--json] | starling accounts switch|forget <claude|codex|gemini|antigravity|zed|factory|mimo|<plugin>> <email> | starling accounts switch|forget copilot <login>[@<name>.ghe.com] [--host <name>.ghe.com] | starling accounts project <gemini|antigravity> <email> <gcp-project-id> | starling accounts alias <agent|<plugin>> <email> [<name>|--clear] | starling accounts switch-only codex [on|off]"
 	agentID := func(s string) (string, error) {
 		switch strings.ToLower(s) {
 		case "claude", "cc":
@@ -72,7 +72,7 @@ func accountsCmd(args []string) error {
 		return nil
 	}
 	if len(args) > 1 && args[1] == "alias" {
-		// a name of the user's own for an account (#1515): magpie's,
+		// a name of the user's own for an account (#1515): starling's,
 		// never written to the vendor's or plugin's sign-in
 		if len(args) < 4 {
 			return fmt.Errorf("%s", usage)
@@ -94,9 +94,9 @@ func accountsCmd(args []string) error {
 			if a := provider.AccountNameOf(id, user); a != "" {
 				fmt.Println(a)
 			} else if s := provider.SeatNameOf(id, user); s != "" {
-				fmt.Println(s, muted.Render("· the key plan this account stands in for; name it: chongyun accounts alias "+args[2]+" "+args[3]+" <name>"))
+				fmt.Println(s, muted.Render("· the key plan this account stands in for; name it: starling accounts alias "+args[2]+" "+args[3]+" <name>"))
 			} else {
-				fmt.Println(muted.Render(user + " has no name of its own · name it: chongyun accounts alias " + args[2] + " " + args[3] + " <name>"))
+				fmt.Println(muted.Render(user + " has no name of its own · name it: starling accounts alias " + args[2] + " " + args[3] + " <name>"))
 			}
 			return nil
 		}
@@ -130,7 +130,7 @@ func accountsCmd(args []string) error {
 			case len(args) == 4 && strings.HasPrefix(args[3], "--host="):
 				host = strings.TrimPrefix(args[3], "--host=")
 			case len(args) != 3:
-				return fmt.Errorf("usage: chongyun accounts add copilot [--host <name>.ghe.com]")
+				return fmt.Errorf("usage: starling accounts add copilot [--host <name>.ghe.com]")
 			}
 			h, err := provider.CopilotHost(host)
 			if err != nil {
@@ -199,7 +199,7 @@ func accountsCmd(args []string) error {
 			return err
 		}
 		if _, plug := provider.PluginOf(id); plug || id == "gemini" || id == "antigravity" || id == "copilot" {
-			fmt.Println(green.Render("✓"), "chongyun now uses", args[3], "for", id)
+			fmt.Println(green.Render("✓"), "starling now uses", args[3], "for", id)
 			return nil
 		}
 		fmt.Println(green.Render("✓"), id, "is now signed in as", args[3], muted.Render("· sessions already running keep their account until restarted"))
@@ -237,7 +237,7 @@ func accountsCmd(args []string) error {
 		return nil
 	}
 	if len(ls) == 0 {
-		fmt.Println(muted.Render("no accounts yet ·"), "add one: chongyun accounts add <claude|codex|gemini|antigravity>")
+		fmt.Println(muted.Render("no accounts yet ·"), "add one: starling accounts add <claude|codex|gemini|antigravity>")
 		return nil
 	}
 	// an account named by the user, or for the key plan it stands in
@@ -283,11 +283,11 @@ func accountsCmd(args []string) error {
 		line += quotaReadingCell(r.AsOf, r.ReadAt, r.Windows)
 		fmt.Println(line)
 	}
-	fmt.Println(faint.Render("  ● signed in · ○ takes over when it runs out · add one: chongyun accounts add <agent> · switch: chongyun accounts switch <agent> <email>"))
+	fmt.Println(faint.Render("  ● signed in · ○ takes over when it runs out · add one: starling accounts add <agent> · switch: starling accounts switch <agent> <email>"))
 	return nil
 }
 
-// accountRow is one account and its allowance, as `chongyun accounts` shows it.
+// accountRow is one account and its allowance, as `starling accounts` shows it.
 type accountRow struct {
 	Agent   string      `json:"agent"`
 	User    string      `json:"user"`
@@ -313,7 +313,7 @@ type accountRow struct {
 type quotaSpan = provider.QuotaSpan
 
 // accountRows asks each agent's accounts for their allowance at once; what
-// was asked less than a minute ago comes from magpie's cache.
+// was asked less than a minute ago comes from starling's cache.
 func accountRows(ls []provider.Login, now time.Time) []accountRow {
 	// the user asking, read even when allowances are read only when asked
 	ctx, cancel := context.WithTimeout(provider.Asked(context.Background()), 15*time.Second)
@@ -371,7 +371,7 @@ func accountRows(ls []provider.Login, now time.Time) []accountRow {
 func quotaCell(w quotaSpan, now time.Time) string {
 	name := strings.NewReplacer(" hours", "h", " hour", "h", " days", "d", " day", "d", " · ", " ").Replace(w.Name)
 	if w.Unlimited {
-		// no cap is not 0% of one: a remote magpie's gateway key held to
+		// no cap is not 0% of one: a remote starling's gateway key held to
 		// no limit (#1547) read "Limit 0%"
 		return name + " unlimited"
 	}
@@ -439,7 +439,7 @@ func addAccount(agentID string) error {
 		// a server or container: the sign-in runs Claude Code, which it
 		// has none of; downloading it is offered, and asked (Jorben).
 		// Not on Windows, where one in WSL may be the one signed in with.
-		fmt.Println(amber.Render("!"), "Claude Code isn't installed here: chongyun signs in to Claude, and answers its requests, through it")
+		fmt.Println(amber.Render("!"), "Claude Code isn't installed here: starling signs in to Claude, and answers its requests, through it")
 		if err := installClaudeCode(false); err != nil {
 			return err
 		}
@@ -476,7 +476,7 @@ func addAccount(agentID string) error {
 		case st.CallbackBlocked != "":
 			fmt.Println(amber.Render("!"), fmt.Sprintf("Another program has port %d, where the sign-in comes back, so the page the browser ends on won't finish it. Paste its whole address here and press Enter:", st.CallbackPort))
 		default:
-			fmt.Println("If the page the browser ends on won't load (chongyun on a server or in Docker), paste its whole address here and press Enter:")
+			fmt.Println("If the page the browser ends on won't load (starling on a server or in Docker), paste its whole address here and press Enter:")
 		}
 		id := st.ID
 		go func() {
@@ -504,9 +504,9 @@ func addAccount(agentID string) error {
 		} else if st.Using {
 			fmt.Println(green.Render("✓"), agentID, "is signed in as", st.User)
 		} else if strings.HasPrefix(agentID, "copilot") {
-			fmt.Println(green.Render("✓"), "added", st.User, muted.Render("· with the other Copilot accounts in chongyun's window"))
+			fmt.Println(green.Render("✓"), "added", st.User, muted.Render("· with the other Copilot accounts in starling's window"))
 		} else {
-			fmt.Println(green.Render("✓"), "added", st.User, muted.Render("· use it: chongyun accounts switch "+agentID+" "+st.User))
+			fmt.Println(green.Render("✓"), "added", st.User, muted.Render("· use it: starling accounts switch "+agentID+" "+st.User))
 		}
 		return nil
 	case "failed":
@@ -522,13 +522,13 @@ var openInBrowser = openURLInBrowser
 func openURLInBrowser(url string) {
 	// the link is printed beside it, to open by hand when this fails (#2043)
 	if err := proc.OpenBrowser(url); err != nil {
-		fmt.Fprintln(os.Stderr, "chongyun couldn't open the browser:", err)
+		fmt.Fprintln(os.Stderr, "starling couldn't open the browser:", err)
 	}
 }
 
-// refreshAccounts: `chongyun accounts refresh` renews the sign-in of every
+// refreshAccounts: `starling accounts refresh` renews the sign-in of every
 // saved Claude and ChatGPT account the agent isn't signed in to now — what
-// the gateway does once a day, for a magpie that isn't left running (cron,
+// the gateway does once a day, for a starling that isn't left running (cron,
 // launchd). A sign-in the vendor refuses is marked as needing a new one.
 func refreshAccounts(asJSON bool) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
@@ -571,7 +571,7 @@ func refreshAccounts(asJSON bool) error {
 	return nil
 }
 
-// checkinWorkBuddy: `chongyun accounts checkin` — WorkBuddy's daily check-in
+// checkinWorkBuddy: `starling accounts checkin` — WorkBuddy's daily check-in
 // (签到) for each WorkBuddy (China) account not in yet today, and Trae CN's
 // (每日签到) for each Trae CN account, and MiniMax Code's for each MiniMax
 // Code account, and Qoder's daily credits for each Qoder account, and each
@@ -657,7 +657,7 @@ func checkinWorkBuddy(asJSON bool) error {
 }
 
 // accountNamed is the saved account of agent that user names: its name as
-// magpie lists it ("a@b.com · Team"), or the email alone when only one of
+// starling lists it ("a@b.com · Team"), or the email alone when only one of
 // the agent's accounts has it.
 func accountNamed(agent, user string) (string, error) {
 	user = strings.TrimSpace(user)
@@ -692,25 +692,25 @@ func accountNamed(agent, user string) (string, error) {
 	case len(same) > 1:
 		return "", fmt.Errorf("%s has %d accounts of %s: %q — name one in full", agent, len(same), user, same)
 	case len(names) == 0:
-		return "", fmt.Errorf("no saved %s accounts · add one: chongyun accounts add %s", agent, agent)
+		return "", fmt.Errorf("no saved %s accounts · add one: starling accounts add %s", agent, agent)
 	}
 	return "", fmt.Errorf("no saved %s account %q · its accounts: %q", agent, user, names)
 }
 
-// switchOnlyCmd is `chongyun accounts switch-only codex [on|off]`: magpie
+// switchOnlyCmd is `starling accounts switch-only codex [on|off]`: starling
 // only switches Codex's own sign-in to the next account with room, its
 // requests never sent through the gateway for account failover (#1907).
 // With no on or off it says which it is.
 func switchOnlyCmd(args []string) error {
-	const usage = "usage: chongyun accounts switch-only codex [on|off]"
+	const usage = "usage: starling accounts switch-only codex [on|off]"
 	if len(args) < 1 || len(args) > 2 || !strings.EqualFold(args[0], "codex") {
 		return fmt.Errorf("%s", usage)
 	}
 	if len(args) == 1 {
 		if provider.SwitchOnly("codex") {
-			fmt.Println("on · chongyun only switches Codex's sign-in; its requests go straight to OpenAI")
+			fmt.Println("on · starling only switches Codex's sign-in; its requests go straight to OpenAI")
 		} else {
-			fmt.Println("off · with more of its accounts on, Codex's requests go through chongyun to fail over between them")
+			fmt.Println("off · with more of its accounts on, Codex's requests go through starling to fail over between them")
 		}
 		return nil
 	}
@@ -728,9 +728,9 @@ func switchOnlyCmd(args []string) error {
 	// Codex's config.toml follows now, not at the next start
 	agent.SyncCatalog()
 	if on {
-		fmt.Println(green.Render("✓"), "chongyun only switches Codex's sign-in to an account with room; its requests go straight to OpenAI. A Codex app or session already open stays on its account until it is opened again.")
+		fmt.Println(green.Render("✓"), "starling only switches Codex's sign-in to an account with room; its requests go straight to OpenAI. A Codex app or session already open stays on its account until it is opened again.")
 	} else {
-		fmt.Println(green.Render("✓"), "with more of its accounts on, Codex's requests go through chongyun to fail over between them again")
+		fmt.Println(green.Render("✓"), "with more of its accounts on, Codex's requests go through starling to fail over between them again")
 	}
 	return nil
 }

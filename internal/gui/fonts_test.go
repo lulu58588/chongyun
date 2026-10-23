@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/fonts"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/fonts"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 func TestFontDiscoveryCacheAndFailure(t *testing.T) {

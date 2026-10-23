@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // Two installed plugins that sign in to one provider (neiko 报告:
@@ -23,8 +23,8 @@ func TestPluginsClashRows(t *testing.T) {
 	testenv.SetHome(t, dir)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(dir, "config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(dir, "cache"))
-	t.Setenv("MAGPIE_BUN", bun)
-	t.Setenv("MAGPIE_PLUGIN_MARKET", "off")
+	t.Setenv("STARLING_BUN", bun)
+	t.Setenv("STARLING_PLUGIN_MARKET", "off")
 	t.Cleanup(plugin.Settle)
 	src, err := os.ReadFile("../plugin/testdata/fake/index.js")
 	if err != nil {

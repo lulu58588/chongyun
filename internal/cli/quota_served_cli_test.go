@@ -10,14 +10,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// magpie quota --json tells when each key last answered through the gateway
+// starling quota --json tells when each key last answered through the gateway
 // — a process of its own, which wrote it down — and marks the latest last,
-// as GET /v1/magpie/quotas does (#570).
+// as GET /v1/starling/quotas does (#570).
 func TestQuotaJSONLastServedAt(t *testing.T) {
 	groupsHome(t)
 	for _, k := range agentenv.Vars {

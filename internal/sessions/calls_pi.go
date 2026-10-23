@@ -29,7 +29,7 @@ import (
 // usage, on the model and provider in use. A call that failed is written
 // with no usage, and is none.
 //
-// A call made through magpie's own entry (provider "magpie", which
+// A call made through starling's own entry (provider "starling", which
 // internal/agent's pi.go and omp.go write, "dial" before the rename) is the
 // gateway's to count: it logged the call itself, with the provider and
 // account that answered.
@@ -45,8 +45,13 @@ func piCallFiles() []file {
 	return append(out, wslFiles("pi", "omp")...)
 }
 
-// piGateway is whether a provider is magpie's own entry.
-func piGateway(provider string) bool { return provider == "magpie" || provider == "dial" }
+// piGateway is whether a provider is starling's own entry.
+// piGateway is whether a pi provider is starling's own gateway, by the name
+// it is written under now ("starling") or by the one it had before the
+// rename ("magpie"), or by "dial" from before that.
+func piGateway(provider string) bool {
+	return provider == "starling" || provider == "magpie" || provider == "dial"
+}
 
 type piCallLine struct {
 	Type      string   `json:"type"`

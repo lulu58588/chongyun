@@ -9,12 +9,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/update"
 )
 
 // Settings › About › Download source (#893): the mirror is set and taken
-// away on its own, the same setting `chongyun update mirror` writes, a full
+// away on its own, the same setting `starling update mirror` writes, a full
 // https:// address only, and the Settings page's save keeps it. A download
 // that fails through it says so (the page's mirror), which a check clears.
 func TestUpdateMirrorSetting(t *testing.T) {
@@ -55,11 +55,11 @@ func TestUpdateMirrorSetting(t *testing.T) {
 	defer mirror.Close()
 	feed := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(update.Release{Version: "0.1.11", Assets: map[string]update.Asset{
-			update.BinaryAsset(): {URL: "https://github.com/lulu58588/chongyun-releases/releases/download/v0.1.11/x", SHA256: strings.Repeat("0", 64)},
+			update.BinaryAsset(): {URL: "https://github.com/lulu58588/starling-releases/releases/download/v0.1.11/x", SHA256: strings.Repeat("0", 64)},
 		}})
 	}))
 	defer feed.Close()
-	t.Setenv("MAGPIE_UPDATE_FEED", feed.URL)
+	t.Setenv("STARLING_UPDATE_FEED", feed.URL)
 	if err := settings.Save(settings.Settings{UpdateMirror: mirror.URL + "/"}); err != nil {
 		t.Fatal(err)
 	}

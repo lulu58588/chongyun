@@ -7,13 +7,13 @@ import (
 	"strings"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // openCodeSeed names the conversation a request to OpenCode's gateway is a
 // turn of, for its x-opencode-session (provider.OpenCodeClient): the
 // client's own x-opencode-session when it sent one, else the session the
-// client names (X-Magpie-Session, Codex's session_id, Claude Code's
+// client names (X-Starling-Session, Codex's session_id, Claude Code's
 // session, Pi's affinity: sessionOf), else the body's prompt_cache_key
 // (Codex's thread), else the conversation's first user message
 // (conversationID). OpenCode itself sends one session id for every turn of
@@ -35,7 +35,7 @@ func openCodeSeed(in http.Header, body []byte) string {
 	return conversationID(in, body)
 }
 
-// logOpenCodeRefusal writes to magpie's log what went to OpenCode's
+// logOpenCodeRefusal writes to starling's log what went to OpenCode's
 // gateway with a request it refused: where, the names of the headers sent
 // (never a value), and whether x-opencode-session was among them, by its
 // first 8 characters. OpenCode answers a request without one 400

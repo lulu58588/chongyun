@@ -3,7 +3,7 @@
 // example plugin (testdata/page-plugin) gets a tab in the sidebar's
 // Plugins group and draws in a frame sandboxed to scripts, with the
 // window's theme, its own options and the read it declared. The frame
-// can't reach magpie's API: its policy stops the fetch, and with the
+// can't reach starling's API: its policy stops the fetch, and with the
 // policy gone the request it would send carries Origin: null, which
 // apiFramed turns away (TestPluginPageNoAPI). A read it didn't declare is
 // refused, and a message from another frame is nothing. A page that
@@ -24,9 +24,9 @@ const bridge = path.resolve(__dirname, "../pagebridge.js");
 const GLANCE = "a".repeat(32), PROBE = "b".repeat(32), OPEN = "c".repeat(32), BROKEN = "d".repeat(32);
 const entry = (tok, name, title, reads, file = "index.html") => ({
   spec: "/x/" + name, name, key: "plugin-" + name, title, reads,
-  url: `/_magpie/plugin/${tok}/${file}`, icon: name === "glance" ? `/_magpie/plugin/${tok}/icon.svg` : "",
+  url: `/_starling/plugin/${tok}/${file}`, icon: name === "glance" ? `/_starling/plugin/${tok}/icon.svg` : "",
 });
-// the example's title by language (magpie.page.titles); none in German,
+// the example's title by language (starling.page.titles); none in German,
 // which reads its title
 const TITLES = { zh: "用量速览", "zh-TW": "用量速覽", ja: "使用量の概要" };
 const pages = [
@@ -39,7 +39,7 @@ const pages = [
 // what pluginpage.go's pagePolicy sends, for this host: the page's folder
 // under each scheme the window is served on
 const policy = (tok) => {
-  const dir = `magpie.test/_magpie/plugin/${tok}/`;
+  const dir = `starling.test/_starling/plugin/${tok}/`;
   const own = `wails://${dir} http://${dir} https://${dir}`;
   return [
     "sandbox allow-scripts", "default-src 'none'", `script-src ${own}`, `style-src ${own} 'unsafe-inline'`,
@@ -49,23 +49,23 @@ const policy = (tok) => {
 };
 
 // a page that tries every way out it has, and tells the window what came
-// of each (its message has no magpie:1, so the window's bridge ignores it)
-const PROBE_HTML = `<!doctype html><meta charset="utf-8"><script src="_magpie/bridge.js"></script><script src="probe.js"></script><style>.own { border-radius: 2px; }</style><h1>probe</h1><p id="p">probe</p><button id="b">b</button><button class="own">o</button>`;
+// of each (its message has no starling:1, so the window's bridge ignores it)
+const PROBE_HTML = `<!doctype html><meta charset="utf-8"><script src="_starling/bridge.js"></script><script src="probe.js"></script><style>.own { border-radius: 2px; }</style><h1>probe</h1><p id="p">probe</p><button id="b">b</button><button class="own">o</button>`;
 const PROBE_JS = `(async () => {
   const out = {};
-  await magpie.ready;
+  await starling.ready;
   try { const r = await fetch("/api/state?probe=1"); out.fetch = "status " + r.status; } catch (e) { out.fetch = "refused"; }
   try { out.storage = typeof localStorage.length; } catch (e) { out.storage = "refused"; }
   try { out.cookie = document.cookie; } catch (e) { out.cookie = "refused"; }
   try { out.top = String(parent.document.title); } catch (e) { out.top = "refused"; }
-  try { await magpie.read("usage:summary"); out.read = "given"; } catch (e) { out.read = e.message; }
-  try { await magpie.read("providers:list"); out.read2 = "given"; } catch (e) { out.read2 = e.message; }
-  // what the page left unstyled is magpie's; what it styled is its own
+  try { await starling.read("usage:summary"); out.read = "given"; } catch (e) { out.read = e.message; }
+  try { await starling.read("providers:list"); out.read2 = "given"; } catch (e) { out.read2 = e.message; }
+  // what the page left unstyled is starling's; what it styled is its own
   const cs = (q) => getComputedStyle(document.querySelector(q));
   out.look = { bg: cs("html").backgroundColor, fg: cs("body").color, font: cs("body").fontFamily, h1: cs("h1").fontSize, button: cs("#b").borderRadius, own: cs(".own").borderRadius };
   parent.postMessage({ probe: out }, "*");
 })();`;
-const BROKEN_HTML = `<!doctype html><meta charset="utf-8"><script src="_magpie/bridge.js"></script><script src="app.js"></script><p id="ok">drawn</p>`;
+const BROKEN_HTML = `<!doctype html><meta charset="utf-8"><script src="_starling/bridge.js"></script><script src="app.js"></script><p id="ok">drawn</p>`;
 
 function server(lang, seen, plugins) {
   return async (route) => {
@@ -96,14 +96,14 @@ function server(lang, seen, plugins) {
     if (url.pathname === "/api/plugins/market") return json({ listings: [], state: plugins });
     if (url.pathname === "/api/plugins/listings") return json({ listings: [] });
     if (url.pathname.startsWith("/api/")) return json({});
-    const m = url.pathname.match(/^\/_magpie\/plugin\/([0-9a-f]{32})\/(.+)$/);
+    const m = url.pathname.match(/^\/_starling\/plugin\/([0-9a-f]{32})\/(.+)$/);
     if (m) {
       const [, tok, rel] = m;
       const headers = { "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "Cache-Control": "no-cache" };
       if (tok !== OPEN) headers["Content-Security-Policy"] = policy(tok);
       const type = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml" }[path.extname(rel)];
       let body;
-      if (rel === "_magpie/bridge.js") body = await fs.readFile(bridge);
+      if (rel === "_starling/bridge.js") body = await fs.readFile(bridge);
       else if (tok === GLANCE) body = await fs.readFile(path.join(example, rel)).catch(() => null);
       else if ((tok === PROBE || tok === OPEN) && rel === "index.html") body = PROBE_HTML;
       else if ((tok === PROBE || tok === OPEN) && rel === "probe.js") body = PROBE_JS;
@@ -112,7 +112,7 @@ function server(lang, seen, plugins) {
       if (body == null) return route.fulfill({ status: 404, body: "" });
       return route.fulfill({ status: 200, headers: { ...headers, "Content-Type": type }, body });
     }
-    if (url.host !== "magpie.test") return route.fulfill({ status: 404, body: "" });
+    if (url.host !== "starling.test") return route.fulfill({ status: 404, body: "" });
     const file = path.join(assets, url.pathname === "/" ? "index.html" : url.pathname);
     const contentType = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".png": "image/png" }[path.extname(file)];
     try { await route.fulfill({ body: await fs.readFile(file), contentType }); } catch { await route.fulfill({ status: 404, body: "" }); }
@@ -120,8 +120,8 @@ function server(lang, seen, plugins) {
 }
 
 const plugins = { bun: true, bunVersion: "1.3.0", plugins: [
-  { spec: "/x/magpie-usage-glance", providers: [], moved: [], inMagpieOnly: true, page: { title: "Usage glance", reads: ["usage:summary", "providers:list"] } },
-  { spec: "/x/quiet-page", off: true, providers: [], moved: [], inMagpieOnly: true, page: { title: "Quiet", reads: [] } },
+  { spec: "/x/magpie-usage-glance", providers: [], moved: [], inStarlingOnly: true, page: { title: "Usage glance", reads: ["usage:summary", "providers:list"] } },
+  { spec: "/x/quiet-page", off: true, providers: [], moved: [], inStarlingOnly: true, page: { title: "Quiet", reads: [] } },
 ] };
 
 const frameOf = (page, tok) => page.frames().find((f) => f.url().includes(tok));
@@ -145,7 +145,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         page.on("pageerror", (e) => errors.push(e.message));
         const seen = { api: [], reads: [], options: [] };
         await page.route("**/*", server(lang, seen, plugins));
-        await page.goto("http://magpie.test/");
+        await page.goto("http://starling.test/");
 
         // the sidebar's Plugins group, after the built-in pages
         const head = page.locator("#nav .nav-gl[data-plugin-pages]");
@@ -154,7 +154,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         const tabs = page.locator("#nav button[data-plugin-page]");
         assert.equal(await tabs.count(), 4, where);
         assert.equal(await page.evaluate(() => { const h = document.querySelector("#nav .nav-gl[data-plugin-pages]"); return [...h.parentElement.children].indexOf(h) > [...h.parentElement.querySelectorAll("button[data-view='plugins']")].map((b) => [...b.parentElement.children].indexOf(b))[0]; }), true, `${where}: after the built-in pages`);
-        assert.equal(await tabs.first().locator("img.nav-ic").getAttribute("src"), `/_magpie/plugin/${GLANCE}/icon.svg`, where);
+        assert.equal(await tabs.first().locator("img.nav-ic").getAttribute("src"), `/_starling/plugin/${GLANCE}/icon.svg`, where);
         // titled in the window's language, else by its title
         assert.equal(await tabs.first().locator("span").textContent(), TITLES[lang] || "Usage glance", `${where}: the tab's title`);
         if (lang === "de") {
@@ -178,7 +178,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         assert.equal(await glance.evaluate(() => document.documentElement.dataset.theme), "light", where);
         await page.evaluate(() => { document.documentElement.dataset.theme = "dark"; });
         await glance.waitForFunction(() => document.documentElement.dataset.theme === "dark");
-        assert.ok((await glance.evaluate(() => document.documentElement.style.getPropertyValue("--magpie-bg"))).length > 0, `${where}: the tokens`);
+        assert.ok((await glance.evaluate(() => document.documentElement.style.getPropertyValue("--starling-bg"))).length > 0, `${where}: the tokens`);
         await glance.locator("#hide").click();
         await glance.waitForFunction(() => document.getElementById("cost").textContent === "");
         assert.deepEqual(seen.options.map((o) => [o.spec, o.options.hideCost]), [["/x/glance", true]], `${where}: its own options`);
@@ -212,8 +212,8 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           assert.equal(probe.look.bg, win.bg, `${where}: the window's background`);
           assert.equal(probe.look.fg, win.fg, `${where}: the window's text colour`);
           assert.match(probe.look.font, /apple-system|SF Pro|system-ui/, `${where}: the window's font, not a serif`);
-          assert.equal(probe.look.h1, "20px", `${where}: magpie's heading`);
-          assert.equal(probe.look.button, "6px", `${where}: magpie's button`);
+          assert.equal(probe.look.h1, "20px", `${where}: starling's heading`);
+          assert.equal(probe.look.button, "6px", `${where}: starling's button`);
           assert.equal(probe.look.own, "2px", `${where}: the page's own rule wins`);
 
           // with the policy gone, what the frame's fetch would send is what
@@ -230,7 +230,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
           const before = seen.reads.length;
           await page.evaluate(() => {
             const f = document.createElement("iframe");
-            f.srcdoc = `<script>parent.postMessage({magpie:1,id:1,method:"read",params:{name:"usage:summary"}},"*")<\/script>`;
+            f.srcdoc = `<script>parent.postMessage({starling:1,id:1,method:"read",params:{name:"usage:summary"}},"*")<\/script>`;
             document.body.append(f);
           });
           await page.waitForTimeout(300);
@@ -270,7 +270,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         const errors = [];
         page.on("pageerror", (e) => errors.push(e.message));
         await page.route("**/*", server(lang, { api: [], reads: [], options: [] }, plugins));
-        await page.goto("http://magpie.test/?view=plugins");
+        await page.goto("http://starling.test/?view=plugins");
         const view = page.locator("#view-plugins");
         const installed = await page.evaluate(() => t("Installed"));
         await page.locator(":is(.lib-tabs .opt, .nav-s):visible", { hasText: installed }).first().click();
@@ -284,7 +284,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         if (lang !== "en") assert.ok(!(await glance.locator(".pm-page").innerText()).includes("Adds a page"), `${where}: translated`);
         // one switched off still says it
         const quiet = row("quiet-page");
-        assert.equal((await quiet.locator(".pm-page").innerText()).trim(), await tr("Adds a page to the sidebar, which reads nothing of magpie's"), where);
+        assert.equal((await quiet.locator(".pm-page").innerText()).trim(), await tr("Adds a page to the sidebar, which reads nothing of starling's"), where);
         assert.ok(await view.evaluate((v) => v.scrollWidth <= v.clientWidth + 1), `${where}: fits`);
         // nothing drawn with a coloured left border
         const borders = await view.locator(".pm-row *").evaluateAll((els) => els.filter((e) => { const s = getComputedStyle(e); return parseFloat(s.borderLeftWidth) > 0 && s.borderLeftStyle !== "none" && parseFloat(s.borderRightWidth) === 0; }).length);

@@ -11,21 +11,21 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// Signing in to an account removed from magpie shows it again before the
+// Signing in to an account removed from starling shows it again before the
 // sign-in reads as done, so the window, seeing it done, finds the account
 // listed rather than saying it can't list it (TestClaudeTeamSeatBesidePersonal
 // found it missing on macOS in #1046's CI). Each way a sign-in finishes is
-// checked: magpie's own callback (Codex), an agent's login command run by
-// magpie (Claude) and a plugin's.
+// checked: starling's own callback (Codex), an agent's login command run by
+// starling (Claude) and a plugin's.
 func TestSignInDoneOnceTheAccountIsBack(t *testing.T) {
 	for _, c := range []struct {
 		agent string
-		// setUp signs in to agent, which is then removed from magpie
+		// setUp signs in to agent, which is then removed from starling
 		setUp func(t *testing.T)
 		// signIn starts the sign-in again, and finish does what the
 		// browser, or the code its page shows, does then
@@ -50,7 +50,7 @@ func TestSignInDoneOnceTheAccountIsBack(t *testing.T) {
 			fakeClaudeLogin(t, fakeClaudeAccount{email: "new@example.com", name: "New", plan: "max", refresh: "sk-ant-ort01-new"}, "", true)
 			claudeCodeSignIn(t, home, time.Now().Add(time.Hour))
 			writeFile(t, filepath.Join(home, ".claude.json"), map[string]any{"oauthAccount": map[string]any{"emailAddress": "old@example.com"}})
-			// the account Claude Code is on, as chongyun keeps it: it does
+			// the account Claude Code is on, as starling keeps it: it does
 			// not read Claude Code's own files to find out which one that is
 			claudeRemember(t, home)
 		},
@@ -67,7 +67,7 @@ func TestSignInDoneOnceTheAccountIsBack(t *testing.T) {
 		setUp: func(t *testing.T) {
 			bun := testenv.Bun(t)
 			claudeHome(t)
-			t.Setenv("MAGPIE_BUN", bun)
+			t.Setenv("STARLING_BUN", bun)
 			t.Cleanup(plugin.Settle)
 			ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 			defer cancel()

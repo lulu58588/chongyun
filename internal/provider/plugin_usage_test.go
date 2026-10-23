@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // A plugin's accounts show their allowance as the built-ins' do: beside
@@ -20,7 +20,7 @@ import (
 func TestPluginUsage(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
@@ -84,7 +84,7 @@ func TestPluginUsage(t *testing.T) {
 			t.Fatalf("%s: the key's usage error = %q (%v)", agent, e, u)
 		}
 		// the plugin's own words are said on the card, not only hovered
-		// (aqiu817/magpie-sensenova#1); a clean reading is no error of it
+		// (aqiu817/starling-sensenova#1); a clean reading is no error of it
 		if !u["API key"].PluginError || q.PluginError {
 			t.Fatalf("%s: plugin error = %v, a@fake's = %v", agent, u["API key"].PluginError, q.PluginError)
 		}
@@ -184,7 +184,7 @@ func TestPluginUsage(t *testing.T) {
 func TestPluginUsageLapse(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
@@ -245,7 +245,7 @@ func TestPluginUsageLapse(t *testing.T) {
 func TestPluginUsageReadOlderThanAnswer(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	asked, answer := make(chan struct{}), make(chan int)
 	vendor := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -333,7 +333,7 @@ func TestPluginUsageReadOlderThanAnswer(t *testing.T) {
 func TestPluginAccountModels(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
@@ -389,7 +389,7 @@ func TestMovedProviderName(t *testing.T) {
 func TestPluginModelsSayExpired(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // HistoricalWindowHolds reckons each window at its last reading in

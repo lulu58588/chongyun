@@ -8,12 +8,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
-// magpie accounts lists, switches and forgets a plugin's accounts by its
+// starling accounts lists, switches and forgets a plugin's accounts by its
 // provider's id, as a built-in subscription's.
 func TestAccountsOfAPlugin(t *testing.T) {
 	bun := testenv.Bun(t)
@@ -23,7 +23,7 @@ func TestAccountsOfAPlugin(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
 	t.Setenv("CLAUDE_CONFIG_DIR", filepath.Join(home, ".claude"))
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Cleanup(plugin.Settle)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
@@ -53,7 +53,7 @@ func TestAccountsOfAPlugin(t *testing.T) {
 	}
 	rows := list()
 	if len(rows) != 2 || !rows[0].Active || rows[1].Active || rows[0].User != "API key …1111" || rows[1].User != "API key …2222" {
-		t.Fatalf("chongyun accounts fakeco = %+v", rows)
+		t.Fatalf("starling accounts fakeco = %+v", rows)
 	}
 	second := rows[1].User
 	if _, err := said(t, func() error { return accountsCmd([]string{"accounts", "switch", "fakeco", second}) }); err != nil {

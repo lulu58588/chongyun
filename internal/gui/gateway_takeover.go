@@ -9,31 +9,31 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
-// The Gateway page's button (leslie_luo 报告): with an older magpie
+// The Gateway page's button (leslie_luo 报告): with an older starling
 // keeping the gateway's port, it quits that one and this one serves the
 // gateway at once; otherwise it restarts the gateway this one serves, or
-// starts it when none does. The page said only "quit that chongyun", and the
+// starts it when none does. The page said only "quit that starling", and the
 // user couldn't find which one it was. Only a process whose program is a
-// magpie (proc.IsMagpie, by the pid listening on the port and its path) is
+// starling (proc.IsStarling, by the pid listening on the port and its path) is
 // ever ended; anything else is said, never touched.
 
 // gatewayFixJSON is how a take-over or a restart went: what stood in the
 // way by a reason the page says in its language, and the process it was.
 type gatewayFixJSON struct {
 	OK bool `json:"ok"`
-	// Reason: "not-magpie" (the port is another program's), "container"
-	// (a container's or a VM's: the magpie answering runs in it, which
+	// Reason: "not-starling" (the port is another program's), "container"
+	// (a container's or a VM's: the starling answering runs in it, which
 	// its own tools stop — docker stop, OrbStack's window), "unseen" (no
 	// process of this user's listens: another user's, an administrator's),
-	// "denied" (a magpie this user may not end), "stuck" (it didn't end),
-	// "respawned" (something started a magpie on the port again at once:
+	// "denied" (a starling this user may not end), "stuck" (it didn't end),
+	// "respawned" (something started a starling on the port again at once:
 	// a LaunchAgent, a systemd unit, a scheduled task), "taken" (the
 	// gateway couldn't listen: another program has the port), "other"
-	// (a magpie not older than this one serves; quit it there), "error"
+	// (a starling not older than this one serves; quit it there), "error"
 	Reason  string `json:"reason,omitempty"`
 	PID     int    `json:"pid,omitempty"`
 	Path    string `json:"path,omitempty"`
@@ -51,7 +51,7 @@ func gatewayFixRoutes(mux *http.ServeMux) {
 	})
 }
 
-// How long a magpie asked to quit is given before it is ended at once,
+// How long a starling asked to quit is given before it is ended at once,
 // that again, and the gateway here to answer; vars for the tests.
 var (
 	quitWait  = 5 * time.Second
@@ -59,7 +59,7 @@ var (
 	startWait = 5 * time.Second
 )
 
-// takeOverGateway quits the magpie serving the gateway, when there is one,
+// takeOverGateway quits the starling serving the gateway, when there is one,
 // and serves it here.
 func takeOverGateway() gatewayFixJSON {
 	gatewayMu.Lock()
@@ -68,7 +68,7 @@ func takeOverGateway() gatewayFixJSON {
 		return gatewayFixJSON{OK: true}
 	}
 	if o := gateway.ServedBy(); o.Running {
-		if out := quitMagpieOnPort(o.Version); !out.OK {
+		if out := quitStarlingOnPort(o.Version); !out.OK {
 			return out
 		}
 	}
@@ -76,7 +76,7 @@ func takeOverGateway() gatewayFixJSON {
 }
 
 // restartGateway stops the gateway this process serves and starts it
-// again; with none served here and none answering, it starts it. A magpie
+// again; with none served here and none answering, it starts it. A starling
 // serving it elsewhere is left alone: that is the take-over's to quit.
 func restartGateway() gatewayFixJSON {
 	gatewayMu.Lock()
@@ -120,8 +120,8 @@ func startHere() gatewayFixJSON {
 			}
 			out.PID = pid
 			out.Path, _ = proc.Executable(pid)
-			if proc.IsMagpie(out.Path) {
-				// a magpie took it back as soon as the other quit
+			if proc.IsStarling(out.Path) {
+				// a starling took it back as soon as the other quit
 				out.Reason = "respawned"
 			} else if proc.IsForwarder(out.Path) {
 				out.Reason = "container"
@@ -132,10 +132,10 @@ func startHere() gatewayFixJSON {
 	return out
 }
 
-// quitMagpieOnPort ends the magpie (of version, as it says) listening on
-// the gateway's port, once its program is checked to be magpie's, and
+// quitStarlingOnPort ends the starling (of version, as it says) listening on
+// the gateway's port, once its program is checked to be starling's, and
 // waits until the port is let go.
-func quitMagpieOnPort(version string) gatewayFixJSON {
+func quitStarlingOnPort(version string) gatewayFixJSON {
 	port := gateway.Port()
 	n, _ := strconv.Atoi(port)
 	out := gatewayFixJSON{Port: port, Version: version}
@@ -159,8 +159,8 @@ func quitMagpieOnPort(version string) gatewayFixJSON {
 			out.Reason, out.Error = "unseen", err.Error()
 			return out
 		}
-		if !proc.IsMagpie(path) {
-			out.Reason = "not-magpie"
+		if !proc.IsStarling(path) {
+			out.Reason = "not-starling"
 			if proc.IsForwarder(path) {
 				out.Reason = "container"
 			}

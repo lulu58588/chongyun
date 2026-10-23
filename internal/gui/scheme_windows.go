@@ -6,19 +6,19 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
-// registerScheme makes chongyun:// links open this executable. There is no
+// registerScheme makes starling:// links open this executable. There is no
 // installer to do it, so every start points the per-user handler here.
 func registerScheme() error {
 	exe, err := os.Executable()
 	if err != nil {
 		return err
 	}
-	k, _, err := registry.CreateKey(registry.CURRENT_USER, `Software\Classes\chongyun`, registry.SET_VALUE)
+	k, _, err := registry.CreateKey(registry.CURRENT_USER, `Software\Classes\starling`, registry.SET_VALUE)
 	if err != nil {
 		return err
 	}
 	defer k.Close()
-	_ = k.SetStringValue("", "URL:chongyun")
+	_ = k.SetStringValue("", "URL:starling")
 	_ = k.SetStringValue("URL Protocol", "")
 	icon, _, err := registry.CreateKey(k, `DefaultIcon`, registry.SET_VALUE)
 	if err == nil {

@@ -6,17 +6,17 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// A chongyun-models.json that doesn't parse is kept aside before magpie
+// A starling-models.json that doesn't parse is kept aside before starling
 // writes its list over the file or takes the file away: Keep (#1450) can
 // hold nothing of a file it can't read, so the keys the user added by hand
 // would end with no copy — the rule the other state files were given
 // (#2263), which this file missed.
 func TestUnparsedCodexCatalogKeptAside(t *testing.T) {
 	home, _ := codexHome(t, "", "")
-	list := filepath.Join(home, ".codex", "chongyun-models.json")
+	list := filepath.Join(home, ".codex", "starling-models.json")
 	cx := codex(home)
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
@@ -38,14 +38,14 @@ func TestUnparsedCodexCatalogKeptAside(t *testing.T) {
 		t.Fatalf("the unparsed list was written over with no copy kept")
 	}
 
-	// the list broken again, and magpie steps out: the file goes, but a
+	// the list broken again, and starling steps out: the file goes, but a
 	// copy of what it held stays
 	writeFile(t, list, b[:len(b)-2])
 	if err := cx.Fields[0].Set(""); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(list); err == nil {
-		t.Error("a list chongyun steps out of stayed")
+		t.Error("a list starling steps out of stayed")
 	}
 	if bad, _ := filepath.Glob(list + ".bad-*"); len(bad) == 0 {
 		t.Fatalf("the unparsed list was removed with no copy kept")

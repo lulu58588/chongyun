@@ -86,7 +86,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     t.after(() => browser.close());
     const page = await (await browser.newContext()).newPage();
     await page.route("**/*", serve("en", []));
-    await page.goto("http://magpie.test/?view=providers");
+    await page.goto("http://starling.test/?view=providers");
     await page.waitForFunction(() => typeof curlOf === "function");
     for (const [file, w] of Object.entries(want)) {
       const text = await fs.readFile(path.join(fixtures, file), "utf8");
@@ -132,7 +132,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         return e.defaultPrevented;
       }, text);
 
-      await page.goto("http://magpie.test/?view=providers");
+      await page.goto("http://starling.test/?view=providers");
       await page.locator("#addProvider").click();
       await page.locator("#addSheet .custom-foot .custom").click();
       await baseURL.waitFor();

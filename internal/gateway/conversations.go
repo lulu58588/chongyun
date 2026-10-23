@@ -9,17 +9,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/redact"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/redact"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 const conversationBodyMax = 8 << 20
 
 // withGatewaySession tells the client the session its conversation is
-// recorded under. Only a session the client named is recorded: magpie never
+// recorded under. Only a session the client named is recorded: starling never
 // makes one up, as text under an id nothing lists can't be read (#1355).
 func withGatewaySession(w http.ResponseWriter, r *http.Request) {
 	if id := sessionOf(r.Header); id != "" {
@@ -67,7 +67,7 @@ func recordConversation(w http.ResponseWriter, r *http.Request, proto provider.P
 	at := time.Now()
 	input := append([]byte(nil), body[:min(len(body), conversationBodyMax)]...)
 	sink := &conversationWriter{captureResponseWriter: &captureResponseWriter{
-		ResponseWriter: w, full: &spool{limit: conversationBodyMax, pattern: "magpie-conversation-*"},
+		ResponseWriter: w, full: &spool{limit: conversationBodyMax, pattern: "starling-conversation-*"},
 	}}
 	return sink, func() {
 		defer sink.full.discard()

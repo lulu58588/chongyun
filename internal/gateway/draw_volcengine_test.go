@@ -12,7 +12,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // arkImages stands in for Volcengine Ark's images API
@@ -79,7 +79,7 @@ func arked(t *testing.T) (*Server, *arkImages) {
 }
 
 // Ark watermarks every image unless told not to, takes no n, and takes a
-// ratio only in the prompt: magpie sends watermark false, asks once per
+// ratio only in the prompt: starling sends watermark false, asks once per
 // image, and sends a ratio as the doc's size for it (JL 报告).
 func TestArkDrawsWithoutWatermarkOncePerImage(t *testing.T) {
 	s, a := arked(t)

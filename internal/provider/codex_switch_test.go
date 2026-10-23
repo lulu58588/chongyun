@@ -141,7 +141,7 @@ func TestClaudeSwitchedWhenSpent(t *testing.T) {
 		t.Fatalf("Claude Code is signed in with %v", o)
 	}
 	b, _ := os.ReadFile(profile)
-	// chongyun puts the sign-in where Claude Code keeps it (the credentials
+	// starling puts the sign-in where Claude Code keeps it (the credentials
 	// file above) and says whose it is in the profile beside it, so Claude
 	// Code is signed in to the account it switched to.
 	if !strings.Contains(string(b), "b@example.com") {

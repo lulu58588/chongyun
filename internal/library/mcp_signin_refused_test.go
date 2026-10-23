@@ -5,14 +5,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/mcpauth"
-	"github.com/lulu58588/chongyun/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/starling/internal/mcpauth"
+	"github.com/lulu58588/starling/internal/mcpauth/mcpauthtest"
 )
 
 // Xichun123 (#1619): Figma's remote MCP server (mcp.figma.com/mcp) admits
-// only the clients it lists, and its authorization server answers magpie's
+// only the clients it lists, and its authorization server answers starling's
 // dynamic client registration 403 with the bare body "Forbidden". The
-// Library's Sign in said "registering magpie with the server's sign-in
+// Library's Sign in said "registering starling with the server's sign-in
 // failed (403): Forbidden", which reads as a fault to retry. It now says the
 // server admits only its listed apps and that each agent signs in itself,
 // and the agents given the server keep its own address, where they do.

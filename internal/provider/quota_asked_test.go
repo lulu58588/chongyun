@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// dialsOut has magpie's own requests go as netproxy.Install has them, and
+// dialsOut has starling's own requests go as netproxy.Install has them, and
 // tells every host dialed that isn't this machine's, never dialing it.
 func dialsOut(t *testing.T) func() []string {
 	t.Helper()
@@ -55,7 +55,7 @@ func setQuotaReads(t *testing.T, v string) {
 }
 
 // #1518 (RooobinYe): with Settings → Usage → Allowance reads at "When I
-// ask", nothing magpie does by itself asks a vendor for an allowance —
+// ask", nothing starling does by itself asks a vendor for an allowance —
 // the switch to an account with room (CodexUsedUp), routing
 // (Allowances), the Usage page's and tray's timed reads, the menu bar
 // (Quotas) — and each shows the reading kept from the last time, as of
@@ -103,7 +103,7 @@ func TestAllowancesReadOnlyWhenAsked(t *testing.T) {
 	t.Cleanup(restart)
 	bg := context.Background()
 
-	// read once, as magpie does by itself, before the setting
+	// read once, as starling does by itself, before the setting
 	if CodexUsedUp(bg) {
 		t.Fatal("used up at 37%")
 	}
@@ -111,7 +111,7 @@ func TestAllowancesReadOnlyWhenAsked(t *testing.T) {
 		t.Fatalf("ChatGPT asked %d times, want 1", n)
 	}
 
-	// then allowances read only when asked, and magpie started again (at
+	// then allowances read only when asked, and starling started again (at
 	// login, before the proxy app)
 	setQuotaReads(t, "asked")
 	t.Cleanup(func() { setQuotaReads(t, "") })
@@ -134,7 +134,7 @@ func TestAllowancesReadOnlyWhenAsked(t *testing.T) {
 		t.Fatalf("nobody asked, and ChatGPT was asked %d more times", n-1)
 	}
 	if d := out(); len(d) > 0 {
-		t.Fatalf("nobody asked, and chongyun dialed %v", d)
+		t.Fatalf("nobody asked, and starling dialed %v", d)
 	}
 
 	// the vendor turns the account away for its quota: read, asked or not
@@ -156,7 +156,7 @@ func TestAllowancesReadOnlyWhenAsked(t *testing.T) {
 	}
 }
 
-// Automatic, as before: magpie reads by itself.
+// Automatic, as before: starling reads by itself.
 func TestAllowancesReadByThemselvesByDefault(t *testing.T) {
 	signIn(t)
 	var asked atomic.Int32
@@ -178,7 +178,7 @@ func TestAllowancesReadByThemselvesByDefault(t *testing.T) {
 	t.Cleanup(forget)
 	LoginUsage(context.Background(), "codex")
 	if asked.Load() != 1 {
-		t.Fatal("chongyun no longer reads an allowance by itself while set to")
+		t.Fatal("starling no longer reads an allowance by itself while set to")
 	}
 }
 
@@ -195,7 +195,7 @@ func TestKeyReadsOnlyWhenAsked(t *testing.T) {
 	}
 	setQuotaReads(t, "asked")
 	t.Cleanup(func() { setQuotaReads(t, "") })
-	dialsOut(t) // magpie's own transport, which holds what nobody asked for
+	dialsOut(t) // starling's own transport, which holds what nobody asked for
 	bg := context.Background()
 	KeyBalances(bg)
 	PlanQuotas(bg)

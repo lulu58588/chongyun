@@ -51,7 +51,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const errors = [];
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", serve(lang, reads));
-      await page.goto("http://magpie.test/");
+      await page.goto("http://starling.test/");
       await page.waitForSelector("#nav button.on");
 
       // at 1024 points the pages are down the left, in their groups
@@ -156,7 +156,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const context = await browser.newContext({ viewport: { width: 900, height: 700 }, reducedMotion: "reduce" });
       const page = await context.newPage();
       await page.route("**/*", serve("en", reads));
-      await page.goto("http://magpie.test/");
+      await page.goto("http://starling.test/");
       await page.waitForSelector("#nav button.on");
       await page.waitForTimeout(2000);
       // the providers list is read once after the start, for the
@@ -175,7 +175,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const context = await browser.newContext({ viewport: { width: 1200, height: 760 } });
       const page = await context.newPage();
       await page.route("**/*", serve("en", []));
-      await page.goto("http://magpie.test/");
+      await page.goto("http://starling.test/");
       await page.waitForSelector("#nav button.on");
       await page.locator("#prefs").click();
       const box = page.locator("#side .nav-sub").first();

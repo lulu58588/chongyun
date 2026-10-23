@@ -25,8 +25,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // jevSure is how confident Jev must be of an intent for it to count.
@@ -401,7 +401,7 @@ func maskedState(text, user, reply string) (string, string, string, error) {
 }
 
 // systemOne posts body to p's System One API and returns the answer,
-// counting it in the usage as magpie's own. A gateway serving Jev is asked
+// counting it in the usage as starling's own. A gateway serving Jev is asked
 // and answers in its own way (decideAsk, decideAnswer).
 func (s *Server) systemOne(ctx context.Context, p provider.Provider, model string, body []byte) ([]byte, error) {
 	start := time.Now()
@@ -457,8 +457,8 @@ func (s *Server) postDecide(ctx context.Context, p provider.Provider, model stri
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("User-Agent", RouterAgent)
-	if p.IsRemoteMagpie() {
-		req.Header.Set("User-Agent", "magpie/"+Version)
+	if p.IsRemoteStarling() {
+		req.Header.Set("User-Agent", "starling/"+Version)
 		passOnCaller(ctx, req)
 	}
 	if via == provider.ViaVercelEval {
@@ -489,7 +489,7 @@ func (s *Server) postDecide(ctx context.Context, p provider.Provider, model stri
 // (ARNO 报告: clef模型是支持图像输入的).
 const maxSystemOneBody = 16 << 20
 
-// serveSystemOne is magpie's own System One API. The model's prefix names
+// serveSystemOne is starling's own System One API. The model's prefix names
 // the Jev provider (gptload-jev/jev-latest); the rest is what that provider
 // is asked, at its /v1/systemone. The call is a route of its own, as a
 // conversation is: the Routing view and the day's jsonl would otherwise

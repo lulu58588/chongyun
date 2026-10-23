@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // The router strategy point's groups with plugins/groups on and off: on, a
 // group of the user's own is listed and answers; off, in the process
-// serving the gateway, it is neither, while the group magpie found for a
+// serving the gateway, it is neither, while the group starling found for a
 // model two providers serve is listed and answers either way.
 func TestGroupsOnAndOff(t *testing.T) {
 	fresh(t)

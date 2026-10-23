@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A request that only reads builds the catalog once for all its look-ups
@@ -53,7 +53,7 @@ func TestHoldBuildsOnce(t *testing.T) {
 func TestHoldKeptForTheNextRequest(t *testing.T) {
 	defer func(d time.Duration) { heldFor = d }(heldFor)
 	heldFor = time.Minute // a loaded machine's pause between requests isn't the change
-	t.Setenv("MAGPIE_HOLD_TEST", "1")
+	t.Setenv("STARLING_HOLD_TEST", "1")
 	n := 0
 	build := func() int { n++; return n }
 	for range 5 {
@@ -72,7 +72,7 @@ func TestHoldKeptForTheNextRequest(t *testing.T) {
 			t.Fatalf("after a write: built %d times, want 2", n)
 		}
 	}()
-	t.Setenv("MAGPIE_HOLD_TEST", "2")
+	t.Setenv("STARLING_HOLD_TEST", "2")
 	func() {
 		defer Hold()()
 		if heldOf("t-next", build); n != 3 {
@@ -87,7 +87,7 @@ func TestHoldKeptForTheNextRequest(t *testing.T) {
 // What is held across requests is built again when anything it was built
 // from may have moved: a write that only tells filememo (settings.Save, an
 // account's file), the providers' or the settings' file written by
-// another process (the CLI's "chongyun group add"), the groups served or
+// another process (the CLI's "starling group add"), the groups served or
 // not (GateGroups, ServeGroups), and the models.dev catalog read again.
 func TestHoldKeptUntilAWrite(t *testing.T) {
 	defer func(d time.Duration) { heldFor = d }(heldFor)
@@ -140,7 +140,7 @@ func TestHoldKeptUntilAWrite(t *testing.T) {
 
 // A change the plugin host tells (a sign-in saved, a plugin added) drops
 // what a request holds before it returns: a SyncCatalog running held the
-// plugins as they were before `chongyun plugin login` saved its account,
+// plugins as they were before `starling plugin login` saved its account,
 // and the look at the accounts right after it found none (#2449). The
 // hooks told in the background are left out, so only what goes at once
 // is looked at.
@@ -354,4 +354,4 @@ func TestHeldGroupsAreTheCallers(t *testing.T) {
 	}
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。

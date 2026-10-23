@@ -9,18 +9,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/starling/internal/gateway"
 )
 
 // sameGroup compares two values of a field, one of them read back from the
 // agent's own settings where Claude Code's [1m] mark rides on the group's
-// id: the marked one is the group magpie set, not another group — the
+// id: the marked one is the group starling set, not another group — the
 // gateway serves either (#750's comparison, with the mark on one side).
 func TestSameGroupTakesTheOneMMarkOff(t *testing.T) {
 	for _, pair := range [][2]string{
 		{"group/auto-gpt-5", "group/auto-gpt-5[1m]"},
 		{"group/auto-gpt-5[1m]", "group/auto-gpt-5"},
-		{"group/auto-gpt-5[1m]", "magpie/group/auto-gpt-5"},
+		{"group/auto-gpt-5[1m]", "starling/group/auto-gpt-5"},
 	} {
 		if !sameGroup(pair[0], pair[1]) {
 			t.Errorf("sameGroup(%q, %q) = false", pair[0], pair[1])
@@ -35,7 +35,7 @@ func TestSameGroupTakesTheOneMMarkOff(t *testing.T) {
 }
 
 // Something else rewrote Codex's config: the base URL gone while the model
-// is still magpie's is unwired, and setting it again wires it back.
+// is still starling's is unwired, and setting it again wires it back.
 func TestCodexDriftUnwired(t *testing.T) {
 	home, read := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "")
 	cx := codex(home)
@@ -58,7 +58,7 @@ func TestCodexDriftUnwired(t *testing.T) {
 	}
 }
 
-// A magpie model replaced by one of the agent's own is drift; one magpie
+// A starling model replaced by one of the agent's own is drift; one starling
 // model for another (the agent's own picker) isn't. Keep forgets it.
 func TestDriftReplaced(t *testing.T) {
 	home, read := codexHome(t, "", "")
@@ -75,7 +75,7 @@ func TestDriftReplaced(t *testing.T) {
 	if err := cx.Reapply(); err != nil {
 		t.Fatal(err)
 	}
-	if cfg := read(); !strings.Contains(cfg, `model = "fake/m1"`) || !strings.Contains(cfg, `model_provider = "magpie"`) || cx.Drift() != nil {
+	if cfg := read(); !strings.Contains(cfg, `model = "fake/m1"`) || !strings.Contains(cfg, `model_provider = "starling"`) || cx.Drift() != nil {
 		t.Fatalf("reapplied:\n%s", cfg)
 	}
 	os.WriteFile(filepath.Join(home, ".codex", "config.toml"), []byte("model = \"gpt-5.5\"\n"), 0o644)
@@ -85,9 +85,9 @@ func TestDriftReplaced(t *testing.T) {
 	}
 }
 
-// A Codex used since magpie set it, none of whose requests reached the
-// gateway, runs round magpie: bypassed, until a request arrives or it is
-// set again. A use while magpie wasn't up says nothing.
+// A Codex used since starling set it, none of whose requests reached the
+// gateway, runs round starling: bypassed, until a request arrives or it is
+// set again. A use while starling wasn't up says nothing.
 func TestDriftBypassed(t *testing.T) {
 	home, _ := codexHome(t, "", "")
 	cx := codex(home)
@@ -126,11 +126,11 @@ func TestDriftBypassed(t *testing.T) {
 	started = time.Now()
 	prompt(time.Now().Add(-5 * time.Minute))
 	if d := cx.Drift(); d != nil {
-		t.Fatalf("used while chongyun was down: %+v", d)
+		t.Fatalf("used while starling was down: %+v", d)
 	}
 }
 
-// A profile that sets its own provider wins over magpie's top level.
+// A profile that sets its own provider wins over starling's top level.
 func TestCodexDriftProfile(t *testing.T) {
 	home, read := codexHome(t, "", "")
 	cx := codex(home)
@@ -143,8 +143,8 @@ func TestCodexDriftProfile(t *testing.T) {
 	}
 }
 
-// Every agent magpie wires through the gateway says when its wiring was
-// taken out behind magpie's back — the gateway's URL swapped for another —
+// Every agent starling wires through the gateway says when its wiring was
+// taken out behind starling's back — the gateway's URL swapped for another —
 // and setting it again puts it back.
 func TestDriftUnwiredEveryAgent(t *testing.T) {
 	home, _ := codexHome(t, "", "")
@@ -170,7 +170,7 @@ func TestDriftUnwiredEveryAgent(t *testing.T) {
 			continue
 		}
 		t.Run(a.ID, func(t *testing.T) {
-			// the field that takes one of magpie's models
+			// the field that takes one of starling's models
 			var f Field
 			want := ""
 			for _, g := range a.Fields {
@@ -180,16 +180,16 @@ func TestDriftUnwiredEveryAgent(t *testing.T) {
 					}
 				}
 			}
-			// or the one that puts it on magpie as a whole (Claude Desktop)
+			// or the one that puts it on starling as a whole (Claude Desktop)
 			for _, g := range a.Fields {
 				for _, o := range g.Options(a.Values()) {
-					if o.Value == magpieID && want == "" {
+					if o.Value == starlingID && want == "" {
 						f, want = g, o.Value
 					}
 				}
 			}
 			if want == "" {
-				t.Fatal("no field takes chongyun's models")
+				t.Fatal("no field takes starling's models")
 			}
 			if err := a.Apply(f.Key, want); err != nil {
 				t.Fatal(err)
@@ -229,7 +229,7 @@ func TestDriftUnwiredEveryAgent(t *testing.T) {
 }
 
 // Claude Code's managed settings win over the user's: a base URL there is
-// drift magpie can only point out.
+// drift starling can only point out.
 func TestClaudeDriftManaged(t *testing.T) {
 	home, _ := codexHome(t, "", "")
 	managed := claudeManaged
@@ -246,8 +246,8 @@ func TestClaudeDriftManaged(t *testing.T) {
 }
 
 // The Codex app writes no prompt log, but it logs each model request it
-// opens: one sent elsewhere, or refused because magpie wasn't running, is
-// drift; one that reached magpie isn't.
+// opens: one sent elsewhere, or refused because starling wasn't running, is
+// drift; one that reached starling isn't.
 func TestCodexDriftReached(t *testing.T) {
 	home, _ := codexHome(t, `{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, "")
 	cx := codex(home)
@@ -281,15 +281,15 @@ func TestCodexDriftReached(t *testing.T) {
 	}
 	log("INFO", "connecting to websocket: "+ws)
 	if d := cx.Drift(); d != nil {
-		t.Fatalf("reached chongyun: %+v", d)
+		t.Fatalf("reached starling: %+v", d)
 	}
 }
 
-// A magpie on a port of its own (magpie-dev) runs beside the installed one:
+// A starling on a port of its own (starling-dev) runs beside the installed one:
 // an agent that one wired to its gateway is not drift here, while one wired
 // to neither still is.
-func TestDriftInstalledMagpie(t *testing.T) {
-	t.Setenv("MAGPIE_ADDR", "127.0.0.1:3426")
+func TestDriftInstalledStarling(t *testing.T) {
+	t.Setenv("STARLING_ADDR", "127.0.0.1:3426")
 	home, _ := codexHome(t, "", "")
 	cx := codex(home)
 	if err := cx.Apply("model", "fake/m1"); err != nil {
@@ -298,7 +298,7 @@ func TestDriftInstalledMagpie(t *testing.T) {
 	cfg := filepath.Join(home, ".codex", "config.toml")
 	os.WriteFile(cfg, []byte("openai_base_url = \"http://"+gateway.DefaultAddr+gateway.CodexPath+"\"\nmodel = \"fake/m1\"\n"), 0o644)
 	if d := cx.Drift(); d != nil {
-		t.Fatalf("the installed chongyun's wiring taken for drift: %+v", d)
+		t.Fatalf("the installed starling's wiring taken for drift: %+v", d)
 	}
 	os.WriteFile(cfg, []byte("openai_base_url = \"http://127.0.0.1:9999"+gateway.CodexPath+"\"\nmodel = \"fake/m1\"\n"), 0o644)
 	if d := cx.Drift(); d == nil || d.Kind != "unwired" {

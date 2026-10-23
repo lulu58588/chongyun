@@ -7,17 +7,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// On a real WSL: MAGPIE_WSL_TEST_DISTRO names a throwaway distro with a
+// On a real WSL: STARLING_WSL_TEST_DISTRO names a throwaway distro with a
 // ~/.codex of its own, which the test writes to.
 func TestWSLCodexLive(t *testing.T) {
-	name := os.Getenv("MAGPIE_WSL_TEST_DISTRO")
+	name := os.Getenv("STARLING_WSL_TEST_DISTRO")
 	if name == "" {
-		t.Skip("MAGPIE_WSL_TEST_DISTRO not set")
+		t.Skip("STARLING_WSL_TEST_DISTRO not set")
 	}
 	names, _ := wslList()
 	found := false
@@ -77,10 +77,10 @@ func TestWSLCodexLive(t *testing.T) {
 	if !strings.Contains(got, `model = "fake/m1"`) || !strings.Contains(got, `base_url = "`+d.base()+`/v1"`) {
 		t.Fatal("not written")
 	}
-	if !strings.Contains(before, "OPENAI_API_KEY") && !strings.Contains(got, `model_catalog_json = "`+d.Home+`/.codex/chongyun-models.json"`) {
+	if !strings.Contains(before, "OPENAI_API_KEY") && !strings.Contains(got, `model_catalog_json = "`+d.Home+`/.codex/starling-models.json"`) {
 		t.Fatal("catalog path")
 	}
-	if !strings.Contains(cat(d.Home+"/.codex/chongyun-models.json"), "fake/m1") {
+	if !strings.Contains(cat(d.Home+"/.codex/starling-models.json"), "fake/m1") {
 		t.Fatal("catalog not seen inside WSL")
 	}
 	if c := a.Check(); c != "" {

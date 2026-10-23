@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/lulu58588/chongyun/internal/gwmw"
-	"github.com/lulu58588/chongyun/internal/masking"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/gwmw"
+	"github.com/lulu58588/starling/internal/masking"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // redacted masks a request's secrets, as the settings say, before it goes
@@ -131,7 +131,7 @@ func (e maskBlocked) Error() string {
 	if e.hit.Head != "" {
 		one = e.hit.Head + "…, " + one
 	}
-	return fmt.Sprintf("chongyun held this request back: Settings › Privacy blocks %s, and it has one (%s). Nothing was sent.", e.hit.Kind, one)
+	return fmt.Sprintf("starling held this request back: Settings › Privacy blocks %s, and it has one (%s). Nothing was sent.", e.hit.Kind, one)
 }
 
 // blocked is the error for hits with a value to hold the request back

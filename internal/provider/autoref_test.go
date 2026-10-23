@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // autoRefHome is a sandbox HOME with two providers serving Claude Opus 5.5,
@@ -39,7 +39,7 @@ func autoRefHome(t *testing.T) {
 	}
 }
 
-// A group magpie found is listed as auto/<model>, the model's id as a
+// A group starling found is listed as auto/<model>, the model's id as a
 // vendor spells it (ZeroClover 报告), so a client looking the part after
 // the slash up on models.dev finds the model; its old group/auto-<slug> is
 // the same group, and a group the user made stays group/<id>.

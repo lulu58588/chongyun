@@ -4,11 +4,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // An account whose every sign-in in use was refused reads as signed out
-// on the Providers page, as magpie providers and the app say it (LeeHom on
+// on the Providers page, as starling providers and the app say it (LeeHom on
 // Discord), not as a green signed-in account.
 func TestProvidersSaySignedOut(t *testing.T) {
 	home(t)

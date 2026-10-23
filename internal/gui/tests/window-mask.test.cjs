@@ -49,7 +49,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         const browser = await (engine === "webkit" ? webkit.launch() : chromium.launch({ channel: "chromium" }));
         t.after(() => browser.close());
         const context = await browser.newContext({ viewport: { width, height: 800 }, reducedMotion: "reduce" });
-        await context.addInitScript(() => { try { if (!sessionStorage.getItem("seeded")) { localStorage.setItem("magpie.maskEmails", "1"); sessionStorage.setItem("seeded", "1"); } } catch {} });
+        await context.addInitScript(() => { try { if (!sessionStorage.getItem("seeded")) { localStorage.setItem("starling.maskEmails", "1"); sessionStorage.setItem("seeded", "1"); } } catch {} });
         const page = await context.newPage();
         page.setDefaultTimeout(5000);
         const errors = [];
@@ -57,14 +57,14 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         await page.route("**/*", serve(lang));
 
         // the Providers list
-        await page.goto("http://magpie.test/?view=providers");
+        await page.goto("http://starling.test/?view=providers");
         await page.waitForFunction(() => document.querySelector("#view-providers")?.innerText.includes("Codex"));
         await page.waitForFunction(() => document.querySelector("#view-providers .pii"));
         let text = await seen(page);
         for (const name of [...MAIL, "李雷"]) assert.ok(!text.includes(name), `${name} in sight on Providers: ${text}`);
 
         // a provider's editor, its accounts listed
-        await page.goto("http://magpie.test/?view=providers&edit=codex");
+        await page.goto("http://starling.test/?view=providers&edit=codex");
         await page.waitForFunction((m) => [...document.querySelectorAll(".pii")].filter((e) => m.includes(e.dataset.raw)).length >= 2, MAIL);
         text = await seen(page);
         for (const name of MAIL) assert.ok(!text.includes(name), `${name} in sight in the editor: ${text}`);

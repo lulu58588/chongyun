@@ -4,9 +4,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // visionOff has no model describe images to one that can't see them, so an
@@ -39,7 +39,7 @@ func TestDescribedModelTakesImages(t *testing.T) {
 		t.Fatal(err)
 	}
 	plain := func() catalog.Model {
-		for _, m := range magpieModels("dsh") {
+		for _, m := range starlingModels("dsh") {
 			if m.ID == "v/plain" {
 				return m
 			}

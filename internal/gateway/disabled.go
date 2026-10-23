@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Disabled models (#1867, provider/disabled.go): a model the user turned
@@ -19,19 +19,19 @@ import (
 
 // disabledError is what a request for a disabled model is told.
 func disabledError(id, pat string) string {
-	return fmt.Sprintf("model %s is disabled in chongyun (it matches %q in Settings › Models › Disabled models); enable it there or with `chongyun model enable %s`. Only requests through chongyun are refused", id, pat, pat)
+	return fmt.Sprintf("model %s is disabled in starling (it matches %q in Settings › Models › Disabled models); enable it there or with `starling model enable %s`. Only requests through starling are refused", id, pat, pat)
 }
 
 // unknownDisabledError is what every request is told while settings.json
 // can't be read and no list of disabled models was read before it.
 func unknownDisabledError(id string) string {
-	return fmt.Sprintf("model %s is disabled in chongyun for now: settings.json can't be read, so chongyun doesn't know which models are disabled; fix or restore settings.json", id)
+	return fmt.Sprintf("model %s is disabled in starling for now: settings.json can't be read, so starling doesn't know which models are disabled; fix or restore settings.json", id)
 }
 
 // groupDisabledError is what a request for a group whose every model is
 // disabled is told.
 func groupDisabledError(id string, g provider.Group, off []string) string {
-	return fmt.Sprintf("model %s is disabled in chongyun: every model of the routing group %s is (%s); enable one in Settings › Models › Disabled models or with `chongyun model enable`. Only requests through chongyun are refused", id, g.Name, strings.Join(off, ", "))
+	return fmt.Sprintf("model %s is disabled in starling: every model of the routing group %s is (%s); enable one in Settings › Models › Disabled models or with `starling model enable`. Only requests through starling are refused", id, g.Name, strings.Join(off, ", "))
 }
 
 // modelOff is the refusal for p's model, resolved, as id names it to the
@@ -77,7 +77,7 @@ func idOff(id string) (string, bool) {
 	}
 	// a bare id that resolves to nothing because the catalog left it out:
 	// one of the providers' models the user disabled ("embed-1" with
-	// lib/embed-1 disabled), refused as itself, not as a model magpie
+	// lib/embed-1 disabled), refused as itself, not as a model starling
 	// doesn't know
 	if pat, off := provider.BareDisabled(id); off {
 		return disabledError(id, pat), true

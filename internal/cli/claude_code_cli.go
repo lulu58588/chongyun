@@ -8,20 +8,20 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/claudecode"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/claudecode"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-const claudeCodeUsage = "usage: chongyun claude-code                  which Claude Code the Claude subscription runs\n" +
-	"       chongyun claude-code install [--yes]  download Anthropic's own build of Claude Code for chongyun (a server or container without one)\n" +
-	"       chongyun claude-code remove           delete the Claude Code chongyun downloaded\n" +
-	"       chongyun claude-code runs [N|auto]    how many Claude Code processes may run at once (auto: what this machine's memory holds)"
+const claudeCodeUsage = "usage: starling claude-code                  which Claude Code the Claude subscription runs\n" +
+	"       starling claude-code install [--yes]  download Anthropic's own build of Claude Code for starling (a server or container without one)\n" +
+	"       starling claude-code remove           delete the Claude Code starling downloaded\n" +
+	"       starling claude-code runs [N|auto]    how many Claude Code processes may run at once (auto: what this machine's memory holds)"
 
-// claudeCodeCmd: magpie claude-code [install [--yes]|remove]. A Claude
+// claudeCodeCmd: starling claude-code [install [--yes]|remove]. A Claude
 // subscription is answered by Claude Code, and signed in to through it; a
-// server or a container has none (Jorben 报告), so magpie downloads
+// server or a container has none (Jorben 报告), so starling downloads
 // Anthropic's build when asked, as Anthropic's installer does.
 func claudeCodeCmd(args []string) error {
 	if len(args) == 0 {
@@ -35,14 +35,14 @@ func claudeCodeCmd(args []string) error {
 			case "--yes", "-y":
 				yes = true
 			default:
-				return fmt.Errorf("chongyun claude-code install: unknown %q\n%s", a, claudeCodeUsage)
+				return fmt.Errorf("starling claude-code install: unknown %q\n%s", a, claudeCodeUsage)
 			}
 		}
 		return installClaudeCode(yes)
 	case "remove", "rm":
 		path, v := claudeCode.downloaded()
 		if path == "" {
-			fmt.Println(muted.Render("chongyun hasn't downloaded Claude Code"))
+			fmt.Println(muted.Render("starling hasn't downloaded Claude Code"))
 			return nil
 		}
 		if err := claudecode.Remove(); err != nil {
@@ -56,19 +56,19 @@ func claudeCodeCmd(args []string) error {
 		fmt.Println(claudeCodeUsage)
 		return nil
 	}
-	return fmt.Errorf("chongyun claude-code: unknown %q\n%s", args[0], claudeCodeUsage)
+	return fmt.Errorf("starling claude-code: unknown %q\n%s", args[0], claudeCodeUsage)
 }
 
-// claudeCodeRuns: magpie claude-code runs [N|auto]. Each Claude
+// claudeCodeRuns: starling claude-code runs [N|auto]. Each Claude
 // subscription conversation, test and /usage read is a Claude Code process
 // of about 100 MiB; a 512 MiB service ran 16 and the kernel killed them
-// (#2956). magpie holds them to what the machine's memory holds unless the
+// (#2956). starling holds them to what the machine's memory holds unless the
 // user says how many (claudeRunsMost).
 func claudeCodeRuns(args []string) error {
 	s := settings.Load()
 	switch {
 	case len(args) > 1:
-		return fmt.Errorf("chongyun claude-code runs takes one value\n%s", claudeCodeUsage)
+		return fmt.Errorf("starling claude-code runs takes one value\n%s", claudeCodeUsage)
 	case len(args) == 1 && (args[0] == "-h" || args[0] == "--help"):
 		fmt.Println(claudeCodeUsage)
 		return nil
@@ -77,7 +77,7 @@ func claudeCodeRuns(args []string) error {
 		if args[0] != "auto" {
 			v, err := strconv.Atoi(args[0])
 			if err != nil || v < 1 {
-				return fmt.Errorf("chongyun claude-code runs takes a number from 1, or auto, not %q", args[0])
+				return fmt.Errorf("starling claude-code runs takes a number from 1, or auto, not %q", args[0])
 			}
 			n = v
 		}
@@ -87,13 +87,13 @@ func claudeCodeRuns(args []string) error {
 		}
 	}
 	auto, why := gateway.ClaudeMemRuns()
-	autoSaid := "no bound: this machine's memory isn't known to chongyun"
+	autoSaid := "no bound: this machine's memory isn't known to starling"
 	if auto > 0 {
 		autoSaid = why
 	}
 	if s.ClaudeRunsMost > 0 {
 		fmt.Println(green.Render("●"), s.ClaudeRunsMost, "Claude Code processes may run at once", muted.Render("· your setting"))
-		fmt.Println(muted.Render("  auto would be " + autoSaid + " · chongyun claude-code runs auto"))
+		fmt.Println(muted.Render("  auto would be " + autoSaid + " · starling claude-code runs auto"))
 		return nil
 	}
 	if auto > 0 {
@@ -101,7 +101,7 @@ func claudeCodeRuns(args []string) error {
 	} else {
 		fmt.Println(green.Render("●"), "any number of Claude Code processes may run", muted.Render("· "+autoSaid))
 	}
-	fmt.Println(muted.Render("  chongyun claude-code runs N sets how many"))
+	fmt.Println(muted.Render("  starling claude-code runs N sets how many"))
 	return nil
 }
 
@@ -125,14 +125,14 @@ func claudeCodeStatus() error {
 	case own != "":
 		fmt.Println(green.Render("●"), "Claude Code", muted.Render(own), muted.Render("· this machine's own, which the Claude subscription runs"))
 		if path != "" {
-			fmt.Println(muted.Render("  chongyun's download (" + v + ", " + path + ") isn't used while it is here · chongyun claude-code remove deletes it"))
+			fmt.Println(muted.Render("  starling's download (" + v + ", " + path + ") isn't used while it is here · starling claude-code remove deletes it"))
 		}
 	case path != "":
-		fmt.Println(green.Render("●"), "Claude Code", v, muted.Render(path), muted.Render("· downloaded by chongyun"))
-		fmt.Println(muted.Render("  chongyun claude-code install gets the newest · chongyun claude-code remove deletes it"))
+		fmt.Println(green.Render("●"), "Claude Code", v, muted.Render(path), muted.Render("· downloaded by starling"))
+		fmt.Println(muted.Render("  starling claude-code install gets the newest · starling claude-code remove deletes it"))
 	default:
 		fmt.Println(amber.Render("○"), "no Claude Code here: a Claude subscription can't be signed in to or answered")
-		fmt.Println(muted.Render("  install it (https://code.claude.com/docs), or chongyun claude-code install downloads Anthropic's own build for chongyun"))
+		fmt.Println(muted.Render("  install it (https://code.claude.com/docs), or starling claude-code install downloads Anthropic's own build for starling"))
 	}
 	return nil
 }
@@ -156,7 +156,7 @@ func installClaudeCode(yes bool) error {
 	fmt.Println(muted.Render("  from  " + r.URL))
 	fmt.Println(muted.Render("  to    " + claudecode.Root()))
 	fmt.Println(muted.Render("  Anthropic's own build, as its installer downloads it; its SHA-256 is checked against Anthropic's manifest"))
-	fmt.Println(muted.Render("  it is Anthropic's software, under Anthropic's terms; chongyun runs it for the Claude subscription only"))
+	fmt.Println(muted.Render("  it is Anthropic's software, under Anthropic's terms; starling runs it for the Claude subscription only"))
 	if own := claudeCode.own(); own != "" {
 		fmt.Println(amber.Render("!"), "this machine has a Claude Code of its own,", own+": it is the one run while it is there")
 	}
@@ -184,7 +184,7 @@ func installClaudeCode(yes bool) error {
 		return fmt.Errorf("downloading Claude Code %s: %w", r.Version, err)
 	}
 	fmt.Println(green.Render("✓"), "Claude Code", r.Version, "downloaded and checked", muted.Render("("+path+")"))
-	fmt.Println(muted.Render("  add a Claude account: chongyun accounts add claude"))
+	fmt.Println(muted.Render("  add a Claude account: starling accounts add claude"))
 	return nil
 }
 

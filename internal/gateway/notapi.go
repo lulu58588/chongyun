@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // notAnAPIReply turns a 2xx reply that can't be a model API's answer into

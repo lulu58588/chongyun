@@ -5,20 +5,20 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/gwmw"
-	"github.com/lulu58588/chongyun/internal/middleware"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/gwmw"
+	"github.com/lulu58588/starling/internal/middleware"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // serveAgent is serve for a request an agent sent: the agent middleware
 // of the gateway's middleware point (gwmw.Agents: the JS gateway middleware
 // plugins, internal/middleware, while plugins/middleware is on) see its
 // body first, and its reply on the way back, in the agent's own API.
-// magpie's own requests through serve (titles, the router's classifier,
+// starling's own requests through serve (titles, the router's classifier,
 // search and vision stand-ins) go without them, as their replies are
-// magpie's to read.
+// starling's to read.
 func (s *Server) serveAgent(w http.ResponseWriter, r *http.Request, from provider.Protocol, body []byte) {
 	withGatewaySession(w, r)
 	w, recorded := recordConversation(w, r, from, body)

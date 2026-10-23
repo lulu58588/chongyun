@@ -6,8 +6,8 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // setAsyncCompact sets Codex's background compaction as the Settings row
@@ -30,7 +30,7 @@ func setAsyncCompact(t *testing.T, on bool, percent int) {
 }
 
 // asyncOf is the config's async_compaction value and the capability on
-// magpie's provider table.
+// starling's provider table.
 func asyncOf(t *testing.T, config string) (feature any, capability any) {
 	t.Helper()
 	var doc map[string]any
@@ -39,15 +39,15 @@ func asyncOf(t *testing.T, config string) (feature any, capability any) {
 	}
 	features, _ := doc["features"].(map[string]any)
 	providers, _ := doc["model_providers"].(map[string]any)
-	p, _ := providers[magpieID].(map[string]any)
+	p, _ := providers[starlingID].(map[string]any)
 	caps, _ := p["capabilities"].(map[string]any)
 	return features["async_compaction"], caps["remote_compaction"]
 }
 
-// The switch on, Codex routed through magpie as its provider (no ChatGPT
+// The switch on, Codex routed through starling as its provider (no ChatGPT
 // sign-in) gets [features.async_compaction] with the threshold in that
 // table, where Codex 0.163 reads it, and remote_compaction = "v2" on
-// magpie's provider table: without it Codex never starts a background
+// starling's provider table: without it Codex never starts a background
 // compaction on a provider other than OpenAI's (tried with Codex 0.163:
 // none in a whole turn past the threshold; with it, one per step, its
 // summary taken in). A model switch writing the table again keeps it, and
@@ -64,9 +64,9 @@ func TestCodexAsyncCompactionWritten(t *testing.T) {
 		t.Fatalf("async_compaction = %v:\n%s", feature, read())
 	}
 	if capability != "v2" {
-		t.Fatalf("no remote_compaction = \"v2\" on chongyun's provider:\n%s", read())
+		t.Fatalf("no remote_compaction = \"v2\" on starling's provider:\n%s", read())
 	}
-	// a model switch writes magpie's provider table again
+	// a model switch writes starling's provider table again
 	if err := cx.Fields[0].Set("fake/m1"); err != nil {
 		t.Fatal(err)
 	}
@@ -95,19 +95,19 @@ func TestCodexAsyncCompactionWritten(t *testing.T) {
 		t.Fatalf("left behind with the switch off: %v %v\n%s", feature, capability, read())
 	}
 	if _, ok := stashLoad()["codex.async"]; ok {
-		t.Fatal("the stash still claims what chongyun wrote")
+		t.Fatal("the stash still claims what starling wrote")
 	}
 }
 
 // A value the user set is theirs: on, it is never written over; off, it
 // stays. The feature the user turned on by hand gets the capability it
-// needs on magpie's provider, the switch on or not (#2493).
+// needs on starling's provider, the switch on or not (#2493).
 func TestCodexAsyncCompactionKeepsTheUsers(t *testing.T) {
 	for _, tc := range []struct {
 		name, config string
 		on           bool
 		want         string // the config holds this after
-		capability   any    // on magpie's provider once routed
+		capability   any    // on starling's provider once routed
 	}{
 		{"enabled false, threshold", "[features.async_compaction]\nenabled = false\nmodel_async_compact_threshold_percent = 50\n", true,
 			"[features.async_compaction]\nenabled = false\nmodel_async_compact_threshold_percent = 50\n", "v2"},
@@ -139,7 +139,7 @@ func TestCodexAsyncCompactionKeepsTheUsers(t *testing.T) {
 	}
 }
 
-// A capability the user gave magpie's provider stays as they wrote it.
+// A capability the user gave starling's provider stays as they wrote it.
 func TestCodexAsyncCompactionKeepsUsersCapability(t *testing.T) {
 	quietCodex(t, false, provider.CodexDaemonCheck{})
 	home, read := codexHome(t, "", "model = \"gpt-5.5\"\n")

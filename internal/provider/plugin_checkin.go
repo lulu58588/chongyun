@@ -2,11 +2,11 @@ package provider
 
 // A plugin's own daily check-in (Lemon 报告: provider 每日签到的方法能
 // 放到插件里面去做吗): a plugin whose auth hook has checkin presses its
-// vendor's 签到 itself, and magpie runs it as it runs its own check-ins
+// vendor's 签到 itself, and starling runs it as it runs its own check-ins
 // (checkin.go): each account in use once a Beijing day while the user has
 // it on, a failure tried again later that day, what came of it on the
 // account's Usage card and in Settings. A plugin that checks in takes over
-// from magpie's own check-in through its fetch (WorkBuddy, Trae CN,
+// from starling's own check-in through its fetch (WorkBuddy, Trae CN,
 // MiniMax Code, Qoder), so an account is never checked in twice.
 //
 // What came of it is kept in plugin-checkin.json by provider and sign-in
@@ -22,8 +22,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // pluginCheckinBy is the WorkBuddyCheckin.By of a plugin's check-in.
@@ -235,7 +235,7 @@ func adoptLegacyCheckinOff(heirs map[string][]string) bool {
 }
 
 // pluginChecksIn says whether pp's plugin presses the check-in itself:
-// magpie's own check-in through its fetch leaves its accounts to it.
+// starling's own check-in through its fetch leaves its accounts to it.
 func pluginChecksIn(pp plugin.Provider) bool { return pp.Checkin }
 
 // PluginCheckinOn says whether a plugin provider's accounts are checked in

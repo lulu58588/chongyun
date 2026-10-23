@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // OpenAI's safety filter refusing a Codex turn, as the ChatGPT backend said
@@ -216,12 +216,12 @@ func TestClaudeRefusalMovesToNextKey(t *testing.T) {
 }
 
 // claudeSubscriptionRefusing signs in two Claude subscription accounts,
-// served through a claude CLI whose run on the first (the account chongyun
+// served through a claude CLI whose run on the first (the account starling
 // signed the agent in to) ends in stop_reason "refusal" with nothing said,
 // category cyber in its stop_details (then Claude Code's own "unable to
 // respond" result), and whose run on the spare answers "pong". It returns
 // the file each run writes its token to: tok-primary for the first (the
-// sign-in chongyun holds), tok-spare for the spare.
+// sign-in starling holds), tok-spare for the spare.
 func claudeSubscriptionRefusing(t *testing.T) string {
 	t.Helper()
 	if runtime.GOOS == "windows" {
@@ -244,7 +244,7 @@ func claudeSubscriptionRefusing(t *testing.T) string {
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "me@example.com", "accountUuid": "u-me"}}), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	seen := time.Now()

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/redact"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/redact"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A masking rule is changed in place (nf1qaz2w 报告: rules could only

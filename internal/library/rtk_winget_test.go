@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // wingetOn makes rtk upgraded as on Windows, with a fake winget whose
@@ -144,7 +144,7 @@ func TestRTKWingetList(t *testing.T) {
 		t.Fatalf("winget ran %q; want twice", l)
 	}
 
-	// winget has no rtk-ai.rtk: magpie can't tell, as before
+	// winget has no rtk-ai.rtk: starling can't tell, as before
 	ran = wingetOn(t, h, wingetUnlisted, 20, none)
 	if c := rtkUpgrader(bin); c != nil {
 		t.Fatalf("unlisted: upgrader %q; want none", c)

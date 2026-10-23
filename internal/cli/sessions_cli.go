@@ -10,14 +10,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	stats "github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/sessions"
+	stats "github.com/lulu58588/starling/internal/usage"
 )
 
-const sessionsUsage = "usage: chongyun sessions [--days N|today|all] [--model <model>] [--folder <folder>] [--limit N] [--json]"
+const sessionsUsage = "usage: starling sessions [--days N|today|all] [--model <model>] [--folder <folder>] [--limit N] [--json]"
 
-// sessionsCmd: `chongyun sessions` — the latest sessions of Claude Code and
+// sessionsCmd: `starling sessions` — the latest sessions of Claude Code and
 // Codex; with --days, what they spent day by day, as the app's Sessions
 // view shows it.
 func sessionsCmd(args []string) error {
@@ -28,7 +28,7 @@ func sessionsCmd(args []string) error {
 }
 
 func relocateClaudeTo(w io.Writer, args []string) error {
-	const usage = "usage: chongyun sessions relocate-claude --from <absolute-path> --to <absolute-path> [--confirm <preview-token>]"
+	const usage = "usage: starling sessions relocate-claude --from <absolute-path> --to <absolute-path> [--confirm <preview-token>]"
 	var in sessions.ClaudeRelocation
 	for i := 0; i < len(args); i += 2 {
 		if i+1 >= len(args) || args[i+1] == "" {

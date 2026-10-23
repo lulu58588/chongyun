@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/backup"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/backup"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // #1776 (tsuixl, Aliyun OSS, which answers a conditional PUT 400
@@ -24,7 +24,7 @@ func TestS3BlindWriteGoneOverIsMergedAgain(t *testing.T) {
 	f.noCond = true
 	cfg := f.config(srv)
 	ctx := context.Background()
-	const key = "team x+y/magpie/magpie.magpie-backup"
+	const key = "team x+y/starling/starling.starling-backup"
 	sync := func(t *testing.T) {
 		t.Helper()
 		if err := Now(ctx); err != nil {

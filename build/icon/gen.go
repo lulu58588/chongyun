@@ -2,9 +2,9 @@
 
 // Icon generator. Everything the app shows is drawn from one mark: a cloud
 // with a slot cut out of its base, on a 44-unit grid.
-// chongyun.svg is the full drawing, the slot cut out of the cloud; the app
+// starling.svg is the full drawing, the slot cut out of the cloud; the app
 // tile uses it from 64px up.
-// chongyun-small.svg drops the slot, which would only be a smudge; the tray
+// starling-small.svg drops the slot, which would only be a smudge; the tray
 // and the smaller tiles use it, and so does the header in
 // internal/gui/assets/index.html.
 //
@@ -28,9 +28,9 @@ import (
 )
 
 var (
-	//go:embed chongyun.svg
+	//go:embed starling.svg
 	fullSVG string
-	//go:embed chongyun-small.svg
+	//go:embed starling-small.svg
 	smallSVG string
 )
 

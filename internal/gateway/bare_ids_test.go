@@ -10,8 +10,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // listedIDs is /v1/models' ids, in order, as the request r is answered.
@@ -36,7 +36,7 @@ func listedIDs(t *testing.T, r *http.Request) []string {
 }
 
 // love1sbug 报告, moving from CLIProxyAPI: the old clients ask for
-// gpt-5.6-sol and pick from /v1/models, and magpie listed only
+// gpt-5.6-sol and pick from /v1/models, and starling listed only
 // codex/gpt-5.6-sol, whatever Names in agents' lists said. With Model ids
 // without the provider on, the list has gpt-5.6-sol too, after the
 // provider/model ids it had, and a request for it on each API reaches the
@@ -96,11 +96,11 @@ func TestBareModelIDsReporterCase(t *testing.T) {
 		asked = nil
 		req := httptest.NewRequest("POST", c.path, strings.NewReader(c.body))
 		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("User-Agent", "python-requests/2.31") // a client magpie doesn't know, as CLIProxyAPI's are
+		req.Header.Set("User-Agent", "python-requests/2.31") // a client starling doesn't know, as CLIProxyAPI's are
 		rec := httptest.NewRecorder()
 		New().Handler().ServeHTTP(rec, req)
-		if rec.Code != 200 || !strings.Contains(rec.Body.String(), "pong") || rec.Header().Get("X-Magpie-Provider") != "codex" {
-			t.Fatalf("%s: %d by %q %s", c.path, rec.Code, rec.Header().Get("X-Magpie-Provider"), rec.Body.String())
+		if rec.Code != 200 || !strings.Contains(rec.Body.String(), "pong") || rec.Header().Get("X-Starling-Provider") != "codex" {
+			t.Fatalf("%s: %d by %q %s", c.path, rec.Code, rec.Header().Get("X-Starling-Provider"), rec.Body.String())
 		}
 		if !slices.Equal(asked, []string{"gpt-5.6-sol"}) {
 			t.Fatalf("%s asked the backend for %v", c.path, asked)
@@ -116,10 +116,10 @@ func TestBareModelIDsReporterCase(t *testing.T) {
 }
 
 // Two providers serving one bare id list it once, and a request for it
-// goes where magpie sends a bare id: the group it found for it, first
+// goes where starling sends a bare id: the group it found for it, first
 // member first, or with found groups off the first provider in the
 // Providers order; the listed row is where that is. A gateway key is
-// listed a bare id only where its request would be served, another magpie
+// listed a bare id only where its request would be served, another starling
 // none (its provider would list each model twice), and an id that names a
 // provider of the user's ("vendor/m9") isn't listed bare.
 func TestBareModelIDsShared(t *testing.T) {
@@ -146,12 +146,12 @@ func TestBareModelIDsShared(t *testing.T) {
 	if _, err := access.Update("models-key", access.Change{Key: keys[0].ID, Models: []string{"b/*"}}); err != nil {
 		t.Fatal(err)
 	}
-	get := func(secret string, magpie bool) []string {
+	get := func(secret string, starling bool) []string {
 		r := httptest.NewRequest("GET", "/v1/models", nil)
 		if secret != "" {
 			r.Header.Set("Authorization", "Bearer "+secret)
 		}
-		if magpie {
+		if starling {
 			r.Header.Set(provider.DrawersHeader, "1")
 		}
 		return listedIDs(t, r)
@@ -173,7 +173,7 @@ func TestBareModelIDsShared(t *testing.T) {
 		if rec.Code != 200 {
 			t.Fatalf("%s: %d %s", model, rec.Code, rec.Body.String())
 		}
-		return rec.Header().Get("X-Magpie-Provider")
+		return rec.Header().Get("X-Starling-Provider")
 	}
 
 	for _, found := range []bool{true, false} {
@@ -192,7 +192,7 @@ func TestBareModelIDsShared(t *testing.T) {
 	}
 
 	if got := bare(get("", true)); len(got) != 0 {
-		t.Fatalf("another chongyun was listed bare ids %v", got)
+		t.Fatalf("another starling was listed bare ids %v", got)
 	}
 	// held to b/*: glm-5.3 bare reaches a first, which the key may not use
 	if got, want := bare(get(secrets[0], false)), []string{"only-b"}; !slices.Equal(got, want) {

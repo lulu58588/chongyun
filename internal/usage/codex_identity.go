@@ -7,7 +7,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 func codexIdentityRow(row Row, actor string, identities map[string]sessions.CodexIdentity) Row {

@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // xaiUndecryptable is what xAI answers — a Grok API key or a SuperGrok
@@ -263,7 +263,7 @@ func TestForeignSealGrokToCodexAccount(t *testing.T) {
 			"id_token":      claims(map[string]any{"email": "me@example.com"}),
 			"access_token":  claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}),
 			"refresh_token": "r", "account_id": "acct-1"}}), 0o600)
-		// chongyun keeps the account it signed the agent in to in its own
+		// starling keeps the account it signed the agent in to in its own
 		// logins.json: the agent's own file is never read to find out.
 		codexLoginSavedFromFile(t, "me@example.com")
 		provider.ForgetAccounts()

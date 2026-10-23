@@ -12,12 +12,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // claudeMadeFirst signs Claude Code in to a@example.com, with
-// b@example.com added in magpie beside it, as nil_1024 had them, and puts
+// b@example.com added in starling beside it, as nil_1024 had them, and puts
 // a Claude Code in PATH that answers as the account whose sign-in it reads
 // at each turn, from the config directory it runs in, as Claude Code reads
 // its keychain again every half minute: b's 5 hours are spent, a's not;
@@ -42,7 +42,7 @@ func claudeMadeFirst(t *testing.T, bRefuses bool) {
 	os.WriteFile(filepath.Join(home, ".claude.json"), mustJSON(map[string]any{
 		"oauthAccount": map[string]any{"emailAddress": "a@example.com", "accountUuid": "u-a"}}), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	seen := time.Now()
@@ -91,7 +91,7 @@ while read -r line; do
 done
 `
 	testenv.Program(t, filepath.Join(bin, "claude"), script)
-	// chongyun puts the sign-in it holds in the keychain, where Claude
+	// starling puts the sign-in it holds in the keychain, where Claude
 	// Code keeps its own on a Mac: the keychain stands in for the file the
 	// fake Claude Code reads.
 	testenv.Program(t, filepath.Join(bin, "security"), `#!/bin/sh
@@ -121,7 +121,7 @@ exit 0
 	t.Cleanup(provider.ForgetAccounts)
 }
 
-// nil_1024: Claude Code signed in to A, B added in magpie and made first
+// nil_1024: Claude Code signed in to A, B added in starling and made first
 // (Claude Code's own sign-in moved to B), B's 5 hours spent. A went on
 // being asked in the Claude Code kept for its conversation, in Claude
 // Code's own home, which by then read B's sign-in: A's turns were B's,

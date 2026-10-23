@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // #1545 (thedavidweng): Detect APIs and Each picked model ask with the
@@ -155,7 +155,7 @@ func TestProviderDetectDraft(t *testing.T) {
 		t.Fatalf("providers now %+v", ps)
 	}
 
-	// magpie web: without its key a draft probe is turned away, and the
+	// starling web: without its key a draft probe is turned away, and the
 	// vendor is never asked
 	guarded := webHandler("3999", "0123456789abcdef-1545", time.Hour, mux)
 	if w := post(guarded, "detect", `{"typed":true,"key":"sk-typed","base":"`+base+`","picked":["draft-m"]}`); w.Code != http.StatusUnauthorized {

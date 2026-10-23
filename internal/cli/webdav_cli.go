@@ -10,31 +10,31 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/davsync"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/davsync"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // WebDAV, S3 and GitHub sync from the terminal: what Settings › Sync does, through
 // the same davsync.Configure, Now, Off and Dismiss. One backend is on at a time.
 
 const webdavUsage = `usage:
-  chongyun webdav                           whether sync is on, where to, and how the last sync went
-  chongyun webdav on <address> [user=…] [keys=no] [agents=no] [library=no]
+  starling webdav                           whether sync is on, where to, and how the last sync went
+  starling webdav on <address> [user=…] [keys=no] [agents=no] [library=no]
                                           keep providers, settings, profiles, agents' models and the library
                                           the same on every computer through a WebDAV folder (a folder named
-                                          chongyun is made in it), and sync at once; asks for the password
+                                          starling is made in it), and sync at once; asks for the password
                                           (with a user) and the passphrase
-  chongyun webdav set k=v…                  change it: address, user, keys, agents, library, usage (yes|no);
+  starling webdav set k=v…                  change it: address, user, keys, agents, library, usage (yes|no);
                                           password= and passphrase= ask for a new one
-  chongyun webdav now                       sync now (the gateway also syncs by itself while it runs: see auto)
-  chongyun webdav auto off|3|15|30|60       how often the gateway syncs by itself, in minutes; off: only when asked
-  chongyun webdav restore                   make this computer's setup the server's; what is here is kept first
-  chongyun webdav undo                      put back what the last restore replaced
-  chongyun webdav upload                    put this computer's setup over a server file that isn't a backup
+  starling webdav now                       sync now (the gateway also syncs by itself while it runs: see auto)
+  starling webdav auto off|3|15|30|60       how often the gateway syncs by itself, in minutes; off: only when asked
+  starling webdav restore                   make this computer's setup the server's; what is here is kept first
+  starling webdav undo                      put back what the last restore replaced
+  starling webdav upload                    put this computer's setup over a server file that isn't a backup
                                           (empty, cut short, another app's); the server's is kept first
-  chongyun webdav dismiss                   clear what the last sync said it replaced
-  chongyun webdav off                       turn it off; the file on the server stays
+  starling webdav dismiss                   clear what the last sync said it replaced
+  starling webdav off                       turn it off; the file on the server stays
 
   passphrase  the same on every computer: the file is sealed with it on this one, and the server only
               ever sees it sealed. Keep it: without it the file can't be opened. Never the password:
@@ -47,36 +47,36 @@ const webdavUsage = `usage:
   usage       yes: this computer's usage goes up too, a file a day, sealed, and the Usage page counts
               the other computers' that share theirs, each named
   first sync  on a computer that had its own setup, each part that differs becomes the server's; what
-              was here is kept in the sync folder beside chongyun's files, and chongyun webdav says so
-  moving      chongyun webdav on with S3 sync on moves sync to the folder; the bucket, endpoint, access key
-              and secret are kept, and chongyun s3 on alone moves back to them
+              was here is kept in the sync folder beside starling's files, and starling webdav says so
+  moving      starling webdav on with S3 sync on moves sync to the folder; the bucket, endpoint, access key
+              and secret are kept, and starling s3 on alone moves back to them
 
   Piped in, the password (when asked) is the first line of stdin and the passphrase the next.
-  An S3-compatible bucket instead: chongyun s3 help.
+  An S3-compatible bucket instead: starling s3 help.
 
-  e.g. chongyun webdav on https://dav.jianguoyun.com/dav/ user=me@example.com
-       chongyun webdav set agents=no library=no
+  e.g. starling webdav on https://dav.jianguoyun.com/dav/ user=me@example.com
+       starling webdav set agents=no library=no
 `
 
 const s3Usage = `usage:
-  chongyun s3                               whether sync is on, where to, and how the last sync went
-  chongyun s3 on s3://<bucket>[/<prefix>] access-key-id=… [endpoint=…] [region=…] [path-style=yes]
+  starling s3                               whether sync is on, where to, and how the last sync went
+  starling s3 on s3://<bucket>[/<prefix>] access-key-id=… [endpoint=…] [region=…] [path-style=yes]
                [keys=no] [agents=no] [library=no]
                                           keep providers, settings, profiles, agents' models and the library
                                           the same on every computer through an S3-compatible bucket (AWS S3,
-                                          Cloudflare R2, Backblaze B2, MinIO, a NAS…), in <prefix>/magpie/,
+                                          Cloudflare R2, Backblaze B2, MinIO, a NAS…), in <prefix>/starling/,
                                           and sync at once; asks for the secret and the passphrase
-  chongyun s3 set k=v…                      change it: address, bucket, prefix, endpoint, region, access-key-id,
+  starling s3 set k=v…                      change it: address, bucket, prefix, endpoint, region, access-key-id,
                                           path-style, keys, agents, library, usage (yes|no); secret= and passphrase=
                                           ask for a new one
-  chongyun s3 now                           sync now (the gateway also syncs by itself while it runs: see auto)
-  chongyun s3 auto off|3|15|30|60           how often the gateway syncs by itself, in minutes; off: only when asked
-  chongyun s3 restore                       make this computer's setup the server's; what is here is kept first
-  chongyun s3 undo                          put back what the last restore replaced
-  chongyun s3 upload                        put this computer's setup over a bucket file that isn't a backup
+  starling s3 now                           sync now (the gateway also syncs by itself while it runs: see auto)
+  starling s3 auto off|3|15|30|60           how often the gateway syncs by itself, in minutes; off: only when asked
+  starling s3 restore                       make this computer's setup the server's; what is here is kept first
+  starling s3 undo                          put back what the last restore replaced
+  starling s3 upload                        put this computer's setup over a bucket file that isn't a backup
                                           (empty, cut short, another app's); the bucket's is kept first
-  chongyun s3 dismiss                       clear what the last sync said it replaced
-  chongyun s3 off                           turn it off; the file in the bucket stays
+  starling s3 dismiss                       clear what the last sync said it replaced
+  starling s3 off                           turn it off; the file in the bucket stays
 
   endpoint    the server, https://…; none is AWS. R2: https://<account>.r2.cloudflarestorage.com
   region      none is us-east-1, or auto on R2; AWS says which when it is another
@@ -90,28 +90,28 @@ const s3Usage = `usage:
   keys        no: providers go without their API keys, and each computer keeps its own
   usage       yes: this computer's usage goes up too, a file a day, sealed, and the Usage page counts
               the other computers' that share theirs, each named
-  moving      chongyun s3 on with WebDAV sync on moves sync to the bucket; the WebDAV address, user and
-              password are kept, and chongyun webdav on alone moves back to them
+  moving      starling s3 on with WebDAV sync on moves sync to the bucket; the WebDAV address, user and
+              password are kept, and starling webdav on alone moves back to them
 
   Piped in, the secret (when asked) is the first line of stdin and the passphrase the next.
-  A WebDAV folder instead: chongyun webdav help.
+  A WebDAV folder instead: starling webdav help.
 
-  e.g. chongyun s3 on s3://my-bucket/magpie endpoint=https://<account>.r2.cloudflarestorage.com access-key-id=…
-       chongyun s3 on s3://backups endpoint=http://nas.local:9000 path-style=yes access-key-id=…
+  e.g. starling s3 on s3://my-bucket/starling endpoint=https://<account>.r2.cloudflarestorage.com access-key-id=…
+       starling s3 on s3://backups endpoint=http://nas.local:9000 path-style=yes access-key-id=…
 `
 
 const githubUsage = `usage:
-  chongyun github                           whether sync is on, where to, and how the last sync went
-  chongyun github on github://owner/repo[/folder] [branch=…] [keys=no] [agents=no] [library=no]
+  starling github                           whether sync is on, where to, and how the last sync went
+  starling github on github://owner/repo[/folder] [branch=…] [keys=no] [agents=no] [library=no]
                                           keep the encrypted setup in an existing GitHub repository; asks for a token and passphrase
-  chongyun github set k=v…                  change it: address, branch, keys, agents, library, usage (yes|no)
-  chongyun github now                       sync now
-  chongyun github auto off|3|15|30|60       how often the gateway syncs by itself, in minutes
-  chongyun github restore                   make this computer's setup the repository's; what is here is kept first
-  chongyun github undo                       put back what the last restore replaced
-  chongyun github upload                     put this computer's setup over a repository file that isn't a backup; the old file is kept first
-  chongyun github dismiss                   clear what the last sync said it replaced
-  chongyun github off                       turn it off; the encrypted file and its commit history stay
+  starling github set k=v…                  change it: address, branch, keys, agents, library, usage (yes|no)
+  starling github now                       sync now
+  starling github auto off|3|15|30|60       how often the gateway syncs by itself, in minutes
+  starling github restore                   make this computer's setup the repository's; what is here is kept first
+  starling github undo                       put back what the last restore replaced
+  starling github upload                     put this computer's setup over a repository file that isn't a backup; the old file is kept first
+  starling github dismiss                   clear what the last sync said it replaced
+  starling github off                       turn it off; the encrypted file and its commit history stay
 
   token      asked for, unechoed, and saved only for this repository. It needs
              Contents read and write permission. The repository must already
@@ -121,7 +121,7 @@ const githubUsage = `usage:
   passphrase the same on every computer; GitHub only ever receives the sealed file.
 `
 
-// syncKind is magpie webdav's, magpie s3's or magpie github's server.
+// syncKind is starling webdav's, starling s3's or starling github's server.
 type syncKind struct {
 	name, cmd, usage string
 }
@@ -134,21 +134,21 @@ var (
 
 func (k syncKind) turnOn() string {
 	if k.cmd == "s3" {
-		return "chongyun s3 on s3://<bucket>[/<prefix>] access-key-id=… [endpoint=…] turns it on"
+		return "starling s3 on s3://<bucket>[/<prefix>] access-key-id=… [endpoint=…] turns it on"
 	}
 	if k.cmd == "github" {
-		return "chongyun github on github://<owner>/<repo>[/<folder>] turns it on"
+		return "starling github on github://<owner>/<repo>[/<folder>] turns it on"
 	}
-	return "chongyun webdav on <address> [user=…] turns it on"
+	return "starling webdav on <address> [user=…] turns it on"
 }
 
-// webdavCmd is magpie webdav ….
+// webdavCmd is starling webdav ….
 func webdavCmd(args []string) error { return syncCmd(webdavKind, args) }
 
-// s3Cmd is magpie s3 ….
+// s3Cmd is starling s3 ….
 func s3Cmd(args []string) error { return syncCmd(s3Kind, args) }
 
-// githubCmd is magpie github ….
+// githubCmd is starling github ….
 func githubCmd(args []string) error { return syncCmd(githubKind, args) }
 
 func syncCmd(k syncKind, args []string) error {
@@ -164,12 +164,12 @@ func syncCmd(k syncKind, args []string) error {
 		return syncNow(k)
 	case "auto":
 		if len(args) != 2 {
-			return fmt.Errorf("chongyun %s auto off|3|15|30|60", k.cmd)
+			return fmt.Errorf("starling %s auto off|3|15|30|60", k.cmd)
 		}
 		m := davsync.Manual
 		if args[1] != "off" {
 			if _, err := fmt.Sscan(args[1], &m); err != nil {
-				return fmt.Errorf("chongyun %s auto off|3|15|30|60, not %q", k.cmd, args[1])
+				return fmt.Errorf("starling %s auto off|3|15|30|60, not %q", k.cmd, args[1])
 			}
 		}
 		if err := davsync.SetAuto(m); err != nil {
@@ -193,7 +193,7 @@ func syncCmd(k syncKind, args []string) error {
 		if len(parts) == 0 {
 			fmt.Println("nothing differed: nothing was replaced")
 		} else if args[0] == "restore" {
-			fmt.Printf("restored from the server: %s; what was here is kept, and chongyun %s undo puts it back\n", strings.Join(parts, ", "), k.cmd)
+			fmt.Printf("restored from the server: %s; what was here is kept, and starling %s undo puts it back\n", strings.Join(parts, ", "), k.cmd)
 		} else {
 			fmt.Printf("put back: %s\n", strings.Join(parts, ", "))
 		}
@@ -215,7 +215,7 @@ func syncCmd(k syncKind, args []string) error {
 	case "off":
 		// the other's is turned off by its own command, not by a slip
 		if c, ok := davsync.Load(); ok && c.Kind() != k.name {
-			return fmt.Errorf("%s sync is on, not %s: chongyun %s off turns it off", c.Kind(), k.name, strings.ToLower(c.Kind()))
+			return fmt.Errorf("%s sync is on, not %s: starling %s off turns it off", c.Kind(), k.name, strings.ToLower(c.Kind()))
 		}
 		if err := davsync.Off(); err != nil {
 			return err
@@ -243,7 +243,7 @@ func syncSet(k syncKind, args []string, on bool) error {
 	c, was := davsync.Load()
 	if was && c.Kind() != k.name {
 		if !on {
-			return fmt.Errorf("%s sync is on, not %s: chongyun %s set changes it; %s", c.Kind(), k.name, strings.ToLower(c.Kind()), k.turnOn())
+			return fmt.Errorf("%s sync is on, not %s: starling %s set changes it; %s", c.Kind(), k.name, strings.ToLower(c.Kind()), k.turnOn())
 		}
 		next := davsync.Config{Passphrase: c.Passphrase, Keys: c.Keys, Agents: c.Agents, Library: c.Library, Usage: c.Usage}
 		if o, ok := c.Kept(k.name); ok { // its server, as it was kept when sync moved from it
@@ -348,9 +348,9 @@ func syncSet(k syncKind, args []string, on bool) error {
 			return fmt.Errorf("%q is not a GitHub address (github://owner/repo or github://owner/repo/folder)", c.URL)
 		}
 		if c.GitHub() {
-			return fmt.Errorf("%q is not a WebDAV address (https://...): chongyun github on %s for a GitHub repository", c.URL, c.URL)
+			return fmt.Errorf("%q is not a WebDAV address (https://...): starling github on %s for a GitHub repository", c.URL, c.URL)
 		}
-		return fmt.Errorf("%q is not a WebDAV address (https://…): chongyun s3 on %s for an S3 bucket", c.URL, c.URL)
+		return fmt.Errorf("%q is not a WebDAV address (https://…): starling s3 on %s for an S3 bucket", c.URL, c.URL)
 	}
 	if err := davsync.Check(c); err != nil {
 		return err
@@ -386,7 +386,7 @@ func syncSet(k syncKind, args []string, on bool) error {
 	}
 	// and sync at once, so a wrong address or password shows now
 	if err := syncNow(k); err != nil {
-		fmt.Fprintln(os.Stderr, muted.Render(fmt.Sprintf("It is on: chongyun %s set k=v… changes it, chongyun %s off turns it off.", k.cmd, k.cmd)))
+		fmt.Fprintln(os.Stderr, muted.Render(fmt.Sprintf("It is on: starling %s set k=v… changes it, starling %s off turns it off.", k.cmd, k.cmd)))
 		return err
 	}
 	return nil
@@ -425,11 +425,11 @@ func syncShow(k syncKind) error {
 	if !v.On {
 		fmt.Println(k.name + " sync is off")
 		if k.cmd == "s3" {
-			fmt.Println(muted.Render("chongyun s3 on s3://<bucket> keeps providers, settings, profiles, agents' models and the library the same on every computer (chongyun s3 help)"))
+			fmt.Println(muted.Render("starling s3 on s3://<bucket> keeps providers, settings, profiles, agents' models and the library the same on every computer (starling s3 help)"))
 		} else if k.cmd == "github" {
-			fmt.Println(muted.Render("chongyun github on github://<owner>/<repo>[/<folder>] keeps providers, settings, profiles, agents' models and the library in an encrypted GitHub file (chongyun github help)"))
+			fmt.Println(muted.Render("starling github on github://<owner>/<repo>[/<folder>] keeps providers, settings, profiles, agents' models and the library in an encrypted GitHub file (starling github help)"))
 		} else {
-			fmt.Println(muted.Render("chongyun webdav on <address> keeps providers, settings, profiles, agents' models and the library the same on every computer (chongyun webdav help)"))
+			fmt.Println(muted.Render("starling webdav on <address> keeps providers, settings, profiles, agents' models and the library the same on every computer (starling webdav help)"))
 		}
 		return nil
 	}
@@ -492,11 +492,11 @@ func syncShow(k syncKind) error {
 	fmt.Println("  syncs", strings.Join(what, ", "))
 	if o := v.Other; o != nil {
 		if o.Kind == "s3" {
-			fmt.Println(muted.Render("  S3 " + o.URL + " is kept, not synced to: chongyun s3 on moves back to it"))
+			fmt.Println(muted.Render("  S3 " + o.URL + " is kept, not synced to: starling s3 on moves back to it"))
 		} else if o.Kind == "github" {
-			fmt.Println(muted.Render("  GitHub " + o.URL + " is kept, not synced to: chongyun github on moves back to it"))
+			fmt.Println(muted.Render("  GitHub " + o.URL + " is kept, not synced to: starling github on moves back to it"))
 		} else {
-			fmt.Println(muted.Render("  WebDAV " + o.URL + " is kept, not synced to: chongyun webdav on moves back to it"))
+			fmt.Println(muted.Render("  WebDAV " + o.URL + " is kept, not synced to: starling webdav on moves back to it"))
 		}
 	}
 
@@ -512,11 +512,11 @@ func syncShow(k syncKind) error {
 		fmt.Println("  couldn't share usage:", v.UsageError)
 	}
 	if len(v.SignIn) > 0 {
-		fmt.Println("  synced settings use these, not signed in on this computer (sync carries settings, not sign-ins; to use one here: chongyun accounts add <id>):", strings.Join(v.SignIn, ", "))
+		fmt.Println("  synced settings use these, not signed in on this computer (sync carries settings, not sign-ins; to use one here: starling accounts add <id>):", strings.Join(v.SignIn, ", "))
 	}
 	if n := v.Notice; n != nil && n.Restored {
 		fmt.Println("  Restored from the server:", partNames(n.Here))
-		fmt.Println(muted.Render("  This computer's setup from before is kept in " + tilde(n.Saved) + " (chongyun " + cmd + " undo puts it back; chongyun " + cmd + " dismiss clears this)"))
+		fmt.Println(muted.Render("  This computer's setup from before is kept in " + tilde(n.Saved) + " (starling " + cmd + " undo puts it back; starling " + cmd + " dismiss clears this)"))
 	} else if n != nil {
 		if len(n.Here) > 0 {
 			fmt.Println("  Replaced here by newer ones from another computer:", partNames(n.Here))
@@ -528,15 +528,15 @@ func syncShow(k syncKind) error {
 		if dir == "" {
 			dir = filepath.Join(settings.Dir(), "sync")
 		}
-		fmt.Println(muted.Render("  The copies replaced are kept in " + tilde(dir) + " (chongyun restore opens one; chongyun " + cmd + " dismiss clears this)"))
+		fmt.Println(muted.Render("  The copies replaced are kept in " + tilde(dir) + " (starling restore opens one; starling " + cmd + " dismiss clears this)"))
 	}
 	switch {
 	case v.Auto == 0:
-		fmt.Println(muted.Render("  Syncs only when asked: chongyun " + cmd + " now syncs once (chongyun " + cmd + " auto 3 syncs by itself again)"))
+		fmt.Println(muted.Render("  Syncs only when asked: starling " + cmd + " now syncs once (starling " + cmd + " auto 3 syncs by itself again)"))
 	case !gateway.Running():
-		fmt.Println(muted.Render(fmt.Sprintf("  No gateway runs here: nothing syncs by itself until one does (the app, chongyun web or chongyun serve), every %d minutes; chongyun %s now syncs once", v.Auto, cmd)))
+		fmt.Println(muted.Render(fmt.Sprintf("  No gateway runs here: nothing syncs by itself until one does (the app, starling web or starling serve), every %d minutes; starling %s now syncs once", v.Auto, cmd)))
 	default:
-		fmt.Println(muted.Render(fmt.Sprintf("  Syncs by itself every %d minutes (chongyun %s auto changes it)", v.Auto, cmd)))
+		fmt.Println(muted.Render(fmt.Sprintf("  Syncs by itself every %d minutes (starling %s auto changes it)", v.Auto, cmd)))
 	}
 	return nil
 }

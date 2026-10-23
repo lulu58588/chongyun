@@ -16,8 +16,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/source"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/source"
 )
 
 // Partners are services that pay to be listed first in the add sheet,
@@ -26,9 +26,9 @@ import (
 // is, and kept on disk. A partner is a preset in all but where it comes
 // from, so adding one, its editor and its key page work as a preset's do.
 
-// PartnersURL is where the list is kept; MAGPIE_PARTNERS moves it, and
-// MAGPIE_PARTNERS=off keeps to none. 崇云版不内置任何列表源：没有自己的
-// 站点可指，默认即 off；MAGPIE_PARTNERS 可指向自建的源。
+// PartnersURL is where the list is kept; STARLING_PARTNERS moves it, and
+// STARLING_PARTNERS=off keeps to none. 星鸣版不内置任何列表源：没有自己的
+// 站点可指，默认即 off；STARLING_PARTNERS 可指向自建的源。
 const PartnersURL = ""
 
 // KindPartner is a partner's Kind: the add sheet lists them apart.
@@ -94,7 +94,7 @@ func partnerCacheFile() string { return filepath.Join(appdir.Cache(), "partners.
 
 func partnersSource() string {
 	// this build lists no partner: the add sheet is the vendors' own.
-	if v := os.Getenv("MAGPIE_PARTNERS"); v != "" {
+	if v := os.Getenv("STARLING_PARTNERS"); v != "" {
 		return v
 	}
 	return "off"
@@ -255,7 +255,7 @@ func fetchPartners(ctx context.Context, src string) ([]Partner, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "chongyun")
+	req.Header.Set("User-Agent", "starling")
 	req.Header.Set("Accept", "application/json")
 	res, err := source.Do(http.DefaultClient, req)
 	if err != nil {
@@ -272,7 +272,7 @@ func fetchPartners(ctx context.Context, src string) ([]Partner, error) {
 	return validPartners(f.Partners), nil
 }
 
-// validPartners keeps the entries magpie can list safely, at most
+// validPartners keeps the entries starling can list safely, at most
 // MaxPartners: an id of its own that no built-in preset has, a name, and
 // https addresses only. What a partner may not set (a decision API, no
 // key, an endpoint of the user's own) is cleared.

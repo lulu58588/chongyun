@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // shim is a version manager's shim an agent's CLI was found as.
@@ -88,7 +88,7 @@ func miseShim(bin string) *shim {
 		return nil
 	}
 	// mise-shim.exe runs the mise on PATH; the installers' own folders
-	// after it, for a magpie whose PATH lacks it
+	// after it, for a starling whose PATH lacks it
 	home, _ := os.UserHomeDir()
 	mgr := lookTool("mise", filepath.Join(home, ".local", "bin", exe("mise")),
 		filepath.Join(appdir.Getenv("LOCALAPPDATA"), "mise", "bin", exe("mise")))

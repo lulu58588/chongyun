@@ -6,7 +6,7 @@ package agent
 //
 //	cindy://provider/import?v=1&data=<base64url of the provider's JSON>
 //
-// So magpie has nothing to set there: its row is the link, magpie as one
+// So starling has nothing to set there: its row is the link, starling as one
 // custom provider with an endpoint for each of Cindy's runtimes, and
 // whether Cindy has it already, read from Cindy's database and never
 // written.
@@ -20,8 +20,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	_ "github.com/lulu58588/chongyun/internal/sqlitedb"
+	"github.com/lulu58588/starling/internal/gateway"
+	_ "github.com/lulu58588/starling/internal/sqlitedb"
 )
 
 // CindyScheme begins every Cindy import link.
@@ -29,7 +29,7 @@ const CindyScheme = "cindy://provider/import?"
 
 // cindyName is the name the link gives the provider, and so the name Cindy
 // shows it under and keeps in its own database: how it is found there.
-const cindyName = "Chongyun"
+const cindyName = "Starling"
 
 type cindyEndpoint struct {
 	Protocol  string   `json:"protocol"`
@@ -39,7 +39,7 @@ type cindyEndpoint struct {
 }
 
 // CindyLink is the link that adds the gateway at url to Cindy as the
-// provider Chongyun, keyed so that its requests are counted as Cindy's.
+// provider Starling, keyed so that its requests are counted as Cindy's.
 func CindyLink(url string) string {
 	v1 := url + "/v1"
 	models := v1 + "/models"
@@ -50,7 +50,7 @@ func CindyLink(url string) string {
 		Auth      map[string]any  `json:"auth"`
 		Endpoints []cindyEndpoint `json:"endpoints"`
 	}{
-		Kind: "custom", Name: cindyName, ID: magpieID,
+		Kind: "custom", Name: cindyName, ID: starlingID,
 		Auth: map[string]any{"method": "apiKey", "apiKey": agentKeyAt("cindy", url)},
 		Endpoints: []cindyEndpoint{
 			{"anthropic-messages", url, []string{"claude-code"}, models},
@@ -62,7 +62,7 @@ func CindyLink(url string) string {
 	return CindyScheme + "v=1&data=" + base64.RawURLEncoding.EncodeToString(b)
 }
 
-// cindyHas reports whether Cindy's database at path has magpie among its
+// cindyHas reports whether Cindy's database at path has starling among its
 // custom providers: by the id or name the link gives it, or by the
 // gateway's address in its endpoints. Opened read-only; no database, or
 // one that can't be read, is no.
@@ -83,7 +83,7 @@ func cindyHas(path, gw string) bool {
 	var n int
 	err = db.QueryRow(`SELECT count(*) FROM custom_providers
 		WHERE id = ? OR lower(name) IN (?, ?) OR instr(runtimes, ?) > 0`,
-		magpieID, magpieID, strings.ToLower(cindyName), gw).Scan(&n)
+		starlingID, starlingID, strings.ToLower(cindyName), gw).Scan(&n)
 	return err == nil && n > 0
 }
 
@@ -107,7 +107,7 @@ func cindyDirs() []string {
 	return append(have, not...)
 }
 
-// cindyAdded reports whether any of Cindy's databases in dirs has magpie:
+// cindyAdded reports whether any of Cindy's databases in dirs has starling:
 // one per account (cindy-<account>.db) once signed in, cindy-local-v1.db
 // before.
 func cindyAdded(dirs []string, gw string) bool {

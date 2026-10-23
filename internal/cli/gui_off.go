@@ -6,7 +6,7 @@ import "errors"
 
 const hasGUI = false
 
-func runGUI(bool, string) error { return errors.New("this build has no GUI; run `chongyun tui`") }
+func runGUI(bool, string) error { return errors.New("this build has no GUI; run `starling tui`") }
 
 func runPanel() error { return runGUI(false, "") }
 

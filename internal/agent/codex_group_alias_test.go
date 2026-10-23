@@ -6,21 +6,21 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// #750: Codex put on the group magpie found for gpt-6.1-sol
+// #750: Codex put on the group starling found for gpt-6.1-sol
 // (group/auto-gpt-6-1-sol), and its config.toml then naming the model as
-// vendors spell it, gpt-6.1-sol, with openai_base_url still magpie's: the
+// vendors spell it, gpt-6.1-sol, with openai_base_url still starling's: the
 // gateway takes gpt-6.1-sol as that same group, so Codex is connected, not
-// "switched off group/auto-gpt-6-1-sol outside chongyun". A model of
+// "switched off group/auto-gpt-6-1-sol outside starling". A model of
 // another group, or of none, is still drift.
 func TestCodexGroupByItsModelName(t *testing.T) {
 	for _, auth := range []string{`{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`, ""} {
 		home, read := codexHome(t, auth, "")
 		if auth != "" {
-			// chongyun never reads the agent's own sign-in: a Codex signed
-			// in to ChatGPT is one chongyun wired beside that sign-in.
+			// starling never reads the agent's own sign-in: a Codex signed
+			// in to ChatGPT is one starling wired beside that sign-in.
 			codexBeside(t, home, "beside")
 		}
 		for _, p := range []provider.Provider{
@@ -54,14 +54,14 @@ func TestCodexGroupByItsModelName(t *testing.T) {
 		if d := cx.Drift(); d != nil {
 			t.Errorf("auth %q: drift on gpt-6.1-sol, the same group: %+v", auth, d)
 		}
-		// with nothing sending it to magpie, gpt-6.1-sol goes to OpenAI
+		// with nothing sending it to starling, gpt-6.1-sol goes to OpenAI
 		os.WriteFile(path, []byte("model = \"gpt-6.1-sol\"\n"), 0o644)
 		if cx.Wired() {
-			t.Errorf("auth %q: wired on gpt-6.1-sol with no route to chongyun", auth)
+			t.Errorf("auth %q: wired on gpt-6.1-sol with no route to starling", auth)
 		}
-		// another group's model is not what magpie set, nor is one no group
+		// another group's model is not what starling set, nor is one no group
 		// has; beside the ChatGPT sign-in either is a pick in Codex's /model
-		// that still goes through magpie, not a change from outside (#2424)
+		// that still goes through starling, not a change from outside (#2424)
 		for _, m := range []string{"gpt-6.1", "gpt-5.5"} {
 			os.WriteFile(path, []byte(strings.Replace(cfg, `model = "auto/gpt-6.1-sol"`, `model = "`+m+`"`, 1)), 0o644)
 			d := cx.Drift()

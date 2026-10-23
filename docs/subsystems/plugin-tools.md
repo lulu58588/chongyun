@@ -1,6 +1,6 @@
 # 插件工具
 
-社区插件（即插件宿主里的 OpenCode 插件，一个 npm 包）可以提供工具：OpenCode 的 `tool` 钩子，`{tool: {name: tool({description, args, execute})}}`。在 OpenCode 里只有 OpenCode 自己的模型能调用它们。崇云科技改为把它们提供给所有 Agent，作为自带的一个 MCP 服务器，地址在 `/mcp/magpie/tools`（Streamable HTTP），任何能接入 MCP 服务器的 Agent 都可以被指派它。它就是网关的工具接入点（[插件运行时](plugin-runtime.md)的 P4）向社区插件开放的那一处。内置插件 `tools` 负责提供它。同一宿主里的供应商插件见[供应商与插件归属](provider-plugins.md)；网关中间件见[网关中间件](gateway-middleware.md)。
+社区插件（即插件宿主里的 OpenCode 插件，一个 npm 包）可以提供工具：OpenCode 的 `tool` 钩子，`{tool: {name: tool({description, args, execute})}}`。在 OpenCode 里只有 OpenCode 自己的模型能调用它们。星鸣改为把它们提供给所有 Agent，作为自带的一个 MCP 服务器，地址在 `/mcp/starling/tools`（Streamable HTTP），任何能接入 MCP 服务器的 Agent 都可以被指派它。它就是网关的工具接入点（[插件运行时](plugin-runtime.md)的 P4）向社区插件开放的那一处。内置插件 `tools` 负责提供它。同一宿主里的供应商插件见[供应商与插件归属](provider-plugins.md)；网关中间件见[网关中间件](gateway-middleware.md)。
 
 ## 职责与事实来源
 
@@ -12,15 +12,15 @@
 | 提供 | `tools/list` 给每个工具命名为 `<plugin>_<tool>`：插件的短名，与它的 Plugins 行所写的相同（`plugin.ShortName`，它会去掉作用域前缀和一个开头的 `middleware-`、`opencode-`、`tools-`、`page-` 或 `agent-`：opencode-weather-tools → weather-tools，@magpie-community/tools-calc → calc；从文件夹添加的插件则用文件夹名），最多 24 个字符，只含 `[A-Za-z0-9_-]`，后面接工具名。每个名字最多 64 个字符，有两个名字会撞车时后者加 `_2`、`_3`。`tools/call` 运行其中一个；名字未知则报 -32602 错误。它与搜索 MCP 服务器一样受保护（`serveMCP`：网页发来的请求被拒绝，远程请求需要密钥），请求体上限 4 MiB。 | [`tools_mcp.go`](../../internal/gateway/tools_mcp.go) |
 | 开关 | `plugins/tools`（"插件工具"，需要 `gateway`，Essential）提供 `gwtool.PluginTools`。`InUse` 就是 `plugin.ToolsOn`，所以只要有处于开启状态且提供工具的插件，它就是开的。网关的 `KeepFresh` 也会盯 `plugin-tools.json`。 | [`plugins/tools`](../../plugins/tools/tools.go)、[`gwtool.go`](../../internal/gwtool/gwtool.go)、[`gateway.go`](../../internal/gateway/gateway.go) |
 | GUI | 插件处于开启状态且提供工具时，它的每个已安装行按 MCP 名字列出这些工具，悬停时各自显示描述，另有一个按钮可复制服务器地址（`mcpAddress`）。只有工具的插件挂 Tools 标签，而不是 Provider。Discover 会把 `kind: "tools"` 的市场条目列在 Agent 的 Tools 之下。 | [`plugins.go`](../../internal/gui/plugins.go) 中的 `pluginEntryJSON.Tools`；`plugins.js` 中的 `toolsLine`、`kindOf` 和 `KINDS.tl` |
-| CLI | `chongyun plugin` 用同样的 MCP 名字列出插件的工具，插件页面则按标题和它可以读取的内容列出。宿主不加载处于关闭状态的插件，所以这类插件不列出任何工具。 | [`plugins_cli.go`](../../internal/cli/plugins_cli.go) 中的 `toolsLine`、`pageLine` |
+| CLI | `starling plugin` 用同样的 MCP 名字列出插件的工具，插件页面则按标题和它可以读取的内容列出。宿主不加载处于关闭状态的插件，所以这类插件不列出任何工具。 | [`plugins_cli.go`](../../internal/cli/plugins_cli.go) 中的 `toolsLine`、`pageLine` |
 | 用户文档 | 如何编写一个工具并把地址加入某个 Agent | [插件工具](plugin-tools.md) 与[插件运行时](plugin-runtime.md) |
 
 plugins.json 是判断哪些插件开启的事实来源。宿主只加载这些插件，所以只有它们的工具会被列出。
 
 ## 运行路径
 
-1. Agent 的 MCP 客户端向 `/mcp/magpie/tools` 发起 `tools/list`。当这个接入点未提供、或没有插件开启时，`servedTools` 返回空，插件宿主（Bun）也不会为此启动。否则它向宿主索取各插件的工具（`plugin.Tools`，必要时自行启动宿主）并给出名字（`namedTools`）。
-2. `tools/call` 在同一份列表里按 MCP 名字找到该工具。接入点关闭时它直接回答 `isError` "magpie's Plugin tools plugin is off…"，不询问宿主。
+1. Agent 的 MCP 客户端向 `/mcp/starling/tools` 发起 `tools/list`。当这个接入点未提供、或没有插件开启时，`servedTools` 返回空，插件宿主（Bun）也不会为此启动。否则它向宿主索取各插件的工具（`plugin.Tools`，必要时自行启动宿主）并给出名字（`namedTools`）。
+2. `tools/call` 在同一份列表里按 MCP 名字找到该工具。接入点关闭时它直接回答 `isError` "starling's Plugin tools plugin is off…"，不询问宿主。
 3. `toolsMCPRun` 通过 `reserveFor` 把这次调用计入调用方网关密钥的限额，与聊天 API 和搜索 MCP 服务器的方式相同（[插件运行时](plugin-runtime.md)，预算接入点）。被拒绝，或限额已满且"密钥限额"插件关闭，都是 `isError` 应答，工具不会运行。
 4. `plugin.RunTool` 让宿主运行它。应答，或错误（`<tool>'s arguments are wrong: …`、`<tool> took longer than 55s`，或工具抛出的内容），作为这次调用的文本回给 Agent，出错时带上 `isError`。
 
@@ -32,7 +32,7 @@ plugins.json 是判断哪些插件开启的事实来源。宿主只加载这些�
 - 插件的工具在插件宿主里以用户权限运行，和它的供应商代码一样。安装插件就等于信任它。
 - 一个宿主服务所有插件。永不返回的工具会在 `ToolTimeout` 处得到应答，它在宿主里占的那个调用槽位留给它自己的中止来结束；宿主继续提供服务（`TestPluginTools`）。
 - 对给定的一组开启插件，名字是稳定的。若在 plugins.json 里更靠前的位置开启了一个提供同名 MCP 工具的插件，后面那个会被重新编号。
-- 接线由用户负责：Plugins 页面负责复制地址，崇云科技不会为此写任何 Agent 的 MCP 配置。目前还没有对应的资源库条目。
+- 接线由用户负责：Plugins 页面负责复制地址，星鸣不会为此写任何 Agent 的 MCP 配置。目前还没有对应的资源库条目。
 
 ## 验证
 

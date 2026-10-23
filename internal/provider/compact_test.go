@@ -4,8 +4,8 @@ import (
 	"maps"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A provider's editor sets where Codex and Claude Code compact on its
@@ -43,7 +43,7 @@ func TestModelCompactsSetFromTheEditor(t *testing.T) {
 	}
 	for id, n := range map[string]int{
 		"deepseek/deepseek-v4-flash":      272000,
-		"magpie/deepseek/deepseek-v4-pro": 500000,
+		"starling/deepseek/deepseek-v4-pro": 500000,
 		"deepseek/deepseek-v4-pro[1m]":    500000,
 		"other/deepseek-v4-flash":         0,
 		"other/deepseek-v4-pro":           300000,

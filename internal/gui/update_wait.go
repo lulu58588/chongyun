@@ -3,8 +3,8 @@ package gui
 import (
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A restart to update ends the gateway this process serves, and with it
@@ -24,7 +24,7 @@ var (
 )
 
 // gatewayBusy is what the gateway this process serves has in flight;
-// nothing when another magpie serves it, which a restart here leaves be.
+// nothing when another starling serves it, which a restart here leaves be.
 var gatewayBusy = func() gateway.Busy {
 	if gw := served.Load(); gw != nil {
 		return gw.Busy()

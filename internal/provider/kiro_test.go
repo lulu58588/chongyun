@@ -69,7 +69,7 @@ func writeKiroCLI(t *testing.T, rows map[string]any) {
 	}
 }
 
-// Kiro CLI's own sign-in is not read: only the accounts chongyun signed in
+// Kiro CLI's own sign-in is not read: only the accounts starling signed in
 // itself, each in a home of its own, and the key saved on the provider.
 func TestKiroDoesNotReadKiroCLIsSignIn(t *testing.T) {
 	kiroSandbox(t)
@@ -115,7 +115,7 @@ func TestKiroDoesNotReadTheIDEsSignIn(t *testing.T) {
 	}
 }
 
-// An expired sign-in of an account chongyun signed in is refreshed, and the
+// An expired sign-in of an account starling signed in is refreshed, and the
 // new token written back into the home it keeps it in.
 func TestKiroRefreshesAndWritesBack(t *testing.T) {
 	kiroSandbox(t)
@@ -158,7 +158,7 @@ func TestKiroRefreshesAndWritesBack(t *testing.T) {
 	}
 }
 
-// A sign-in of an account chongyun signed in that can't be refreshed says
+// A sign-in of an account starling signed in that can't be refreshed says
 // to add the account again here.
 func TestKiroExpiredWithNoWayToRefresh(t *testing.T) {
 	kiroSandbox(t)
@@ -166,7 +166,7 @@ func TestKiroExpiredWithNoWayToRefresh(t *testing.T) {
 	os.MkdirAll(home, 0o700)
 	os.WriteFile(filepath.Join(home, kiroTokenFile),
 		[]byte(`{"accessToken":"old","expiresAt":"2020-01-01T00:00:00Z","authMethod":"social","provider":"google"}`), 0o600)
-	if _, err := KiroAuthOf(context.Background(), "", home, false); err == nil || !strings.Contains(err.Error(), "add the account again in chongyun") {
+	if _, err := KiroAuthOf(context.Background(), "", home, false); err == nil || !strings.Contains(err.Error(), "add the account again in starling") {
 		t.Fatalf("err = %v", err)
 	}
 }

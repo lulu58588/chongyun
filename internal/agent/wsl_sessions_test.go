@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
-// The Sessions page reads the sessions of Claude Code in a WSL distro magpie
-// found it in (lgtm 报告: magpie can't see the session lists of agents
+// The Sessions page reads the sessions of Claude Code in a WSL distro starling
+// found it in (lgtm 报告: starling can't see the session lists of agents
 // inside WSL), at the distro user's home as the agent is set up there, and
 // resumes one through wsl.exe in the distro.
 func TestWSLSessionsOfTheDistro(t *testing.T) {

@@ -4,11 +4,11 @@ import (
 	"cmp"
 	"net/http"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // museContext and museOutput are what Muse is told of a model whose window
-// or reply size magpie doesn't know.
+// or reply size starling doesn't know.
 const (
 	museContext = 128000
 	museOutput  = 32000
@@ -34,10 +34,10 @@ func (s *Server) museModels(w http.ResponseWriter, r *http.Request) {
 			"attachment": e.Images, "reasoning": len(e.Efforts) > 0, "temperature": false, "tool_call": true,
 			"modalities": map[string]any{"input": input, "output": []string{"text"}},
 			"options":    map[string]any{"include": []string{}}, "variants": map[string]any{},
-			"description": labels[i] + " via chongyun"}
+			"description": labels[i] + " via starling"}
 		// the window and the most a reply may hold: Muse hides a model
 		// whose limit lacks either, and without a limit asks for replies
-		// of 128K tokens, more than most models give; one magpie doesn't
+		// of 128K tokens, more than most models give; one starling doesn't
 		// know is told 128K and Muse's own 32K
 		ctx, out := cmp.Or(e.Context, museContext), e.PublishedOutput()
 		if out <= 0 {

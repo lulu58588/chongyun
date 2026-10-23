@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 -------------------------------------------------------------------------------
+星鸣（Starling）二开说明 / Notice for the Starling derivative
 崇云科技二开说明 / Notice for the Chongyun Technology derivative
 
 This build is a derivative work of "magpie" (https://github.com/yetone/magpie),
@@ -30,10 +31,12 @@ requires that this notice be kept in all copies or substantial portions of
 the software; the original copyright notice and the MIT License text are
 retained above and are not modified.
 
-Modifications made by 崇云科技 include, among others:
+Modifications made by 崇云科技 (Chongyun Technology) include, among others:
 
   * Branding: the product name, the logo, the application icons and the
-    user-facing texts were replaced with 崇云科技 / Chongyun.
+    user-facing texts were replaced with 星鸣 / Starling. The product is
+    Starling; 崇云科技 (Chongyun Technology) is the company behind it and
+    the copyright holder of these modifications.
   * Telemetry: the daily usage-report to the upstream project's PostHog
     project was removed (internal/stats). This build reports nothing to
     any third party.
@@ -43,7 +46,7 @@ Modifications made by 崇云科技 include, among others:
   * Subscription accounts: the whole layer that read the sign-ins of other
     agents (Claude Code, Codex, the Keychain) or imported another app's
     login files was removed. This build reads no other agent's sign-in.
-    Accounts signed into through 崇云科技 itself (the Codex PKCE flow, the
+    Accounts signed into through Starling itself (the Codex PKCE flow, the
     Copilot device code, Google OAuth) are unaffected.
   * The upstream project's website (site/) was removed.
   * The developer documentation under docs/ was translated into Chinese;

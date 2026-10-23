@@ -5,11 +5,11 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/codexcat"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/codexcat"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// A text-only model is offered to agents as taking images while magpie
+// A text-only model is offered to agents as taking images while starling
 // describes images to it (Discord, Fate: Codex turned an image away for a
 // text model although Settings › Vision was set), and as text-only again
 // with Vision off.

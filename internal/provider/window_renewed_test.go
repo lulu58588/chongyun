@@ -7,7 +7,7 @@ import (
 )
 
 // claudeWindowAccount keeps a Claude account in logins.json, the account
-// the agent is on: chongyun's own sign-in does that, and two accounts
+// the agent is on: starling's own sign-in does that, and two accounts
 // holding one sign-in are one account's sign-in under two names, which it
 // refuses to save.
 func claudeWindowAccount(t *testing.T, email, plan string) savedLogin {
@@ -101,7 +101,7 @@ func TestNextLoginTakesAPassedResetAsRenewed(t *testing.T) {
 				codexSignIn(t, "work@example.com", "r-work")
 				on, spare = "work@example.com", "me@example.com"
 			} else {
-				// chongyun's own accounts: the one the agent is on is
+				// starling's own accounts: the one the agent is on is
 				// marked in logins.json, the one beside it is on
 				claudeHome(t)
 				claudeWindowAccount(t, "a@example.com", "max")
@@ -147,7 +147,7 @@ func TestNextLoginTakesAPassedResetAsRenewed(t *testing.T) {
 	}
 }
 
-// What stops an account, for magpie quota wait and the Codex resets, is a
+// What stops an account, for starling quota wait and the Codex resets, is a
 // full window still to reset: one whose reset has passed doesn't stop it,
 // nor say when it is back.
 func TestUsedUpLeavesOutARenewedWindow(t *testing.T) {

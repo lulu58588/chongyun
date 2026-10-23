@@ -25,7 +25,7 @@ function settingsPayload(over) {
     dock: false, dockWindow: false, proxy: "", redact: false, redactPersonal: false, redactWords: [],
     codexWarmup: "", claudeWarmup: "", codexWarmAt: "", claudeWarmAt: "", workbuddyCheckin: false, noStats: false,
     trayUsage: "claude|a@b.c", trayUsages: ["claude|a@b.c"], trayUsageEvery: 3, vision: "", imageGen: "",
-    version: "0.1.400", dir: "~/.config/magpie", gateway: "http://127.0.0.1:3425",
+    version: "0.1.400", dir: "~/.config/starling", gateway: "http://127.0.0.1:3425",
     proxyNow: "none", proxySource: "none", login: false,
     visionModels: [], imageGenModels: [], workbuddyCheckins: [], lanURLs: [],
     fx: { rate: 7.2, at: new Date().toISOString(), stale: false },
@@ -67,7 +67,7 @@ async function open(browser, lang, posts, platform, width, over) {
   const page = await context.newPage();
   page.setDefaultTimeout(5000);
   await page.route("**/*", server(lang, posts, over));
-  await page.goto("http://magpie.test/?view=usage");
+  await page.goto("http://starling.test/?view=usage");
   await page.locator("#prefs").click();
   await openPart(page, "usage");
   await page.locator("#trayUsagePick button").waitFor();
@@ -88,11 +88,11 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     });
 
     for (const [lang, name, sub] of [
-      ["en", "Menu bar cost", "What magpie's requests cost, beside their tokens in the menu bar and its tooltip; off, the tokens alone"],
-      ["zh", "菜单栏金额", "magpie 请求的花费，显示在菜单栏和提示中的 token 数旁；关闭则只显示 token 数"],
-      ["zh-TW", "選單列金額", "magpie 請求的花費，顯示在選單列與提示中的 token 數旁；關閉則只顯示 token 數"],
-      ["ja", "メニューバーの金額", "magpie のリクエストの費用を、メニューバーとツールチップのトークン数の横に表示します。オフにするとトークン数だけになります"],
-      ["de", "Kosten in der Menüleiste", "Was die Anfragen über magpie kosten, neben ihren Tokens in der Menüleiste und ihrem Tooltip; aus, nur die Tokens"],
+      ["en", "Menu bar cost", "What starling's requests cost, beside their tokens in the menu bar and its tooltip; off, the tokens alone"],
+      ["zh", "菜单栏金额", "starling 请求的花费，显示在菜单栏和提示中的 token 数旁；关闭则只显示 token 数"],
+      ["zh-TW", "選單列金額", "starling 請求的花費，顯示在選單列與提示中的 token 數旁；關閉則只顯示 token 數"],
+      ["ja", "メニューバーの金額", "starling のリクエストの費用を、メニューバーとツールチップのトークン数の横に表示します。オフにするとトークン数だけになります"],
+      ["de", "Kosten in der Menüleiste", "Was die Anfragen über starling kosten, neben ihren Tokens in der Menüleiste und ihrem Tooltip; aus, nur die Tokens"],
     ]) {
       for (const width of [1100, 420]) {
         await t.test(lang + " at " + width, async () => {

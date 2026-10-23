@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/provider"
 	"gopkg.in/yaml.v3"
 )
 
@@ -44,7 +44,7 @@ func TestMorph(t *testing.T) {
 	if f.Get() != "gpt-5.4" || a.Check() != "" {
 		t.Fatalf("get: %q, check %q", f.Get(), a.Check())
 	}
-	if err := f.Set("magpie/deepseek/pro"); err != nil {
+	if err := f.Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	llm, raw := read()
@@ -55,18 +55,18 @@ func TestMorph(t *testing.T) {
 		!strings.Contains(raw, "# mine") || !strings.Contains(raw, "enabled: true") {
 		t.Fatalf("config:\n%s", raw)
 	}
-	if f.Get() != "magpie/deepseek/pro" || a.Check() != "" {
+	if f.Get() != "starling/deepseek/pro" || a.Check() != "" {
 		t.Fatalf("get: %q, check %q", f.Get(), a.Check())
 	}
-	// another magpie model keeps what was stashed first
-	if err := f.Set("magpie/deepseek/flash"); err != nil {
+	// another starling model keeps what was stashed first
+	if err := f.Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	if llm, _ := read(); llm["model"] != "deepseek/flash" {
 		t.Fatalf("flash: %v", llm)
 	}
 
-	// its own model: what the user had comes back, magpie's header goes
+	// its own model: what the user had comes back, starling's header goes
 	if err := f.Set("gpt-5.5"); err != nil {
 		t.Fatal(err)
 	}
@@ -78,8 +78,8 @@ func TestMorph(t *testing.T) {
 		t.Fatalf("own:\n%s", raw)
 	}
 
-	// reset from magpie: back to what the user had
-	f.Set("magpie/deepseek/flash")
+	// reset from starling: back to what the user had
+	f.Set("starling/deepseek/flash")
 	if err := f.Set(""); err != nil {
 		t.Fatal(err)
 	}
@@ -87,10 +87,10 @@ func TestMorph(t *testing.T) {
 		t.Fatalf("reset:\n%s", raw)
 	}
 
-	// a config with nothing under llm: nothing of magpie's stays, headers
-	// magpie's User-Agent was alone in included
+	// a config with nothing under llm: nothing of starling's stays, headers
+	// starling's User-Agent was alone in included
 	os.WriteFile(path, []byte("tools:\n  bash:\n    enabled: true\n"), 0o644)
-	f.Set("magpie/deepseek/pro")
+	f.Set("starling/deepseek/pro")
 	if llm, raw = read(); llm["provider"] != nil {
 		t.Fatalf("provider written:\n%s", raw)
 	}
@@ -102,7 +102,7 @@ func TestMorph(t *testing.T) {
 	}
 
 	// the gateway's address changed under it: said so
-	f.Set("magpie/deepseek/pro")
+	f.Set("starling/deepseek/pro")
 	b, _ := os.ReadFile(path)
 	os.WriteFile(path, []byte(strings.Replace(string(b), gateway.URL(), "http://127.0.0.1:1", 1)), 0o644)
 	if c := a.Check(); !strings.Contains(c, "endpoint") {
@@ -112,7 +112,7 @@ func TestMorph(t *testing.T) {
 	// MISTER_MORPH_CONFIG names the file
 	other := filepath.Join(home, "elsewhere.yaml")
 	t.Setenv("MISTER_MORPH_CONFIG", other)
-	if err := morph(home).Field("model").Set("magpie/deepseek/pro"); err != nil {
+	if err := morph(home).Field("model").Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	if b, err := os.ReadFile(other); err != nil || !strings.Contains(string(b), "deepseek/pro") {
@@ -124,7 +124,7 @@ func TestMorph(t *testing.T) {
 	}
 }
 
-// The window magpie knows a model to take is handed to morph, which knows
+// The window starling knows a model to take is handed to morph, which knows
 // one only from a list of its own.
 func TestMorphContextWindow(t *testing.T) {
 	home := t.TempDir()
@@ -149,14 +149,14 @@ func TestMorphContextWindow(t *testing.T) {
 		return c.LLM.Window, string(b)
 	}
 	f := morph(home).Field("model")
-	if err := f.Set("magpie/deepseek/pro"); err != nil {
+	if err := f.Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	if n, raw := window(); n != 1000000 {
 		t.Fatalf("pro: %d\n%s", n, raw)
 	}
-	// one whose window magpie doesn't know: morph's own guess, not pro's
-	if err := f.Set("magpie/deepseek/flash"); err != nil {
+	// one whose window starling doesn't know: morph's own guess, not pro's
+	if err := f.Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	if n, raw := window(); n != 0 {

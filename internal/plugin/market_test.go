@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-// The list built in is what a magpie that can't reach the market shows:
+// The list built in is what a starling that can't reach the market shows:
 // every entry a real package name, said in English and Chinese, once.
 func TestBuiltinMarket(t *testing.T) {
 	l, err := parseMarket(builtinMarket)
@@ -27,7 +27,7 @@ func TestBuiltinMarket(t *testing.T) {
 			t.Errorf("%s: summary needs en and zh", x.Package)
 		}
 		if !x.Community {
-			t.Errorf("%s: only chongyun's community's plugins are listed", x.Package)
+			t.Errorf("%s: only starling's community's plugins are listed", x.Package)
 		}
 		// gateway middleware signs in to nothing
 		if x.Kind == "middleware" {
@@ -60,7 +60,7 @@ func TestMarketSources(t *testing.T) {
 		w.Write([]byte(`{"version":1,"plugins":[{"package":"opencode-x-auth","name":"X","community":true},{"package":"not a name","community":true},{"package":"opencode-other-auth","name":"Other"}]}`))
 	}))
 	defer srv.Close()
-	t.Setenv("MAGPIE_PLUGIN_MARKET", srv.URL)
+	t.Setenv("STARLING_PLUGIN_MARKET", srv.URL)
 	ctx := context.Background()
 
 	reset()
@@ -79,7 +79,7 @@ func TestMarketSources(t *testing.T) {
 		t.Fatalf("down, nothing kept: %d, want the %d built in", len(l), len(builtin))
 	}
 	up = true
-	t.Setenv("MAGPIE_PLUGIN_MARKET", "off")
+	t.Setenv("STARLING_PLUGIN_MARKET", "off")
 	reset()
 	if l := Market(ctx); len(l) != len(builtin) {
 		t.Fatalf("off: %d", len(l))

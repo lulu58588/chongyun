@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // The APIs are close cousins; everything below is the shape they have
@@ -183,7 +183,7 @@ type Request struct {
 	Ultrafast bool
 	// Tier is the service_tier the client sent, as it sent it. It goes on
 	// as it is to a provider the user added by its address (OwnTier):
-	// a relay of theirs may serve Fast and Ultrafast where magpie can't
+	// a relay of theirs may serve Fast and Ultrafast where starling can't
 	// tell (hsiangron 报告: both were left out)
 	Tier string
 	// OwnTier is set for such a provider (gateway.go, as each attempt is
@@ -212,7 +212,7 @@ type Request struct {
 	// was sent, null and all, when the request is built again for a
 	// Responses upstream, whose answer to a value it doesn't take
 	// (invalid_access_program) is the client's to read; no other API takes
-	// it (magpie-releases#18).
+	// it (starling-releases#18).
 	AccessPrograms json.RawMessage
 	// Metadata is an Anthropic client's metadata (Claude Code's user_id),
 	// which goes on as it was sent when the request is built again for an
@@ -379,7 +379,7 @@ type Usage struct {
 	Tier string `json:"tier,omitempty"`
 	// Deferred is what the reply counted of earlier requests of its
 	// conversation, which their own replies couldn't (cUsage's
-	// MagpieDeferred): billed with this one, never told as its prompt
+	// StarlingDeferred): billed with this one, never told as its prompt
 	Deferred *Usage `json:"deferred,omitempty"`
 	// Credits is what the reply said the request cost in its plan's own
 	// credits, nil when it said none: WorkBuddy's usage.credit, the
@@ -801,7 +801,7 @@ func ByStrength(efforts []string) []string {
 // and max only.
 //
 // Codex's ultra is no API's level, whatever a list says (ChatGPT's lists
-// it for Codex's picker; magpie offers it on Copilot's gpt-6.1-sol, #656):
+// it for Codex's picker; starling offers it on Copilot's gpt-6.1-sol, #656):
 // it is sent as max, or the nearest the model has below it.
 func fitEffort(want string, levels []string) string {
 	if want == "ultra" {

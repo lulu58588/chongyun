@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
-	appsettings "github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
+	appsettings "github.com/lulu58588/starling/internal/settings"
 )
 
 func TestRuntimeUnavailableJSONKeepsMessageAndAction(t *testing.T) {
@@ -75,7 +75,7 @@ func TestAsideOfflineDisconnectAPIRequiresCurrentPreview(t *testing.T) {
 	if before, _ := os.ReadFile(settings); string(before) != initial {
 		t.Fatal("unavailable set staged without confirmation")
 	}
-	invalidPick := call("POST", "/api/set", `{"agent":"aside","field":"model","value":"magpie/offline-fixture/missing"}`)
+	invalidPick := call("POST", "/api/set", `{"agent":"aside","field":"model","value":"starling/offline-fixture/missing"}`)
 	var invalidError map[string]string
 	json.Unmarshal(invalidPick.Body.Bytes(), &invalidError)
 	if invalidPick.Code != 400 || invalidError["code"] != "" {
@@ -85,7 +85,7 @@ func TestAsideOfflineDisconnectAPIRequiresCurrentPreview(t *testing.T) {
 	if stage.Code != 200 {
 		t.Fatalf("stage %s", stage.Body)
 	}
-	if selection, _ := edit.GetJSON(settings, "defaultModel.provider"); selection != "magpie" {
+	if selection, _ := edit.GetJSON(settings, "defaultModel.provider"); selection != "starling" {
 		t.Fatal("stage did not normalize the same catalog ref as set")
 	}
 	a, err := agent.Find("aside")

@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // fakeWarmClaude is a claude that writes what it was run with to log and
@@ -46,7 +46,7 @@ func TestWarmClaudeAsksClaudeCodeOnce(t *testing.T) {
 	b, _ := os.ReadFile(log)
 	got := string(b)
 	for _, want := range []string{"[-p]", "[--model][haiku]", "[--tools][]", "[--setting-sources][]", "[--no-session-persistence]",
-		"dir:/saved/account\n", "base:\n", "stdin:hi", "magpie-claude-"} {
+		"dir:/saved/account\n", "base:\n", "stdin:hi", "starling-claude-"} {
 		if !strings.Contains(got, want) {
 			t.Errorf("run lacks %q:\n%s", want, got)
 		}

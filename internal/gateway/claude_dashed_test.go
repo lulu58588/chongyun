@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // misteer_ti. 报告: Claude Code reads a relay's claude-opus-4.6 as
-// Claude Opus 4, so magpie gives it relay/claude-opus-4-6-us. The gateway
+// Claude Opus 4, so starling gives it relay/claude-opus-4-6-us. The gateway
 // takes that dashed spelling back to the model the relay serves, its
 // effort and [1m] mark kept; a model served by the dashed name itself is
 // that one, and another vendor's id is never respelled.

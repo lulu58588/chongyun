@@ -8,16 +8,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // #1957 (parkavenue9639): Codex signed in to one account, another on in
-// magpie. Claude Code's /model described every codex/gpt-* by the account
-// Codex is signed in to, while magpie sent each request to the first in
+// starling. Claude Code's /model described every codex/gpt-* by the account
+// Codex is signed in to, while starling sent each request to the first in
 // its own order: the other one when the signed-in one is paused, or when
 // Codex is kept signed in to an account that isn't first. The note names
 // the account a request goes to first.
-func TestViaMagpieNamesTheAccountFirstInOrder(t *testing.T) {
+func TestViaStarlingNamesTheAccountFirstInOrder(t *testing.T) {
 	claims := func(m map[string]any) string {
 		b, _ := json.Marshal(m)
 		return "h." + base64.RawURLEncoding.EncodeToString(b) + ".s"
@@ -32,7 +32,7 @@ func TestViaMagpieNamesTheAccountFirstInOrder(t *testing.T) {
 	home, _ := codexHome(t, string(me), "model = \"gpt-5.5\"\n")
 	os.WriteFile(filepath.Join(home, ".codex", "models_cache.json"), []byte(`{"models":[{"slug":"gpt-5.5","display_name":"GPT-5.5","priority":1}]}`), 0o644)
 	b, _ := json.Marshal([]map[string]any{
-		// chongyun keeps the account it signed the agent in to in its own
+		// starling keeps the account it signed the agent in to in its own
 		// logins.json, marked as the one the agent is on: it never reads
 		// the agent's own file to find out which account that is.
 		{"agent": "codex", "user": "me@example.com", "active": true, "seen": time.Now(), "auth": auth("me@example.com", "acct-1")},
@@ -44,15 +44,15 @@ func TestViaMagpieNamesTheAccountFirstInOrder(t *testing.T) {
 	t.Cleanup(provider.ForgetAccounts)
 	note := func() string {
 		t.Helper()
-		for _, o := range viaMagpie("claude", "") {
+		for _, o := range viaStarling("claude", "") {
 			if o.Value == "codex/gpt-5.5" {
 				return o.Note
 			}
 		}
-		t.Fatal("no codex/gpt-5.5 among Claude Code's models via chongyun")
+		t.Fatal("no codex/gpt-5.5 among Claude Code's models via starling")
 		return ""
 	}
-	if got := note(); got != "me@example.com · via chongyun" {
+	if got := note(); got != "me@example.com · via starling" {
 		t.Fatalf("signed in to the first: %q", got)
 	}
 	// kept signed in to spare, me still first in the order
@@ -60,7 +60,7 @@ func TestViaMagpieNamesTheAccountFirstInOrder(t *testing.T) {
 		t.Fatal(err)
 	}
 	provider.ForgetAccounts()
-	if got := note(); got != "me@example.com · via chongyun" {
+	if got := note(); got != "me@example.com · via starling" {
 		t.Fatalf("kept signed in to spare, me first: %q", got)
 	}
 	// let go, Codex is on me again; me paused, spare takes its requests
@@ -71,7 +71,7 @@ func TestViaMagpieNamesTheAccountFirstInOrder(t *testing.T) {
 		t.Fatal(err)
 	}
 	provider.ForgetAccounts()
-	if got := note(); got != "spare@example.com · via chongyun" {
+	if got := note(); got != "spare@example.com · via starling" {
 		t.Fatalf("signed in to me, paused: %q", got)
 	}
 }

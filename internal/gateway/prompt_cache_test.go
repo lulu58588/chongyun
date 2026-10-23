@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// codexTurn is a Codex request as it reaches magpie: its instructions, its
+// codexTurn is a Codex request as it reaches starling: its instructions, its
 // developer and context messages, the conversation so far, its tools and its
 // thread's id as prompt_cache_key.
 func codexTurn(input string) string {

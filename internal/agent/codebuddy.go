@@ -6,8 +6,8 @@ package agent
 // take models of one's own from ~/.codebuddy/models.json ($CODEBUDDY_CONFIG_DIR
 // if set), in WorkBuddy's format (workbuddy.go):
 //
-//	{"models":[{"id":"deepseek/pro","name":…,"vendor": "magpie",
-//	  "apiKey":"magpie-codebuddy","url":"http://127.0.0.1:3425/v1/chat/completions",
+//	{"models":[{"id":"deepseek/pro","name":…,"vendor": "starling",
+//	  "apiKey":"starling-codebuddy","url":"http://127.0.0.1:3425/v1/chat/completions",
 //	  "maxInputTokens":…,"maxOutputTokens":…,"supportsToolCall":true,…}],
 //	 "availableModels":[…]}
 //
@@ -23,7 +23,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/starling/internal/edit"
 )
 
 func codebuddy(home string) *Agent { return codebuddyIn(here(home)) }
@@ -41,7 +41,7 @@ func codebuddyIn(at place) *Agent {
 	write := func(on bool) error { return buddyWriteAt(path, "codebuddy", on, at) }
 	settings := filepath.Join(dir, "settings.json")
 	model := func() string { v, _ := edit.GetJSON(settings, "model"); return v }
-	// ours is whether id is one of magpie's models in models.json
+	// ours is whether id is one of starling's models in models.json
 	ours := func(id string) bool {
 		d, _ := workbuddyRead(path)
 		return slices.ContainsFunc(d.models, func(raw json.RawMessage) bool { e, ok := workbuddyMine(raw); return ok && e.ID == id })
@@ -67,18 +67,18 @@ func codebuddyIn(at place) *Agent {
 			Get: func() string {
 				m := model()
 				if m != "" && ours(m) {
-					return magpieID + "/" + m
+					return starlingID + "/" + m
 				}
 				return m
 			},
 			Set: func(v string) error {
-				if ref, ok := strings.CutPrefix(v, magpieID+"/"); ok && isMagpie(ref) {
+				if ref, ok := strings.CutPrefix(v, starlingID+"/"); ok && isStarling(ref) {
 					if err := write(true); err != nil {
 						return err
 					}
 					return edit.SetJSON(settings, edit.KV{Path: "model", Value: ref})
 				}
-				// CodeBuddy's own: magpie's models come out of its list
+				// CodeBuddy's own: starling's models come out of its list
 				if err := write(false); err != nil {
 					return err
 				}
@@ -89,10 +89,10 @@ func codebuddyIn(at place) *Agent {
 			},
 			Options: func(cur map[string]string) []Option {
 				var out []Option
-				if v := cur["model"]; v != "" && !usesMagpie(v) {
+				if v := cur["model"]; v != "" && !usesStarling(v) {
 					out = append(out, Option{Value: v, Icon: modelIcon("", v)})
 				}
-				return append(out, viaMagpie("codebuddy", magpieID+"/")...)
+				return append(out, viaStarling("codebuddy", starlingID+"/")...)
 			},
 		}},
 	}

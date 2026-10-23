@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func TestClaudeStandIn(t *testing.T) {
@@ -50,8 +50,8 @@ func TestClaudeStandIn(t *testing.T) {
 	}
 }
 
-// Codex on magpie as its provider asks for its auto-review by OpenAI's
-// name, codex-auto-review (shihao H 报告: 404 magpie knows no model
+// Codex on starling as its provider asks for its auto-review by OpenAI's
+// name, codex-auto-review (shihao H 报告: 404 starling knows no model
 // "codex-auto-review"); it goes to the model Codex is set to. Signed in
 // (routed by openai_base_url) or not routed, nothing stands in.
 func TestCodexStandIn(t *testing.T) {
@@ -67,9 +67,9 @@ func TestCodexStandIn(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	write("model = \"deepseek/deepseek-v4\"\nmodel_provider = \"magpie\"\n\n[model_providers.magpie]\nname = \"magpie\"\n")
+	write("model = \"deepseek/deepseek-v4\"\nmodel_provider = \"starling\"\n\n[model_providers.starling]\nname = \"starling\"\n")
 	if got := StandIn("codex", "codex-auto-review"); got != "deepseek/deepseek-v4" {
-		t.Errorf("chongyun as provider: %q", got)
+		t.Errorf("starling as provider: %q", got)
 	}
 	// the gateway knows the request as Codex's by its User-Agent
 	for _, ua := range []string{

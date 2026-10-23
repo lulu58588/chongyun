@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/lastgood"
+	"github.com/lulu58588/starling/internal/lastgood"
 )
 
 // plugin-auth.json is parsed once for each version of the file, however

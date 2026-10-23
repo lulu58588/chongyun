@@ -14,7 +14,7 @@
 | 把 Agent 的配置接到网关上、配置漂移、断开、WSL 双胞胎 | [Agent 接线](agent-wiring.md) |
 | 供应商、密钥、订阅账号、刷新与额度 | [供应商与账号](providers-accounts.md) |
 | 写入 Agent 的指令、MCP server、skills 与 RTK | [库](library.md) |
-| 托盘、面板、窗口、`chongyun web` 以及页面 JSON API | [GUI 应用外壳](gui-shell.md) |
+| 托盘、面板、窗口、`starling web` 以及页面 JSON API | [GUI 应用外壳](gui-shell.md) |
 | 加密备份，以及通过 WebDAV、S3 或 GitHub 的配置同步 | [同步与备份](sync-backup.md) |
 
 一个子系统可能横跨多个包甚至多个仓库。它的参考文档描述这些部分合在一起提供的行为，不要求逐个函数罗列。

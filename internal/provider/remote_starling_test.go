@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
-// Another magpie is added by its address however it was typed, and
+// Another starling is added by its address however it was typed, and
 // speaks every API there: Chat and Responses at /v1, Messages at the root.
 // Its whole list is offered, being already what its user exposed.
-func TestRemoteMagpie(t *testing.T) {
+func TestRemoteStarling(t *testing.T) {
 	azureHome(t)
 	for _, in := range []string{
 		"192.168.1.20:3425",
@@ -25,7 +25,7 @@ func TestRemoteMagpie(t *testing.T) {
 		"http://192.168.1.20:3425/v1/videos",
 		"http://192.168.1.20:3425/v1/messages/count_tokens",
 	} {
-		p := normalize(Provider{Preset: RemoteMagpiePreset, Chat: in})
+		p := normalize(Provider{Preset: RemoteStarlingPreset, Chat: in})
 		if p.Chat != "http://192.168.1.20:3425/v1" || p.Responses != p.Chat || p.Anthropic != "http://192.168.1.20:3425" || p.Decide != p.Chat {
 			t.Errorf("%q: %q %q %q", in, p.Chat, p.Responses, p.Anthropic)
 		}
@@ -35,7 +35,7 @@ func TestRemoteMagpie(t *testing.T) {
 		t.Errorf("custom: %+v", p)
 	}
 
-	if err := Save(Provider{ID: "office", Preset: RemoteMagpiePreset, Key: "sk-magpie-x", Chat: "http://192.168.1.20:3425"}); err != nil {
+	if err := Save(Provider{ID: "office", Preset: RemoteStarlingPreset, Key: "sk-starling-x", Chat: "http://192.168.1.20:3425"}); err != nil {
 		t.Fatal(err)
 	}
 	var ms []catalog.Model
@@ -52,7 +52,7 @@ func TestRemoteMagpie(t *testing.T) {
 	if n := len(p.Exposed()); n != len(ms) {
 		t.Errorf("exposed %d of %d", n, len(ms))
 	}
-	if !p.Ready() || p.Icon != "chongyun" {
+	if !p.Ready() || p.Icon != "starling" {
 		t.Errorf("%+v", p)
 	}
 }

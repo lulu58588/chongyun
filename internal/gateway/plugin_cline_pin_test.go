@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // The Cline plugin's provider has ClinePass's Upstream tick too (ARNO on

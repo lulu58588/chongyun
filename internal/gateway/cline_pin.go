@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/tidwall/gjson"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // clinePin is body with its DeepSeek or GLM model pinned to its maker's

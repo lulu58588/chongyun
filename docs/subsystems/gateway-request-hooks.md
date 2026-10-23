@@ -5,27 +5,27 @@
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Magpie
+    participant Starling
     participant Hook as Bun gateway hook
     participant Model
-    Client->>Magpie: Request
-    Magpie->>Hook: await onRequest(body, ctx with host-derived origin)
-    Hook-->>Magpie: Context-enriched body, or original on failure
-    Magpie->>Model: One inference request
-    Model-->>Client: Live response through Magpie
-    Magpie--)Hook: onResponse(completedReply, ctx)
+    Client->>Starling: Request
+    Starling->>Hook: await onRequest(body, ctx with host-derived origin)
+    Hook-->>Starling: Context-enriched body, or original on failure
+    Starling->>Model: One inference request
+    Model-->>Client: Live response through Starling
+    Starling--)Hook: onResponse(completedReply, ctx)
     Note over Hook: Bounded best-effort notification
 ```
 
 ## 入口与请求契约
 
-在 package.json 里声明 `"magpie": {"hooks": "./context.hooks.ts"}`，或者用 `chongyun plugin add` 安装一个 `*.hooks.js`、`.mjs`、`.ts` 或 `.mts` 文件。这些名字与 JS 网关 middleware 的（`magpie.middleware`、它的别名 `magpie.gateway`、`*.gateway.js`）不同，所以一个 import 了 `node:fs` 的 hook 不会再被当作 middleware 加载。Bun 直接运行 TypeScript。纯网关的包不需要 provider 的 main/exports，也不需要客户端 MCP 安装或客户端 skill。
+在 package.json 里声明 `"starling": {"hooks": "./context.hooks.ts"}`，或者用 `starling plugin add` 安装一个 `*.hooks.js`、`.mjs`、`.ts` 或 `.mts` 文件。这些名字与 JS 网关 middleware 的（`starling.middleware`、它的别名 `starling.gateway`、`*.gateway.js`）不同，所以一个 import 了 `node:fs` 的 hook 不会再被当作 middleware 加载。Bun 直接运行 TypeScript。纯网关的包不需要 provider 的 main/exports，也不需要客户端 MCP 安装或客户端 skill。
 
 `export async function onRequest(body, ctx)` 在路由前拿到客户端协议的 JSON。返回一个 JSON 对象以补充上下文；返回 `undefined` 则保持原样。当 hook 抛异常、超时、返回非法数据，或改动了客户端的工具声明、tool choice、`model` 或 `stream` 时，这些改动都会被回滚（网关已经拿调用方的 key 对照模型做过校验，而客户端读的是它自己请求的那份回复）。被回滚的 hook 记为失败，该请求不再有 `onResponse`。它不能拒绝请求，也不能注册工具。同步的 middleware API 仍然单独可用。
 
 上下文字段：`protocol`（`chat`、`responses`、`anthropic`、`gemini`）、`model`、`stream`、`path`、`origin`、`agent`、`session`、`cwd`、`query`、包级 `options`、请求私有 `state`、一个 `AbortSignal` 以及 `report(code, bytes)`。请求头和客户端凭据不会转发给 hook。query 提取保持模型原始输入完整，同时在召回时排除客户端的环境/指令说明。空的身份字段不得被当作已认证的用户身份。
 
-`origin` 由宿主推导：直接回环请求、没有转发请求头也没有具名网关 key 时为 `local`；具名 key（包括在回环上使用的）为 `gateway-key`；其余为 `remote`。即使设置了 `MAGPIE_TRUST_PROXY=1`，转发来的流量仍然是 remote。不会暴露 key、key 名、对端地址或客户端自称的 origin。较旧的宿主没有 origin 时表示未知。这个分类不是用户身份；导出对话的 plugin 必须自行取得明确授权，并默认跳过非 local 或未知的 origin。两个生命周期回调里都能拿到它。
+`origin` 由宿主推导：直接回环请求、没有转发请求头也没有具名网关 key 时为 `local`；具名 key（包括在回环上使用的）为 `gateway-key`；其余为 `remote`。即使设置了 `STARLING_TRUST_PROXY=1`，转发来的流量仍然是 remote。不会暴露 key、key 名、对端地址或客户端自称的 origin。较旧的宿主没有 origin 时表示未知。这个分类不是用户身份；导出对话的 plugin 必须自行取得明确授权，并默认跳过非 local 或未知的 origin。两个生命周期回调里都能拿到它。
 
 `gatewayTimeoutMs` 选项接受 100–10000 毫秒（默认 1000 毫秒）。整条请求 hook 链的时限是十秒，宿主启动/RPC 的时限是十一秒，其中包括在 provider 发现期间等待一个正在启动的宿主。首个请求在这个预算内等待，而不是因为启动占着宿主锁就跳过它的 hook。客户端取消会中止等待和请求 hook 的 I/O。hook 按 plugin 顺序执行。失败时保留上一次被接受的请求；诊断信息里是固定的结果码和字节数，不含私有内容。
 

@@ -24,8 +24,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // JevLatest is the Jev a decision provider is asked with when the user
@@ -94,7 +94,7 @@ func (p Provider) DecidesModel(model string) bool {
 	if p.bailianApart() {
 		return model == BailianDecision
 	}
-	if p.IsRemoteMagpie() || p.listsDecisions() {
+	if p.IsRemoteStarling() || p.listsDecisions() {
 		// OpenRouter's Jev Router (typesafe/jev-router) is a chat model
 		return slices.ContainsFunc(p.decideListed(), func(m catalog.Model) bool { return m.ID == model })
 	}
@@ -104,7 +104,7 @@ func (p Provider) DecidesModel(model string) bool {
 // isDecision uses a listed remote model's marker without reading its whole
 // list again. Other providers keep their endpoint and name-based rules.
 func (p Provider) isDecision(m catalog.Model) bool {
-	if p.IsRemoteMagpie() {
+	if p.IsRemoteStarling() {
 		return m.Decides
 	}
 	if p.IsPlugin() && p.Decides() && m.Decides {
@@ -170,7 +170,7 @@ func decisionsID(id string) string { return id + ".decisions" }
 
 // DecisionModels are the decision models listed separately from a provider's
 // conversations: OpenRouter's own list, a Bailian Token Plan's decision
-// model, or a remote magpie's or a plugin's marked models.
+// model, or a remote starling's or a plugin's marked models.
 func (p Provider) DecisionModels() []catalog.Model {
 	if p.IsPlugin() {
 		if !p.Decides() {
@@ -178,14 +178,14 @@ func (p Provider) DecisionModels() []catalog.Model {
 		}
 		return p.decideModels()
 	}
-	if !p.IsRemoteMagpie() && (p.DecideOnly() || !p.listsDecisions() && !p.bailianApart()) {
+	if !p.IsRemoteStarling() && (p.DecideOnly() || !p.listsDecisions() && !p.bailianApart()) {
 		return nil
 	}
 	return p.decideModels()
 }
 
 // decideListDue reports whether p's list of decision models at OpenRouter
-// is still to be fetched, or was fetched before magpie kept each model's
+// is still to be fetched, or was fetched before starling kept each model's
 // window and input (they show on the Providers page and the Gateway list
 // only once it is fetched again).
 func (p Provider) decideListDue() bool {
@@ -254,7 +254,7 @@ const (
 // the gateway's own path (Vercel's /typesafe or /v4/ai, Cloudflare's
 // /client/v4).
 func (p Provider) DecideVia() string {
-	if p.IsRemoteMagpie() {
+	if p.IsRemoteStarling() {
 		return ViaSystemOne
 	}
 	base := strings.TrimRight(p.Decide, "/")
@@ -272,7 +272,7 @@ func (p Provider) DecideVia() string {
 // Jev is the model a decision provider is asked with when the user picked
 // none: TypeSafe's latest stable one, or the one Jev a gateway serves.
 func (p Provider) Jev() string {
-	if p.IsRemoteMagpie() || p.IsPlugin() {
+	if p.IsRemoteStarling() || p.IsPlugin() {
 		if models := p.decideListed(); len(models) > 0 {
 			return models[0].ID
 		}
@@ -381,7 +381,7 @@ func withDecideFacts(ms []catalog.Model) []catalog.Model {
 }
 
 func (p Provider) decideListed() []catalog.Model {
-	if p.IsRemoteMagpie() {
+	if p.IsRemoteStarling() {
 		live, _, _ := catalog.Live(p.ID)
 		// Live returns a filtered copy, so it can be compacted in place.
 		return slices.DeleteFunc(live, func(m catalog.Model) bool { return !m.Decides })
@@ -558,7 +558,7 @@ func Deciders() []Entry {
 
 // OfferedDeciders are the Deciders a routing group's pickers and templates
 // offer: of a provider whose decision models are listed beside its chat
-// models (OpenRouter's, a Bailian plan's, a plugin's, a remote magpie's),
+// models (OpenRouter's, a Bailian plan's, a plugin's, a remote starling's),
 // with picks saved, those among the picks alone, as its editor shows the
 // rest unpicked (coeo91 报告: two OpenRouter models picked, and a
 // new group's picker listed OpenRouter's twenty-odd decision models after
@@ -583,7 +583,7 @@ func deciders(keep func(id string) bool) []Entry {
 			continue
 		}
 		ms := p.Exposed()
-		if !p.DecideOnly() && (len(p.Models) == 0 || p.listsDecisions() || p.bailianApart() || p.IsRemoteMagpie() || p.IsPlugin()) {
+		if !p.DecideOnly() && (len(p.Models) == 0 || p.listsDecisions() || p.bailianApart() || p.IsRemoteStarling() || p.IsPlugin()) {
 			ms = p.decideModels() // the conversation picker's limit does not hide Jev
 			if keep != nil && len(p.Models) > 0 {
 				ms = slices.DeleteFunc(slices.Clone(ms), func(m catalog.Model) bool {
@@ -593,7 +593,7 @@ func deciders(keep func(id string) bool) []Entry {
 		}
 		for _, m := range ms {
 			if p.isDecision(m) && !off(p.ID, m.ID) { // a disabled one isn't offered (#1867)
-				if p.IsRemoteMagpie() {
+				if p.IsRemoteStarling() {
 					out = append(out, entryFor(p, m, s))
 				} else {
 					out = append(out, Entry{ID: p.ID + "/" + m.ID, Model: m.ID, Name: m.Name, Provider: p})
@@ -629,7 +629,7 @@ func RouteDecider(model string) (Provider, string, error) {
 	if pid, rest, ok := strings.Cut(model, "/"); ok && rest != "" {
 		if p, ok := deciderByID(pid); ok {
 			if !p.On() {
-				return Provider{}, "", decideBadRequest("%s is switched off in chongyun", p.Name)
+				return Provider{}, "", decideBadRequest("%s is switched off in starling", p.Name)
 			}
 			m, ok := resolveDecideModel(p, rest)
 			if !ok {
@@ -640,7 +640,7 @@ func RouteDecider(model string) (Provider, string, error) {
 	}
 	if p, ok := deciderByID(model); ok {
 		if !p.On() {
-			return Provider{}, "", decideBadRequest("%s is switched off in chongyun", p.Name)
+			return Provider{}, "", decideBadRequest("%s is switched off in starling", p.Name)
 		}
 		if m := p.Jev(); m != "" {
 			return p, m, nil
@@ -678,9 +678,9 @@ func RouteDecider(model string) (Provider, string, error) {
 		return hits[0].p, hits[0].m, nil
 	case 0:
 		if len(on) == 0 {
-			return Provider{}, "", decideNotFound("chongyun has no Jev provider")
+			return Provider{}, "", decideNotFound("starling has no Jev provider")
 		}
-		return Provider{}, "", decideNotFound("chongyun knows no Jev model %q; name the provider before it, like %s/%s", model, on[0].ID, on[0].Jev())
+		return Provider{}, "", decideNotFound("starling knows no Jev model %q; name the provider before it, like %s/%s", model, on[0].ID, on[0].Jev())
 	default:
 		ps := make([]Provider, len(hits))
 		for i, h := range hits {
@@ -700,7 +700,7 @@ func decideAmbiguous(model string, ps []Provider) error {
 }
 
 // decideRouteError is a System One routing failure, with the HTTP status
-// magpie answers.
+// starling answers.
 type decideRouteError struct {
 	msg    string
 	status int
@@ -717,7 +717,7 @@ func decideNotFound(format string, a ...any) error {
 }
 
 // DecideRouteStatus is the HTTP status a System One request gets for err
-// from RouteDecider: 400 when the model is named badly, 404 when magpie
+// from RouteDecider: 400 when the model is named badly, 404 when starling
 // has no such Jev provider.
 func DecideRouteStatus(err error) int {
 	var e *decideRouteError
@@ -771,7 +771,7 @@ func deciderByID(id string) (Provider, bool) {
 // account's Workers AI models, or by finding its account) and Jev is the
 // model.
 func (p Provider) fetchDecide(ctx context.Context) ([]catalog.Model, error) {
-	if p.IsRemoteMagpie() {
+	if p.IsRemoteStarling() {
 		if _, err := p.fetch(ctx); err != nil {
 			return nil, err
 		}
@@ -918,7 +918,7 @@ func (p Provider) decideAsked(ctx context.Context) ([]catalog.Model, error) {
 // decision API, and says why it wasn't answered.
 func (p Provider) AskSystemOne(ctx context.Context, model string) error {
 	if pat, off := ModelDisabled(p.ID, model); off { // never asked (#1867)
-		return fmt.Errorf("model %s/%s is disabled in chongyun (it matches %q)", p.ID, model, pat)
+		return fmt.Errorf("model %s/%s is disabled in starling (it matches %q)", p.ID, model, pat)
 	}
 	u, err := p.DecideModelURL(ctx, model)
 	if err != nil {

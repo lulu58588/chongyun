@@ -5,7 +5,7 @@
 // sending one. Each member now carries the same chips the Gateway page's model
 // list says a model in (modelInfo): its reasoning levels, whether it sees
 // images and the window it holds. A member whose list says nothing of images
-// is marked unknown, not "text only": magpie counts it text-only for a
+// is marked unknown, not "text only": starling counts it text-only for a
 // describer (gateway.blindTo), which is not its list saying it takes none. In
 // English and Chinese, Chromium and WebKit.
 const assert = require("node:assert/strict");
@@ -157,7 +157,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const errors = [];
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", serve(lang));
-      await page.goto("http://magpie.test/?view=routing");
+      await page.goto("http://starling.test/?view=routing");
       await page.locator(".rt-group[data-id=g]").waitFor();
       await page.locator(".rt-group[data-id=g]").click();
       await page.locator(".rt-gedit .fbrow").first().waitFor();
@@ -208,7 +208,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
       const errors = [];
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", serve(lang));
-      await page.goto("http://magpie.test/?view=routing");
+      await page.goto("http://starling.test/?view=routing");
       await page.locator(".rt-group[data-id=g3]").waitFor();
       await page.locator(".rt-group[data-id=g3]").click();
       await page.locator(".rt-gedit .fbrow").first().waitFor();

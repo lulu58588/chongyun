@@ -12,7 +12,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
 type entry struct {
@@ -38,7 +38,7 @@ var (
 	mu   sync.Mutex
 	seen = map[string]entry{}
 	// holds is how many requests hold what was read (Hold); gen is moved
-	// on by every write magpie makes (Forget)
+	// on by every write starling makes (Forget)
 	holds int
 	gen   uint64
 	// gone is the files found not there last time looked at, not waited
@@ -82,7 +82,7 @@ func Hold() (release func()) {
 	})
 }
 
-// Forget has every file looked at again on its next read: magpie wrote
+// Forget has every file looked at again on its next read: starling wrote
 // one.
 func Forget() {
 	mu.Lock()
@@ -99,7 +99,7 @@ var gens atomic.Uint64
 func Gen() uint64 { return gens.Load() }
 
 // Look has the file at path looked at on its next read, even while a
-// request holds what was read (Hold): another magpie may have written it,
+// request holds what was read (Hold): another starling may have written it,
 // which Forget, moved on by this one's writes alone, can't know of.
 func Look(path string) {
 	mu.Lock()

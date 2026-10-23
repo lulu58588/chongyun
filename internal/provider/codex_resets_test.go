@@ -81,7 +81,7 @@ func TestCodexResetsCounted(t *testing.T) {
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			asked := fakeCodexResets(t, c.count, c.details)
-			// chongyun keeps the account in its own logins.json and reads
+			// starling keeps the account in its own logins.json and reads
 			// the usage by the account's name, not by the agent's home
 			q := codexSubscriptionUsage(context.Background(), "me@example.com")
 			if q.Error != "" || len(q.Windows) != 1 {

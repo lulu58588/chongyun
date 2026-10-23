@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // sessionsHome is a sandbox HOME with the sessions package's fixtures as
@@ -81,7 +81,7 @@ func wantAll(t *testing.T, out string, want ...string) {
 	}
 }
 
-// magpie sessions lists the latest sessions; --days sums them day by day
+// starling sessions lists the latest sessions; --days sums them day by day
 // with the top models and folders; --model and --folder narrow both.
 func TestSessionsCmd(t *testing.T) {
 	now := sessionsHome(t)

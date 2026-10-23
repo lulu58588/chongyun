@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/codexcat"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/codexcat"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // The windows the user set on the codex provider reach Codex's own entries
@@ -19,7 +19,7 @@ import (
 // the window, and the max where the window is past it; the rest of each
 // entry as the backend gave it, and a model with none set as it was.
 // Taking one away changes the ETag and the window goes back, also in a list
-// made from Codex's cache, which keeps what magpie handed it.
+// made from Codex's cache, which keeps what starling handed it.
 func TestCodexNativeModelsTakeSetWindows(t *testing.T) {
 	codexSignedIn(t)
 	if err := provider.Save(provider.Provider{ID: "codex", Contexts: map[string]int{"gpt-6.1-sol": 600000, "gpt-5.5": 400000}}); err != nil {
@@ -118,9 +118,9 @@ func TestCodexNativeModelsTakeSetWindows(t *testing.T) {
 	}
 }
 
-// A ChatGPT account's model in a catalog magpie writes (model_catalog_json)
-// takes its entry from Codex's cache under magpie's id, with the window
-// magpie resolved for it, not the one the cache kept (#674).
+// A ChatGPT account's model in a catalog starling writes (model_catalog_json)
+// takes its entry from Codex's cache under starling's id, with the window
+// starling resolved for it, not the one the cache kept (#674).
 func TestCodexCatalogOwnEntryTakesResolvedWindow(t *testing.T) {
 	home := t.TempDir()
 	setHome(t, home)

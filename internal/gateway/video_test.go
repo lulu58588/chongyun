@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // grokMedia is the backend a Grok subscription's images and videos are
@@ -139,7 +139,7 @@ func TestVolcengineAgentPlanVideos(t *testing.T) {
 }
 
 func TestVolcengineVideoBody(t *testing.T) {
-	f := filming{Prompt: "a chongyun", Seconds: "6", Size: "1280x720", Start: &picture{Mime: "image/png", Data: []byte("png")}, References: []picture{{URL: "https://example.test/ref.png"}}}
+	f := filming{Prompt: "a starling", Seconds: "6", Size: "1280x720", Start: &picture{Mime: "image/png", Data: []byte("png")}, References: []picture{{URL: "https://example.test/ref.png"}}}
 	var got map[string]any
 	if err := json.Unmarshal(volcengineVideoBody("doubao-seedance-2.5", f), &got); err != nil {
 		t.Fatal(err)
@@ -211,7 +211,7 @@ func TestVolcengineVideoIsStartedPolledAndFetched(t *testing.T) {
 	}
 
 	s := New()
-	code, obj, raw, _ := request(t, s, http.MethodPost, "/v1/videos", "application/json", `{"model":"ark-agent/doubao-seedance-2.0-mini","prompt":"a chongyun","seconds":5,"size":"854x480"}`)
+	code, obj, raw, _ := request(t, s, http.MethodPost, "/v1/videos", "application/json", `{"model":"ark-agent/doubao-seedance-2.0-mini","prompt":"a starling","seconds":5,"size":"854x480"}`)
 	if code != 200 || obj["status"] != "queued" || obj["model"] != "ark-agent/doubao-seedance-2.0-mini" {
 		t.Fatalf("create: %d %s", code, raw)
 	}

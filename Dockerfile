@@ -9,7 +9,7 @@ COPY . .
 
 ARG VERSION=dev
 RUN CGO_ENABLED=0 go build -tags nogui -trimpath \
-      -ldflags "-s -w -X main.version=${VERSION}" -o /out/chongyun . \
+      -ldflags "-s -w -X main.version=${VERSION}" -o /out/starling . \
     && mkdir -p /config/home /config/cache /config/data /config/state
 
 # Debian, not distroless: a subscription's CLI is installed with its
@@ -28,30 +28,30 @@ RUN apt-get update \
     && groupadd -g 65532 nonroot \
     && useradd -u 65532 -g nonroot -d /config/home -s /bin/bash nonroot
 
-COPY --from=build /out/chongyun /chongyun
-# chongyun on PATH, so `chongyun accounts add …` works in that terminal
-RUN ln -s /chongyun /usr/local/bin/chongyun
+COPY --from=build /out/starling /starling
+# starling on PATH, so `starling accounts add …` works in that terminal
+RUN ln -s /starling /usr/local/bin/starling
 USER nonroot
 COPY --from=build --chown=65532:65532 /config /config
 
-# Everything Chongyun and the sign-ins it manages write goes into the volume:
-# its own files (/config/magpie), sign-ins kept where an agent keeps them
+# Everything Starling and the sign-ins it manages write goes into the volume:
+# its own files (/config/starling), sign-ins kept where an agent keeps them
 # (~/.codex, ~/.claude…, under HOME), and the cache holding Bun and the
-# model catalog. Chongyun makes the folders a volume from an older image
+# model catalog. Starling makes the folders a volume from an older image
 # lacks.
 ENV HOME=/config/home \
     XDG_CONFIG_HOME=/config \
     XDG_CACHE_HOME=/config/cache \
     XDG_DATA_HOME=/config/data \
     XDG_STATE_HOME=/config/state \
-    MAGPIE_ADDR=0.0.0.0:3425
+    STARLING_ADDR=0.0.0.0:3425
 
 VOLUME /config
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD ["/chongyun", "healthcheck"]
+    CMD ["/starling", "healthcheck"]
 
 EXPOSE 3425 3430
 
-ENTRYPOINT ["/chongyun"]
+ENTRYPOINT ["/starling"]
 CMD ["serve"]

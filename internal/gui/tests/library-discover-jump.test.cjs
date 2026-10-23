@@ -20,7 +20,7 @@ const servers = Array.from({ length: 40 }, (_, i) => ({ name: `server-${String(i
 
 function serve(lang, web) {
   const view = {
-    dir: `${HOME}/.magpie/library`, backups: `${HOME}/.magpie/backups`, home: HOME,
+    dir: `${HOME}/.starling/library`, backups: `${HOME}/.starling/backups`, home: HOME,
     agents: [agent("claude", "Claude Code", "claudecode-color")],
     instructions: { agents: [], sets: [] }, servers, foundServers: [], projects: [], foundSkills: [], skills, problems: [],
   };
@@ -58,9 +58,9 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         page.on("pageerror", (e) => errors.push(e.message));
         page.on("console", (m) => { if (/scroll not asked for/.test(m.text())) errors.push(m.text()); });
         await page.route("**/*", serve(lang, web));
-        await page.addInitScript(() => { localStorage.setItem("magpie.libTab", "skills"); });
+        await page.addInitScript(() => { localStorage.setItem("starling.libTab", "skills"); });
         t.after(() => browser.close());
-        await page.goto("http://magpie.test/?view=library");
+        await page.goto("http://starling.test/?view=library");
         const view = page.locator("#view-library");
         const head = view.locator(".lib-head");
         await view.locator('.mk[data-market="skills"] .mk-card').first().waitFor();

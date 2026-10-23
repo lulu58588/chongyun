@@ -3,7 +3,7 @@ package gui
 import (
 	"slices"
 
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 func addCodexModelEffort(s *sessions.Session, byThread map[string][]sessions.ModelEffort) {

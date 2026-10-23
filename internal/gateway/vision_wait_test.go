@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // slowEye is eyeUp with the describing model's answer held: until gate is
@@ -103,7 +103,7 @@ func TestVisionWaitIsntTheDescribersTime(t *testing.T) {
 }
 
 // The limit still ends a describer that takes too long once asked, and the
-// usage log says magpie stopped waiting, not that the agent canceled.
+// usage log says starling stopped waiting, not that the agent canceled.
 func TestVisionLimitEndsASlowDescriber(t *testing.T) {
 	visionLimits(t, 200*time.Millisecond, 10*time.Second)
 	s, _ := slowEyed(t, time.Second)
@@ -120,7 +120,7 @@ func TestVisionLimitEndsASlowDescriber(t *testing.T) {
 	if vision == nil {
 		t.Fatal("no vision request in the usage log")
 	}
-	if vision.Status != 499 || !strings.Contains(vision.Error, "chongyun stopped waiting") || strings.Contains(vision.Error, "agent canceled") {
+	if vision.Status != 499 || !strings.Contains(vision.Error, "starling stopped waiting") || strings.Contains(vision.Error, "agent canceled") {
 		t.Fatalf("vision usage: %d %q", vision.Status, vision.Error)
 	}
 }

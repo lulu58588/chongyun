@@ -16,13 +16,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/filelock"
+	"github.com/lulu58588/starling/internal/filelock"
 )
 
 // savedTokenMu keeps two requests from refreshing one saved account at
 // once: the second would spend a refresh token the first just rotated. It
-// holds across magpies too (#1674): the gateway's refresh and one by a
-// magpie run from a terminal would each spend the same refresh token.
+// holds across starlings too (#1674): the gateway's refresh and one by a
+// starling run from a terminal would each spend the same refresh token.
 var savedTokenMu = filelock.Mutex{Path: func() string { return loginsPath() + ".renew.lock" }}
 
 // SetLoginOn puts a saved account in use beside the agent's own, or takes
@@ -249,7 +249,7 @@ func renewSavedLogin(ctx context.Context, agent, user string, force bool) (tok, 
 
 // savedRefreshFailed words a saved account's failed refresh. One the vendor
 // refused is marked lapsed on the account: that sign-in is gone and has to be
-// made again, in magpie; the agent's own login command would sign the agent
+// made again, in starling; the agent's own login command would sign the agent
 // in, not this account. A refresh that never got an answer marks nothing.
 func savedRefreshFailed(agent, user string, err error) error {
 	var refused refreshRefused

@@ -13,14 +13,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // ourFree is a provider listing ids as Our Free Model's plugin does: its
 // free pools' models, and its account channels' as "channel/model".
 func ourFree(ids ...string) []plugin.Provider {
-	p := plugin.Provider{ID: "our-free-model", Spec: "magpie-our-free-model", Name: "Our Free Model",
+	p := plugin.Provider{ID: "our-free-model", Spec: "starling-our-free-model", Name: "Our Free Model",
 		NPM: "@ai-sdk/openai-compatible"}
 	for _, id := range ids {
 		p.Models = append(p.Models, plugin.Model{ID: id, Name: id, NPM: "@ai-sdk/openai-compatible"})
@@ -28,9 +28,9 @@ func ourFree(ids ...string) []plugin.Provider {
 	return []plugin.Provider{p}
 }
 
-// Our Free Model's service, started again with magpie after an update,
+// Our Free Model's service, started again with starling after an update,
 // lists its free pools at once and its account channels' models only once
-// it has read them, so the list the gateway's magpie read a minute after
+// it has read them, so the list the gateway's starling read a minute after
 // it started was short. The picks it didn't have were dropped for good,
 // and its user picked every model again after each update (多喝热水 on
 // Discord). They are set aside now, not served while the list leaves them
@@ -38,7 +38,7 @@ func ourFree(ids ...string) []plugin.Provider {
 // a list left a pick out, not an hour later.
 func TestPluginPicksComeBackWithTheirList(t *testing.T) {
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", "")
+	t.Setenv("STARLING_BUN", "")
 	write := func(name string, v any) {
 		t.Helper()
 		b, _ := json.Marshal(v)
@@ -49,7 +49,7 @@ func TestPluginPicksComeBackWithTheirList(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	write("plugins.json", map[string]any{"plugins": []map[string]any{{"spec": "magpie-our-free-model"}}})
+	write("plugins.json", map[string]any{"plugins": []map[string]any{{"spec": "starling-our-free-model"}}})
 	write("plugin-auth.json", map[string]any{"our-free-model": map[string]any{"type": "api", "key": "managed"}})
 	full := ourFree("pool-a", "pool-b", "qoder/claude-x", "kiro/claude-y", "kiro/claude-z")
 	plugin.UseCached(full)
@@ -151,12 +151,12 @@ func TestPluginPicksComeBackWithTheirList(t *testing.T) {
 // forgets what was set aside.
 func TestEveryPickDelistedServesNone(t *testing.T) {
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", "")
+	t.Setenv("STARLING_BUN", "")
 	if err := os.MkdirAll(settings.Dir(), 0o700); err != nil {
 		t.Fatal(err)
 	}
 	for name, v := range map[string]any{
-		"plugins.json":     map[string]any{"plugins": []map[string]any{{"spec": "magpie-our-free-model"}}},
+		"plugins.json":     map[string]any{"plugins": []map[string]any{{"spec": "starling-our-free-model"}}},
 		"plugin-auth.json": map[string]any{"our-free-model": map[string]any{"type": "api", "key": "managed"}},
 	} {
 		b, _ := json.Marshal(v)

@@ -6,12 +6,12 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // An omp bun installed is asked its version though ~/.bun/bin isn't on
-// magpie's PATH, as on Windows and in WSL (whqtian 报告: on Ubuntu
-// omp's models still offered xhigh in place of max). A `chongyun serve`, or
+// starling's PATH, as on Windows and in WSL (whqtian 报告: on Ubuntu
+// omp's models still offered xhigh in place of max). A `starling serve`, or
 // a service started with a PATH that lacks it, found no omp at all, so its
 // version stayed unknown and was taken for one older than 16.4.0.
 func TestOmpVersionOffPath(t *testing.T) {

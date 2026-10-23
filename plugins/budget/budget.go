@@ -6,15 +6,15 @@
 // docs/subsystems/plugin-runtime.md): Apply serves internal/budget's, and
 // the point fails closed: a request of a key held to a limit is not sent
 // while no limiter serves it. What a key has used is the core's, read
-// from the usage records, so the Settings page, `chongyun keys` and
-// /v1/magpie/limit tell it either way.
+// from the usage records, so the Settings page, `starling keys` and
+// /v1/starling/limit tell it either way.
 package budget
 
 import (
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/budget"
-	"github.com/lulu58588/chongyun/internal/gwbudget"
-	"github.com/lulu58588/chongyun/internal/pluginrt"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/budget"
+	"github.com/lulu58588/starling/internal/gwbudget"
+	"github.com/lulu58588/starling/internal/pluginrt"
 )
 
 func init() {

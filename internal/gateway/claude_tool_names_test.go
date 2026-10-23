@@ -12,14 +12,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // #2649 (tsy0716): a tool the client named "spawn.agent" came back as
 // "spawn_agent", a tool it never offered: Claude Code takes an MCP tool's
 // name as [A-Za-z0-9_-] only, and changed it. Each tool is offered under a
-// name Claude Code keeps, unique and short enough with mcp__magpie__ before
+// name Claude Code keeps, unique and short enough with mcp__starling__ before
 // it, and its calls are handed back under the name the client declared, on
 // every API the bridge serves, streamed or whole.
 func TestClaudeToolNamesComeBackAsDeclared(t *testing.T) {
@@ -47,14 +47,14 @@ while read -r line; do
     for n in $names; do
       i=$((i+1))
       [ -n "$content" ] && content="$content,"
-      content="$content"'{"type":"tool_use","id":"toolu_'$i'","name":"mcp__magpie__'$n'","input":{"n":'$i'}}'
+      content="$content"'{"type":"tool_use","id":"toolu_'$i'","name":"mcp__starling__'$n'","input":{"n":'$i'}}'
     done
     echo '{"type":"assistant","message":{"id":"m","model":"claude-sonnet-5","content":['"$content"'],"stop_reason":"tool_use","usage":{"output_tokens":3}}}' ;;
   *)
     echo '{"type":"stream_event","event":{"type":"message_start","message":{"id":"m","model":"claude-sonnet-5","usage":{"input_tokens":1}}}}'
     i=0
     for n in $names; do
-      echo '{"type":"stream_event","event":{"type":"content_block_start","index":'$i',"content_block":{"type":"tool_use","id":"toolu_'$i'","name":"mcp__magpie__'$n'"}}}'
+      echo '{"type":"stream_event","event":{"type":"content_block_start","index":'$i',"content_block":{"type":"tool_use","id":"toolu_'$i'","name":"mcp__starling__'$n'"}}}'
       echo '{"type":"stream_event","event":{"type":"content_block_delta","index":'$i',"delta":{"type":"input_json_delta","partial_json":"{\"n\":'$i'}"}}}'
       echo '{"type":"stream_event","event":{"type":"content_block_stop","index":'$i'}}'
       i=$((i+1))
@@ -94,7 +94,7 @@ done
 	}
 	paths := map[provider.Protocol]string{provider.Anthropic: "/v1/messages", provider.Chat: "/v1/chat/completions", provider.Responses: "/v1/responses"}
 	nameRe := regexp.MustCompile(`"name":"((?:[^"\\]|\\.)*)"`)
-	validRe := regexp.MustCompile(`^[A-Za-z0-9_-]{1,51}$`)
+	validRe := regexp.MustCompile(`^[A-Za-z0-9_-]{1,49}$`)
 	p := provider.Provider{ID: "claude", Account: &provider.Account{Agent: "claude", User: "u"}}
 	for _, from := range []provider.Protocol{provider.Anthropic, provider.Chat, provider.Responses} {
 		for _, stream := range []bool{false, true} {
@@ -127,7 +127,7 @@ done
 				seen := map[string]bool{}
 				for _, n := range names {
 					if !validRe.MatchString(n) || seen[n] {
-						t.Errorf("%s: Claude Code was offered %q, which isn't a valid, unique MCP tool name of at most 51: %q", what, n, names)
+						t.Errorf("%s: Claude Code was offered %q, which isn't a valid, unique MCP tool name of at most 49: %q", what, n, names)
 					}
 					seen[n] = true
 				}
@@ -145,15 +145,15 @@ done
 	if len(offer) != 1 || !validRe.MatchString(offer[0].Name) || offer[0].Name == "a_b" {
 		t.Fatalf("tool_choice a.b offers %+v", offer)
 	}
-	if got, want := toolChoiceAsk(req), "You must call the mcp__magpie__"+offer[0].Name+" tool."; !strings.Contains(got, want) {
+	if got, want := toolChoiceAsk(req), "You must call the mcp__starling__"+offer[0].Name+" tool."; !strings.Contains(got, want) {
 		t.Errorf("tool choice %q, want %q", got, want)
 	}
 	var text strings.Builder
 	renderParts(nil, &text, []Part{{Kind: ToolCall, ID: "c1", Name: "a.b", Args: json.RawMessage(`{}`)}, {Kind: ToolCall, ID: "c2", Name: long, Args: json.RawMessage(`{}`)}}, offeredTools(req.Tools))
-	if !strings.Contains(text.String(), "[tool call mcp__magpie__"+offer[0].Name+" id=c1 ") {
+	if !strings.Contains(text.String(), "[tool call mcp__starling__"+offer[0].Name+" id=c1 ") {
 		t.Errorf("history tells a.b otherwise than it is offered (%s): %q", offer[0].Name, text.String())
 	}
-	if !strings.Contains(text.String(), "[tool call mcp__magpie__"+bridgeToolName(long)+" id=c2 ") || len("mcp__magpie__"+bridgeToolName(long)) > 64 {
+	if !strings.Contains(text.String(), "[tool call mcp__starling__"+bridgeToolName(long)+" id=c2 ") || len("mcp__starling__"+bridgeToolName(long)) > 64 {
 		t.Errorf("history tells the long name as %q", text.String())
 	}
 }

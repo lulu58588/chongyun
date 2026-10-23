@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Codex's own models follow the ones ticked on its ChatGPT subscription.
@@ -23,7 +23,7 @@ func TestCodexOwnModelsFollowPicks(t *testing.T) {
 		{"slug":"gpt-b","display_name":"B","priority":2},
 		{"slug":"gpt-c","display_name":"C","priority":3}]}`), 0o644)
 	os.WriteFile(filepath.Join(dir, "auth.json"), []byte(`{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json: the agent's own file is never read to find out.
 	codexLoginSaved(t, "me@example.com", map[string]any{"tokens": map[string]any{"access_token": "x", "id_token": "x.e30.x"}})
 
@@ -45,9 +45,9 @@ func TestCodexOwnModelsFollowPicks(t *testing.T) {
 	if got := own(); len(got) != 2 || got[0] != "gpt-a" || got[1] != "gpt-c" {
 		t.Fatalf("ticked a and c: %v", got)
 	}
-	for _, o := range viaMagpie("codex", "") {
+	for _, o := range viaStarling("codex", "") {
 		if o.Ref == "" || o.Ref != o.Value {
-			t.Fatalf("chongyun option without its catalog ref: %+v", o)
+			t.Fatalf("starling option without its catalog ref: %+v", o)
 		}
 	}
 }
@@ -67,7 +67,7 @@ func TestCodexOwnModelsNotNarrowedWhileOff(t *testing.T) {
 		{"slug":"gpt-a","display_name":"A","priority":1},
 		{"slug":"gpt-b","display_name":"B","priority":2}]}`), 0o644)
 	os.WriteFile(filepath.Join(dir, "auth.json"), []byte(`{"tokens":{"access_token":"x","id_token":"x.e30.x"}}`), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json: the agent's own file is never read to find out.
 	codexLoginSaved(t, "me@example.com", map[string]any{"tokens": map[string]any{"access_token": "x", "id_token": "x.e30.x"}})
 

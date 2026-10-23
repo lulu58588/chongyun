@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // strictRefusal is #1980's refusal ("Unsupported Chat Completions API
@@ -39,7 +39,7 @@ func toolsHaveStrict(q map[string]any) bool {
 }
 
 // OpenCode 2.0.25 offers every tool with "strict": false, on Chat through
-// @ai-sdk/openai-compatible (magpie's provider for it) and on Responses
+// @ai-sdk/openai-compatible (starling's provider for it) and on Responses
 // through @ai-sdk/openai (the fixtures are its requests, recorded against
 // a fake upstream). An upstream that takes no strict on Chat turned every
 // turn away (#1980), and one may on Responses too. It is asked again

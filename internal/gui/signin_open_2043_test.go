@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/library"
-	"github.com/lulu58588/chongyun/internal/mcpauth"
-	"github.com/lulu58588/chongyun/internal/mcpauth/mcpauthtest"
+	"github.com/lulu58588/starling/internal/library"
+	"github.com/lulu58588/starling/internal/mcpauth"
+	"github.com/lulu58588/starling/internal/mcpauth/mcpauthtest"
 )
 
 // browserDown is a desktop whose browser doesn't start, as Windows'

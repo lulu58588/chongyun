@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-// claudeThree saves three Claude accounts as chongyun signs in to each,
+// claudeThree saves three Claude accounts as starling signs in to each,
 // last the Pro, and gives the helpers that change them.
 //
-// chongyun keeps the accounts it signed in to in its own logins.json,
+// starling keeps the accounts it signed in to in its own logins.json,
 // marking there the one the agent is on: the account signed in to last is
 // that one, and a switch moves the mark to another. The helpers keep the
 // mark where a switch left it.
@@ -107,7 +107,7 @@ func claudeEmail(user string) string {
 }
 
 // netfishx 报告: Pro, Max and Team accounts, Claude Code kept signed in
-// to one. magpie switches Claude Code to the Team account, and a Claude
+// to one. starling switches Claude Code to the Team account, and a Claude
 // Code started on the Pro a moment before writes the Pro's profile after:
 // the sign-in is the Team's, the profile the Pro's. That isn't saved as
 // the Pro's, whose runs (its own config directory) would then spend the

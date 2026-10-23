@@ -12,17 +12,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Remote media uses the remote's images and videos APIs, including edits,
 // polls and content downloads, with local video ids surviving every poll.
-func TestRemoteMagpieMedia(t *testing.T) {
+func TestRemoteStarlingMedia(t *testing.T) {
 	grokSignedIn(t)
 	up := newGrokMedia(t)
 	remote := httptest.NewServer(New().Handler())
 	t.Cleanup(remote.Close)
-	if err := provider.Save(provider.Provider{ID: "office", Preset: provider.RemoteMagpiePreset, Chat: remote.URL, Key: "remote-key"}); err != nil {
+	if err := provider.Save(provider.Provider{ID: "office", Preset: provider.RemoteStarlingPreset, Chat: remote.URL, Key: "remote-key"}); err != nil {
 		t.Fatal(err)
 	}
 	p, _ := provider.Find("office")
@@ -94,12 +94,12 @@ func TestRemoteMagpieMedia(t *testing.T) {
 		}
 	})).ServeHTTP(httptest.NewRecorder(), r)
 	head := <-arrived
-	if head.Get(AgentHeader) != "pi" || head.Get(SessionHeader) != "media-session" || !strings.HasPrefix(head.Get("User-Agent"), "magpie/") {
+	if head.Get(AgentHeader) != "pi" || head.Get(SessionHeader) != "media-session" || !strings.HasPrefix(head.Get("User-Agent"), "starling/") {
 		t.Errorf("media caller: %v", head)
 	}
 }
 
-func TestRemoteMagpieVideoContentCaller(t *testing.T) {
+func TestRemoteStarlingVideoContentCaller(t *testing.T) {
 	fresh(t)
 	arrived := make(chan caller, 1)
 	remote := httptest.NewServer(withCaller(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -108,7 +108,7 @@ func TestRemoteMagpieVideoContentCaller(t *testing.T) {
 		io.WriteString(w, "fake-mp4-bytes")
 	})))
 	t.Cleanup(remote.Close)
-	if err := provider.Save(provider.Provider{ID: "office", Preset: provider.RemoteMagpiePreset, Chat: remote.URL, Key: "remote-key"}); err != nil {
+	if err := provider.Save(provider.Provider{ID: "office", Preset: provider.RemoteStarlingPreset, Chat: remote.URL, Key: "remote-key"}); err != nil {
 		t.Fatal(err)
 	}
 	p, _ := provider.Find("office")

@@ -2,7 +2,7 @@
 
 <a id="community-prs-what-is-closed-unreviewed-and-who-is-blocked"></a>
 
-崇云科技通过 agent 合并社区 PR。有两件事防止这件事拖垮项目：可能伤害用户的
+星鸣通过 agent 合并社区 PR。有两件事防止这件事拖垮项目：可能伤害用户的
 PR 在对它做了什么进行任何评审之前就被拦下；反复提交"评审成本高于收益"的
 作者会被叫停。
 

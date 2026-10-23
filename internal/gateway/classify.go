@@ -3,9 +3,9 @@ package gateway
 // A rule with an intent (provider.Rule.Intent) is for a kind of message:
 // as a user's turn begins, the group's classifier model is asked which of
 // the intents the user's message is — once, before the turn goes anywhere,
-// and never again within it. The call goes through magpie itself, so the
-// classifier is any model magpie has, with its keys, failover and usage;
-// it shows in the usage as magpie's own call. When it can't say
+// and never again within it. The call goes through starling itself, so the
+// classifier is any model starling has, with its keys, failover and usage;
+// it shows in the usage as starling's own call. When it can't say
 // (it fails, is slow, or answers something else) no intent matches, and
 // the trace tells why.
 
@@ -26,11 +26,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// RouterAgent is the User-Agent magpie's own classifier calls carry.
-const RouterAgent = "magpie-router/1"
+// RouterAgent is the User-Agent starling's own classifier calls carry.
+const RouterAgent = "starling-router/1"
 
 var (
 	classifyTimeout = 8 * time.Second
@@ -449,7 +449,7 @@ func readEffort(answer string) (string, float64, error) {
 func (s *Server) askChat(model string, body []byte) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), classifyTimeout)
 	defer cancel()
-	r, err := http.NewRequestWithContext(ctx, http.MethodPost, "http://magpie/v1/chat/completions", nil)
+	r, err := http.NewRequestWithContext(ctx, http.MethodPost, "http://starling/v1/chat/completions", nil)
 	if err != nil {
 		return "", err
 	}

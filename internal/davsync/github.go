@@ -90,7 +90,7 @@ func (g *github) send(ctx context.Context, method, apiPath string, body []byte, 
 	req.Header.Set("Authorization", "Bearer "+g.token)
 	req.Header.Set("Accept", accept)
 	req.Header.Set("X-GitHub-Api-Version", "2022-11-28")
-	req.Header.Set("User-Agent", "magpie-sync")
+	req.Header.Set("User-Agent", "starling-sync")
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
@@ -273,7 +273,7 @@ func (g *github) commit(ctx context.Context, name string, data []byte, sha strin
 	if err := g.prepare(ctx); err != nil {
 		return version{}, err
 	}
-	in := map[string]string{"message": "chongyun: sync " + name, "content": base64.StdEncoding.EncodeToString(data)}
+	in := map[string]string{"message": "starling: sync " + name, "content": base64.StdEncoding.EncodeToString(data)}
 	// Omitting branch lets the first backup initialize an empty repository.
 	if !g.empty {
 		in["branch"] = g.branch
@@ -284,7 +284,7 @@ func (g *github) commit(ctx context.Context, name string, data []byte, sha strin
 	method := http.MethodPut
 	if remove {
 		method = http.MethodDelete
-		in["message"] = "chongyun: remove " + name
+		in["message"] = "starling: remove " + name
 		delete(in, "content")
 	}
 	body, err := json.Marshal(in)

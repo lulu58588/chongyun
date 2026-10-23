@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // setProxies gives subscription id a proxy of its own, and its accounts
@@ -153,7 +153,7 @@ func TestSignInGoesThroughItsProxy(t *testing.T) {
 	}
 }
 
-// A device sign-in run by magpie (Copilot's: the code asked for, then
+// A device sign-in run by starling (Copilot's: the code asked for, then
 // polled for the token, then whose account it is) goes through the
 // subscription's proxy from its first request (#1663).
 func TestDeviceSignInGoesThroughItsProxy(t *testing.T) {
@@ -210,7 +210,7 @@ func TestDeviceSignInGoesThroughItsProxy(t *testing.T) {
 func TestPluginSignInGoesThroughItsProxy(t *testing.T) {
 	bun := testenv.Bun(t)
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", bun)
+	t.Setenv("STARLING_BUN", bun)
 	t.Setenv("FAKE_SIGNIN", "http://vendor.invalid/signin")
 	t.Cleanup(plugin.Settle)
 	var mu sync.Mutex
@@ -269,7 +269,7 @@ func TestClaudeSignInGoesThroughItsProxy(t *testing.T) {
 // A Claude subscription behind a socks5:// proxy (#2651): Claude Code is
 // built with Bun, which takes only http:// and https:// proxies and failed
 // as UnsupportedProxyProtocol, so its sign-in, and the auth status read
-// after it, are given magpie's HTTP bridge to the SOCKS proxy.
+// after it, are given starling's HTTP bridge to the SOCKS proxy.
 func TestClaudeSignInBridgesASOCKSProxy(t *testing.T) {
 	claudeHome(t)
 	noAnthropic(t)

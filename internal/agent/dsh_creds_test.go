@@ -7,15 +7,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/edit"
 )
 
-// #969 (pan17): the DeepSeek Harness desktop app, wired through magpie, failed
-// every turn with `no credential for provider route "magpie"; its profile
-// resolves MAGPIE_GATEWAY_KEY, which is not set — store MAGPIE_GATEWAY_KEY
+// #969 (pan17): the DeepSeek Harness desktop app, wired through starling, failed
+// every turn with `no credential for provider route "starling"; its profile
+// resolves STARLING_GATEWAY_KEY, which is not set — store STARLING_GATEWAY_KEY
 // through the credentials service (the web Models page writes it) or export
-// it` (MISSING_CREDENTIAL), while magpie said it was connected. The route was
+// it` (MISSING_CREDENTIAL), while starling said it was connected. The route was
 // in its profile; the key was in ~/.dsh/.env, which only dsh's product CLI
 // loads. The key now goes into dsh's own store, ~/.dsh/.credentials.yaml,
 // which every dsh reads (dsh-credentials-local), the desktop app included.
@@ -26,7 +26,7 @@ func TestDshDesktopGetsTheKeyFromItsStore(t *testing.T) {
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"), 0o644)
 	os.WriteFile(desktop, []byte("# Your patch layer for this dsh profile.\n"), 0o644)
 	a := dsh(home)
-	if err := a.Field("model").Set("magpie/deepseek/flash"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	if b, _ := os.ReadFile(desktop); !strings.Contains(string(b), "apiKeyEnv: "+dshKeyRef) {
@@ -37,7 +37,7 @@ func TestDshDesktopGetsTheKeyFromItsStore(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if s := string(b); !strings.HasPrefix(s, "version: 1\n") || !strings.Contains(s, "refs:\n  "+dshKeyRef+": magpie\n") {
+	if s := string(b); !strings.HasPrefix(s, "version: 1\n") || !strings.Contains(s, "refs:\n  "+dshKeyRef+": starling\n") {
 		t.Fatalf("the key is not in dsh's store:\n%s", s)
 	}
 	// dsh refuses to start on a store any other user can read
@@ -48,8 +48,8 @@ func TestDshDesktopGetsTheKeyFromItsStore(t *testing.T) {
 		t.Fatalf("check: %s", d)
 	}
 
-	// wired by an earlier magpie, the key in .env alone: the check says so,
-	// and the sync that runs as magpie starts writes it
+	// wired by an earlier starling, the key in .env alone: the check says so,
+	// and the sync that runs as starling starts writes it
 	os.Remove(creds)
 	if d := a.Check(); !strings.Contains(d, ".credentials.yaml") || !strings.Contains(d, "desktop") {
 		t.Fatalf("a store without the key is not named: %q", d)
@@ -61,8 +61,8 @@ func TestDshDesktopGetsTheKeyFromItsStore(t *testing.T) {
 		t.Fatalf("after the sync: %s", d)
 	}
 
-	// back to dsh's own models: magpie's key goes, the rest stays
-	os.WriteFile(creds, []byte("version: 1\n# mine\nrefs:\n  DEEPSEEK_API_KEY: sk-mine\n  "+dshKeyRef+": magpie\n"), 0o600)
+	// back to dsh's own models: starling's key goes, the rest stays
+	os.WriteFile(creds, []byte("version: 1\n# mine\nrefs:\n  DEEPSEEK_API_KEY: sk-mine\n  "+dshKeyRef+": starling\n"), 0o600)
 	if err := a.Field("model").Set("deepseek-v4-pro"); err != nil {
 		t.Fatal(err)
 	}
@@ -73,14 +73,14 @@ func TestDshDesktopGetsTheKeyFromItsStore(t *testing.T) {
 }
 
 // #1332: a caller key this gateway issued, held in dsh's own store, takes dsh
-// through magpie all the same — the store wins over .env (#969) and the
+// through starling all the same — the store wins over .env (#969) and the
 // gateway authenticates the key — so the check is quiet. A key the gateway
 // doesn't take still is drift.
 func TestDshStoreHoldingAGatewayCallerKey(t *testing.T) {
 	home, dir, web := dshRouteHome(t)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"), 0o644)
 	a := dsh(home)
-	if err := a.Field("model").Set("magpie/deepseek/flash"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	secret, err := access.Update("add-key", access.Change{Name: "dsh"})
@@ -99,7 +99,7 @@ func TestDshStoreHoldingAGatewayCallerKey(t *testing.T) {
 }
 
 // A store the user keeps is written into, not over; one holding a key of the
-// user's under magpie's name, or in dsh's pre-release flat layout, is left to
+// user's under starling's name, or in dsh's pre-release flat layout, is left to
 // the user and to dsh.
 func TestDshStoreOfTheUsersOwn(t *testing.T) {
 	home, dir, web := dshRouteHome(t)
@@ -109,11 +109,11 @@ func TestDshStoreOfTheUsersOwn(t *testing.T) {
 
 	own := "version: 1\nrefs:\n  DEEPSEEK_API_KEY: sk-mine\nrecords:\n  llm-pi-ai/amazon-bedrock:\n    kind: api-key\n    env:\n      AWS_PROFILE: prod\n"
 	os.WriteFile(creds, []byte(own), 0o600)
-	if err := a.Field("model").Set("magpie/deepseek/pro"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/pro"); err != nil {
 		t.Fatal(err)
 	}
 	b, _ := os.ReadFile(creds)
-	for _, want := range []string{"DEEPSEEK_API_KEY: sk-mine", "AWS_PROFILE: prod", dshKeyRef + ": magpie"} {
+	for _, want := range []string{"DEEPSEEK_API_KEY: sk-mine", "AWS_PROFILE: prod", dshKeyRef + ": starling"} {
 		if !strings.Contains(string(b), want) {
 			t.Fatalf("missing %q:\n%s", want, b)
 		}
@@ -142,16 +142,16 @@ func TestDshStoreOfTheUsersOwn(t *testing.T) {
 }
 
 // #1419 (DannyJRu, dsh desktop 0.2.0-rc.2): dsh's own store held a
-// MAGPIE_GATEWAY_KEY this gateway refuses. Reconnect (Apply again, which sets
+// STARLING_GATEWAY_KEY this gateway refuses. Reconnect (Apply again, which sets
 // the model) said done and the row stayed red, telling the user to go and
-// remove it in dsh. A model picked here now puts magpie's key there, the one
+// remove it in dsh. A model picked here now puts starling's key there, the one
 // it replaced stashed for Disconnect to put back; the sync still leaves it,
 // and a key the gateway takes stays on a pick too.
 func TestDshApplyReplacesAKeyTheGatewayRefuses(t *testing.T) {
 	home, dir, web := dshRouteHome(t)
 	os.WriteFile(web, []byte("# Your patch layer for this dsh profile.\n"), 0o644)
 	a := dsh(home)
-	if err := a.Field("model").Set("magpie/deepseek/flash"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	creds := filepath.Join(dir, ".credentials.yaml")
@@ -168,10 +168,10 @@ func TestDshApplyReplacesAKeyTheGatewayRefuses(t *testing.T) {
 	}
 
 	// Reconnect
-	if err := a.Field("model").Set("magpie/deepseek/flash"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
-	if v, _ := edit.GetYAML(creds, "refs."+dshKeyRef); v != "magpie" {
+	if v, _ := edit.GetYAML(creds, "refs."+dshKeyRef); v != "starling" {
 		t.Fatalf("the refused key is still there: %q", v)
 	}
 	if v, _ := edit.GetYAML(creds, "refs.DEEPSEEK_API_KEY"); v != "sk-mine" {
@@ -194,7 +194,7 @@ func TestDshApplyReplacesAKeyTheGatewayRefuses(t *testing.T) {
 	}
 	taken := "version: 1\nrefs:\n  " + dshKeyRef + ": " + secret + "\n"
 	os.WriteFile(creds, []byte(taken), 0o600)
-	if err := a.Field("model").Set("magpie/deepseek/flash"); err != nil {
+	if err := a.Field("model").Set("starling/deepseek/flash"); err != nil {
 		t.Fatal(err)
 	}
 	if b, _ := os.ReadFile(creds); string(b) != taken {

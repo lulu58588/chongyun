@@ -8,23 +8,23 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // Codex's background app-server (the daemon codex sessions attach to)
 // builds its model list once, as it starts, and runs on per CODEX_HOME,
-// across terminals, with no idle exit. So a change magpie makes to what
+// across terminals, with no idle exit. So a change starling makes to what
 // Codex reads at start — wiring it in, taking it out, a new catalog —
 // reaches no codex session started after it until the daemon restarts:
-// luci (Discord, Codex 0.162) took Codex off magpie, opened codex, which
+// luci (Discord, Codex 0.162) took Codex off starling, opened codex, which
 // started the daemon on Codex's own models, and after wiring Codex in
 // again every new codex showed the official list. With no codex session
-// attached magpie restarts it itself, right after the change and every
+// attached starling restarts it itself, right after the change and every
 // so often after (a session open then is one the user closes later);
 // with one attached the Agents page offers the restart.
 
 // codexRestartAll is what is said after a change while copies of Codex
-// run that magpie leaves to the user.
+// run that starling leaves to the user.
 var codexRestartAll = newNotice("Codex builds its model list at start-up — restart the Codex app, open codex sessions and the app-server they share ({command}) to see this.").say("command", provider.CodexDaemonRestart)
 
 // keepCodexDaemon is provider.KeepCodexDaemonCurrent; a var so tests can
@@ -41,7 +41,7 @@ var codexDaemonSeen struct {
 }
 
 // codexDaemonCheck checks the daemon of the Codex whose config is path
-// against when magpie last changed what Codex reads at start, and
+// against when starling last changed what Codex reads at start, and
 // restarts it when no codex session is on it.
 func codexDaemonCheck(path string) provider.CodexDaemonCheck {
 	a := &Agent{ID: "codex", Path: path}
@@ -123,6 +123,6 @@ func codexDaemonBehind() []StaleCopy {
 
 // what codexdaemon says after a change (notice.go)
 var (
-	noticeCodexBehind = newNotice("Codex builds its model list at start-up, and the app-server open codex sessions share started before this: restart it (Restart on chongyun's Agents page, or {command}) and the Codex app to see this.")
-	noticeCodexdaemon = newNotice("chongyun restarted the app-server codex sessions share, which none was on, so new codex sessions have this; restart the Codex app, if it is open, to see it there.")
+	noticeCodexBehind = newNotice("Codex builds its model list at start-up, and the app-server open codex sessions share started before this: restart it (Restart on starling's Agents page, or {command}) and the Codex app to see this.")
+	noticeCodexdaemon = newNotice("starling restarted the app-server codex sessions share, which none was on, so new codex sessions have this; restart the Codex app, if it is open, to see it there.")
 )

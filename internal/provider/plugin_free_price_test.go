@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // A model no catalog prices is at the price its plugin lists it at, and
@@ -20,7 +20,7 @@ import (
 // is free stays unpriced, and one a catalog prices keeps that price.
 func TestPluginFreeModelCostsNothing(t *testing.T) {
 	claudeHome(t)
-	t.Setenv("MAGPIE_BUN", "")
+	t.Setenv("STARLING_BUN", "")
 	os.MkdirAll(filepath.Dir(catalog.CachePath()), 0o755)
 	// models.dev as it has them (2026-10-15): Anthropic's Opus 5.5, and
 	// Cognition's SWE models nowhere

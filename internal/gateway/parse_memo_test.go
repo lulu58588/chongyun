@@ -10,7 +10,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // parseMemoBody is a Claude Code conversation in a folder, long enough to

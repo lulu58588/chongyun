@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// A distro with no agent chongyun sets up, only the Copilot CLI signed in
+// A distro with no agent starling sets up, only the Copilot CLI signed in
 // (#723, jia2), is kept: the CLI's folder makes no agent row.
 func TestWSLCopilotHome(t *testing.T) {
 	syncHome(t)

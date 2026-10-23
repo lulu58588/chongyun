@@ -22,13 +22,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/ghtoken"
-	"github.com/lulu58588/chongyun/internal/libc"
-	"github.com/lulu58588/chongyun/internal/netproxy"
-	"github.com/lulu58588/chongyun/internal/source"
+	"github.com/lulu58588/starling/internal/ghtoken"
+	"github.com/lulu58588/starling/internal/libc"
+	"github.com/lulu58588/starling/internal/netproxy"
+	"github.com/lulu58588/starling/internal/source"
 )
 
-// BunVersion is the Bun magpie downloads to run plugins with the first
+// BunVersion is the Bun starling downloads to run plugins with the first
 // time one is needed, and the oldest it runs them on: newer releases are
 // taken as they come (see CheckBun). Update bunSums below, testenv.MinBun
 // and test.yml's bun-version when it changes.
@@ -138,7 +138,7 @@ func missingLibs(out string) string {
 	if len(libs) == 0 {
 		return ""
 	}
-	return fmt.Sprintf("this system lacks %s, which Bun needs (on Alpine: apk add libstdc++ libgcc), or set MAGPIE_BUN to a bun that runs here", strings.Join(libs, ", "))
+	return fmt.Sprintf("this system lacks %s, which Bun needs (on Alpine: apk add libstdc++ libgcc), or set STARLING_BUN to a bun that runs here", strings.Join(libs, ", "))
 }
 
 // whyDied adds to the error of a host that died starting what the bun it
@@ -168,18 +168,18 @@ func cantStart(bun string, err error) error {
 	if fi, serr := os.Stat(bun); serr != nil || fi.IsDir() {
 		return err
 	}
-	if b := os.Getenv("MAGPIE_BUN"); b != "" && b == bun {
-		return fmt.Errorf("this system can't start $MAGPIE_BUN (%s), though it is there: it is likely a build for another C library than this system's (glibc or musl), whose loader isn't here: %w", bun, err)
+	if b := os.Getenv("STARLING_BUN"); b != "" && b == bun {
+		return fmt.Errorf("this system can't start $STARLING_BUN (%s), though it is there: it is likely a build for another C library than this system's (glibc or musl), whose loader isn't here: %w", bun, err)
 	}
 	target, _ := bunTarget()
-	return fmt.Errorf("this system can't start the Bun chongyun downloaded (%s, %s), though it is there: the build doesn't match this system's C library (glibc or musl). Set MAGPIE_BUN to a bun built for this system to run plugins on it: %w", target, bun, err)
+	return fmt.Errorf("this system can't start the Bun starling downloaded (%s, %s), though it is there: the build doesn't match this system's C library (glibc or musl). Set STARLING_BUN to a bun built for this system to run plugins on it: %w", target, bun, err)
 }
 
-// Bun is the bun to run plugins with: $MAGPIE_BUN when set, else the one
-// magpie downloaded and keeps up to date, downloading it now when there
+// Bun is the bun to run plugins with: $STARLING_BUN when set, else the one
+// starling downloaded and keeps up to date, downloading it now when there
 // is none yet.
 func Bun(ctx context.Context) (string, error) {
-	if b := os.Getenv("MAGPIE_BUN"); b != "" {
+	if b := os.Getenv("STARLING_BUN"); b != "" {
 		return b, nil
 	}
 	bunMu.Lock()
@@ -197,7 +197,7 @@ func Bun(ctx context.Context) (string, error) {
 
 // HasBun is whether a Bun is at hand without a download.
 func HasBun() bool {
-	if os.Getenv("MAGPIE_BUN") != "" {
+	if os.Getenv("STARLING_BUN") != "" {
 		return true
 	}
 	bunMu.Lock()
@@ -284,7 +284,7 @@ func getURLFrom(ctx context.Context, url string, limit int64, mirror bool) ([]by
 		return nil, err
 	}
 	// Bun's newest release is asked of GitHub's API: with the user's
-	// GitHub token, as every request magpie makes to it is (#1942)
+	// GitHub token, as every request starling makes to it is (#1942)
 	res, _, err := ghtoken.Do(req, githubAPI, func(r *http.Request) (*http.Response, error) {
 		if mirror {
 			return source.Do(http.DefaultClient, r)

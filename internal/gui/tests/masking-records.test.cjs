@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
 // Settings › Privacy opens on what masking kept from vendors: the number,
 // the days, the kinds, agents to providers and the values masked most, a
-// value shown only while pointed at (and said gone when this magpie no
+// value shown only while pointed at (and said gone when this starling no
 // longer knows it). Its records open from the card, filtered by what was
 // clicked, each one opening on the text the vendor saw. A masked call on
 // the Gateway page opens its own record. Nothing in the card or the
@@ -97,7 +97,7 @@ async function open(engine, lang, width, sum, where) {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.route("**/*", serve(lang, sum, asked));
   await watchSettingsReads(page);
-  await page.goto("http://magpie.test/" + (where || "?view=settings&tab=privacy"));
+  await page.goto("http://starling.test/" + (where || "?view=settings&tab=privacy"));
   if (!where) await settingsDrawn(page);
   return { browser, page, errors, asked };
 }
@@ -140,7 +140,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         }
         assert.deepEqual(await wide(page), { page: false, over: [] });
 
-        // pointed at, a value says what it was; one this magpie no longer
+        // pointed at, a value says what it was; one this starling no longer
         // knows says so
         const before = await scrolled(page);
         await card.locator(".mo-val").first().hover();
@@ -193,7 +193,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
     let shape = {};
     const { browser, page, errors } = await open(engine, "en", 1100, () => shape);
     t.after(() => browser.close());
-    // an old magpie's {}: the card waits on requests, without failing
+    // an old starling's {}: the card waits on requests, without failing
     await page.locator("#maskObs .mo-empty").waitFor();
     assert.match(await page.locator("#maskObs").innerText(), /A request that carries a key/);
     await page.locator("#maskObs .mo-open").count().then((n) => assert.equal(n, 0));

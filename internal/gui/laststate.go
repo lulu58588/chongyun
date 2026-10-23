@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // The last-known state (#1519, fatkun). state() reads every agent's config
@@ -32,7 +32,7 @@ var lastState struct {
 }
 
 // stateFile is the last-known state, with the version that wrote it: an
-// older magpie's is not drawn by a newer page.
+// older starling's is not drawn by a newer page.
 type stateFile struct {
 	Version string    `json:"version"`
 	State   stateJSON `json:"state"`

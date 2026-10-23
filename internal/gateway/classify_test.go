@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // clsUp is a Chat vendor that classifies: it answers what answer says,
@@ -154,27 +154,27 @@ func TestIntentRoutesATurn(t *testing.T) {
 	if r.Rule.Classified == nil || r.Rule.Classified.After != "" || strings.Contains(c.last(), "was of kind") || c.n() != 3 {
 		t.Fatalf("turn 3: %+v %s", r.Rule.Classified, c.last())
 	}
-	// the classifier's call is magpie's own, in the usage, marked as the
+	// the classifier's call is starling's own, in the usage, marked as the
 	// routing classifier's (#1839)
 	var seen bool
 	for _, call := range s.Recent() {
-		if call.Model == "c/cls" && call.Agent == "magpie-router" && call.Kind == "routing" {
+		if call.Model == "c/cls" && call.Agent == "starling-router" && call.Kind == "routing" {
 			seen = true
 		}
 	}
 	if !seen {
-		t.Fatal("the classifier's call isn't recorded as magpie-router's routing")
+		t.Fatal("the classifier's call isn't recorded as starling-router's routing")
 	}
 	var recs, agents int
 	for _, r := range usage.Load(time.Time{}) {
 		switch {
 		case r.Provider == "c":
-			if r.Kind != "routing" || !r.ByMagpie() || usage.PurposeOf(r.Kind) != "kind:routing" {
+			if r.Kind != "routing" || !r.ByStarling() || usage.PurposeOf(r.Kind) != "kind:routing" {
 				t.Fatalf("the classifier's record: %+v", r)
 			}
 			recs++
-		case r.ByMagpie() || r.Kind == "routing":
-			t.Fatalf("an agent's record marked chongyun's or routing: %+v", r)
+		case r.ByStarling() || r.Kind == "routing":
+			t.Fatalf("an agent's record marked starling's or routing: %+v", r)
 		default:
 			agents++
 		}

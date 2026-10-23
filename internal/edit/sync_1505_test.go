@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
 // WriteAtomic (settings, profiles, caller keys, agents' configs) flushes

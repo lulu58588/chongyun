@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // freePort is a port nothing listens on now.
@@ -26,7 +26,7 @@ func freePort(t *testing.T) int {
 	return ln.Addr().(*net.TCPAddr).Port
 }
 
-// answers says whether a magpie gateway answers on port p. Keep-alive is
+// answers says whether a starling gateway answers on port p. Keep-alive is
 // off: a moved gateway finishes the connections it has (Relisten), so a
 // pooled one from the polls above would answer from the old port forever
 // and say nothing about new connections to it.
@@ -41,13 +41,13 @@ func answers(p int) bool {
 }
 
 // Settings' gateway port (Magic_zero 报告) moves the gateway this
-// magpie serves: it answers on the new port and no longer on the old one,
-// and magpie's URL, the CLI's and the agents', follows. A port another
+// starling serves: it answers on the new port and no longer on the old one,
+// and starling's URL, the CLI's and the agents', follows. A port another
 // program has is refused with its reason, the gateway left where it was;
-// one out of range or under MAGPIE_ADDR is refused too.
+// one out of range or under STARLING_ADDR is refused too.
 func TestSetPortMovesTheGateway(t *testing.T) {
 	sandboxHome(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	from := freePort(t)
 	s := settings.Load()
 	s.Port = from
@@ -116,7 +116,7 @@ func TestSetPortMovesTheGateway(t *testing.T) {
 		t.Fatal("the gateway still answers on the old port")
 	}
 	if !gateway.Running() {
-		t.Fatal("chongyun doesn't find its own gateway on the new port")
+		t.Fatal("starling doesn't find its own gateway on the new port")
 	}
 
 	// the Settings page's other choices, saved, leave the port as it is
@@ -126,23 +126,23 @@ func TestSetPortMovesTheGateway(t *testing.T) {
 		t.Fatalf("saving Settings took the port: %d %s, port %d", w.Code, w.Body, settings.Load().Port)
 	}
 
-	// MAGPIE_ADDR comes first: the port is set there, not here
-	t.Setenv("MAGPIE_ADDR", "127.0.0.1:3426")
-	if code, out := post(fmt.Sprintf(`{"port":%d}`, freePort(t))); code != http.StatusBadRequest || !strings.Contains(fmt.Sprint(out["error"]), "MAGPIE_ADDR") {
-		t.Fatalf("under MAGPIE_ADDR: %d %v", code, out)
+	// STARLING_ADDR comes first: the port is set there, not here
+	t.Setenv("STARLING_ADDR", "127.0.0.1:3426")
+	if code, out := post(fmt.Sprintf(`{"port":%d}`, freePort(t))); code != http.StatusBadRequest || !strings.Contains(fmt.Sprint(out["error"]), "STARLING_ADDR") {
+		t.Fatalf("under STARLING_ADDR: %d %v", code, out)
 	}
 	w = httptest.NewRecorder()
 	handler.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/api/settings", nil))
 	if !strings.Contains(w.Body.String(), `"addrEnv":"127.0.0.1:3426"`) {
-		t.Fatalf("Settings don't say MAGPIE_ADDR: %s", w.Body)
+		t.Fatalf("Settings don't say STARLING_ADDR: %s", w.Body)
 	}
 }
 
-// The port magpie was on taken by another program (Magic_zero's 3425), it
+// The port starling was on taken by another program (Magic_zero's 3425), it
 // serves nothing: setting another port starts the gateway there.
 func TestSetPortServesWhenTheOldOneWasTaken(t *testing.T) {
 	sandboxHome(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	other, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
@@ -159,7 +159,7 @@ func TestSetPortServesWhenTheOldOneWasTaken(t *testing.T) {
 	served.Store(nil)
 	t.Cleanup(func() { served.Store(nil) })
 	if gateway.Running() {
-		t.Fatal("another program taken for chongyun")
+		t.Fatal("another program taken for starling")
 	}
 	to := freePort(t)
 	if _, err := setPort(to); err != nil {

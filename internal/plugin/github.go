@@ -16,13 +16,13 @@ import (
 )
 
 // Plugins on GitHub that nobody listed: a repository its author tagged
-// with the magpie-plugin topic. The market shows them apart from the
+// with the starling-plugin topic. The market shows them apart from the
 // community's, as not reviewed by anyone: installed from npm when its
 // author published it there from the repository, else from the repository
 // itself (github:owner/repo).
 
 // Topic is the GitHub topic that puts a repository on the Plugins page.
-const Topic = "magpie-plugin"
+const Topic = "starling-plugin"
 
 // Tagged is a repository tagged with Topic.
 type Tagged struct {
@@ -40,7 +40,7 @@ type Tagged struct {
 	Package string `json:"package,omitempty"`
 	Version string `json:"version,omitempty"`
 	Kind    string `json:"kind,omitempty"` // "middleware", "agent" or "page" when that is all it is
-	// its package.json's magpie.icon, as an installed plugin gives its
+	// its package.json's starling.icon, as an installed plugin gives its
 	// provider one: an https URL or a data:image URI, as it is written
 	Icon string `json:"icon,omitempty"`
 }
@@ -122,7 +122,7 @@ func (e *TaggedMissing) Unwrap() error { return e.Why }
 // are left out, as is one whose package.json doesn't parse, which bun
 // couldn't install either. A repository whose package.json didn't come in
 // time is as the list had it last, and the list is asked again in
-// taggedRetry. MAGPIE_PLUGIN_MARKET=off keeps to none.
+// taggedRetry. STARLING_PLUGIN_MARKET=off keeps to none.
 //
 // The error says the list isn't GitHub's whole answer, and why: the search
 // failed (the list is what GitHub said before, empty when it never
@@ -136,10 +136,10 @@ func TaggedRepos(ctx context.Context) ([]Tagged, error) {
 	if taggedL != nil && time.Since(taggedAt) < taggedTTL {
 		return taggedL, taggedWhy
 	}
-	if os.Getenv("MAGPIE_PLUGIN_MARKET") == "off" {
+	if os.Getenv("STARLING_PLUGIN_MARKET") == "off" {
 		return []Tagged{}, nil
 	}
-	// a magpie started again within the ten minutes: what GitHub said then,
+	// a starling started again within the ten minutes: what GitHub said then,
 	// without the wait of asking (a package.json read for each)
 	if taggedL == nil {
 		if fi, err := os.Stat(taggedCache()); err == nil && time.Since(fi.ModTime()) < taggedTTL {
@@ -164,7 +164,7 @@ func TaggedRepos(ctx context.Context) ([]Tagged, error) {
 		if b, err := json.Marshal(l); err == nil {
 			_ = os.MkdirAll(filepath.Dir(taggedCache()), 0o755)
 			_ = os.WriteFile(taggedCache(), b, 0o644)
-			// a magpie started again meanwhile asks again too
+			// a starling started again meanwhile asks again too
 			_ = os.Chtimes(taggedCache(), taggedAt, taggedAt)
 		}
 		return l, taggedWhy
@@ -384,29 +384,29 @@ func readTagged(pc context.Context, t Tagged, branch string) (Tagged, bool, bool
 		Version string          `json:"version"`
 		Main    string          `json:"main"`
 		Exports json.RawMessage `json:"exports"`
-		Magpie  struct {
+		Starling  struct {
 			Middleware string `json:"middleware"`
 			Agent      string `json:"agent"`
 			Icon       string `json:"icon"`
 			Page       struct {
 				File string `json:"file"`
 			} `json:"page"`
-		} `json:"magpie"`
+		} `json:"starling"`
 	}
 	if json.Unmarshal(pb, &pj) != nil || !pkgName.MatchString(pj.Name) {
 		return t, false, true, nil
 	}
 	t.Package, t.Version = pj.Name, pj.Version
-	// a picture, as host.js's iconOf takes one: magpie checks and
+	// a picture, as host.js's iconOf takes one: starling checks and
 	// keeps it before the page shows it (the GUI's /api/plugins/github)
-	t.Icon = ownIcon(pj.Magpie.Icon)
+	t.Icon = ownIcon(pj.Starling.Icon)
 	if pj.Main == "" && len(pj.Exports) == 0 {
 		switch {
-		case strings.TrimSpace(pj.Magpie.Middleware) != "":
+		case strings.TrimSpace(pj.Starling.Middleware) != "":
 			t.Kind = "middleware"
-		case strings.TrimSpace(pj.Magpie.Agent) != "":
+		case strings.TrimSpace(pj.Starling.Agent) != "":
 			t.Kind = "agent"
-		case strings.TrimSpace(pj.Magpie.Page.File) != "":
+		case strings.TrimSpace(pj.Starling.Page.File) != "":
 			t.Kind = "page"
 		}
 	}
@@ -438,11 +438,11 @@ func readTagged(pc context.Context, t Tagged, branch string) (Tagged, bool, bool
 	// that is only a command (bin), an MCP server, has none and
 	// would never load (#1327)
 	if IsGit(t.Spec) || !npmNames {
-		entry := pj.Magpie.Middleware
+		entry := pj.Starling.Middleware
 		if t.Kind == "agent" {
-			entry = pj.Magpie.Agent
+			entry = pj.Starling.Agent
 		} else if t.Kind == "page" {
-			entry = pj.Magpie.Page.File
+			entry = pj.Starling.Page.File
 		} else if t.Kind != "middleware" {
 			entry = pkgEntry(pj.Exports, pj.Main)
 			if !IsGit(t.Spec) {

@@ -12,12 +12,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/claudecode"
-	"github.com/lulu58588/chongyun/internal/libc"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/claudecode"
+	"github.com/lulu58588/starling/internal/libc"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// claudeCodeOut runs `chongyun claude-code args…` and gives what it printed.
+// claudeCodeOut runs `starling claude-code args…` and gives what it printed.
 func claudeCodeOut(t *testing.T, args ...string) (string, error) {
 	t.Helper()
 	r, w, err := os.Pipe()
@@ -41,7 +41,7 @@ func claudeCodeOut(t *testing.T, args ...string) (string, error) {
 	return out.String(), err
 }
 
-// `chongyun claude-code install --yes` on a machine with no Claude Code (a
+// `starling claude-code install --yes` on a machine with no Claude Code (a
 // container, Jorben 报告) downloads the release's build, says from
 // where and to where, and the subscription then runs it.
 func TestClaudeCodeInstallDownloadsTheRelease(t *testing.T) {
@@ -74,7 +74,7 @@ func TestClaudeCodeInstallDownloadsTheRelease(t *testing.T) {
 	t.Cleanup(func() { claudecode.Base, claudeCode.own = oldBase, oldOwn; _ = claudecode.Remove() })
 
 	out, err := claudeCodeOut(t)
-	if err != nil || !strings.Contains(out, "chongyun claude-code install") {
+	if err != nil || !strings.Contains(out, "starling claude-code install") {
 		t.Fatalf("status before: %q, %v", out, err)
 	}
 	out, err = claudeCodeOut(t, "install", "--yes")
@@ -92,7 +92,7 @@ func TestClaudeCodeInstallDownloadsTheRelease(t *testing.T) {
 	if out, _ := claudeCodeOut(t, "install", "--yes"); !strings.Contains(out, "downloaded already") {
 		t.Errorf("a second install: %q", out)
 	}
-	if out, _ := claudeCodeOut(t); !strings.Contains(out, "downloaded by chongyun") {
+	if out, _ := claudeCodeOut(t); !strings.Contains(out, "downloaded by starling") {
 		t.Errorf("status after: %q", out)
 	}
 	if _, err := claudeCodeOut(t, "remove"); err != nil {
@@ -103,7 +103,7 @@ func TestClaudeCodeInstallDownloadsTheRelease(t *testing.T) {
 	}
 }
 
-// `chongyun claude-code runs N` is the user's own bound on Claude Code
+// `starling claude-code runs N` is the user's own bound on Claude Code
 // processes (#2956), which the gateway's 503 names; auto gives it back to
 // the machine's memory, and a value that isn't a count is refused and
 // writes nothing.

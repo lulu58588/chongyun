@@ -18,30 +18,30 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/plugin"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/plugin"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
-// A community plugin's own page in magpie's window (P4 of
-// docs/subsystems/plugin-runtime.md): package.json's magpie.page, shown in
-// a sandboxed frame (pluginpages.js), and its panels in magpie's own pages
-// (magpie.panels, P5), each in a frame of its own shut in the same way.
+// A community plugin's own page in starling's window (P4 of
+// docs/subsystems/plugin-runtime.md): package.json's starling.page, shown in
+// a sandboxed frame (pluginpages.js), and its panels in starling's own pages
+// (starling.panels, P5), each in a frame of its own shut in the same way.
 // Their files are served under
-// pluginPagePrefix and a token only this run of magpie hands out, with a
+// pluginPagePrefix and a token only this run of starling hands out, with a
 // policy that lets the page load nothing but its own files and reach
-// nothing over the network; it has no way to magpie's /api (apiFramed),
-// and what it may read of magpie's it asks the window for, which asks
+// nothing over the network; it has no way to starling's /api (apiFramed),
+// and what it may read of starling's it asks the window for, which asks
 // /api/plugin-pages/read for the reads its package declared.
 
 // pluginPagePrefix is where a plugin's page's files are served:
 // pluginPagePrefix + token + "/" + the file's path in the page's folder.
-const pluginPagePrefix = "/_magpie/plugin/"
+const pluginPagePrefix = "/_starling/plugin/"
 
 // pluginBridgePath is the window's side of the page's messages, served
 // beside every page's files: a page loads it as
-// <script src="_magpie/bridge.js">.
-const pluginBridgePath = "_magpie/bridge.js"
+// <script src="_starling/bridge.js">.
+const pluginBridgePath = "_starling/bridge.js"
 
 //go:embed pagebridge.js
 var pageBridgeJS []byte
@@ -76,14 +76,14 @@ type pluginPage struct {
 	// plugin's in plugins.json's order to ask for it
 	Replaces string   `json:"replaces,omitempty"`
 	Reads    []string `json:"reads"` // what it may read, of plugin.PageReads
-	// Actions are its items in magpie's menus (plugin.ActionSpec); each
+	// Actions are its items in starling's menus (plugin.ActionSpec); each
 	// opens this page
 	Actions []pluginAction `json:"actions,omitempty"`
 	token   string
 	dir     string
 }
 
-// pluginAction is an item a plugin's page adds to one of magpie's menus.
+// pluginAction is an item a plugin's page adds to one of starling's menus.
 type pluginAction struct {
 	ID     string            `json:"id"`
 	Menu   string            `json:"menu"`  // of plugin.ActionMenus
@@ -91,7 +91,7 @@ type pluginAction struct {
 	Titles map[string]string `json:"titles,omitempty"`
 }
 
-// pluginPanel is a panel a plugin that is on adds to one of magpie's own
+// pluginPanel is a panel a plugin that is on adds to one of starling's own
 // pages (plugin.PanelSlots).
 type pluginPanel struct {
 	Spec   string            `json:"spec"`

@@ -14,15 +14,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/redact"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/redact"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Each mode needs a fresh process: the redaction key is cached after its
 // first use, so another test's masking would hide initialization races.
 func TestConcurrentRedactedCountTokens(t *testing.T) {
-	const modeEnv = "MAGPIE_TEST_REDACT_CONCURRENCY"
+	const modeEnv = "STARLING_TEST_REDACT_CONCURRENCY"
 	mode := os.Getenv(modeEnv)
 	if mode == "" {
 		exe, err := os.Executable()

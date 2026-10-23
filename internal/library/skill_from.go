@@ -10,7 +10,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
+	"github.com/lulu58588/starling/internal/appdir"
 )
 
 // Where a skill came from, for the page to group it with the others from

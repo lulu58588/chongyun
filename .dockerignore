@@ -4,6 +4,6 @@
 dist
 site
 build
-chongyun.app
+starling.app
 /*.md
 .DS_Store

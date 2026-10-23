@@ -101,7 +101,7 @@ func copilotNames() string {
 // are kept, each with its own token, and one switched to or removed leaves
 // the other as it was.
 func TestCopilotSameLoginOnTwoHosts(t *testing.T) {
-	signIn(t) // chongyun's own Copilot account: octocat on github.com
+	signIn(t) // starling's own Copilot account: octocat on github.com
 	hostsServer(t)
 
 	if st := copilotSignInAt(t, "a.ghe.com"); st.User != "mona@a.ghe.com" || st.Plan != "Enterprise" || st.Using {
@@ -158,7 +158,7 @@ func TestCopilotSameLoginOnTwoHosts(t *testing.T) {
 	}
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。
 
 // A logins.json written before #1220 reads as it did: an enterprise's
 // account saved under its login alone is named with its host and keeps its
@@ -198,9 +198,9 @@ func TestCopilotLoginsBeforeHosts(t *testing.T) {
 	}
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。
 
-// oldGHEFiles writes logins.json as magpie kept it before #1220 — mona
+// oldGHEFiles writes logins.json as starling kept it before #1220 — mona
 // on a.ghe.com saved under her login alone — and providers.json with
 // settings, data, under that login.
 func oldGHEFiles(t *testing.T, providers string) {
@@ -290,7 +290,7 @@ func TestCopilotRenameKeepsSettings(t *testing.T) {
 	}
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。
 
 // A providers.json that can't be read is not one without settings: the
 // account isn't written under its new name, its settings stranded under

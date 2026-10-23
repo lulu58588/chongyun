@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/autostart"
+	"github.com/lulu58588/starling/internal/autostart"
 )
 
 // Open at login switched off in System Settings, its launch agent still

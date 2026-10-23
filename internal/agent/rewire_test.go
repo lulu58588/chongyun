@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // setPort is Settings' gateway port set to p, as the Settings page saves it.
@@ -37,11 +37,11 @@ func filesWith(home, s string) []string {
 }
 
 // The gateway's port set in Settings (Magic_zero 报告) moves every
-// agent magpie connected: each one's config is written with the gateway's
+// agent starling connected: each one's config is written with the gateway's
 // URL on the new port, none keeps the old one, and each is still connected
 // with nothing off.
 func TestPortMovesEveryAgent(t *testing.T) {
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	home, _ := codexHome(t, "", "")
 	managed := claudeManaged
 	claudeManaged = func() string { return filepath.Join(home, "managed-settings.json") }
@@ -73,13 +73,13 @@ func TestPortMovesEveryAgent(t *testing.T) {
 		var key, want string
 		for _, g := range a.Fields {
 			for _, o := range g.Options(a.Values()) {
-				if want == "" && (o.Ref == "fake/m1" || o.Value == magpieID) {
+				if want == "" && (o.Ref == "fake/m1" || o.Value == starlingID) {
 					key, want = g.Key, o.Value
 				}
 			}
 		}
 		if want == "" {
-			t.Fatalf("%s: no field takes chongyun's models", a.ID)
+			t.Fatalf("%s: no field takes starling's models", a.ID)
 		}
 		if err := a.Apply(key, want); err != nil {
 			t.Fatalf("%s: %v", a.ID, err)
@@ -130,12 +130,12 @@ func containsAgent(as []*Agent, id string) bool {
 	return false
 }
 
-// 崇云不读别家的登录态，此用例随之移除。
+// 星鸣不读别家的登录态，此用例随之移除。
 
-// An agent taken off magpie before the port moved is left as it is: it is
+// An agent taken off starling before the port moved is left as it is: it is
 // the user's to set again, not the move's.
 func TestPortLeavesAnUnwiredAgent(t *testing.T) {
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	home, read := codexHome(t, "", "")
 	setPort(t, 3591)
 	cx := codex(home)
@@ -150,16 +150,16 @@ func TestPortLeavesAnUnwiredAgent(t *testing.T) {
 		t.Fatal(err)
 	}
 	if strings.Contains(read(), "127.0.0.1:3592") {
-		t.Fatalf("an agent taken off chongyun was moved:\n%s", read())
+		t.Fatalf("an agent taken off starling was moved:\n%s", read())
 	}
 }
 
-// A magpie MAGPIE_ADDR puts beside the installed one tells the installed
+// A starling STARLING_ADDR puts beside the installed one tells the installed
 // one's wiring by the port the installed one's Settings have, not 3425.
-func TestDriftInstalledMagpieOnItsPort(t *testing.T) {
+func TestDriftInstalledStarlingOnItsPort(t *testing.T) {
 	home, _ := codexHome(t, "", "")
 	setPort(t, 3591)
-	t.Setenv("MAGPIE_ADDR", "127.0.0.1:3426")
+	t.Setenv("STARLING_ADDR", "127.0.0.1:3426")
 	cx := codex(home)
 	if err := cx.Apply("model", "fake/m1"); err != nil {
 		t.Fatal(err)
@@ -167,15 +167,15 @@ func TestDriftInstalledMagpieOnItsPort(t *testing.T) {
 	cfg := filepath.Join(home, ".codex", "config.toml")
 	os.WriteFile(cfg, []byte("openai_base_url = \"http://127.0.0.1:3591"+gateway.CodexPath+"\"\nmodel = \"fake/m1\"\n"), 0o644)
 	if d := cx.Drift(); d != nil {
-		t.Fatalf("the installed chongyun's wiring taken for drift: %+v", d)
+		t.Fatalf("the installed starling's wiring taken for drift: %+v", d)
 	}
 }
 
-// Moved, an agent still puts back what it had before magpie when switched
-// off: its own endpoint and token, not magpie's at the old port, which
+// Moved, an agent still puts back what it had before starling when switched
+// off: its own endpoint and token, not starling's at the old port, which
 // setting it again there would otherwise have noted as its own.
 func TestPortKeepsWhatAnAgentHadBefore(t *testing.T) {
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	home, _ := codexHome(t, "", "")
 	managed := claudeManaged
 	claudeManaged = func() string { return filepath.Join(home, "managed-settings.json") }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/redact"
+	"github.com/lulu58588/starling/internal/redact"
 )
 
 // How many values the masking allowlist may hold, and how long each.

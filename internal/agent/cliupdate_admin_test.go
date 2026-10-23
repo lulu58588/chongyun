@@ -12,12 +12,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/update"
+	"github.com/lulu58588/starling/internal/update"
 )
 
 // On Windows npm's global folder may be Node.js's own, C:\Program
 // Files\nodejs, which only an administrator can change (新v学员 on
-// Discord): magpie runs as the user, so npm install -g there failed with
+// Discord): starling runs as the user, so npm install -g there failed with
 // EPERM. The update is still offered, says it asks for an administrator,
 // and runs through Windows' prompt (runAdmin), never as the user; a prompt
 // declined or not to be had says why, with what to do. Elsewhere a global

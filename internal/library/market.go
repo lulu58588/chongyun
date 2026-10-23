@@ -21,12 +21,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/iconproxy"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/iconproxy"
 )
 
 // The market is where the page finds MCP servers and skills to add in one
-// click: servers magpie picked and checked itself, then the MCP Registry's;
+// click: servers starling picked and checked itself, then the MCP Registry's;
 // skills from skills.sh, which counts how often each is installed.
 
 // ---- servers ----------------------------------------------------------------
@@ -88,7 +88,7 @@ func secretEnv(key, label, where string) Input {
 	return Input{Key: key, Where: "env", Label: label, Description: where, Secret: true, Required: true}
 }
 
-// featured are the servers magpie offers first. Every one was checked: its
+// featured are the servers starling offers first. Every one was checked: its
 // package is published, its endpoint answers.
 var featured = []MarketServer{
 	selfServer(),
@@ -152,40 +152,40 @@ var featured = []MarketServer{
 		secretEnv("TAVILY_API_KEY", "API key", "app.tavily.com")),
 }
 
-// magpieCommand stands for this magpie's own binary in a featured server's
+// starlingCommand stands for this starling's own binary in a featured server's
 // command, which InstallServer puts in when it is added, and in a library
 // carried to another computer, which reads it as its own (self_here.go).
-const magpieCommand = "chongyun"
+const starlingCommand = "starling"
 
-// selfServerName is the name magpie's own image generation server is written
+// selfServerName is the name starling's own image generation server is written
 // under, in every agent's config.
-const selfServerName = "magpie-image"
+const selfServerName = "starling-image"
 
-// selfServer is magpie's own image generation server: generate_image makes
+// selfServer is starling's own image generation server: generate_image makes
 // an image with the model Settings → Images → Image generation names, saved
 // in the project. It costs what the model does, so it is given only to the
 // agents picked for it.
 func selfServer() MarketServer {
-	m := localServer(selfServerName, "Chongyun Image", "Chongyun", "https://raw.githubusercontent.com/lulu58588/chongyun/main/build/icon/chongyun.svg", "https://github.com/lulu58588/chongyun",
-		"Generate and edit images with the image model set in Chongyun (Settings → Images), and make short videos with a video model set up in Chongyun (Grok Imagine, Seedance), saved in the project.", magpieCommand, []string{"mcp", "image"})
+	m := localServer(selfServerName, "Starling Image", "Starling", "https://raw.githubusercontent.com/lulu58588/starling/main/build/icon/starling.svg", "https://github.com/lulu58588/starling",
+		"Generate and edit images with the image model set in Starling (Settings → Images), and make short videos with a video model set up in Starling (Grok Imagine, Seedance), saved in the project.", starlingCommand, []string{"mcp", "image"})
 	m.OptIn = true
 	return m
 }
 
-// selfCommand is the server's command and env for this magpie: its binary
+// selfCommand is the server's command and env for this starling: its binary
 // by full path, and the gateway's address when it isn't the default one.
 func selfCommand(s *Server) {
-	if s.Command != magpieCommand {
+	if s.Command != starlingCommand {
 		return
 	}
 	if exe, err := selfExe(); err == nil {
 		s.Command = exe
 	}
-	if a := os.Getenv("MAGPIE_ADDR"); a != "" {
+	if a := os.Getenv("STARLING_ADDR"); a != "" {
 		if s.Env == nil {
 			s.Env = map[string]string{}
 		}
-		s.Env["MAGPIE_ADDR"] = a
+		s.Env["STARLING_ADDR"] = a
 	}
 }
 
@@ -281,7 +281,7 @@ func serverKey(s *Server) string {
 		return strings.TrimSuffix(strings.ToLower(s.URL), "/")
 	}
 	if len(s.Args) == 2 && s.Args[0] == "mcp" && s.Args[1] == "image" {
-		return "chongyun mcp image" // magpie's own, wherever its binary is
+		return "starling mcp image" // starling's own, wherever its binary is
 	}
 	for _, a := range s.Args {
 		if a == "" || strings.HasPrefix(a, "-") || a == "run" {
@@ -605,7 +605,7 @@ func fromRegistry(r *registryServer) (MarketServer, bool) {
 					}
 					m.Inputs = append(m.Inputs, Input{Key: fmt.Sprintf("arg%d", i), Where: "arg", Label: label, Description: a.Description, Required: true})
 				case a.IsRequired:
-					return MarketServer{}, false // a named argument magpie can't fill
+					return MarketServer{}, false // a named argument starling can't fill
 				}
 			}
 			return m, true
@@ -775,7 +775,7 @@ type MarketSkill struct {
 	Name     string `json:"name"`
 	Installs int    `json:"installs"`
 	Official bool   `json:"official,omitempty"`
-	// Featured is magpie's own, not one skills.sh lists
+	// Featured is starling's own, not one skills.sh lists
 	Featured bool   `json:"featured,omitempty"`
 	Icon     string `json:"icon"`
 	// Description is known once it has been fetched
@@ -783,12 +783,12 @@ type MarketSkill struct {
 	Have        string `json:"have,omitempty"`
 }
 
-// featuredSkills are magpie's own skills, first in the market: in
+// featuredSkills are starling's own skills, first in the market: in
 // magpie-community/plugins, beside its plugins (ttmouse 报告: an official
-// skill for an agent to read what magpie quota tells).
+// skill for an agent to read what starling quota tells).
 var featuredSkills = []MarketSkill{{
 	Source: "magpie-community/plugins", SkillID: "magpie-quota", Name: "magpie-quota", Official: true, Featured: true,
-	Description: "Check how much is left of the user's AI subscriptions, coding plans and API key balances through chongyun: each usage window's percent used and when it resets, each key's balance, and wait until a subscription has allowance again.",
+	Description: "Check how much is left of the user's AI subscriptions, coding plans and API key balances through starling: each usage window's percent used and when it resets, each key's balance, and wait until a subscription has allowance again.",
 }}
 
 type skillsShEntry struct {
@@ -823,7 +823,7 @@ func marketCache(name string) string {
 
 // popularSkills are skills.sh's most installed, read off its front page,
 // which lists them for itself; kept for six hours, and on disk for when
-// it can't be reached, else what magpie shipped with.
+// it can't be reached, else what starling shipped with.
 func popularSkills() []skillsShEntry {
 	popular.Lock()
 	defer popular.Unlock()
@@ -876,7 +876,7 @@ func searchSkillsSh(q string) ([]skillsShEntry, error) {
 	return slices.DeleteFunc(body.Skills, func(e skillsShEntry) bool { return !repoRe.MatchString(e.Source) || e.SkillID == "" }), nil
 }
 
-// MarketSkills is what the market shows for a search: magpie's own skills
+// MarketSkills is what the market shows for a search: starling's own skills
 // that match it, the most installed skills that do, then what skills.sh
 // finds for it.
 func MarketSkills(q string) ([]MarketSkill, error) {
@@ -1065,7 +1065,7 @@ func InstallMarketSkill(source, id string, agents []string) (*Result, error) {
 // ---- icons ------------------------------------------------------------------
 
 // Icon is a market icon, fetched once and kept on disk: only an icon the
-// market gave out is fetched, so the page can't have magpie fetch anything else.
+// market gave out is fetched, so the page can't have starling fetch anything else.
 func Icon(u string) ([]byte, string, error) {
 	sum := sha256.Sum256([]byte(u))
 	file := marketCache(filepath.Join("icons", hex.EncodeToString(sum[:16])))
@@ -1165,7 +1165,7 @@ func get(u, accept string, limit int64) ([]byte, error) {
 		return nil, err
 	}
 	// skills.sh answers a client it doesn't know with a page of its own
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 chongyun")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 starling")
 	req.Header.Set("Accept", accept)
 	resp, err := client.Do(req)
 	if err != nil {

@@ -3,12 +3,12 @@ package cli
 import (
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// magpie model suffix off has the agents' lists name models alone, on
+// starling model suffix off has the agents' lists name models alone, on
 // names them with their providers again (#335), own all but the names the
 // user gave (#92); anything else is refused.
 func TestModelSuffixCmd(t *testing.T) {

@@ -16,20 +16,20 @@ import (
 	"time"
 	"unicode/utf16"
 
-	"github.com/lulu58588/chongyun/internal/appdir"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/gateway"
-	"github.com/lulu58588/chongyun/internal/lastgood"
-	"github.com/lulu58588/chongyun/internal/proc"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/wslrun"
+	"github.com/lulu58588/starling/internal/appdir"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/gateway"
+	"github.com/lulu58588/starling/internal/lastgood"
+	"github.com/lulu58588/starling/internal/proc"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/wslrun"
 )
 
 // An agent installed in a WSL distro reads its config there, not in
-// Windows' home — so does the Codex app's WSL connection. On Windows magpie
+// Windows' home — so does the Codex app's WSL connection. On Windows starling
 // lists the distros (wsl.exe -l -q), asks each running one once for its
 // $HOME and which of wslKinds' agents are there (never starting one that is
 // stopped), and edits the files through \\wsl.localhost\<distro>. Each is
@@ -41,14 +41,14 @@ import (
 // Windows as WSL sees it, which reaches the gateway only while that
 // listens beyond loopback.
 
-// place is where an agent lives: its home as magpie opens it, how a path
+// place is where an agent lives: its home as starling opens it, how a path
 // there is spelt in the agent's own config, and the gateway as it reaches
 // it. here(home) is this machine's.
 type place struct {
 	home  string
 	id    string              // the agent's id when not its own: its stash keys go under it
 	spell func(string) string // a path under home as the agent names it; nil: as is
-	sys   func(string) string // a path of the agent's system (/etc/…) as magpie opens it; nil: as is
+	sys   func(string) string // a path of the agent's system (/etc/…) as starling opens it; nil: as is
 	base  func() string       // the gateway's URL from the agent; nil: gateway.URL
 	// cold: a stopped distro's, whose files can't be looked at without
 	// starting it — an agent built there takes its files at their defaults
@@ -61,7 +61,7 @@ type place struct {
 func here(home string) place { return place{home: home} }
 
 // getenv is this machine's variable for this machine's agent; "" for one
-// in a distro, whose variables magpie can't read.
+// in a distro, whose variables starling can't read.
 func (p place) getenv(k string) string {
 	if p.spell != nil {
 		return ""
@@ -70,7 +70,7 @@ func (p place) getenv(k string) string {
 }
 
 // codexHome is Codex's folder at the place: $CODEX_HOME on this machine
-// (appdir.CodexHome), ~/.codex in a distro, whose variables magpie can't
+// (appdir.CodexHome), ~/.codex in a distro, whose variables starling can't
 // read.
 func (p place) codexHome() string {
 	if p.spell != nil {
@@ -81,7 +81,7 @@ func (p place) codexHome() string {
 
 // claudeDir is Claude Code's folder at the place: $CLAUDE_CONFIG_DIR on
 // this machine (appdir.ClaudeDir), ~/.claude in a distro, whose variables
-// magpie can't read.
+// starling can't read.
 func (p place) claudeDir() string {
 	if p.spell != nil {
 		return filepath.Join(p.home, ".claude")
@@ -92,7 +92,7 @@ func (p place) claudeDir() string {
 // hermesHome is Hermes Agent's folder at the place: $HERMES_HOME, else
 // %LOCALAPPDATA%\hermes on Windows and ~/.hermes elsewhere, on this machine
 // (appdir.HermesHome); ~/.hermes in a distro, which is Linux and whose
-// variables magpie can't read.
+// variables starling can't read.
 func (p place) hermesHome() string {
 	if p.spell != nil {
 		return filepath.Join(p.home, ".hermes")
@@ -166,7 +166,7 @@ func (p place) key(k string) string {
 type distro struct {
 	Name    string          `json:"name"`
 	Home    string          `json:"home"`              // $HOME inside it, e.g. /home/me
-	Root    string          `json:"root"`              // where magpie opens its / from, e.g. \\wsl.localhost\Ubuntu
+	Root    string          `json:"root"`              // where starling opens its / from, e.g. \\wsl.localhost\Ubuntu
 	Has     map[string]bool `json:"has"`               // "dir:.codex", "bin:pi": what the probe found
 	Probe   int             `json:"probe,omitempty"`   // the wslProbeVersion that found it
 	Gateway string          `json:"gateway,omitempty"` // the Windows host as the distro reaches it, when not at 127.0.0.1
@@ -207,12 +207,12 @@ func (d distro) live() bool {
 	return d.up()
 }
 
-// local is a path inside the distro as magpie opens it.
+// local is a path inside the distro as starling opens it.
 func (d distro) local(linux string) string {
 	return d.Root + strings.ReplaceAll(linux, "/", string(filepath.Separator))
 }
 
-// native is a path magpie opens as the distro spells it.
+// native is a path starling opens as the distro spells it.
 func (d distro) native(local string) string {
 	rel := local
 	if len(local) >= len(d.Root) && strings.EqualFold(local[:len(d.Root)], d.Root) {
@@ -265,7 +265,7 @@ func (d distro) place(id string) place {
 	return place{home: d.local(d.Home), id: id, spell: d.native, sys: d.local, base: d.base, cold: !d.Running, version: d.Versions[kind]}
 }
 
-// wslKind is an agent magpie looks for in a distro: what the probe finds
+// wslKind is an agent starling looks for in a distro: what the probe finds
 // of it, and how it lives at a place. Adding one here is all it takes.
 type wslKind struct {
 	id, name string
@@ -292,16 +292,16 @@ var wslKinds = []wslKind{
 			switch key {
 			case "model", "subagent":
 				return func(map[string]string) []Option {
-					// over several accounts magpie routes, so they are
-					// offered via magpie too, as on a live Codex (#1603)
+					// over several accounts starling routes, so they are
+					// offered via starling too, as on a live Codex (#1603)
 					if codexFailover() {
-						return append(group("OpenAI", options(ownCodex(), "")), viaMagpie("codex", "")...)
+						return append(group("OpenAI", options(ownCodex(), "")), viaStarling("codex", "")...)
 					}
-					return append(group("OpenAI", options(ownCodex(), "")), viaMagpieFor("codex", "")...)
+					return append(group("OpenAI", options(ownCodex(), "")), viaStarlingFor("codex", "")...)
 				}
 			case "effort":
 				return func(cur map[string]string) []Option {
-					return codexEfforts(append(catalog.Codex(), magpieModels("codex")...), cur["model"])
+					return codexEfforts(append(catalog.Codex(), starlingModels("codex")...), cur["model"])
 				}
 			}
 			return nil
@@ -311,7 +311,7 @@ var wslKinds = []wslKind{
 			if key == "model" {
 				// the providers of its auth.json are the distro's files
 				return func(cur map[string]string) []Option {
-					return append(ownOptions(cur["model"]), viaMagpie("pi", magpieID+"/")...)
+					return append(ownOptions(cur["model"]), viaStarling("pi", starlingID+"/")...)
 				}
 			}
 			return nil
@@ -322,7 +322,7 @@ var wslKinds = []wslKind{
 		asleep: func(key string) func(map[string]string) []Option {
 			if key == "model" {
 				return func(cur map[string]string) []Option {
-					return append(ownOptions(cur["model"]), viaMagpie("omo", magpieID+"/")...)
+					return append(ownOptions(cur["model"]), viaStarling("omo", starlingID+"/")...)
 				}
 			}
 			return nil
@@ -333,7 +333,7 @@ var wslKinds = []wslKind{
 		asleep: func(key string) func(map[string]string) []Option {
 			if key == "model" {
 				return func(cur map[string]string) []Option {
-					return append(ownOptions(cur["model"]), viaMagpie("prime-agent", magpieID+"/")...)
+					return append(ownOptions(cur["model"]), viaStarling("prime-agent", starlingID+"/")...)
 				}
 			}
 			return nil
@@ -348,25 +348,25 @@ var wslKinds = []wslKind{
 			case "model":
 				// whether it has a base URL of its own is the distro's file
 				return func(cur map[string]string) []Option {
-					return append(group("Claude Code", claudeOwn(cur["model"], nil)), claudeViaMagpie(false)...)
+					return append(group("Claude Code", claudeOwn(cur["model"], nil)), claudeViaStarling(false)...)
 				}
 			case "effort":
 				return nil
 			case "login":
-				// its sign-in, while the model last seen is magpie's
+				// its sign-in, while the model last seen is starling's
 				return func(cur map[string]string) []Option {
-					if !isMagpie(cur["model"]) {
+					if !isStarling(cur["model"]) {
 						return nil
 					}
 					return claudeSignIns()
 				}
 			}
-			// a tier: magpie's models while the model last seen is one
+			// a tier: starling's models while the model last seen is one
 			return func(cur map[string]string) []Option {
-				if !isMagpie(cur["model"]) {
+				if !isStarling(cur["model"]) {
 					return nil
 				}
-				return claudeViaMagpie(false)
+				return claudeViaStarling(false)
 			}
 		}},
 	// The CLIs below keep a plain file in the distro's home, written as on
@@ -388,7 +388,7 @@ var wslKinds = []wslKind{
 				return nil
 			}
 			return func(cur map[string]string) []Option {
-				return append(kimiOwnOptions("", cur["model"]), viaMagpie("kimi", magpieID+"/")...)
+				return append(kimiOwnOptions("", cur["model"]), viaStarling("kimi", starlingID+"/")...)
 			}
 		}},
 	// Qwen Code's ~/.qwen, one settings.json of the same shape as this
@@ -400,7 +400,7 @@ var wslKinds = []wslKind{
 				return nil
 			}
 			return func(cur map[string]string) []Option {
-				return append(qwenOwnOptions("", cur["model"]), viaMagpie("qwen", magpieID+"/")...)
+				return append(qwenOwnOptions("", cur["model"]), viaStarling("qwen", starlingID+"/")...)
 			}
 		}},
 	{id: "omp", name: "omp", dir: ".omp", bin: "omp", in: ompIn, version: true,
@@ -410,7 +410,7 @@ var wslKinds = []wslKind{
 				return nil
 			}
 			return func(cur map[string]string) []Option {
-				return append(ompOwnOptions("", cur[key]), viaMagpie("omp", magpieID+"/")...)
+				return append(ompOwnOptions("", cur[key]), viaStarling("omp", starlingID+"/")...)
 			}
 		}},
 	{id: "crush", name: "Crush", dir: ".config/crush", bin: "crush", in: crushIn,
@@ -432,17 +432,17 @@ var wslKinds = []wslKind{
 			}
 			return func(cur map[string]string) []Option {
 				var own []Option
-				if c := cur["model"]; c != "" && !usesMagpie(c) {
+				if c := cur["model"]; c != "" && !usesStarling(c) {
 					own = append(own, Option{Value: c, Icon: modelIcon("", c)})
 				}
-				return append(group("Droid", own), viaMagpie("droid", magpieID+"/")...)
+				return append(group("Droid", own), viaStarling("droid", starlingID+"/")...)
 			}
 		}},
 	// no bin: fx is also the JSON viewer's name
 	{id: "fx", name: "fx", dir: ".fx", in: fxIn,
 		restart: newNotice("{agent} in WSL {distro} reads its settings at start-up — restart open fx sessions to use this.")},
 	{id: "commandcode", name: "Command Code", dir: ".commandcode", bin: "command-code", in: commandCodeIn,
-		restart: newNotice("{agent} in WSL {distro} wants its own sign-in there (cmd login) even for models through chongyun, and reads its settings at start-up — restart open Command Code sessions to use this.")},
+		restart: newNotice("{agent} in WSL {distro} wants its own sign-in there (cmd login) even for models through starling, and reads its settings at start-up — restart open Command Code sessions to use this.")},
 	{id: "minimax-code", name: "MiniMax Code", dir: ".minimax", bin: "mcode", in: miniMaxIn,
 		restart: newNotice("{agent} in WSL {distro} reads its settings at start-up — restart open mcode sessions to use this."),
 		asleep: func(key string) func(map[string]string) []Option {
@@ -450,7 +450,7 @@ var wslKinds = []wslKind{
 				return nil
 			}
 			return func(cur map[string]string) []Option {
-				return append(miniMaxOwnOptions("", cur["model"]), viaMagpie("minimax-code", magpieID+"/")...)
+				return append(miniMaxOwnOptions("", cur["model"]), viaStarling("minimax-code", starlingID+"/")...)
 			}
 		}},
 	{id: "dsh", name: "DeepSeek Harness", dir: ".dsh", bin: "dsh", in: dshIn,
@@ -462,7 +462,7 @@ var wslKinds = []wslKind{
 				return nil
 			}
 			return func(cur map[string]string) []Option {
-				if ref, ok := strings.CutPrefix(cur["model"], magpieID+"/"); ok {
+				if ref, ok := strings.CutPrefix(cur["model"], starlingID+"/"); ok {
 					return static(dshLevels(ref)...)
 				}
 				return static(dshEfforts...)
@@ -480,7 +480,7 @@ var wslKinds = []wslKind{
 		restart: newNotice("{agent} in WSL {distro} reads its settings as a session starts — open sessions keep the model they have; new ones use this.")},
 	{id: "qoder-cn", name: "Qoder CN", dir: ".qoder-cn", bin: "qoderclicn", in: qoderCNIn,
 		restart: newNotice("{agent} in WSL {distro} reads its settings as a session starts — open sessions keep the model they have; new ones use this.")},
-	// lgtm 报告: magpie didn't find a CodeBuddy Code installed in WSL
+	// lgtm 报告: starling didn't find a CodeBuddy Code installed in WSL
 	{id: "codebuddy", name: "CodeBuddy Code", dir: ".codebuddy", bin: "codebuddy", in: codebuddyIn,
 		restart: newNotice("{agent} in WSL {distro} reads its model when a session starts — restart open codebuddy sessions, or run /clear in them, to use this.")},
 	// Cline's CLI, and its VS Code extension in a Remote - WSL window, which
@@ -496,7 +496,7 @@ var wslKinds = []wslKind{
 			}
 			// the models of its config.toml are the distro's files
 			return func(cur map[string]string) []Option {
-				return append(atomcodeOwnModels("", cur["model"]), viaMagpie("atomcode", magpieID+"/")...)
+				return append(atomcodeOwnModels("", cur["model"]), viaStarling("atomcode", starlingID+"/")...)
 			}
 		}},
 	// Snow CLI's ~/.snow, its profiles the distro's own; a stopped
@@ -519,7 +519,7 @@ var wslKinds = []wslKind{
 					{Value: "api-key", Label: "API key", Icon: "gemini-color"},
 					{Value: "vertex", Label: "Vertex AI", Icon: "googlecloud-color", Note: "Vertex AI · $GOOGLE_CLOUD_PROJECT"},
 				}
-				if v := cur["provider"]; v == magpieID || v == "custom" {
+				if v := cur["provider"]; v == starlingID || v == "custom" {
 					out = append(out, Option{Value: v})
 				}
 				return out
@@ -528,7 +528,7 @@ var wslKinds = []wslKind{
 	// Block's goose, by its folder alone: a goose command may be pressly's
 	// database migration tool
 	{id: "goose", name: "Goose", dir: ".config/goose", in: func(at place) *Agent { return gooseIn(at, filepath.Join(at.home, ".config")) },
-		restart: newNotice("{agent} in WSL {distro} loads its providers at start-up — restart open goose sessions to use chongyun's models."),
+		restart: newNotice("{agent} in WSL {distro} loads its providers at start-up — restart open goose sessions to use starling's models."),
 		asleep:  wslOwnAsleep("goose", "model")},
 	// Reasonix's native CLI (1.39 on), by its command and the version it
 	// gives: the historical npm client is reasonix too, and ~/.reasonix is
@@ -547,20 +547,20 @@ var wslKinds = []wslKind{
 			switch key {
 			case "model", "planner":
 				return func(cur map[string]string) []Option {
-					out := append(ownOptions(cur[key]), viaMagpie("reasonix", magpieID+"/")...)
+					out := append(ownOptions(cur[key]), viaStarling("reasonix", starlingID+"/")...)
 					if key == "planner" {
 						out = append([]Option{{Value: "off", Label: "off", Note: "Disable the separate planner"}}, out...)
 					}
 					return out
 				}
 			case "effort":
-				// the levels of magpie's model, as its provider is written them
+				// the levels of starling's model, as its provider is written them
 				return func(cur map[string]string) []Option {
-					ref, ok := strings.CutPrefix(cur["model"], magpieID+"/")
+					ref, ok := strings.CutPrefix(cur["model"], starlingID+"/")
 					if !ok {
 						return nil
 					}
-					levels := reasonixCatalogAt(magpieModels("reasonix"), ref, "", "").Overrides[ref].Efforts
+					levels := reasonixCatalogAt(starlingModels("reasonix"), ref, "", "").Overrides[ref].Efforts
 					if len(levels) == 0 {
 						return nil
 					}
@@ -573,14 +573,14 @@ var wslKinds = []wslKind{
 
 // wslOwnAsleep is a stopped distro's options for an agent's model fields
 // (keys) whose live ones read its files: the providers of the value last
-// seen, and magpie's.
+// seen, and starling's.
 func wslOwnAsleep(id string, keys ...string) func(string) func(map[string]string) []Option {
 	return func(key string) func(map[string]string) []Option {
 		if !slices.Contains(keys, key) {
 			return nil
 		}
 		return func(cur map[string]string) []Option {
-			return append(ownOptions(cur[key]), viaMagpie(id, magpieID+"/")...)
+			return append(ownOptions(cur[key]), viaStarling(id, starlingID+"/")...)
 		}
 	}
 }
@@ -602,7 +602,7 @@ func (k wslKind) memo(key string) string {
 	return k.id + "." + key
 }
 
-// wslFound reports whether any agent magpie knows is in d.
+// wslFound reports whether any agent starling knows is in d.
 func wslFound(d distro) bool {
 	for _, k := range wslKinds {
 		if k.found(d) {
@@ -612,13 +612,13 @@ func wslFound(d distro) bool {
 	return false
 }
 
-// wslKept is whether magpie keeps a distro it probed: one of wslKinds is
+// wslKept is whether starling keeps a distro it probed: one of wslKinds is
 // there, or the Copilot CLI's folder, whose sign-in it reads (#723).
 func wslKept(d distro) bool { return wslFound(d) || d.Has["dir:"+wslCopilotDir] }
 
 // ListsFor is whose model lists an agent's are (provider.CatalogFor): its
 // own id's, or, for one in a WSL distro, its Windows twin's (claude for
-// claude@wsl:Ubuntu). A distro's agent is written magpie's models under
+// claude@wsl:Ubuntu). A distro's agent is written starling's models under
 // that id and sends the gateway that id's key, so the models picked for
 // its row are the ones it is shown only when kept under that id too (#927).
 func (a *Agent) ListsFor() string {
@@ -646,7 +646,7 @@ func wslPi(d distro) *Agent { return wslAgent(wslKindOf("pi"), d) }
 
 // wslAgent is an agent in a distro: its own reading and writing, at the
 // distro's home, with the distro's way to the gateway. A distro that isn't
-// running is shown as magpie last saw it, and nothing of it is read: any
+// running is shown as starling last saw it, and nothing of it is read: any
 // access to its files starts it. Picking a value starts it, as asked.
 func wslAgent(k wslKind, d distro) *Agent {
 	id := k.id + "@wsl:" + d.Name
@@ -741,8 +741,8 @@ func wslAgent(k wslKind, d distro) *Agent {
 	return a
 }
 
-// asleep is a stopped distro's agent: its fields read what magpie last
-// saw, their options come from magpie alone, and it has no files to check,
+// asleep is a stopped distro's agent: its fields read what starling last
+// saw, their options come from starling alone, and it has no files to check,
 // sync or migrate (Path and Dir are empty); setting a field goes to the
 // files, which starts the distro.
 func asleep(live *Agent, k wslKind, d distro) *Agent {
@@ -809,7 +809,7 @@ func wslAgents() []*Agent {
 func wslAgentsOf(ds []distro) []*Agent {
 	var out []*Agent
 	for _, d := range ds {
-		// only the agents it has: magpie writes nothing for one that isn't there
+		// only the agents it has: starling writes nothing for one that isn't there
 		for _, k := range wslKinds {
 			if a := wslAgent(k, d); a.Detected() {
 				out = append(out, a)
@@ -832,7 +832,7 @@ func wslAgentsOf(ds []distro) []*Agent {
 }
 
 // wslHomes are the distros agents (or the Copilot CLI's folder, wslKept)
-// were found in, each user's home as magpie
+// were found in, each user's home as starling
 // opens it, for internal/sessions to read their sessions in; none off
 // Windows. A stopped distro's is its home as last probed.
 func wslHomes() []sessions.WSLHome {
@@ -850,11 +850,11 @@ func wslHomes() []sessions.WSLHome {
 }
 
 // wslCopilotDir is the Copilot CLI's folder under a distro's $HOME: not an
-// agent magpie sets up, but a sign-in it uses (provider.CopilotWSLHomes),
+// agent starling sets up, but a sign-in it uses (provider.CopilotWSLHomes),
 // so a distro that has only it is kept as one agents are found in (#723).
 const wslCopilotDir = ".copilot"
 
-// copilotWSLHomes are the homes, as magpie opens them, of the running
+// copilotWSLHomes are the homes, as starling opens them, of the running
 // distros the Copilot CLI's folder was found in, for provider to read its
 // sign-in in; none off Windows. A stopped distro is left out: reading it
 // would start it.
@@ -877,7 +877,7 @@ func wslHasCopilot(name string) bool {
 
 // Only running distros are probed — asking one anything starts it — once
 // each in a process, and again only after a probe that failed. Those an
-// agent of wslKinds was found in are kept in wsl.json beside magpie's settings (not the
+// agent of wslKinds was found in are kept in wsl.json beside starling's settings (not the
 // stash, which profiles and backups carry), with their fields as last
 // read, so a stopped one is listed without being started.
 var wsl struct {
@@ -911,7 +911,7 @@ const (
 // wslOn is whether there is WSL to look in: on Windows, or in tests.
 var wslOn = runtime.GOOS == "windows"
 
-// wslLooks is whether magpie looks in WSL on its own: there is WSL, and
+// wslLooks is whether starling looks in WSL on its own: there is WSL, and
 // Settings' Detect agents in WSL is on (#1264).
 func wslLooks() bool { return wslOn && !settings.Load().NoWSLAgents }
 
@@ -925,7 +925,7 @@ var wslRun = func(timeout time.Duration, args ...string) ([]byte, error) {
 	return cmd.Output()
 }
 
-// wslRoot is where magpie opens a running distro's / from; a var for tests.
+// wslRoot is where starling opens a running distro's / from; a var for tests.
 var wslRoot = func(name string) string {
 	if _, err := os.Stat(`\\wsl.localhost\` + name + `\`); err == nil {
 		return `\\wsl.localhost\` + name
@@ -1125,8 +1125,8 @@ func wslLastSeen(name, key string) string {
 }
 
 // wslClaudeStandIn is StandIn for a Claude Code in a WSL distro routed
-// through magpie: the first, of the distros running now, whose
-// settings.json has a stand-in. Only magpie's memory of them and which run
+// through starling: the first, of the distros running now, whose
+// settings.json has a stand-in. Only starling's memory of them and which run
 // (wslRunningLocked) are asked — nothing is probed, and a stopped distro
 // is never opened.
 func wslClaudeStandIn(model string) string {
@@ -1420,7 +1420,7 @@ func wslSetting(cfg, key string) (val string, ok bool) {
 // (notice.go)
 var (
 	noticeWSLNotMirrored = newNotice("WSL {distro} is in {net} networking, not mirrored, so its {agent} was pointed at Windows ({url}) rather than 127.0.0.1; that answers only while the gateway listens beyond loopback and Windows' firewall lets WSL in. For 127.0.0.1, set networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig and run wsl --shutdown, then pick the model again.")
-	noticeWSLNoMode      = newNotice("chongyun couldn't ask WSL {distro} its networking mode (it has no wslinfo) and %UserProfile%\\.wslconfig doesn't set it to mirrored, so its {agent} was pointed at Windows ({url}) rather than 127.0.0.1; that answers only while the gateway listens beyond loopback and Windows' firewall lets WSL in. For 127.0.0.1, set networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig and run wsl --shutdown, then pick the model again.")
-	noticeWSLNoRelay     = newNotice("WSL {distro} is in {net} networking with localhostForwarding=false in %UserProfile%\\.wslconfig, so 127.0.0.1 there, where its {agent} was pointed, isn't relayed to Windows, where chongyun listens. Remove localhostForwarding=false under [wsl2] (it is on by default) and run wsl --shutdown.")
-	noticeWSLAsleep      = newNotice("WSL {distro} isn't running: chongyun shows what it last saw there, and starts it only to change something.")
+	noticeWSLNoMode      = newNotice("starling couldn't ask WSL {distro} its networking mode (it has no wslinfo) and %UserProfile%\\.wslconfig doesn't set it to mirrored, so its {agent} was pointed at Windows ({url}) rather than 127.0.0.1; that answers only while the gateway listens beyond loopback and Windows' firewall lets WSL in. For 127.0.0.1, set networkingMode=mirrored under [wsl2] in %UserProfile%\\.wslconfig and run wsl --shutdown, then pick the model again.")
+	noticeWSLNoRelay     = newNotice("WSL {distro} is in {net} networking with localhostForwarding=false in %UserProfile%\\.wslconfig, so 127.0.0.1 there, where its {agent} was pointed, isn't relayed to Windows, where starling listens. Remove localhostForwarding=false under [wsl2] (it is on by default) and run wsl --shutdown.")
+	noticeWSLAsleep      = newNotice("WSL {distro} isn't running: starling shows what it last saw there, and starts it only to change something.")
 )

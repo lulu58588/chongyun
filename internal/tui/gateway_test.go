@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/gateway"
+	"github.com/lulu58588/starling/internal/gateway"
 )
 
 func freeAddr(t *testing.T) string {
@@ -30,11 +30,11 @@ func waitFor(t *testing.T, what string, ok func() bool) {
 	t.Fatal(what)
 }
 
-// With no magpie serving, the terminal serves the gateway while it is open
+// With no starling serving, the terminal serves the gateway while it is open
 // and lets go as it quits (gnayiab 报告: ECONNREFUSED in WSL with only
-// magpie tui).
+// starling tui).
 func TestTUIServesTheGatewayWhenNoneDoes(t *testing.T) {
-	t.Setenv("MAGPIE_ADDR", freeAddr(t))
+	t.Setenv("STARLING_ADDR", freeAddr(t))
 	if gateway.Running() {
 		t.Fatal("a gateway answers before the terminal started")
 	}
@@ -44,7 +44,7 @@ func TestTUIServesTheGatewayWhenNoneDoes(t *testing.T) {
 	if !gw.here.Load() {
 		t.Fatal("not marked as served here")
 	}
-	if s := gatewayStatus(); !strings.Contains(s, gateway.URL()) || !strings.Contains(s, "served while chongyun tui is open") {
+	if s := gatewayStatus(); !strings.Contains(s, gateway.URL()) || !strings.Contains(s, "served while starling tui is open") {
 		t.Fatalf("status %q", s)
 	}
 	stop()
@@ -55,10 +55,10 @@ func TestTUIServesTheGatewayWhenNoneDoes(t *testing.T) {
 	}
 }
 
-// A magpie that has the gateway keeps it; the terminal takes it up once
+// A starling that has the gateway keeps it; the terminal takes it up once
 // that one is gone.
 func TestTUILeavesTheGatewayToAnotherAndTakesItUp(t *testing.T) {
-	t.Setenv("MAGPIE_ADDR", freeAddr(t))
+	t.Setenv("STARLING_ADDR", freeAddr(t))
 	old := gatewayWatch
 	gatewayWatch = 100 * time.Millisecond
 	defer func() { gatewayWatch = old }()
@@ -69,14 +69,14 @@ func TestTUILeavesTheGatewayToAnotherAndTakesItUp(t *testing.T) {
 		defer close(otherDone)
 		gateway.New().ListenAndServe(other)
 	}()
-	waitFor(t, "the other chongyun's gateway never answered", gateway.Running)
+	waitFor(t, "the other starling's gateway never answered", gateway.Running)
 
 	ctx, stop := context.WithCancel(context.Background())
 	defer stop()
 	wait := serveGateway(ctx)
 	time.Sleep(300 * time.Millisecond)
 	if gw.here.Load() || gatewayStatus() != "" {
-		t.Fatalf("took the gateway another chongyun serves: %q", gatewayStatus())
+		t.Fatalf("took the gateway another starling serves: %q", gatewayStatus())
 	}
 
 	endOther()

@@ -5,7 +5,7 @@ package agent
 import (
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/proc"
+	"github.com/lulu58588/starling/internal/proc"
 )
 
 // listRunning lists the processes a pgrep -f pattern matches, with how

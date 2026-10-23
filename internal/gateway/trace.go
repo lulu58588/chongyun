@@ -21,9 +21,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // traceKeep is how many requests the trace keeps.
@@ -112,7 +112,7 @@ type Route struct {
 	// Flow: the ms its content took to come (Call.Flow)
 	Flow int64 `json:"flow,omitempty"`
 	// Sent: ms from the request to its answering try's request written
-	// to the vendor, and of it Own magpie's, Retried the tries that
+	// to the vendor, and of it Own starling's, Retried the tries that
 	// failed first, Queued waiting for a slot, as the usage record has
 	// them (Record.Sent); the rest of Sent is connecting and sending
 	Sent    int64 `json:"sent,omitempty"`
@@ -121,7 +121,7 @@ type Route struct {
 	Queued  int64 `json:"queued,omitempty"`
 	// Served: the model the reply says answered, as the last try has it;
 	// Swapped: another than the one that try asked for; Routed: that try
-	// asked another magpie's routing group, and Served is its member
+	// asked another starling's routing group, and Served is its member
 	Served  string `json:"served,omitempty"`
 	Swapped bool   `json:"swapped,omitempty"`
 	Routed  bool   `json:"routed,omitempty"`
@@ -165,7 +165,7 @@ func (u RouteUsage) PricingRecord() usage.Record {
 type GroupRef struct {
 	ID string `json:"id"`
 	// Ref: the id agents pick it by (provider.Group.Ref), auto/<model>
-	// for a group magpie found, which the Routing page names it by
+	// for a group starling found, which the Routing page names it by
 	Ref      string   `json:"ref,omitempty"`
 	Name     string   `json:"name"`
 	Routing  string   `json:"routing"`
@@ -333,7 +333,7 @@ type Try struct {
 	Flow int64 `json:"flow,omitempty"`
 	// Served: the model its reply said answered, when it named one;
 	// Swapped: another model than Model, not just its dated name; Routed:
-	// Model is another magpie's routing group, and Served the member it
+	// Model is another starling's routing group, and Served the member it
 	// routed to (usage.GroupRouted)
 	Served  string `json:"served,omitempty"`
 	Swapped bool   `json:"swapped,omitempty"`
@@ -381,7 +381,7 @@ type Try struct {
 
 // AutoReset is a Codex reset spent by itself, on Who's account. (Claude's
 // resets were taken out in 9bf6d4352 and aren't coming back: reading or
-// spending one means magpie calling Anthropic with the account's token,
+// spending one means starling calling Anthropic with the account's token,
 // #1972.)
 type AutoReset struct {
 	Who   string `json:"who"`
@@ -500,13 +500,13 @@ type TraceState struct {
 	// stopped reading while out of sight drops a request it last heard of
 	// under way that has since ended and gone from the trace
 	IDs []int64 `json:"ids,omitempty"`
-	// By is the magpie whose routing this is, when it is another magpie's
+	// By is the starling whose routing this is, when it is another starling's
 	// (OwnerTrace): the console names it from here, so the name follows the
-	// trace when another magpie takes the gateway over (#2606)
+	// trace when another starling takes the gateway over (#2606)
 	By *TraceBy `json:"by,omitempty"`
 }
 
-// TraceBy names the magpie a trace was read from.
+// TraceBy names the starling a trace was read from.
 type TraceBy struct {
 	Pid    int    `json:"pid"`
 	Serves string `json:"serves"`
@@ -677,16 +677,16 @@ func (t *trace) update(r *Route, f func(r *Route)) {
 	r.Seq = t.seq
 }
 
-// gatewayTrace tells this gateway's routing to another magpie on the same
+// gatewayTrace tells this gateway's routing to another starling on the same
 // computer, which does not serve the gateway and so has no trace of its own
-// (#2606, fatcutegg: the trace is the serving process's, and a second magpie
+// (#2606, fatcutegg: the trace is the serving process's, and a second starling
 // showed none of it). Its console reads this to show the same Routing page.
 // This computer alone, and never to a held key: the trace names accounts,
 // what they served, folders and why accounts rest. A request through a proxy
 // or tunnel on this computer isn't local, nor is a LAN one while shared.
 func (s *Server) gatewayTrace(w http.ResponseWriter, r *http.Request) {
 	if !local(r) {
-		writeError(w, provider.Chat, http.StatusForbidden, "chongyun's routing is told to this computer alone")
+		writeError(w, provider.Chat, http.StatusForbidden, "starling's routing is told to this computer alone")
 		return
 	}
 	if refuseHeld(w, r, heldRefused) {
@@ -701,10 +701,10 @@ func (s *Server) gatewayTrace(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, 200, map[string]any{"object": "trace", "now": time.Now(), "seq": st.Seq, "routes": st.Routes, "totals": st.Totals, "ids": st.IDs, "pid": os.Getpid(), "serves": Serves})
 }
 
-// ownerURL is the gateway's address on loopback, where the magpie serving
-// it is read by another magpie on this computer (OwnerTrace, OwnerLanes).
+// ownerURL is the gateway's address on loopback, where the starling serving
+// it is read by another starling on this computer (OwnerTrace, OwnerLanes).
 // An address on another interface, or another host, gives "": the trace is
-// read from this computer alone, never from wherever MAGPIE_ADDR points.
+// read from this computer alone, never from wherever STARLING_ADDR points.
 func ownerURL() string {
 	h, p, err := net.SplitHostPort(Addr())
 	if err != nil {
@@ -720,11 +720,11 @@ func ownerURL() string {
 	return ""
 }
 
-// OwnerTrace reads the routing the magpie serving the gateway's address has
-// decided, for a magpie on this computer that doesn't serve it: its console
+// OwnerTrace reads the routing the starling serving the gateway's address has
+// decided, for a starling on this computer that doesn't serve it: its console
 // reads this and shows the same Routing page (#2606: the trace is the
-// serving process's alone, so a second magpie showed none of it). ok is
-// false when nothing answers there, or a magpie too old to tell its trace,
+// serving process's alone, so a second starling showed none of it). ok is
+// false when nothing answers there, or a starling too old to tell its trace,
 // or one that refuses: unknown, never an empty trace.
 func OwnerTrace(ctx context.Context, after int64, wait time.Duration) (TraceState, bool) {
 	base := ownerURL()
@@ -738,10 +738,10 @@ func OwnerTrace(ctx context.Context, after int64, wait time.Duration) (TraceStat
 	if wait > 0 {
 		q.Set("wait", "1")
 	}
-	// the serving magpie holds a long poll up to 25s; a hung one is let go
+	// the serving starling holds a long poll up to 25s; a hung one is let go
 	// a few seconds past that, and at once when the page stops asking
 	c := &http.Client{Timeout: wait + 5*time.Second}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/v1/magpie/trace?"+q.Encode(), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/v1/starling/trace?"+q.Encode(), nil)
 	if err != nil {
 		return TraceState{}, false
 	}
@@ -772,7 +772,7 @@ func OwnerTrace(ctx context.Context, after int64, wait time.Duration) (TraceStat
 	return TraceState{Seq: out.Seq, Routes: out.Routes, Totals: out.Totals, IDs: out.IDs, By: &TraceBy{Pid: out.Pid, Serves: out.Serves}}, true
 }
 
-// OwnerLanes reads the lanes of the magpie serving the gateway's address, for
+// OwnerLanes reads the lanes of the starling serving the gateway's address, for
 // a console that doesn't serve it (the providers' rows show the same pills
 // wherever the gateway runs). ok is false when nothing answers there. It is
 // asked on every state read, so it waits no longer than ServedBy does.
@@ -782,7 +782,7 @@ func OwnerLanes() (map[string]Lane, bool) {
 		return nil, false
 	}
 	c := &http.Client{Timeout: 700 * time.Millisecond}
-	res, err := c.Get(base + "/v1/magpie/concurrency")
+	res, err := c.Get(base + "/v1/starling/concurrency")
 	if err != nil {
 		return nil, false
 	}

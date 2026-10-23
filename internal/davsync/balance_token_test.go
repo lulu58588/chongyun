@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/backup"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/backup"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A computer sending no keys leaves the server's balance token in place,
@@ -85,7 +85,7 @@ func TestSyncBalanceToken(t *testing.T) {
 			}
 			remote := func() backup.Bundle {
 				t.Helper()
-				got, err := backup.Open(f.objects["team x+y/magpie/magpie.magpie-backup"], cfg.Passphrase)
+				got, err := backup.Open(f.objects["team x+y/starling/starling.starling-backup"], cfg.Passphrase)
 				if err != nil {
 					t.Fatal(err)
 				}

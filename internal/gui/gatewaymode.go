@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"sync/atomic"
 
-	"github.com/lulu58588/chongyun/internal/agent"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agent"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// Gateway mode (Player 报告): `chongyun web` on a server that is only
+// Gateway mode (Player 报告): `starling web` on a server that is only
 // the gateway for other machines' agents shows what such a gateway needs —
 // Providers, Gateway, Routing, Usage, Sessions, Plugins and Settings — and leaves out
 // what is this machine's agents' (Agents, Library, the settings
@@ -19,20 +19,20 @@ import (
 // windows show everything whatever it says.
 //
 // Settings' choice (settings.GatewayMode, "on" or "off") wins; with none,
-// `chongyun web --gateway` turns it on, and so does a magpie web with no
+// `starling web --gateway` turns it on, and so does a starling web with no
 // agent on its machine (a container, a NAS). Settings › General turns it
 // off again, which brings the pages back.
 
-// WebGateway is `chongyun web --gateway`'s.
+// WebGateway is `starling web --gateway`'s.
 var WebGateway atomic.Bool
 
-// webPage is set once the page is served by `chongyun web`: settingsState,
+// webPage is set once the page is served by `starling web`: settingsState,
 // which has no Windows, tells the page its gateway mode by it.
 var webPage atomic.Bool
 
 // gatewayMode says whether the page is in gateway mode, and why: "on" or
-// "off" (Settings' choice), "flag" (magpie web --gateway), "no-agents", or
-// "" (the app's windows, or magpie web on a machine with agents).
+// "off" (Settings' choice), "flag" (starling web --gateway), "no-agents", or
+// "" (the app's windows, or starling web on a machine with agents).
 func gatewayMode(web bool) (bool, string) {
 	if !web {
 		return false, ""
@@ -54,7 +54,7 @@ func gatewayMode(web bool) (bool, string) {
 var agentsHere = func() bool { return len(agent.Detected()) > 0 }
 
 // gatewayModeRoutes: POST /api/settings/gateway-mode {"mode": "on" | "off"
-// | ""} sets Settings' choice, "" leaving it to magpie again.
+// | ""} sets Settings' choice, "" leaving it to starling again.
 func gatewayModeRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/settings/gateway-mode", func(rw http.ResponseWriter, r *http.Request) {
 		var in struct {

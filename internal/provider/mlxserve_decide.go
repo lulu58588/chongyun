@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // MLXServePreset is the MLX-Serve preset's id.

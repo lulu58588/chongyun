@@ -5,11 +5,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/gwtool"
-	"github.com/lulu58588/chongyun/internal/pluginrt"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/gwtool"
+	"github.com/lulu58588/starling/internal/pluginrt"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 func TestMain(m *testing.M) { testenv.Main(m) }
@@ -34,7 +34,7 @@ func sandbox(t *testing.T) {
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, "cache"))
 }
 
-// In a process serving the gateway, on serves magpie's web search, off
+// In a process serving the gateway, on serves starling's web search, off
 // doesn't, on again does; a process not serving it has it either way.
 func TestOnServesOffDoesNot(t *testing.T) {
 	sandbox(t)
@@ -60,7 +60,7 @@ func TestOnServesOffDoesNot(t *testing.T) {
 	served(true)
 }
 
-// In use while a search API is set up or a searcher is picked; magpie's
+// In use while a search API is set up or a searcher is picked; starling's
 // pick or off: none; files that can't be read: not known.
 func TestInUse(t *testing.T) {
 	sandbox(t)

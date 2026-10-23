@@ -4,8 +4,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/routes"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/routes"
 )
 
 // The router strategy point with plugins/rotation on and off: a provider

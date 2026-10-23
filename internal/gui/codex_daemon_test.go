@@ -11,11 +11,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // The Restart button runs `codex app-server daemon restart` with the codex
-// magpie finds, for the Codex home it switches, the user's CODEX_HOME when
+// starling finds, for the Codex home it switches, the user's CODEX_HOME when
 // that is set; a stand-in codex writes
 // down how it was run, since the real one would restart the user's daemon.
 func TestCodexDaemonRestartRoute(t *testing.T) {

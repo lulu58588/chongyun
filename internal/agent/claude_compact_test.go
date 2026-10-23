@@ -4,13 +4,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
-// TestClaudeCompactWindow: on magpie Claude Code compacts at the working
+// TestClaudeCompactWindow: on starling Claude Code compacts at the working
 // window (CLAUDE_CODE_AUTO_COMPACT_WINDOW), another vendor's [1m] model too, so a 1M model's
 // conversation isn't run to 1M with every turn sending all of it (X: Chen);
 // settings.FullContext takes it away, a Claude model runs to its own, a value the user set is theirs, and
@@ -41,7 +41,7 @@ func TestClaudeCompactWindow(t *testing.T) {
 
 	must(a.Field("model").Set("v/big[1m]"))
 	if compact() != "272000" {
-		t.Fatalf("on chongyun: %q", compact())
+		t.Fatalf("on starling: %q", compact())
 	}
 	must(settings.Save(settings.Settings{FullContext: true}))
 	must(a.Sync())
@@ -141,8 +141,8 @@ func TestClaudeCompactAt(t *testing.T) {
 
 // An auto-compact window the user set in Claude Code (autoCompactWindow,
 // or modelSettings.<model>.autoCompactWindow as /autocompact saves it) is
-// theirs: magpie's default doesn't write the env that would take
-// precedence over it; a size typed in magpie, or on the model or its
+// theirs: starling's default doesn't write the env that would take
+// precedence over it; a size typed in starling, or on the model or its
 // provider, still does (#876, hisiling).
 func TestClaudeCompactYieldsToOwnSetting(t *testing.T) {
 	home := t.TempDir()
@@ -188,18 +188,18 @@ func TestClaudeCompactYieldsToOwnSetting(t *testing.T) {
 	expect("another model's", "272000")
 	must(a.Field("model").Set("v/flash[1m]"))
 	expect("this model's", "")
-	// a size typed in magpie, or the model's own there, comes first
+	// a size typed in starling, or the model's own there, comes first
 	must(provider.SetModelCompacts("v", map[string]int{"flash": 200000}))
 	must(a.Sync())
-	expect("the model's own in chongyun", "200000")
+	expect("the model's own in starling", "200000")
 	must(provider.SetModelCompacts("v", nil))
 	must(provider.SetCompactAt(400000))
 	must(a.Sync())
-	expect("typed in chongyun", "400000")
+	expect("typed in starling", "400000")
 }
 
 // A routing group made only of Claude models runs as a Claude model does,
-// to its own window: Claude Code isn't handed magpie's default 272000 for
+// to its own window: Claude Code isn't handed starling's default 272000 for
 // it (#1741, yanjieee: a group of Claude [1m] models was, its id's last
 // part not starting with "claude"), a group in it of Claude models too.
 // A group with another vendor's model in it keeps the default, a
@@ -272,7 +272,7 @@ func TestClaudeGroupCompactWindow(t *testing.T) {
 
 // A Claude model runs to its whole window whatever name its provider gives
 // it: Amazon Bedrock names Claude Opus us.anthropic.claude-…, which
-// magpie's [1m] Claude Opus there was not taken for, so Claude Code was
+// starling's [1m] Claude Opus there was not taken for, so Claude Code was
 // held to 272K on a 1M Claude model (划船不靠桨 报告), while a group
 // of the same model ran to 1M (provider.ClaudeGroup). Another vendor's 1M
 // model on the same provider is still compacted at the working window.

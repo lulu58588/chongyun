@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // museReasoningID is the reasoning item id Muse Spark on OpenCode handed
@@ -35,7 +35,7 @@ var openaiItemID = regexp.MustCompile(`^[A-Za-z0-9_-]+$`)
 
 // idChecker plays OpenAI's /responses as Copilot passes it on: an input
 // item whose id has another character is refused with OpenAI's 400, word
-// for word as echo_ts got it (Copilot's name is magpie's, before it).
+// for word as echo_ts got it (Copilot's name is starling's, before it).
 // With check off it takes any id, as OpenCode does its own.
 type idChecker struct {
 	mu     sync.Mutex
@@ -112,7 +112,7 @@ func TestCopilotTakesAnotherVendorsItemIDs(t *testing.T) {
 	os.WriteFile(filepath.Join(cfg, "github-copilot", "apps.json"), mustJSON(map[string]any{
 		"github.com:Iv1.x": map[string]any{"user": "echo", "oauth_token": "gho_echo"},
 	}), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json: the editor's own file is never read to find out.
 	copilotLoginSaved(t, "echo", "gho_echo")
 	up := &idChecker{check: true}
@@ -154,7 +154,7 @@ func TestCopilotTakesAnotherVendorsItemIDs(t *testing.T) {
 	checkSent(t, asked[0])
 }
 
-// A relay in front of OpenAI, which magpie can't tell from any other
+// A relay in front of OpenAI, which starling can't tell from any other
 // upstream, refuses the ids as OpenAI does: asked once more with ids it
 // takes, and from then on asked that way at once.
 func TestRelayRefusingItemIDsAskedAgain(t *testing.T) {

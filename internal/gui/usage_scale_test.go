@@ -1,6 +1,6 @@
 package gui
 
-// Run with MAGPIE_USAGE_SCALE=1 go test -tags nogui ./internal/gui
+// Run with STARLING_USAGE_SCALE=1 go test -tags nogui ./internal/gui
 // -run TestUsageScale -count=1 -v. The fixture is entirely synthetic.
 
 import (
@@ -14,14 +14,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/sessions"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/sessions"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func TestUsageScale(t *testing.T) {
-	if os.Getenv("MAGPIE_USAGE_SCALE") != "1" {
-		t.Skip("large synthetic fixture; opt in with MAGPIE_USAGE_SCALE=1")
+	if os.Getenv("STARLING_USAGE_SCALE") != "1" {
+		t.Skip("large synthetic fixture; opt in with STARLING_USAGE_SCALE=1")
 	}
 	home := sandboxHome(t)
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
@@ -32,7 +32,7 @@ func TestUsageScale(t *testing.T) {
 	catalog.Reset()
 	t.Cleanup(func() { sessions.Reset(); catalog.Reset() })
 	now := time.Now().Add(-time.Hour)
-	active := os.Getenv("MAGPIE_USAGE_ACTIVE") == "1"
+	active := os.Getenv("STARLING_USAGE_ACTIVE") == "1"
 	wantCalls := 300_000
 	var activePaths []string
 	if active {

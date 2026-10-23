@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // A provider's editor saves what it shows. What it doesn't show, set from
-// the CLI or the TUI (`chongyun provider set … family= website= keys=
+// the CLI or the TUI (`starling provider set … family= website= keys=
 // balance= balance.path= models.url=`), stays as the user set it: an
 // editor's Save wrote it away, so a preset's came back as the preset's and
 // a custom one's as nothing.

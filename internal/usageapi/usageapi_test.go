@@ -4,18 +4,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/testenv"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/testenv"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 func TestMain(m *testing.M) { testenv.Main(m) }
 
 // A provider the usage log names but that isn't set up now is still named
-// as magpie knows it (@ByronVon1 报告): the Claude Code subscription,
+// as starling knows it (@ByronVon1 报告): the Claude Code subscription,
 // signed out of since, showed as "claude" in the Requests page's Provider
 // filter, between providers named by their names. A preset's removed
-// since is named by the preset; a custom one magpie can't know stays its
+// since is named by the preset; a custom one starling can't know stays its
 // id. Every place the page names a provider from the log says the same:
 // the filter, each row, the split-by legends, and the summary's models
 // and accounts.

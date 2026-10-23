@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/budget"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/budget"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 func TestGatewayKeyCLI(t *testing.T) {
@@ -105,7 +105,7 @@ func TestGatewayKeyCLIOwnValue(t *testing.T) {
 
 func TestGatewayKeyListWithReadOnlyMigration(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
-	s := settings.Settings{LAN: true, LANKey: "sk-magpie-fixture-cli"}
+	s := settings.Settings{LAN: true, LANKey: "sk-starling-fixture-cli"}
 	if err := settings.Save(s); err != nil {
 		t.Fatal(err)
 	}
@@ -117,12 +117,12 @@ func TestGatewayKeyListWithReadOnlyMigration(t *testing.T) {
 		t.Skip("settings.json remains writable")
 	}
 	var out bytes.Buffer
-	if err := gatewayKeysTo(&out, []string{"gateway-key", "list"}); err != nil || !strings.Contains(out.String(), "Chongyun") {
+	if err := gatewayKeysTo(&out, []string{"gateway-key", "list"}); err != nil || !strings.Contains(out.String(), "Starling") {
 		t.Fatal("read-only migration blocked CLI list", out.String(), err)
 	}
 }
 
-// magpie gateway-key limit sets, shows and takes off a key's limit, and
+// starling gateway-key limit sets, shows and takes off a key's limit, and
 // list says what each key has used of its own (#585).
 func TestGatewayKeyLimitCLI(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
@@ -261,7 +261,7 @@ func TestGatewayKeyModelsCLI(t *testing.T) {
 	}
 }
 
-// magpie gateway-key accounts sets, shows and takes off a key's account
+// starling gateway-key accounts sets, shows and takes off a key's account
 // whitelist, and refuses an account no provider has (#905). An account's
 // stable id, named by who is signed in, is exercised against a real
 // sign-in in the gateway's tests; a key's fingerprint is one here.
@@ -312,7 +312,7 @@ func TestGatewayKeyAccountsCLI(t *testing.T) {
 	}
 }
 
-// magpie gateway-key limit adds, lists, changes and removes a key's
+// starling gateway-key limit adds, lists, changes and removes a key's
 // several limits (#2227); the single-limit form still sets an only limit.
 func TestGatewayKeySeveralLimitsCLI(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())

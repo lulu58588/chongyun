@@ -9,12 +9,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/edit"
+	"github.com/lulu58588/starling/internal/edit"
 )
 
 // claudeProxySignIn keeps a Claude account in logins.json with a sign-in
 // of its own: two accounts holding the same sign-in are one account's
-// sign-in under two names, which chongyun refuses to save.
+// sign-in under two names, which starling refuses to save.
 func claudeProxySignIn(t *testing.T, email, plan string, expiry time.Time) savedLogin {
 	t.Helper()
 	return claudeOwnLogin(t, claudeTestSignIn{email: email, plan: plan,
@@ -22,7 +22,7 @@ func claudeProxySignIn(t *testing.T, email, plan string, expiry time.Time) saved
 }
 
 // claudeTwoAccounts signs Claude Code in to a@example.com, then to
-// b@example.com, as magpie sees both, and answers its settings.json.
+// b@example.com, as starling sees both, and answers its settings.json.
 func claudeTwoAccounts(t *testing.T) string {
 	t.Helper()
 	home := claudeHome(t)
@@ -97,8 +97,8 @@ func jsonGetT(t *testing.T, path, k string) string {
 	return v
 }
 
-// A proxy the user set in Claude Code's env is theirs: magpie writes no
-// account's beside it, and never takes it out (LESSONS: magpie's default
+// A proxy the user set in Claude Code's env is theirs: starling writes no
+// account's beside it, and never takes it out (LESSONS: starling's default
 // never overrides a value the user set).
 func TestClaudeAccountProxyKeepsTheUsersOwn(t *testing.T) {
 	settingsPath := claudeTwoAccounts(t)
@@ -125,7 +125,7 @@ func TestClaudeAccountProxyKeepsTheUsersOwn(t *testing.T) {
 	}
 }
 
-// One magpie wrote that the user then changed is the user's from then on:
+// One starling wrote that the user then changed is the user's from then on:
 // a switch to an account without a proxy leaves it.
 func TestClaudeAccountProxyEditedByTheUserStays(t *testing.T) {
 	settingsPath := claudeTwoAccounts(t)
@@ -141,9 +141,9 @@ func TestClaudeAccountProxyEditedByTheUserStays(t *testing.T) {
 	if v := claudeEnvOf(t, settingsPath, "HTTPS_PROXY"); v != "http://mine:7890" {
 		t.Fatalf("the user's HTTPS_PROXY = %q", v)
 	}
-	// what was still magpie's goes
+	// what was still starling's goes
 	if v := claudeEnvOf(t, settingsPath, "HTTP_PROXY"); v != "" {
-		t.Fatalf("chongyun's HTTP_PROXY = %q stayed", v)
+		t.Fatalf("starling's HTTP_PROXY = %q stayed", v)
 	}
 	// and with the user's own there, b's isn't written over it
 	claudeSwitch(t, "b@example.com")
@@ -200,7 +200,7 @@ func TestClaudeAccountProxyLeavesABrokenSettings(t *testing.T) {
 	}
 }
 
-// claudeLog is what magpie logs while f runs.
+// claudeLog is what starling logs while f runs.
 func claudeLog(t *testing.T, f func()) string {
 	t.Helper()
 	var buf bytes.Buffer

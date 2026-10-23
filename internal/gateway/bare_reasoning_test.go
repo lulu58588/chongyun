@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // relayUpstream plays a Responses relay in front of OpenAI as #1044's
@@ -65,7 +65,7 @@ func (u *relayUpstream) asked() [][]map[string]any {
 
 // bareConversation is the shape of the reporter's old conversation: messages,
 // function calls, Codex's apply_patch as custom tool calls, and reasoning
-// items with nothing sealed in them (one with a summary, as magpie gives
+// items with nothing sealed in them (one with a summary, as starling gives
 // Codex in a translated reply; one with an id alone), beside one sealed.
 const bareConversation = `{"type":"message","role":"developer","content":[{"type":"input_text","text":"<permissions instructions>"}]},
   {"type":"message","role":"user","content":[{"type":"input_text","text":"fix the login bug"}]},

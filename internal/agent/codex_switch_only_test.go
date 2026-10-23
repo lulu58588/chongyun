@@ -9,14 +9,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// #1907 (foobra): two ChatGPT accounts, both on in magpie, for Codex
+// #1907 (foobra): two ChatGPT accounts, both on in starling, for Codex
 // Desktop and the CLI alone, not for the gateway. With more accounts on,
-// magpie points Codex at the gateway to fail over between them (#1385);
+// starling points Codex at the gateway to fail over between them (#1385);
 // switch-only takes that base URL out, so Codex goes straight to OpenAI and
-// magpie only switches its sign-in, and nothing puts it back while it is
+// starling only switches its sign-in, and nothing puts it back while it is
 // on. Off again, failover writes it back. A base URL the user wrote by hand
 // is theirs, and stays either way (#856).
 func TestCodexSwitchOnlyKeepsCodexOffTheGateway(t *testing.T) {
@@ -32,7 +32,7 @@ func TestCodexSwitchOnlyKeepsCodexOffTheGateway(t *testing.T) {
 	}
 	me, _ := json.Marshal(auth("me@example.com", "acct-1"))
 	home, read := codexHome(t, string(me), "model = \"gpt-5.5\"\n")
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	b, _ := json.Marshal([]map[string]any{

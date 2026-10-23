@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/sessions"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/sessions"
 )
 
 func sessionHome(t *testing.T) string {
@@ -32,16 +32,16 @@ func sessionAuth(t *testing.T, dir, account, user, email string) {
 	if err := os.WriteFile(filepath.Join(dir, "auth.json"), auth, 0600); err != nil {
 		t.Fatal(err)
 	}
-	// chongyun tells what a session's account was by the accounts it holds
+	// starling tells what a session's account was by the accounts it holds
 	// itself, never by reading the agent's own file: the account the agent
-	// is signed in to is kept in chongyun's own logins.json, marked as the
+	// is signed in to is kept in starling's own logins.json, marked as the
 	// one it is on.
 	sessionLogin(t, account, email, auth)
 }
 
-// sessionLogin keeps a ChatGPT account in chongyun's own logins.json, the
+// sessionLogin keeps a ChatGPT account in starling's own logins.json, the
 // account the agent is on: the mark is taken off the others of that agent,
-// as it is when chongyun signs an agent in to another account.
+// as it is when starling signs an agent in to another account.
 func sessionLogin(t *testing.T, account, email string, auth []byte) {
 	t.Helper()
 	path := filepath.Join(filepath.Dir(provider.Path()), "logins.json")

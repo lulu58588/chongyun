@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/access"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // nativeSealedReply is a Responses stream whose output is one compaction item,
@@ -48,7 +48,7 @@ func nativeAsk(t *testing.T, model, body string) (int, string) {
 // #1099: a provider set to compact natively is asked Codex's
 // compaction_trigger as Codex sent it, and the compaction it seals goes
 // back to Codex unchanged; the next turn carries it to the same provider
-// as it is. One not set to keeps magpie's summary (magpie1:).
+// as it is. One not set to keeps starling's summary (starling1:).
 func TestNativeCompactionPassesTheTrigger(t *testing.T) {
 	f := &fake{t: t, reply: nativeSealedReply("gAAAAB-sealed-by-relay")}
 	setup(t, provider.Responses, f)
@@ -57,12 +57,12 @@ func TestNativeCompactionPassesTheTrigger(t *testing.T) {
 		w.WriteHeader(400)
 	})
 
-	// off: magpie summarises, the trigger never reaches the relay
+	// off: starling summarises, the trigger never reaches the relay
 	f.reply = sse(
 		`data: {"type":"response.output_item.done","output_index":0,"item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"SUMMARY"}]}}`,
 		`data: {"type":"response.completed","response":{"id":"resp_s","status":"completed","output":[],"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}`)
 	code, body := nativeAsk(t, "fake/m1", compactTurn)
-	if code != 200 || strings.Contains(string(f.got), "compaction_trigger") || !strings.Contains(body, magpieCompaction) {
+	if code != 200 || strings.Contains(string(f.got), "compaction_trigger") || !strings.Contains(body, starlingCompaction) {
 		t.Fatalf("off: %d %s\nrelay got %s", code, body, f.got)
 	}
 
@@ -79,7 +79,7 @@ func TestNativeCompactionPassesTheTrigger(t *testing.T) {
 	if f.path != "/v1/responses" {
 		t.Errorf("asked at %s", f.path)
 	}
-	if !strings.Contains(body, `"encrypted_content":"gAAAAB-sealed-by-relay"`) || strings.Contains(body, magpieCompaction) {
+	if !strings.Contains(body, `"encrypted_content":"gAAAAB-sealed-by-relay"`) || strings.Contains(body, starlingCompaction) {
 		t.Errorf("Codex got %s", body)
 	}
 
@@ -92,7 +92,7 @@ func TestNativeCompactionPassesTheTrigger(t *testing.T) {
 }
 
 // A relay that refuses compaction_trigger has its own error go back to
-// Codex, not a summary of magpie's in its place.
+// Codex, not a summary of starling's in its place.
 func TestNativeCompactionRefusalGoesBack(t *testing.T) {
 	f := &fake{t: t}
 	f.refuse = func(body []byte) (int, string) {
@@ -105,7 +105,7 @@ func TestNativeCompactionRefusalGoesBack(t *testing.T) {
 	chatgpt(t, func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(400) })
 	nativeOn(t, "fake")
 	code, body := nativeAsk(t, "fake/m1", compactTurn)
-	if code != 400 || !strings.Contains(body, "Invalid value: 'compaction_trigger'") || strings.Contains(body, magpieCompaction) {
+	if code != 400 || !strings.Contains(body, "Invalid value: 'compaction_trigger'") || strings.Contains(body, starlingCompaction) {
 		t.Fatalf("%d %s", code, body)
 	}
 	if f.calls != 1 {
@@ -147,7 +147,7 @@ func TestNativeCompactionStaysWithItsWriter(t *testing.T) {
 
 // GitHub Copilot's GPT models answer on Responses, so a Copilot account
 // set to compact natively is asked Codex's compaction as it was sent; its
-// Claude models, on chat completions, keep magpie's summary.
+// Claude models, on chat completions, keep starling's summary.
 func TestNativeCompactionCopilot(t *testing.T) {
 	var mu sync.Mutex
 	var asked []string
@@ -193,7 +193,7 @@ func TestNativeCompactionCopilot(t *testing.T) {
 	mu.Unlock()
 
 	code, body = nativeAsk(t, "copilot/claude-sonnet-4.5", compactTurn)
-	if code != 200 || !strings.Contains(body, magpieCompaction) {
+	if code != 200 || !strings.Contains(body, starlingCompaction) {
 		t.Fatalf("claude: %d %s", code, body)
 	}
 	mu.Lock()
@@ -410,10 +410,10 @@ func TestNativeCompactionWriterThroughAGroupWhoseListLacksTheModel(t *testing.T)
 	}
 }
 
-// #2582, #2642: Codex compacting one of its own models through magpie's
+// #2582, #2642: Codex compacting one of its own models through starling's
 // Codex accounts compacts natively only with the codex provider's native
 // compaction on. Off (the default), the trigger never reaches the ChatGPT
-// backend: magpie's summary comes back, which any account reads, and no
+// backend: starling's summary comes back, which any account reads, and no
 // account is recorded as the conversation's only reader. Before, the
 // trigger was relayed whatever the setting and the seal bound the
 // conversation to the account that answered, so switching to another
@@ -445,7 +445,7 @@ func TestCodexOwnModelCompactionHonoursTheToggle(t *testing.T) {
 	}
 
 	code, body := nativeAsk(t, "gpt-5.5", compactTurn)
-	if code != 200 || !strings.Contains(body, magpieCompaction) || strings.Contains(body, "gAAAAB-sealed-by-chatgpt") {
+	if code != 200 || !strings.Contains(body, starlingCompaction) || strings.Contains(body, "gAAAAB-sealed-by-chatgpt") {
 		t.Fatalf("off: %d %s", code, body)
 	}
 	mu.Lock()
@@ -465,7 +465,7 @@ func TestCodexOwnModelCompactionHonoursTheToggle(t *testing.T) {
 
 	nativeOn(t, "codex")
 	code, body = nativeAsk(t, "gpt-5.5", compactTurn)
-	if code != 200 || !strings.Contains(body, `"encrypted_content":"gAAAAB-sealed-by-chatgpt"`) || strings.Contains(body, magpieCompaction) {
+	if code != 200 || !strings.Contains(body, `"encrypted_content":"gAAAAB-sealed-by-chatgpt"`) || strings.Contains(body, starlingCompaction) {
 		t.Fatalf("on: %d %s", code, body)
 	}
 	mu.Lock()
@@ -479,7 +479,7 @@ func TestCodexOwnModelCompactionHonoursTheToggle(t *testing.T) {
 }
 
 // #2642: a conversation whose native compaction's account can't be asked
-// is told why, as magpie's settings say, and what lets it go on — not
+// is told why, as starling's settings say, and what lets it go on — not
 // "switched off, removed, or no longer serves" of an account that is on.
 // No other account is asked.
 func TestNativeCompactionWriterGoneSaysWhy(t *testing.T) {
@@ -501,7 +501,7 @@ func TestNativeCompactionWriterGoneSaysWhy(t *testing.T) {
 					t.Fatal(err)
 				}
 			},
-			[]string{"switched off in chongyun", "switch spare@example.com on again", "the others can stay on beside it"},
+			[]string{"switched off in starling", "switch spare@example.com on again", "the others can stay on beside it"},
 			[]string{"no longer signed in", "paused"}},
 		{"own paused", "me@example.com",
 			func(t *testing.T) {
@@ -510,7 +510,7 @@ func TestNativeCompactionWriterGoneSaysWhy(t *testing.T) {
 				}
 			},
 			[]string{"it is paused", "turn me@example.com on again"},
-			[]string{"no longer signed in", "switched off in chongyun"}},
+			[]string{"no longer signed in", "switched off in starling"}},
 		{"kept from the model", "me@example.com",
 			func(t *testing.T) {
 				if err := provider.SetAccountModels("codex", "me@example.com", []string{"gpt-4.1"}); err != nil {
@@ -518,10 +518,10 @@ func TestNativeCompactionWriterGoneSaysWhy(t *testing.T) {
 				}
 			},
 			[]string{"set not to serve gpt-5.5 (Names & levels)", "let me@example.com serve gpt-5.5 again"},
-			[]string{"no longer signed in", "switched off in chongyun", "paused"}},
+			[]string{"no longer signed in", "switched off in starling", "paused"}},
 		{"signed out", "gone@example.com", func(t *testing.T) {},
-			[]string{"gone@example.com is no longer signed in to chongyun", "sign in to gone@example.com again"},
-			[]string{"switched off in chongyun", "paused"}},
+			[]string{"gone@example.com is no longer signed in to starling", "sign in to gone@example.com again"},
+			[]string{"switched off in starling", "paused"}},
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			codexSignedIn(t, "spare@example.com")
@@ -571,7 +571,7 @@ func TestNativeCompactionRouteNamesItsWriter(t *testing.T) {
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), mustJSON(auth("pro@example.com", "acct-pro")), 0o600)
 	os.MkdirAll(filepath.Dir(provider.Path()), 0o755)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json, marked as the one the agent is on: it never reads the
 	// agent's own file to find out which account that is.
 	os.WriteFile(filepath.Join(filepath.Dir(provider.Path()), "logins.json"), mustJSON([]map[string]any{
@@ -641,14 +641,14 @@ func TestNativeCompactionRouteNamesItsWriter(t *testing.T) {
 
 // A legacy /responses/compact carrying a recorded seal is judged here, as
 // the same request on /responses is (serve, checkpointReaders, #2642):
-// the writer on in magpie answers it, signed as the writer — relayed as
+// the writer on in starling answers it, signed as the writer — relayed as
 // it came, the compact reaches the sign-in, which another account's seal
 // refuses (#1099, #2271), its reason unread (#2727). A writer gone is
 // refused with the reason, also when the sign-in is paused and the
 // compact would otherwise relay on another account (compactOn); a seal
 // the sign-in wrote while it can be asked relays as it came; a request
 // signing with its own chatgpt-account-id (a Codex on WSL or another
-// CODEX_HOME), and a seal a magpie key's candidate wrote, are not judged
+// CODEX_HOME), and a seal a starling key's candidate wrote, are not judged
 // here.
 // sealedCompactAsked sends Codex's legacy /responses/compact carrying the seal
 // enc, signed with auth (Codex's ChatGPT token, or a gateway key) and
@@ -698,7 +698,7 @@ func TestNativeCompactionCompactJudgesItsWriter(t *testing.T) {
 	}
 	account := sealedBy
 
-	t.Run("a writer on in chongyun answers it, signed as the writer", func(t *testing.T) {
+	t.Run("a writer on in starling answers it, signed as the writer", func(t *testing.T) {
 		codexSignedIn(t, "biz@example.com") // the sign-in is me@example.com (acct-1); biz@example.com (acct-2) is on
 		nativeOn(t, "codex")
 		wroteCheckpoint("gAAAAB-sealed-by-biz", account("biz@example.com"))
@@ -715,7 +715,7 @@ func TestNativeCompactionCompactJudgesItsWriter(t *testing.T) {
 		if code != 400 || seen != "" {
 			t.Fatalf("%d, the backend saw %q: %s", code, seen, body)
 		}
-		for _, want := range []string{"compacted natively by codex@gone@example.com", "gone@example.com is no longer signed in to chongyun", "sign in to gone@example.com again"} {
+		for _, want := range []string{"compacted natively by codex@gone@example.com", "gone@example.com is no longer signed in to starling", "sign in to gone@example.com again"} {
 			if !strings.Contains(body, want) {
 				t.Errorf("no %q in %s", want, body)
 			}
@@ -759,7 +759,7 @@ func TestNativeCompactionCompactJudgesItsWriter(t *testing.T) {
 		if code != 400 || seen != "" {
 			t.Fatalf("%d, the backend saw %q: %s", code, seen, body)
 		}
-		if !strings.Contains(body, "gone@example.com is no longer signed in to chongyun") {
+		if !strings.Contains(body, "gone@example.com is no longer signed in to starling") {
 			t.Errorf("body %s", body)
 		}
 	})

@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // lml 报告 (Windows, about ten providers): the Providers page took
@@ -35,7 +35,7 @@ func TestProviderListReadsSettingsOnce(t *testing.T) {
 		t.Fatal(err)
 	}
 	// image answers of other providers' models too, as a long-used
-	// magpie's settings hold
+	// starling's settings hold
 	images := map[string]bool{"relay/model-7": true}
 	for i := range 200 {
 		images[fmt.Sprintf("other-%d/some-model-%d", i%50, i)] = i%2 == 0

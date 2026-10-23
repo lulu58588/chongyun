@@ -16,8 +16,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // fake is an upstream that records what it got and replies with a script.
@@ -69,7 +69,7 @@ func sse(lines ...string) string {
 	return b.String()
 }
 
-// setup points magpie's provider file at a temp dir and adds one provider
+// setup points starling's provider file at a temp dir and adds one provider
 // speaking only the given protocol, backed by the fake. Rests are kept
 // for the process, by provider id, and every test's provider is "fake":
 // one a test rested (out of its allowance, held without asking since
@@ -603,7 +603,7 @@ func TestAnthropicPassthroughTurnsThinkingOffUnlessAsked(t *testing.T) {
 }
 
 // GLM-5.3 always thinks and refuses thinking turned off (Z.ai's 1210):
-// the request magpie turned it off for is asked again with it left to the
+// the request starling turned it off for is asked again with it left to the
 // model, once
 func TestAnthropicPassthroughModelThatAlwaysThinks(t *testing.T) {
 	f := &fake{t: t, ctype: "application/json", reply: `{"id":"msg","type":"message","content":[]}`}
@@ -628,7 +628,7 @@ func TestAnthropicPassthroughModelThatAlwaysThinks(t *testing.T) {
 
 // DashScope's glm-5.3 cannot think with it off either, in its own words
 // ("The value of the enable_thinking parameter is restricted to True."):
-// the request magpie turned it off for is asked again with it left to the
+// the request starling turned it off for is asked again with it left to the
 // model, once
 func TestAnthropicPassthroughDashScopeThinkingRestricted(t *testing.T) {
 	f := &fake{t: t, ctype: "application/json", reply: `{"id":"msg","type":"message","content":[]}`}
@@ -670,7 +670,7 @@ func TestAnthropicPassthroughAlwaysThinksInChinese(t *testing.T) {
 }
 
 // #1141: MiniMax and Volcengine Ark refuse thinking turned off in their
-// own words, the reporters' literal messages. The request magpie turned it
+// own words, the reporters' literal messages. The request starling turned it
 // off for (Claude Desktop's model_validation probe, its health probe and
 // titles send none) is asked again with thinking left to the model, once;
 // thinking the caller asked for goes as it came, and another 400 on the
@@ -1088,10 +1088,10 @@ func TestGeminiClientChatUpstream(t *testing.T) {
 
 func mustJSON(v any) []byte { b, _ := json.Marshal(v); return b }
 
-// saveLogin adds an account to chongyun's own logins.json, and makes the
+// saveLogin adds an account to starling's own logins.json, and makes the
 // accounts be read afresh.
 //
-// chongyun keeps what it signed the agent in to in its own logins.json,
+// starling keeps what it signed the agent in to in its own logins.json,
 // marking there the account the agent is on: it never reads the agent's
 // own file to find out which account that is. So a test that writes an
 // agent's own file has to say the same account here as well.
@@ -1136,17 +1136,17 @@ func saveLogin(t *testing.T, entry map[string]any) {
 	t.Cleanup(provider.ForgetAccounts)
 }
 
-// activateLogin marks an account chongyun's own logins.json already holds
-// as the one the agent is on: the account chongyun signed the agent in to,
+// activateLogin marks an account starling's own logins.json already holds
+// as the one the agent is on: the account starling signed the agent in to,
 // which it keeps there, never read from the agent's own file.
 func activateLogin(t *testing.T, agent, user string) {
 	t.Helper()
 	saveLogin(t, map[string]any{"agent": agent, "user": user, "active": true})
 }
 
-// codexLoginSaved puts a Codex account into chongyun's own logins.json and
+// codexLoginSaved puts a Codex account into starling's own logins.json and
 // marks it the one the agent is on: the account the agent's own auth.json
-// holds, which chongyun never reads to find out.
+// holds, which starling never reads to find out.
 func codexLoginSaved(t *testing.T, user string, auth map[string]any) {
 	t.Helper()
 	saveLogin(t, map[string]any{"agent": "codex", "user": user, "active": true,
@@ -1154,7 +1154,7 @@ func codexLoginSaved(t *testing.T, user string, auth map[string]any) {
 }
 
 // codexLoginSavedFromFile puts the account the agent's own auth.json holds
-// into chongyun's own logins.json, under the name it is known by, marked
+// into starling's own logins.json, under the name it is known by, marked
 // as the one the agent is on.
 func codexLoginSavedFromFile(t *testing.T, user string) {
 	t.Helper()
@@ -1169,9 +1169,9 @@ func codexLoginSavedFromFile(t *testing.T, user string) {
 	codexLoginSaved(t, user, blob)
 }
 
-// copilotLoginSaved puts a Copilot account into chongyun's own logins.json
+// copilotLoginSaved puts a Copilot account into starling's own logins.json
 // and marks it the one the agent is on: the account the editor's own
-// apps.json holds, which chongyun never reads to find out.
+// apps.json holds, which starling never reads to find out.
 func copilotLoginSaved(t *testing.T, user, token string) {
 	t.Helper()
 	saveLogin(t, map[string]any{"agent": "copilot", "user": user, "active": true,
@@ -1195,7 +1195,7 @@ func TestCodexAccountUpstream(t *testing.T) {
 	auth := fmt.Sprintf(`{"auth_mode":"chatgpt","tokens":{"id_token":%q,"access_token":%q,"refresh_token":"r","account_id":"acct-1"}}`,
 		claims(map[string]any{"email": "me@example.com"}), claims(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}))
 	os.WriteFile(filepath.Join(home, ".codex", "auth.json"), []byte(auth), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json: the agent's own file is never read to find out.
 	var blob map[string]any
 	json.Unmarshal([]byte(auth), &blob)
@@ -1316,7 +1316,7 @@ func TestConversationID(t *testing.T) {
 	turn2 := `{"messages":[{"role":"system","content":"s"},{"role":"user","content":"fix the bug"},{"role":"assistant","content":"done"},{"role":"user","content":"thanks"}]}`
 	other := `{"messages":[{"role":"system","content":"s"},{"role":"user","content":"write docs"}]}`
 	a, b, c := conversationID(http.Header{}, []byte(turn1)), conversationID(http.Header{}, []byte(turn2)), conversationID(http.Header{}, []byte(other))
-	if a != b || a == c || !strings.HasPrefix(a, "magpie-") {
+	if a != b || a == c || !strings.HasPrefix(a, "starling-") {
 		t.Errorf("derived ids: %q %q %q", a, b, c)
 	}
 	r1 := conversationID(http.Header{}, []byte(`{"input":[{"role":"user","content":"hi"}]}`))
@@ -1329,7 +1329,7 @@ func TestConversationID(t *testing.T) {
 	g1 := conversationID(http.Header{}, []byte(`{"model":"m","contents":[{"role":"user","parts":[{"text":"fix the bug"}]}]}`))
 	g2 := conversationID(http.Header{}, []byte(`{"model":"m","systemInstruction":{"parts":[{"text":"help"}]},"contents":[{"role":"user","parts":[{"text":"fix the bug"}]},{"role":"model","parts":[{"text":"done"}]},{"role":"user","parts":[{"text":"thanks"}]}]}`))
 	gOther := conversationID(http.Header{}, []byte(`{"model":"m","contents":[{"role":"user","parts":[{"text":"write docs"}]}]}`))
-	if g1 != g2 || g1 == gOther || !strings.HasPrefix(g1, "magpie-") {
+	if g1 != g2 || g1 == gOther || !strings.HasPrefix(g1, "starling-") {
 		t.Errorf("gemini derived ids: %q %q %q", g1, g2, gOther)
 	}
 	// Gemini accepts an omitted role on a user content. When history adds an

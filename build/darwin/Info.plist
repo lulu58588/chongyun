@@ -2,11 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleName</key><string>chongyun</string>
-	<key>CFBundleDisplayName</key><string>崇云科技</string>
-	<key>CFBundleIdentifier</key><string>com.chongyun.ai.gateway</string>
-	<key>CFBundleExecutable</key><string>chongyun</string>
-	<key>CFBundleIconFile</key><string>chongyun</string>
+	<key>CFBundleName</key><string>starling</string>
+	<key>CFBundleDisplayName</key><string>星鸣</string>
+	<key>CFBundleIdentifier</key><string>com.starling.ai.gateway</string>
+	<key>CFBundleExecutable</key><string>starling</string>
+	<key>CFBundleIconFile</key><string>starling</string>
 	<key>CFBundleIconName</key><string>AppIcon</string>
 	<key>CFBundlePackageType</key><string>APPL</string>
 	<key>CFBundleShortVersionString</key><string>@VERSION@</string>
@@ -17,8 +17,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key><string>com.chongyun.ai.gateway.import</string>
-			<key>CFBundleURLSchemes</key><array><string>chongyun</string></array>
+			<key>CFBundleURLName</key><string>com.starling.ai.gateway.import</string>
+			<key>CFBundleURLSchemes</key><array><string>starling</string></array>
 		</dict>
 	</array>
 	<key>NSHumanReadableCopyright</key><string>yetone</string>

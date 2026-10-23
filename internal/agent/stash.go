@@ -9,12 +9,12 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/lulu58588/chongyun/internal/edit"
-	"github.com/lulu58588/chongyun/internal/lastgood"
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/edit"
+	"github.com/lulu58588/starling/internal/lastgood"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
-// The stash remembers what an agent's config said before magpie pointed it
+// The stash remembers what an agent's config said before starling pointed it
 // at the gateway, so switching back restores it instead of guessing.
 //
 // stash.json holds every agent's originals, so a change to it is read,
@@ -22,7 +22,7 @@ import (
 // two changes at once, or one cut short, never leave it half there, which
 // the next change read as no stash and wrote back over every agent's. A
 // file that doesn't parse (edited by hand, or half written by an older
-// magpie) is copied aside before it is written over, so what it held can
+// starling) is copied aside before it is written over, so what it held can
 // still be got back.
 var stashMu sync.Mutex
 

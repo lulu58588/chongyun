@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/testenv"
+	"github.com/lulu58588/starling/internal/testenv"
 )
 
 // fixture is a file of testdata/mise-windows: bytes mise 2026.10.7 and
@@ -269,7 +269,7 @@ func TestMiseShimWindows(t *testing.T) {
 // TestMiseShimWindowsFiveAgents is flp's own layout: node 24.20.0 under
 // mise, `where claude` finding installs\node\24.20.0\claude (npm's sh
 // script), claude.cmd beside it and shims\claude.exe, and `mise which
-// claude` naming the extensionless script. magpie, started without mise's
+// claude` naming the extensionless script. starling, started without mise's
 // activation, finds shims\<cmd>.exe; each agent npm installs this way is
 // read through npm's claude.cmd (whose --version is its version) and
 // updated with that Node's npm.cmd, then mise reshim.

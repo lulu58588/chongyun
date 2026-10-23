@@ -15,7 +15,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/access"
+	"github.com/lulu58588/starling/internal/access"
 )
 
 // Refusal is why a key's request was turned away, as the client is told.
@@ -96,7 +96,7 @@ func ForgetRefreshForTest() { lastAsk.Store(0) }
 
 // ErrUnlimited is the error a key's request gets when the key is held to
 // a limit and nothing can hold it.
-var ErrUnlimited = errors.New("this gateway key is held to a limit, but chongyun's Key limits plugin isn't serving it, so nothing was sent; turn the plugin on in chongyun's Settings → Plugins")
+var ErrUnlimited = errors.New("this gateway key is held to a limit, but starling's Key limits plugin isn't serving it, so nothing was sent; turn the plugin on in starling's Settings → Plugins")
 
 // Limiting is the limiter for who's request: nil, nil when who has no
 // limit; ErrUnlimited when it has one and none serves. With none, one

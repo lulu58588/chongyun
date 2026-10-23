@@ -7,13 +7,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
-// What docs/integrating.md promises an app magpie has no adapter for (#918):
+// What docs/integrating.md promises an app starling has no adapter for (#918):
 // /api/hello finds the gateway, and its calls are counted as its own in
-// Usage, by the key it sends (magpie-<app>) or else by its User-Agent.
+// Usage, by the key it sends (starling-<app>) or else by its User-Agent.
 func TestThirdPartyAppIsCountedAsItself(t *testing.T) {
 	setHome(t, t.TempDir())
 

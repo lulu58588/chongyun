@@ -1,6 +1,6 @@
-// A plugin declaring switches for its provider (auth.options, magpie's own
+// A plugin declaring switches for its provider (auth.options, starling's own
 // field, #2038) and reading them as they stand: its key prompt's check
-// answers with what input.magpie.options says, read when it is asked.
+// answers with what input.starling.options says, read when it is asked.
 export const Optco = async (input) => ({
   auth: {
     provider: "optco",
@@ -17,7 +17,7 @@ export const Optco = async (input) => ({
       {
         type: "api",
         label: "API key",
-        prompts: [{ type: "text", key: "probe", message: "probe", validate: () => JSON.stringify([input.magpie?.options("optco"), input.magpie?.option("optco", "beta"), input.magpie?.option("optco", "nope")]) }],
+        prompts: [{ type: "text", key: "probe", message: "probe", validate: () => JSON.stringify([input.starling?.options("optco"), input.starling?.option("optco", "beta"), input.starling?.option("optco", "nope")]) }],
       },
     ],
   },

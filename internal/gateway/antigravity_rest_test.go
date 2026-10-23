@@ -11,14 +11,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/usage"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/usage"
 )
 
 // turnedAway is Antigravity's answer to Claude Code's and the Agent SDK's
 // system prompt: a 429 that reads as a used-up plan whatever the quota
 // left, on every model (#666: Claude Desktop's chats always 429 while its
-// titles and Codex on the same account answer). magpie says why, and now
+// titles and Codex on the same account answer). starling says why, and now
 // also leaves the account alone, since nothing is wrong with it.
 const turnedAway = `{"error":{"code":429,"message":"Resource has been exhausted (e.g. check quota).","status":"RESOURCE_EXHAUSTED"}}`
 

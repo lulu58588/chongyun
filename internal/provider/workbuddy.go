@@ -14,7 +14,7 @@ package provider
 // (its desktop app, packaged from CodeBuddy Code) signs in to. WorkBuddy's
 // own account is read, never changed, from its auth store,
 // <shared data>/auth/workbuddy-desktop.info (plain JSON while credential
-// protection is off, which it is by default); accounts magpie signed in
+// protection is off, which it is by default); accounts starling signed in
 // keep their tokens in logins.json.
 //
 // WorkBuddy AI, the international build (www.workbuddy.ai, the CodeBuddy
@@ -40,7 +40,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // Where WorkBuddy's plan is; vars so tests can point them elsewhere.
@@ -101,14 +101,14 @@ type wbCreds struct {
 
 // wbAccount is a signed-in WorkBuddy account: which login it is (who, its
 // plan, and whether it is the one in use), its tokens, and whether it is
-// WorkBuddy's own sign-in (read-only) or one magpie added (in logins.json).
+// WorkBuddy's own sign-in (read-only) or one starling added (in logins.json).
 type wbAccount struct {
 	Login
 	site  *wbSite
 	creds wbCreds
 	own   bool
 	// via, for an account on the plugin, sends a request as the plugin
-	// does, signed with its sign-in, which magpie never renews itself
+	// does, signed with its sign-in, which starling never renews itself
 	via func(*http.Request) (*http.Response, error)
 	// card is the provider id its Usage card has, when not the site's:
 	// the plugin's signed in under its own id, "workbuddy-plugin"
@@ -136,7 +136,7 @@ func wbAuthPath(w *wbSite) string {
 
 // wbStoredSession is the shape of the auth store's session: the account and
 // its tokens. The tokens are plain strings while credential protection is
-// off (the default); when it is on they are objects magpie can't read, and
+// off (the default); when it is on they are objects starling can't read, and
 // the account is then taken as not readable.
 type wbStoredSession struct {
 	Account struct {
@@ -157,7 +157,7 @@ type wbStoredSession struct {
 }
 
 // wbString reads a JSON value that is a plain string, "" for anything else
-// (an encrypted-field object magpie doesn't decrypt).
+// (an encrypted-field object starling doesn't decrypt).
 func wbString(raw json.RawMessage) string {
 	var s string
 	if json.Unmarshal(raw, &s) == nil {
@@ -233,7 +233,7 @@ func wbLogins(w *wbSite) []wbAccount {
 	return out
 }
 
-// WBRestrictedHint is what magpie adds to WorkBuddy's 403 code 11140
+// WBRestrictedHint is what starling adds to WorkBuddy's 403 code 11140
 // "request illegal" (#1849), whose displayMsg says "Your account has been
 // restricted due to unusual activity": the account, not the request, is
 // out until WorkBuddy lifts the restriction, which its appeal asks for.
@@ -285,7 +285,7 @@ func WBRestricted(status int, body []byte) bool {
 
 // wbTokens caches each account's freshest tokens (by site and uid), so a token
 // refreshed for one request is used by the next; WorkBuddy's own file is
-// never written, and a magpie-added account's refresh goes to logins.json.
+// never written, and a starling-added account's refresh goes to logins.json.
 var wbTokens = struct {
 	sync.Mutex
 	m map[string]wbCreds
@@ -381,7 +381,7 @@ func wbCallVia(ctx context.Context, do func(*http.Request) (*http.Response, erro
 // filtered. ...]": the server had taken the image out. Its other models
 // (deepseek-v4.1-flash, kimi, gemini, grok, gpt) read them, and WorkBuddy
 // (China)'s glm-5.3-flash does too, so this is WorkBuddy AI's GLM family
-// alone. Said text-only, magpie's image-describing model reads the image
+// alone. Said text-only, starling's image-describing model reads the image
 // for them; a user's own answer (settings' ModelImages) still wins over
 // this, in entryFor. ms is not changed; the result is a copy.
 func (w *wbSite) textOnly(ms []catalog.Model) []catalog.Model {

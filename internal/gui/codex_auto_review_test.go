@@ -7,13 +7,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agentenv"
-	"github.com/lulu58588/chongyun/internal/provider"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/agentenv"
+	"github.com/lulu58588/starling/internal/provider"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Settings' Codex auto-review model (#938) is set on its own: a model or
-// group magpie serves (one it doesn't, or a name that is no model's id, is
+// group starling serves (one it doesn't, or a name that is no model's id, is
 // refused and the value kept), or back to Codex's own pick; the Settings
 // page's other saves keep it; and Codex's list's tag changes with it, so
 // Codex asks for the list again.

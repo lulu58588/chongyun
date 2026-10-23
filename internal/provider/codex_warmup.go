@@ -4,7 +4,7 @@ package provider
 // A Codex window starts at the account's first request after it resets, not
 // at the reset: an account that sits idle for a day after its week ends has
 // its next week end a day later too. So, while the setting is on, whichever
-// magpie runs the gateway looks at each account's windows every few minutes
+// starling runs the gateway looks at each account's windows every few minutes
 // and, when one has started over — its reset time passed, or its use fell
 // back (OpenAI resetting everyone's limits early) — and nothing has used it
 // since, sends that account one tiny request, as the gateway sends any.
@@ -31,8 +31,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 const (
@@ -52,7 +52,7 @@ const (
 	warmKickEvery = 10 * time.Minute
 )
 
-// warmWindow is one window of an account as last seen, and when magpie
+// warmWindow is one window of an account as last seen, and when starling
 // last started it.
 type warmWindow struct {
 	ResetsAt time.Time `json:"resetsAt,omitzero"`
@@ -457,7 +457,7 @@ func warmCodex(ctx context.Context, sign func(context.Context, *http.Request, []
 	return err
 }
 
-// CodexWarmed is when magpie last started a window of each ChatGPT
+// CodexWarmed is when starling last started a window of each ChatGPT
 // account, by user as kept (lower-cased).
 func CodexWarmed() map[string]time.Time { return codexWarmedIn(codexWarmPath()) }
 

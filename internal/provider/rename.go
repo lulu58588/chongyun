@@ -7,12 +7,12 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
-	"github.com/lulu58588/chongyun/internal/settings"
+	"github.com/lulu58588/starling/internal/catalog"
+	"github.com/lulu58588/starling/internal/settings"
 )
 
 // Rename gives a provider another id, the one its models are picked by
-// (<id>/<model>). What magpie keeps that names it by id follows: the
+// (<id>/<model>). What starling keeps that names it by id follows: the
 // routing groups it is in and their rules and classifiers, the other
 // providers' fallbacks, which agents are shown it, and its StepFun sign-in. The old id stays
 // with it (Was), so an agent still running on a config that names it the
@@ -43,8 +43,8 @@ func Rename(from, to string) error {
 		return fmt.Errorf("%s is a subscription: its id is its agent's", from)
 	}
 	switch {
-	case to == "magpie":
-		return errors.New(`"magpie" is what agents call the gateway itself; pick another id`)
+	case to == "starling":
+		return errors.New(`"starling" is what agents call the gateway itself; pick another id`)
 	case to == strings.TrimSuffix(GroupPrefix, "/"):
 		return errors.New(`"group" starts the ids of routing groups; pick another id`)
 	case to == autoID:
@@ -122,12 +122,12 @@ func Rename(from, to string) error {
 	return nil
 }
 
-// renamedRef is a model id ("provider/model", "magpie/provider/model")
+// renamedRef is a model id ("provider/model", "starling/provider/model")
 // with the provider from named to instead.
 func renamedRef(ref, from, to string) string {
 	pre, rest := "", ref
-	if r, ok := strings.CutPrefix(ref, "magpie/"); ok {
-		pre, rest = "magpie/", r
+	if r, ok := strings.CutPrefix(ref, "starling/"); ok {
+		pre, rest = "starling/", r
 	}
 	if m, ok := strings.CutPrefix(rest, from+"/"); ok {
 		return pre + to + "/" + m

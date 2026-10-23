@@ -1,7 +1,7 @@
 // Run with Node's test runner and Playwright on the module path; see README.md.
-// Cursor Private Inference's own model picker lists magpie's /v1/models as
+// Cursor Private Inference's own model picker lists starling's /v1/models as
 // its key is shown them (mamba 报告: connected through its
-// environment variables, its models couldn't be picked in magpie): its
+// environment variables, its models couldn't be picked in starling): its
 // connected row picks which models that picker lists, several at once, as
 // Claude Desktop's does, beside the square copying its launch command. In
 // the window the button beside its switch names them and opens the model
@@ -15,7 +15,7 @@ const { test } = require("node:test");
 const { chromium, webkit } = require("playwright");
 
 const assets = path.resolve(__dirname, "../assets");
-const LAUNCH = "CURSOR_LOCAL_AGENT_BASE_URL=http://127.0.0.1:3425/v1 CURSOR_LOCAL_AGENT_API_KEY=magpie-cursor-local '/Applications/Cursor.app/Contents/MacOS/Cursor'";
+const LAUNCH = "CURSOR_LOCAL_AGENT_BASE_URL=http://127.0.0.1:3425/v1 CURSOR_LOCAL_AGENT_API_KEY=starling-cursor-local '/Applications/Cursor.app/Contents/MacOS/Cursor'";
 
 function fixture(lang) {
   const list = [
@@ -39,7 +39,7 @@ function fixture(lang) {
     agents: [{
       id: "cursor-local", name: "Cursor Private Inference", path: "", icon: "cursor", launch: LAUNCH, wired: true,
       fields: [
-        { key: "provider", label: "provider", value: "magpie", options: [{ value: "magpie", label: "magpie", icon: "magpie" }] },
+        { key: "provider", label: "provider", value: "starling", options: [{ value: "starling", label: "starling", icon: "starling" }] },
       ],
       models: count(),
     }],
@@ -92,7 +92,7 @@ for (const engine of (process.env.BROWSER ? [process.env.BROWSER] : ["chromium",
         const fx = fixture(lang);
         await page.route("**/*", fx.serve);
         t.after(() => browser.close());
-        await page.goto("http://magpie.test/" + (where === "panel" ? "?mode=panel" : ""));
+        await page.goto("http://starling.test/" + (where === "panel" ? "?mode=panel" : ""));
         await page.locator(cd).waitFor();
 
         let menu;

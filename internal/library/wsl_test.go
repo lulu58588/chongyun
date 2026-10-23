@@ -7,12 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lulu58588/chongyun/internal/agent"
+	"github.com/lulu58588/starling/internal/agent"
 )
 
 // wslSandbox is sandbox with a running WSL distro, Ubuntu-24.04, whose /
 // is a temp folder and whose user /home/me has Codex, Claude Code, Pi and
-// OmO; it gives back that user's home as magpie opens it.
+// OmO; it gives back that user's home as starling opens it.
 func wslSandbox(t *testing.T) string {
 	t.Helper()
 	sandbox(t)
@@ -35,7 +35,7 @@ const (
 	wslOmO    = "omo@wsl:Ubuntu-24.04"
 )
 
-// The agents magpie found in a WSL distro are the library's to give to
+// The agents starling found in a WSL distro are the library's to give to
 // (#331), each at its own files in the distro's home, not Windows'.
 func TestWSLTargets(t *testing.T) {
 	h := wslSandbox(t)
@@ -163,7 +163,7 @@ func TestWSLServers(t *testing.T) {
 }
 
 // The shared instructions, and what one WSL agent gets besides, go into
-// its file in the distro; the files magpie keeps of it are named without
+// its file in the distro; the files starling keeps of it are named without
 // the colon Windows can't have in a name.
 func TestWSLInstructions(t *testing.T) {
 	h := wslSandbox(t)
@@ -204,18 +204,18 @@ func TestWSLInstructions(t *testing.T) {
 	}
 }
 
-// magpie's own image server, a Windows program, is given to an agent in
+// starling's own image server, a Windows program, is given to an agent in
 // WSL all the same (#900): by the binary's path in the distro, which WSL's
 // interop starts, told the distro, with the variables it is given named in
 // WSLENV. A distro whose interop is off is told so.
-func TestWSLMagpieImage(t *testing.T) {
+func TestWSLStarlingImage(t *testing.T) {
 	h := wslSandbox(t)
 	probed := 0
-	answer := "/mnt/d/tools/Chongyun/magpie-windows-amd64.exe\ninterop:on\n"
+	answer := "/mnt/d/tools/Starling/starling-windows-amd64.exe\ninterop:on\n"
 	old := wslProbe
 	wslProbe = func(distro, script string) (string, error) {
 		probed++
-		if distro != "Ubuntu-24.04" || !strings.Contains(script, `wslpath -u 'D:\tools\Chongyun\magpie-windows-amd64.exe'`) {
+		if distro != "Ubuntu-24.04" || !strings.Contains(script, `wslpath -u 'D:\tools\Starling\starling-windows-amd64.exe'`) {
 			t.Errorf("probe %s: %s", distro, script)
 		}
 		return answer, nil
@@ -227,22 +227,22 @@ func TestWSLMagpieImage(t *testing.T) {
 	}
 	reset()
 	t.Cleanup(func() { wslProbe = old; reset() })
-	// the Windows magpie this computer runs, as it would on Windows
-	thisMagpie(t, `D:\tools\Chongyun\magpie-windows-amd64.exe`)
+	// the Windows starling this computer runs, as it would on Windows
+	thisStarling(t, `D:\tools\Starling\starling-windows-amd64.exe`)
 
-	img := Server{Name: "magpie-image", Transport: "stdio", Command: `D:\tools\Chongyun\magpie-windows-amd64.exe`, Args: []string{"mcp", "image"},
-		Env: map[string]string{"MAGPIE_ADDR": "127.0.0.1:4000"}, Agents: []string{wslCodex, wslClaude}}
+	img := Server{Name: "starling-image", Transport: "stdio", Command: `D:\tools\Starling\starling-windows-amd64.exe`, Args: []string{"mcp", "image"},
+		Env: map[string]string{"STARLING_ADDR": "127.0.0.1:4000"}, Agents: []string{wslCodex, wslClaude}}
 	res := ok(t)(SaveServer("", img))
 	if len(res.Problems) != 0 {
 		t.Fatalf("problems: %+v", res.Problems)
 	}
 	s := read(t, filepath.Join(h, ".codex/config.toml"))
-	for _, w := range []string{"[mcp_servers.magpie-image]", `command = "/mnt/d/tools/Chongyun/magpie-windows-amd64.exe"`, `"--wsl"`, `"Ubuntu-24.04"`, `WSLENV = "MAGPIE_ADDR"`} {
+	for _, w := range []string{"[mcp_servers.starling-image]", `command = "/mnt/d/tools/Starling/starling-windows-amd64.exe"`, `"--wsl"`, `"Ubuntu-24.04"`, `WSLENV = "STARLING_ADDR"`} {
 		if !strings.Contains(s, w) {
 			t.Errorf("codex@wsl config.toml has no %s:\n%s", w, s)
 		}
 	}
-	if s := read(t, filepath.Join(h, ".claude.json")); !strings.Contains(s, `"/mnt/d/tools/Chongyun/magpie-windows-amd64.exe"`) || !strings.Contains(s, `"--wsl"`) {
+	if s := read(t, filepath.Join(h, ".claude.json")); !strings.Contains(s, `"/mnt/d/tools/Starling/starling-windows-amd64.exe"`) || !strings.Contains(s, `"--wsl"`) {
 		t.Errorf("claude@wsl .claude.json:\n%s", s)
 	}
 	// written as it is: the next sync changes nothing, nor asks the distro again
@@ -255,22 +255,22 @@ func TestWSLMagpieImage(t *testing.T) {
 
 	// drives mounted elsewhere: the server is told where
 	reset()
-	answer = "/win/d/tools/Chongyun/magpie-windows-amd64.exe\ninterop:on\n"
+	answer = "/win/d/tools/Starling/starling-windows-amd64.exe\ninterop:on\n"
 	ok(t)(Sync())
-	if s := read(t, filepath.Join(h, ".codex/config.toml")); !strings.Contains(s, `"/win/d/tools/Chongyun/magpie-windows-amd64.exe"`) || !strings.Contains(s, `"--mount"`) || !strings.Contains(s, `"/win/"`) {
+	if s := read(t, filepath.Join(h, ".codex/config.toml")); !strings.Contains(s, `"/win/d/tools/Starling/starling-windows-amd64.exe"`) || !strings.Contains(s, `"--mount"`) || !strings.Contains(s, `"/win/"`) {
 		t.Errorf("custom mount:\n%s", s)
 	}
 
 	// interop off: nothing it could start, and why
 	reset()
-	answer = "/mnt/d/tools/Chongyun/magpie-windows-amd64.exe\ninterop:off\n"
+	answer = "/mnt/d/tools/Starling/starling-windows-amd64.exe\ninterop:off\n"
 	res, err := Sync()
 	if err != nil || len(res.Problems) == 0 || !strings.Contains(res.Problems[0].Error, "interop") {
 		t.Errorf("interop off: %+v", res.Problems)
 	}
 }
 
-// TJHHHH 报告: magpie kept starting WSL while they repaired it. An
+// TJHHHH 报告: starling kept starting WSL while they repaired it. An
 // agent made while its distro ran, which the user then stops (wsl
 // --shutdown), is no target: writing the library there would start it.
 // Giving it something says the distro isn't running.

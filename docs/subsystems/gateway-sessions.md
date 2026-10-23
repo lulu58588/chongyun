@@ -4,12 +4,12 @@
 
 Sessions API 把以文件为后端的原生 session 和网关使用记录的只读投影合在一起。
 一个网关 session 的身份恰好是 `AgentOf(record.Agent) + record.Session`，其中
-session 是客户端发来的那个（`X-Magpie-Session`，或它自己的 session 头），无论
-它以什么开头。响应在 `X-Magpie-Session` 里返回这个 id；列出的浏览器 origin
-可以通过 CORS 读取这个头。崇云科技绝不为没有 session 的请求编造 id，所以这样的
+session 是客户端发来的那个（`X-Starling-Session`，或它自己的 session 头），无论
+它以什么开头。响应在 `X-Starling-Session` 里返回这个 id；列出的浏览器 origin
+可以通过 CORS 读取这个头。星鸣绝不为没有 session 的请求编造 id，所以这样的
 请求没有 session，它的文本也不会被记录：挂在一个没有任何列表能列出的 id 下的
 文本是无法打开的。prompt 文本、caller key 和网络地址都不会被用来猜对话归属。
-因此崇云科技写下的配置让每个 agent 各自声明自己的 session：Pi 的 provider 块
+因此星鸣写下的配置让每个 agent 各自声明自己的 session：Pi 的 provider 块
 设置 `compat.sendSessionAffinityHeaders`（Chat 和 Messages 上是
 `x-session-affinity`；Responses 本来就发 `session_id`），omp 16.0.6 及以后则得到
 `compat.promptCacheSessionHeader: x-session-affinity`。用户自己的
@@ -21,19 +21,19 @@ session 是客户端发来的那个（`X-Magpie-Session`，或它自己的 sessi
 按调用方分别应用。
 
 WorkBuddy 和 CodeBuddy Code 用 `X-Conversation-ID` 命名它们的对话。网关把它当作
-一个原生 session 头读取，在已有原生头之后；`X-Magpie-Session` 仍然覆盖被记录的
+一个原生 session 头读取，在已有原生头之后；`X-Starling-Session` 仍然覆盖被记录的
 session，但不会改变它的原生身份。每轮的 `X-Conversation-Request-ID`、每条消息的
 `X-Conversation-Message-ID` 和 `X-Parent-Conversation-ID` 都不标识当前 session。
 这让 Routing 能按原生 WorkBuddy session 读取器已经知道的同一个 id 给请求分组；
 没有记录 session 的旧请求仍然无名。见 `TestWorkBuddySessionHeader`、
-`TestWorkBuddySessionThroughGateway` 和 `TestRemoteMagpieKeepsTheSession`。
+`TestWorkBuddySessionThroughGateway` 和 `TestRemoteStarlingKeepsTheSession`。
 
 DSH 用 `x-deepseek-harness-session-id` 命名它的 session，同样在其余之后读取，
 并用 `x-deepseek-harness-compact` 标记一个会压缩上下文的请求（#2505）。
 `callKind` 把这样的调用记为 `compact`，即 Requests 列表里的 Compaction；取值
 `0`、`false`、`no` 或 `off` 表示没有标记，而没有这个头的请求绝不会因为它的
 prompt 被当成一次压缩。`passOnCaller` 会把这个标记连同 session 一起转给远端的
-崇云科技，也不会转给任何厂商（`TestDshMarksSessionAndCompaction`）。
+星鸣，也不会转给任何厂商（`TestDshMarksSessionAndCompaction`）。
 
 当同一个身份出现在一个原生 session 里时，原生 session 优先，网关投影被省略。在
 `/api/sessions/manage` 里、在它的计数中、也在 `/api/sessions/delete` 里，一个
@@ -42,7 +42,7 @@ prompt 被当成一次压缩。`passOnCaller` 会把这个标记连同 session �
 被展示的那个 agent 和那些有网关 session 的 agent（#2776）。网关投影没有路径、
 没有恢复命令也没有终端动作：agent 自己那些 session 的文件不在本机上。它们那几行
 带着 `gateway: true`；Sessions 页面把它们归到 "Seen through the gateway" 而不是
-"No folder" 下，而它们的大小就是崇云科技为它们记录下来的文本
+"No folder" 下，而它们的大小就是星鸣为它们记录下来的文本
 （`sessions.GatewaySizes`），只有在有文本时才显示。概览顶部的汇总
 （`MergeExternalStats`）同样带着 `gateway: true`，而 Usage › Sessions 把这样的行
 在没有文件夹的位置上标为 "Gateway session"，在没有保留文本时加上
@@ -75,7 +75,7 @@ Context 页面。它不会给网关行带来恢复或原生记录的能力。验
 `TestDesktopTitlesReadOncePerList`、`TestDesktopSessionTitlesOnPages`。
 
 一个网关投影可以被删除（lc 报告）。`sessions.DeleteGateway` 把它记录下的
-文本目录（`gateway-conversations/<date>/<identity hash>`）移进崇云科技的 session
+文本目录（`gateway-conversations/<date>/<identity hash>`）移进星鸣的 session
 回收站下的 `trash/sessions/gateway/`，附带一条标着 `gateway` 的备注，并把
 `{agent, id, last}` 加到配置目录里的 `gateway-sessions-hidden.json`。`/api/sessions`
 和 `/api/sessions/manage` 会把一个隐藏的 session 排除到那次最后的请求为止；更新
@@ -106,7 +106,7 @@ Sessions 页面提供一个明确的、默认关闭的录音开关。确认时�
 列表里有网关 session 的 agent 上（`/api/sessions/manage` 那一行上的 `gateway`）、
 网关模式下，或者录音开着或文本被保留时。它的 "Delete saved conversations…" 在
 `/api/sessions/manage` 的 `recorded` 说有文本被保留时显示
-（`sessions.HasGatewayConversations`，目录读不出来时为真），并且先在崇云科技
+（`sessions.HasGatewayConversations`，目录读不出来时为真），并且先在星鸣
 自己的对话框里询问。`Settings.GatewayConversations` 是机器本地的同意：
 `settings.SetGatewayConversations` 在设置文件锁下更新它。其它设置保存会在同一把
 锁下保留最近存下的同意，这样一份更旧的快照不能在录音停止后把它重新打开。
@@ -129,7 +129,7 @@ token 计数、embeddings、模型列表和压缩路径不会被记录。录音�
 不是原始请求归档，也不是远端 session 同步，已有的 S3 归档不会被导入。
 
 [`SaveGatewayTurn`](../../internal/sessions/gateway.go) 把归一化、擦除过的往返存进
-崇云科技的配置目录下的每 `gateway-conversations/<UTC date>/<identity hash>/` 一个
+星鸣的配置目录下的每 `gateway-conversations/<UTC date>/<identity hash>/` 一个
 只追加的 `turns.jsonl`，目录用 0700、文件用 0600。每一行是一个有界的轮次；
 旧的按轮次分的 JSON 文件在过期之前仍可读。一次没写完的末尾追加不会进入读取
 （被标为截断），并在下次追加前被移除；完整的更早的行仍然可用。不存储任何头。
@@ -158,8 +158,8 @@ session 文件满了之后会拒绝当天进一步的录音。每小时的后台
 `GET /api/sessions/markdown` 和 `POST /api/sessions/export` 做同样的选择：原生
 session 从它自己的文件写出（`sessions.WriteMarkdown`），否则一个已知的网关
 session 按它的记录所读到的东西写出（`sessions.WriteGatewayMarkdown`，
-"Recorded by: magpie's gateway"，并在轮次或某个部分的结尾没有被保留时加一条
-备注）。一个被别人当作远端崇云科技访问的崇云科技没有那些 agent 的 session 文件，
+"Recorded by: starling's gateway"，并在轮次或某个部分的结尾没有被保留时加一条
+备注）。一个被别人当作远端星鸣访问的星鸣没有那些 agent 的 session 文件，
 所以这是它导出它们的唯一办法。验证：`TestGatewaySessionExportsMarkdown`。
 
 一个没有保存 Desktop 名字的网关 session，按它最初被问的内容命名（YOU 报告），
@@ -214,19 +214,19 @@ context`）和图片绝不会被匹配。session 由最多 4 个 worker 按最�
 
 <a id="usage-over-the-gateway-and-subagents"></a>
 
-`GET /v1/magpie/usage` 和 `GET /v1/magpie/usage/requests`
+`GET /v1/starling/usage` 和 `GET /v1/starling/usage/requests`
 （[`internal/gateway/usage_api.go`](../../internal/gateway/usage_api.go)）用与
 窗口的 `/api/usage` 和 `/api/usage/requests`
 （[`internal/usageapi`](../../internal/usageapi/usageapi.go)）相同的构建器，提供
-Usage 页面的汇总和请求账本，只读且不含对话文本。它们遵循 `/v1/magpie/quotas`
+Usage 页面的汇总和请求账本，只读且不含对话文本。它们遵循 `/v1/starling/quotas`
 的 guard：本机，或者另一台持有启用了的网关 key 的机器，在同样的 Host 检查之后。
 一个被持有的 key（`heldKey`：一份预算、一些模型或一些账号）会被拒绝访问汇总，
 并让账本按它自己的 `CallerKey` 过滤，筛选列表也裁剪到它自己那几行
 （`usageapi.OwnPage`）：账本的分面来自这段时间内的每一次调用，不裁剪的话它们会
 提到别的 key。`TestUsageOverGateway` 覆盖这两种情况，去掉任一个裁剪都会变红。
 一个被持有的 key 会被拒绝（`refuseHeld`，403 `provider.KeyHeldCode`）访问配额、
-它们的历史、保留的卡片和刷新，以及 `/v1/magpie/concurrency`（#1981）；
-`/v1/magpie/route` 只告诉它那些 `callerKey` 是它自己的路由。`Route.callerKey`
+它们的历史、保留的卡片和刷新，以及 `/v1/starling/concurrency`（#1981）；
+`/v1/starling/route` 只告诉它那些 `callerKey` 是它自己的路由。`Route.callerKey`
 由 `trace.beginFor` 从请求的调用方设置，所以一条没有它就开始的路由不会告诉任何
 被持有的 key。`TestHeldKeyToldNoAccounts` 从回环和局域网两种情况覆盖这里每一条，
 针对三种方式各自被持有的 key 和一个被持有到什么都不剩的 key。
@@ -246,7 +246,7 @@ Usage 页面的汇总和请求账本，只读且不含对话文本。它们遵�
 
 <a id="calls-read-from-the-agents-own-files"></a>
 
-一个 agent 在没有崇云科技时做出的调用，只有当它自己的文件被读取时才到达 Usage
+一个 agent 在没有星鸣时做出的调用，只有当它自己的文件被读取时才到达 Usage
 （`sessions.Calls`，来自 [`calls.go`](../../internal/sessions/calls.go) 里的
 `callSources`）。读取器有 Claude Code 的、Claude Desktop 的和 Cowork 的、Codex
 的（以及 WSL 里两者），还有一次读一个文件的（[`call_cache.go`](../../internal/sessions/call_cache.go)
@@ -258,14 +258,14 @@ Usage 页面的汇总和请求账本，只读且不含对话文本。它们遵�
 Code 的（#1607，[`calls_kimi.go`](../../internal/sessions/calls_kimi.go)）以及 Pi
 的和 omp 的，在这里和 WSL 里都有（#1951，
 [`calls_pi.go`](../../internal/sessions/calls_pi.go)）。每一个都会跳过该 agent
-通过崇云科技自己的入口做出的那些调用，那是网关用应答的账号记下的：Kimi Code 的
-是那些 `usage.record` 模型以 `magpie/` 开头的。Kimi Code 的调用是它每个 agent 的
+通过星鸣自己的入口做出的那些调用，那是网关用应答的账号记下的：Kimi Code 的
+是那些 `usage.record` 模型以 `starling/` 开头的。Kimi Code 的调用是它每个 agent 的
 `wire.jsonl` 里的 `usage.record`，位于 `$KIMI_CODE_HOME/sessions`（否则
 `~/.kimi-code`）下，协议 1.4 和 1.5；一个 fork 会重复它父级的记录，所以每一条
 按 agent、时间、模型和用量为键，只计一次。Pi 和 omp 的调用是 session 文件里的
 assistant 消息，以及 Sessions 也一并统计的那些调用（"usage" 和 omp 的
 "model_usage" 条目、一次压缩的、一个分支摘要的和一个工具结果的用量，用在当时
-的模型和 provider 上）；provider `magpie`（或 `dial`）是崇云科技的入口，一次
+的模型和 provider 上）；provider `starling`（或 `dial`）是星鸣的入口，一次
 失败的调用没有用量，而 fork 复制来的它父级的条目（写在其头之前）属于父级。
 Sessions 页面读取的其他 agent（Cline、Qoder、Grok、Droid、Cursor、Hermes、Alma）
 还没有读取器（#1607）。Context 页面读的是网关自己的 trace，所以它不显示这些
@@ -290,9 +290,9 @@ agent 的文件。Sessions 概览里的 Codex 模型和 effort（`usage.CodexMod
 
 <a id="calls-an-app-reports-itself"></a>
 
-`POST /v1/magpie/usage/requests`
+`POST /v1/starling/usage/requests`
 （[`internal/gateway/usage_ingest.go`](../../internal/gateway/usage_ingest.go)，
-#1874）接收那些从未经过崇云科技、由某个 app 直接发给它的厂商的调用，于是 Usage
+#1874）接收那些从未经过星鸣、由某个 app 直接发给它的厂商的调用，于是 Usage
 页面也覆盖它们。请求体是一条记录或最多 5000 条的数组（最多 32 MiB），形状与
 `usage.jsonl` 相同：`t`、`agent`、`provider`、`model` 和 `rid` 是必需的；`in`、
 `out`、`cache_read`、`cache_write`、`cache_write_1h`、`reasoning`、`ms`、
@@ -316,7 +316,7 @@ agent 的文件。Sessions 概览里的 Codex 模型和 effort（`usage.CodexMod
   之后每次提交只读此后追加的部分。回复会统计 `accepted` 和 `skipped`，并给出
   每条记录的 `index`、`rid` 和 `status`，所以重跑一批是安全的。
 - **定价：** 一条带 `cost` 的记录保留它（`Record.OwnCost`，打包行上的
-  `rowOwnCost` 标志）。没有它就按崇云科技自己的价格定价，和网关行一样。
+  `rowOwnCost` 标志）。没有它就按星鸣自己的价格定价，和网关行一样。
 - **速度：** `first_text_ms` 和 `flow_ms`（#2637）的含义与 `usage.jsonl` 里一样
   （`Record.FirstText`、`Record.Flow`），所以一条上报行的速度就是
   `usage.DecodeOf` 给出的，正如网关行的一样，在服务端（`Row.Decode`，汇总的
@@ -458,7 +458,7 @@ thread 返回 `model_effort`，按标准 Usage 账本的 `model` 和实际推理
 `session_role` 对其他 agent 省略，它们的现有字段语义保持不变。含糊或没有配对的
 调用不会从共享的 session 元数据继承任何关系。
 
-`GET /api/usage/requests` 和 `GET /v1/magpie/usage/requests` 在一个原生 Codex
+`GET /api/usage/requests` 和 `GET /v1/starling/usage/requests` 在一个原生 Codex
 调用确立了标记状态时，把 Codex 的 `compaction` 暴露为 `true` 或 `false`，在没有
 匹配的原生证据时省略它。只有一个从 `token_usage_record` 读出的调用（它有
 `response_id`）能确立它：Codex 把那条记录和一次压缩的 `compaction_response_id`
@@ -466,4 +466,4 @@ thread 返回 `model_effort`，按标准 Usage 账本的 `model` 和实际推理
 而不是说 `false`。一个唯一的 `response_id` 匹配把这个元数据加到网关行上，同时
 保留该行的模型、用量、费用和 kind。
 压缩已经计入 Codex 的总消耗，所以这个标记不增加 token 也不增加费用。这是
-Codex 专属的；Claude 的行为和 POST `/v1/magpie/usage/requests` 的上报白名单不变。
+Codex 专属的；Claude 的行为和 POST `/v1/starling/usage/requests` 的上报白名单不变。

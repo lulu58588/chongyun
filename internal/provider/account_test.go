@@ -16,7 +16,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/catalog"
+	"github.com/lulu58588/starling/internal/catalog"
 )
 
 // fakeJWT is a token whose payload is the given claims; nobody checks the
@@ -46,13 +46,13 @@ func signIn(t *testing.T) string {
 	t.Setenv("USERPROFILE", home) // Windows: os.UserHomeDir reads this, not HOME
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
-	// the accounts are chongyun's own: logins.json is where it keeps them
+	// the accounts are starling's own: logins.json is where it keeps them
 	codexOwnLogin(t, "me@example.com", "pro", codexAuthBlob("me@example.com", "pro", "acct-1", time.Now().Add(time.Hour)))
 	// the Copilot account the editors are signed in to: the one served
-	// first, as it was when chongyun read the editors' own sign-in
+	// first, as it was when starling read the editors' own sign-in
 	ownFirstLogin(t, savedLogin{Agent: "copilot", User: "octocat", Plan: "Individual",
 		Auth: []byte(`{"oauth_token":"gho_x"}`)})
-	// Codex lists its models in its own cache; magpie reads that, nothing else.
+	// Codex lists its models in its own cache; starling reads that, nothing else.
 	writeFile(t, filepath.Join(home, ".codex", "models_cache.json"), map[string]any{
 		"models": []any{map[string]any{"slug": "gpt-5.5", "display_name": "GPT-5.5", "visibility": "list", "priority": 1}},
 	})
@@ -123,7 +123,7 @@ func TestAccountsAreProviders(t *testing.T) {
 	if len(codex.Exposed()) != 1 || codex.Exposed()[0].ID != "gpt-5.5" || codex.Responses == "" {
 		t.Fatalf("picks: %+v", codex.Exposed())
 	}
-	// removing an account hides it from magpie; adding it back restores
+	// removing an account hides it from starling; adding it back restores
 	// it with its picks
 	if err := Delete("codex"); err != nil {
 		t.Fatal(err)
@@ -242,7 +242,7 @@ func TestClaudeAccountIsProvider(t *testing.T) {
 	claudeHome(t)
 	claudeAccountSignIn(t, "max@example.com", "max", time.Now().Add(time.Hour))
 
-	// Claude's models are the catalog's: magpie asks Anthropic nothing with
+	// Claude's models are the catalog's: starling asks Anthropic nothing with
 	// the account's sign-in, not even its model list
 	asked := false
 	anthropic := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -522,7 +522,7 @@ func TestCopilotAPIs(t *testing.T) {
 	}
 }
 
-// A sign-in magpie wrote on several lines comes back from `security -w` as
+// A sign-in starling wrote on several lines comes back from `security -w` as
 // hex; it is read, and written on one line so Claude Code can read it (#70).
 func TestKeychainText(t *testing.T) {
 	c := claudeCredentials{OAuth: claudeAuth{AccessToken: "a", RefreshToken: "r", Scopes: []string{"user:inference"}}}

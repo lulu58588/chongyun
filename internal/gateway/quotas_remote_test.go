@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lulu58588/chongyun/internal/provider"
+	"github.com/lulu58588/starling/internal/provider"
 )
 
 // remoteOnly leaves out the remote's keys' own cards (#1547).
@@ -27,15 +27,15 @@ func remoteOnly(cs []provider.SubscriptionQuota) []provider.SubscriptionQuota {
 	return out
 }
 
-// A remote magpie's quotas (莫 报告), between a gateway and a
-// magpie that has it as its provider: the cards it is shown are the
+// A remote starling's quotas (莫 报告), between a gateway and a
+// starling that has it as its provider: the cards it is shown are the
 // gateway's as last read, and asking for them asks no vendor, however
 // often; a card's refresh reads it there once, and again no sooner than
-// remoteRefreshGap; a card the gateway has from a third magpie isn't read
+// remoteRefreshGap; a card the gateway has from a third starling isn't read
 // for it; another machine without the gateway's key gets nothing.
-func TestRemoteMagpieQuotas(t *testing.T) {
+func TestRemoteStarlingQuotas(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	provider.ForgetBalances()
 	t.Cleanup(provider.ForgetBalances)
 	var reads atomic.Int32
@@ -50,7 +50,7 @@ func TestRemoteMagpieQuotas(t *testing.T) {
 	}
 	gw := httptest.NewServer(lanGuard(New().Handler()))
 	defer gw.Close()
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Key: "sk-magpie-office", Chat: gw.URL}); err != nil {
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Key: "sk-starling-office", Chat: gw.URL}); err != nil {
 		t.Fatal(err)
 	}
 	ctx := context.Background()
@@ -106,10 +106,10 @@ func TestRemoteMagpieQuotas(t *testing.T) {
 		return w.Code
 	}
 	if c := post("127.0.0.1:5000", "?provider=home/codex", ""); c != http.StatusBadRequest {
-		t.Errorf("a third chongyun's card: %d", c)
+		t.Errorf("a third starling's card: %d", c)
 	}
 	if c := post("127.0.0.1:5000", "?provider=office", ""); c != http.StatusBadRequest {
-		t.Errorf("a remote chongyun's own card: %d", c)
+		t.Errorf("a remote starling's own card: %d", c)
 	}
 	if c := post("192.168.1.9:5000", "?provider=bal", ""); c == http.StatusOK {
 		t.Error("another machine without a key had a card read")
@@ -128,15 +128,15 @@ func TestRemoteMagpieQuotas(t *testing.T) {
 	}
 }
 
-// #1313 (jorben): a magpie in a container serves only other magpies, so
+// #1313 (jorben): a starling in a container serves only other starlings, so
 // nobody opens its Usage page, while its Codex account's usage is read
 // behind the requests (the account switching, CodexUsedUp). A GUI on
-// another computer with that magpie as its provider is shown the
+// another computer with that starling as its provider is shown the
 // reading on the account's card, through the gateway, and asking for the
 // cards asks ChatGPT nothing.
-func TestRemoteMagpieShowsBackgroundReadings(t *testing.T) {
+func TestRemoteStarlingShowsBackgroundReadings(t *testing.T) {
 	fresh(t)
-	t.Setenv("MAGPIE_ADDR", "")
+	t.Setenv("STARLING_ADDR", "")
 	home := os.Getenv("HOME")
 	jwt := func(m map[string]any) string {
 		b, _ := json.Marshal(m)
@@ -148,7 +148,7 @@ func TestRemoteMagpieShowsBackgroundReadings(t *testing.T) {
 		"id_token":      jwt(map[string]any{"email": "jorben-1313@example.com", "https://api.openai.com/auth": map[string]any{"chatgpt_plan_type": "pro", "chatgpt_account_id": "acct-1313"}}),
 		"access_token":  jwt(map[string]any{"exp": time.Now().Add(time.Hour).Unix()}),
 		"refresh_token": "r", "account_id": "acct-1313"}}), 0o600)
-	// chongyun keeps the account it signed the agent in to in its own
+	// starling keeps the account it signed the agent in to in its own
 	// logins.json: the agent's own file is never read to find out.
 	codexLoginSavedFromFile(t, "jorben-1313@example.com")
 	provider.ForgetAccounts()
@@ -171,7 +171,7 @@ func TestRemoteMagpieShowsBackgroundReadings(t *testing.T) {
 
 	gw := httptest.NewServer(lanGuard(New().Handler()))
 	defer gw.Close()
-	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteMagpiePreset, Key: "sk-magpie-office", Chat: gw.URL}); err != nil {
+	if err := provider.Save(provider.Provider{ID: "office", Name: "Office", Preset: provider.RemoteStarlingPreset, Key: "sk-starling-office", Chat: gw.URL}); err != nil {
 		t.Fatal(err)
 	}
 	ctx := context.Background()

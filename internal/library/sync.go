@@ -6,7 +6,7 @@ import (
 	"os"
 	"slices"
 
-	"github.com/lulu58588/chongyun/internal/mcpauth"
+	"github.com/lulu58588/starling/internal/mcpauth"
 )
 
 // Result is what a change did to the agents.
@@ -75,7 +75,7 @@ func (l *Library) sync() *Result {
 }
 
 // syncSteps are what a sync does, one agent's part at a time, in order. The
-// agents gone from here that still have what magpie gave them (held) only
+// agents gone from here that still have what starling gave them (held) only
 // have what was unticked taken out, after the rest.
 func syncSteps(all, gone []*Target, b *backups, res *Result) []func(*Library) {
 	var steps []func(*Library)
@@ -117,10 +117,10 @@ func syncSteps(all, gone []*Target, b *backups, res *Result) []func(*Library) {
 }
 
 // Sync writes the library into the agents again: after an agent is
-// installed, or a profile brings another library in. magpie does one at
+// installed, or a profile brings another library in. starling does one at
 // every start, and the Library page waits on the lock for each read and
 // change: held for the whole sync, through every agent's skills, the
-// first operations after opening magpie took seconds (#1624, Hipple).
+// first operations after opening starling took seconds (#1624, Hipple).
 // It lets go after each agent's part, for whatever waits to go first.
 func Sync() (*Result, error) {
 	res := &Result{Changed: []string{}, Problems: []Problem{}}
@@ -171,13 +171,13 @@ func (l *Library) syncMCP(t *Target, b *backups, res *Result) {
 	}
 	id := t.Agent.ID
 	a := l.applied(id)
-	// an agent given no server, with none of magpie's in it, isn't read:
+	// an agent given no server, with none of starling's in it, isn't read:
 	// a file of its that can't be read is nothing the library did
 	if len(a.MCP) == 0 && len(a.ToolRules) == 0 && (t.Gone || !slices.ContainsFunc(l.MCP, func(s *Server) bool { return slices.Contains(s.Agents, id) })) {
 		return
 	}
 	how := toolsOffOf(t)
-	toolsOff := map[string][]string{} // what magpie's in each entry's list now
+	toolsOff := map[string][]string{} // what starling's in each entry's list now
 	entries, err := t.MCP.entries()
 	if err != nil {
 		res.fail(id, "mcp", err)
@@ -305,7 +305,7 @@ type AgentView struct {
 	How      string `json:"how,omitempty"`
 	HowOwn   bool   `json:"howOwn,omitempty"`
 	MustCopy bool   `json:"mustCopy,omitempty"`
-	// Gone: not installed here any more, and listed only for what magpie
+	// Gone: not installed here any more, and listed only for what starling
 	// gave it to be taken out (held); it is given nothing new
 	Gone bool `json:"gone,omitempty"`
 }
@@ -316,7 +316,7 @@ type ServerView struct {
 	Icon string `json:"icon,omitempty"`
 	// Problems are the agents it couldn't be given to, and why
 	Problems map[string]string `json:"problems,omitempty"`
-	// SignIn is magpie's sign-in to a streamable HTTP server, which the
+	// SignIn is starling's sign-in to a streamable HTTP server, which the
 	// agents then use (#615)
 	SignIn *mcpauth.Status `json:"signIn,omitempty"`
 }
@@ -371,7 +371,7 @@ type View struct {
 	SkillGroups  []SkillGroup      `json:"skillGroups"`
 	CopySkills   bool              `json:"copySkills"` // the library gives skills as copies (#896)
 	// CheckDue is set when the skills from GitHub weren't checked for
-	// updates since magpie started, or not for a while: the page checks
+	// updates since starling started, or not for a while: the page checks
 	// them as it shows them (#1449)
 	CheckDue bool `json:"checkDue,omitempty"`
 	// Partial is a glance (Glance): FoundSkills and each skill's Behind
@@ -430,7 +430,7 @@ func readView(problems []Problem, glance bool) (*View, error) {
 		}
 		v.Agents = append(v.Agents, av)
 	}
-	// an agent gone from here that still has what magpie gave it: listed on
+	// an agent gone from here that still has what starling gave it: listed on
 	// the rows of what it has, for that to be taken out (held)
 	gone := l.held(targets)
 	for _, t := range gone {
@@ -556,7 +556,7 @@ func SaveServer(old string, s Server) (*Result, error) {
 			if i < 0 {
 				return fmt.Errorf("no server called %s", old)
 			}
-			// magpie's sign-in goes with a renamed server, before the agents
+			// starling's sign-in goes with a renamed server, before the agents
 			// are given it under its new name
 			if old != s.Name {
 				if err := mcpauth.Rename(old, s.Name); err != nil {
@@ -651,7 +651,7 @@ func serversAgents(names, agents []string, on bool) (*Result, error) {
 }
 
 // RemoveServer takes a server out of the library and out of every agent
-// magpie gave it to.
+// starling gave it to.
 func RemoveServer(name string) (*Result, error) {
 	res, err := change(func(l *Library) error { return removeServer(l, name) })
 	if err == nil {
@@ -662,7 +662,7 @@ func RemoveServer(name string) (*Result, error) {
 }
 
 // RemoveServers takes the servers named out of the library and every agent
-// in one write (#1027), each as RemoveServer does: only the entries magpie
+// in one write (#1027), each as RemoveServer does: only the entries starling
 // wrote (Applied) leave the agents' files, a server of the agent's own by
 // another name stays, and each one's sign-in goes with it. One that can't
 // be taken out stays, and is said in Unremoved.

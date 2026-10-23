@@ -19,19 +19,19 @@ import (
 	toml "github.com/pelletier/go-toml/v2"
 	"github.com/tidwall/gjson"
 
-	"github.com/lulu58588/chongyun/internal/filememo"
-	"github.com/lulu58588/chongyun/internal/settings"
-	"github.com/lulu58588/chongyun/internal/steady"
+	"github.com/lulu58588/starling/internal/filememo"
+	"github.com/lulu58588/starling/internal/settings"
+	"github.com/lulu58588/starling/internal/steady"
 )
 
 // Codex lists, in its history and its resume picker, only the sessions made
 // with the provider it uses now: a rollout's session_meta names its
 // model_provider, and so does the thread's row in Codex's state database
 // (state_<n>.sqlite). Sessions made through CC Switch ("custom") are gone
-// from that list once Codex uses magpie, though their files are all there
+// from that list once Codex uses starling, though their files are all there
 // (#887). MoveCodexProvider changes a session's provider, in its files and
 // in that row, and nothing else: its messages, id, title and archive stay as
-// they were. A copy of each file as it was is kept in magpie's trash folder
+// they were. A copy of each file as it was is kept in starling's trash folder
 // first, and moving it back to the provider it had is the undo.
 
 // codexProviderRe is what a provider id may be: a key of config.toml's
@@ -186,7 +186,7 @@ func codexProviders(out []Managed, groups map[string][]file) {
 // model_provider of each session_meta in its files, and of its row in
 // Codex's state database. A session written to in the last minute is left
 // as it is (ErrActive), as Codex may be running it. Each file is copied to
-// <magpie dir>/trash/codex-provider/ before it is changed, and rewritten
+// <starling dir>/trash/codex-provider/ before it is changed, and rewritten
 // whole into a file beside it that then takes its place, keeping its time.
 func MoveCodexProvider(id, to string) (CodexMove, error) {
 	if !safeID.MatchString(id) {
@@ -405,7 +405,7 @@ func rewriteCodexProvider(path, to string) (bool, error) {
 		return false, err
 	}
 	defer in.Close()
-	tmp, err := os.CreateTemp(filepath.Dir(path), ".magpie-"+filepath.Base(path)+"-*")
+	tmp, err := os.CreateTemp(filepath.Dir(path), ".starling-"+filepath.Base(path)+"-*")
 	if err != nil {
 		return false, err
 	}
